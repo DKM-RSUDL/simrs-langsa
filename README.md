@@ -30,7 +30,7 @@ DB_PASSWORD=1Tlangsa
 
 ## Access Admin Page
 1. Admin :
-Username : suryadi.hhb@gmail.com
+Username : admin@gmail.com
 Password : password
 
 2. Manager : 
