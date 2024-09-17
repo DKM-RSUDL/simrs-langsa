@@ -19,13 +19,13 @@ Ini adalah starter kit untuk proyek Laravel, yang menampilkan Laravel UI untuk k
 - MySQL or any other supported database system
  
 ## Installation conncting database
-DB_CONNECTION=sqlsrv_rslangsa
+```DB_CONNECTION=sqlsrv_rslangsa
 DB_HOST=192.168.13.4
 DB_HOST=123.108.100.83,8001 // di komentar
 DB_PORT=
 DB_DATABASE=test_langsars
 DB_USERNAME=sa
-DB_PASSWORD=1Tlangsa
+DB_PASSWORD=1Tlangsa```
 
 
 ## Access Admin Page
