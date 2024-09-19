@@ -2,6 +2,11 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/chart.js/Chart.min.css') }}">
+    <style>
+        body{
+            width: 100%;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -64,7 +69,11 @@
     <div class="content-wrapper">
         <div class="row same-height">
             {{-- card --}}
+<<<<<<< HEAD
             <div class="col-md-7">
+=======
+            <div class="col-md-6">
+>>>>>>> ebac4d73f845c5eb5da57fe5835ddedea93fb8df
                 <div class="card mb-3 p-4">
                     <div class="row same-height">
                         <div class="col-md-4 p-2">
@@ -244,7 +253,11 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div class="col-md-5">
+=======
+            <div class="col-md-6">
+>>>>>>> ebac4d73f845c5eb5da57fe5835ddedea93fb8df
                 <div class="card mb-4 p-4">
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>

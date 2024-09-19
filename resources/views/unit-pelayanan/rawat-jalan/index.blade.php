@@ -5,9 +5,7 @@
 
     <div class="row mt-5">
         <div class="col-md-3">
-            <a href="{{ route('bedah.index') }}">Bedah</a>
-            {{-- <a href="{{ url('unit-pelayanan.rawat-jalan.bedah.index') }}">Bedah</a> --}}
-            <p>Pasien: 23</p>
+            <a href="">Anak</a>
         </div>
         <div class="col-md-3">
             <a href="">Gigi dan Mulut</a>
@@ -25,7 +23,7 @@
         <div class="mt-5"></div>
 
         <div class="col-md-3">
-            <a href="">Bedah</a>
+            <a href="{{ route('bedah.index') }}">Bedah</a>
             <p>Pasien: 03</p>
         </div>
         <div class="col-md-3">
@@ -58,6 +56,40 @@
         <div class="col-md-3">
             <a href="">Umum</a>
             <p>Pasien: 43</p>
+        </div>
+
+        <div class="mt-5"></div>
+
+        <div class="col-md-3">
+            <a href="">Bedah Mulut</a>
+            <p>Pasien: 0</p>
+        </div>
+        <div class="col-md-3">
+            <a href="">Jantung</a>
+            <p>Pasien: 0</p>
+        </div>
+        <div class="col-md-3">
+            <a href="">Ortopedi</a>
+            <p>Pasien: 0</p>
+        </div>
+        <div class="col-md-3">
+            <a href="">Urologi</a>
+            <p>Pasien: 0</p>
+        </div>
+
+        <div class="mt-5"></div>
+
+        <div class="col-md-3">
+            <a href="">Geriatri</a>
+            <p>Pasien: 10</p>
+        </div>
+        <div class="col-md-3">
+            <a href="">Jiwa</a>
+            <p>Pasien: 0</p>
+        </div>
+        <div class="col-md-3">
+            <a href="">Paru</a>
+            <p>Pasien: 0</p>
         </div>
     </div>
 @endsection

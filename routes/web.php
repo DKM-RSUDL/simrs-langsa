@@ -33,7 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
         Route::resource('rawat-jalan', RawatJalanController::class);
-
         // Rute untuk Klinik Bedah di dalam Rawat Jalan
         Route::prefix('ruang-klinik')->group(function () {
             Route::resource('bedah', BedahController::class);
