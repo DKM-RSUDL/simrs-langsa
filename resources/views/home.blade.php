@@ -39,12 +39,10 @@
                                 </p>
                             @endif
                             <div class="mt-2">
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
                                 <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
-=======
                                 <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">
                                     {{ auth()->user()->name }}
                                 </h5>
@@ -71,12 +69,9 @@
                                         class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank" class=""><i
                                         class="fab fa-facebook fa-lg"></i></a>
->>>>>>> fa23e87 (menu rawat jalan)
-=======
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
                                 <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
->>>>>>> 1e3be76 (modifikasi home dan rawat jalan)
                             </div>
                         </div>
                     </div>
@@ -90,11 +85,7 @@
 
             <div class="col-md-4">
                 <div class="card text-center mb-4 p-3">
-<<<<<<< HEAD
-                    <div class="mx-auto">
-=======
                     <div class="date mx-auto">
->>>>>>> 1e3be76 (modifikasi home dan rawat jalan)
                         <h5 class="card-title">Tanggal</h5>
                         <p class="card-text">{{ date('d F Y') }}</p> <!-- Example date -->
                     </div>
@@ -118,16 +109,15 @@
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-8">
+            {{-- card --}}
+            <div class="col-md-6">
                 <div class="card mb-3 p-4">
                     <div class="row">
                         @foreach ([
                             ['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23],
                             ['route' => '#', 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11],
-<<<<<<< HEAD
                             ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
-=======
                             ['route' => '#', 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
->>>>>>> 1e3be76 (modifikasi home dan rawat jalan)
                             ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4],
                             ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23],
                             ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31],
