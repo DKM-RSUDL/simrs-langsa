@@ -17,7 +17,7 @@
     <!-- <link rel="stylesheet" href="../vendor/themify-icons/themify-icons.css"> -->
     <link rel="stylesheet" href="../assets/css/bootstrap-override.css">
 
-
+    @yield('css')
 </head>
 
 <body>

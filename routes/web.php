@@ -8,9 +8,13 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// unit pelanayan
+use App\Http\Controllers\UnitPelayanan\RawatJalanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
+
+
 
 Auth::routes(['register' => false]); // Nonaktifkan register
-
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('auth.login');
@@ -18,12 +22,22 @@ Route::middleware('guest')->group(function () {
 });
 
 Auth::routes();
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('navigation', NavigationController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('users', UserController::class);
+
+    // Grup rute untuk Unit Pelayanan
+    Route::prefix('unit-pelayanan')->group(function () {
+        // Rute untuk Rawat Jalan
+        Route::resource('rawat-jalan', RawatJalanController::class);
+
+        // Rute untuk Klinik Bedah di dalam Rawat Jalan
+        Route::prefix('ruang-klinik')->group(function () {
+            Route::resource('bedah', BedahController::class);
+        });
+    });
+
 });

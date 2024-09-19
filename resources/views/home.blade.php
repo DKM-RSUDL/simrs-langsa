@@ -64,7 +64,7 @@
     <div class="content-wrapper">
         <div class="row same-height">
             {{-- card --}}
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="card mb-3 p-4">
                     <div class="row same-height">
                         <div class="col-md-4 p-2">
@@ -244,7 +244,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="card mb-4 p-4">
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>

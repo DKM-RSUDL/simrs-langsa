@@ -13,7 +13,7 @@
                             Nama
                         </label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                            name="name" value="{{ old('name', $user->name) }}" @required(true)>
+                            name="name" value="{{ old('name', $user->name) }}" required>
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -25,7 +25,7 @@
                             Nomor HP
                         </label>
                         <input type="number" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
-                            name="no_hp" value="{{ old('no_hp', $user->profile->no_hp) }}" @required(true)>
+                            name="no_hp" value="{{ old('no_hp', optional($user->profile)->no_hp) }}" required>
                         @error('no_hp')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -40,7 +40,7 @@
                             Email
                         </label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                            name="email" value="{{ old('email', $user->email) }}" @required(true)>
+                            name="email" value="{{ old('email', $user->email) }}" required>
                         <small class="text-muted">
                             Email ini akan digunakan sebagai username
                         </small>
@@ -56,7 +56,7 @@
                         </label>
                         <input type="text" class="form-control @error('password') is-invalid @enderror" id="password"
                             name="password" value="{{ old('password') ? old('password', $user->password) : 'password' }}"
-                            @required(true)>
+                            required>
                         <small class="text-muted">
                             Ubah jika ingin mengganti password
                         </small>
@@ -73,7 +73,7 @@
                     <div class="input-group input-append date" data-date-format="dd-mm-yyyy">
                         <input class="form-control @error('tanggal_lahir') is-invalid @enderror" type="text"
                             readonly="" autocomplete="off" id="tanggal_lahir" name="tanggal_lahir"
-                            value="{{ old('tanggal_lahir', $user->profile->tanggal_lahir) }}" @required(true)>
+                            value="{{ old('tanggal_lahir', optional($user->profile)->tanggal_lahir) }}" required>
                         <button class="btn btn-outline-secondary" type="button">
                             <i class="far fa-calendar-alt"></i>
                         </button>
@@ -88,14 +88,12 @@
                             Jenis Kelamin
                         </label>
                         <select class="form-select select2 @error('jenis_kelamin') is-invalid @enderror" id="jenis_kelamin"
-                            name="jenis_kelamin" @required(true)>
+                            name="jenis_kelamin" required>
                             <option value=""></option>
-                            <option {{ $user->profile->jenis_kelamin == 'laki-laki' ? 'selected' : '' }} value="laki-laki"
-                                {{ old('jenis_kelamin') == 'laki-laki' ? 'selected' : '' }}>
+                            <option {{ optional($user->profile)->jenis_kelamin == 'laki-laki' ? 'selected' : '' }} value="laki-laki">
                                 Laki-laki
                             </option>
-                            <option {{ $user->jenis_kelamin == 'perempuan' ? 'selected' : '' }} value="perempuan"
-                                {{ old('jenis_kelamin') == 'perempuan' ? 'selected' : '' }}>
+                            <option {{ optional($user->profile)->jenis_kelamin == 'perempuan' ? 'selected' : '' }} value="perempuan">
                                 Perempuan
                             </option>
                         </select>
@@ -113,7 +111,7 @@
                             Role
                         </label>
                         <select class="form-select select2 @error('role') is-invalid @enderror" id="role"
-                            name="role" @required(true)>
+                            name="role" required>
                             <option value=""></option>
                             @foreach (getRoles() as $role)
                                 <option value="{{ $role->id }}"
@@ -143,7 +141,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        @if ($user->profile->image)
+                        @if ($user->profile && $user->profile->image)
                             <img src="{{ asset('assets/images/users/' . $user->profile->image) }}" alt="Gambar Pengguna"
                                 class="img-thumbnail" width="60">
                         @endif
@@ -158,7 +156,7 @@
                         <label for="alamat">
                             Alamat
                         </label>
-                        <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" @required(true)>{{ old('alamat', $user->profile->alamat) }}</textarea>
+                        <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" required>{{ old('alamat', optional($user->profile)->alamat) }}</textarea>
                         @error('alamat')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
