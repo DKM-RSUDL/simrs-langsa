@@ -1,95 +1,55 @@
 @extends('layouts.administrator.master')
 
 @section('content')
-    <h6>Ruang/Klinik</h6>
+    @php
+        $cards = [
+            ['title' => 'Anak', 'description' => 'Pasien: 0'],
+            ['title' => 'Gigi dan Mulut', 'description' => 'Pasien: 0'],
+            ['title' => 'Kulit dan Kelamin', 'description' => 'Pasien: 0'],
+            ['title' => 'Rheumatology', 'description' => 'Pasien: 0'],
+            ['title' => 'Bedah', 'description' => 'Pasien: 0', 'url' => 'bedah.index'],
+            ['title' => 'Gigi Periodonti', 'description' => 'Pasien: 0'],
+            ['title' => 'Mata', 'description' => 'Pasien: 0'],
+            ['title' => 'THT', 'description' => 'Pasien: 0'],
+            ['title' => 'Bedah Mulut', 'description' => 'Pasien: 0'],
+            ['title' => 'Internis Pria', 'description' => 'Pasien: 3'],
+            ['title' => 'Syaraf/Neurology', 'description' => 'Pasien: 0'],
+            ['title' => 'TB Dot', 'description' => 'Pasien: 0'],
+            ['title' => 'Bedah Digestive', 'description' => 'Pasien: 0'],
+            ['title' => 'Internis Wanita', 'description' => 'Pasien: 10'],
+            ['title' => 'Obgyn', 'description' => 'Pasien: 0'],
+            ['title' => 'Umum', 'description' => 'Pasien: 0'],
+            ['title' => 'Bedah Mulut', 'description' => 'Pasien: 0'],
+            ['title' => 'Jantung', 'description' => 'Pasien: 0'],
+            ['title' => 'Ortopedi', 'description' => 'Pasien: 0'],
+            ['title' => 'Urologi', 'description' => 'Pasien: 0'],
+            ['title' => 'Geriatri', 'description' => 'Pasien: 10'],
+            ['title' => 'Jiwa', 'description' => 'Pasien: 0'],
+            ['title' => 'Paru', 'description' => 'Pasien: 0'],
+        ];
+    @endphp
 
-    <div class="row mt-5">
-        <div class="col-md-3">
-            <a href="">Anak</a>
-        </div>
-        <div class="col-md-3">
-            <a href="">Gigi dan Mulut</a>
-            <p>Pasien: 03</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Kulit dan Kelamin</a>
-            <p>Pasien: 43</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Rheumatology</a>
-            <p>Pasien: 43</p>
-        </div>
+    <div class="content-wrapper">
+        <h5 class="fw-bold">Ruang/Klinik</h5>
+        <p>Pilih ruang/klinik pelayanan pasien:</p>
+        <div class="row">
+            @foreach ($cards as $card)
+                <div class="col-md-3 p-2">
+                    <a href="{{ isset($card['url']) ? route($card['url']) : '#' }}" class="text-decoration-none card-hover">
+                        <div class="card mb-3 rounded-5 bg-white dark:bg-dark text-dark dark:text-light">
+                            <div class="card-body text-center">
+                                <h6 class="fw-bold text-primary">{{ $card['title'] }}</h6>
+                                <hr class="text-secondary">
+                                <p class="text-black">
+                                    <img src="{{ asset('assets/img/Account.png') }}" alt="" width="15%">
+                                    {{ $card['description'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
 
-        <div class="mt-5"></div>
-
-        <div class="col-md-3">
-            <a href="{{ route('bedah.index') }}">Bedah</a>
-            <p>Pasien: 03</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Gigi Periodonti</a>
-            <p>Pasien: 03</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Mata</a>
-            <p>Pasien: 11</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">THT</a>
-            <p>Pasien: 01</p>
-        </div>
-
-        <div class="mt-5"></div>
-
-        <div class="col-md-3">
-            <a href="">Internis pria</a>
-            <p>Pasien: 23</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Internis Wanita</a>
-            <p>Pasien: 03</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">TB</a>
-            <p>Pasien: 43</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Umum</a>
-            <p>Pasien: 43</p>
-        </div>
-
-        <div class="mt-5"></div>
-
-        <div class="col-md-3">
-            <a href="">Bedah Mulut</a>
-            <p>Pasien: 0</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Jantung</a>
-            <p>Pasien: 0</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Ortopedi</a>
-            <p>Pasien: 0</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Urologi</a>
-            <p>Pasien: 0</p>
-        </div>
-
-        <div class="mt-5"></div>
-
-        <div class="col-md-3">
-            <a href="">Geriatri</a>
-            <p>Pasien: 10</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Jiwa</a>
-            <p>Pasien: 0</p>
-        </div>
-        <div class="col-md-3">
-            <a href="">Paru</a>
-            <p>Pasien: 0</p>
         </div>
     </div>
 @endsection

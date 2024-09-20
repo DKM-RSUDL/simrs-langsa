@@ -80,7 +80,7 @@ class UserRolePermissionSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt('password'), // password
             'remember_token' => Str::random(10),
         ]);
 
@@ -88,7 +88,7 @@ class UserRolePermissionSeeder extends Seeder
             'name' => 'Manager',
             'email' => 'manager@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt('password'), // password
             'remember_token' => Str::random(10),
         ]);
 
@@ -96,7 +96,7 @@ class UserRolePermissionSeeder extends Seeder
             'name' => 'user',
             'email' => 'user@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt('password'), // password
             'remember_token' => Str::random(10),
         ]);
 
@@ -106,7 +106,7 @@ class UserRolePermissionSeeder extends Seeder
     public function createUserProfile()
     {
         // Buat profil untuk Admin
-        $admin = User::where('email', 'suryadi.hhb@gmail.com')->first();
+        $admin = User::where('email', 'admin@gmail.com')->first();
         if ($admin) {
             $admin->profile()->create([
                 'no_hp' => '081377747843',

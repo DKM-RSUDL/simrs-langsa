@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Str;
-// // $host = "192.168.99.2";
+
 $host = "192.168.13.4";
-// $host = "123.108.100.83,8001";
 $port = "";
-$database = "test_langsars";
+$database = "rslangsa_test";
 
 return [
 
