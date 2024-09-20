@@ -24,7 +24,7 @@
                             <div class="mt-2">
                                 <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">dr. Aleysa, Sp.PD
                                 </h5>
-                                <p class="card-text mb-1" style="font-size: 1.25rem;">Dokter: Spesialis Penyakit Dalam</p>
+                                <p class="card-text mb-1" style="font-size: 1.25rem;">Role: Spesialis Penyakit Dalam</p>
                                 <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp: 085277678789</p>
                                 <p class="card-text mb-2" style="font-size: 1.25rem;">Email: aleysa@gmail.com</p>
                             </div>
