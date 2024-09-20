@@ -39,9 +39,38 @@
                                 </p>
                             @endif
                             <div class="mt-2">
+<<<<<<< HEAD
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
                                 <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
+=======
+                                <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">
+                                    {{ auth()->user()->name }}
+                                </h5>
+                                @if (isset(auth()->user()->roles[0]->name))
+                                    <p class="card-text mb-1" style="font-size: 1.25rem;">Roles:
+                                        {{ auth()->user()->roles[0]->name }}</p>
+                                @endif
+
+                                @if (isset(auth()->user()->profile->no_hp))
+                                    <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp:
+                                        {{ auth()->user()->profile->no_hp }}</p>
+                                @endif
+
+                                @if (isset(auth()->user()->email))
+                                    <p class="card-text mb-2" style="font-size: 1.25rem;">Email: {{ auth()->user()->email }}
+                                    </p>
+                                @endif
+
+                            </div>
+                            <div class="mt-2">
+                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i
+                                        class="fab fa-instagram fa-lg"></i></a>
+                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i
+                                        class="fab fa-whatsapp fa-lg"></i></a>
+                                <a href="https://www.facebook.com" target="_blank" class=""><i
+                                        class="fab fa-facebook fa-lg"></i></a>
+>>>>>>> fa23e87 (menu rawat jalan)
                             </div>
                         </div>
                     </div>
