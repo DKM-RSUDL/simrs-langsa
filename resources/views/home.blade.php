@@ -3,7 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/chart.js/Chart.min.css') }}">
     <style>
-        body{
+        body {
             width: 100%;
         }
     </style>
@@ -22,11 +22,24 @@
                         </div>
                         <div class="card-body">
                             <div class="mt-2">
-                                <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">dr. Aleysa, Sp.PD
+                                <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">
+                                    {{ auth()->user()->name }}
                                 </h5>
-                                <p class="card-text mb-1" style="font-size: 1.25rem;">Dokter: Spesialis Penyakit Dalam</p>
-                                <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp: 085277678789</p>
-                                <p class="card-text mb-2" style="font-size: 1.25rem;">Email: aleysa@gmail.com</p>
+                                @if (isset(auth()->user()->roles[0]->name))
+                                    <p class="card-text mb-1" style="font-size: 1.25rem;">Roles:
+                                        {{ auth()->user()->roles[0]->name }}</p>
+                                @endif
+
+                                @if (isset(auth()->user()->profile->no_hp))
+                                    <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp:
+                                        {{ auth()->user()->profile->no_hp }}</p>
+                                @endif
+
+                                @if (isset(auth()->user()->email))
+                                    <p class="card-text mb-2" style="font-size: 1.25rem;">Email: {{ auth()->user()->email }}
+                                    </p>
+                                @endif
+
                             </div>
                             <div class="mt-2">
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i

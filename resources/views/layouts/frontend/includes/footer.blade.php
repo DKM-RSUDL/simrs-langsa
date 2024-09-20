@@ -11,8 +11,8 @@
                     binatang, maka dia akan mendapatkan pahala sedekah dari setiap buah yang dimakan atau setiap biji
                     yang tumbuh hingga akhir zaman." (HR. Muslim)</p>
                 <br>
-                <p>Email: suryadi.hhb@gmail.com</p>
-                <p>Phone: +62 896 7846 8651</p>
+                <p>Email: admin@gmail.com</p>
+                <p>Phone: +62 822 742 9797</p>
 
             </div>
             <div class="col-2 col-xs-12">
@@ -45,7 +45,7 @@
                 </h1>
 
                 <div class="input-group">
-                    <a href="https://wa.me/6289678468651" target="_blank">
+                    <a href="https://wa.me/08227429797" target="_blank">
                         <button>
                             Whatsapp
                         </button>
