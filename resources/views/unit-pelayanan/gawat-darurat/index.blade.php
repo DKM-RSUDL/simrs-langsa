@@ -74,7 +74,7 @@
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     {data: 'kd_pasien', name: 'kd_pasien'},
                     {data: 'kd_dokter', name: 'kd_dokter'},
-                    {data: 'tgl_masuk', name: 'tgl_masuk'},
+                    {data: 'jam_masuk', name: 'tgl_masuk'},
                 ],
                 "paging": true,
                 "lengthChange": true,
