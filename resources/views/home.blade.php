@@ -39,25 +39,9 @@
                                 </p>
                             @endif
                             <div class="mt-2">
-<<<<<<< HEAD
-                                <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">dr. Aleysa, Sp.PD
-                                </h5>
-                                <p class="card-text mb-1" style="font-size: 1.25rem;">Role: Spesialis Penyakit Dalam</p>
-                                <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp: 085277678789</p>
-                                <p class="card-text mb-2" style="font-size: 1.25rem;">Email: aleysa@gmail.com</p>
-                            </div>
-                            <div class="mt-2">
-                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i
-                                        class="fab fa-instagram fa-lg"></i></a>
-                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i
-                                        class="fab fa-whatsapp fa-lg"></i></a>
-                                <a href="https://www.facebook.com" target="_blank" class=""><i
-                                        class="fab fa-facebook fa-lg"></i></a>
-=======
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
                                 <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
->>>>>>> origin/main
                             </div>
                         </div>
                     </div>
@@ -71,7 +55,7 @@
 
             <div class="col-md-4">
                 <div class="card text-center mb-4 p-3">
-                    <div class="date mx-auto">
+                    <div class="mx-auto">
                         <h5 class="card-title">Tanggal</h5>
                         <p class="card-text">{{ date('d F Y') }}</p> <!-- Example date -->
                     </div>
@@ -94,12 +78,7 @@
 
     <div class="content-wrapper">
         <div class="row same-height">
-<<<<<<< HEAD
-            {{-- card --}}
-            <div class="col-md-6">
-=======
             <div class="col-md-8">
->>>>>>> origin/main
                 <div class="card mb-3 p-4">
                     <div class="row">
                         @foreach ([
@@ -133,11 +112,7 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <div class="col-md-6">
-=======
             <div class="col-md-4">
->>>>>>> origin/main
                 <div class="card mb-4 p-4">
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>
