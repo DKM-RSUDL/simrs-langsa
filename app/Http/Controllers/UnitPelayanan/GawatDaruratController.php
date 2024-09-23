@@ -17,6 +17,9 @@ class GawatDaruratController extends Controller
             $data = Kunjungan::with(['pasien', 'dokter']);
 
             return DataTables::of($data)
+                ->order(function ($query) {
+                    $query->orderBy('tgl_masuk', 'desc');
+                })
                 ->addColumn('triase', fn($row) => $row->kd_triase)
                 ->addColumn('bed', fn($row) => '')
                 ->addColumn('no_rm', fn($row) => $row->kd_pasien ?: 'null')
@@ -33,6 +36,12 @@ class GawatDaruratController extends Controller
                     //     ? Carbon::parse($row->tgl_masuk)->format('d M Y')
                     //     : 'null';
                     return "$tglMasuk $jamMasuk";
+                })
+                // Hitung umur dari tabel pasien
+                ->addColumn('umur', function ($row) {
+                    return $row->pasien && $row->pasien->tgl_lahir
+                        ? Carbon::parse($row->pasien->tgl_lahir)->age . ''
+                        : 'Tidak diketahui';
                 })
                 ->addColumn('action', fn($row) => $row->kd_pasien)  // Return raw data, no HTML
                 ->addColumn('del', fn($row) => $row->kd_pasien)     // Return raw data

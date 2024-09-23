@@ -6,7 +6,7 @@
     $pathSegments = explode('/', trim($url, '/'));
 
     echo '<nav aria-label="breadcrumb">';
-    echo '<ol class="breadcrumb">';
+    echo '<ol class="breadcrumb custom-breadcrumb">'; // Adding custom class for styling
 
     $currentSegment = '';
     $currentPath = '';
@@ -28,15 +28,11 @@
             }
 
             if ($key == count($pathSegments) - 1) {
-                echo '<li class="breadcrumb-item active">' . ucfirst($segment) . '</li>';
+                // Last segment (active)
+                echo '<li class="breadcrumb-item active" aria-current="page">' . ucfirst($segment) . '</li>';
             } else {
-                if ($key > 0) {
-                    $fullUrl = url('/') . '/' . $segment;
-                } else {
-                    $fullUrl = url('/') . '/' . $segment;
-                }
-
-                echo '<li class="breadcrumb-item active">' . ucfirst($segment) . '</li>';
+                // Intermediate segments
+                echo '<li class="breadcrumb-item"><a href="' . url($currentPath) . '">' . ucfirst($segment) . '</a></li>';
             }
 
             $currentSegment = $segment;
@@ -45,5 +41,4 @@
 
     echo '</ol>';
     echo '</nav>';
-
 @endphp
