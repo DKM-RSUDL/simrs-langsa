@@ -27,4 +27,9 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'kd_customer', 'kd_customer');
+    }
 }
