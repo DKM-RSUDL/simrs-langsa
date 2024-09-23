@@ -84,7 +84,7 @@
                         @foreach ([
                             ['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23],
                             ['route' => '#', 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11],
-                            ['route' => '#', 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
+                            ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
                             ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4],
                             ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23],
                             ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31],
