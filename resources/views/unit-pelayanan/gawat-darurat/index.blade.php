@@ -101,7 +101,7 @@
                     },
                     {
                         data: 'kd_pasien',
-                        name: 'RM :kd_pasien',
+                        name: 'kd_pasien',
                         defaultContent: ''
                     },
                     {

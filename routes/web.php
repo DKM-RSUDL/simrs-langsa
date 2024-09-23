@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('bedah', BedahController::class);
         });
         Route::resource('gawat-darurat', GawatDaruratController::class);
+        Route::get('medis-gawat-darurat', [MedisGawatDaruratController::class, 'index'])->name('medis-gawat-darurat.index');
+
     });
 
 });
