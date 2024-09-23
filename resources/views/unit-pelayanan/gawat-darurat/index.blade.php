@@ -115,9 +115,9 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'instruksi',
-                        name: 'instruksi',
-                        defaultContent: ''
+                        data: 'tgl_masuk',
+                        name: 'tgl_masuk',
+                        defaultContent: 'null'
                     },
                     {
                         data: 'kd_dokter',
@@ -125,9 +125,9 @@
                         defaultContent: 'null'
                     },
                     {
-                        data: 'tgl_masuk',
-                        name: 'tgl_masuk',
-                        defaultContent: 'null'
+                        data: 'instruksi',
+                        name: 'instruksi',
+                        defaultContent: ''
                     },
                     {
                         data: 'del',

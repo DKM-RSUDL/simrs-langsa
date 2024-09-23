@@ -28,7 +28,12 @@ class GawatDaruratController extends Controller
                 ->addColumn('Jaminan', fn($row) =>  '')
                 ->addColumn('Instruksi', fn($row) =>  '')
                 ->addColumn('kd_dokter', fn($row) => $row->kd_dokter ?: 'null')
-                ->addColumn('tgl_masuk', fn($row) => $row->tgl_masuk ? Carbon::parse($row->tgl_masuk)->translatedFormat('d M Y') : 'null')
+                ->addColumn('tgl_masuk', function($row) {
+                    return $row->tgl_masuk
+                        ? Carbon::parse($row->tgl_masuk)->format('d M Y h:i A')
+                        : 'null';
+                })
+
                 ->addColumn('action', fn($row) => '<a href="#" class="edit btn btn-secondary btn-sm m-2"><i class="ti-pencil-alt"></i></a><a href="#" class="btn btn-secondary btn-sm">...</a>')
                 ->addColumn('del', fn($row) => '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>')
                 ->addColumn('profile', function ($row) {
