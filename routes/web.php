@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 // unit pelanayan
 use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
+use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 
 
 
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('ruang-klinik')->group(function () {
             Route::resource('bedah', BedahController::class);
         });
+        Route::resource('gawat-darurat', GawatDaruratController::class);
     });
 
 });
