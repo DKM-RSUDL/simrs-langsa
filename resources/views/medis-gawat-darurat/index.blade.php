@@ -174,7 +174,7 @@
                 </div>
 
                 <!-- task -->
-                <div class="card mt-2">
+                <div class="mt-2">
                     <div class="card-header">
                         <h4>Task:</h4>
                     </div>
@@ -184,6 +184,41 @@
                                 <div class="margin-left-15">
                                     <p>
                                         Asesmen Awal Medis
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item success">
+                                <div class="margin-left-15">
+                                    <p>
+                                        Asesmen Awal Keperawatan
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item success">
+                                <div class="margin-left-15">
+                                    <p>
+                                        Order Laboratorium
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>
+                                        Resume Medis -(belum final)
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>
+                                        Perintah Rawat Inap
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>
+                                        Selesai
                                     </p>
                                 </div>
                             </li>
