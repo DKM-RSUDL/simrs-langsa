@@ -14,11 +14,7 @@ class GawatDaruratController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Kunjungan::select([
-                'kd_pasien',
-                'kd_dokter',
-                'tgl_masuk',
-            ]);
+            $data = Kunjungan::with(['pasien', 'dokter', 'customer']);
 
             return DataTables::of($data)
                 ->addColumn('Triase', fn($row) => '')
@@ -26,14 +22,15 @@ class GawatDaruratController extends Controller
                 ->addColumn('No RM/ Reg', fn($row) => $row->kd_pasien ?: 'null')
                 ->addColumn('Alamat', fn($row) =>  '')
                 ->addColumn('Jaminan', fn($row) =>  '')
+                ->addColumn('Instruksi', fn($row) =>  '')
+                ->addColumn('kd_dokter', fn($row) => $row->kd_dokter ?: 'null')
                 ->addColumn('tgl_masuk', function($row) {
                     return $row->tgl_masuk
                         ? Carbon::parse($row->tgl_masuk)->format('d M Y h:i A')
                         : 'null';
                 })
-                ->addColumn('kd_dokter', fn($row) => $row->kd_dokter ?: 'null')
-                ->addColumn('Instruksi', fn($row) =>  '')
-                ->addColumn('action', fn($row) => '<a href="'.route('medis-gawat-darurat.index').'" class="edit btn btn-secondary btn-sm m-2"><i class="ti-pencil-alt"></i></a><a href="#" class="btn btn-secondary btn-sm">...</a>')
+
+                ->addColumn('action', fn($row) => '<a href="#" class="edit btn btn-secondary btn-sm m-2"><i class="ti-pencil-alt"></i></a><a href="#" class="btn btn-secondary btn-sm">...</a>')
                 ->addColumn('del', fn($row) => '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>')
                 ->addColumn('profile', function ($row) {
                     $imageUrl = $row->foto_pasien ? asset('storage/' . $row->foto_pasien) : asset('assets/images/avatar1.png');
@@ -41,7 +38,7 @@ class GawatDaruratController extends Controller
                     return '<div class="profile">
                                 <img src="' . $imageUrl . '" alt="Profile" width="50" height="50" class="rounded-circle"/>
                                 <div class="info">
-                                    <strong>' . $row->jenis_kelamin . '</strong>
+                                    <strong>' . $row->nama_pasien . '</strong>
                                     <span>' . $gender . ' / ' . $row->umur . ' Tahun</span>
                                 </div>
                             </div>';
