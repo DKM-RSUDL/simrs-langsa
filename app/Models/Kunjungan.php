@@ -16,4 +16,15 @@ class Kunjungan extends Model
 
     protected $keyType = 'string';
     public $timestamps = false;
+
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class,'kd_pasien', 'kd_pasien');
+    }
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
+    }
 }

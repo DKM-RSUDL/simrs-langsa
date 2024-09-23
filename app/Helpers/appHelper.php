@@ -29,3 +29,5 @@ if (!function_exists('getRoles')) {
         return Role::where('name', '!=', 'admin')->get();
     }
 }
+
+

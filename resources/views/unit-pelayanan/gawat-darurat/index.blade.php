@@ -118,12 +118,12 @@
                         name: 'profile',
                         render: function(data, type, row) {
                             let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row.foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
-                            let gender = row.jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan';
+                            let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' : 'Perempuan';
                             return `
                                 <div class="profile">
                                     <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
                                     <div class="info">
-                                        <strong>${row.nama_pasien}</strong>
+                                        <strong>${row.pasien.nama}</strong>
                                         <span>${gender} / ${row.umur} Tahun</span>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                     data: 'kd_pasien',
                     name: 'kd_pasien',
                     render: function(data, type, row) {
-                        // Sesuaikan Reg dengan Database 
+                        // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
                         return `
                             <div class="rm-reg">
                                 RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
