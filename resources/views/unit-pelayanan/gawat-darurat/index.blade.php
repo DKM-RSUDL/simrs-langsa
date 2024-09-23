@@ -98,18 +98,21 @@
 
 @push('js')
     <script type="text/javascript">
+    var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
+    var medisGawatDaruratIndexUrl = "{{ route('medis-gawat-darurat.index') }}";
+
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('gawat-darurat.index') }}",
+                ajax: gawatDaruratIndexUrl,
                 columns: [{
                         data: 'action',
                         name: 'action',
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return '<a href="#" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a>' +
+                            return '<a href="' + medisGawatDaruratIndexUrl + '" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a>' +
                                 '<a href="#" class="btn btn-secondary btn-sm">...</a>';
                         }
                     },
@@ -143,10 +146,19 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'kd_pasien',
-                        name: 'RM :kd_pasien',
-                        defaultContent: ''
+                    data: 'kd_pasien',
+                    name: 'kd_pasien',
+                    render: function(data, type, row) {
+                        // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                        return `
+                            <div class="rm-reg">
+                                RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
+                                Reg: ${row.reg_number ? row.reg_number : 'N/A'}
+                            </div>
+                        `;
                     },
+                    defaultContent: ''
+                },
                     {
                         data: 'alamat',
                         name: 'alamat',
