@@ -8,12 +8,15 @@
                 height: 30px;
                 border-radius: 50%;
             }
+
             .badge-triage-yellow {
                 background-color: #ffeb3b;
             }
+
             .badge-triage-red {
                 background-color: #f44336;
             }
+
             .badge-triage-green {
                 background-color: #4caf50;
             }
@@ -34,8 +37,7 @@
                     </select>
                 </div>
                 <button type="button" class="btn btn-primary btn-sm" id="createRawatDarurat">
-                    <i class="ti-plus"></i>
-                    Tambah Data
+                    <i class="ti-plus"></i> Tambah Data
                 </button>
             </div>
         </div>
@@ -49,8 +51,15 @@
                         <tr>
                             <th width="100px">Action</th>
                             <th>Pasien</th>
-                            <th>Dokter</th>
+                            <th>Triase</th>
+                            <th>Bed</th>
+                            <th>No RM/ Reg</th>
+                            <th>Alamat</th>
+                            <th>Jaminan</th>
                             <th>Tgl Masuk</th>
+                            <th>Dokter</th>
+                            <th>Instruksi</th>
+                            <th>Del</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,24 +74,75 @@
 @push('js')
     <script type="text/javascript">
         $(document).ready(function() {
-            // Server-side processing DataTables
             $('#rawatDaruratTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": "{{ route('gawat-darurat.index') }}", // Sesuaikan dengan route yang sesuai
-                "columns": [
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                    {data: 'kd_pasien', name: 'kd_pasien'},
-                    {data: 'kd_dokter', name: 'kd_dokter'},
-                    {data: 'tgl_masuk', name: 'tgl_masuk'},
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('gawat-darurat.index') }}",
+                columns: [{
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'profile',
+                        name: 'profile',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'triase',
+                        name: 'triase',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'bed',
+                        name: 'bed',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'kd_pasien',
+                        name: 'RM :kd_pasien',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'alamat',
+                        name: 'alamat',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'jaminan',
+                        name: 'jaminan',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'instruksi',
+                        name: 'instruksi',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'kd_dokter',
+                        name: 'kd_dokter',
+                        defaultContent: 'null'
+                    },
+                    {
+                        data: 'tgl_masuk',
+                        name: 'tgl_masuk',
+                        defaultContent: 'null'
+                    },
+                    {
+                        data: 'del',
+                        name: 'del',
+                        orderable: false,
+                        searchable: false
+                    },
                 ],
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                responsive: true,
             });
         });
     </script>
