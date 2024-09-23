@@ -2,12 +2,17 @@
 
 @section('content')
     @push('css')
+<<<<<<< HEAD
         <style>
+=======
+        <<style>
+>>>>>>> 5e7e14d (data dawat darurat)
             .badge {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
             }
+<<<<<<< HEAD
 
             .badge-triage-yellow {
                 background-color: #ffeb3b;
@@ -45,6 +50,17 @@
                 font-size: 12px;
                 color: #777;
             }
+=======
+            .badge-triage-yellow {
+                background-color: #ffeb3b;
+            }
+            .badge-triage-red {
+                background-color: #f44336;
+            }
+            .badge-triage-green {
+                background-color: #4caf50;
+            }
+>>>>>>> 5e7e14d (data dawat darurat)
         </style>
     @endpush
 
@@ -62,7 +78,12 @@
                     </select>
                 </div>
                 <button type="button" class="btn btn-primary btn-sm" id="createRawatDarurat">
+<<<<<<< HEAD
                     <i class="ti-plus"></i> Tambah Data
+=======
+                    <i class="ti-plus"></i>
+                    Tambah Data
+>>>>>>> 5e7e14d (data dawat darurat)
                 </button>
             </div>
         </div>
@@ -78,7 +99,11 @@
                             <th>Pasien</th>
                             <th>Triase</th>
                             <th>Bed</th>
+<<<<<<< HEAD
                             <th>No RM / Reg</th>
+=======
+                            <th>No RM/ Reg</th>
+>>>>>>> 5e7e14d (data dawat darurat)
                             <th>Alamat</th>
                             <th>Jaminan</th>
                             <th>Tgl Masuk</th>
@@ -88,7 +113,44 @@
                         </tr>
                     </thead>
                     <tbody>
+<<<<<<< HEAD
                         {{-- Tabel diisi oleh DataTables --}}
+=======
+                        @foreach ($DataKunjungan as $item)
+                            <tr>
+                                <td>
+                                    <a href="" class="btn btn-sm btn-secondary"><i class="ti-pencil-alt"></i></a>
+                                    <a href="" class="btn btn-sm btn-secondary">...</a>
+                                </td>
+
+                                <td class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{ asset('assets/images/avatar1.png') }}" alt="person" width="50" height="50">
+                                    <div class="ms-3">
+                                        <span class="d-block fw-bold" style="font-size: 16px;">M.Anas</span>
+                                        <span class="text-muted" style="font-size: 14px;">Laki-Laki/ 43 Tahun</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-triage-green"> </span></td>
+                                <td>12</td>
+                                <td>RM: {{ $item->kd_pasien }} <br> Reg : 00000001</td>
+                                <td>{{ $item->alamat }}</td>
+                                <td>BPJS Kesehatan</td>
+                                <td>{{ \Carbon\Carbon::parse($item->tgl_masuk)->translatedFormat('d F Y') }}</td>
+                                <td>{{ $item->kd_dokter }}</td>
+                                <td>Instruksi</td>
+                                <td>
+                                    <form action="" method="POST" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+>>>>>>> 5e7e14d (data dawat darurat)
                     </tbody>
                 </table>
             </div>
@@ -98,6 +160,7 @@
 
 @push('js')
     <script type="text/javascript">
+<<<<<<< HEAD
         var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";        
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
@@ -203,6 +266,17 @@
                 info: true,
                 autoWidth: false,
                 responsive: true,
+=======
+        $(document).ready(function() {
+            $('#rawatDaruratTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+>>>>>>> 5e7e14d (data dawat darurat)
             });
         });
     </script>
