@@ -26,7 +26,6 @@
         ];
     @endphp
 
-    <div class="container">
         <div class="row">
             <!-- Patient Card Section -->
             <div class="col-md-3">
@@ -126,5 +125,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection
