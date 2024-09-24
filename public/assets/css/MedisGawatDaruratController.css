@@ -1,0 +1,187 @@
+.header-background {
+    background-color: #fff;
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-content {
+    color: white;
+    text-align: center;
+    z-index: 2;
+}
+
+/* Styling for navigation bar */
+.nav-icons {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 15px;
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    width: 100%;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.nav-icons a img {
+    margin-right: 4px;
+}
+
+.nav-icons a span {
+    color: #000;
+}
+
+/* Styling for patient card */
+.patient-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.patient-photo img {
+    border-radius: 10px;
+    width: 50%;
+    height: auto;
+}
+
+.status-indicators {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+.status-indicator.red {
+    background-color: red;
+}
+
+.status-indicator.orange {
+    background-color: orange;
+}
+
+.status-indicator.green {
+    background-color: green;
+}
+
+.patient-info {
+    margin-top: 5px;
+}
+
+.patient-info h6 {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.patient-info small {
+    color: #6c757d;
+}
+
+.patient-meta {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.patient-meta i {
+    margin-right: 5px;
+}
+
+/* Adjustments for tablet and mobile view */
+@media (max-width: 1024px) {
+    .header-background {
+        height: 400px; /* Decrease the height for tablet and mobile view */
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap; /* Allow wrapping in case of insufficient space */
+        justify-content: center;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 15px;
+        position: relative; /* Ensure it remains at the top */
+        top: 10px;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .nav-icons a {
+        font-size: 10px; /* Slightly larger font size for better readability */
+    }
+
+    .patient-photo img {
+        width: 40%; /* Adjust image width for tablet */
+    }
+
+    .patient-info h6 {
+        font-size: 14px; /* Slightly larger font size for tablet and mobile */
+    }
+
+    .patient-meta {
+        font-size: 11px; /* Adjust font size to be readable on both tablet and mobile */
+    }
+}
+
+/* Mobile view - Keep layout same as tablet */
+@media (max-width: 576px) {
+    .header-background {
+        height: 400px; /* Same height as tablet view */
+    }
+
+    .nav-icons {
+        flex-direction: row; /* Keep horizontal layout */
+        position: relative; /* Remove fixed positioning, keep it at the top */
+        top: 10px;
+        width: 100%; /* Full width */
+        justify-content: center; /* Center align the icons */
+    }
+
+    .nav-icons a {
+        font-size: 10px; /* Consistent font size for small devices */
+        margin-bottom: 0; /* No extra margin */
+    }
+
+    .patient-photo img {
+        width: 40%; /* Same as tablet view */
+    }
+
+    .patient-info h6 {
+        font-size: 14px; /* Consistent font size */
+    }
+
+    .patient-meta {
+        font-size: 11px; /* Consistent font size */
+    }
+
+    .content-wrapper {
+        padding-bottom: 0px; /* No extra padding needed for the bottom */
+    }
+}
