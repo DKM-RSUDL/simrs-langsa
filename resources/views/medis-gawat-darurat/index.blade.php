@@ -26,7 +26,8 @@
         ];
     @endphp
 
-        <div class="row">
+    <div class="content-wrapper">
+        <div class="row same-height">
             <!-- Patient Card Section -->
             <div class="col-md-3">
                 <div class="position-relative patient-card">
@@ -63,7 +64,7 @@
                 </div>
 
                 <!-- Task List -->
-                <div class="mt-2">
+                <div class="position-relative patient-card mt-2">
                     <div class="card-header">
                         <h4>Task:</h4>
                     </div>
@@ -119,10 +120,11 @@
                     </div>
 
                     <!-- Header content (Text) -->
-                    <div class="header-content">
+                    <div class="tab-content">
                         <h1>Dokter Dashboard</h1>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection
