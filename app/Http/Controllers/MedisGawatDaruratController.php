@@ -2,12 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kunjungan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class MedisGawatDaruratController extends Controller
 {
-    public function index()
+    public function index($kd_pasien)
     {
-        return view('medis-gawat-darurat.index');
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+            ->where('kd_pasien', $kd_pasien)
+            ->first();
+
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        return view('medis-gawat-darurat.index', compact('dataMedis'));
+    }
+
+
+    public function asesmen($kd_pasien)
+    {
+
+        return view('medis-gawat-darurat.asesmen');
     }
 }

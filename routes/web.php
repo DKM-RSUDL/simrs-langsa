@@ -40,7 +40,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('bedah', BedahController::class);
         });
         Route::resource('gawat-darurat', GawatDaruratController::class);
-        Route::get('medis-gawat-darurat', [MedisGawatDaruratController::class, 'index'])->name('medis-gawat-darurat.index');
+        Route::get('medis-gawat-darurat/action/{kd_pasien}', [MedisGawatDaruratController::class, 'index'])->name('medis-gawat-darurat.index');
+        Route::get('asesmen', [MedisGawatDaruratController::class, 'asesmen'])->name('asesmen');
 
     });
 

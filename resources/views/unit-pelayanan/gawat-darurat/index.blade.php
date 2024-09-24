@@ -98,8 +98,8 @@
 
 @push('js')
     <script type="text/javascript">
-    var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
-    var medisGawatDaruratIndexUrl = "{{ route('medis-gawat-darurat.index') }}";
+        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
+        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/medis-gawat-darurat/action') }}/";
 
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({
@@ -112,7 +112,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return '<a href="' + medisGawatDaruratIndexUrl + '" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a>' +
+                            return '<a href="' + medisGawatDaruratIndexUrl + row.kd_pasien + '" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a>' +
                                 '<a href="#" class="btn btn-secondary btn-sm">...</a>';
                         }
                     },
@@ -120,8 +120,10 @@
                         data: 'profile',
                         name: 'profile',
                         render: function(data, type, row) {
-                            let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row.foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
-                            let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' : 'Perempuan';
+                            let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
+                                .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
+                            let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
+                            'Perempuan';
                             return `
                                 <div class="profile">
                                     <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
@@ -146,19 +148,19 @@
                         defaultContent: ''
                     },
                     {
-                    data: 'kd_pasien',
-                    name: 'kd_pasien',
-                    render: function(data, type, row) {
-                        // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
-                        return `
+                        data: 'kd_pasien',
+                        name: 'kd_pasien',
+                        render: function(data, type, row) {
+                            // Assuming row.kd_pasien is the "RM" and row.reg_number is the "Reg" value
+                            return `
                             <div class="rm-reg">
                                 RM: ${row.kd_pasien ? row.kd_pasien : 'N/A'}<br>
                                 Reg: ${row.reg_number ? row.reg_number : 'N/A'}
                             </div>
                         `;
+                        },
+                        defaultContent: ''
                     },
-                    defaultContent: ''
-                },
                     {
                         data: 'alamat',
                         name: 'alamat',
