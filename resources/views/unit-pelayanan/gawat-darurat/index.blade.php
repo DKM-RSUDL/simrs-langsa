@@ -140,7 +140,7 @@
                     {
                         data: 'triase',
                         name: 'triase',
-                        defaultContent: ''
+                        defaultContent: 'null'
                     },
                     {
                         data: 'bed',

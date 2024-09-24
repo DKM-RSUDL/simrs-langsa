@@ -48,4 +48,5 @@ class GawatDaruratController extends Controller
 
         return view('unit-pelayanan.gawat-darurat.index');
     }
+
 }

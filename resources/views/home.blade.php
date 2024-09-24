@@ -55,7 +55,7 @@
 
             <div class="col-md-4">
                 <div class="card text-center mb-4 p-3">
-                    <div class="date mx-auto">
+                    <div class="mx-auto">
                         <h5 class="card-title">Tanggal</h5>
                         <p class="card-text">{{ date('d F Y') }}</p> <!-- Example date -->
                     </div>
