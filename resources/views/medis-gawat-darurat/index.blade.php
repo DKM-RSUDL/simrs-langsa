@@ -121,7 +121,7 @@
 
                     <!-- Header content (Text) -->
                     <div class="tab-content">
-                        <h1>Dokter Dashboard</h1>
+                        @yield('content')
                     </div>
                 </div>
             </div>

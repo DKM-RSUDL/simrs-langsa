@@ -29,7 +29,8 @@ class MedisGawatDaruratController extends Controller
     }
 
 
-    public function asesmen($kd_pasien)
+
+    public function asesmen()
     {
 
         return view('medis-gawat-darurat.asesmen');
