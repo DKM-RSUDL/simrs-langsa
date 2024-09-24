@@ -26,8 +26,7 @@
         ];
     @endphp
 
-    <div class="content-wrapper">
-        <div class="row same-height">
+        <div class="row">
             <!-- Patient Card Section -->
             <div class="col-md-3">
                 <div class="position-relative patient-card">
@@ -64,68 +63,66 @@
                 </div>
 
                 <!-- Task List -->
-                <div class="position-relative patient-card mt-3">
-                    <div class="mt-2">
-                        <div class="card-header">
-                            <h4>Task:</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul class="timeline-xs">
-                                <li class="timeline-item success">
-                                    <div class="margin-left-15">
-                                        <p>Asesmen Awal Medis</p>
-                                    </div>
-                                </li>
-                                <li class="timeline-item success">
-                                    <div class="margin-left-15">
-                                        <p>Asesmen Awal Keperawatan</p>
-                                    </div>
-                                </li>
-                                <li class="timeline-item success">
-                                    <div class="margin-left-15">
-                                        <p>Order Laboratorium</p>
-                                    </div>
-                                </li>
-                                <li class="timeline-item info">
-                                    <div class="margin-left-15">
-                                        <p>Resume Medis -(belum final)</p>
-                                    </div>
-                                </li>
-                                <li class="timeline-item info">
-                                    <div class="margin-left-15">
-                                        <p>Perintah Rawat Inap</p>
-                                    </div>
-                                </li>
-                                <li class="timeline-item info">
-                                    <div class="margin-left-15">
-                                        <p>Selesai</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="mt-2">
+                    <div class="card-header">
+                        <h4>Task:</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="timeline-xs">
+                            <li class="timeline-item success">
+                                <div class="margin-left-15">
+                                    <p>Asesmen Awal Medis</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item success">
+                                <div class="margin-left-15">
+                                    <p>Asesmen Awal Keperawatan</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item success">
+                                <div class="margin-left-15">
+                                    <p>Order Laboratorium</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>Resume Medis -(belum final)</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>Perintah Rawat Inap</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item info">
+                                <div class="margin-left-15">
+                                    <p>Selesai</p>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Navigation and Header Section -->
             <div class="col-md-9">
-                <div class="card-body">
-                    <ul class="nav nav-tabs-b mb-3">
+                <div class="header-background">
+                    <!-- Navigation bar inside header -->
+                    <div class="nav-icons">
                         @foreach ($navItems as $item)
-                            <li class="nav-item-b">
-                                <a href="{{ $item['link'] }}" class="nav-link">
-                                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}"
-                                        alt="{{ $item['label'] }} Icon" width="25">
-                                    <span>{{ $item['label'] }}</span>
-                                </a>
-                            </li>
+                            <a href="{{ $item['link'] }}">
+                                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon"
+                                    width="25">
+                                <span>{{ $item['label'] }}</span>
+                            </a>
                         @endforeach
-                    </ul>
-                    <div class="tab-content">
-                        
+                    </div>
+
+                    <!-- Header content (Text) -->
+                    <div class="header-content">
+                        <h1>Dokter Dashboard</h1>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 @endsection

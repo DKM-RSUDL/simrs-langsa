@@ -3,6 +3,7 @@
     background-size: cover;
     background-position: center;
     height: 500px;
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -38,6 +39,7 @@
     align-items: center;
     font-size: 9px;
     font-weight: bold;
+    width: 100%;
 }
 
 .nav-icons a img {
@@ -91,12 +93,6 @@
 
 .patient-info {
     margin-top: 5px;
-}
-
-.patient-info h6 {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 5px;
 }
 
 .patient-info small {
