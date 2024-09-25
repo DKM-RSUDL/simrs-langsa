@@ -98,8 +98,8 @@
 
 @push('js')
     <script type="text/javascript">
-        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
-        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/medis-gawat-darurat/action') }}/";
+        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";        
+        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
         $(document).ready(function() {
             $('#rawatDaruratTable').DataTable({

@@ -112,72 +112,72 @@
 /* Adjustments for tablet and mobile view */
 @media (max-width: 1024px) {
     .header-background {
-        height: 400px; /* Decrease the height for tablet and mobile view */
+        height: 400px;
     }
 
     .nav-icons {
         display: flex;
         gap: 8px;
-        flex-wrap: wrap; /* Allow wrapping in case of insufficient space */
+        flex-wrap: wrap;
         justify-content: center;
         padding: 10px;
         background-color: #fff;
         border-radius: 15px;
-        position: relative; /* Ensure it remains at the top */
+        position: relative;
         top: 10px;
         z-index: 1;
         width: 100%;
     }
 
     .nav-icons a {
-        font-size: 10px; /* Slightly larger font size for better readability */
+        font-size: 10px;
     }
 
     .patient-photo img {
-        width: 40%; /* Adjust image width for tablet */
+        width: 40%;
     }
 
     .patient-info h6 {
-        font-size: 14px; /* Slightly larger font size for tablet and mobile */
+        font-size: 14px;
     }
 
     .patient-meta {
-        font-size: 11px; /* Adjust font size to be readable on both tablet and mobile */
+        font-size: 11px;
     }
 }
 
 /* Mobile view - Keep layout same as tablet */
 @media (max-width: 576px) {
     .header-background {
-        height: 400px; /* Same height as tablet view */
+        height: 400px;
     }
 
     .nav-icons {
-        flex-direction: row; /* Keep horizontal layout */
-        position: relative; /* Remove fixed positioning, keep it at the top */
+        flex-direction: row;
+        position: relative;
         top: 10px;
-        width: 100%; /* Full width */
-        justify-content: center; /* Center align the icons */
+        width: 100%;
+        justify-content: center;
     }
 
     .nav-icons a {
-        font-size: 10px; /* Consistent font size for small devices */
-        margin-bottom: 0; /* No extra margin */
+        font-size: 10px;
+        margin-bottom: 0;
     }
 
     .patient-photo img {
-        width: 40%; /* Same as tablet view */
+        width: 40%;
     }
 
     .patient-info h6 {
-        font-size: 14px; /* Consistent font size */
+        font-size: 14px;
     }
 
     .patient-meta {
-        font-size: 11px; /* Consistent font size */
+        font-size: 11px;
     }
 
     .content-wrapper {
-        padding-bottom: 0px; /* No extra padding needed for the bottom */
+        padding-bottom: 0px;
     }
 }
