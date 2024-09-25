@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Str;
 
-$host = "192.168.13.4";
+// $host = "192.168.13.4";
+$host = "DESKTOP-OOSJSA1";
 $port = "";
-$database = "rslangsa_test";
+$database = "rslangsa";
 
 return [
 
@@ -82,21 +83,38 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        // 'sqlsrv_rslangsa' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => '',
+        //     'host' => $host,
+        //     'port' => $port,
+        //     'database' => $database,
+        //     'username' => 'sa',
+        //     'password' => '1Tlangsa',
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'options' => [
+        //         PDO::ATTR_CASE => PDO::CASE_LOWER,
+        //     ],
+        // ],
+
         'sqlsrv_rslangsa' => [
             'driver' => 'sqlsrv',
-            'url' => '',
-            'host' => $host,
-            'port' => $port,
-            'database' => $database,
-            'username' => 'sa',
-            'password' => '1Tlangsa',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '1433'),
+            'database' => env('DB_DATABASE', ''),
+            'username' => env('DB_USERNAME', ''),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
             'prefix' => '',
-            'prefix_indexes' => true,
+            'schema' => 'dbo',
             'options' => [
                 PDO::ATTR_CASE => PDO::CASE_LOWER,
             ],
         ],
+
 
     ],
 
