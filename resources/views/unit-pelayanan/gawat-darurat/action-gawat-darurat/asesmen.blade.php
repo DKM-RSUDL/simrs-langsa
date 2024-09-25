@@ -1,9 +1,10 @@
-@extends('medis-gawat-darurat.index')
+@extends('layouts.administrator.master')
+{{-- @extends('unit-pelayanan.gawat-darurat.action-gawat-darurat.index') --}}
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+@endpush
 
 @section('content')
-    <div class="asesmen-container">
-        <h1>Asesmen Medis</h1>
-        <p>Ini adalah halaman untuk melakukan asesmen medis pasien.</p>
-        <!-- Contoh tabel atau formulir asesmen bisa ditambahkan di sini -->
-    </div>
+    asesmen
 @endsection
