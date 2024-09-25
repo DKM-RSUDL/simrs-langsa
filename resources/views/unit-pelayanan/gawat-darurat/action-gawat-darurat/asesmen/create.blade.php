@@ -225,6 +225,25 @@
                                                     <input type="number" class="form-control" placeholder="Input 8">
                                                 </div>
                                             </div>
+                                            <div class="col-md-6"> <!-- Change to col-md-4 for a third width -->
+                                                <label>Tingkat Kesadaran (AVPU) </label>
+                                                <input type="number" class="form-control" placeholder="AVPU">
+                                            </div>
+
+                                            <!-- Visual Analog -->
+                                            <h5>Visual Analog/Numeric</h5>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <label>Nyeri</label>
+                                                    <input type="number" class="form-control">
+                                                </div>
+                                                <!-- Image Next to Input -->
+                                                <div class="col-md-6">
+                                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                                        alt="Descriptive Alt Text" style="width: 100%; height: auto;">
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

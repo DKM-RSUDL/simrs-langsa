@@ -78,6 +78,17 @@
                                     <li><a class="dropdown-item" href="#">Kategori 3</a></li>
                                 </ul>
                             </div>
+
+                            <!-- Filter Tanggal -->
+                            <div class="d-flex align-items-center me-2">
+                                <label class="me-2">Dari: </label>
+                                <input type="date" class="form-control me-2" id="startDate" name="start_date">
+                            </div>
+                            <div class="d-flex align-items-center me-2">
+                                <label class="me-2">Sampai: </label>
+                                <input type="date" class="form-control me-2" id="endDate" name="end_date">
+                            </div>
+
                             <div class="d-flex ms-auto">
                                 <input type="text" class="form-control w-100 me-2" placeholder="Search...">
                                 <button class="btn btn-primary" data-bs-toggle="modal"
@@ -116,8 +127,9 @@
                                                 <span class="fw-bold">Mar-24</span> <br>
                                                 <span class="fw">08:00</span>
                                             </div>
-                                            <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3"
-                                                alt="Foto Pasien" width="70" height="70">
+                                            <img src="{{ asset('assets/images/avatar1.png') }}"
+                                                class="rounded-circle me-3" alt="Foto Pasien" width="70"
+                                                height="70">
                                             <div>
                                                 <span class="text-primary fw-bold">Asesmen Awal Keperawatan-Pasien
                                                     Umum/Dewasa</span> <br>
