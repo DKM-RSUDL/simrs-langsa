@@ -3,11 +3,6 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <style>
-            .header-background {
-                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-            }
-        </style>
     @endpush
 
     @php
@@ -121,7 +116,7 @@
 
                     <!-- Header content (Text) -->
                     <div class="tab-content">
-                        @yield('content')
+                        dsadas
                     </div>
                 </div>
             </div>
