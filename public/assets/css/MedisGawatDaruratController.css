@@ -2,7 +2,7 @@
     background-color: #fff;
     background-size: cover;
     background-position: center;
-    height: 100px;
+    height: 70px;
     width: 100%;
     position: relative;
     display: flex;
@@ -63,6 +63,12 @@
 .patient-photo img {
     border-radius: 10px;
     width: 50%;
+    height: auto;
+}
+
+.patient-photo-asesmen img {
+    border-radius: 10px;
+    width: 70%;
     height: auto;
 }
 
