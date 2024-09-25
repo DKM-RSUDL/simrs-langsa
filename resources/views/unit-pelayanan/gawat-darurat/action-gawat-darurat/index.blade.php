@@ -13,7 +13,7 @@
     @php
         // Array that stores the navigation data
         $navItems = [
-            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen')],
+            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien)],
             ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => '#'],
             ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => '#'],
             ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => '#'],

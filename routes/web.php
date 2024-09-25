@@ -5,6 +5,7 @@ use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\AsesmenController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,10 +40,16 @@ Route::middleware('auth')->group(function () {
         Route::prefix('ruang-klinik')->group(function () {
             Route::resource('bedah', BedahController::class);
         });
+
         Route::resource('gawat-darurat', GawatDaruratController::class);
-        Route::get('medis-gawat-darurat/action/{kd_pasien}', [MedisGawatDaruratController::class, 'index'])->name('medis-gawat-darurat.index');
-        Route::get('asesmen', [MedisGawatDaruratController::class, 'asesmen'])->name('asesmen');
 
+        Route::prefix('gawat-darurat')->group(function () {
+            Route::prefix('pelayanan')->group(function () {
+                Route::prefix('/{kd_pasien}')->group(function () {
+                    Route::resource('/', MedisGawatDaruratController::class);
+                    Route::resource('asesmen', AsesmenController::class);
+                });
+            });
+        });
     });
-
 });

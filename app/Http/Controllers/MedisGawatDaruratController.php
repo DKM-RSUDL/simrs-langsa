@@ -25,13 +25,6 @@ class MedisGawatDaruratController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('medis-gawat-darurat.index', compact('dataMedis'));
-    }
-
-
-    public function asesmen($kd_pasien)
-    {
-
-        return view('medis-gawat-darurat.asesmen');
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.index', compact('dataMedis'));
     }
 }
