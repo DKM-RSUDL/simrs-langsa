@@ -2,7 +2,7 @@
     background-color: #fff;
     background-size: cover;
     background-position: center;
-    height: 100px;
+    height: 70px;
     width: 100%;
     position: relative;
     display: flex;
@@ -58,6 +58,7 @@
     width: 100%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    border: none;
 }
 
 .patient-photo img {
