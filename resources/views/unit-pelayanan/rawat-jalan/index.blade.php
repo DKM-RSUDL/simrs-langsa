@@ -34,7 +34,7 @@
         <p>Pilih ruang/klinik pelayanan pasien:</p>
         <div class="row">
             @foreach ($cards as $card)
-                <div class="col-md-3 p-2">
+                <div class="col-md-2 p-2">
                     <a href="{{ isset($card['url']) ? route($card['url']) : '#' }}" class="text-decoration-none card-hover">
                         <div class="card mb-3 rounded-5 bg-white dark:bg-dark text-dark dark:text-light">
                             <div class="card-body text-center">
