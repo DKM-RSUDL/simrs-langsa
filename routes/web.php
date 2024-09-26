@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
+use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\UnitPelayanan\AsesmenController;
+use App\Http\Controllers\UnitPelayanan\CpptController;
 
 
 
@@ -38,7 +41,17 @@ Route::middleware('auth')->group(function () {
         Route::prefix('ruang-klinik')->group(function () {
             Route::resource('bedah', BedahController::class);
         });
-        Route::resource('gawat-darurat', GawatDaruratController::class);
-    });
 
+        Route::resource('gawat-darurat', GawatDaruratController::class);
+
+        Route::prefix('gawat-darurat')->group(function () {
+            Route::prefix('pelayanan')->group(function () {
+                Route::prefix('/{kd_pasien}')->group(function () {
+                    Route::resource('/', MedisGawatDaruratController::class);
+                    Route::resource('asesmen', AsesmenController::class);
+                    Route::resource('cppt', CpptController::class);
+                });
+            });
+        });
+    });
 });

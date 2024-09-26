@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Str;
 
-$host = "192.168.13.4";
+// $host = "192.168.13.4";
+$host = "DESKTOP-OOSJSA1";
 $port = "";
-$database = "rslangsa_test";
+$database = "rslangsa";
 
 return [
 
@@ -113,6 +114,7 @@ return [
                 PDO::ATTR_CASE => PDO::CASE_LOWER,
             ],
         ],
+
 
     ],
 

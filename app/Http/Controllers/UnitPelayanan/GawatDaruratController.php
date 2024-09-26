@@ -17,7 +17,7 @@ class GawatDaruratController extends Controller
             $data = Kunjungan::with(['pasien', 'dokter', 'customer']);
 
             return DataTables::of($data)
-                ->order(function($query) {
+                ->order(function ($query) {
                     $query->orderBy('tgl_masuk', 'desc');
                 })
                 ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')
@@ -27,7 +27,7 @@ class GawatDaruratController extends Controller
                 ->addColumn('jaminan', fn($row) =>  $row->customer->customer ?: '-')
                 ->addColumn('instruksi', fn($row) => '' ?: '-')
                 ->addColumn('kd_dokter', fn($row) => $row->dokter->nama ?: '-')
-                ->addColumn('tgl_masuk', function($row) {
+                ->addColumn('tgl_masuk', function ($row) {
 
                     $tglMasuk = Carbon::parse($row->tgl_masuk)->format('d M Y');
                     $jamMasuk = date('H:i', strtotime($row->jam_masuk));

@@ -1,0 +1,225 @@
+.header-background {
+    background-color: #fff;
+    background-size: cover;
+    background-position: center;
+    height: 70px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-content {
+    color: white;
+    text-align: center;
+    z-index: 2;
+}
+
+/* Styling for navigation bar */
+.nav-icons {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 15px;
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    width: 100%;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 9px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.nav-icons a img {
+    margin-right: 4px;
+}
+
+.nav-icons a span {
+    color: #000;
+}
+
+/* Styling for patient card */
+.patient-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border: none;
+}
+
+.patient-photo img {
+    border-radius: 10px;
+    width: 50%;
+    height: auto;
+}
+
+.patient-photo-asesmen img {
+    border-radius: 10px;
+    width: 70%;
+    height: auto;
+}
+
+.status-indicators {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+.status-indicator.red {
+    background-color: red;
+}
+
+.status-indicator.orange {
+    background-color: orange;
+}
+
+.status-indicator.green {
+    background-color: green;
+}
+
+.patient-info {
+    margin-top: 5px;
+}
+
+.patient-info small {
+    color: #6c757d;
+}
+
+.patient-meta {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.patient-meta i {
+    margin-right: 5px;
+}
+
+/* Adjustments for tablet and mobile view */
+@media (max-width: 1024px) {
+    .header-background {
+        height: 400px;
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 15px;
+        position: relative;
+        top: 10px;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .nav-icons a {
+        font-size: 10px;
+    }
+
+    .patient-photo img {
+        width: 40%;
+    }
+
+    .patient-info h6 {
+        font-size: 14px;
+    }
+
+    .patient-meta {
+        font-size: 11px;
+    }
+}
+
+/* Mobile view - Keep layout same as tablet */
+@media (max-width: 576px) {
+    .header-background {
+        height: 400px;
+    }
+
+    .nav-icons {
+        flex-direction: row;
+        position: relative;
+        top: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-icons a {
+        font-size: 10px;
+        margin-bottom: 0;
+    }
+
+    .patient-photo img {
+        width: 40%;
+    }
+
+    .patient-info h6 {
+        font-size: 14px;
+    }
+
+    .patient-meta {
+        font-size: 11px;
+    }
+
+    .content-wrapper {
+        padding-bottom: 0px;
+    }
+}
+
+
+/* Styling untuk kontainer checkbox */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.checkbox-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.inputs-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
