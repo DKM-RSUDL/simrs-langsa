@@ -1,0 +1,73 @@
+[33mf60c800[m[33m ([m[1;36mHEAD -> [m[1;32mharisdev[m[33m, [m[1;31morigin/harisdev[m[33m)[m Test
+[33mb53fefd[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33me0688cf[m Route-ActionGawatDarurat
+[33mab79daa[m Farmasi:Route
+[33maed782e[m membuat page cppt dan modifikasi
+[33m56575a0[m fitur cppt
+[33m5c0f334[m Merge remote-tracking branch 'origin/harisdev' into anasdelop
+[33m6c674e2[m Asesmen:Modal
+[33m047a4b7[m Merge remote-tracking branch 'origin/harisdev' into anasdelop
+[33m3796c3b[m menu cppt
+[33m0d60845[m Modal:Asesmen
+[33m8d0e90a[m Asesmen:UI
+[33m5d83069[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33mb575534[m Fixed
+[33me039231[m dinamic layouts action gawat darurat
+[33m8c8f070[m Commit
+[33m5ecf4f0[m modifikasi routing
+[33ma28a851[m fixed route
+[33m33e8f40[m modifikasi routing
+[33m6f3fe92[m Merge remote-tracking branch 'origin/harisdev' into anasdelop
+[33mbf5d38d[m Asesmen:Fixed
+[33mae62632[m Layout:fixed
+[33maed9273[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33m1afdaea[m assemen
+[33m81c1966[m modifikasi css
+[33m1f36bf1[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33m8655ec9[m Database:Config
+[33md5b232d[m edit route dinamis dan perbaiki page media gawat darurat
+[33m222f3f6[m modifikasi page medis gawat darurat
+[33me105595[m modifikasi link route
+[33m2bb73ba[m merge:igd
+[33mb986df5[m Merge remote-tracking branch 'origin/rizaldev' into anasdelop
+[33m63eb85c[m page medis gawat darurat
+[33m913ceac[m merge
+[33mc556857[m Breadcrumb:css
+[33maa297cf[m add jaminan ke list pasien igd
+[33mb4ea836[m table-gawatdarurat
+[33m2c11692[m table-gawatdarurat
+[33m4d34c22[m pasien data
+[33mdf28fe8[m merge
+[33mc5dfa52[m anas
+[33mf00c2ff[m modifikasi page Gawat Darurat
+[33maaff8ff[m modifikasi page Gawat Darurat
+[33mcf8bc54[m model pasien dan dokter
+[33macf0fa9[m[33m ([m[1;32mrizaldev[m[33m)[m table:serverside
+[33m7e06f84[m table serverside
+[33mc1d743d[m table serverside
+[33m65aa4b3[m merge anas
+[33m46c9fa0[m merge anas
+[33m0003e50[m data gawat darurat
+[33md84931b[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33m5e7e14d[m data dawat darurat
+[33md2a8b6a[m Merge remote-tracking branch 'origin/anasdelop' into harisdev
+[33mde667d8[m merge main
+[33mdc6ebeb[m now
+[33m1e3be76[m modifikasi home dan rawat jalan
+[33mfa23e87[m menu rawat jalan
+[33me7ce521[m layout card
+[33m62d4088[m Change Table Users
+[33m55eb194[m Change Table Users
+[33m72c8691[m Change User Table
+[33mebac4d7[m Merge branch 'main' of https://github.com/DKM-RSUDL/simrs-langsa
+[33m5aafedf[m modifikasi menu rawat jalan
+[33ma2a2cfc[m[33m ([m[1;32manasdelop[m[33m)[m route rawat jalan/inap dan bedah
+[33m6f5ecce[m dashboard
+[33m01e01fb[m modifikasi page login dan non aktifkan register
+[33me835672[m css
+[33m586646d[m page-login
+[33m45da8e2[m manajemen user
+[33me540af8[m manajemen user
+[33mb5b7520[m manajemen user
+[33me8439d0[m manajemen user
+[33m0f0f465[m manajemen user
