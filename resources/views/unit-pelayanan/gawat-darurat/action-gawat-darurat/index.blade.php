@@ -27,7 +27,11 @@
             ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => '#'],
             ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => '#'],
             ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => '#'],
-            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => '#'],
+            [
+                'icon' => 'pill.png',
+                'label' => 'Farmasi',
+                'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien),
+            ],
             ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => '#'],
             ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => '#'],
             ['icon' => 'cv.png', 'label' => 'Resume', 'link' => '#'],
