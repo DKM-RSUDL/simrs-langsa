@@ -172,9 +172,9 @@
                                                 <table class="table table-bordered">
                                                     <thead>
                                                         <tr>
-                                                            <th>Tanggal/Jam</th>
-                                                            <th>Dokter</th>
-                                                            <th>Triage</th>
+                                                            <th>Alergen</th>
+                                                            <th>Reaksi</th>
+                                                            <th>Serve</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -188,7 +188,7 @@
                                             </div>
 
                                             <!-- Riwayat Perawatan -->
-                                            <h5>Vital Sign</h5>
+                                            <h5>Vital Sign <br> <span class="text-muted small">Frekuensi</span></h5>
                                             <div class="row mb-3">
                                                 <div class="col">
                                                     <label>TD (Sistole)</label>
@@ -203,14 +203,22 @@
                                                     <input type="number" class="form-control" placeholder="Input 3">
                                                 </div>
                                                 <div class="col">
+                                                    <label>Resp (x/mnt)</label>
+                                                    <input type="number" class="form-control" placeholder="Input 5">
+                                                </div>
+                                                <div class="col">
                                                     <label>Suhu (°C)</label>
                                                     <input type="number" class="form-control" placeholder="Input 4">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col">
-                                                    <label>Resp (x/mnt)</label>
-                                                    <input type="number" class="form-control" placeholder="Input 5">
+                                                    <label>CGS</label>
+                                                    <input type="number" class="form-control" placeholder="Input 8">
+                                                </div>
+                                                <div class="col">
+                                                    <label>AVPU </label>
+                                                    <input type="number" class="form-control" placeholder="AVPU">
                                                 </div>
                                                 <div class="col">
                                                     <label>SPO (tanpa O2)</label>
@@ -220,27 +228,89 @@
                                                     <label>SPO (dengan O2)</label>
                                                     <input type="number" class="form-control" placeholder="Input 7">
                                                 </div>
-                                                <div class="col">
-                                                    <label>CGS</label>
-                                                    <input type="number" class="form-control" placeholder="Input 8">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"> <!-- Change to col-md-4 for a third width -->
-                                                <label>Tingkat Kesadaran (AVPU) </label>
-                                                <input type="number" class="form-control" placeholder="AVPU">
                                             </div>
 
                                             <!-- Visual Analog -->
-                                            <h5>Visual Analog/Numeric</h5>
+                                            <h5>Skala Nyeri Visual Analog</h5>
                                             <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <label>Nyeri</label>
-                                                    <input type="number" class="form-control">
-                                                </div>
                                                 <!-- Image Next to Input -->
                                                 <div class="col-md-6">
                                                     <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
                                                         alt="Descriptive Alt Text" style="width: 100%; height: auto;">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Nyeri</label>
+                                                    <input type="number" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="container">
+                                                <!-- Antropometri Section -->
+                                                <div class="checkbox-container">
+                                                    <h5>Antropometri</h5>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="jarangAntro" name="jarangAntro">
+                                                        <label for="jarangAntro">Jarang</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="hilangTimbulAntro"
+                                                            name="hilangTimbulAntro">
+                                                        <label for="hilangTimbulAntro">Hilang timbul</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="terusMenerusAntro"
+                                                            name="terusMenerusAntro">
+                                                        <label for="terusMenerusAntro">Terus menerus</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="checkbox-container">
+                                                    <h5>Pemeriksaan Fisik</h5>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="jarangFisik" name="jarangFisik">
+                                                        <label for="jarangFisik">Jarang</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="hilangTimbulFisik"
+                                                            name="hilangTimbulFisik">
+                                                        <label for="hilangTimbulFisik">Hilang timbul</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" id="terusMenerusFisik"
+                                                            name="terusMenerusFisik">
+                                                        <label for="terusMenerusFisik">Terus menerus</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-4 mb-3">
+                                                <div class="col">
+                                                    <label>TB (meter)</label>
+                                                    <input type="number" class="form-control" placeholder="Input 1">
+                                                </div>
+                                                <div class="col">
+                                                    <label>BB (Kg)</label>
+                                                    <input type="number" class="form-control" placeholder="Input 2">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Lin. Kepala</label>
+                                                    <input type="number" class="form-control" placeholder="Input 3">
+                                                </div>
+                                                <div class="col">
+                                                    <label>LPT</label>
+                                                    <input type="number" class="form-control" placeholder="Input 5">
+                                                </div>
+                                                <div class="col">
+                                                    <label>IMT</label>
+                                                    <input type="number" class="form-control" placeholder="Input 4">
+                                                </div>
+                                            </div>
+
+
+                                            {{-- Pemeriksaan Fisik --}}
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <h5>Pemeriksaan Fisik</h5>
                                                 </div>
                                             </div>
 
