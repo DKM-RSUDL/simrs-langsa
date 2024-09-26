@@ -22,24 +22,16 @@
     @php
         // Prepare navigation items
         $navItems = [
-            [
-                'icon' => 'verified_badge.png',
-                'label' => 'Asesmen',
-                'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien),
-            ],
-            [
-                'icon' => 'positive_dynamic.png',
-                'label' => 'CPPT',
-                'link' => route('cppt.index', $dataMedis->pasien->kd_pasien),
-            ],
-            ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => '#'],
-            ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => '#'],
-            ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => '#'],
-            ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => '#'],
-            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => '#'],
-            ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => '#'],
-            ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => '#'],
-            ['icon' => 'cv.png', 'label' => 'Resume', 'link' => '#'],
+            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => route('cppt.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => route('tindakan.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => route('konsultasi.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => route('labor.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => route('radiologi.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => route('edukasi.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => route('careplan.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'cv.png', 'label' => 'Resume', 'link' => route('resume.index', $dataMedis->pasien->kd_pasien)],
         ];
 
         // Prepare content for each tab
@@ -300,10 +292,53 @@
 
 @push('js')
 <script>
-    // Event listener untuk membuka Modal Kedua tanpa menutup Modal Pertama
-    document.getElementById('openModalKedua').addEventListener('click', function() {
-        var modalKedua = new bootstrap.Modal(document.getElementById('verticalCenter'));
-        modalKedua.show();
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const dataList = document.getElementById('dataList');
+        const items = dataList.querySelectorAll('.dropdown-item');
+
+        // dropdown saat input di klik
+        searchInput.addEventListener('focus', function () {
+            dataList.classList.add('show');
+        });
+
+        // dropdown user mulai mengetik
+        searchInput.addEventListener('input', function () {
+            const filter = searchInput.value.toLowerCase();
+            let hasVisibleItems = false;
+
+            items.forEach(function (item) {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Jika tidak ada item yang cocok, tutup dropdown
+            if (hasVisibleItems) {
+                dataList.classList.add('show');
+            } else {
+                dataList.classList.remove('show');
+            }
+        });
+
+        // Event listener untuk klik pada item dropdown
+        items.forEach(function (item) {
+            item.addEventListener('click', function () {
+                searchInput.value = this.textContent;
+                dataList.classList.remove('show');
+            });
+        });
+
+        // Menyembunyikan dropdown saat klik di luar
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.dropdown')) {
+                dataList.classList.remove('show');
+            }
+        });
     });
 </script>
 
