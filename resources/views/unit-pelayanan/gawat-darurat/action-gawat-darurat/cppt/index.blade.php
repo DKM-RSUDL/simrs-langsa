@@ -147,8 +147,8 @@
 
                     <!-- Start Date -->
                     <div class="col-md-2">
-                    <input type="date" name="start_date" id="start_date" class="form-control"
-                        placeholder="Dari Tanggal">
+                        <input type="date" name="start_date" id="start_date" class="form-control"
+                            placeholder="Dari Tanggal">
                     </div>
 
                     <!-- End Date -->
@@ -297,3 +297,14 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+<script>
+    // Event listener untuk membuka Modal Kedua tanpa menutup Modal Pertama
+    document.getElementById('openModalKedua').addEventListener('click', function() {
+        var modalKedua = new bootstrap.Modal(document.getElementById('verticalCenter'));
+        modalKedua.show();
+    });
+</script>
+
+@endpush
