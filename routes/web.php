@@ -15,8 +15,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\UnitPelayanan\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\CpptController;
-
-
+use App\Http\Controllers\UnitPelayanan\FarmasiController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 Route::middleware('guest')->group(function () {
@@ -50,6 +49,7 @@ Route::middleware('auth')->group(function () {
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', AsesmenController::class);
                     Route::resource('cppt', CpptController::class);
+                    Route::resource('farmasi', FarmasiController::class);
                 });
             });
         });

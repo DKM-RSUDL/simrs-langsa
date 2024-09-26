@@ -308,7 +308,7 @@
 
 
                                             {{-- Pemeriksaan Fisik --}}
-                                            <div class="row mb-3">
+                                            <div id="exam-list" class="row mb-3">
                                                 <div class="col-md-12">
                                                     <h5>Pemeriksaan Fisik</h5>
                                                 </div>
