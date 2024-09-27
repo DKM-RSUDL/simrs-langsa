@@ -1,11 +1,11 @@
 <!-- Button untuk membuka modal kedua -->
-<button class="btn btn-sm btn-secondary" id="openVerticalCenterModal"><i class="bi bi-plus-square"></i> Tambah</button>
+<button type="button" class="btn btn-sm" id="openVerticalCenterModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
 <div class="modal fade" id="verticalCenter" tabindex="-1" aria-labelledby="verticalCenterLabel" aria-hidden="true"
     style="z-index: 1060;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
+            <div class="modal-header">
                 <h5 class="modal-title" id="verticalCenterLabel">Input Diagnosis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -29,7 +29,7 @@
                             <li><a class="dropdown-item" href="#">Sakit Gigi</a></li>
                         </ul>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary mt-2 float-end">Tambah/Enter</button>
+                    <button type="submit" class="btn btn-sm btn-primary mt-2 float-end">Tambah</button>
                 </form>
 
                 <h6 class="fw-bold mt-5">Daftar Diagnosis</h6>
