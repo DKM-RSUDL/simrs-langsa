@@ -17,7 +17,7 @@
                     <input class="form-check-input" type="radio" name="status_obat" id="diberikan_obat" value="diberikan"
                         checked>
                     <label class="form-check-label" for="diberikan_obat">
-                        Diberikan Obat
+                        Diberikan Obat -tes
                     </label>
                 </div>
                 <div class="form-check">
