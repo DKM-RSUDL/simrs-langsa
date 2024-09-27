@@ -53,11 +53,6 @@
             justify-content: center;
         }
 
-        .login__right img {
-            width: 100px;
-            margin: 0 auto 20px auto;
-        }
-
         .btn__custom {
             background: linear-gradient(90.04deg, #1C9D41 2.03%, #B6D427 132%);
             color: white;
