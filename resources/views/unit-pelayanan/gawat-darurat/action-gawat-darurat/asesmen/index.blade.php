@@ -74,13 +74,13 @@
                     <div class="card-body">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                                    type="button" role="tab" aria-controls="home" aria-selected="true">Asesmen Awal
+                                <button class="nav-link active" id="asesmen-tab" data-bs-toggle="tab" data-bs-target="#asesmen"
+                                    type="button" role="tab" aria-controls="asesmen" aria-selected="true">Asesmen Awal
                                     Medis</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-                                    type="button" role="tab" aria-controls="profile" aria-selected="false">Skrining
+                                <button class="nav-link" id="skrining-tab" data-bs-toggle="tab" data-bs-target="#skrining"
+                                    type="button" role="tab" aria-controls="skrining" aria-selected="false">Skrining
                                     Khusus</button>
                             </li>
                         </ul>
@@ -135,16 +135,18 @@
                                 </div>
 
                                 <!-- Button "Tambah" di sebelah kanan -->
-                                <div class="col-md-2 d-flex justify-content-end">
-                                    <button class="btn btn-primary ms-auto" data-bs-toggle="modal"
-                                        data-bs-target="#detailPasienModal">Tambah</button>
+                                <div class="col-md-2 d-grid gap-2">
+                                    <button class="btn mb-2 btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#detailPasienModal" type="button">
+                                        <i class="ti-plus"></i> Tambah
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel"
-                                aria-labelledby="home-tab">
+                            <div class="tab-pane fade show active" id="asesmen" role="tabpanel"
+                                aria-labelledby="asesmen-tab">
                                 <ul class="list-group">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center">
@@ -191,7 +193,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
                                 {{-- TAB 2. buatlah list disini --}}
                             </div>
                         </div>
