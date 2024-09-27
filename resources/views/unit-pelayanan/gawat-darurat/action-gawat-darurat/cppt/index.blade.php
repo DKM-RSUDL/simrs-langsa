@@ -292,54 +292,163 @@
 
 @push('js')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('searchInput');
-        const dataList = document.getElementById('dataList');
-        const items = dataList.querySelectorAll('.dropdown-item');
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     const searchInput = document.getElementById('searchInput');
+    //     const dataList = document.getElementById('dataList');
+    //     const items = dataList.querySelectorAll('.dropdown-item');
 
-        // dropdown saat input di klik
-        searchInput.addEventListener('focus', function () {
-            dataList.classList.add('show');
-        });
+    //     dropdown saat input di klik
+    //     searchInput.addEventListener('focus', function () {
+    //         dataList.classList.add('show');
+    //     });
 
-        // dropdown user mulai mengetik
-        searchInput.addEventListener('input', function () {
-            const filter = searchInput.value.toLowerCase();
-            let hasVisibleItems = false;
+    //     dropdown user mulai mengetik
+    //     searchInput.addEventListener('input', function () {
+    //         const filter = searchInput.value.toLowerCase();
+    //         let hasVisibleItems = false;
 
-            items.forEach(function (item) {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    item.style.display = 'block';
-                    hasVisibleItems = true;
-                } else {
-                    item.style.display = 'none';
+    //         items.forEach(function (item) {
+    //             const text = item.textContent.toLowerCase();
+    //             if (text.includes(filter)) {
+    //                 item.style.display = 'block';
+    //                 hasVisibleItems = true;
+    //             } else {
+    //                 item.style.display = 'none';
+    //             }
+    //         });
+
+    //         // Jika tidak ada item yang cocok, tutup dropdown
+    //         if (hasVisibleItems) {
+    //             dataList.classList.add('show');
+    //         } else {
+    //             dataList.classList.remove('show');
+    //         }
+    //     });
+
+    //     // Event listener untuk klik pada item dropdown
+    //     items.forEach(function (item) {
+    //         item.addEventListener('click', function () {
+    //             searchInput.value = this.textContent;
+    //             dataList.classList.remove('show');
+    //         });
+    //     });
+
+    //     // Menyembunyikan dropdown saat klik di luar
+    //     document.addEventListener('click', function (event) {
+    //         if (!event.target.closest('.dropdown')) {
+    //             dataList.classList.remove('show');
+    //         }
+    //     });
+    // });
+
+    let typingTimer;
+    let debounceTime = 500;
+    var dataListDiagnose = $('#addDiagnosisModal #dataList');
+    var datalistDiagnoseAdd = $('#addDiagnosisModal #dataListAdd');
+    var searchInputDiagnose = $('#addDiagnosisModal #searchInput');
+
+    $(searchInputDiagnose).keyup(function () { 
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+            var $this = $('#addDiagnosisModal #searchInput');
+            var url = "{{ route('cppt.get-icd10-ajax', $dataMedis->pasien->kd_pasien) }}";
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'data': $this.val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == 'success') {
+                        var dataDiag = response.data.diagnosa;
+                        var dataDiagCount = response.data.count;
+                        
+                        var html = '';
+                        if(dataDiagCount > 0) {
+                            $.each(dataDiag, function (i, e) { 
+                                html += `<li><a class="dropdown-item" data-kode="${e.kd_penyakit}" href="#">${e.penyakit}</a></li>`;
+                            });
+                        } else {
+                            html += `<li><a class="dropdown-item" data-kode="" href="#">--Data tidak ditemukan--</a></li>`;
+                        }
+
+                        $(dataListDiagnose).html(html);
+                        $(dataListDiagnose).show();
+                    }
                 }
             });
-
-            // Jika tidak ada item yang cocok, tutup dropdown
-            if (hasVisibleItems) {
-                dataList.classList.add('show');
-            } else {
-                dataList.classList.remove('show');
-            }
-        });
-
-        // Event listener untuk klik pada item dropdown
-        items.forEach(function (item) {
-            item.addEventListener('click', function () {
-                searchInput.value = this.textContent;
-                dataList.classList.remove('show');
-            });
-        });
-
-        // Menyembunyikan dropdown saat klik di luar
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.dropdown')) {
-                dataList.classList.remove('show');
-            }
-        });
+        }, debounceTime);
     });
-</script>
 
+    var diagnoseSelection = '';
+    var diagnoseSelectionAll = '';
+    var diagnoseSelectionText = [];
+
+    $(document).on('click', '#addDiagnosisModal #dataList li', function(e) {
+        var $this = $(this);
+        var text = $this.find('.dropdown-item').text();
+        var kode = $this.find('.dropdown-item').attr('data-kode');
+        
+        if(kode != '') {
+            $(searchInputDiagnose).val(text);
+            diagnoseSelection = kode;
+            $(dataListDiagnose).hide();
+        }
+    });
+
+    $('#addDiagnosisModal #btnAddListDiagnosa').click(function(e) {
+        e.preventDefault();
+        var searchInputValue = $(searchInputDiagnose).val();
+        
+        if(searchInputValue != '') {
+            $('#listDiagnosa').append(`<li>${searchInputValue}</li>`);
+            diagnoseSelectionAll += (diagnoseSelectionAll != '') ? `,${diagnoseSelection}` : diagnoseSelection;
+
+            diagnoseSelectionText.push(searchInputValue);
+            $(datalistDiagnoseAdd).val(diagnoseSelectionAll);
+            $(searchInputDiagnose).val('');
+            diagnoseSelection = '';
+        }
+    });
+
+    $('#addDiagnosisModal #btnSaveDiagnose').click(function(e) {
+        var dignoseListContent = '';
+
+        diagnoseSelectionText.forEach(e => {
+            dignoseListContent += `<a href="#" class="fw-bold">${e}</a> <br>`;
+        });
+
+        $('#addCpptModal #diagnoseList').html(dignoseListContent);
+        $('#addDiagnosisModal .btn-close').trigger('click');
+    });
+
+    $('input[name="skala_nyeri"]').change(function(e) {
+        var $this = $(this);
+        var skalaValue = $this.val();
+
+        if(skalaValue > 10) {
+            skalaValue = 10;
+            $this.val(10);
+        }
+
+        if(skalaValue < 0) {
+            skalaValue = 0;
+            $this.val(0);
+        }
+
+        var valColor = 'btn-success';
+
+        if(skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
+        if(skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
+
+        $('#addCpptModal #skalaNyeriBtn').removeClass('btn-success');
+        $('#addCpptModal #skalaNyeriBtn').removeClass('btn-warning');
+        $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
+        $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
+    });
+
+</script>
 @endpush

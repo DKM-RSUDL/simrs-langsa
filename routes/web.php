@@ -56,7 +56,17 @@ Route::middleware('auth')->group(function () {
                 Route::prefix('/{kd_pasien}')->group(function () {
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
-                    Route::resource('cppt', GawatDaruratCpptController::class);
+
+                    // CPPT
+                    Route::prefix('cppt')->group(function() {
+                        Route::name('cppt')->group(function() {
+                            Route::controller(GawatDaruratCpptController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
+                            });
+                        });
+                    });
+
                     Route::resource('tindakan', GawatDaruratTindakanController::class);
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);

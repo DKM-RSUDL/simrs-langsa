@@ -1,15 +1,15 @@
 <div class="d-grid gap-2">
-    <button class="btn mb-2 btn-primary" data-bs-toggle="modal" data-bs-target="#extraLargeModal" type="button">
+    <button class="btn mb-2 btn-primary" data-bs-toggle="modal" data-bs-target="#addCpptModal" type="button">
         <i class="ti-plus"></i> Tambah
     </button>
 </div>
 
-<div class="modal fade" id="extraLargeModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addCpptModal" tabindex="-1" aria-labelledby="addCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form action="" method="post">
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white" id="extraLargeModalLabel">Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
+                    <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -44,8 +44,8 @@
                                             Skala Nyeri
                                             <label for="skala_nyeri"></label>
                                         </p>
-                                        <input type="number" name="skala_nyeri" class="form-control" id="skala_nyeri" required>
-                                        <button type="button" class="btn btn-sm btn-warning mt-2" id="skalaNyeriBtn">Nyeri Hebat</button>
+                                        <input type="number" name="skala_nyeri" class="form-control" min="0" max="10" id="skala_nyeri" value="0" required>
+                                        <button type="button" class="btn btn-sm btn-success mt-2" id="skalaNyeriBtn">Nyeri Hebat</button>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -169,10 +169,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="bg-secondary-subtle rounded-2 p-3">
-                                            <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
+                                        <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
+                                            {{-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
                                             <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                                            <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br>
+                                            <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
                                         </div>
                                     </div>
                                 </div>

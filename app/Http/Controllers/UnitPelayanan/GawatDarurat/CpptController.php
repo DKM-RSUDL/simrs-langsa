@@ -5,12 +5,14 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrKondisiFisik;
+use App\Models\Penyakit;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -51,4 +53,43 @@ class CpptController extends Controller
             'jenisNyeri'        => $jenisNyeri,
         ]);
     }
+
+    public function getIcdTenAjax(Request $request)
+    {
+        try {
+            $search = $request->data;
+            $query = Penyakit::select(['kd_penyakit', 'penyakit']);
+
+            if(!empty($search)) {
+                $query->where(function($q) use ($search) {
+                        $q->where('penyakit', 'LIKE', "%$search%");
+                        $q->orWhere('kd_penyakit', 'LIKE', "%$search%");
+                    })
+                    ->limit(5);
+            } else {
+                    $query->limit(5);
+            }
+
+            $dataDiagnosa = $query->get();
+
+            return response()->json([
+                'status'    => 'success',
+                'data'      => [
+                    'count'     => count($dataDiagnosa),
+                    'diagnosa'  => $dataDiagnosa
+                ]
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => [
+                    'count' => 0
+                ]
+            ], 400);
+        }
+    }
 }
+
+
