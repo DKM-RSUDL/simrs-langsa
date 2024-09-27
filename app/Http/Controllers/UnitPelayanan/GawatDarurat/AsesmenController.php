@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan;
+namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
-class ResumeController extends Controller
+class AsesmenController extends Controller
 {
     public function index($kd_pasien)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
-        ->where('kd_pasien', $kd_pasien)
+            ->where('kd_pasien', $kd_pasien)
             ->first();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -25,6 +25,6 @@ class ResumeController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.index', compact('dataMedis'));
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact('dataMedis'));
     }
 }

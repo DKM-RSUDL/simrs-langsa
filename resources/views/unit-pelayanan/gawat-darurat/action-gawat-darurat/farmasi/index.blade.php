@@ -36,7 +36,7 @@
         @component('components.navigation', ['navItems' => $navItems])
         @endcomponent
         <div class="d-flex justify-content-center">
-            <h1>CPPT Dashboard</h1>
+            <h1>CPPT Dashboard Tesssss t(Task Besok Jumat)</h1>
         </div>
     </div>
 </div>

@@ -13,16 +13,17 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
-use App\Http\Controllers\UnitPelayanan\AsesmenController;
-use App\Http\Controllers\UnitPelayanan\CarePlanController;
-use App\Http\Controllers\UnitPelayanan\CpptController;
-use App\Http\Controllers\UnitPelayanan\EdukasiController;
-use App\Http\Controllers\UnitPelayanan\FarmasiController;
-use App\Http\Controllers\UnitPelayanan\KonsultasiController;
-use App\Http\Controllers\UnitPelayanan\LaborController;
-use App\Http\Controllers\UnitPelayanan\RadiologiController;
-use App\Http\Controllers\UnitPelayanan\ResumeController;
-use App\Http\Controllers\UnitPelayanan\TindakanController;
+
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatDaruratCarePlanController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\EdukasiController as GawatDaruratEdukasiController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDaruratFarmasiController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 Route::middleware('guest')->group(function () {
@@ -54,16 +55,16 @@ Route::middleware('auth')->group(function () {
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}')->group(function () {
                     Route::resource('/', MedisGawatDaruratController::class);
-                    Route::resource('asesmen', AsesmenController::class);
-                    Route::resource('cppt', CpptController::class);
-                    Route::resource('tindakan', TindakanController::class);
-                    Route::resource('konsultasi', KonsultasiController::class);
-                    Route::resource('labor', LaborController::class);
-                    Route::resource('radiologi', RadiologiController::class);
-                    Route::resource('farmasi', FarmasiController::class);
-                    Route::resource('edukasi', EdukasiController::class);
-                    Route::resource('careplan', CarePlanController::class);
-                    Route::resource('resume', ResumeController::class);
+                    Route::resource('asesmen', GawatDaruratAsesmenController::class);
+                    Route::resource('cppt', GawatDaruratCpptController::class);
+                    Route::resource('tindakan', GawatDaruratTindakanController::class);
+                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
+                    Route::resource('labor', GawatDaruratLaborController::class);
+                    Route::resource('radiologi', GawatDaruratRadiologiController::class);
+                    Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::resource('edukasi', GawatDaruratEdukasiController::class);
+                    Route::resource('careplan', GawatDaruratCarePlanController::class);
+                    Route::resource('resume', GawatDaruratResumeController::class);
                 });
             });
         });
