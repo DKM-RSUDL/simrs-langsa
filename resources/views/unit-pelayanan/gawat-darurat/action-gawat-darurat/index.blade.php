@@ -35,6 +35,7 @@
         <div class="col-md-9">
             @component('components.navigation', ['navItems' => $navItems])
             @endcomponent
+
             <div class="header-content" hidden>
                 <h1>Dokter Dashbord</h1>
             </div>
