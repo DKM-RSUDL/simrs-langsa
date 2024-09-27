@@ -14,7 +14,8 @@ class GawatDaruratController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Kunjungan::with(['pasien', 'dokter', 'customer']);
+            $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
+            ->where('kd_unit', 3);
 
             return DataTables::of($data)
                 ->order(function ($query) {

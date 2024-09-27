@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan;
+namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
-class TindakanController extends Controller
+class KonsultasiController extends Controller
 {
     public function index($kd_pasien)
     {
@@ -25,6 +25,6 @@ class TindakanController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.tindakan.index', compact('dataMedis'));
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.index', compact('dataMedis'));
     }
 }

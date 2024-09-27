@@ -10,15 +10,51 @@
     @php
         // Prepare navigation items
         $navItems = [
-            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => route('cppt.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => route('tindakan.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => route('konsultasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => route('labor.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => route('radiologi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => route('edukasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => route('careplan.index', $dataMedis->pasien->kd_pasien)],
+            [
+                'icon' => 'verified_badge.png',
+                'label' => 'Asesmen',
+                'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'positive_dynamic.png',
+                'label' => 'CPPT',
+                'link' => route('cppt.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'tools.png',
+                'label' => 'Tindakan',
+                'link' => route('tindakan.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'agree.png',
+                'label' => 'Konsultasi',
+                'link' => route('konsultasi.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'test_tube.png',
+                'label' => 'Labor',
+                'link' => route('labor.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'microbeam_radiation_therapy.png',
+                'label' => 'Radiologi',
+                'link' => route('radiologi.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'pill.png',
+                'label' => 'Farmasi',
+                'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'info.png',
+                'label' => 'Edukasi',
+                'link' => route('edukasi.index', $dataMedis->pasien->kd_pasien),
+            ],
+            [
+                'icon' => 'goal.png',
+                'label' => 'Care Plan',
+                'link' => route('careplan.index', $dataMedis->pasien->kd_pasien),
+            ],
             ['icon' => 'cv.png', 'label' => 'Resume', 'link' => route('resume.index', $dataMedis->pasien->kd_pasien)],
         ];
 
@@ -49,44 +85,63 @@
                             </li>
                         </ul>
                         <div class="d-flex justify-content-start align-items-center m-3">
-                            <div class="btn-group me-2">
-                                <button id="btnGroupDrop1" type="button" class="btn btn-outline-secondary dropdown-toggle"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pilih PPA
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                                    <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                                </ul>
-                            </div>
-                            <div class="btn-group me-2">
-                                <button id="btnGroupDrop2" type="button" class="btn btn-outline-secondary dropdown-toggle"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pilih Kategori
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                                    <li><a class="dropdown-item" href="#">Kategori 1</a></li>
-                                    <li><a class="dropdown-item" href="#">Kategori 2</a></li>
-                                    <li><a class="dropdown-item" href="#">Kategori 3</a></li>
-                                </ul>
-                            </div>
+                            <div class="row g-3 w-100">
+                                <!-- Select PPA Option -->
+                                <div class="col-md-2">
+                                    <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                                        <option value="semua" selected>Semua PPA</option>
+                                        <option value="option1">Dokter Spesialis</option>
+                                        <option value="option2">Dokter Umum</option>
+                                        <option value="option3">Perawat/bidan</option>
+                                        <option value="option4">Nutrisionis</option>
+                                        <option value="option5">Apoteker</option>
+                                        <option value="option6">Fisioterapis</option>
+                                    </select>
+                                </div>
 
-                            <!-- Filter Tanggal -->
-                            <div class="d-flex align-items-center me-2">
-                                <label class="me-2">Dari: </label>
-                                <input type="date" class="form-control me-2" id="startDate" name="start_date">
-                            </div>
-                            <div class="d-flex align-items-center me-2">
-                                <label class="me-2">Sampai: </label>
-                                <input type="date" class="form-control me-2" id="endDate" name="end_date">
-                            </div>
+                                <!-- Select Episode Option -->
+                                <div class="col-md-2">
+                                    <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
+                                        <option value="semua" selected>Semua Episode</option>
+                                        <option value="Episode1">Episode Sekarang</option>
+                                        <option value="Episode2">1 Bulan</option>
+                                        <option value="Episode3">3 Bulan</option>
+                                        <option value="Episode4">6 Bulan</option>
+                                        <option value="Episode5">9 Bulan</option>
+                                    </select>
+                                </div>
 
-                            <div class="d-flex ms-auto">
-                                <input type="text" class="form-control w-100 me-2" placeholder="Search...">
-                                <button class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#detailPasienModal">Tambah</button>
+                                <!-- Start Date -->
+                                <div class="col-md-2">
+                                    <input type="date" name="start_date" id="start_date" class="form-control"
+                                        placeholder="Dari Tanggal">
+                                </div>
+
+                                <!-- End Date -->
+                                <div class="col-md-2">
+                                    <input type="date" name="end_date" id="end_date" class="form-control"
+                                        placeholder="S.d Tanggal">
+                                </div>
+
+                                <!-- Search Bar -->
+                                <div class="col-md-2">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="bi bi-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
+                                            aria-describedby="basic-addon1">
+                                    </div>
+                                </div>
+
+                                <!-- Button "Tambah" di sebelah kanan -->
+                                <div class="col-md-2 d-flex justify-content-end">
+                                    <button class="btn btn-primary ms-auto" data-bs-toggle="modal"
+                                        data-bs-target="#detailPasienModal">Tambah</button>
+                                </div>
                             </div>
                         </div>
+
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel"
                                 aria-labelledby="home-tab">
