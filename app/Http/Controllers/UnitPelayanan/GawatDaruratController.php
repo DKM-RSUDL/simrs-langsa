@@ -4,21 +4,15 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
-<<<<<<< HEAD
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
-=======
-use App\Models\TestModel;
-use Illuminate\Http\Request;
->>>>>>> 5e7e14d (data dawat darurat)
 
 class GawatDaruratController extends Controller
 {
     protected $roleService;
     public function index(Request $request)
     {
-<<<<<<< HEAD
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', 3);
@@ -54,12 +48,5 @@ class GawatDaruratController extends Controller
         }
 
         return view('unit-pelayanan.gawat-darurat.index');
-=======
-        $DataKunjungan = Kunjungan::all();
-        if ($request->ajax()) {
-            return $this->roleService->dataTable();
-        }
-        return view('unit-pelayanan.gawat-darurat.index', compact('DataKunjungan'));
->>>>>>> 5e7e14d (data dawat darurat)
     }
 }
