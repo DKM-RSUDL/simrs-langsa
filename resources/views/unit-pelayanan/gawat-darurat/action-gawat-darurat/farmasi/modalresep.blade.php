@@ -253,7 +253,7 @@
                                 <!-- Tab 3: Info Tambahan -->
                                 <div class="tab-pane fade" id="tab3" role="tabpanel"
                                     aria-labelledby="tab3-tab">
-                                    <h4 class="mt-3">Info Tambahan</h4>
+                                    <h4 class="mt-3">Tabs 3</h4>
                                     <p>Area ini bisa digunakan untuk menampilkan informasi tambahan atau instruksi lebih
                                         lanjut terkait pemesanan obat.</p>
                                 </div>
@@ -261,7 +261,7 @@
                                 <!-- Tab 4: Info Tambahan -->
                                 <div class="tab-pane fade" id="tab4" role="tabpanel"
                                     aria-labelledby="tab4-tab">
-                                    <h4 class="mt-3">Info Tambahan</h4>
+                                    <h4 class="mt-3">Tabs 4</h4>
                                     <p>Area ini bisa digunakan untuk menampilkan informasi tambahan atau instruksi lebih
                                         lanjut terkait pemesanan obat.</p>
                                 </div>
