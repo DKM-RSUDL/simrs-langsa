@@ -15,7 +15,7 @@ class GawatDaruratController extends Controller
     {
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-            ->where('kd_unit', 3);
+                ->where('kd_unit', 3);
 
             return DataTables::of($data)
                 ->order(function ($query) {
