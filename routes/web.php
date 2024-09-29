@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('pelayanan')->group(function () {
-                Route::prefix('/{kd_pasien}')->group(function () {
+                Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
 
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
                             Route::controller(GawatDaruratCpptController::class)->group(function() {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
+                                Route::post('/', 'store')->name('.store');
                             });
                         });
                     });

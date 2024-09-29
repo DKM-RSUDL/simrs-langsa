@@ -112,8 +112,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return '<a href="' + medisGawatDaruratIndexUrl + row.kd_pasien + '" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a>' +
-                                '<a href="#" class="btn btn-secondary btn-sm">...</a>';
+                            return `<a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a> <a href="#" class="btn btn-secondary btn-sm">...</a>`;
                         }
                     },
                     {
@@ -172,7 +171,7 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'tgl_masuk',
+                        data: 'waktu_masuk',
                         name: 'tgl_masuk',
                         defaultContent: 'null'
                     },

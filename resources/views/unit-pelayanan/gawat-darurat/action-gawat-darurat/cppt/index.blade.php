@@ -21,76 +21,78 @@
 @section('content')
     @php
         // Prepare navigation items
+        $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
+
         $navItems = [
-            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => route('cppt.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => route('tindakan.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => route('konsultasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => route('labor.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => route('radiologi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => route('edukasi.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => route('careplan.index', $dataMedis->pasien->kd_pasien)],
-            ['icon' => 'cv.png', 'label' => 'Resume', 'link' => route('resume.index', $dataMedis->pasien->kd_pasien)],
+            ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'tools.png', 'label' => 'Tindakan', 'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'agree.png', 'label' => 'Konsultasi', 'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'test_tube.png', 'label' => 'Labor', 'link' => route('labor.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'microbeam_radiation_therapy.png', 'label' => 'Radiologi', 'link' => route('radiologi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'pill.png', 'label' => 'Farmasi', 'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'info.png', 'label' => 'Edukasi', 'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'goal.png', 'label' => 'Care Plan', 'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
+            ['icon' => 'cv.png', 'label' => 'Resume', 'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
         ];
 
         // Prepare content for each tab
-        $tabContents = [
-            [
-                'tanggal' => '02 Mar 2024',
-                'time' => '8:30',
-                'avatar' => 'profile.jpg',
-                'name' => 'Ns. Aleyndra, S.Kep',
-                'role' => 'Perawat Klinik Internis',
-                'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'objective' => [
-                    'TD' => '___ / ___ mmHg',
-                    'RR' => '___ x/mnt',
-                    'TB' => '___ M',
-                    'Temp' => '___ C',
-                    'Resp' => '___ x/mnt',
-                    'BB' => '___ Kg',
-                ],
-                'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-                'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-            ],
-            [
-                'tanggal' => '03 Mar 2024',
-                'time' => '9:30',
-                'avatar' => 'profile1.jpg',
-                'name' => 'Dr. Amanda',
-                'role' => 'Perawat Klinik Internis',
-                'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'objective' => [
-                    'TD' => '___ / ___ mmHg',
-                    'RR' => '___ x/mnt',
-                    'TB' => '___ M',
-                    'Temp' => '___ C',
-                    'Resp' => '___ x/mnt',
-                    'BB' => '___ Kg',
-                ],
-                'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-                'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-            ],
-            [
-                'tanggal' => '01 Mar 2024',
-                'time' => '10:30',
-                'avatar' => 'profile2.jpg',
-                'name' => 'Ns. Eka Wira , S.Kep ',
-                'role' => 'Perawat Klinik Internis',
-                'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'objective' => [
-                    'TD' => '___ / ___ mmHg',
-                    'RR' => '___ x/mnt',
-                    'TB' => '___ M',
-                    'Temp' => '___ C',
-                    'Resp' => '___ x/mnt',
-                    'BB' => '___ Kg',
-                ],
-                'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-                'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-            ],
-        ];
+        // $tabContents = [
+        //     [
+        //         'tanggal' => '02 Mar 2024',
+        //         'time' => '8:30',
+        //         'avatar' => 'profile.jpg',
+        //         'name' => 'Ns. Aleyndra, S.Kep',
+        //         'role' => 'Perawat Klinik Internis',
+        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        //         'objective' => [
+        //             'TD' => '___ / ___ mmHg',
+        //             'RR' => '___ x/mnt',
+        //             'TB' => '___ M',
+        //             'Temp' => '___ C',
+        //             'Resp' => '___ x/mnt',
+        //             'BB' => '___ Kg',
+        //         ],
+        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
+        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
+        //     ],
+        //     [
+        //         'tanggal' => '03 Mar 2024',
+        //         'time' => '9:30',
+        //         'avatar' => 'profile1.jpg',
+        //         'name' => 'Dr. Amanda',
+        //         'role' => 'Perawat Klinik Internis',
+        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        //         'objective' => [
+        //             'TD' => '___ / ___ mmHg',
+        //             'RR' => '___ x/mnt',
+        //             'TB' => '___ M',
+        //             'Temp' => '___ C',
+        //             'Resp' => '___ x/mnt',
+        //             'BB' => '___ Kg',
+        //         ],
+        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
+        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
+        //     ],
+        //     [
+        //         'tanggal' => '01 Mar 2024',
+        //         'time' => '10:30',
+        //         'avatar' => 'profile2.jpg',
+        //         'name' => 'Ns. Eka Wira , S.Kep ',
+        //         'role' => 'Perawat Klinik Internis',
+        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        //         'objective' => [
+        //             'TD' => '___ / ___ mmHg',
+        //             'RR' => '___ x/mnt',
+        //             'TB' => '___ M',
+        //             'Temp' => '___ C',
+        //             'Resp' => '___ x/mnt',
+        //             'BB' => '___ Kg',
+        //         ],
+        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
+        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
+        //     ],
+        // ];
 
     @endphp
 
@@ -171,7 +173,37 @@
                         <!-- Sidebar navigation -->
                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                             aria-orientation="vertical">
-                            @foreach ($tabContents as $index => $content)
+                            @php
+                                $i=0;
+                            @endphp
+                            @foreach ($cppt as $key => $value)
+                                <button class="nav-link @if ($i == 0) active @endif"
+                                    id="v-pills-home-tab-{{ $i }}" data-bs-toggle="pill"
+                                    href="#v-pills-home-{{ $i }}" role="tab"
+                                    aria-selected="{{ $i == 0 }}">
+                                    <div class="d-flex align-items-center">
+                                        <div class="text-center me-2">
+                                            <strong class="d-block">
+                                                {{ date('d M', strtotime($value['tanggal'])) }}
+                                            </strong>
+                                            <small class="d-block">
+                                                {{ date('H:i', strtotime($value['jam'])) }}
+                                            </small>
+                                        </div>
+                                        <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar"
+                                            class="rounded-circle" width="50" height="50">
+                                        <div class="ms-3">
+                                            <p class="mb-0"><strong>{{ $value['nama_penanggung'] }}</strong></p>
+                                            <small class="text-muted">{{ $value['nama_unit'] }}</small>
+                                        </div>
+                                    </div>
+                                </button>
+                                @php
+                                    $i++;
+                                @endphp
+                            @endforeach
+
+                            {{-- @foreach ($tabContents as $index => $content)
                                 <button class="nav-link @if ($index == 0) active @endif"
                                     id="v-pills-home-tab-{{ $index }}" data-bs-toggle="pill"
                                     href="#v-pills-home-{{ $index }}" role="tab"
@@ -193,12 +225,112 @@
                                         </div>
                                     </div>
                                 </button>
-                            @endforeach
+                            @endforeach --}}
                         </div>
 
                         <!-- Tab content -->
                         <div class="tab-content flex-grow-1" id="v-pills-tabContent">
-                            @foreach ($tabContents as $index => $content)
+                            @php
+                                $j = 0;
+                            @endphp
+                            @foreach ($cppt as $key => $value)
+                                <div class="tab-pane fade @if ($j == 0) show active @endif"
+                                id="v-pills-home-{{ $j }}" role="tabpanel">
+                                    <div class="patient-card bg-secondary-subtle">
+                                        <p class="mb-0 text-end">{{ date('d M Y', strtotime($value['tanggal'])) }} {{ date('H:i', strtotime($value['jam'])) }}</p>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ asset('assets/img/profile.jpg') }}" alt="Avatar"
+                                                class="rounded-circle" width="50" height="50">
+                                            <div class="ms-3">
+                                                <p class="mb-0 fw-bold">Catatan Perkembangan Pasien Terintegrasi</p>
+                                                <small class="text-muted">
+                                                    <span class="fw-bold">{{ $value['nama_penanggung'] }}</span>
+                                                    ({{ $value['nama_unit'] }})
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Subjective -->
+                                    <div class="row mt-3">
+                                        <div class="col-1">
+                                            <h6><strong>S</strong></h6>
+                                        </div>
+                                        <div class="col-11">
+                                            <p>{{ $value['anamnesis'] }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Objective -->
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <h6><strong>O</strong></h6>
+                                        </div>
+                                        <div class="col-11">
+                                            <div class="row">
+                                                @foreach ($value['kondisi']['konpas'] as $item => $val)
+                                                    <div class="col-md-6 mb-2">{{ $val['nama_kondisi'] .' : '. $val['hasil'] .' '. $val['satuan'] }}</div>
+                                                @endforeach
+                                                {{-- <div class="col-md-3">TD: {{ $content['objective']['TD'] }}</div>
+                                                <div class="col-md-3">RR: {{ $content['objective']['RR'] }}</div>
+                                                <div class="col-md-3">TB: {{ $content['objective']['TB'] }}</div> --}}
+                                            </div>
+                                            {{-- <div class="row">
+                                                <div class="col-md-3">Temp: {{ $content['objective']['Temp'] }}</div>
+                                                <div class="col-md-3">Resp: {{ $content['objective']['Resp'] }}</div>
+                                                <div class="col-md-3">BB: {{ $content['objective']['BB'] }}</div>
+                                            </div> --}}
+                                            <p>{{ $value['obyektif'] }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Assessment -->
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <h6><strong>A</strong></h6>
+                                        </div>
+                                        <div class="col-11">
+                                            <ul>
+                                                @foreach ($value['penyakit'] as $p => $v)
+                                                    <li>{{ $v['nama_penyakit'] }}</li>
+                                                @endforeach
+
+                                                {{-- @foreach ($content['assessment'] as $assessment)
+                                                    <li>{{ $assessment }}</li>
+                                                @endforeach --}}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Plan -->
+                                    <div class="row mt-3">
+                                        <div class="col-1">
+                                            <h6><strong>P</strong></h6>
+                                        </div>
+                                        <div class="col-11">
+                                            <ul>
+                                                <li>{{ $value['planning'] }}</li>
+
+                                                {{-- @foreach ($content['plan'] as $plan)
+                                                    <li>{{ $plan }}</li>
+                                                @endforeach --}}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button -->
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button class="btn btn-primary">Verifikasi DPJP</button>
+                                        <button class="btn btn-primary">Edit</button>
+                                    </div>
+                                </div>
+
+                                @php
+                                    $j++;
+                                @endphp
+                            @endforeach
+
+                            {{-- @foreach ($tabContents as $index => $content)
                                 <div class="tab-pane fade @if ($index == 0) show active @endif"
                                     id="v-pills-home-{{ $index }}" role="tabpanel">
                                     <div class="patient-card bg-secondary-subtle">
@@ -280,7 +412,7 @@
                                         <button class="btn btn-primary">Edit</button>
                                     </div>
                                 </div>
-                            @endforeach
+                            @endforeach --}}
                         </div>
                     </div>
                 </div>
@@ -351,7 +483,7 @@
         clearTimeout(typingTimer);
         typingTimer = setTimeout(function() {
             var $this = $('#addDiagnosisModal #searchInput');
-            var url = "{{ route('cppt.get-icd10-ajax', $dataMedis->pasien->kd_pasien) }}";
+            var url = "{{ route('cppt.get-icd10-ajax', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}";
 
             $.ajax({
                 type: "post",
@@ -421,6 +553,7 @@
             dignoseListContent += `<a href="#" class="fw-bold">${e}</a> <br>`;
         });
 
+        $('#addCpptModal #daftarDiagnosaInput').val($(datalistDiagnoseAdd).val());
         $('#addCpptModal #diagnoseList').html(dignoseListContent);
         $('#addDiagnosisModal .btn-close').trigger('click');
     });

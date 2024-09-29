@@ -10,7 +10,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="">
                     <h6 class="fw-bold">
                         Tambah Diagnosis
                     </h6>
@@ -19,7 +18,7 @@
                         untuk satu diagnosis )
                     </p>
                     <div class="dropdown">
-                        <input type="text" id="dataListAdd">
+                        <input type="hidden" id="dataListAdd">
                         <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Cari data..." aria-expanded="false" autocomplete="off">
                         <ul class="dropdown-menu" id="dataList" aria-labelledby="searchInput">
                             <!-- Daftar data -->
@@ -31,7 +30,6 @@
                         </ul>
                     </div>
                     <button type="button" id="btnAddListDiagnosa" class="btn btn-sm btn-primary mt-2 float-end">Tambah</button>
-                </form>
 
                 <h6 class="fw-bold mt-5">Daftar Diagnosis</h6>
                 <ol type="1" id="listDiagnosa">

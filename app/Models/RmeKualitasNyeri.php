@@ -10,4 +10,5 @@ class RmeKualitasNyeri extends Model
     use HasFactory;
 
     protected $table = 'rme_kualitas_nyeri';
+    public $timestamps = false;
 }
