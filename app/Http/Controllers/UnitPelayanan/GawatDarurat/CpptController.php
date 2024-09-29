@@ -179,6 +179,8 @@ class CpptController extends Controller
             ];
         });
 
+        // dd($getCppt[0]);
+
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.index', [
             'dataMedis'         => $dataMedis,
             'tandaVital'        => $tandaVital,
@@ -417,8 +419,8 @@ class CpptController extends Controller
             'skala_nyeri'           => $request->skala_nyeri,
             'lokasi'                => $request->lokasi,
             'durasi'                => $request->durasi,
-            'pemberat'              => $request->pemberat,
-            'peringan'              => $request->peringan,
+            'faktor_pemberat_id'    => $request->pemberat,
+            'faktor_peringan_id'    => $request->peringan,
             'kualitas_nyeri_id'     => $request->kualitas_nyeri,
             'frekuensi_nyeri_id'    => $request->frekuensi_nyeri,
             'menjalar_id'           => $request->menjalar,
