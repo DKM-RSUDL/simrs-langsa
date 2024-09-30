@@ -5,8 +5,8 @@
     style="z-index: 1060;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="verticalCenterLabel">Input Diagnosis</h5>
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="verticalCenterLabel">Input Diagnosis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -52,8 +52,8 @@
 <script>
     document.getElementById('openVerticalCenterModal').addEventListener('click', function() {
         var modalKedua = new bootstrap.Modal(document.getElementById('verticalCenter'), {
-            backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
-            keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
+            backdrop: 'static',
+            keyboard: false
         });
         modalKedua.show();
     });
