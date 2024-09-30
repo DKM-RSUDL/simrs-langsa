@@ -3,61 +3,67 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                        background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                    } */
+                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                        } */
     </style>
 @endpush
 
 @section('content')
     @php
         // Prepare navigation items
+        $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
+
         $navItems = [
             [
                 'icon' => 'verified_badge.png',
                 'label' => 'Asesmen',
-                'link' => route('asesmen.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'positive_dynamic.png',
                 'label' => 'CPPT',
-                'link' => route('cppt.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'tools.png',
                 'label' => 'Tindakan',
-                'link' => route('tindakan.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'agree.png',
                 'label' => 'Konsultasi',
-                'link' => route('konsultasi.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'test_tube.png',
                 'label' => 'Labor',
-                'link' => route('labor.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('labor.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'microbeam_radiation_therapy.png',
                 'label' => 'Radiologi',
-                'link' => route('radiologi.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('radiologi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'pill.png',
                 'label' => 'Farmasi',
-                'link' => route('farmasi.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'info.png',
                 'label' => 'Edukasi',
-                'link' => route('edukasi.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
             [
                 'icon' => 'goal.png',
                 'label' => 'Care Plan',
-                'link' => route('careplan.index', $dataMedis->pasien->kd_pasien),
+                'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
             ],
-            ['icon' => 'cv.png', 'label' => 'Resume', 'link' => route('resume.index', $dataMedis->pasien->kd_pasien)],
+            [
+                'icon' => 'cv.png',
+                'label' => 'Resume',
+                'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            ],
         ];
 
     @endphp
@@ -92,7 +98,8 @@
 
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
+                            <div class="tab-pane fade show active" id="resep" role="tabpanel"
+                                aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.pktabs')
                             </div>

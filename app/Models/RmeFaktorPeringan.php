@@ -10,4 +10,5 @@ class RmeFaktorPeringan extends Model
     use HasFactory;
 
     protected $table = 'rme_faktor_peringan';
+    public $timestamps = false;
 }

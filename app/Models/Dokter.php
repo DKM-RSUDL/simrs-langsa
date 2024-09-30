@@ -10,4 +10,5 @@ class Dokter extends Model
     use HasFactory;
 
     protected $table = 'dokter';
+    public $timestamps = false;
 }
