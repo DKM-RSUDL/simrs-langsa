@@ -1,25 +1,24 @@
 @push('css')
-<style>
-    .dropdown-menu {
-        max-height: 400px;
-        overflow-y: auto;
-    }
+    <style>
+        .dropdown-menu {
+            max-height: 400px;
+            overflow-y: auto;
+        }
 
-    #orderList li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        margin-bottom: 3px;
-    }
+        #orderList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 3px;
+        }
 
-    .remove-item {
-        color: red;
-        cursor: pointer;
-    }
-</style>
-
+        .remove-item {
+            color: red;
+            cursor: pointer;
+        }
+    </style>
 @endpush
 
 <div class="d-grid gap-2">
@@ -47,9 +46,9 @@
                                 <select id="dokter_pengirim" name="dokter_pengirim" class="form-select"
                                     aria-label="Pilih dokter pengirim">
                                     <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
-                                    <option value="1">Dokter A</option>
-                                    <option value="2">Dokter B</option>
-                                    <option value="3">Dokter C</option>
+                                    @foreach ($dataDokter as $dokter)
+                                        <option value="{{ $dokter->id }}">{{ $dokter->nama }}</option>
+                                    @endforeach
                                 </select>
 
                                 <div class="row">
@@ -134,25 +133,20 @@
                                 <label for="jenis_pemeriksaan" class="form-label fw-bold h5 text-dark">
                                     Pilih Jenis Pemeriksaan
                                 </label>
-                                <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select"
-                                    aria-label="Pilih dokter pengirim">
+                                <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select" aria-label="Pilih jenis pemeriksaan">
                                     <option value="" disabled selected>--Semua--</option>
-                                    <option value="1">Pilih A</option>
-                                    <option value="2">Pilih B</option>
-                                    <option value="3">Pilih C</option>
+                                    @foreach($DataLapPemeriksaan as $kategori => $items)
+                                        <option value="{{ $kategori }}">{{ $kategori }}</option>
+                                    @endforeach
                                 </select>
 
                                 <div class="dropdown mt-3">
                                     <input type="text" class="form-control" id="searchInput" placeholder="Cari data..." autocomplete="off">
                                     <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput" style="display: none;">
-                                        @foreach($DataLapPemeriksaan as $item)
-                                            <li><a class="dropdown-item" href="#">{{ $item->nama }}</a></li>
-                                        @endforeach
+                                        <!-- Data nama yang difilter akan muncul di sini -->
                                     </ul>
                                 </div>
-
                             </div>
-
                         </div>
 
                         <div class="col-md-4">
@@ -176,72 +170,99 @@
 </div>
 
 @push('js')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const dataList = document.getElementById('dataList');
-        const orderList = document.getElementById('orderList');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const dataList = document.getElementById('dataList');
+            const orderList = document.getElementById('orderList');
+            const jenisPemeriksaanSelect = document.getElementById('jenis_pemeriksaan');
 
-        // dropdown saat input di klik
-        searchInput.addEventListener('focus', function() {
-            dataList.style.display = 'block';
-        });
+            // Ambil data dari controller dalam bentuk JSON
+            const dataPemeriksaan = @json($DataLapPemeriksaan); // Data dari controller
 
-        // dropdown user mulai mengetik
-        searchInput.addEventListener('input', function() {
-            const filter = searchInput.value.toLowerCase();
-            const items = dataList.querySelectorAll('.dropdown-item');
-            let hasVisibleItems = false;
-
-            items.forEach(function(item) {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    item.style.display = 'block';
-                    hasVisibleItems = true;
-                } else {
-                    item.style.display = 'none';
+            // Tampilkan dropdown saat input difokuskan
+            searchInput.addEventListener('focus', function() {
+                if (jenisPemeriksaanSelect.value) {
+                    dataList.style.display = 'block';
                 }
             });
 
-            // Jika tidak ada item yang cocok, sembunyikan dropdown
-            if (hasVisibleItems) {
-                dataList.style.display = 'block';
-            } else {
-                dataList.style.display = 'none';
-            }
-        });
+            // untuk perubahan kategori di dropdown jenis pemeriksaan
+            jenisPemeriksaanSelect.addEventListener('change', function() {
+                const selectedCategory = this.value;
 
-        // Event listener untuk klik pada item dropdown (menggunakan delegation)
-        document.querySelector('#dataList').addEventListener('click', function(e) {
-            if (e.target.classList.contains('dropdown-item')) {
-                const selectedItemText = e.target.textContent;
+                // Reset dataList setiap kali kategori berubah
+                dataList.innerHTML = '';
 
-                // Memindahkan item yang dipilih ke orderList dengan tombol hapus
-                const listItem = document.createElement('li');
-                listItem.classList.add('list-group-item');
-                listItem.innerHTML = `
-                    ${selectedItemText}
-                    <span class="remove-item" style="color: red; cursor: pointer;"><i class="bi bi-x-circle"></i></span>
-                `;
-                orderList.appendChild(listItem);
+                // Tampilkan nama sesuai dengan kategori yang dipilih
+                if (dataPemeriksaan[selectedCategory]) {
+                    dataPemeriksaan[selectedCategory].forEach(item => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a class="dropdown-item" href="#">${item.nama}</a>`;
+                        dataList.appendChild(li);
+                    });
+                }
 
-                // Set value input ke item yang dipilih dan tutup dropdown
+                // Reset search input value ketika kategori berubah
                 searchInput.value = '';
                 dataList.style.display = 'none';
+            });
 
-                // Event listener untuk menghapus item dari daftar
-                listItem.querySelector('.remove-item').addEventListener('click', function() {
-                    listItem.remove();
+            // Filter data saat mengetik di input cari
+            searchInput.addEventListener('input', function() {
+                const filter = searchInput.value.toLowerCase();
+                const items = dataList.querySelectorAll('.dropdown-item');
+                let hasVisibleItems = false;
+
+                items.forEach(function(item) {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(filter)) {
+                        item.style.display = 'block';
+                        hasVisibleItems = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
-            }
-        });
 
-        // Menyembunyikan dropdown saat klik di luar elemen dropdown
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown')) {
-                dataList.style.display = 'none';
-            }
+                if (hasVisibleItems) {
+                    dataList.style.display = 'block';
+                } else {
+                    dataList.style.display = 'none';
+                }
+            });
+
+            // tambah item dari dropdown ke daftar order
+            dataList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-item')) {
+                    const selectedItemText = e.target.textContent;
+
+                    // Buat elemen baru dari order
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('list-group-item');
+                    listItem.innerHTML = `
+                        ${selectedItemText}
+                        <span class="remove-item" style="color: red; cursor: pointer;"><i class="bi bi-x-circle"></i></span>
+                    `;
+                    orderList.appendChild(listItem);
+
+                    // Hapus teks di input dan sembunyikan dropdown
+                    searchInput.value = '';
+                    dataList.style.display = 'none';
+
+                    // hapus item dari daftar order
+                    listItem.querySelector('.remove-item').addEventListener('click', function() {
+                        listItem.remove();
+                    });
+                }
+            });
+
+            // simpan dropdown jika klik di luar dropdown
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown') && event.target !== searchInput) {
+                    dataList.style.display = 'none';
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endpush
+

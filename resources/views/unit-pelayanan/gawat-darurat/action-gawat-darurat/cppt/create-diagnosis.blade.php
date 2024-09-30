@@ -5,10 +5,6 @@
     style="z-index: 1060;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-<<<<<<< HEAD
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="verticalCenterLabel">Input Diagnosis</h5>
-=======
             <div class="modal-header">
                 <h5 class="modal-title" id="addDiagnosisModal">Input Diagnosis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -55,7 +51,6 @@
         var modalKedua = new bootstrap.Modal(document.getElementById('addDiagnosisModal'), {
             backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
             keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
->>>>>>> origin/rizaldev
         });
         modalKedua.show();
     });
