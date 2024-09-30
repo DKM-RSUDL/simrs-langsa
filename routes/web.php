@@ -74,7 +74,9 @@ Route::middleware('auth')->group(function () {
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('radiologi', GawatDaruratRadiologiController::class);
+
                     Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);
                     Route::resource('resume', GawatDaruratResumeController::class);

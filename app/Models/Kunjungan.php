@@ -78,8 +78,8 @@ class Kunjungan extends Model
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 
-    public function aptBarangOuts()
-    {
-        return $this->hasMany(AptBarangOut::class, 'KD_PASIENAPT', 'KD_PASIEN');
-    }
+    // public function resep()
+    // {
+    //     return $this->hasMany(MrResep::class, 'KD_PASIEN', 'KD_PASIEN');
+    // }
 }
