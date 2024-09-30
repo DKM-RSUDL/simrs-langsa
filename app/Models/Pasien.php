@@ -10,4 +10,5 @@ class Pasien extends Model
     use HasFactory;
 
     protected $table = 'pasien';
+    public $timestamps = false;
 }

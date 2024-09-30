@@ -54,10 +54,22 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('pelayanan')->group(function () {
-                Route::prefix('/{kd_pasien}')->group(function () {
+                Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
-                    Route::resource('cppt', GawatDaruratCpptController::class);
+
+                    // CPPT
+                    Route::prefix('cppt')->group(function() {
+                        Route::name('cppt')->group(function() {
+                            Route::controller(GawatDaruratCpptController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
+                                Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
+                                Route::post('/', 'store')->name('.store');
+                            });
+                        });
+                    });
+
                     Route::resource('tindakan', GawatDaruratTindakanController::class);
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);

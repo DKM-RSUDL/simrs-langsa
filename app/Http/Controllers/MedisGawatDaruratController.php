@@ -8,10 +8,12 @@ use Illuminate\Support\Carbon;
 
 class MedisGawatDaruratController extends Controller
 {
-    public function index($kd_pasien)
+    public function index($kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+            ->where('kd_unit', 3)
             ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
             ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada

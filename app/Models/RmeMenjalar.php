@@ -10,4 +10,5 @@ class RmeMenjalar extends Model
     use HasFactory;
 
     protected $table = 'rme_menjalar';
+    public $timestamps = false;
 }

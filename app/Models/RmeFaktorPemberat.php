@@ -10,4 +10,5 @@ class RmeFaktorPemberat extends Model
     use HasFactory;
 
     protected $table = 'rme_faktor_pemberat';
+    public $timestamps = false;
 }
