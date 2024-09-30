@@ -32,4 +32,9 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Customer::class, 'kd_customer', 'kd_customer');
     }
+
+    public function aptBarangOuts()
+    {
+        return $this->hasMany(AptBarangOut::class, 'KD_PASIENAPT', 'KD_PASIEN');
+    }
 }

@@ -11,7 +11,7 @@ class FarmasiController extends Controller
 {
     public function index($kd_pasien)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'aptBarangOuts'])
         ->where('kd_pasien', $kd_pasien)
             ->first();
 
@@ -25,6 +25,9 @@ class FarmasiController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index', compact('dataMedis'));
+        // Ambil data riwayat pemberian obat
+        $riwayatObat = $dataMedis->aptBarangOuts()->select('KD_PASIENAPT', 'NO_RESEP', 'DOKTER', 'JML_ITEM', 'RESEP', 'TGL_OUT')->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index', compact('dataMedis', 'riwayatObat'));
     }
 }

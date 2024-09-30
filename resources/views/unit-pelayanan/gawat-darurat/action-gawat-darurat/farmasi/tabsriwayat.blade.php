@@ -19,14 +19,12 @@
 
             <!-- Start Date -->
             <div class="col-md-2">
-                <input type="date" name="start_date" id="start_date" class="form-control"
-                    placeholder="Dari Tanggal">
+                <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
             </div>
 
             <!-- End Date -->
             <div class="col-md-2">
-                <input type="date" name="end_date" id="end_date" class="form-control"
-                    placeholder="S.d Tanggal">
+                <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
             </div>
 
             <!-- Search Bar -->
@@ -44,22 +42,30 @@
     </div>
 
     {{-- Tabel E-Resep Obat & BMHP --}}
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#Order</th>
-                <th>Nama Obat</th>
-                <th>Dosis</th>
-                <th>Frek</th>
-                <th>QTY</th>
-                <th>Keterangan</th>
-                <th>Ket. Tambahan</th>
-                <th>Dokter</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr></tr>
-        </tbody>
-    </table>
+    @if ($riwayatObat->isEmpty())
+        <p>Tidak ada riwayat pemberian obat.</p>
+    @else
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Kode Pasien</th>
+                    <th>No Resep</th>
+                    <th>Dokter</th>
+                    <th>Jumlah Item</th>
+                    <th>Resep</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($riwayatObat as $obat)
+                    <tr>
+                         <td>{{ $obat->KD_PASIENAPT }}</td>
+                        <td>{{ $obat->NO_RESEP }}</td>
+                        <td>{{ $obat->DOKTER }}</td>
+                        <td>{{ $obat->JML_ITEM }}</td>
+                        <td>{{ $obat->RESEP }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 </div>
+@endif

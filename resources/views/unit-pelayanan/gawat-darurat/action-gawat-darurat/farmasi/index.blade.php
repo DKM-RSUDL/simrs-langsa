@@ -94,7 +94,7 @@
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsriwayat')
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsriwayat', ['riwayatObat' => $riwayatObat])
                             </div>
                         </div>
                     </div>
