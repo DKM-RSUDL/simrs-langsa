@@ -321,7 +321,7 @@
                                     <!-- Button -->
                                     <div class="d-flex justify-content-between mt-4">
                                         <button class="btn btn-primary">Verifikasi DPJP</button>
-                                        <button class="btn btn-primary">Edit</button>
+                                        <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal" data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}" data-unit="{{ $value['kd_unit'] }}">Edit</button>
                                     </div>
                                 </div>
 
@@ -582,6 +582,97 @@
         $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
         $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
     });
+
+    // edit
+    var tanggal, urut, unit, button;
+
+    $('.btn-edit-cppt').click(function(e) {
+        e.preventDefault();
+        
+        var $this = $(this);
+        var tanggalData = $this.attr('data-tgl');
+        var urutData = $this.attr('data-urut');
+        var unitData = $this.attr('data-unit');
+        var target = $this.attr('data-bs-target');
+
+        tanggal = tanggalData;
+        urut = urutData;
+        unit = unitData;
+        button = $this;
+
+         // Ubah teks tombol dan tambahkan spinner
+        $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Proses...');
+        $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
+
+        $(target).modal('show');
+    });
+
+    $('#editCpptModal').on('show.bs.modal', function(e)
+    {
+
+        var $this = $(this);
+        var url = "{{ route('cppt.get-cppt-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
+
+        $.ajax({
+            type: "post",
+            url: url,
+            data: {
+                _token: "{{ csrf_token() }}",
+                kd_pasien: "{{ $dataMedis->kd_pasien }}",
+                no_transaksi: "{{ $dataMedis->no_transaksi }}",
+                tanggal: tanggal,
+                urut: urut,
+                kd_unit: unit
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                if(response.status == 'success') {
+                    var data = response.data;
+
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let patient = data[key];
+
+                            //set key to input
+                            $this.find('#anamnesis').val(patient.anamnesis);
+                            $this.find('#lokasi').val(patient.lokasi);
+                            $this.find('#durasi').val(patient.durasi);
+                            $this.find('#pemeriksaan_fisik').val(patient.pemeriksaan_fisik);
+                            $this.find('#data_objektif').val(patient.obyektif);
+                            $this.find('#planning').val(patient.planning);
+
+                            var skalaNyeri = patient.skala_nyeri;
+                            var valColor = 'btn-success';
+
+                            if(skalaNyeri > 3 && skalaNyeri <= 7) valColor = 'btn-warning';
+                            if(skalaNyeri > 7 && skalaNyeri <= 10) valColor = 'btn-danger';
+
+                            $this.find('#skalaNyeriBtn').removeClass('btn-success');
+                            $this.find('#skalaNyeriBtn').removeClass('btn-warning');
+                            $this.find('#skalaNyeriBtn').removeClass('btn-danger');
+                            $this.find('#skalaNyeriBtn').addClass(valColor);
+
+                            $this.find('#skala_nyeri').val(skalaNyeri);
+                        }
+                    }
+                }
+
+                // Ubah teks tombol jadi edit
+                button.html('Edit');
+                button.prop('disabled', false);
+            },
+            error: function (xhr, status, error) {
+                // Penanganan jika terjadi error
+                // console.log("Error:", error);
+                // console.log("Status:", status);
+                // console.log("XHR Object:", xhr);
+                // alert("Terjadi kesalahan: " + error);
+                showToast('error', xhr.responseJSON.message);
+            }
+        });
+    })
 
 </script>
 @endpush
