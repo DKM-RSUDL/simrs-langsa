@@ -643,6 +643,7 @@
                             $this.find('#data_objektif').val(patient.obyektif);
                             $this.find('#planning').val(patient.planning);
 
+                            // skala nyeri set value
                             var skalaNyeri = patient.skala_nyeri;
                             var valColor = 'btn-success';
 
@@ -655,6 +656,18 @@
                             $this.find('#skalaNyeriBtn').addClass(valColor);
 
                             $this.find('#skala_nyeri').val(skalaNyeri);
+
+                            // tanda vital set value
+                            var kondisi = patient.kondisi;
+                            var konpas = kondisi.konpas;
+
+                            for(let i in konpas) {
+                                if(konpas.hasOwnProperty(i)) {
+                                    let kondisi = konpas[i];
+
+                                    $this.find(`#kondisi${kondisi.id_kondisi}`).val(kondisi.hasil);
+                                }
+                            }
                         }
                     }
                 }
