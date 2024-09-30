@@ -39,36 +39,6 @@
                                 </p>
                             @endif
                             <div class="mt-2">
-
-                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
-                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
-                                <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
-                                <h5 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800">
-                                    {{ auth()->user()->name }}
-                                </h5>
-                                @if (isset(auth()->user()->roles[0]->name))
-                                    <p class="card-text mb-1" style="font-size: 1.25rem;">Roles:
-                                        {{ auth()->user()->roles[0]->name }}</p>
-                                @endif
-
-                                @if (isset(auth()->user()->profile->no_hp))
-                                    <p class="card-text mb-1" style="font-size: 1.25rem;">No Hp:
-                                        {{ auth()->user()->profile->no_hp }}</p>
-                                @endif
-
-                                @if (isset(auth()->user()->email))
-                                    <p class="card-text mb-2" style="font-size: 1.25rem;">Email: {{ auth()->user()->email }}
-                                    </p>
-                                @endif
-
-                            </div>
-                            <div class="mt-2">
-                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i
-                                        class="fab fa-instagram fa-lg"></i></a>
-                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i
-                                        class="fab fa-whatsapp fa-lg"></i></a>
-                                <a href="https://www.facebook.com" target="_blank" class=""><i
-                                        class="fab fa-facebook fa-lg"></i></a>
                                 <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
                                 <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
@@ -109,15 +79,12 @@
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-8">
-            {{-- card --}}
-            <div class="col-md-6">
                 <div class="card mb-3 p-4">
                     <div class="row">
                         @foreach ([
                             ['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23],
                             ['route' => '#', 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11],
                             ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
-                            ['route' => '#', 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
                             ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4],
                             ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23],
                             ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31],
