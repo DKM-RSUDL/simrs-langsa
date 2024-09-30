@@ -604,13 +604,7 @@
         $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Proses...');
         $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
 
-        $(target).modal('show');
-    });
 
-    $('#editCpptModal').on('show.bs.modal', function(e)
-    {
-
-        var $this = $(this);
         var url = "{{ route('cppt.get-cppt-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
 
         $.ajax({
@@ -636,12 +630,12 @@
                             let patient = data[key];
 
                             //set key to input
-                            $this.find('#anamnesis').val(patient.anamnesis);
-                            $this.find('#lokasi').val(patient.lokasi);
-                            $this.find('#durasi').val(patient.durasi);
-                            $this.find('#pemeriksaan_fisik').val(patient.pemeriksaan_fisik);
-                            $this.find('#data_objektif').val(patient.obyektif);
-                            $this.find('#planning').val(patient.planning);
+                            $(target).find('#anamnesis').val(patient.anamnesis);
+                            $(target).find('#lokasi').val(patient.lokasi);
+                            $(target).find('#durasi').val(patient.durasi);
+                            $(target).find('#pemeriksaan_fisik').val(patient.pemeriksaan_fisik);
+                            $(target).find('#data_objektif').val(patient.obyektif);
+                            $(target).find('#planning').val(patient.planning);
 
                             // skala nyeri set value
                             var skalaNyeri = patient.skala_nyeri;
@@ -650,12 +644,12 @@
                             if(skalaNyeri > 3 && skalaNyeri <= 7) valColor = 'btn-warning';
                             if(skalaNyeri > 7 && skalaNyeri <= 10) valColor = 'btn-danger';
 
-                            $this.find('#skalaNyeriBtn').removeClass('btn-success');
-                            $this.find('#skalaNyeriBtn').removeClass('btn-warning');
-                            $this.find('#skalaNyeriBtn').removeClass('btn-danger');
-                            $this.find('#skalaNyeriBtn').addClass(valColor);
+                            $(target).find('#skalaNyeriBtn').removeClass('btn-success');
+                            $(target).find('#skalaNyeriBtn').removeClass('btn-warning');
+                            $(target).find('#skalaNyeriBtn').removeClass('btn-danger');
+                            $(target).find('#skalaNyeriBtn').addClass(valColor);
 
-                            $this.find('#skala_nyeri').val(skalaNyeri);
+                            $(target).find('#skala_nyeri').val(skalaNyeri);
 
                             // tanda vital set value
                             var kondisi = patient.kondisi;
@@ -665,13 +659,53 @@
                                 if(konpas.hasOwnProperty(i)) {
                                     let kondisi = konpas[i];
 
-                                    $this.find(`#kondisi${kondisi.id_kondisi}`).val(kondisi.hasil);
+                                    $(target).find(`#kondisi${kondisi.id_kondisi}`).val(kondisi.hasil);
                                 }
                             }
+
+                            // set pemberat value
+                            $(target).find(`#pemberat option[value="${patient.pemberat.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#peringan option[value="${patient.peringan.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#kualitas_nyeri option[value="${patient.kualitas.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#frekuensi_nyeri option[value="${patient.frekuensi.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#menjalar option[value="${patient.menjalar.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#jenis_nyeri option[value="${patient.jenis.id}"]`).attr('selected', 'selected');
+                            $(target).find(`input[name="tindak_lanjut"][value="${patient.tindak_lanjut_code}"]`).attr('checked', 'checked');
+
+                            // diagnosis set value
+                            var penyakit = patient.penyakit;
+                            var kdPenyakitList = '';
+                            var kdPenyakitListArr = [];
+                            var diagnoseInputHtmlList = '';
+                            var htmlDiagnoseListText = '';
+                            
+                            for(let d in penyakit) {
+                                if(penyakit.hasOwnProperty(d)) {
+                                    let diag = penyakit[d];
+
+                                    kdPenyakitListArr.push(diag.kd_penyakit);
+
+                                    htmlDiagnoseListText += `<a href="#" data-kode="${diag.kd_penyakit}" class="fw-bold btnListDiagnose text-decoration-none">
+                                                                <div class="d-flex align-items-center justify-content-between">                            
+                                                                    <p class="m-0 p-0">${diag.nama_penyakit}</p>
+                                                                    <i class="ti-close text-danger"></i>
+                                                                </div>
+                                                            </a> <br>
+                                                                
+                                    `;
+
+                                    diagnoseInputHtmlList += `<input type="text" name="diagnosis[]" class="diag-input" value="${diag.kd_penyakit}">`;
+
+                                }
+                            }
+                            
+                            $(target).find('#diagnoseList').html(htmlDiagnoseListText);
+                            $(target).find('#diagnoseListInput').html(diagnoseInputHtmlList);
                         }
                     }
                 }
 
+                $(target).modal('show');
                 // Ubah teks tombol jadi edit
                 button.html('Edit');
                 button.prop('disabled', false);
@@ -685,7 +719,58 @@
                 showToast('error', xhr.responseJSON.message);
             }
         });
+    });
+
+    // delete old diagnose list
+    $(document).on('click', '#editCpptModal .btnListDiagnose', function(e) {
+        e.preventDefault();
+        
+        var $this = $(this);
+        var kdPenyakit = $this.attr('data-kode');
+        var inputEl = $(`#editCpptModal .diag-input[value="${kdPenyakit}"]`);
+
+        $($this).remove();
+        $(inputEl).remove();
     })
+
+    // Button add diagnosis from edit cppt modal
+    $('#editCpptModal #openEditDiagnosisModal').click(function(e) {
+        var $this = $(this);
+        var target = $this.attr('data-bs-target');
+
+        var modalKedua = new bootstrap.Modal($(target), {
+            backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
+            keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
+        });
+
+
+
+        $(target).modal('show');
+    });
+
+    $('#editCpptModal #editDiagnosisModal').on('show.bs.modal', function(e) {
+        var $this = $(this);
+        var oldKdPenyakitList = $('#editCpptModal #diagnoseListInput .diag-input');
+        var oldNamaPenyakitEl = $('#editCpptModal .btnListDiagnose p'); 
+        
+        var kdPenyakitList = '';
+        var namaPenyakitArr = [];
+        var listNamaPenyakitHtml = '';
+        
+        $.each(oldKdPenyakitList, function (i, el) { 
+            if($(el).val() != '') {
+                kdPenyakitList += (kdPenyakitList != '') ? ',' + $(el).val() : $(el).val();
+            }
+        });
+        
+        $.each(oldNamaPenyakitEl, function (i, el) { 
+            var nmDiag = $(el).text();
+            if(nmDiag != '') listNamaPenyakitHtml += `<li>${nmDiag}</li>`;
+        });
+
+        $this.find('#dataListAdd').val(kdPenyakitList);
+        $this.find('#listDiagnosa').html(listNamaPenyakitHtml);
+    });
 
 </script>
 @endpush

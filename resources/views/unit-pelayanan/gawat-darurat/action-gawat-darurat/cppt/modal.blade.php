@@ -226,8 +226,8 @@
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
                                     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.create-diagnosis')
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
-                                        ICD-10</a>
+                                    {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
+                                        ICD-10</a> --}}
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -524,9 +524,9 @@
                                 <p class="fw-bold col-sm-5">Asesmen /Diagnosis</p>
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
-                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.create-diagnosis')
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
-                                        ICD-10</a>
+                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.edit-diagnosis')
+                                    {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
+                                        ICD-10</a> --}}
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -537,6 +537,7 @@
                                             <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
                                         </div>
                                     </div>
+                                    <div class="col-12" id="diagnoseListInput"></div>
                                 </div>
                             </div>
 
