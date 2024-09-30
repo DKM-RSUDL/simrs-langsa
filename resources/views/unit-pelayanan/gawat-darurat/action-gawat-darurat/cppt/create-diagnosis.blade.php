@@ -11,7 +11,6 @@
 =======
             <div class="modal-header">
                 <h5 class="modal-title" id="addDiagnosisModal">Input Diagnosis</h5>
->>>>>>> origin/rizaldev
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -53,11 +52,6 @@
 
 <script>
     document.getElementById('openVerticalCenterModal').addEventListener('click', function() {
-<<<<<<< HEAD
-        var modalKedua = new bootstrap.Modal(document.getElementById('verticalCenter'), {
-            backdrop: 'static',
-            keyboard: false
-=======
         var modalKedua = new bootstrap.Modal(document.getElementById('addDiagnosisModal'), {
             backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
             keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
