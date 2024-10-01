@@ -620,7 +620,6 @@
             },
             dataType: "json",
             success: function (response) {
-                console.log(response);
 
                 if(response.status == 'success') {
                     var data = response.data;
@@ -694,7 +693,7 @@
                                                                 
                                     `;
 
-                                    diagnoseInputHtmlList += `<input type="text" name="diagnosis[]" class="diag-input" value="${diag.kd_penyakit}">`;
+                                    diagnoseInputHtmlList += `<input type="hidden" name="diagnosis[]" class="diag-input" value="${diag.kd_penyakit}">`;
 
                                 }
                             }
@@ -712,11 +711,10 @@
             },
             error: function (xhr, status, error) {
                 // Penanganan jika terjadi error
-                // console.log("Error:", error);
-                // console.log("Status:", status);
-                // console.log("XHR Object:", xhr);
-                // alert("Terjadi kesalahan: " + error);
-                showToast('error', xhr.responseJSON.message);
+                console.log("Error:", error);
+                console.log("Status:", status);
+                console.log("XHR Object:", xhr);
+                alert("Terjadi kesalahan: " + error);
             }
         });
     });
@@ -733,6 +731,107 @@
         $(inputEl).remove();
     })
 
+    // add diagnose cppt edit
+    var editDataListDiagnose = $('#editDiagnosisModal #dataList');
+    var editDatalistDiagnoseAdd = $('#editDiagnosisModal #dataListAdd');
+    var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput');
+
+    $(editSearchInputDiagnose).keyup(function () { 
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+            var $this = $('#editDiagnosisModal #searchInput');
+            var url = "{{ route('cppt.get-icd10-ajax', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}";
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'data': $this.val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == 'success') {
+                        var dataDiag = response.data.diagnosa;
+                        var dataDiagCount = response.data.count;
+                        
+                        var html = '';
+                        if(dataDiagCount > 0) {
+                            $.each(dataDiag, function (i, e) { 
+                                html += `<li><a class="dropdown-item" data-kode="${e.kd_penyakit}" href="#">${e.penyakit}</a></li>`;
+                            });
+                        } else {
+                            html += `<li><a class="dropdown-item" data-kode="" href="#">--Data tidak ditemukan--</a></li>`;
+                        }
+
+                        $(editDataListDiagnose).html(html);
+                        $(editDataListDiagnose).show();
+                    }
+                }
+            });
+        }, debounceTime);
+    });
+
+    var editDiagnoseSelection = '';
+    var editDiagnoseSelectionAll = '';
+    var editDiagnoseSelectionText = [];
+
+    $(document).on('click', '#editDiagnosisModal #dataList li', function(e) {
+        var $this = $(this);
+        var text = $this.find('.dropdown-item').text();
+        var kode = $this.find('.dropdown-item').attr('data-kode');
+        
+        if(kode != '') {
+            $(editSearchInputDiagnose).val(text);
+            editDiagnoseSelection = kode;
+            $(editDataListDiagnose).hide();
+        }
+    });
+
+    $('#editDiagnosisModal #btnAddListDiagnosa').click(function(e) {
+        e.preventDefault();
+        var searchInputValue = $(editSearchInputDiagnose).val();
+        
+        if(searchInputValue != '') {
+            $('#editDiagnosisModal #listDiagnosa').append(`<li>${searchInputValue}</li>`);
+            editDiagnoseSelectionAll = $('#editDiagnosisModal #dataListAdd').val();
+            editDiagnoseSelectionAll += (editDiagnoseSelectionAll != '') ? `,${editDiagnoseSelection}` : editDiagnoseSelection;
+
+            $(editDatalistDiagnoseAdd).val(editDiagnoseSelectionAll);
+            $(editSearchInputDiagnose).val('');
+            editDiagnoseSelection = '';
+        }
+    });
+
+    $('#editDiagnosisModal #btnSaveDiagnose').click(function(e) {
+        var diagnoseListContent = '';
+        var diagnoseInputHtmlList = '';
+
+        var newKdDiagnoseVal = $('#editDiagnosisModal #dataListAdd').val();
+        var newKdDiagnoseList = newKdDiagnoseVal.split(',');
+        var newNameDiagnoseList = $('#editDiagnosisModal #listDiagnosa li');
+
+        for (let i = 0; i < newNameDiagnoseList.length; i++) {
+            var diagName = $(newNameDiagnoseList[i]).text();
+            var diagCode = newKdDiagnoseList[i];
+
+            diagnoseListContent += `<a href="#" data-kode="${diagCode}" class="fw-bold btnListDiagnose text-decoration-none">
+                                        <div class="d-flex align-items-center justify-content-between">                            
+                                            <p class="m-0 p-0">${diagName}</p>
+                                            <i class="ti-close text-danger"></i>
+                                        </div>
+                                    </a> <br>
+            `;
+
+            diagnoseInputHtmlList += `<input type="hidden" name="diagnosis[]" class="diag-input" value="${diagCode}">`;
+        }
+
+        $('#editCpptModal #diagnoseList').html(diagnoseListContent);
+        $('#editCpptModal #diagnoseListInput').html(diagnoseInputHtmlList);
+        $('#editDiagnosisModal .btn-close').trigger('click');
+    });
+
+
     // Button add diagnosis from edit cppt modal
     $('#editCpptModal #openEditDiagnosisModal').click(function(e) {
         var $this = $(this);
@@ -742,8 +841,6 @@
             backdrop: 'static', // Agar tidak menutup modal pertama ketika klik di luar modal kedua
             keyboard: false // Agar tidak bisa ditutup dengan tombol ESC
         });
-
-
 
         $(target).modal('show');
     });
@@ -765,7 +862,10 @@
         
         $.each(oldNamaPenyakitEl, function (i, el) { 
             var nmDiag = $(el).text();
-            if(nmDiag != '') listNamaPenyakitHtml += `<li>${nmDiag}</li>`;
+
+            if(nmDiag != '') {
+                listNamaPenyakitHtml += `<li>${nmDiag}</li>`;
+            }
         });
 
         $this.find('#dataListAdd').val(kdPenyakitList);

@@ -18,7 +18,7 @@
                         untuk satu diagnosis )
                     </p>
                     <div class="dropdown">
-                        <input type="text" id="dataListAdd">
+                        <input type="hidden" id="dataListAdd">
                         <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Cari data..." aria-expanded="false" autocomplete="off">
                         <ul class="dropdown-menu" id="dataList" aria-labelledby="searchInput">
                             <!-- Daftar data -->

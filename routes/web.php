@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
                                 Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                                 Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                                 Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
                             });
                         });
                     });
