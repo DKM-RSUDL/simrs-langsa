@@ -1,7 +1,19 @@
 <div>
-    <div class="d-flex justify-content-start align-items-center m-3">
+    <div class="d-flex justify-content-between m-3">
         <div class="row">
             <!-- Select PPA Option -->
+            <div class="col-md-2">
+                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                    <option value="semua" selected>Semua PPA</option>
+                    <option value="option1">PPA Sekarang</option>
+                    <option value="option2">1 PPA</option>
+                    <option value="option3">3 PPA</option>
+                    <option value="option4">6 PPA</option>
+                    <option value="option5">9 PPA</option>
+                </select>
+            </div>
+
+            <!-- Select Episode Option -->
             <div class="col-md-2">
                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
                     <option value="semua" selected>Semua Episode</option>
@@ -37,30 +49,6 @@
                 </div>
             </div>
 
-            <!-- Add Button -->
-            <!-- Include the modal file -->
-            <div class="col-md-2">
-                <button class="btn btn-primary">Tambah</button>
-            </div>
-
         </div>
     </div>
-
-    <table class="table table-bordered">
-        <thead class="table-primary">
-            <tr>
-                <th width="100px"># order</th>
-                <th>Nama Pemeriksaan</th>
-                <th>Waktu Permintaan</th>
-                <th>Waktu Hasil</th>
-                <th>Dokter Pengirim</th>
-                <th>Cito/Non Cito</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr></tr>
-        </tbody>
-    </table>
 </div>

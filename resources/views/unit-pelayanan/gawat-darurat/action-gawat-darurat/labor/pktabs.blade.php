@@ -41,7 +41,6 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                {{-- <button class="btn btn-primary">Tambah</button> --}}
                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal')
             </div>
 

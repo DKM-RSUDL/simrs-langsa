@@ -1,5 +1,5 @@
 <div>
-    <div class="d-flex justify-content-start align-items-center m-3">
+    <div class="d-flex justify-content-between m-3">
         <div class="row">
             <!-- Select PPA Option -->
             <div class="col-md-2">
@@ -22,12 +22,12 @@
             <div class="col-md-2">
                 <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <a href="#" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></a>
             </div>
 
             <!-- Search Bar -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-search"></i>
@@ -37,30 +37,44 @@
                 </div>
             </div>
 
-            <!-- Add Button -->
-            <!-- Include the modal file -->
-            <div class="col-md-2">
-                <button class="btn btn-primary">Tambah</button>
-            </div>
-
         </div>
     </div>
 
     <table class="table table-bordered">
         <thead class="table-primary">
             <tr>
-                <th width="100px"># order</th>
-                <th>Nama Pemeriksaan</th>
-                <th>Waktu Permintaan</th>
-                <th>Waktu Hasil</th>
-                <th>Dokter Pengirim</th>
-                <th>Cito/Non Cito</th>
-                <th>Status</th>
+                <th>Jenis Pelayanan</th>
+                <th>Dokter (DPJP)</th>
+                <th>Tanggal Masuk</th>
+                <th>Tanggal Keluar</th>
+                <th>LOS</th>
+                <th>Kinik/Ruang</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            <tr></tr>
+            <tr>
+                <td>Rawat Jalan</td>
+                <td>dr. Gunardi, Sp.PD</td>
+                <td>03 Apr 2024</td>
+                <td>03 Apr 2024</td>
+                <td>1 Hari</td>
+                <td>Klinik Internis</td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-success">Validasi</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Rawat Inap</td>
+                <td>dr. Helmiza Fahry, Sp.OT</td>
+                <td>01 Apr 2024</td>
+                <td>03 Apr 2024</td>
+                <td>3 Hari</td>
+                <td>Ruang Kelas Utama B</td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-info">Lihat</a>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
