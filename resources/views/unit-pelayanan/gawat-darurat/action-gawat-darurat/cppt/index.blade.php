@@ -558,7 +558,7 @@
         $('#addDiagnosisModal .btn-close').trigger('click');
     });
 
-    $('input[name="skala_nyeri"]').change(function(e) {
+    $('#addCpptModal input[name="skala_nyeri"]').change(function(e) {
         var $this = $(this);
         var skalaValue = $this.val();
 
@@ -873,6 +873,31 @@
 
         $this.find('#dataListAdd').val(kdPenyakitList);
         $this.find('#listDiagnosa').html(listNamaPenyakitHtml);
+    });
+
+    $('#editCpptModal input[name="skala_nyeri"]').change(function(e) {
+        var $this = $(this);
+        var skalaValue = $this.val();
+
+        if(skalaValue > 10) {
+            skalaValue = 10;
+            $this.val(10);
+        }
+
+        if(skalaValue < 0) {
+            skalaValue = 0;
+            $this.val(0);
+        }
+
+        var valColor = 'btn-success';
+
+        if(skalaValue > 3 && skalaValue <= 7) valColor = 'btn-warning';
+        if(skalaValue > 7 && skalaValue <= 10) valColor = 'btn-danger';
+
+        $('#editCpptModal #skalaNyeriBtn').removeClass('btn-success');
+        $('#editCpptModal #skalaNyeriBtn').removeClass('btn-warning');
+        $('#editCpptModal #skalaNyeriBtn').removeClass('btn-danger');
+        $('#editCpptModal #skalaNyeriBtn').addClass(valColor);
     });
 
 </script>
