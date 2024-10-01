@@ -703,104 +703,73 @@ class CpptController extends Controller
         $tanggal = date('Y-m-d');
         $jam = date('H:i:s');
 
-        // store anamnesis
-        $lastUrutMasukAnamnesis = MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
-                                        ->where('kd_unit', $kunjungan->kd_unit)
-                                        ->whereDate('tgl_masuk', $tanggal)
-                                        ->count();
-        $lastUrutMasukAnamnesis += 1;
+        $tglCpptReq = $request->tgl_cppt;
+        $urutCpptReq = $request->urut_cppt;
+        $unitCpptReq = $request->unit_cppt;
 
-        $anamnesisInsertData = [
-            'kd_pasien'     => $kunjungan->kd_pasien,
-            'kd_unit'       => $kunjungan->kd_unit,
-            'tgl_masuk'     => $tanggal,
-            'urut_masuk'    => $lastUrutMasukAnamnesis,
-            'urut'          => 0,
-            'anamnesis'     => $request->anamnesis,
-            'dd'            => ''
-        ];
-
-        MrAnamnesis::create($anamnesisInsertData);
+        // update anamnesis
+        MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                                        ->where('kd_unit', $unitCpptReq)
+                                        ->where('tgl_masuk', $tglCpptReq)
+                                        ->where('urut_masuk', $urutCpptReq)
+                                        ->update([
+                                            'anamnesis' => $request->anamnesis
+                                        ]);
 
 
-        // insert data to mr_konpas
-        $konpasMax = MrKonpas::select(['id_konpas'])
-                            ->whereDate('tgl_masuk', $tanggal)
-                            // ->where('kd_unit', 3)
-                            ->orderBy('id_konpas', 'desc')
-                            ->max('id_konpas');
+        // update konpas
+        $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
+                            ->where('kd_unit', $unitCpptReq)
+                            ->where('tgl_masuk', $tglCpptReq)
+                            ->where('urut_masuk', $urutCpptReq)
+                            ->first();
 
-        $newIdKonpas = (empty($konpasMax)) ? date('Ymd', strtotime($tanggal)) . '0001' : (int) $konpasMax + 1;
 
-        $lastUrutMasukKonpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
-                                        ->where('kd_unit', $kunjungan->kd_unit)
-                                        ->whereDate('tgl_masuk', $tanggal)
-                                        ->count();
-        $lastUrutMasukKonpas += 1;
-
-        $konpasInsertData = [
-            'id_konpas'     => $newIdKonpas,
-            'kd_pasien'     => $kunjungan->kd_pasien,
-            'kd_unit'       => $kunjungan->kd_unit,
-            'tgl_masuk'     => $tanggal,
-            'urut_masuk'    => $lastUrutMasukKonpas,
-            'catatan'       => ''
-        ];
-
-        MrKonpas::create($konpasInsertData);
-
-        // store tanda vital
+        // update tanda vital
         $tandaVitalReq = $request->tanda_vital;
         $tandaVitalList = MrKondisiFisik::OrderBy('urut')->get();
 
         $i = 0;
         foreach($tandaVitalList as $item) {
-            $konpasDtlInsertData = [
-                'id_konpas'     => $newIdKonpas,
-                'id_kondisi'    => $item->id_kondisi,
-                'hasil'         => $tandaVitalReq[$i]
-            ];
+            MrKonpasDtl::where('id_konpas', $konpas->id_konpas)
+                                    ->where('id_kondisi', $item->id_kondisi)
+                                    ->update([
+                                        'hasil' => $tandaVitalReq[$i]
+                                    ]);
 
-            MrKonpasDtl::create($konpasDtlInsertData);
             $i++;
         }
 
 
-        // store CPPT
-        $lastUrutCPPT = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
+        // update CPPT
+        $cppt = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                                     ->where('kd_kasir', $kunjungan->kd_kasir)
-                                    ->whereDate('tanggal', $tanggal)
-                                    ->count();
-        $lastUrutCPPT += 1;
+                                    ->where('tanggal', $tglCpptReq)
+                                    ->where('urut', $urutCpptReq)
+                                    ->first();
 
-        $cpptInsertData = [
-            'kd_kasir'              => $kunjungan->kd_kasir,
-            'no_transaksi'          => $kunjungan->no_transaksi,
-            'penanggung'            => 0,
-            'nama_penanggung'       => Auth::user()->name,
-            'tanggal'               => $tanggal,
-            'jam'                   => $jam,
-            'obyektif'              => $request->data_objektif,
-            'assesment'             => '',
-            'planning'              => $request->planning,
-            'urut'                  => $lastUrutCPPT,
-            'skala_nyeri'           => $request->skala_nyeri,
-            'lokasi'                => $request->lokasi,
-            'durasi'                => $request->durasi,
-            'faktor_pemberat_id'    => $request->pemberat,
-            'faktor_peringan_id'    => $request->peringan,
-            'kualitas_nyeri_id'     => $request->kualitas_nyeri,
-            'frekuensi_nyeri_id'    => $request->frekuensi_nyeri,
-            'menjalar_id'           => $request->menjalar,
-            'jenis_nyeri_id'        => $request->jenis_nyeri,
-            'pemeriksaan_fisik'     => $request->pemeriksaan_fisik,
-            'user_penanggung'       => Auth::user()->id
+        $cpptDataUpdate = [
+            'obyektif' => $request->data_objektif,
+            'planning' => $request->planning,
+            'skala_nyeri' => $request->skala_nyeri,
+            'lokasi' => $request->lokasi,
+            'durasi' => $request->durasi,
+            'faktor_pemberat_id' => $request->pemberat,
+            'faktor_peringan_id' => $request->peringan,
+            'frekuensi_nyeri_id' => $request->frekuensi_nyeri,
+            'menjalar_id' => $request->menjalar,
+            'jenis_nyeri_id' => $request->jenis_nyeri,
+            'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
         ];
 
-        Cppt::create($cpptInsertData);
+        Cppt::where('no_transaksi', $kunjungan->no_transaksi)
+                                    ->where('kd_kasir', $kunjungan->kd_kasir)
+                                    ->where('tanggal', $tglCpptReq)
+                                    ->where('urut', $urutCpptReq)
+                                    ->update($cpptDataUpdate);
 
 
-        // store CPPT Tindak Lanjut
+        // update CPPT Tindak Lanjut
         $tindakLanjut = $request->tindak_lanjut;
         $tindakLanjutLabel = '';
 
@@ -825,32 +794,34 @@ class CpptController extends Controller
                 break;
         }
 
-        $cpptTindakLanjutInsertData = [
-            'kd_kasir'              => $kunjungan->kd_kasir,
-            'no_transaksi'          => $kunjungan->no_transaksi,
-            'tanggal'               => $tanggal,
-            'jam'                   => $jam,
-            'tindak_lanjut_code'    => $tindakLanjut,
-            'tindak_lanjut_name'    => $tindakLanjutLabel,
-            'tgl_kontrol_ulang'     => '',
-            'unit_rujuk_internal'   => '',
-            'unit_rawat_inap'       => '',
-            'rs_rujuk'              => '',
-            'rs_rujuk_bagian'       => '',
-            // 'urut'                  => $lastUrutCPPT
-            'urut'                  => 1
+        $cpptTL = [
+            'tindak_lanjut_code' => $tindakLanjut,
+            'tindak_lanjut_name' => $tindakLanjutLabel,
         ];
 
-        CpptTindakLanjut::create($cpptTindakLanjutInsertData);
+        CpptTindakLanjut::where('kd_kasir', $cppt->kd_kasir)
+                                            ->where('no_transaksi', $cppt->no_transaksi)
+                                            ->where('tanggal', $cppt->tanggal)
+                                            ->where('jam', $cppt->jam)
+                                            ->update($cpptTL);
 
-        // store diagnosis
-        $diagnosisReq = $request->diagnosis;
-        $diagnosisList = explode(',', $diagnosisReq);
+
+        // update diagnosis
+        $diagnosisList = $request->diagnosis;
+
+        // delete old diagnose
+        MrPenyakit::where('kd_pasien', $kunjungan->kd_pasien)
+                                    ->where('kd_unit', $unitCpptReq)
+                                    ->where('tgl_cppt', $tglCpptReq)
+                                    ->where('urut_cppt', $urutCpptReq)
+                                    ->delete();
         
         $lastUrutMasukDiagnosis = MrPenyakit::where('kd_pasien', $kunjungan->kd_pasien)
-                                    ->where('kd_unit', $kunjungan->kd_unit)
-                                    ->whereDate('tgl_masuk', $tanggal)
+                                    ->where('kd_unit', $unitCpptReq)
+                                    ->where('tgl_cppt', $tglCpptReq)
+                                    ->where('urut_cppt', $urutCpptReq)
                                     ->count();
+
         $lastUrutMasukDiagnosis += 1;
 
         foreach($diagnosisList as $diag) {
@@ -866,15 +837,15 @@ class CpptController extends Controller
                 'kasus'             => 0,
                 'tindakan'          => 0,
                 'perawatan'         => 0,
-                'tgl_cppt'          => $tanggal,
-                'urut_cppt'         => $lastUrutCPPT
+                'tgl_cppt'          => $tglCpptReq,
+                'urut_cppt'         => $urutCpptReq
             ];
 
             MrPenyakit::create($diagInsertData);
             $lastUrutMasukDiagnosis++;
         }
 
-        return back()->with('success', 'CPPT berhasil ditambah!');
+        return back()->with('success', 'CPPT berhasil diubah!');
     }
 }
 

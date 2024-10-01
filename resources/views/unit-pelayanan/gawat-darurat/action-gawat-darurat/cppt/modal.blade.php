@@ -310,7 +310,7 @@
             <form action="{{ route('cppt.update', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
                 @csrf
                 @method('put')
-                
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="editCpptModalLabel">Edit Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -323,6 +323,9 @@
                                     Anamnesis/ Keluhan Utama
                                     <label for="anamnesis"></label>
                                 </p>
+                                <input type="hidden" name="tgl_cppt">
+                                <input type="hidden" name="urut_cppt">
+                                <input type="hidden" name="unit_cppt">
                                 <textarea class="form-control @error('anamnesis') is-invalid @enderror" name="anamnesis" id="anamnesis" required>{{ old('anamnesis') }}</textarea>
                                 @error('anamnesis')
                                     <div class="invalid-feedback">

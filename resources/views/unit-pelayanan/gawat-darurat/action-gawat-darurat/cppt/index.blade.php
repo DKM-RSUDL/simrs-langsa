@@ -629,6 +629,9 @@
                             let patient = data[key];
 
                             //set key to input
+                            $(target).find('input[name="tgl_cppt"]').val(tanggalData);
+                            $(target).find('input[name="urut_cppt"]').val(urutData);
+                            $(target).find('input[name="unit_cppt"]').val(unitData);
                             $(target).find('#anamnesis').val(patient.anamnesis);
                             $(target).find('#lokasi').val(patient.lokasi);
                             $(target).find('#durasi').val(patient.durasi);
@@ -663,12 +666,12 @@
                             }
 
                             // set pemberat value
-                            $(target).find(`#pemberat option[value="${patient.pemberat.id}"]`).attr('selected', 'selected');
-                            $(target).find(`#peringan option[value="${patient.peringan.id}"]`).attr('selected', 'selected');
-                            $(target).find(`#kualitas_nyeri option[value="${patient.kualitas.id}"]`).attr('selected', 'selected');
-                            $(target).find(`#frekuensi_nyeri option[value="${patient.frekuensi.id}"]`).attr('selected', 'selected');
-                            $(target).find(`#menjalar option[value="${patient.menjalar.id}"]`).attr('selected', 'selected');
-                            $(target).find(`#jenis_nyeri option[value="${patient.jenis.id}"]`).attr('selected', 'selected');
+                            $(target).find(`#pemberat option[value="${patient?.pemberat?.id || ''}"]`).attr('selected', 'selected');
+                            $(target).find(`#peringan option[value="${patient?.peringan?.id || ''}"]`).attr('selected', 'selected');
+                            $(target).find(`#kualitas_nyeri option[value="${patient?.kualitas?.id || ''}"]`).attr('selected', 'selected');
+                            $(target).find(`#frekuensi_nyeri option[value="${patient?.frekuensi?.id || ''}"]`).attr('selected', 'selected');
+                            $(target).find(`#menjalar option[value="${patient?.menjalar?.id || ''}"]`).attr('selected', 'selected');
+                            $(target).find(`#jenis_nyeri option[value="${patient?.jenis?.id || ''}"]`).attr('selected', 'selected');
                             $(target).find(`input[name="tindak_lanjut"][value="${patient.tindak_lanjut_code}"]`).attr('checked', 'checked');
 
                             // diagnosis set value
