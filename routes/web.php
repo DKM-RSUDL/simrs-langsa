@@ -75,7 +75,16 @@ Route::middleware('auth')->group(function () {
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('radiologi', GawatDaruratRadiologiController::class);
 
-                    Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::prefix('farmasi')->group(function () {
+                        Route::name('farmasi')->group(function () {
+                            Route::controller(GawatDaruratFarmasiController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'index')->name('.store');
+                                Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                            });
+                        });
+                    });
                     
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);

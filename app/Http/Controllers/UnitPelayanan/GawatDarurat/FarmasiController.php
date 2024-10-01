@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
+use App\Models\AptObat;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
@@ -31,23 +32,25 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
 
+        // Mengambil daftar dokter
+        $dokters = Dokter::all();
+
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'kd_pasien', 'tgl_masuk')
+            compact('dataMedis', 'riwayatObat', 'kd_pasien', 'tgl_masuk', 'dokters')
         );
     }
 
-    public function getModalData()
+    public function searchObat(Request $request, $kd_pasien, $tgl_masuk)
     {
-        $dokters = Dokter::orderBy('NAMA', 'asc')->get();
+        $search = $request->get('term');
+        $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
+        ->where('APT_OBAT.nama_obat', 'LIKE', '%' . $search . '%')
+            ->select('APT_OBAT.KD_PRD as id', 'APT_OBAT.nama_obat as text', 'APT_PRODUK.HARGA_BELI as harga')
+            ->take(10)
+            ->get();
 
-        // Log::info('Jumlah dokter: ' . $dokters->count());
-        // Log::info('Data dokter: ' . $dokters->toJson());
-
-        return response()->json([
-            'dokters' => $dokters,
-            // Tambahkan data lain yang diperlukan untuk modal di sini
-        ]);
+        return response()->json($obats);
     }
 
     private function getRiwayatObat($kd_pasien)
@@ -71,5 +74,11 @@ class FarmasiController extends Controller
             )
             ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
             ->get();
+    }
+
+
+    public function Store(Request $request)
+    {
+        //
     }
 }

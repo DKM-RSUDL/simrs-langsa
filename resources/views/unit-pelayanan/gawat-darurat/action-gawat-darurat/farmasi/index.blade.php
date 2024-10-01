@@ -1,6 +1,7 @@
 @extends('layouts.administrator.master')
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
     </style>
