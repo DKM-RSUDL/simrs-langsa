@@ -4,20 +4,6 @@
             max-height: 400px;
             overflow-y: auto;
         }
-
-        #orderList li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 3px;
-        }
-
-        .remove-item {
-            color: red;
-            cursor: pointer;
-        }
     </style>
 @endpush
 
@@ -30,7 +16,13 @@
 <div class="modal fade" id="extraLargeModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="" method="post">
+            <form action="{{ route('labor.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+                @csrf
+                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="extraLargeModalLabel">
                         Order Pemeriksaan Laboratorium Klinik
@@ -41,25 +33,22 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="patient-card">
-                                <label for="dokter_pengirim" class="form-label fw-bold h5 text-dark">Dokter
-                                    Pengirim:</label>
-                                <select id="dokter_pengirim" name="dokter_pengirim" class="form-select"
-                                    aria-label="Pilih dokter pengirim">
+                                <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
+                                <select id="kd_dokter" name="kd_dokter" class="form-select" aria-label="Pilih dokter pengirim" required>
                                     <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
                                     @foreach ($dataDokter as $dokter)
-                                        <option value="{{ $dokter->id }}">{{ $dokter->nama }}</option>
+                                        <option value="{{ $dokter->kd_dokter }}"
+                                            {{ old('kd_dokter') == $dokter->kd_dokter ? 'selected' : '' }}>
+                                            {{ $dokter->nama }}
+                                        </option>
                                     @endforeach
                                 </select>
 
                                 <div class="row">
-                                    <div class="col-6">
-                                        <label for="tanggal" class="form-label fw-bold h5 text-dark">Tanggal Order
-                                            :</label>
-                                        <input type="date" id="tanggal" name="tanggal" class="form-control">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="jam" class="form-label fw-bold h5 text-dark">Jam:</label>
-                                        <input type="time" id="jam" name="jam" class="form-control">
+                                    <div class="col-12">
+                                        <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal & Jam Order:</label>
+                                        <input type="datetime-local" id="tgl_order" name="tgl_order" class="form-control"
+                                            value="{{ old('tgl_order', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}" required>
                                     </div>
                                 </div>
                             </div>
@@ -69,35 +58,23 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="cito" value="ya"
-                                                id="citoYa">
-                                            <label class="form-check-label" for="citoYa">
-                                                Ya
-                                            </label>
+                                            <input class="form-check-input" type="radio" name="cyto" value="1" id="cyto_yes" {{ old('cyto') == '1' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="cyto_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="cito" value="tidak"
-                                                id="citoTidak" checked>
-                                            <label class="form-check-label" for="citoTidak">
-                                                Tidak
-                                            </label>
+                                            <input class="form-check-input" type="radio" name="cyto" value="0" id="cyto_no" {{ old('cyto', '0') == '0' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="cyto_no">Tidak</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="puasa" value="ya"
-                                                id="puasaYa">
-                                            <label class="form-check-label" for="puasaYa">
-                                                Ya
-                                            </label>
+                                            <input class="form-check-input" type="radio" name="puasa" value="1" id="puasa_yes" {{ old('puasa') == '1' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="puasa_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="puasa" value="tidak"
-                                                id="puasaTidak" checked>
-                                            <label class="form-check-label" for="puasaTidak">
-                                                Tidak
-                                            </label>
+                                            <input class="form-check-input" type="radio" name="puasa" value="0" id="puasa_no" {{ old('puasa', '0') == '0' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="puasa_no">Tidak</label>
                                         </div>
                                     </div>
                                 </div>
@@ -109,60 +86,49 @@
                                     Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
                                 </p>
                                 <div class="row">
-                                    <div class="col-6">
-                                        <label for="tanggal" class="form-label fw-bold h5 text-dark">Tanggal Order
-                                            :</label>
-                                        <input type="date" id="tanggal" name="tanggal" class="form-control">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="jam" class="form-label fw-bold h5 text-dark">Jam:</label>
-                                        <input type="time" id="jam" name="jam" class="form-control">
+                                    <div class="col-12">
+                                        <label for="jadwal_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal & Jam Pemeriksaan:</label>
+                                        <input type="datetime-local" id="jadwal_pemeriksaan" name="jadwal_pemeriksaan" class="form-control"
+                                            value="{{ old('jadwal_pemeriksaan') }}">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
-                                <textarea class="form-control" id="anamnesis"></textarea>
+                                <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis') }}</textarea>
                             </div>
-
                         </div>
 
                         <div class="col-md-4">
                             <div class="patient-card">
-                                <label for="jenis_pemeriksaan" class="form-label fw-bold h5 text-dark">
-                                    Pilih Jenis Pemeriksaan
-                                </label>
                                 <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select" aria-label="Pilih jenis pemeriksaan">
-                                    <option value="" disabled selected>--Semua--</option>
-                                    @foreach($DataLapPemeriksaan as $kategori => $items)
-                                        <option value="{{ $kategori }}">{{ $kategori }}</option>
+                                    <option value="" disabled selected>--Pilih Kategori--</option>
+                                    @foreach ($DataLapPemeriksaan as $kategori => $items)
+                                        <option value="{{ $kategori }}" {{ old('jenis_pemeriksaan') == $kategori ? 'selected' : '' }}>
+                                            {{ $kategori }}
+                                        </option>
                                     @endforeach
                                 </select>
 
                                 <div class="dropdown mt-3">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Cari data..." autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput" style="display: none;">
-                                        <!-- Data nama yang difilter akan muncul di sini -->
-                                    </ul>
+                                    <input type="text" class="form-control mt-3" id="searchInput" placeholder="Cari produk..." autocomplete="off">
+                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput" style="display: none;"></ul>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="patient-card">
-                                <h6 class="fw-bold">Daftar Order Pemeriksaan Laboratorium</h6>
-                                <ul id="orderList" class="list-group">
-                                    <!-- Daftar order pemeriksaan yang dipilih akan muncul di sini -->
-                                </ul>
+                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                <ul id="orderList" class="list-group"></ul>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -171,98 +137,87 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const dataList = document.getElementById('dataList');
-            const orderList = document.getElementById('orderList');
-            const jenisPemeriksaanSelect = document.getElementById('jenis_pemeriksaan');
+        $(document).ready(function() {
+            const $searchInput = $('#searchInput');
+            const $dataList = $('#dataList');
+            const $orderList = $('#orderList');
+            const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
+            const dataPemeriksaan = @json($DataLapPemeriksaan);
+            console.log(dataPemeriksaan);
 
-            // Ambil data dari controller dalam bentuk JSON
-            const dataPemeriksaan = @json($DataLapPemeriksaan); // Data dari controller
+            let urut = 1;
 
-            // Tampilkan dropdown saat input difokuskan
-            searchInput.addEventListener('focus', function() {
-                if (jenisPemeriksaanSelect.value) {
-                    dataList.style.display = 'block';
+            $searchInput.on('focus', function() {
+                if ($jenisPemeriksaanSelect.val()) {
+                    $dataList.show();
                 }
             });
 
-            // untuk perubahan kategori di dropdown jenis pemeriksaan
-            jenisPemeriksaanSelect.addEventListener('change', function() {
-                const selectedCategory = this.value;
+            $jenisPemeriksaanSelect.on('change', function() {
+                const selectedCategory = $(this).val();
+                console.log(selectedCategory);
 
-                // Reset dataList setiap kali kategori berubah
-                dataList.innerHTML = '';
+                $dataList.empty();
 
-                // Tampilkan nama sesuai dengan kategori yang dipilih
                 if (dataPemeriksaan[selectedCategory]) {
-                    dataPemeriksaan[selectedCategory].forEach(item => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<a class="dropdown-item" href="#">${item.nama}</a>`;
-                        dataList.appendChild(li);
+                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
+                        console.log(item);
+                        const $li = $('<li>');
+                        $li.html(
+                            `<a class="dropdown-item" href="#" data-kd-produk="${item.kd_produk}">${item.nama}</a>`
+                        );
+                        $dataList.append($li);
                     });
                 }
 
-                // Reset search input value ketika kategori berubah
-                searchInput.value = '';
-                dataList.style.display = 'none';
+                $searchInput.val('');
+                $dataList.hide();
             });
 
-            // Filter data saat mengetik di input cari
-            searchInput.addEventListener('input', function() {
-                const filter = searchInput.value.toLowerCase();
-                const items = dataList.querySelectorAll('.dropdown-item');
-                let hasVisibleItems = false;
+            $dataList.on('click', '.dropdown-item', function(e) {
+                e.preventDefault();
 
-                items.forEach(function(item) {
-                    const text = item.textContent.toLowerCase();
-                    if (text.includes(filter)) {
-                        item.style.display = 'block';
-                        hasVisibleItems = true;
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+                const selectedItemText = $(this).text();
+                const kdProduk = $(this).attr('data-kd-produk');
+                console.log(kdProduk);
 
-                if (hasVisibleItems) {
-                    dataList.style.display = 'block';
-                } else {
-                    dataList.style.display = 'none';
-                }
-            });
+                if (kdProduk) {
+                    const $listItem = $('<li>').addClass('list-group-item');
 
-            // tambah item dari dropdown ke daftar order
-            dataList.addEventListener('click', function(e) {
-                if (e.target.classList.contains('dropdown-item')) {
-                    const selectedItemText = e.target.textContent;
-
-                    // Buat elemen baru dari order
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('list-group-item');
-                    listItem.innerHTML = `
+                    // Set hidden inputs dynamically
+                    $listItem.html(`
                         ${selectedItemText}
-                        <span class="remove-item" style="color: red; cursor: pointer;"><i class="bi bi-x-circle"></i></span>
-                    `;
-                    orderList.appendChild(listItem);
+                        <input type="hidden" name="kd_produk[]" value="${kdProduk}">
+                        <input type="hidden" name="jumlah[]" value="1">
+                        <input type="hidden" name="status[]" value="1">
+                        <input type="hidden" name="urut[]" value="${urut}">
+                        <span class="remove-item" style="color: red; cursor: pointer;">
+                            <i class="bi bi-x-circle"></i>
+                        </span>
+                    `);
 
-                    // Hapus teks di input dan sembunyikan dropdown
-                    searchInput.value = '';
-                    dataList.style.display = 'none';
+                    $orderList.append($listItem);
 
-                    // hapus item dari daftar order
-                    listItem.querySelector('.remove-item').addEventListener('click', function() {
-                        listItem.remove();
+                    urut++;
+
+                    $listItem.find('.remove-item').on('click', function() {
+                        $(this).closest('li').remove();
+                        urut--;
+                        console.log(urut);
                     });
+
+                    $searchInput.val('');
+                    $dataList.hide();
+                } else {
+                    console.error('Error: kd_produk is undefined');
                 }
             });
 
-            // simpan dropdown jika klik di luar dropdown
-            document.addEventListener('click', function(event) {
-                if (!event.target.closest('.dropdown') && event.target !== searchInput) {
-                    dataList.style.display = 'none';
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
+                    $dataList.hide();
                 }
             });
         });
     </script>
 @endpush
-

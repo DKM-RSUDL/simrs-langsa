@@ -46,21 +46,45 @@
         </div>
     </div>
 
-    <table class="table table-bordered">
-        <thead class="table-primary">
-            <tr>
-                <th width="100px"># order</th>
-                <th>Nama Pemeriksaan</th>
-                <th>Waktu Permintaan</th>
-                <th>Waktu Hasil</th>
-                <th>Dokter Pengirim</th>
-                <th>Cito/Non Cito</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr></tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th width="100px"># order</th>
+                    <th>Nama Pemeriksaan</th>
+                    <th>Waktu Permintaan</th>
+                    <th>Waktu Hasil</th>
+                    <th>Dokter Pengirim</th>
+                    <th>Cito/Non Cito</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($dataLabor as $laborPA)
+                    <tr>
+                        <td>{{ $laborPA->kd_order }}</td>
+                        <td>Darah Rutin</td>
+                        <td>{{ \Carbon\Carbon::parse($laborPA->tgl_order)->format('d M Y H:i') }}</td>
+                        <td>05 Apr 2024 11:00</td>
+                        <td>{{ $laborPA->dokter->nama }}</td>
+                        <td>{{ $laborPA->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
+                        <td>
+                            @if ($laborPA->status == 1)
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                selesai
+                            @else
+                                <i class="bi bi-check-circle-fill text-secondary"></i>
+                                Diorder
+                            @endif
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
+                            <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>

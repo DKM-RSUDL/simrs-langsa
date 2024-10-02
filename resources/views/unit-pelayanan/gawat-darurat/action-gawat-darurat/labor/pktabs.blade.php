@@ -47,69 +47,47 @@
         </div>
     </div>
 
-    <table class="table table-bordered">
-        <thead class="table-primary">
-            <tr>
-                <th width="100px">No order</th>
-                <th>Nama Pemeriksaan</th>
-                <th>Waktu Permintaan</th>
-                <th>Waktu Hasil</th>
-                <th>Dokter Pengirim</th>
-                <th>Cito/Non Cito</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>000973</td>
-                <td>KGDS, Fungsi Hati, Fungsi Ginjal, Darah Rutin</td>
-                <td>03 Apr 2024 11:30</td>
-                <td>-</td>
-                <td>dr. Gunardi, Sp.PD (Klinik Internis Pria)</td>
-                <td>Cito</td>
-                <td>
-                    <span class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-check"></i></span>
-                    <p>Diorder</p>
-                </td>
-                <td >
-                    <a href="#" class="btn btn-sm btn-secondary"><i class="bi bi-pencil"></i></a>
-                    <a href="#"><i class="bi bi-x-circle-fill text-danger m-2"></i></a>
-                </td>
-            </tr>
-            <tr>
-                <td>002273</td>
-                <td>KGDS, Darah Rutin</td>
-                <td>01 Apr 2024 12:30</td>
-                <td>01 Apr 2024 15:00</td>
-                <td>dr. Nuansa Chalid (Gawat Darurat)</td>
-                <td>Non Cito</td>
-                <td>
-                    <span class="btn btn-sm btn-success rounded-circle"><i class="bi bi-check"></i></span>
-                    Selesai
-                </td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
-                    <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
-                </td>
-            </tr>
-            <tr>
-                <td>000573</td>
-                <td>Darah Rutin</td>
-                <td>03 Mar 2024 14:00</td>
-                <td>03 Mar 2024 19:00</td>
-                <td>dr. Gunardi, Sp.PD (Rawat Inap KUB)</td>
-                <td>Non Cito</td>
-                <td>
-                    <span class="btn btn-sm btn-success rounded-circle"><i class="bi bi-check"></i></span>
-                    Selesai
-                </td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
-                    <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th width="100px">No order</th>
+                    <th>Nama Pemeriksaan</th>
+                    <th>Waktu Permintaan</th>
+                    <th>Waktu Hasil</th>
+                    <th>Dokter Pengirim</th>
+                    <th>Cito/Non Cito</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($dataLabor as $laborPK)
+                    <tr>
+                        <td>{{ $laborPK->kd_order }}</td>
+                        <td>KGDS, Darah Rutin</td>
+                        <td>{{ \Carbon\Carbon::parse($laborPK->tgl_order)->format('d M Y H:i') }}</td>
+                        <td>01 Apr 2024 15:00</td>
+                        <td>{{ $laborPK->dokter->nama }}</td>
+                        <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
+                        <td>
+                            @if ($laborPK->status == 0)
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                selesai
+                            @else
+                                <i class="bi bi-check-circle-fill text-secondary"></i>
+                                Diorder
+                            @endif
+                        </td>
+
+                        <td>
+                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
+                            <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
 </div>
