@@ -140,8 +140,8 @@ class LaborController extends Controller
             'kd_order' => $newKdOrder,
             'urut' => $validatedData['urut'],
             'kd_produk' => $validatedData['kd_produk'],
-            'jumlah' => $validatedData['jumlah'] ?? 1, // Default jumlah 1
-            'status' => $validatedData['status'] ?? 0, // Default status 0
+            'jumlah' => $validatedData['jumlah'] ?? 1,
+            'status' => $validatedData['status'] ?? 0,
             'kd_dokter' => $validatedData['kd_dokter'],
         ]);
 
