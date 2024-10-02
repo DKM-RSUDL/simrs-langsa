@@ -4,7 +4,7 @@
         <div class="modal-content">
 
             <!-- Modal Header -->
-           <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="tambahResepLabel">Order Obat</h5>
                 <button type="button" class="btn-close btn-close-modified" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -122,11 +122,11 @@
                                                                 <option>3</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-4">
-                                                            <label for="jenisDosis" class="form-label"></label>
-                                                            <select class="form-select" id="jenisDosis">
-                                                                <option selected>Tablet</option>
-                                                            </select>
+                                                        <div class="col md-4">
+                                                            <label for="satuanObat" class="form-label">Satuan
+                                                                Obat</label>
+                                                            <input type="text" id="satuanObat"
+                                                                class="form-control" readonly></input>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label for="jumlah" class="form-label">Jumlah</label>
@@ -149,22 +149,6 @@
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
-                                                            <label for="aturanTambahan" class="form-label">Rute</label>
-                                                            <select class="form-select" id="rute">
-                                                                <option selected>Oral</option>
-                                                                <option>Sunlingual/Buccal</option>
-                                                                <option>Prenteral</option>
-                                                                <option>Rectal</option>
-                                                                <option>Ocular</option>
-                                                                <option>Oral Inhalasi</option>
-                                                                <option>Vaginal</option>
-                                                                <option>Otic/Telinga</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-12">
                                                             <label for="aturanTambahan" class="form-label">Aturan
                                                                 tambahan</label>
                                                             <input type="text" class="form-control"
@@ -172,7 +156,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
+                                                <button type="button" id="tambahObat"
+                                                    class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
                                             </div>
 
                                             <!-- Racikan Tab -->
@@ -195,7 +180,7 @@
                                         </div>
 
                                     </div>
-                                </div> 
+                                </div>
                             </div>
 
                             <!-- Main Content Area (Kanan) -->
@@ -238,32 +223,17 @@
                                                     <th>Dosis</th>
                                                     <th>Frek</th>
                                                     <th>Qty</th>
-                                                    <th>Rute</th>
                                                     <th>Sebelum/Sesudah Makan</th>
                                                     <th>Ket. Tambahan</th>
                                                     <th>Harga</th>
                                                     <th>Pilih</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Non Racik</td>
-                                                    <td>PARACETAMOL 500 mg (tab)</td>
-                                                    <td>1/2 tablet</td>
-                                                    <td>3 x 1 hari</td>
-                                                    <td>21</td>
-                                                    <td>Oral</td>
-                                                    <td>Sesudah makan (pagi, siang, malam)</td>
-                                                    <td>-</td>
-                                                    <td>Rp. 23.000</td>
-                                                    <td><button class="btn btn-danger btn-sm">X</button></td>
-                                                </tr>
-                                            </tbody>
+                                            <tbody id="daftarObatBody"></tbody>
                                         </table>
                                         <div>
-                                            <div class="fw-bold">Jumlah Item Obat: 3 </div>
-                                            <div class="fw-bold">Total Biaya Obat: Rp. 300.432,-</div>
+                                            <div class="fw-bold">Jumlah Item Obat: 0 </div>
+                                            <div class="fw-bold">Total Biaya Obat: Rp. ,-</div>
                                         </div>
                                     </div>
 
@@ -288,19 +258,6 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>000973</td>
-                                                    <td>Non Racik</td>
-                                                    <td>PARACETAMOL 500 mg (tab)</td>
-                                                    <td>1/2 tablet</td>
-                                                    <td>3 x 1 hari</td>
-                                                    <td>21</td>
-                                                    <td>Oral</td>
-                                                    <td>Sesudah makan (pagi, siang, malam)</td>
-                                                    <td>-</td>
-                                                    <td>Dokter A</td>
-                                                    <td><button class="btn btn-info btn-sm show-details"
-                                                            type="button">X</button>
-                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -338,41 +295,110 @@
     </div>
 </div>
 
-<!-- Modal Kecil untuk Detail Obat -->
-<div class="modal fade" id="detailObatModal" tabindex="-1" aria-labelledby="detailObatModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailObatModalLabel">Detail Pemberian Obat</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Isi dengan detail obat -->
-                <p><strong>Jenis:</strong> <span id="detailJenis"></span></p>
-                <p><strong>Nama Obat:</strong> <span id="detailNama"></span></p>
-                <p><strong>Dosis:</strong> <span id="detailDosis"></span></p>
-                <p><strong>Frek:</strong> <span id="detailFrek"></span></p>
-                <p><strong>Qty:</strong> <span id="detailQty"></span></p>
-                <p><strong>Sebelum/Sesudah Makan:</strong> <span id="detailMakan"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Copy Obat</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @push('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            // Variabel untuk menyimpan daftar obat yang akan diorder
+            let daftarObat = [];
+
+            // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
+            $('#tambahObat').on('click', function() {
+                var obatName = $('#cariObat').val();
+                var obatId = $('#selectedObatId').val();
+                var dosis = $('#dosis').val();
+                var frekuensi = $('#frekuensi').val();
+                var jumlah = $('#jumlah').val();
+                var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
+                var aturanTambahan = $('#aturanTambahan').val();
+                var satuanObat = $('#satuanObat').val();
+                var hargaObat = $('#obatList a[data-id="' + obatId + '"]').data('harga') || 0;
+
+                if (!obatId) {
+                    alert("Pilih obat terlebih dahulu.");
+                    return;
+                }
+
+                // Cek jika obat sudah ada dalam daftar
+                const exists = daftarObat.some(obat => obat.id === obatId);
+                if (exists) {
+                    alert("Obat sudah ada dalam daftar.");
+                    return;
+                }
+
+                // Simpan ke daftar obat
+                daftarObat.push({
+                    id: obatId,
+                    nama: obatName,
+                    dosis: dosis,
+                    frekuensi: frekuensi,
+                    jumlah: jumlah,
+                    sebelumSesudahMakan: sebelumSesudahMakan,
+                    aturanTambahan: aturanTambahan,
+                    harga: hargaObat,
+                    satuan: satuanObat
+                });
+
+                // Tampilkan di tabel sebelah kanan
+                renderDaftarObat();
+
+                // Reset form input obat setelah ditambahkan
+                $('#cariObat').val('').prop('readonly', false);
+                $('#selectedObatId').val('');
+                $('#jumlah').val('');
+                $('#aturanTambahan').val('');
+                $('#satuanObat').val('');
+                $('#clearObat').hide();
+            });
+
+            // Fungsi untuk menampilkan daftar obat di tabel
+            function renderDaftarObat() {
+                var tbody = $('#daftarObatBody');
+                tbody.empty();
+
+                let totalBiaya = 0;
+
+                daftarObat.forEach(function(obat, index) {
+                    let subtotal = obat.harga * obat.jumlah;
+                    totalBiaya += subtotal;
+
+                    tbody.append(`
+            <tr>
+                <td>${index + 1}</td>
+                <td>Non Racik</td>
+                <td>${obat.nama}</td>
+                <td>${obat.dosis} ${obat.satuan}</td>
+                <td>${obat.frekuensi}</td>
+                <td>${obat.jumlah}</td>
+                <td>${obat.sebelumSesudahMakan}</td>
+                <td>${obat.aturanTambahan || '-'}</td>
+                <td>Rp. ${subtotal.toLocaleString()}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="removeObat(${index})">X</button></td>
+            </tr>
+        `);
+                });
+
+                // Tampilkan total item dan biaya
+                $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
+                $('.fw-bold:contains("Total Biaya Obat")').text(
+                    `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
+            }
+
+
+            // Fungsi untuk menghapus obat dari daftar
+            window.removeObat = function(index) {
+                daftarObat.splice(index, 1);
+                renderDaftarObat();
+            };
+
+
+            // Fungsi untuk menampilkan obat //
             const cariObat = $('#cariObat');
             const clearObat = $('#clearObat');
             const obatList = $('#obatList');
             const selectedObatId = $('#selectedObatId');
-
+            const satuanObat = $('#satuanObat');
             var timer;
             cariObat.on('keyup', function() {
                 clearTimeout(timer);
@@ -391,8 +417,11 @@
                                 if (data.length > 0) {
                                     data.forEach(function(obat) {
                                         html +=
-                                            '<a href="#" class="list-group-item list-group-item-action" data-id="' +
-                                            obat.id + '">' + obat.text + '</a>';
+                                            '<a href="#" class="list-group-item list-group-item-action" ' +
+                                            'data-id="' + obat.id + '" ' +
+                                            'data-satuan="' + obat.satuan +
+                                            '">' +
+                                            obat.text + '</a>';
                                     });
                                 } else {
                                     html =
@@ -403,7 +432,7 @@
                             error: function() {
                                 obatList.html(
                                     '<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>'
-                                    );
+                                );
                             }
                         });
                     } else {
@@ -416,8 +445,10 @@
                 e.preventDefault();
                 var obatName = $(this).text();
                 var obatId = $(this).data('id');
+                var obatSatuan = $(this).data('satuan');
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
+                $('#satuanObat').val(obatSatuan);
                 obatList.html('');
                 clearObat.show();
             });
@@ -425,9 +456,13 @@
             clearObat.on('click', function() {
                 cariObat.val('').prop('readonly', false);
                 selectedObatId.val('');
+                $('#satuanObat').val('');
                 clearObat.hide();
             });
+            // End Fungsi untuk menampilkan obat //
 
+
+            // Fungsi untuk menonaktifkan side column //
             const tab2 = document.getElementById('tab2-tab');
             const sideColumn = document.getElementById('sideColumn');
 
@@ -448,61 +483,7 @@
             document.querySelectorAll('.nav-tabs .nav-link:not(#tab2-tab)').forEach(tab => {
                 tab.addEventListener('shown.bs.tab', enableSideColumn);
             });
-
-            // Event listener untuk tombol detail pada tab 2
-            document.querySelectorAll('#tab2 .show-details').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Ambil data dari baris tabel
-                    const row = this.closest('tr');
-                    const jenis = row.cells[1].textContent;
-                    const namaObat = row.cells[2].textContent;
-                    const dosis = row.cells[3].textContent;
-                    const frek = row.cells[4].textContent;
-                    const qty = row.cells[5].textContent;
-                    const makan = row.cells[7].textContent;
-
-                    // Isi modal dengan data
-                    document.getElementById('detailJenis').textContent = jenis;
-                    document.getElementById('detailNama').textContent = namaObat;
-                    document.getElementById('detailDosis').textContent = dosis;
-                    document.getElementById('detailFrek').textContent = frek;
-                    document.getElementById('detailQty').textContent = qty;
-                    document.getElementById('detailMakan').textContent = makan;
-
-                    // Tampilkan modal
-                    const detailModal = new bootstrap.Modal(document.getElementById(
-                        'detailObatModal'));
-                    detailModal.show();
-                });
-            });
-
-            // Menangani perubahan pada select Jenis Obat
-            const jenisobatSelect = document.getElementById('jenisobat');
-            jenisobatSelect.addEventListener('change', function() {
-                const selectedValue = this.value;
-                let tabToShow;
-
-                switch (selectedValue) {
-                    case '1':
-                        tabToShow = document.getElementById('nonracikan-tab');
-                        break;
-                    case '2':
-                        tabToShow = document.getElementById('racikan-tab');
-                        break;
-                    case '3':
-                        tabToShow = document.getElementById('paket-tab');
-                        break;
-                    case '4':
-                        tabToShow = document.getElementById('prognas-tab');
-                        break;
-                }
-
-                if (tabToShow) {
-                    new bootstrap.Tab(tabToShow).show();
-                }
-            });
-
-
+            // End Fungsi untuk menonaktifkan side column //
 
         });
     </script>

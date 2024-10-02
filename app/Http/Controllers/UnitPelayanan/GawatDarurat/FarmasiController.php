@@ -45,10 +45,17 @@ class FarmasiController extends Controller
     {
         $search = $request->get('term');
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
+        ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+        ->leftJoin('DATA_BATCH', 'APT_OBAT.KD_PRD', '=', 'DATA_BATCH.KD_PRD')
         ->where('APT_OBAT.nama_obat', 'LIKE', '%' . $search . '%')
-            ->select('APT_OBAT.KD_PRD as id', 'APT_OBAT.nama_obat as text', 'APT_PRODUK.HARGA_BELI as harga')
-            ->take(10)
-            ->get();
+        ->select(
+            'APT_OBAT.KD_PRD as id',
+            'APT_OBAT.nama_obat as text',
+            'DATA_BATCH.HRG_BELI_OBT as harga',
+            'APT_SATUAN.SATUAN as satuan'
+        )
+        ->take(10)
+        ->get();
 
         return response()->json($obats);
     }
