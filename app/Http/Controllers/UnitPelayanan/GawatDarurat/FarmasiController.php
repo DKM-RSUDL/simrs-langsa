@@ -93,26 +93,10 @@ class FarmasiController extends Controller
 
     public function store(Request $request, $kd_pasien, $tgl_masuk)
     {
+        Log::info('Memulai proses penyimpanan resep', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]);
         DB::beginTransaction();
 
         try {
-
-            // Validasi data
-            $validatedData = $request->validate([
-                'kd_dokter' => 'required|exists:dokters,id', // Pastikan dokter ada
-                'kd_unit' => 'required|string',
-                'tgl_order' => 'required|date',
-                'jam_order' => 'required|string',
-                'cat_racikan' => 'nullable|string',
-                'obat' => 'required|array', // Pastikan obat adalah array
-                'obat.*.id' => 'required|string',
-                'obat.*.nama' => 'required|string',
-                'obat.*.dosis' => 'required|string',
-                'obat.*.frekuensi' => 'required|string',
-                'obat.*.jumlah' => 'required|integer',
-            ]);
-
-
             // Generate ID_MRRESEP
             $today = Carbon::now();
             $count = MrResep::whereDate('TGL_MASUK', $today)->count() + 1;
@@ -121,12 +105,12 @@ class FarmasiController extends Controller
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
             $mrResep->KD_PASIEN = $kd_pasien;
-            $mrResep->KD_UNIT = $validatedData['kd_unit'];
+            $mrResep->KD_UNIT = $request->kd_unit;
             $mrResep->TGL_MASUK = $today;
-            $mrResep->KD_DOKTER = $validatedData['kd_dokter'];
+            $mrResep->KD_DOKTER = $request->kd_dokter;
             $mrResep->ID_MRRESEP = $id_mrresep;
-            $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'];
-            $mrResep->TGL_ORDER = $validatedData['tgl_order'] . ' ' . $validatedData['jam_order'];
+            $mrResep->CAT_RACIKAN = $request->cat_racikan;
+            $mrResep->TGL_ORDER = $request->tgl_order;
             $mrResep->save();
 
             // Simpan detail resep ke MR_RESEPDTL
@@ -142,12 +126,10 @@ class FarmasiController extends Controller
             }
 
             DB::commit();
-
+            
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $id_mrresep]);
         } catch (\Exception $e) {
-            // Rollback transaksi jika ada kesalahan
             DB::rollback();
-            Log::error('Error saving prescription: ' . $e->getMessage());
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }

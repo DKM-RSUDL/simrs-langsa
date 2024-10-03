@@ -14,7 +14,7 @@
             <div class="modal-body">
                 <form id="resepForm" action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
                 @csrf
-                <input type="hidden" name="kd_unit" id="kd_unit" value="{{ $dataMedis->kd_unit }}">
+                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
 
                     <div class="container-fluid">
                         <div class="row">
@@ -282,7 +282,7 @@
             </div>
 
             <!-- Jumlah dan Total di Footer -->
-            <div class="modal-footer justify-content-end">
+           <div class="modal-footer justify-content-end">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-primary">Order</button>
             </div>
@@ -497,14 +497,13 @@
             //----------- End Fungsi untuk menonaktifkan side column---------- //
 
             //-----------Fungsi untuk Untuk Input Ke Database---------- //
-            $('#resepForm').on('submit', function(e) {
+            $('form').on('submit', function(e) {
                 e.preventDefault();
 
                 var formData = {
                     kd_dokter: $('#dokterPengirim').val(),
-                    kd_unit: $('#kd_unit').val(),
+                    kd_unit: '{{ $dataMedis->kd_unit }}',
                     tgl_order: $('#tanggalOrder').val(),
-                    jam_order: $('#jamOrder').val(),
                     cat_racikan: $('#aturanTambahan').val(),
                     obat: daftarObat
                 };
@@ -512,7 +511,7 @@
                 console.log('Sending data:', formData);
 
                $.ajax({
-                    url: $(this).attr('action'),
+                    url: '{{ route('farmasi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}',
                     method: 'POST',
                     data: JSON.stringify(formData),
                     contentType: 'application/json',
@@ -523,9 +522,6 @@
                         console.log('Success response:', response);
                         if (response.id_mrresep) {
                             alert('Resep berhasil disimpan dengan ID: ' + response.id_mrresep);
-                            // Optional: Reset form atau tutup modal
-                            $('#resepForm')[0].reset();
-                            $('#tambahResep').modal('hide');
                         } else {
                             console.warn('ID_MRRESEP tidak ada dalam respons');
                             alert('Resep berhasil disimpan, tapi ID tidak tersedia. Silakan periksa log server.');
