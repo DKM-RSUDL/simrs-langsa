@@ -18,7 +18,7 @@
             ({{ $patient->tgl_lahir ? \Carbon\Carbon::parse($patient->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</small>
 
         <div class="patient-meta mt-2">
-            <p class="mb-0"><i class="bi bi-file-earmark-medical"></i>RM: 0-76-34-33</p>
+            <p class="mb-0"><i class="bi bi-file-earmark-medical"></i>RM: {{ $patient->kd_pasien }}</p>
             <p class="mb-0"><i class="bi bi-calendar3"></i>31 Jan 2025 - 31 Jan 2025</p>
             <p><i class="bi bi-hospital"></i>Rawat Jalan (Klinik Internis Pria)</p>
         </div>

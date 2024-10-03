@@ -37,6 +37,9 @@ class Cppt extends Model
         'jenis_nyeri_id',
         'pemeriksaan_fisik',
         'user_penanggung',
+        'verified',
+        'user_verified',
+        'urut_total'
     ];
 
     public function dtCppt()

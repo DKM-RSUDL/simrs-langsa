@@ -320,7 +320,25 @@
 
                                     <!-- Button -->
                                     <div class="d-flex justify-content-between mt-4">
-                                        <button class="btn btn-primary">Verifikasi DPJP</button>
+                                        @if ($value['verified'])
+                                            <p class="m-0 p-0 text-success">
+                                                <i class="ti-check"></i>
+                                                Terverifikasi
+                                            </p>
+                                        @else
+                                            <form action="{{ route('cppt.verifikasi', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+                                                @csrf
+                                                @method('put')
+
+                                                <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
+                                                <input type="hidden" name="no_transaksi" value="{{ $dataMedis->no_transaksi }}">
+                                                <input type="hidden" name="kd_kasir" value="{{ $dataMedis->kd_kasir }}">
+                                                <input type="hidden" name="tanggal" value="{{ $value['tanggal'] }}">
+                                                <input type="hidden" name="urut" value="{{ $value['urut'] }}">
+                                                <button type="submit" class="btn btn-primary">Verifikasi DPJP</button>
+                                            </form>
+                                        @endif
+                    
                                         <button class="btn btn-primary btn-edit-cppt" data-bs-target="#editCpptModal" data-tgl="{{ $value['tanggal'] }}" data-urut="{{ $value['urut'] }}" data-unit="{{ $value['kd_unit'] }}">Edit</button>
                                     </div>
                                 </div>
@@ -714,10 +732,11 @@
             },
             error: function (xhr, status, error) {
                 // Penanganan jika terjadi error
-                console.log("Error:", error);
-                console.log("Status:", status);
-                console.log("XHR Object:", xhr);
-                alert("Terjadi kesalahan: " + error);
+                // console.log("Error:", error);
+                // console.log("Status:", status);
+                // console.log("XHR Object:", xhr);
+                // alert("Terjadi kesalahan: " + error);
+                showToast('error', 'internal server error');
             }
         });
     });

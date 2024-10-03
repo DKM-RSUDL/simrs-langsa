@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
                                 Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                                 Route::post('/', 'store')->name('.store');
                                 Route::put('/', 'update')->name('.update');
+                                Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             });
                         });
                     });
