@@ -20,8 +20,9 @@
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-                <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
+                <input type="hidden" name="tgl_masuk" value="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d H:i:s') }}">
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
 
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="extraLargeModalLabel">

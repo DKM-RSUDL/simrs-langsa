@@ -18,7 +18,7 @@ class SegalaOrderDet extends Model
         'kd_dokter',
     ];
 
-    // public $timestamps = false;
+    public $timestamps = false;
     public function order()
     {
         return $this->belongsTo(SegalaOrder::class, 'kd_order', 'kd_order');

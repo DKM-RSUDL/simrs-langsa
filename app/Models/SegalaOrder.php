@@ -23,6 +23,7 @@ class SegalaOrder extends Model
         'cyto' => 'string',
         'puasa' => 'string',
     ];
+    public $timestamps = false;
 
     public function details()
     {
