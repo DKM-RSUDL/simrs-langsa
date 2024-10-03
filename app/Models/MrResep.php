@@ -10,7 +10,6 @@ class MrResep extends Model
     use HasFactory;
 
     protected $table = 'MR_RESEP';
-    protected $primaryKey = 'ID_MRRESEP';
     public $timestamps = false;
 
     protected $fillable = [

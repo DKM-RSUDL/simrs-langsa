@@ -12,10 +12,8 @@
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form id="resepForm" action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
-                @csrf
-                <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-
+               <form id="resepForm" action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
+                    @csrf
                     <div class="container-fluid">
                         <div class="row">
 
@@ -57,7 +55,7 @@
                                                     <select class="form-select" id="dokterPengirim" name="kd_dokter">
                                                         <option value="">-Pilih dokter-</option>
                                                         @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->id }}">{{ $dokter->nama }}</option>
+                                                            <option value="{{ $dokter->kd_dokter }}">{{ $dokter->nama }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -70,7 +68,7 @@
                                                         </div>
                                                         <div class="col-4">
                                                             <label for="jamOrder" class="form-label">Jam</label>
-                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order" value="08:45" required>
+                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order" value="08:45">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -146,10 +144,8 @@
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
-                                                            <label for="aturanTambahan" class="form-label">Aturan
-                                                                tambahan</label>
-                                                            <input type="text" class="form-control"
-                                                                id="aturanTambahan">
+                                                            <label for="aturanTambahan" class="form-label">Aturan tambahan</label>
+                                                                <input type="text" class="form-control" id="aturanTambahan" name="cat_racikan">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -286,6 +282,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-primary">Order</button>
             </div>
+        </form>
 
         </div>
     </div>
@@ -298,14 +295,25 @@
 
             // Variabel untuk menyimpan daftar obat yang akan diorder
             let daftarObat = [];
+            let selectedDokter = null;
             let activeTab = 'Non Racikan';
 
             $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).text().trim();
             });
 
+            $('#dokterPengirim').on('change', function() {
+                selectedDokter = $(this).val();
+                console.log(selectedDokter)
+            });
+
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
             $('#tambahObatNonRacikan, #tambahObatRacikan, #tambahObatPaket, #tambahObatPrognas').on('click', function() {
+                if (!selectedDokter) {
+                    alert("Silakan pilih dokter terlebih dahulu.");
+                    return;
+                }
+
                 var obatName = $('#cariObat').val();
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
@@ -339,7 +347,8 @@
                     aturanTambahan: aturanTambahan,
                     harga: hargaObat,
                     satuan: satuanObat,
-                    jenisObat: activeTab
+                    jenisObat: activeTab,
+                    kd_dokter: selectedDokter
                 });
 
                 // Tampilkan di tabel sebelah kanan
@@ -353,6 +362,77 @@
                 $('#satuanObat').val('');
                 $('#clearObat').hide();
             });
+
+
+            //-----------Fungsi untuk Untuk Input Ke Database---------- //
+            $('#resepForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Validasi form sebelum mengirim
+                if (!$('#dokterPengirim').val()) {
+                    alert('Silakan pilih dokter pengirim.');
+                    return;
+                }
+
+                if (daftarObat.length === 0) {
+                    alert('Silakan tambahkan minimal satu obat sebelum mengirim resep.');
+                    return;
+                }
+
+                var formData = {
+                    kd_dokter: selectedDokter,
+                    tgl_order: $('#tanggalOrder').val() + ' ' + $('#jamOrder').val(),
+                    cat_racikan: $('#aturanTambahan').val(),
+                    obat: daftarObat.map(obat => ({
+                        id: obat.id,
+                        frekuensi: obat.frekuensi,
+                        jumlah: obat.jumlah,
+                        dosis: obat.dosis,
+                        sebelumSesudahMakan: obat.sebelumSesudahMakan,
+                        aturanTambahan: obat.aturanTambahan
+                    }))
+                };
+
+                console.log('Sending data:', formData);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.id_mrresep) {
+                            alert('Resep berhasil disimpan dengan ID: ' + response.id_mrresep);
+                            daftarObat = [];
+                            renderDaftarObat();
+                            $('#resepForm')[0].reset();
+                            $('#dokterPengirim').prop('disabled', false);
+                            selectedDokter = null;
+                        } else {
+                            alert('Resep berhasil disimpan, tetapi ID tidak diterima.');
+                        }
+                    },
+                    
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            // Error validasi
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessage = 'Validasi gagal:\n';
+                            for (let field in errors) {
+                                errorMessage += `${field}: ${errors[field].join(', ')}\n`;
+                            }
+                            alert(errorMessage);
+                        } else {
+                            // Error lainnya
+                           alert('Terjadi kesalahan: ' + (xhr.responseJSON ? xhr.responseJSON.message : error));
+                        }
+                    }
+                });
+            });
+            //-----------END Fungsi untuk Untuk Input Ke Database---------- //
 
 
             // Fungsi untuk menampilkan daftar obat di tabel
@@ -496,44 +576,9 @@
             });
             //----------- End Fungsi untuk menonaktifkan side column---------- //
 
-            //-----------Fungsi untuk Untuk Input Ke Database---------- //
-            $('form').on('submit', function(e) {
-                e.preventDefault();
-
-                var formData = {
-                    kd_dokter: $('#dokterPengirim').val(),
-                    kd_unit: '{{ $dataMedis->kd_unit }}',
-                    tgl_order: $('#tanggalOrder').val(),
-                    cat_racikan: $('#aturanTambahan').val(),
-                    obat: daftarObat
-                };
-
-                console.log('Sending data:', formData);
-
-               $.ajax({
-                    url: '{{ route('farmasi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}',
-                    method: 'POST',
-                    data: JSON.stringify(formData),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        console.log('Success response:', response);
-                        if (response.id_mrresep) {
-                            alert('Resep berhasil disimpan dengan ID: ' + response.id_mrresep);
-                        } else {
-                            console.warn('ID_MRRESEP tidak ada dalam respons');
-                            alert('Resep berhasil disimpan, tapi ID tidak tersedia. Silakan periksa log server.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error response:', xhr.responseText);
-                        alert('Terjadi kesalahan: ' + (xhr.responseJSON ? xhr.responseJSON.message : error));
-                    }
-                });
-            });
-
+            function formatDateTime(date, time) {
+                return `${date}T${time}:00`;
+            }
 
         });
     </script>
