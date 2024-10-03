@@ -14,6 +14,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 
+// action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatDaruratCarePlanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
@@ -75,7 +76,18 @@ Route::middleware('auth')->group(function () {
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('radiologi', GawatDaruratRadiologiController::class);
-                    Route::resource('farmasi', GawatDaruratFarmasiController::class);
+
+                    // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::prefix('farmasi')->group(function () {
+                        Route::name('farmasi')->group(function () {
+                            Route::controller(GawatDaruratFarmasiController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'index')->name('.store');
+                                Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                            });
+                        });
+                    });
+                    
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);
                     Route::resource('resume', GawatDaruratResumeController::class);

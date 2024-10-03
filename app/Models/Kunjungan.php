@@ -77,4 +77,9 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
+
+    // public function resep()
+    // {
+    //     return $this->hasMany(MrResep::class, 'KD_PASIEN', 'KD_PASIEN');
+    // }
 }
