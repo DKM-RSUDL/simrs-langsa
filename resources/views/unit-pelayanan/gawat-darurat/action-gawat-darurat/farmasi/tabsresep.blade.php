@@ -8,8 +8,7 @@
         <div class="d-flex align-items-center flex-wrap">
             <!-- Tanggal Pemberian Obat -->
             <div class="mb-2 me-3">
-                <label for="tanggal_pemberian_obat" class="form-label">Tanggal Pemberian Obat</label>
-                <input type="date" id="tanggal_pemberian_obat" class="form-control" value="{{ date('Y-m-d') }}">
+                <label class="form-label">Tgl</label>
             </div>
 
             <!-- Radio Button untuk status obat -->

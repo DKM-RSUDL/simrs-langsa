@@ -12,9 +12,9 @@
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form
-                    action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
-                    method="post">
+                <form id="resepForm" action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
+                @csrf
+                <input type="hidden" name="kd_unit" id="kd_unit" value="{{ $dataMedis->kd_unit }}">
 
                     <div class="container-fluid">
                         <div class="row">
@@ -53,13 +53,11 @@
                                             <div class="tab-pane fade show active" id="nonracikan" role="tabpanel"
                                                 aria-labelledby="nonracikan-tab">
                                                 <div class="mb-3">
-                                                    <label for="dokterPengirim" class="form-label">Dokter
-                                                        Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="dokter_id">
-                                                        <option selected>-Pilih dokter-</option>
+                                                    <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
+                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter">
+                                                        <option value="">-Pilih dokter-</option>
                                                         @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->id }}">{{ $dokter->nama }}
-                                                            </option>
+                                                            <option value="{{ $dokter->id }}">{{ $dokter->nama }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -67,15 +65,12 @@
                                                 <div class="mb-3">
                                                     <div class="row">
                                                         <div class="col-8">
-                                                            <label for="tanggalOrder" class="form-label">Tanggal
-                                                                Order</label>
-                                                            <input type="date" class="form-control" id="tanggalOrder"
-                                                                value="2025-01-31">
+                                                            <label for="tanggalOrder" class="form-label">Tanggal Order</label>
+                                                            <input type="date" class="form-control" id="tanggalOrder" name="tgl_order">
                                                         </div>
                                                         <div class="col-4">
                                                             <label for="jamOrder" class="form-label">Jam</label>
-                                                            <input type="time" class="form-control" id="jamOrder"
-                                                                value="08:45">
+                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order" value="08:45" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -100,7 +95,7 @@
                                                             <label for="jumlahHari" class="form-label">Jumlah
                                                                 hari</label>
                                                             <input type="number" class="form-control"
-                                                                id="jumlahHari" value="7">
+                                                                id="jumlahHari">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="frekuensi"
@@ -127,6 +122,8 @@
                                                                 Obat</label>
                                                             <input type="text" id="satuanObat"
                                                                 class="form-control" readonly></input>
+                                                            <input type="text" id="hargaObat"
+                                                                class="form-control d-none" readonly></input>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label for="jumlah" class="form-label">Jumlah</label>
@@ -152,30 +149,32 @@
                                                             <label for="aturanTambahan" class="form-label">Aturan
                                                                 tambahan</label>
                                                             <input type="text" class="form-control"
-                                                                id="aturanTambahan" placeholder="Aturan tambahan">
+                                                                id="aturanTambahan">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="button" id="tambahObat"
-                                                    class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
+                                                <button type="button" id="tambahObatNonRacikan" class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
                                             </div>
 
                                             <!-- Racikan Tab -->
                                             <div class="tab-pane fade" id="racikan" role="tabpanel"
                                                 aria-labelledby="racikan-tab">
                                                 <p>Form untuk Racikan akan ditambahkan di sini.</p>
+                                                <button type="button" id="tambahObatRacikan" class="btn btn-primary w-100">Tambah Obat Racikan</button>
                                             </div>
 
                                             <!-- Paket Tab -->
                                             <div class="tab-pane fade" id="paket" role="tabpanel"
                                                 aria-labelledby="paket-tab">
                                                 <p>Form untuk Paket akan ditambahkan di sini.</p>
+                                                <button type="button" id="tambahObatPaket" class="btn btn-primary w-100">Tambah Obat Paket</button>
                                             </div>
 
                                             <!-- Prognas Tab -->
                                             <div class="tab-pane fade" id="prognas" role="tabpanel"
                                                 aria-labelledby="prognas-tab">
                                                 <p>Form untuk Prognas akan ditambahkan di sini.</p>
+                                                <button type="button" id="tambahObatPrognas" class="btn btn-primary w-100">Tambah Obat Prognas</button>
                                             </div>
                                         </div>
 
@@ -284,11 +283,8 @@
 
             <!-- Jumlah dan Total di Footer -->
             <div class="modal-footer justify-content-end">
-                <div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Order</button>
-                </div>
-                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary">Order</button>
             </div>
 
         </div>
@@ -302,9 +298,14 @@
 
             // Variabel untuk menyimpan daftar obat yang akan diorder
             let daftarObat = [];
+            let activeTab = 'Non Racikan';
+
+            $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
+                activeTab = $(e.target).text().trim();
+            });
 
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
-            $('#tambahObat').on('click', function() {
+            $('#tambahObatNonRacikan, #tambahObatRacikan, #tambahObatPaket, #tambahObatPrognas').on('click', function() {
                 var obatName = $('#cariObat').val();
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
@@ -313,7 +314,7 @@
                 var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
                 var aturanTambahan = $('#aturanTambahan').val();
                 var satuanObat = $('#satuanObat').val();
-                var hargaObat = $('#obatList a[data-id="' + obatId + '"]').data('harga') || 0;
+                var hargaObat = $('#hargaObat').val();
 
                 if (!obatId) {
                     alert("Pilih obat terlebih dahulu.");
@@ -337,7 +338,8 @@
                     sebelumSesudahMakan: sebelumSesudahMakan,
                     aturanTambahan: aturanTambahan,
                     harga: hargaObat,
-                    satuan: satuanObat
+                    satuan: satuanObat,
+                    jenisObat: activeTab
                 });
 
                 // Tampilkan di tabel sebelah kanan
@@ -352,7 +354,9 @@
                 $('#clearObat').hide();
             });
 
+
             // Fungsi untuk menampilkan daftar obat di tabel
+            var obatSelect;
             function renderDaftarObat() {
                 var tbody = $('#daftarObatBody');
                 tbody.empty();
@@ -364,19 +368,19 @@
                     totalBiaya += subtotal;
 
                     tbody.append(`
-            <tr>
-                <td>${index + 1}</td>
-                <td>Non Racik</td>
-                <td>${obat.nama}</td>
-                <td>${obat.dosis} ${obat.satuan}</td>
-                <td>${obat.frekuensi}</td>
-                <td>${obat.jumlah}</td>
-                <td>${obat.sebelumSesudahMakan}</td>
-                <td>${obat.aturanTambahan || '-'}</td>
-                <td>Rp. ${subtotal.toLocaleString()}</td>
-                <td><button class="btn btn-danger btn-sm" onclick="removeObat(${index})">X</button></td>
-            </tr>
-        `);
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${obat.jenisObat}</td>
+                            <td>${obat.nama}</td>
+                            <td>${obat.dosis} ${obat.satuan}</td>
+                            <td>${obat.frekuensi}</td>
+                            <td>${obat.jumlah}</td>
+                            <td>${obat.sebelumSesudahMakan}</td>
+                            <td>${obat.aturanTambahan || '-'}</td>
+                            <td>Rp. ${subtotal.toLocaleString()}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="removeObat(${index})">X</button></td>
+                        </tr>
+                    `);
                 });
 
                 // Tampilkan total item dan biaya
@@ -385,7 +389,6 @@
                     `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
             }
 
-
             // Fungsi untuk menghapus obat dari daftar
             window.removeObat = function(index) {
                 daftarObat.splice(index, 1);
@@ -393,13 +396,14 @@
             };
 
 
-            // Fungsi untuk menampilkan obat //
+            //-------------Fungsi untuk menampilkan obat------------ //
             const cariObat = $('#cariObat');
             const clearObat = $('#clearObat');
             const obatList = $('#obatList');
             const selectedObatId = $('#selectedObatId');
             const satuanObat = $('#satuanObat');
             var timer;
+
             cariObat.on('keyup', function() {
                 clearTimeout(timer);
                 var query = $(this).val();
@@ -415,12 +419,14 @@
                             success: function(data) {
                                 var html = '';
                                 if (data.length > 0) {
+
                                     data.forEach(function(obat) {
+
                                         html +=
                                             '<a href="#" class="list-group-item list-group-item-action" ' +
                                             'data-id="' + obat.id + '" ' +
-                                            'data-satuan="' + obat.satuan +
-                                            '">' +
+                                            'data-harga="' + obat.harga + '" ' + // Pastikan harga dimasukkan ke data-harga
+                                            'data-satuan="' + obat.satuan + '">' +
                                             obat.text + '</a>';
                                     });
                                 } else {
@@ -443,12 +449,17 @@
 
             $(document).on('click', '#obatList a', function(e) {
                 e.preventDefault();
+                var $this = $(this);
                 var obatName = $(this).text();
                 var obatId = $(this).data('id');
                 var obatSatuan = $(this).data('satuan');
+                var obatHarga = $this.attr('data-harga');
+
+
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
                 $('#satuanObat').val(obatSatuan);
+                $('#hargaObat').val(obatHarga);
                 obatList.html('');
                 clearObat.show();
             });
@@ -459,10 +470,10 @@
                 $('#satuanObat').val('');
                 clearObat.hide();
             });
-            // End Fungsi untuk menampilkan obat //
+            //------------- End Fungsi untuk menampilkan obat---------- //
 
 
-            // Fungsi untuk menonaktifkan side column //
+            //----------- Fungsi untuk menonaktifkan side column -------------//
             const tab2 = document.getElementById('tab2-tab');
             const sideColumn = document.getElementById('sideColumn');
 
@@ -483,7 +494,50 @@
             document.querySelectorAll('.nav-tabs .nav-link:not(#tab2-tab)').forEach(tab => {
                 tab.addEventListener('shown.bs.tab', enableSideColumn);
             });
-            // End Fungsi untuk menonaktifkan side column //
+            //----------- End Fungsi untuk menonaktifkan side column---------- //
+
+            //-----------Fungsi untuk Untuk Input Ke Database---------- //
+            $('#resepForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    kd_dokter: $('#dokterPengirim').val(),
+                    kd_unit: $('#kd_unit').val(),
+                    tgl_order: $('#tanggalOrder').val(),
+                    jam_order: $('#jamOrder').val(),
+                    cat_racikan: $('#aturanTambahan').val(),
+                    obat: daftarObat
+                };
+
+                console.log('Sending data:', formData);
+
+               $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log('Success response:', response);
+                        if (response.id_mrresep) {
+                            alert('Resep berhasil disimpan dengan ID: ' + response.id_mrresep);
+                            // Optional: Reset form atau tutup modal
+                            $('#resepForm')[0].reset();
+                            $('#tambahResep').modal('hide');
+                        } else {
+                            console.warn('ID_MRRESEP tidak ada dalam respons');
+                            alert('Resep berhasil disimpan, tapi ID tidak tersedia. Silakan periksa log server.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error response:', xhr.responseText);
+                        alert('Terjadi kesalahan: ' + (xhr.responseJSON ? xhr.responseJSON.message : error));
+                    }
+                });
+            });
+
 
         });
     </script>
