@@ -29,13 +29,15 @@
 
             <!-- Search Bar -->
             <div class="col-md-3">
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                        aria-describedby="basic-addon1">
-                </div>
+                <form method="GET" action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </form>
             </div>
 
             <!-- Add Button -->
@@ -80,7 +82,7 @@
                         <td>{{ $laborPK->dokter->nama }}</td>
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>
-                            @if ($laborPK->status == 0)
+                            @if ($laborPK->status == 1)
                                 <i class="bi bi-check-circle-fill text-success"></i>
                                 selesai
                             @else

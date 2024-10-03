@@ -34,9 +34,22 @@ class LaborController extends Controller
         $dataDokter = Dokter::all();
 
         // foreach data di Labor
+        $search = $request->input('search');
+
         $dataLabor = SegalaOrder::with(['details', 'dokter'])
-            ->orderBy('tgl_order', 'desc') // Urutkan berdasarkan data terbaru
-            ->paginate(10); // Pagination dengan 10 data per halaman
+            ->when($search, function ($query, $search) {
+                return $query->where('tgl_masuk', 'like', "%$search%")
+                    ->orWhere('tgl_order', 'like', "%$search%")
+                    ->orWhere('kd_order', 'like', "%$search%")
+                    ->orWhereHas('dokter', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%$search%");
+                    });
+            })
+            ->orderBy('tgl_order', 'desc')
+            ->paginate(10);
+        // $dataLabor = SegalaOrder::with(['details', 'dokter'])
+        //     ->orderBy('tgl_order', 'desc')
+        //     ->paginate(10);
 
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -113,9 +126,7 @@ class LaborController extends Controller
             ->first();
 
         $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
-
         $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
-
         $newKdOrder = $tglOrder . $newOrderNumber;
 
         while (SegalaOrder::where('kd_order', $newKdOrder)->exists()) {
@@ -123,8 +134,6 @@ class LaborController extends Controller
             $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
             $newKdOrder = $tglOrder . $newOrderNumber;
         }
-        // dd($newKdOrder);
-
 
         $segalaOrder = SegalaOrder::create([
             'kd_order' => $newKdOrder,
@@ -142,7 +151,7 @@ class LaborController extends Controller
             'kategori' => $validatedData['kategori'],
             'no_transaksi' => $validatedData['no_transaksi'] ?? null,
             'kd_kasir' => $validatedData['kd_kasir'] ?? null,
-            'status_order' => $validatedData['status_order'] ?? null,
+            'status_order' => $validatedData['status_order'] ?? 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
         ]);
 
@@ -152,7 +161,7 @@ class LaborController extends Controller
                 'urut' => $validatedData['urut'][$index],
                 'kd_produk' => $kd_produk,
                 'jumlah' => $validatedData['jumlah'][$index] ?? 1,
-                'status' => $validatedData['status'][$index] ?? 0,
+                'status' => $validatedData['status'][$index] ?? 1,
                 'kd_dokter' => $validatedData['kd_dokter'],
             ]);
         }
