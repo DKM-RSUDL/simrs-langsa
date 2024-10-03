@@ -19,132 +19,15 @@
 @endpush
 
 @section('content')
-    @php
-        // Prepare navigation items
-        $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
-
-        $navItems = [
-            [
-                'icon' => 'verified_badge.png',
-                'label' => 'Asesmen',
-                'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'positive_dynamic.png',
-                'label' => 'CPPT',
-                'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'tools.png',
-                'label' => 'Tindakan',
-                'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'agree.png',
-                'label' => 'Konsultasi',
-                'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'test_tube.png',
-                'label' => 'Labor',
-                'link' => route('labor.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'microbeam_radiation_therapy.png',
-                'label' => 'Radiologi',
-                'link' => route('radiologi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'pill.png',
-                'label' => 'Farmasi',
-                'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'info.png',
-                'label' => 'Edukasi',
-                'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'goal.png',
-                'label' => 'Care Plan',
-                'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-            [
-                'icon' => 'cv.png',
-                'label' => 'Resume',
-                'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-            ],
-        ];
-
-        // Prepare content for each tab
-        // $tabContents = [
-        //     [
-        //         'tanggal' => '02 Mar 2024',
-        //         'time' => '8:30',
-        //         'avatar' => 'profile.jpg',
-        //         'name' => 'Ns. Aleyndra, S.Kep',
-        //         'role' => 'Perawat Klinik Internis',
-        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //         'objective' => [
-        //             'TD' => '___ / ___ mmHg',
-        //             'RR' => '___ x/mnt',
-        //             'TB' => '___ M',
-        //             'Temp' => '___ C',
-        //             'Resp' => '___ x/mnt',
-        //             'BB' => '___ Kg',
-        //         ],
-        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-        //     ],
-        //     [
-        //         'tanggal' => '03 Mar 2024',
-        //         'time' => '9:30',
-        //         'avatar' => 'profile1.jpg',
-        //         'name' => 'Dr. Amanda',
-        //         'role' => 'Perawat Klinik Internis',
-        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //         'objective' => [
-        //             'TD' => '___ / ___ mmHg',
-        //             'RR' => '___ x/mnt',
-        //             'TB' => '___ M',
-        //             'Temp' => '___ C',
-        //             'Resp' => '___ x/mnt',
-        //             'BB' => '___ Kg',
-        //         ],
-        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-        //     ],
-        //     [
-        //         'tanggal' => '01 Mar 2024',
-        //         'time' => '10:30',
-        //         'avatar' => 'profile2.jpg',
-        //         'name' => 'Ns. Eka Wira , S.Kep ',
-        //         'role' => 'Perawat Klinik Internis',
-        //         'subjective' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //         'objective' => [
-        //             'TD' => '___ / ___ mmHg',
-        //             'RR' => '___ x/mnt',
-        //             'TB' => '___ M',
-        //             'Temp' => '___ C',
-        //             'Resp' => '___ x/mnt',
-        //             'BB' => '___ Kg',
-        //         ],
-        //         'assessment' => ['Hipertensi Kronis', 'Dyspepsia', 'Depresive Episode'],
-        //         'plan' => ['Stabilisasi TD sampai batas normal', 'Terapi obat', 'Lanjutkan perawatan'],
-        //     ],
-        // ];
-
-    @endphp
-
     <div class="row">
         <div class="col-md-3">
-            @component('components.patient-card', ['patient' => $dataMedis->pasien])
-            @endcomponent
+            @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
-            @component('components.navigation', ['navItems' => $navItems])
-            @endcomponent
+            @include('components.navigation')
+            {{-- @component('components.navigation', ['navItems' => $navItems])
+            @endcomponent --}}
 
             <!-- Content -->
             <div class="patient-card">
@@ -475,7 +358,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

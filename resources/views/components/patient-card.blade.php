@@ -10,16 +10,16 @@
     </div>
 
     <div class="patient-info">
-        <h6>{{ $patient->nama ?? 'Tidak Diketahui' }}</h6>
+        <h6>{{ $dataMedis->pasien->nama ?? 'Tidak Diketahui' }}</h6>
         <p class="mb-0">
-            {{ $patient->jenis_kelamin == 1 ? 'Laki-laki' : ($patient->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
-        </p>
-        <small>{{ $patient->umur ?? 'Tidak Diketahui' }} Thn
-            ({{ $patient->tgl_lahir ? \Carbon\Carbon::parse($patient->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</small>
+            {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
+        </p>/
+        <small>{{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
+            ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</small>
 
         <div class="patient-meta mt-2">
-            <p class="mb-0"><i class="bi bi-file-earmark-medical"></i>RM: {{ $patient->kd_pasien }}</p>
-            <p class="mb-0"><i class="bi bi-calendar3"></i>31 Jan 2025 - 31 Jan 2025</p>
+            <p class="mb-0"><i class="bi bi-file-earmark-medical"></i>RM: {{ $dataMedis->pasien->kd_pasien }}</p>
+            <p class="mb-0"><i class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}</p>
             <p><i class="bi bi-hospital"></i>Rawat Jalan (Klinik Internis Pria)</p>
         </div>
     </div>
