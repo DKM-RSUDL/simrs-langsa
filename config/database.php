@@ -3,7 +3,7 @@
 use Illuminate\Support\Str;
 
 // $host = "192.168.13.4";
-$host = "DESKTOP-OOSJSA1";
+$host = "DESKTOP-CMA08S6";
 $port = "";
 $database = "rslangsa";
 

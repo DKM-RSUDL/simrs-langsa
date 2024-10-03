@@ -12,6 +12,8 @@
 
         $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
         // Prepare navigation items
+        $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
+
         $navItems = [
             ['icon' => 'verified_badge.png', 'label' => 'Asesmen', 'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],
             ['icon' => 'positive_dynamic.png', 'label' => 'CPPT', 'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData])],

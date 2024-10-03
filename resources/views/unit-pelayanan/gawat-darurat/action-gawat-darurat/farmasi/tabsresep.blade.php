@@ -14,13 +14,15 @@
             <!-- Radio Button untuk status obat -->
             <div class="d-flex align-items-center">
                 <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="status_obat" id="diberikan_obat" value="diberikan" checked>
+                    <input class="form-check-input" type="radio" name="status_obat" id="diberikan_obat" value="diberikan"
+                        checked>
                     <label class="form-check-label" for="diberikan_obat">
-                        Diberikan Obat
+                        Diberikan Obat -tes
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status_obat" id="tidak_diberikan_obat" value="tidak_diberikan">
+                    <input class="form-check-input" type="radio" name="status_obat" id="tidak_diberikan_obat"
+                        value="tidak_diberikan">
                     <label class="form-check-label" for="tidak_diberikan_obat">
                         Tidak Diberikan Obat
                     </label>

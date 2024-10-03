@@ -477,7 +477,7 @@ class CpptController extends Controller
         //     'tindak_lanjut'     => 'required'
         // ], $validatorMessage);
 
-        
+
         $validatedData = $request->validate([
                 'anamnesis'         => 'required',
                 'skala_nyeri'       => 'required|min:0|max:10',
@@ -663,7 +663,7 @@ class CpptController extends Controller
         // store diagnosis
         $diagnosisReq = $request->diagnosis;
         $diagnosisList = explode(',', $diagnosisReq);
-        
+
         $lastUrutMasukDiagnosis = MrPenyakit::where('kd_pasien', $kunjungan->kd_pasien)
                                     ->where('kd_unit', $kunjungan->kd_unit)
                                     ->whereDate('tgl_masuk', $tanggal)
@@ -939,5 +939,4 @@ class CpptController extends Controller
         }
     }
 }
-
 
