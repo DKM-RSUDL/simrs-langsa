@@ -8,6 +8,7 @@ use App\Models\Kunjungan;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
+use App\Models\Transaksi;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,21 +36,23 @@ class LaborController extends Controller
 
         // foreach data di Labor
         $search = $request->input('search');
-
         $dataLabor = SegalaOrder::with(['details', 'dokter'])
             ->when($search, function ($query, $search) {
-                return $query->where('tgl_masuk', 'like', "%$search%")
-                    ->orWhere('tgl_order', 'like', "%$search%")
-                    ->orWhere('kd_order', 'like', "%$search%")
+                $search = strtolower($search);
+
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('kd_order', $search);
+                }
+
+                return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
                     ->orWhereHas('dokter', function ($q) use ($search) {
-                        $q->where('nama', 'like', "%$search%");
+                        $q->whereRaw('LOWER(nama) like ?', ["%$search%"]);
                     });
             })
             ->orderBy('tgl_order', 'desc')
             ->paginate(10);
-        // $dataLabor = SegalaOrder::with(['details', 'dokter'])
-        //     ->orderBy('tgl_order', 'desc')
-        //     ->paginate(10);
+
+
 
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -120,6 +123,15 @@ class LaborController extends Controller
 
         $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
 
+        if (empty($validatedData['no_transaksi'])) {
+            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
+            $validatedData['no_transaksi'] = $existingTransaction ? $existingTransaction->no_transaksi : Transaksi::generateNoTransaksi();
+        }
+        if (empty($validatedData['kd_kasir'])) {
+            $existingkdKasir = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
+            $validatedData['kd_kasir'] = $existingkdKasir ? $existingkdKasir->kd_kasir : Transaksi::generateNoTransaksi();
+        }
+
         $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
         $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
             ->orderBy('kd_order', 'desc')
@@ -149,7 +161,7 @@ class LaborController extends Controller
             'diagnosis' => $validatedData['diagnosis'] ?? null,
             'dilayani' => 0,
             'kategori' => $validatedData['kategori'],
-            'no_transaksi' => $validatedData['no_transaksi'] ?? null,
+            'no_transaksi' => $validatedData['no_transaksi'],
             'kd_kasir' => $validatedData['kd_kasir'] ?? null,
             'status_order' => $validatedData['status_order'] ?? 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,

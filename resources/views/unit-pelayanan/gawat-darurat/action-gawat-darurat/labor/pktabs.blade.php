@@ -29,12 +29,15 @@
 
             <!-- Search Bar -->
             <div class="col-md-3">
-                <form method="GET" action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+                <form method="GET"
+                    action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari"
+                            value="{{ request('search') }}" aria-describedby="basic-addon1">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </div>
                 </form>
@@ -59,7 +62,7 @@
                 </ul>
             </div>
         @endif
-        <table class="table table-bordered table-sm table-hover">
+        <table class="table table-bordered table-sm table-hover" id="rawatDaruratTable">
             <thead class="table-primary">
                 <tr>
                     <th width="100px">No order</th>
@@ -83,17 +86,19 @@
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>
                             @if ($laborPK->status == 1)
-                                <i class="bi bi-check-circle-fill text-success"></i>
-                                selesai
-                            @else
-                                <i class="bi bi-check-circle-fill text-secondary"></i>
-                                Diorder
+                            <i class="bi bi-check-circle-fill text-success"></i> Selesai
+                            @elseif ($laborPK->status == 0)
+                            <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
                             @endif
                         </td>
 
                         <td>
-                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
+                            @if ($laborPK->status == 1)
+                            <a href="#" class="btn btn-sm btn-primary">edit</a>
                             <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
+                            @elseif ($laborPK->status == 0)
+                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i></a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

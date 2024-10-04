@@ -28,14 +28,20 @@
 
             <!-- Search Bar -->
             <div class="col-md-3">
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                        aria-describedby="basic-addon1">
-                </div>
+                <form method="GET"
+                    action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari"
+                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </form>
             </div>
+
 
             <!-- Add Button -->
             <!-- Include the modal file -->
@@ -86,6 +92,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $dataLabor->withQueryString()->links() }}
     </div>
 </div>
 
