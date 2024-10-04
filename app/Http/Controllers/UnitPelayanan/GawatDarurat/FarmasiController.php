@@ -18,7 +18,14 @@ class FarmasiController extends Controller
     public function index($kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
-            ->where('kd_pasien', $kd_pasien)
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
         if (!$dataMedis) {
@@ -42,14 +49,11 @@ class FarmasiController extends Controller
         );
     }
 
-    public function store(Request $request, $kd_pasien, $tgl_masuk)
+    public function store($kd_pasien, $tgl_masuk, Request $request)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
         try {
-            // Log incoming request data
-            Log::info('Incoming request data:', $request->all());
-
             // Validasi input
             $validatedData = $request->validate([
                 'kd_dokter' => 'required',
@@ -59,22 +63,45 @@ class FarmasiController extends Controller
                 'obat.*.id' => 'required',
                 'obat.*.frekuensi' => 'required',
                 'obat.*.jumlah' => 'required|numeric|min:1',
+                'obat.*.dosis' => 'required',
+                'obat.*.sebelumSesudahMakan' => 'required',
+                'obat.*.aturanTambahan' => 'nullable|string',
+                'obat.*.satuan' => 'nullable',
             ]);
 
+            $kunjungan = Kunjungan::join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
             // Generate ID_MRRESEP
-            $today = Carbon::now();
-            $count = MrResep::whereDate('TGL_MASUK', $today)->count() + 1;
-            $ID_MRRESEP = $today->format('Ymd') . str_pad($count, 4, '0', STR_PAD_LEFT);
+            // $count = MrResep::whereDate('TGL_MASUK', $today)->count() + 1;
+            // $count = MrResep::whereDate('TGL_MASUK', $today)->orderBy('ID_MRRESEP', 'desc')->first();
+            $count = MrResep::where('TGL_MASUK', $kunjungan->tgl_masuk)->orderBy('ID_MRRESEP', 'desc')->first();
+            // $ID_MRRESEP = $today->format('Ymd') . str_pad($count, 4, '0', STR_PAD_LEFT);
+            $ID_MRRESEP = !empty($count) ? $count->ID_MRRESEP + 1 : date('Ymd', strtotime($kunjungan->tgl_masuk)) . '0001';
+
 
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
-            $mrResep->KD_PASIEN = $kd_pasien;
-            $mrResep->KD_UNIT = $request->kd_unit ?? null; // Pastikan kd_unit tersedia
-            $mrResep->TGL_MASUK = $today;
+            $mrResep->KD_PASIEN = $kunjungan->kd_pasien;
+            $mrResep->KD_UNIT = $kunjungan->kd_unit;
+            $mrResep->TGL_MASUK = $kunjungan->tgl_masuk;
+            $mrResep->URUT_MASUK = $kunjungan->urut_masuk;
             $mrResep->KD_DOKTER = $validatedData['kd_dokter'];
             $mrResep->ID_MRRESEP = $ID_MRRESEP;
             $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? null;
             $mrResep->TGL_ORDER = $validatedData['tgl_order'];
+            $mrResep->STATUS = 0;
+            $mrResep->DILAYANI = 0;
+            $mrResep->KRONIS = 0;
+            $mrResep->PRB = 0;
             $mrResep->save();
 
             // Simpan detail resep ke MR_RESEPDTL
@@ -83,23 +110,23 @@ class FarmasiController extends Controller
                 $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
                 $mrResepDtl->URUT = $index + 1;
                 $mrResepDtl->KD_PRD = $obat['id'];
-                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'];
+                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ' , ' . $obat['dosis'] . ' ' . $obat['satuan'] . ' , ' . $obat['sebelumSesudahMakan'];
                 $mrResepDtl->JUMLAH = $obat['jumlah'];
                 $mrResepDtl->KD_DOKTER = $validatedData['kd_dokter'];
+                $mrResepDtl->KET = $obat['aturanTambahan'];
+                $mrResep->STATUS = 0;
                 $mrResepDtl->save();
             }
 
-            DB::commit();
-            Log::info('Resep berhasil disimpan dengan ID: ' . $ID_MRRESEP);
+            // DB::commit();
+
+            Log::info('Resep berhasil disimpan', ['id_mrresep' => $ID_MRRESEP]);
+
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $ID_MRRESEP], 200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollback();
-            Log::error('Validation error:', $e->errors());
-            return response()->json(['message' => 'Validasi gagal', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Error in FarmasiController@store: ' . $e->getMessage());
-            return response()->json(['message' => 'Terjadi kesalahan internal server'], 500);
+            // DB::rollback();
+            Log::error('Error in FarmasiController@store', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Terjadi kesalahan internal server', 'error' => $e->getMessage()], 500);
         }
     }
 

@@ -80,7 +80,7 @@ Route::middleware('auth')->group(function () {
                         Route::name('farmasi')->group(function () {
                             Route::controller(GawatDaruratFarmasiController::class)->group(function () {
                                 Route::get('/', 'index')->name('.index');
-                                Route::post('/', 'index')->name('.store');
+                                Route::post('/', 'store')->name('.store');
                                 Route::get('/search-obat', 'searchObat')->name('.searchObat');
                             });
                         });
