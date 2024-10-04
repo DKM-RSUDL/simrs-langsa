@@ -40,7 +40,6 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
 
-        // Mengambil daftar dokter
         $dokters = Dokter::all();
 
         return view(
@@ -81,12 +80,28 @@ class FarmasiController extends Controller
                 ->first();
 
             // Generate ID_MRRESEP
-            // $count = MrResep::whereDate('TGL_MASUK', $today)->count() + 1;
-            // $count = MrResep::whereDate('TGL_MASUK', $today)->orderBy('ID_MRRESEP', 'desc')->first();
-            $count = MrResep::where('TGL_MASUK', $kunjungan->tgl_masuk)->orderBy('ID_MRRESEP', 'desc')->first();
-            // $ID_MRRESEP = $today->format('Ymd') . str_pad($count, 4, '0', STR_PAD_LEFT);
-            $ID_MRRESEP = !empty($count) ? $count->ID_MRRESEP + 1 : date('Ymd', strtotime($kunjungan->tgl_masuk)) . '0001';
+            $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
+            $prefix = $tglMasuk->format('Ymd');
 
+            // Cari nomor urut terakhir untuk tanggal ini
+            $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
+            ->orderBy('ID_MRRESEP', 'desc')
+            ->first();
+
+            if ($lastResep) {
+                $lastNumber = intval(substr($lastResep->ID_MRRESEP, -4));
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+
+            $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+            // Periksa apakah ID sudah ada (untuk keamanan tambahan)
+            while (MrResep::where('ID_MRRESEP', $ID_MRRESEP)->exists()) {
+                $newNumber++;
+                $ID_MRRESEP = $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+            }
 
             // Simpan ke MR_RESEP
             $mrResep = new MrResep();
@@ -100,6 +115,7 @@ class FarmasiController extends Controller
             $mrResep->TGL_ORDER = $validatedData['tgl_order'];
             $mrResep->STATUS = 0;
             $mrResep->DILAYANI = 0;
+            $mrResep->STTS_TERIMA = 0;
             $mrResep->KRONIS = 0;
             $mrResep->PRB = 0;
             $mrResep->save();
@@ -172,6 +188,7 @@ class FarmasiController extends Controller
                 'MR_RESEP.STATUS',
                 'MR_RESEPDTL.CARA_PAKAI',
                 'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
                 'APT_OBAT.NAMA_OBAT'
             )
             ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
