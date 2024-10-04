@@ -34,16 +34,44 @@ class LaborController extends Controller
 
         $dataDokter = Dokter::all();
 
-        // foreach data di Labor
+        // Ambil data laboratorium berdasarkan filter yang dimasukkan
         $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'dokter'])
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Ambil data laboratorium berdasarkan filter yang dimasukkan
+        $search = $request->input('search');
+        $dataLabor = SegalaOrder::with(['details', 'dokter', 'produk'])
+            ->when($periode, function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_order', $now->year)
+                            ->whereMonth('tgl_order', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_order', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_order', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_order', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_order', '>=', $now->subMonths(9));
+                    default:
+                        return $query;
+                }
+            })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_order', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_order', '<=', $endDate);
+            })
             ->when($search, function ($query, $search) {
                 $search = strtolower($search);
-
                 if (is_numeric($search) && strlen($search) > 3) {
                     return $query->where('kd_order', $search);
                 }
-
                 return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
                     ->orWhereHas('dokter', function ($q) use ($search) {
                         $q->whereRaw('LOWER(nama) like ?', ["%$search%"]);
@@ -51,9 +79,6 @@ class LaborController extends Controller
             })
             ->orderBy('tgl_order', 'desc')
             ->paginate(10);
-
-
-
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -75,7 +100,6 @@ class LaborController extends Controller
 
     public function create($kd_pasien, $tgl_masuk)
     {
-        // Logika untuk mendapatkan data yang diperlukan
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -86,7 +110,6 @@ class LaborController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        // Mengirim data ke view
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal', compact('kd_pasien', 'tgl_masuk'));
     }
     public function store(Request $request)
@@ -172,7 +195,7 @@ class LaborController extends Controller
                 'kd_order' => $newKdOrder,
                 'urut' => $validatedData['urut'][$index],
                 'kd_produk' => $kd_produk,
-                'jumlah' => $validatedData['jumlah'][$index] ?? 1,
+                'jumlah' => $validatedData['jumlah'][$index] ?? ['kd_produk' => $kd_produk],
                 'status' => $validatedData['status'][$index] ?? 1,
                 'kd_dokter' => $validatedData['kd_dokter'],
             ]);
@@ -183,4 +206,24 @@ class LaborController extends Controller
             'tgl_masuk' => $validatedData['tgl_masuk']
         ])->with(['success' => 'Order created successfully']);
     }
+
+    // public function show($kd_pasien, $tgl_masuk, $kd_order)
+    // {
+    //     // Ambil data medis berdasarkan kd_order
+    //     $dataLabor = SegalaOrder::with(['details', 'dokter'])
+    //         ->where('kd_order', $kd_order)
+    //         ->where('kd_pasien', $kd_pasien)
+    //         ->whereDate('tgl_masuk', $tgl_masuk)
+    //         ->firstOrFail(); // Menggunakan firstOrFail untuk menangani jika data tidak ditemukan
+
+    //     // Ambil data pemeriksaan laboratorium
+    //     $DataLapPemeriksaan = LapLisItemPemeriksaan::select('kategori', 'nama', 'kd_produk')
+    //         ->get()
+    //         ->groupBy('kategori');
+
+    //     // Ambil semua data dokter
+    //     $dataDokter = Dokter::all();
+
+    //     return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk', compact('dataLabor', 'DataLapPemeriksaan', 'dataDokter'));
+    // }
 }

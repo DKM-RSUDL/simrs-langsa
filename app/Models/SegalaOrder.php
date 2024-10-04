@@ -52,4 +52,9 @@ class SegalaOrder extends Model
     {
         return $this->hasOne(Transaksi::class, 'kd_pasien', 'kd_pasien');
     }
+
+    public function produk()
+    {
+        return $this->belongsTo(LapLisItemPemeriksaan::class, 'kd_produk', 'kd_produk');
+    }
 }

@@ -102,6 +102,7 @@
 
                         <div class="col-md-4">
                             <div class="patient-card">
+                                <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                 <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select" aria-label="Pilih jenis pemeriksaan">
                                     <option value="" disabled selected>--Pilih Kategori--</option>
                                     @foreach ($DataLapPemeriksaan as $kategori => $items)
