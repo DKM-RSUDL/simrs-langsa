@@ -226,8 +226,8 @@
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
                                     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.create-diagnosis')
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
-                                        ICD-10</a>
+                                    {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
+                                        ICD-10</a> --}}
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -307,8 +307,10 @@
 <div class="modal fade" id="editCpptModal" tabindex="-1" aria-labelledby="editCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
+            <form action="{{ route('cppt.update', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
                 @csrf
+                @method('put')
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="editCpptModalLabel">Edit Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -321,6 +323,9 @@
                                     Anamnesis/ Keluhan Utama
                                     <label for="anamnesis"></label>
                                 </p>
+                                <input type="hidden" name="tgl_cppt">
+                                <input type="hidden" name="urut_cppt">
+                                <input type="hidden" name="unit_cppt">
                                 <textarea class="form-control @error('anamnesis') is-invalid @enderror" name="anamnesis" id="anamnesis" required>{{ old('anamnesis') }}</textarea>
                                 @error('anamnesis')
                                     <div class="invalid-feedback">
@@ -524,19 +529,19 @@
                                 <p class="fw-bold col-sm-5">Asesmen /Diagnosis</p>
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
-                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.create-diagnosis')
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
-                                        ICD-10</a>
+                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.edit-diagnosis')
+                                    {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
+                                        ICD-10</a> --}}
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <input type="hidden" name="diagnosis" id="daftarDiagnosaInput">
                                         <div class="bg-secondary-subtle rounded-2 p-3" id="diagnoseList">
                                             {{-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
                                             <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
                                             <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
                                         </div>
                                     </div>
+                                    <div class="col-12" id="diagnoseListInput"></div>
                                 </div>
                             </div>
 

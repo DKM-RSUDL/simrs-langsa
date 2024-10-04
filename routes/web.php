@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
                                 Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                                 Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
                                 Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
+                                Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
                             });
                         });
                     });
@@ -74,7 +76,18 @@ Route::middleware('auth')->group(function () {
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('radiologi', GawatDaruratRadiologiController::class);
-                    Route::resource('farmasi', GawatDaruratFarmasiController::class);
+
+                    // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::prefix('farmasi')->group(function () {
+                        Route::name('farmasi')->group(function () {
+                            Route::controller(GawatDaruratFarmasiController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                            });
+                        });
+                    });
+                    
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);
                     Route::resource('resume', GawatDaruratResumeController::class);

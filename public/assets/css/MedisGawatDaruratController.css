@@ -277,6 +277,6 @@
     font-size: 1.5rem; /* Membuat tombol lebih besar */
     opacity: 1; /* Pastikan opacity penuh */
     position: absolute;
-    right: 40px; /* Menempel ke sisi kanan */
-    top: 20px; /* Menempel ke sisi atas */
+    right: 20px; /* Menempel ke sisi kanan */
+    top: 18px; /* Menempel ke sisi atas */
 }

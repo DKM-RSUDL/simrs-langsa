@@ -120,14 +120,69 @@ class CpptController extends Controller
                     })
                     ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'mrp.kd_penyakit')
                     ->where('t.kd_pasien', $dataMedis->kd_pasien)
-                    ->where('t.no_transaksi', $dataMedis->no_transaksi)
                     ->where('t.kd_unit', $dataMedis->kd_unit)
+                    ->where('cppt.no_transaksi', $dataMedis->no_transaksi)
+                    ->where('cppt.kd_kasir', $dataMedis->kd_kasir)
                     ->orderBy('cppt.tanggal', 'desc')
                     ->orderBy('cppt.jam', 'desc')
                     ->orderBy('kf.urut')
                     ->get();
 
-        $cppt = $getCppt->groupBy(['urut'])->map(function($item) {
+        // $cppt = $getCppt->groupBy(['tanggal', 'urut'])->map(function($item) {
+        //     return [
+        //         'kd_pasien'             => $item->first()->first()->kd_pasien,
+        //         'no_transaksi'          => $item->first()->first()->no_transaksi,
+        //         'kd_kasir'              => $item->first()->first()->kd_kasir,
+        //         'kd_unit'               => $item->first()->first()->kd_unit,
+        //         'nama_unit'             => $item->first()->first()->nama_unit,
+        //         'penanggung'            => $item->first()->first()->dtCppt,
+        //         'nama_penanggung'       => $item->first()->first()->nama_penanggung,
+        //         'tanggal'               => $item->first()->first()->tanggal,
+        //         'jam'                   => $item->first()->first()->jam,
+        //         'obyektif'              => $item->first()->first()->obyektif,
+        //         'planning'              => $item->first()->first()->planning,
+        //         'urut'                  => $item->first()->first()->urut,
+        //         'skala_nyeri'           => $item->first()->first()->skala_nyeri,
+        //         'lokasi'                => $item->first()->first()->lokasi,
+        //         'durasi'                => $item->first()->first()->durasi,
+        //         'pemberat'              => $item->first()->first()->pemberat,
+        //         'peringan'              => $item->first()->first()->peringan,
+        //         'kualitas'              => $item->first()->first()->kualitas,
+        //         'frekuensi'             => $item->first()->first()->frekuensi,
+        //         'menjalar'              => $item->first()->first()->menjalar,
+        //         'jenis'                 => $item->first()->first()->jenis,
+        //         'pemeriksaan_fisik'     => $item->first()->first()->pemeriksaan_fisik,
+        //         'user_penanggung'       => $item->first()->first()->user_penanggung,
+        //         'anamnesis'             => $item->first()->first()->anamnesis,
+        //         'tindak_lanjut_code'    => $item->first()->first()->tindak_lanjut_code,
+        //         'tindak_lanjut_name'    => $item->first()->first()->tindak_lanjut_name,
+        //         'tgl_kontrol_ulang'     => $item->first()->first()->tgl_kontrol_ulang,
+        //         'unit_rujuk_internal'   => $item->first()->first()->unit_rujuk_internal,
+        //         'unit_rawat_inap'       => $item->first()->first()->unit_rawat_inap,
+        //         'rs_rujuk'              => $item->first()->first()->rs_rujuk,
+        //         'rs_rujuk_bagian'       => $item->first()->first()->rs_rujuk_bagian,
+        //         'kondisi'               => [
+        //             "id_konpas"     => (int) $item->first()->first()->id_konpas,
+        //             'konpas'        => $item->first()->groupBy('id_kondisi')->map(function($konpas) {
+        //                 return [
+        //                     "id_kondisi"    => $konpas->first()->id_kondisi,
+        //                     "nama_kondisi"  => $konpas->first()->kondisi,
+        //                     "satuan"        => $konpas->first()->satuan,
+        //                     "hasil"         => $konpas->first()->hasil,
+        //                 ];
+        //             })
+        //         ],
+        //         'penyakit'              => $item->first()->groupBy('kd_penyakit')->map(function($penyakit) {
+        //             return [
+        //                 'kd_penyakit'   => $penyakit->first()->kd_penyakit,
+        //                 'nama_penyakit' => $penyakit->first()->penyakit,
+        //             ];
+        //         })
+        //     ];
+        // });
+
+        $cppt = $getCppt->groupBy(['urut_total'])->map(function($item) {
+
             return [
                 'kd_pasien'             => $item->first()->kd_pasien,
                 'no_transaksi'          => $item->first()->no_transaksi,
@@ -160,6 +215,8 @@ class CpptController extends Controller
                 'unit_rawat_inap'       => $item->first()->unit_rawat_inap,
                 'rs_rujuk'              => $item->first()->rs_rujuk,
                 'rs_rujuk_bagian'       => $item->first()->rs_rujuk_bagian,
+                'verified'              => $item->first()->verified,
+                'user_verified'         => $item->first()->user_verified,
                 'kondisi'               => [
                     "id_konpas"     => (int) $item->first()->id_konpas,
                     'konpas'        => $item->groupBy('id_kondisi')->map(function($konpas) {
@@ -179,8 +236,6 @@ class CpptController extends Controller
                 })
             ];
         });
-
-        // dd($getCppt[0]);
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.index', [
             'dataMedis'         => $dataMedis,
@@ -520,11 +575,17 @@ class CpptController extends Controller
 
 
         // store CPPT
+        $lastUrutTotalCpptMax = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
+                        ->where('kd_kasir', $kunjungan->kd_kasir)
+                        ->orderBy('urut_total', 'desc')
+                        ->first();
+
         $lastUrutCPPT = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
                                     ->where('kd_kasir', $kunjungan->kd_kasir)
                                     ->whereDate('tanggal', $tanggal)
                                     ->count();
         $lastUrutCPPT += 1;
+        $lastUrutTotalCppt = ($lastUrutTotalCpptMax->urut_total ?? 0) + 1;
 
         $cpptInsertData = [
             'kd_kasir'              => $kunjungan->kd_kasir,
@@ -547,7 +608,10 @@ class CpptController extends Controller
             'menjalar_id'           => $request->menjalar,
             'jenis_nyeri_id'        => $request->jenis_nyeri,
             'pemeriksaan_fisik'     => $request->pemeriksaan_fisik,
-            'user_penanggung'       => Auth::user()->id
+            'user_penanggung'       => Auth::user()->id,
+            'verified'              => 0,
+            'user_verified'         => null,
+            'urut_total'            => $lastUrutTotalCppt
         ];
 
         Cppt::create($cpptInsertData);
@@ -628,6 +692,251 @@ class CpptController extends Controller
         }
 
         return back()->with('success', 'CPPT berhasil ditambah!');
+    }
+
+    public function update($kd_pasien, $tgl_masuk, Request $request)
+    {
+        // Validation Input
+        $validatorMessage = [
+            'anamnesis.required'            => 'Anamnesis harus di isi!',
+            'skala_nyeri.required'          => 'Skala nyeri harus di isi!',
+            'skala_nyeri.min'               => 'Nilai skala nyeri minimal 0!',
+            'skala_nyeri.max'               => 'Nilai skala nyeri minimal 10!',
+            'lokasi.required'               => 'Lokasi harus di isi!',
+            'durasi.required'               => 'Durasi harus di isi!',
+            'pemberat.required'             => 'Pemberat harus di isi!',
+            'peringan.required'             => 'Peringan harus di isi!',
+            'kualitas_nyeri.required'       => 'Kualitas nyeri harus di isi!',
+            'frekuensi_nyeri.required'      => 'Frekuensi nyeri harus di isi!',
+            'menjalar.required'             => 'Menjalar harus di isi!',
+            'jenis_nyeri.required'          => 'Jenis nyeri harus di isi!',
+            'pemeriksaan_fisik.required'    => 'Pemeriksaan fisik harus di isi!',
+            'data_objektif.required'        => 'Data objektif harus di isi!',
+            'planning.required'             => 'Planning harus di isi!',
+            'tindak_lanjut'                 => 'Tindak lanjut harus di isi!'
+        ];
+
+        // $validator = Validator::make($request->all(), [
+        //     'anamnesis'         => 'required',
+        //     'skala_nyeri'       => 'required|min:0|max:10',
+        //     'lokasi'            => 'required',
+        //     'durasi'            => 'required',
+        //     'pemberat'          => 'required',
+        //     'peringan'          => 'required',
+        //     'kualitas_nyeri'    => 'required',
+        //     'frekuensi_nyeri'   => 'required',
+        //     'menjalar'          => 'required',
+        //     'jenis_nyeri'       => 'required',
+        //     'pemeriksaan_fisik' => 'required',
+        //     'data_objektif'     => 'required',
+        //     'planning'          => 'required',
+        //     'tindak_lanjut'     => 'required'
+        // ], $validatorMessage);
+
+        
+        $validatedData = $request->validate([
+                'anamnesis'         => 'required',
+                'skala_nyeri'       => 'required|min:0|max:10',
+                'lokasi'            => 'required',
+                'durasi'            => 'required',
+                'pemberat'          => 'required',
+                'peringan'          => 'required',
+                'kualitas_nyeri'    => 'required',
+                'frekuensi_nyeri'   => 'required',
+                'menjalar'          => 'required',
+                'jenis_nyeri'       => 'required',
+                'pemeriksaan_fisik' => 'required',
+                'data_objektif'     => 'required',
+                'planning'          => 'required',
+                'tindak_lanjut'     => 'required'
+        ], $validatorMessage);
+
+        // get kunjungan
+        $kunjungan = Kunjungan::join('transaksi as t', function($join) {
+                                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                            })
+                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                            ->first();
+
+
+        $tanggal = date('Y-m-d');
+        $jam = date('H:i:s');
+
+        $tglCpptReq = $request->tgl_cppt;
+        $urutCpptReq = $request->urut_cppt;
+        $unitCpptReq = $request->unit_cppt;
+
+        // update anamnesis
+        MrAnamnesis::where('kd_pasien', $kunjungan->kd_pasien)
+                                        ->where('kd_unit', $unitCpptReq)
+                                        ->where('tgl_masuk', $tglCpptReq)
+                                        ->where('urut_masuk', $urutCpptReq)
+                                        ->update([
+                                            'anamnesis' => $request->anamnesis
+                                        ]);
+
+
+        // update konpas
+        $konpas = MrKonpas::where('kd_pasien', $kunjungan->kd_pasien)
+                            ->where('kd_unit', $unitCpptReq)
+                            ->where('tgl_masuk', $tglCpptReq)
+                            ->where('urut_masuk', $urutCpptReq)
+                            ->first();
+
+
+        // update tanda vital
+        $tandaVitalReq = $request->tanda_vital;
+        $tandaVitalList = MrKondisiFisik::OrderBy('urut')->get();
+
+        $i = 0;
+        foreach($tandaVitalList as $item) {
+            MrKonpasDtl::where('id_konpas', $konpas->id_konpas)
+                                    ->where('id_kondisi', $item->id_kondisi)
+                                    ->update([
+                                        'hasil' => $tandaVitalReq[$i]
+                                    ]);
+
+            $i++;
+        }
+
+
+        // update CPPT
+        $cppt = Cppt::where('no_transaksi', $kunjungan->no_transaksi)
+                                    ->where('kd_kasir', $kunjungan->kd_kasir)
+                                    ->where('tanggal', $tglCpptReq)
+                                    ->where('urut', $urutCpptReq)
+                                    ->first();
+
+        $cpptDataUpdate = [
+            'obyektif' => $request->data_objektif,
+            'planning' => $request->planning,
+            'skala_nyeri' => $request->skala_nyeri,
+            'lokasi' => $request->lokasi,
+            'durasi' => $request->durasi,
+            'faktor_pemberat_id' => $request->pemberat,
+            'faktor_peringan_id' => $request->peringan,
+            'frekuensi_nyeri_id' => $request->frekuensi_nyeri,
+            'menjalar_id' => $request->menjalar,
+            'jenis_nyeri_id' => $request->jenis_nyeri,
+            'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
+        ];
+
+        Cppt::where('no_transaksi', $kunjungan->no_transaksi)
+                                    ->where('kd_kasir', $kunjungan->kd_kasir)
+                                    ->where('tanggal', $tglCpptReq)
+                                    ->where('urut', $urutCpptReq)
+                                    ->update($cpptDataUpdate);
+
+
+        // update CPPT Tindak Lanjut
+        $tindakLanjut = $request->tindak_lanjut;
+        $tindakLanjutLabel = '';
+
+        switch ($tindakLanjut) {
+            case '1':
+                $tindakLanjutLabel = 'Rawat Inap';
+                break;
+            case '2':
+                $tindakLanjutLabel = 'Kontrol ulang';
+                break;
+            case '3':
+                $tindakLanjutLabel = 'Selesai di klinik ini';
+                break;
+            case '4':
+                $tindakLanjutLabel = 'Konsul/Rujuk internal';
+                break;
+            case '5':
+                $tindakLanjutLabel = 'Rujuk RS lain';
+                break;
+            default:
+                $tindakLanjutLabel = '';
+                break;
+        }
+
+        $cpptTL = [
+            'tindak_lanjut_code' => $tindakLanjut,
+            'tindak_lanjut_name' => $tindakLanjutLabel,
+        ];
+
+        CpptTindakLanjut::where('kd_kasir', $cppt->kd_kasir)
+                                            ->where('no_transaksi', $cppt->no_transaksi)
+                                            ->where('tanggal', $cppt->tanggal)
+                                            ->where('jam', $cppt->jam)
+                                            ->update($cpptTL);
+
+
+        // update diagnosis
+        $diagnosisList = $request->diagnosis;
+
+        // delete old diagnose
+        MrPenyakit::where('kd_pasien', $kunjungan->kd_pasien)
+                                    ->where('kd_unit', $unitCpptReq)
+                                    ->where('tgl_cppt', $tglCpptReq)
+                                    ->where('urut_cppt', $urutCpptReq)
+                                    ->delete();
+        
+        $lastUrutMasukDiagnosis = MrPenyakit::where('kd_pasien', $kunjungan->kd_pasien)
+                                    ->where('kd_unit', $unitCpptReq)
+                                    ->where('tgl_cppt', $tglCpptReq)
+                                    ->where('urut_cppt', $urutCpptReq)
+                                    ->count();
+
+        $lastUrutMasukDiagnosis += 1;
+
+        foreach($diagnosisList as $diag) {
+
+            $diagInsertData = [
+                'kd_penyakit'       => $diag,
+                'kd_pasien'         => $kunjungan->kd_pasien,
+                'kd_unit'           => $kunjungan->kd_unit,
+                'tgl_masuk'         => $kunjungan->tgl_masuk,
+                'urut_masuk'        => $kunjungan->urut_masuk,
+                'urut'              => $lastUrutMasukDiagnosis,
+                'stat_diag'         => 0,
+                'kasus'             => 0,
+                'tindakan'          => 0,
+                'perawatan'         => 0,
+                'tgl_cppt'          => $tglCpptReq,
+                'urut_cppt'         => $urutCpptReq
+            ];
+
+            MrPenyakit::create($diagInsertData);
+            $lastUrutMasukDiagnosis++;
+        }
+
+        return back()->with('success', 'CPPT berhasil diubah!');
+    }
+
+    public function verifikasiCppt($kd_pasien, $tgl_masuk, Request $request)
+    {
+        try {
+            $kdPasienReq = $request->kd_pasien;
+            $noTransaksiReq = $request->no_transaksi;
+            $kdKasirReq = $request->kd_kasir;
+            $tglReq = $request->tanggal;
+            $urutReq = $request->urut;
+
+            if(empty($kdPasienReq) || empty($noTransaksiReq) || empty($kdKasirReq) || empty($tglReq) || empty($urutReq)) return back()->with('error', 'Salah satu key verifikasi kosong!');
+
+            Cppt::where('no_transaksi', $noTransaksiReq)
+                                    ->where('kd_kasir', $kdKasirReq)
+                                    ->where('tanggal', $tglReq)
+                                    ->where('urut', $urutReq)
+                                    ->update([
+                                        'verified'          => 1,
+                                        'user_verified'     => Auth::user()->id
+                                    ]);
+
+            return back()->with('success', 'Cppt berhasil di verifikasi');
+
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
 
