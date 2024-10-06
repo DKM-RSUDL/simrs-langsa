@@ -115,7 +115,11 @@
                                 </td>
         
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-primary"><i class="ti-eye"></i></a>
+                                    @if ($rad->status_order == 1)
+                                        <button class="btn btn-sm btn-secondary btn-edit-rad" data-kode="{{ intval($rad->kd_order) }}" data-bs-target="#editRadiologiModal"><i class="ti-pencil"></i></button>
+                                        @else
+                                        <button class="btn btn-sm btn-primary btn-show-rad" data-kode="{{ intval($rad->kd_order) }}"><i class="ti-eye"></i></button>
+                                    @endif
                                     <a href="#" class="btn btn-sm"><i class="bi bi-x-circle text-danger"></i></a>
                                 </td>
                             </tr>
@@ -128,3 +132,133 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        // Edit
+        $('.btn-edit-rad').click(function(e) {
+            e.preventDefault()
+            let $this = $(this);
+            let target = $this.attr('data-bs-target');
+            let kdOrder = $this.attr('data-kode');
+            let $modal = $(target);
+            let url = "{{ route('radiologi.get-rad-detail-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
+
+            // Ubah teks tombol dan tambahkan spinner
+            $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $this.prop('disabled', true);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'kd_order' : kdOrder
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == 'success') {
+                        let orderData = response.data.order;
+                        let orderDetailData = response.data.order_detail
+                        console.log(orderData);
+                        console.log(orderDetailData);
+                        
+                        // set value
+                        let tglOrder = orderData.tgl_order;
+                        let tglOrderObj = new Date(tglOrder);
+                        const hoursOrder = tglOrderObj.getHours().toString().padStart(2, '0');
+                        const minutesOrder = tglOrderObj.getMinutes().toString().padStart(2, '0');
+                        let jamOrder = `${hoursOrder}:${minutesOrder}`;
+
+                        let tglPemeriksaan = orderData.jadwal_pemeriksaan;
+                        let tglPemeriksaanObj = new Date(tglPemeriksaan);
+                        const hoursPemeriksaan = tglPemeriksaanObj.getHours().toString().padStart(2, '0');
+                        const minutesPemeriksaan = tglPemeriksaanObj.getMinutes().toString().padStart(2, '0');
+                        let jamPemeriksaan = `${hoursPemeriksaan}:${minutesPemeriksaan}`;
+                        
+                        $modal.find('#kd_order').val(Math.floor(orderData.kd_order));
+                        $modal.find('#kd_dokter').val(orderData.kd_dokter);
+                        $modal.find('#tgl_order').val(tglOrder.split('T')[0]);
+                        $modal.find('#jam_order').val(jamOrder);
+                        $modal.find(`input[name="cyto"][value="${orderData.cyto}"]`).attr('checked', 'checked');
+                        $modal.find(`input[name="puasa"][value="${orderData.puasa}"]`).attr('checked', 'checked');
+                        $modal.find('#tgl_pemeriksaan').val(tglPemeriksaan.split('T')[0]);
+                        $modal.find('#jam_pemeriksaan').val(jamPemeriksaan);
+                        $modal.find('#diagnosis').val(orderData.diagnosis);
+
+                        let listProduk = '';
+
+                        orderDetailData.forEach(dtl => {
+                            listProduk += `<li class="list-group-item">
+                                                    ${dtl.produk.deskripsi}
+                                                    <input type="hidden" name="kd_produk[]" value="${dtl.kd_produk}">
+                                                    <span class="remove-item" style="color: red; cursor: pointer;">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </span>
+                                                </li>`
+
+                        });
+
+                        $modal.find('#orderList').html(listProduk);
+                        $modal.modal('show');
+                    } else {
+                        showToast(response.status, response.message);
+                    }
+
+                    $this.html('<i class="ti-pencil"></i>');
+                    $this.prop('disabled', false);
+                },
+                error: function (xhr, status, error) {
+                    showToast('error', 'internal server error');
+                }
+            });
+            
+        })
+
+        function dataPemeriksaanItemEdit()
+        {
+            const dataPemeriksaan = @json($produk);
+            var listHtml = '';
+
+            dataPemeriksaan.forEach(item => {
+                listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
+            });
+
+            $('#editRadiologiModal #dataList').html(listHtml);
+            $('#editRadiologiModal #dataList').show();
+        }
+
+        $('#editRadiologiModal #searchInput').on('focus', function() {
+            dataPemeriksaanItemEdit();
+        });
+
+        $(document).on('click', '#editRadiologiModal #dataList .dropdown-item', function(e) {
+            e.preventDefault();
+
+            const selectedItemText = $(this).text();
+            const kdProduk = $(this).attr('data-kd-produk');
+
+            if (kdProduk) {
+                let listItem = `<li class="list-group-item">
+                                        ${selectedItemText}
+                                        <input type="hidden" name="kd_produk[]" value="${kdProduk}">
+                                        <span class="remove-item" style="color: red; cursor: pointer;">
+                                            <i class="bi bi-x-circle"></i>
+                                        </span>
+                                    </li>`;
+
+                $('#editRadiologiModal #orderList').append(listItem);
+
+                $('#editRadiologiModal #searchInput').val('');
+                $('#editRadiologiModal #dataList').hide();
+            } else {
+                console.error('Error: kd_produk is undefined');
+            }
+        });
+
+        $(document).on('click', '#editRadiologiModal #orderList .list-group-item .remove-item', function(e) {
+            e.preventDefault();
+            $(this).parent().remove();
+        });
+    </script>
+@endpush

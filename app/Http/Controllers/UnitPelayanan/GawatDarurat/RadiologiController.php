@@ -8,6 +8,7 @@ use App\Models\Kunjungan;
 use App\Models\Produk;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -169,5 +170,44 @@ class RadiologiController extends Controller
         }
 
         return back()->with('success', 'Order berhasil');
+    }
+
+    public function getRadDetailAjax(Request $request)
+    {
+        try {
+            $kdOrder = $request->kd_order;
+
+            $order = SegalaOrder::with(['dokter'])
+                                ->where('kd_order', $kdOrder)
+                                ->first();
+
+            $orderDet = SegalaOrderDet::with(['produk'])
+                                        ->where('kd_order', $kdOrder)
+                                        ->get();
+
+            if(!empty($order) && !empty($orderDet)) {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Data ditemukan',
+                    'data'      => [
+                        'order'         => $order,
+                        'order_detail'  => $orderDet
+                    ]
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => []
+                ], 204);
+            }
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ], 500);
+        }
     }
 }
