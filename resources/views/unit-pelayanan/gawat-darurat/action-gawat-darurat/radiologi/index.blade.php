@@ -27,7 +27,7 @@
                         <select class="form-select" id="SelectOption" aria-label="Pilih...">
                             <option value="semua" selected>Semua Episode</option>
                             <option value="option1">Episode Sekarang</option>
-                            <option value="option2">1 Bulan/option>
+                            <option value="option2">1 Bulan</option>
                             <option value="option3">3 Bulan</option>
                             <option value="option4">6 Bulan</option>
                             <option value="option5">9 Bulan</option>
@@ -81,25 +81,46 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($radList as $rad)
                             <tr>
-                                <td>000937</td>
-                                <td>KGDS, Darah Rutin</td>
-                                <td>19 Apr 2024 11:30</td>
-                                <td>01 Apr 2024 15:00</td>
-                                <td>dr. Polan (Klinik Internis Pria)</td>
-                                <td align="middle">Cyto</td>
+                                <td>{{ (int) $rad->kd_order }}</td>
                                 <td>
-                                    {{-- <i class="bi bi-check-circle-fill text-success"></i>
-                                    selesai --}}
-                                    {{-- <i class="bi bi-check-circle-fill text-secondary"></i> --}}
-                                    Diorder
+                                    @php
+                                        $namaPemeriksaan = '';
+
+                                        foreach ($rad->details as $dtl) {
+                                            $namaPemeriksaan .= (empty($namaPemeriksaan)) ? $dtl->produk->deskripsi : ', ' . $dtl->produk->deskripsi;
+                                        }
+                                    @endphp
+
+                                    {{ $namaPemeriksaan }}
+                                </td>
+                                <td>{{ date('d M Y H:i', strtotime($rad->tgl_order)) }}</td>
+                                <td></td>
+                                <td>{{ $rad->dokter->nama_lengkap . '(' . $rad->unit->nama_unit . ')' }}</td>
+                                <td align="middle">
+                                    {{ ($rad->cyto == 1) ? 'Cito' : 'Non Cito' }}
+                                </td>
+                                <td>
+                                    @php
+                                        $statusOrder = $rad->status_order;
+                                        $statusLabel = '';
+
+                                        if($statusOrder == 0) $statusLabel = '<span class="text-warning">Diproses</span>';
+                                        if($statusOrder == 1) $statusLabel = '<span class="text-secondary">Diorder</span>';
+                                        if($statusOrder == 2) $statusLabel = '<span class="text-success">Selesai</span>';
+                                    @endphp
+
+                                    {!! $statusLabel !!}
                                 </td>
         
                                 <td>
                                     <a href="#" class="btn btn-sm btn-primary"><i class="ti-eye"></i></a>
-                                    <a href="#" class="btn btn-sm btn-danger"><i class="ti-close"></i></a>
+                                    <a href="#" class="btn btn-sm"><i class="bi bi-x-circle text-danger"></i></a>
                                 </td>
                             </tr>
+                        @endforeach
+                        
                     </tbody>
                 </table>
             </div>

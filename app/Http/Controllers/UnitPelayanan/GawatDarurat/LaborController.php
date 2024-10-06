@@ -86,6 +86,7 @@ class LaborController extends Controller
         // Mengirim data ke view
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal', compact('kd_pasien', 'tgl_masuk'));
     }
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -122,8 +123,8 @@ class LaborController extends Controller
 
         $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
         $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-            ->orderBy('kd_order', 'desc')
-            ->first();
+                                ->orderBy('kd_order', 'desc')
+                                ->first();
 
         $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
         $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);

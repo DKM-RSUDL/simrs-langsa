@@ -9,6 +9,7 @@ class SegalaOrder extends Model
 {
     use HasFactory;
     protected $table = 'SEGALA_ORDER';
+    // protected $primaryKey = 'kd_order';
 
     protected $fillable = [
         'kd_order', 'kd_pasien', 'kd_unit', 'tgl_masuk', 'urut_masuk', 'kd_dokter',
@@ -33,5 +34,10 @@ class SegalaOrder extends Model
     public function dokter()
     {
         return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 }
