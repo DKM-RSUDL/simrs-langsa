@@ -115,10 +115,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#SelectOption').change(function() {
-                // Mendapatkan nilai dari dropdown
                 var periode = $(this).val();
-
-                // Redirect dengan parameter periode
                 var queryString = '?periode=' + periode;
                 window.location.href =
                     "{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}" +
@@ -128,24 +125,19 @@
 
 
         $(document).ready(function() {
-            // Event listener untuk tombol filter
             $('#filterButton').click(function(e) {
-                e.preventDefault(); // Mencegah default behavior dari button
+                e.preventDefault();
 
-                // Mengambil nilai dari input tanggal
                 var startDate = $('#start_date').val();
                 var endDate = $('#end_date').val();
 
-                // Validasi apakah tanggal telah dipilih
                 if (!startDate || !endDate) {
                     alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
                     return;
                 }
 
-                // Membuat query string untuk redirect dengan parameter
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
-                // Redirect ke URL dengan query string yang terbentuk
                 window.location.href =
                     "{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}" +
                     queryString;

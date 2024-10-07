@@ -1,12 +1,18 @@
 @if ($laborPK->status_order == 1)
-<button type="button" class="btn btn-sm {{ $laborPK->status == 1 ? 'btn-primary' : 'btn-info' }}"
-    data-bs-toggle="modal" data-bs-target="#laborModal{{ $laborPK->kd_order }}">
-    <i class="ti-eye"></i>
-</button>
+    <button type="button" class="btn btn-sm {{ $laborPK->status == 1 ? 'btn-primary' : 'btn-info' }}"
+        data-bs-toggle="modal" data-bs-target="#laborModal{{ $laborPK->kd_order }}">
+        <i class="ti-eye"></i>
+    </button>
+    <a href="#" class="btn btn-sm">
+        <i class="bi bi-x-circle text-secondary"></i>
+    </a>
 @else
-<button class="btn btn-sm btn-secondary btn-edit-rad"><i class="ti-pencil"></i></button>
+    <button class="btn btn-sm btn-secondary btn-edit-rad"><i class="ti-pencil"></i></button>
+    <a href="#" class="btn btn-sm deleteOrder" data-id="{{ $laborPK->kd_order }}">
+        <i class="bi bi-x-circle text-danger"></i>
+    </a>
 @endif
-<a href="#" class="btn btn-sm"><i class="bi bi-x-circle text-danger"></i></a>
+
 
 <div class="modal fade" id="laborModal{{ $laborPK->kd_order }}" tabindex="-1"
     aria-labelledby="laborModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
@@ -17,7 +23,7 @@
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="laborModalLabel{{ $laborPK->kd_order }}">
-                        Order Pemeriksaan Laboratorium Klinik - KD Order: {{(int) $laborPK->kd_order }}
+                        Order Pemeriksaan Laboratorium Klinik - KD Order: {{ (int) $laborPK->kd_order }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -94,8 +100,6 @@
                     </div>
                 </div>
 
-
-
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -108,3 +112,44 @@
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    // Event listener untuk tombol hapus
+    $('body').on('click', '.deleteOrder', function() {
+        var orderId = $(this).data('id'); // Ambil ID order dari data-id
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#82868',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('labor.destroy', '') }}/" + orderId, // Menggunakan route yang sesuai
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        _method: 'DELETE' // Menyatakan bahwa ini adalah permintaan DELETE
+                    },
+                    success: function(response) {
+                        // Memperbarui tabel dengan Yajra
+                        table.draw();
+                        showToast('success', response.success ? response.message : 'Data berhasil dihapus.');
+                    },
+                    error: function(response) {
+                        var errorMessage = response.responseJSON.message || 'Terjadi kesalahan. Coba lagi.';
+                        showToast('error', errorMessage);
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endpush

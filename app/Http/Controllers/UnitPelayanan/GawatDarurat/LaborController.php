@@ -30,9 +30,9 @@ class LaborController extends Controller
             ->first();
 
         $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
-        ->select('kategori', 'kd_produk')
-        ->get()
-        ->groupBy('kategori');
+            ->select('kategori', 'kd_produk')
+            ->get()
+            ->groupBy('kategori');
 
 
         $dataDokter = Dokter::all();
@@ -209,6 +209,28 @@ class LaborController extends Controller
             'tgl_masuk' => $validatedData['tgl_masuk']
         ])->with(['success' => 'Order created successfully']);
     }
+
+    public function destroy(string $kd_order)
+    {
+        // Mencari order berdasarkan kd_order beserta relasinya
+        $order = SegalaOrder::with('orderDers')->find($kd_order);
+
+        // Jika order tidak ditemukan, kembalikan respon 404
+        if (!$order) {
+            return response()->json(['message' => 'Order tidak ditemukan'], 404);
+        }
+
+        // Hapus semua orderDers terkait
+        $order->orderDers()->delete();
+
+        // Hapus order utama
+        $result = $order->delete();
+
+        // dd(''. $result);
+
+        return response()->json(['success' => $result]);
+    }
+
 
 
     // dari  bg rizaldi

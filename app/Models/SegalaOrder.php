@@ -9,7 +9,10 @@ class SegalaOrder extends Model
 {
     use HasFactory;
     protected $table = 'SEGALA_ORDER';
-    // protected $primaryKey = 'kd_order';
+    protected $primaryKey = 'kd_order';
+    public $incrementing = false;
+    protected $keyType = 'float';
+    public $timestamps = false;
 
     protected $fillable = [
         'kd_order',
@@ -38,7 +41,6 @@ class SegalaOrder extends Model
         'cyto' => 'string',
         'puasa' => 'string',
     ];
-    public $timestamps = false;
 
     public function details()
     {

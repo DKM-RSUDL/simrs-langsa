@@ -118,9 +118,9 @@
                                     @if ($rad->status_order == 1)
                                         <button class="btn btn-sm btn-secondary btn-edit-rad" data-kode="{{ intval($rad->kd_order) }}" data-bs-target="#editRadiologiModal"><i class="ti-pencil"></i></button>
                                         @else
-                                        <button class="btn btn-sm btn-primary btn-show-rad" data-kode="{{ intval($rad->kd_order) }}"><i class="ti-eye"></i></button>
+                                        <button class="btn btn-sm btn-primary btn-show-rad" data-kode="{{ intval($rad->kd_order) }}" data-bs-target="#showRadiologiModal"><i class="ti-eye"></i></button>
                                     @endif
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-x-circle text-danger"></i></a>
+                                    <a href="#" class="btn btn-sm"><i class="bi bi-x-circle {{ ($rad->status_order == 1) ? 'text-danger' : 'text-secondary' }}"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -135,6 +135,9 @@
 
 @push('js')
     <script>
+        let typingTimer;
+        let debounceTime = 500;
+
         // Edit
         $('.btn-edit-rad').click(function(e) {
             e.preventDefault()
@@ -160,8 +163,6 @@
                     if(response.status == 'success') {
                         let orderData = response.data.order;
                         let orderDetailData = response.data.order_detail
-                        console.log(orderData);
-                        console.log(orderDetailData);
                         
                         // set value
                         let tglOrder = orderData.tgl_order;
@@ -177,6 +178,7 @@
                         let jamPemeriksaan = `${hoursPemeriksaan}:${minutesPemeriksaan}`;
                         
                         $modal.find('#kd_order').val(Math.floor(orderData.kd_order));
+                        $modal.find('#urut_masuk').val(orderData.urut_masuk);
                         $modal.find('#kd_dokter').val(orderData.kd_dokter);
                         $modal.find('#tgl_order').val(tglOrder.split('T')[0]);
                         $modal.find('#jam_order').val(jamOrder);
@@ -217,8 +219,9 @@
 
         function dataPemeriksaanItemEdit()
         {
-            const dataPemeriksaan = @json($produk);
+            let dataPemeriksaan = @json($produk);
             var listHtml = '';
+            
 
             dataPemeriksaan.forEach(item => {
                 listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
@@ -230,6 +233,34 @@
 
         $('#editRadiologiModal #searchInput').on('focus', function() {
             dataPemeriksaanItemEdit();
+        });
+
+        function searchDataPemeriksaan(keyword)
+        {
+            let dataPemeriksaan = @json($produk);
+
+            return dataPemeriksaan.filter(function(item) {
+                return item.deskripsi.toLowerCase().includes(keyword.toLowerCase());
+            });
+        }
+
+        $('#editRadiologiModal #searchInput').keyup(function() {
+            let $this = $(this);
+            let search = $this.val();
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function() {
+
+                let dataSearch = searchDataPemeriksaan(search);
+                let listHtml = '';
+                
+                dataSearch.forEach(item => {
+                    listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
+                });
+
+                $('#editRadiologiModal #dataList').html(listHtml);
+                $('#editRadiologiModal #dataList').show();
+            }, debounceTime)
         });
 
         $(document).on('click', '#editRadiologiModal #dataList .dropdown-item', function(e) {
@@ -260,5 +291,85 @@
             e.preventDefault();
             $(this).parent().remove();
         });
+
+        // show
+        $('.btn-show-rad').click(function(e) {
+            e.preventDefault()
+            let $this = $(this);
+            let target = $this.attr('data-bs-target');
+            let kdOrder = $this.attr('data-kode');
+            let $modal = $(target);
+            let url = "{{ route('radiologi.get-rad-detail-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
+
+            // Ubah teks tombol dan tambahkan spinner
+            $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $this.prop('disabled', true);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'kd_order' : kdOrder
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == 'success') {
+                        let orderData = response.data.order;
+                        let orderDetailData = response.data.order_detail
+                        console.log(orderData);
+                        console.log(orderDetailData);
+                        
+                        // set value
+                        // format jadwal order
+                        let tglOrder = orderData.tgl_order;
+                        let orderDatetime = new Date(tglOrder);
+                        let orderOptionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
+                        let orderFormattedDate = orderDatetime.toLocaleDateString('id-ID', orderOptionsDate);
+                        let orderOptionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+                        let orderFormattedTime = orderDatetime.toLocaleTimeString('id-ID', orderOptionsTime);
+                        let jadwalOrder = `${orderFormattedDate} ${orderFormattedTime}`;
+                        // format jadwal pemeriksaan
+                        let tglPemeriksaan = orderData.jadwal_pemeriksaan;
+                        let pemeriksaanDatetime = new Date(tglPemeriksaan);
+                        let pemeriksaanOptionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
+                        let pemeriksaanFormattedDate = pemeriksaanDatetime.toLocaleDateString('id-ID', pemeriksaanOptionsDate);
+                        let pemeriksaanOptionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+                        let pemeriksaanFormattedTime = pemeriksaanDatetime.toLocaleTimeString('id-ID', pemeriksaanOptionsTime);
+                        let jadwalPemeriksaan = `${pemeriksaanFormattedDate} ${pemeriksaanFormattedTime}`;
+
+                        // cito format
+                        let cytoLabel = (orderData.cyto == 1) ? 'Ya' : 'Tidak';
+                        let puasaLabel = (orderData.puasa == 1) ? 'Ya' : 'Tidak';
+
+
+                        $modal.find('#dokter').text(orderData.dokter.nama_lengkap);
+                        $modal.find('#jadwal_order').text(jadwalOrder);
+                        $modal.find('#cyto').text(cytoLabel);
+                        $modal.find('#puasa').text(puasaLabel);
+                        $modal.find('#jadwal_pemeriksaan').text(jadwalPemeriksaan);
+                        $modal.find('#diagnosis').text(orderData.diagnosis);
+
+                        let listProduk = '';
+
+                        orderDetailData.forEach(dtl => {
+                            listProduk += `<li class="list-group-item">${dtl.produk.deskripsi}</li>`
+                        });
+
+                        $modal.find('#orderList').html(listProduk);
+                        $modal.modal('show');
+                    } else {
+                        showToast(response.status, response.message);
+                    }
+
+                    $this.html('<i class="ti-eye"></i>');
+                    $this.prop('disabled', false);
+                },
+                error: function (xhr, status, error) {
+                    showToast('error', 'internal server error');
+                }
+            });
+            
+        })
     </script>
 @endpush
