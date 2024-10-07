@@ -9,6 +9,7 @@ use App\Models\LapLisItemPemeriksaan;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,21 +29,21 @@ class LaborController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $DataLapPemeriksaan = LapLisItemPemeriksaan::select('kategori', 'nama', 'kd_produk')
-            ->get()
-            ->groupBy('kategori');
+        $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
+        ->select('kategori', 'kd_produk')
+        ->get()
+        ->groupBy('kategori');
+
 
         $dataDokter = Dokter::all();
 
-        // Ambil data laboratorium berdasarkan filter yang dimasukkan
         $search = $request->input('search');
         $periode = $request->input('periode');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Ambil data laboratorium berdasarkan filter yang dimasukkan
         $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'dokter', 'produk'])
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
@@ -77,7 +78,8 @@ class LaborController extends Controller
                         $q->whereRaw('LOWER(nama) like ?', ["%$search%"]);
                     });
             })
-            ->orderBy('tgl_order', 'desc')
+            ->where('kd_pasien', $kd_pasien)
+            ->orderBy('tgl_order',  'desc')
             ->paginate(10);
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -112,7 +114,7 @@ class LaborController extends Controller
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal', compact('kd_pasien', 'tgl_masuk'));
     }
-    
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -158,8 +160,8 @@ class LaborController extends Controller
 
         $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
         $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
-                                ->orderBy('kd_order', 'desc')
-                                ->first();
+            ->orderBy('kd_order', 'desc')
+            ->first();
 
         $newOrderNumber = $lastOrder ? ((int)substr($lastOrder->kd_order, -4)) + 1 : 1;
         $newOrderNumber = str_pad((string)$newOrderNumber, 4, '0', STR_PAD_LEFT);
@@ -208,23 +210,41 @@ class LaborController extends Controller
         ])->with(['success' => 'Order created successfully']);
     }
 
-    // public function show($kd_pasien, $tgl_masuk, $kd_order)
+
+    // dari  bg rizaldi
+    // public function getProdukByKategoriAjax(Request $request)
     // {
-    //     // Ambil data medis berdasarkan kd_order
-    //     $dataLabor = SegalaOrder::with(['details', 'dokter'])
-    //         ->where('kd_order', $kd_order)
-    //         ->where('kd_pasien', $kd_pasien)
-    //         ->whereDate('tgl_masuk', $tgl_masuk)
-    //         ->firstOrFail(); // Menggunakan firstOrFail untuk menangani jika data tidak ditemukan
+    //     try {
+    //         $katProduk = $request->kat_produk;
 
-    //     // Ambil data pemeriksaan laboratorium
-    //     $DataLapPemeriksaan = LapLisItemPemeriksaan::select('kategori', 'nama', 'kd_produk')
-    //         ->get()
-    //         ->groupBy('kategori');
+    //         $produk = LapLisItemPemeriksaan::with(['produk'])
+    //                                 ->select([
+    //                                     'kd_produk'
+    //                                 ])
+    //                                 ->where('kategori', $katProduk)
+    //                                 ->groupBy('kd_produk')
+    //                                 ->get();
 
-    //     // Ambil semua data dokter
-    //     $dataDokter = Dokter::all();
+    //         if(count( $produk ) > 0) {
+    //             return response()->json([
+    //                 'status'    => 'success',
+    //                 'message'   => 'Data ditemukan!',
+    //                 'data'      => $produk
+    //             ],200);
+    //         } else {
+    //             return response()->json([
+    //                 'status'    => 'error',
+    //                 'message'   => 'Data tidak ditemukan',
+    //                 'data'      => []
+    //             ], status: 204);
+    //         }
 
-    //     return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk', compact('dataLabor', 'DataLapPemeriksaan', 'dataDokter'));
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'status'    => 'error',
+    //             'message'   => $e->getMessage(),
+    //             'data'      => []
+    //         ], 500);
+    //     }
     // }
 }

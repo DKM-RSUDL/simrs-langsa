@@ -80,39 +80,29 @@
             <tbody>
                 @foreach ($dataLabor as $laborPK)
                     <tr>
-                        <td>{{ $laborPK->kd_order }}</td>
-                        <td>-</td>
+                        <td>{{ (int) $laborPK->kd_order }}</td>
+                        <td>
+                            @foreach ($laborPK->details as $detail)
+                                {{ $detail->produk->deskripsi ?? '' }},
+                            @endforeach
+                        </td>
                         <td>{{ \Carbon\Carbon::parse($laborPK->tgl_order)->format('d M Y H:i') }}</td>
                         <td>-</td>
-                        <td>{{ $laborPK->dokter->nama }}</td>
+                        <td>{{ $laborPK->dokter->nama_lengkap }}</td>
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>
-                            @if ($laborPK->status == 1)
-                                <i class="bi bi-check-circle-fill text-success"></i> Selesai
+                            @if ($laborPK->status_order == 1)
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                <p class="text-success">Selesai</p>
                             @elseif ($laborPK->status == 0)
                                 <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
                             @endif
                         </td>
-
-                        {{-- <td>
-                            @if ($laborPK->status == 1)
-                                <a href="{{ route('labor.show', ['kd_pasien' => $laborPK->kd_pasien, 'tgl_masuk' => $laborPK->tgl_masuk, 'labor' => $laborPK->kd_order]) }}"
-                                    class="btn btn-sm btn-primary">Edit</a>
-                                <a href="#"><i class="bi bi-x-circle-fill text-secondary m-2"></i></a>
-                            @elseif ($laborPK->status == 0)
-                                <a href="{{ route('labor.show', ['kd_pasien' => $laborPK->kd_pasien, 'tgl_masuk' => $laborPK->tgl_masuk, 'labor' => $laborPK->kd_order]) }}"
-                                    class="btn btn-sm btn-primary">
-                                    <i class="bi bi-eye-fill"></i>
-                                </a>
-                            @endif
-                        </td> --}}
-
                         <td>
                             @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk')
                         </td>
 
                     </tr>
-
                 @endforeach
             </tbody>
         </table>

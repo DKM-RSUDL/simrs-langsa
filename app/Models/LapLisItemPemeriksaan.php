@@ -9,4 +9,10 @@ class LapLisItemPemeriksaan extends Model
 {
     use HasFactory;
     protected $table = 'LAB_LIS_ITEM_PEMERIKSAAN';
+
+
+    public function produk()
+    {
+        return $this->belongsTo(produk::class, 'kd_produk', 'kd_produk');
+    }
 }
