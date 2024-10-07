@@ -155,22 +155,22 @@
                                             <!-- Racikan Tab -->
                                             <div class="tab-pane fade" id="racikan" role="tabpanel"
                                                 aria-labelledby="racikan-tab">
-                                                <p>Form untuk Racikan akan ditambahkan di sini.</p>
-                                                <button type="button" id="tambahObatRacikan" class="btn btn-primary w-100">Tambah Obat Racikan</button>
+                                                <p class="text-danger">Form untuk Racikan Belum Tersedia!</p>
+                                                {{-- <button type="button" id="tambahObatRacikan" class="btn btn-primary w-100">Tambah Obat Racikan</button> --}}
                                             </div>
 
                                             <!-- Paket Tab -->
                                             <div class="tab-pane fade" id="paket" role="tabpanel"
                                                 aria-labelledby="paket-tab">
-                                                <p>Form untuk Paket akan ditambahkan di sini.</p>
-                                                <button type="button" id="tambahObatPaket" class="btn btn-primary w-100">Tambah Obat Paket</button>
+                                                <p class="text-danger">Form untuk Paket Belum Tersedia!</p>
+                                                {{-- <button type="button" id="tambahObatPaket" class="btn btn-primary w-100">Tambah Obat Paket</button> --}}
                                             </div>
 
                                             <!-- Prognas Tab -->
                                             <div class="tab-pane fade" id="prognas" role="tabpanel"
                                                 aria-labelledby="prognas-tab">
-                                                <p>Form untuk Prognas akan ditambahkan di sini.</p>
-                                                <button type="button" id="tambahObatPrognas" class="btn btn-primary w-100">Tambah Obat Prognas</button>
+                                                <p class="text-danger">Form untuk Prognas Belum Tersedia!</p>
+                                                {{-- <button type="button" id="tambahObatPrognas" class="btn btn-primary w-100">Tambah Obat Prognas</button> --}}
                                             </div>
                                         </div>
 
@@ -260,8 +260,26 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                </tr>
+                                                @forelse ($riwayatObat as $resep)
+                                                    
+                                                    <tr>
+                                                        <td>{{ (int)$resep->id_mrresep }}</td> 
+                                                        <td>Jenis Obat</td>   
+                                                        <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
+                                                        <td>{{ $dosis }}</td>
+                                                        <td>{{ $frekuensi }}</td>
+                                                        <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                                                        <td>Rute</td>
+                                                        <td>{{ $keterangan }}</td>
+                                                        <td>{{ $resep->ket }}</td>
+                                                        <td>{{ $resep->nama_dokter }}</td>
+                                                        <td>xxx</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="10" class="text-center">Tidak ada data resep obat.</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -286,10 +304,14 @@
             </div>
 
             <!-- Jumlah dan Total di Footer -->
-           <div class="modal-footer justify-content-end">
+            <div class="modal-footer justify-content-end">
+                <div id="loadingIndicator" class="spinner-border text-primary me-3 d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Order</button>
+                <button type="submit" id="orderButton" class="btn btn-primary">Order</button>
             </div>
+
         </form>
 
         </div>

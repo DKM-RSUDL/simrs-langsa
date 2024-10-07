@@ -82,7 +82,7 @@
                     <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                     <td>{{ $dosis }}</td>
                     <td>{{ $frekuensi }}</td>
-                    <td>{{ $resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                    <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
                     <td>{{ $keterangan }}</td>
                     <td>{{ $resep->ket }}</td>
                     <td>{{ $resep->nama_dokter }}</td>
@@ -102,23 +102,3 @@
 </div>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.modalresep')
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tabelResep = document.getElementById('tabelResep');
-    const pesanKosong = document.getElementById('pesanKosong');
-    
-    function updateTabelVisibility() {
-        if (tabelResep.getElementsByTagName('tr').length <= 1) {
-            tabelResep.classList.add('d-none');
-            pesanKosong.classList.remove('d-none');
-        } else {
-            tabelResep.classList.remove('d-none');
-            pesanKosong.classList.add('d-none');
-        }
-    }
-
-    // Panggil fungsi ini setelah memuat data atau menambah/menghapus baris
-    updateTabelVisibility();
-});
-</script>

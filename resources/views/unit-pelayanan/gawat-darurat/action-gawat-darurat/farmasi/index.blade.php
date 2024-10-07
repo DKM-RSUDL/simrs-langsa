@@ -53,6 +53,7 @@
 @endsection
 
 @push('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -71,9 +72,13 @@
             });
 
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
-            $('#tambahObatNonRacikan, #tambahObatRacikan, #tambahObatPaket, #tambahObatPrognas').on('click', function() {
+            $('#tambahObatNonRacikan, #tambahObatRacikan').on('click', function() {
                 if (!selectedDokter) {
-                    alert("Silakan pilih dokter terlebih dahulu.");
+                    iziToast.error({
+                        title: 'Error',
+                        message: "Silakan pilih dokter terlebih dahulu.",
+                        position: 'topRight'
+                    });
                     return;
                 }
 
@@ -89,14 +94,31 @@
                 var catracikan = $('#cat_racikan').val();
 
                 if (!obatId) {
-                    alert("Pilih obat terlebih dahulu.");
+                    iziToast.error({
+                        title: 'Error',
+                        message: "Pilih obat terlebih dahulu.",
+                        position: 'topRight'
+                    });
+                    return;
+                }
+
+                if (!jumlah) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: "Masukkan Jumlah Obat.",
+                        position: 'topRight'
+                    });
                     return;
                 }
 
                 // Cek jika obat sudah ada dalam daftar
                 const exists = daftarObat.some(obat => obat.id === obatId);
                 if (exists) {
-                    alert("Obat sudah ada dalam daftar.");
+                    iziToast.warning({
+                        title: 'Perhatian',
+                        message: "Obat sudah ada dalam daftar.",
+                        position: 'topRight'
+                    });
                     return;
                 }
 
@@ -127,21 +149,22 @@
                 $('#clearObat').hide();
             });
 
-
             //-----------Fungsi untuk Untuk Input Ke Database---------- //
             $('#resepForm').on('submit', function(e) {
                 e.preventDefault();
 
                 // Validasi form sebelum mengirim
-                if (!$('#dokterPengirim').val()) {
-                    alert('Silakan pilih dokter pengirim.');
+                if (daftarObat.length === 0) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: 'Silakan tambahkan minimal satu obat sebelum mengirim resep.',
+                        position: 'topRight'
+                    });
                     return;
                 }
 
-                if (daftarObat.length === 0) {
-                    alert('Silakan tambahkan minimal satu obat sebelum mengirim resep.');
-                    return;
-                }
+                $('#loadingIndicator').removeClass('d-none');
+                $('#orderButton').prop('disabled', true);
 
                 var tanggal = $('#tanggalOrder').val();
                 var waktu = $('#jamOrder').val();
@@ -164,7 +187,7 @@
                     }))
                 };
 
-                console.log('Sending data:', formData);
+                // console.log('Sending data:', formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -175,25 +198,29 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        console.log('Response received:', response);
-                        if (response.id_mrresep) {
-                            alert('Resep berhasil disimpan dengan ID: ' + response.id_mrresep);
-                            daftarObat = [];
-                            renderDaftarObat();
-                            $('#resepForm')[0].reset();
-                            $('#dokterPengirim').prop('disabled', false);
-                            selectedDokter = null;
-                        } else if (response.message) {
-                            alert('Resep berhasil disimpan. ' + response.message);
-                            console.warn('ID_MRRESEP tidak diterima dalam respons.');
-                        } else {
-                            console.warn('Respons tidak mengandung id_mrresep atau pesan.');
-                            alert('Resep berhasil disimpan, tetapi tidak ada ID yang diterima.');
-                        }
+                        // Sembunyikan loading spinner dan aktifkan kembali tombol Order
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#orderButton').prop('disabled', false);
+
+                        iziToast.success({
+                            title: 'Sukses',
+                            message: 'Resep berhasil disimpan dengan ID: ' + response.id_mrresep,
+                            position: 'topRight'
+                        });
+                        daftarObat = [];
+                        renderDaftarObat();
+                        $('#resepForm')[0].reset();
+                        $('#dokterPengirim').prop('disabled', false);
+                        selectedDokter = null;
+
+                        // Tutup modal dan refresh halaman
+                        $('#tambahResep').modal('hide');
+                        location.reload();
                     },
                     
                     error: function(xhr, status, error) {
-                        console.error('Error details:', xhr.responseText);
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#orderButton').prop('disabled', false);
                         var errorMessage = 'Terjadi kesalahan saat menyimpan resep.';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMessage += ' ' + xhr.responseJSON.message;
@@ -330,26 +357,26 @@
 
 
             //----------- Fungsi untuk menonaktifkan side column -------------//
-            const tab2 = document.getElementById('tab2-tab');
-            const sideColumn = document.getElementById('sideColumn');
+            // const tab2 = document.getElementById('tab2-tab');
+            // const sideColumn = document.getElementById('sideColumn');
 
-            function disableSideColumn() {
-                sideColumn.style.pointerEvents = 'none';
-                sideColumn.style.opacity = '0.5';
-                sideColumn.style.backgroundColor = '#f0f0f0';
-            }
+            // function disableSideColumn() {
+            //     sideColumn.style.pointerEvents = 'none';
+            //     sideColumn.style.opacity = '0.5';
+            //     sideColumn.style.backgroundColor = '#f0f0f0';
+            // }
 
-            function enableSideColumn() {
-                sideColumn.style.pointerEvents = 'auto';
-                sideColumn.style.opacity = '1';
-                sideColumn.style.backgroundColor = '';
-            }
+            // function enableSideColumn() {
+            //     sideColumn.style.pointerEvents = 'auto';
+            //     sideColumn.style.opacity = '1';
+            //     sideColumn.style.backgroundColor = '';
+            // }
 
-            tab2.addEventListener('shown.bs.tab', disableSideColumn);
+            // tab2.addEventListener('shown.bs.tab', disableSideColumn);
 
-            document.querySelectorAll('.nav-tabs .nav-link:not(#tab2-tab)').forEach(tab => {
-                tab.addEventListener('shown.bs.tab', enableSideColumn);
-            });
+            // document.querySelectorAll('.nav-tabs .nav-link:not(#tab2-tab)').forEach(tab => {
+            //     tab.addEventListener('shown.bs.tab', enableSideColumn);
+            // });
             //----------- End Fungsi untuk menonaktifkan side column---------- //
 
             function formatDateTime(date, time) {
