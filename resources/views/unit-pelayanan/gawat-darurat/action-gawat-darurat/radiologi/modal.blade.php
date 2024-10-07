@@ -165,10 +165,12 @@
 <div class="modal fade" id="editRadiologiModal" tabindex="-1" aria-labelledby="editRadiologiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="#" method="post">
+            <form action="{{ route('radiologi.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
                 @csrf
+                @method('put')
 
                 <input type="hidden" id="kd_order" name="kd_order">
+                <input type="hidden" id="urut_masuk" name="urut_masuk">
 
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="editRadiologiModalLabel">
@@ -311,6 +313,84 @@
     </div>
 </div>
 
+<div class="modal fade" id="showRadiologiModal" tabindex="-1" aria-labelledby="showRadiologiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="showRadiologiModalLabel">
+                    Detail Pemeriksaan Radiologi
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="patient-card">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="p-0 m-0"><strong>Dokter pengirim :</strong></p>
+                                    <p class="p-0 m-0" id="dokter"></p>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <p class="p-0 m-0"><strong>Jadwal Order :</strong></p>
+                                    <p class="p-0 m-0" id="jadwal_order"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="patient-card mt-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="p-0 m-0"><strong>Cito :</strong> <span id="cyto"></span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="p-0 m-0"><strong>Puasa :</strong> <span id="puasa"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="patient-card mt-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="p-0 m-0"><strong>Jadwal Pemeriksaan :</strong></p>
+                                    <p class="p-0 m-0" id="jadwal_pemeriksaan"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="patient-card mt-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="p-0 m-0"><strong>Catatan Klinis/Diagnosis :</strong></p>
+                                    <p class="p-0 m-0" id="diagnosis">Tidak ada diagnosis</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="patient-card">
+                            <h6 class="fw-bold">Daftar Pemeriksaan</h6>
+                            <ul id="orderList" class="list-group">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @push('js')
     <script>
         // const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
@@ -333,6 +413,26 @@
 
         $searchInput.on('focus', function() {
             dataPemeriksaanItem();
+        });
+
+
+        $('#addRadiologiModal #searchInput').keyup(function() {
+            let $this = $(this);
+            let search = $this.val();
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function() {
+
+                let dataSearch = searchDataPemeriksaan(search);
+                let listHtml = '';
+                
+                dataSearch.forEach(item => {
+                    listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
+                });
+
+                $('#addRadiologiModal #dataList').html(listHtml);
+                $('#addRadiologiModal #dataList').show();
+            }, debounceTime)
         });
 
         $dataList.on('click', '.dropdown-item', function(e) {

@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
                             Route::controller(GawatDaruratRadiologiController::class)->group(function() {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
                                 Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                             });
                         });
