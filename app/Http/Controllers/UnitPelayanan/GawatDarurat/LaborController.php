@@ -207,7 +207,7 @@ class LaborController extends Controller
         return redirect()->route('labor.index', [
             'kd_pasien' => $validatedData['kd_pasien'],
             'tgl_masuk' => $validatedData['tgl_masuk']
-        ])->with(['success' => 'Order created successfully']);
+        ])->with(['success' => 'created successfully']);
     }
 
     public function destroy(string $kd_order)
