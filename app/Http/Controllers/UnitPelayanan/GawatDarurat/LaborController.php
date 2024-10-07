@@ -212,22 +212,15 @@ class LaborController extends Controller
 
     public function destroy(string $kd_order)
     {
-        // Mencari order berdasarkan kd_order beserta relasinya
         $order = SegalaOrder::with('orderDers')->find($kd_order);
 
-        // Jika order tidak ditemukan, kembalikan respon 404
         if (!$order) {
             return response()->json(['message' => 'Order tidak ditemukan'], 404);
         }
-
-        // Hapus semua orderDers terkait
         $order->orderDers()->delete();
-
-        // Hapus order utama
         $result = $order->delete();
 
         // dd(''. $result);
-
         return response()->json(['success' => $result]);
     }
 
