@@ -58,11 +58,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // Variabel untuk menyimpan daftar obat yang akan diorder
+            // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
             let selectedDokter = null;
             let activeTab = 'Non Racikan';
 
+            // ------------ 2. Event Listener untuk Pengguna ------------ //
             $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).text().trim();
             });
@@ -90,7 +91,7 @@
                 var sebelumSesudahMakan = $('#sebelumSesudahMakan').val();
                 var aturanTambahan = $('#aturanTambahan').val();
                 var satuanObat = $('#satuanObat').val();
-                var hargaObat = $('#hargaObat').val();
+                var hargaObat = parseFloat($('#hargaObat').val());
                 var catracikan = $('#cat_racikan').val();
 
                 if (!obatId) {
@@ -102,7 +103,7 @@
                     return;
                 }
 
-                if (!jumlah) {
+                if (!jumlah || isNaN(jumlah)) {
                     iziToast.error({
                         title: 'Error',
                         message: "Masukkan Jumlah Obat.",
@@ -122,13 +123,13 @@
                     return;
                 }
 
-                // Simpan ke daftar obat
+                // tAMBAH ke daftar obat
                 daftarObat.push({
                     id: obatId,
                     nama: obatName,
                     dosis: dosis,
                     frekuensi: frekuensi,
-                    jumlah: jumlah,
+                    jumlah: parseInt(jumlah),
                     sebelumSesudahMakan: sebelumSesudahMakan,
                     aturanTambahan: aturanTambahan,
                     harga: hargaObat,
@@ -140,16 +141,88 @@
                 // Tampilkan di tabel sebelah kanan
                 renderDaftarObat();
 
-                // Reset form input obat setelah ditambahkan
-                $('#cariObat').val('').prop('readonly', false);
-                $('#selectedObatId').val('');
-                $('#jumlah').val('');
-                $('#aturanTambahan').val('');
-                $('#satuanObat').val('');
-                $('#clearObat').hide();
+                resetInputObat();
             });
 
-            //-----------Fungsi untuk Untuk Input Ke Database---------- //
+            // Listener untuk tombol Copy Obat di tabel riwayat
+            $(document).on('click', '.copy-obat', function() {
+                var obatData = $(this).data('obat');
+
+                // Cek jika obat sudah ada dalam daftar
+                const exists = daftarObat.some(obat => obat.nama === obatData.nama_obat);
+                if (exists) {
+                    iziToast.warning({
+                        title: 'Perhatian',
+                        message: 'Obat sudah ada dalam daftar.',
+                        position: 'topRight'
+                    });
+                    return;
+                }
+
+                // Tambah obat dari riwayat ke daftarObat
+                daftarObat.push({
+                    id: obatData.id,
+                    nama: obatData.nama_obat || 'Tidak ada informasi',
+                    dosis: obatData.dosis || 'N/A', 
+                    frekuensi: obatData.frekuensi || 'N/A', 
+                    jumlah: parseInt(obatData.jumlah) || 0, 
+                    sebelumSesudahMakan: obatData.sebelum_sesudah_makan || 'Sesudah Makan',
+                    aturanTambahan: obatData.ket || '-',
+                    harga: parseFloat(obatData.harga) || 0,
+                    satuan: obatData.satuan || '',
+                    jenisObat: 'Non Racikan',
+                    kd_dokter: selectedDokter
+                });
+
+                iziToast.success({
+                    title: 'Sukses',
+                    message: 'Obat berhasil disalin ke Daftar Order Obat.',
+                    position: 'topRight'
+                });
+
+                renderDaftarObat();
+            });
+
+             // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
+            var obatSelect;
+            function renderDaftarObat() {
+                var tbody = $('#daftarObatBody');
+                tbody.empty();
+
+                let totalBiaya = 0;
+
+                daftarObat.forEach(function(obat, index) {
+                    let subtotal = obat.harga * obat.jumlah;
+                    totalBiaya += subtotal;
+
+                    tbody.append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${obat.jenisObat}</td>
+                            <td>${obat.nama}</td>
+                            <td>${obat.dosis} ${obat.satuan}</td>
+                            <td>${obat.frekuensi}</td>
+                            <td>${obat.jumlah}</td>
+                            <td>${obat.sebelumSesudahMakan}</td>
+                            <td>${obat.aturanTambahan || '-'}</td>
+                            <td>Rp. ${subtotal.toLocaleString()}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="removeObat(${index})">X</button></td>
+                        </tr>
+                    `);
+                });
+
+                // Tampilkan total item dan biaya
+                $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
+                $('.fw-bold:contains("Total Biaya Obat")').text(`Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
+            }
+
+            // Fungsi untuk menghapus obat dari daftar
+            window.removeObat = function(index) {
+                daftarObat.splice(index, 1);
+                renderDaftarObat();
+            };
+
+           // ------------ 4. Fungsi AJAX untuk Pengiriman Data ke Server ------------ //
             $('#resepForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -235,51 +308,8 @@
                     }
                 });
             });
-            //-----------END Fungsi untuk Untuk Input Ke Database---------- //
 
-
-            // Fungsi untuk menampilkan daftar obat di tabel
-            var obatSelect;
-            function renderDaftarObat() {
-                var tbody = $('#daftarObatBody');
-                tbody.empty();
-
-                let totalBiaya = 0;
-
-                daftarObat.forEach(function(obat, index) {
-                    let subtotal = obat.harga * obat.jumlah;
-                    totalBiaya += subtotal;
-
-                    tbody.append(`
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${obat.jenisObat}</td>
-                            <td>${obat.nama}</td>
-                            <td>${obat.dosis} ${obat.satuan}</td>
-                            <td>${obat.frekuensi}</td>
-                            <td>${obat.jumlah}</td>
-                            <td>${obat.sebelumSesudahMakan}</td>
-                            <td>${obat.aturanTambahan || '-'}</td>
-                            <td>Rp. ${subtotal.toLocaleString()}</td>
-                            <td><button class="btn btn-danger btn-sm" onclick="removeObat(${index})">X</button></td>
-                        </tr>
-                    `);
-                });
-
-                // Tampilkan total item dan biaya
-                $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
-                $('.fw-bold:contains("Total Biaya Obat")').text(
-                    `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
-            }
-
-            // Fungsi untuk menghapus obat dari daftar
-            window.removeObat = function(index) {
-                daftarObat.splice(index, 1);
-                renderDaftarObat();
-            };
-
-
-            //-------------Fungsi untuk menampilkan obat------------ //
+            // ------------ 5. Fungsi Pendukung (Helper) ------------ //
             const cariObat = $('#cariObat');
             const clearObat = $('#clearObat');
             const obatList = $('#obatList');

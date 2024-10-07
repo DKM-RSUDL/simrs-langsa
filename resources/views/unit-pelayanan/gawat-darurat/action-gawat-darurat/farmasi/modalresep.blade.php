@@ -273,7 +273,10 @@
                                                         <td>{{ $keterangan }}</td>
                                                         <td>{{ $resep->ket }}</td>
                                                         <td>{{ $resep->nama_dokter }}</td>
-                                                        <td>xxx</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-success btn-sm copy-obat" data-obat='@json($resep)'>Copy Obat</button>
+                                                        </td>
+
                                                     </tr>
                                                 @empty
                                                     <tr>
