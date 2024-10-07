@@ -9,6 +9,7 @@ class SegalaOrder extends Model
 {
     use HasFactory;
     protected $table = 'SEGALA_ORDER';
+    // protected $primaryKey = 'kd_order';
 
     protected $fillable = [
         'kd_order',
@@ -56,5 +57,10 @@ class SegalaOrder extends Model
     public function produk()
     {
         return $this->belongsTo(LapLisItemPemeriksaan::class, 'kd_produk', 'kd_produk');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 }

@@ -55,9 +55,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
-                    Route::resource('/', MedisGawatDaruratController::class);
-                    Route::resource('asesmen', GawatDaruratAsesmenController::class);
-
                     // CPPT
                     Route::prefix('cppt')->group(function() {
                         Route::name('cppt')->group(function() {
@@ -72,10 +69,16 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
-                    Route::resource('tindakan', GawatDaruratTindakanController::class);
-                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
-                    Route::resource('labor', GawatDaruratLaborController::class);
-                    Route::resource('radiologi', GawatDaruratRadiologiController::class);
+                    // Radologi
+                    Route::prefix('radiologi')->group(function() {
+                        Route::name('radiologi')->group(function() {
+                            Route::controller(GawatDaruratRadiologiController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                            });
+                        });
+                    });
 
                     // Route::resource('farmasi', GawatDaruratFarmasiController::class);
                     Route::prefix('farmasi')->group(function () {
@@ -88,6 +91,11 @@ Route::middleware('auth')->group(function () {
                         });
                     });
                     
+                    Route::resource('/', MedisGawatDaruratController::class);
+                    Route::resource('asesmen', GawatDaruratAsesmenController::class);
+                    Route::resource('tindakan', GawatDaruratTindakanController::class);
+                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
+                    Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);
                     Route::resource('resume', GawatDaruratResumeController::class);

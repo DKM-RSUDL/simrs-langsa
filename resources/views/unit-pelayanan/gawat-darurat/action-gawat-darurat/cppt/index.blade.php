@@ -364,54 +364,6 @@
 
 @push('js')
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     const searchInput = document.getElementById('searchInput');
-    //     const dataList = document.getElementById('dataList');
-    //     const items = dataList.querySelectorAll('.dropdown-item');
-
-    //     dropdown saat input di klik
-    //     searchInput.addEventListener('focus', function () {
-    //         dataList.classList.add('show');
-    //     });
-
-    //     dropdown user mulai mengetik
-    //     searchInput.addEventListener('input', function () {
-    //         const filter = searchInput.value.toLowerCase();
-    //         let hasVisibleItems = false;
-
-    //         items.forEach(function (item) {
-    //             const text = item.textContent.toLowerCase();
-    //             if (text.includes(filter)) {
-    //                 item.style.display = 'block';
-    //                 hasVisibleItems = true;
-    //             } else {
-    //                 item.style.display = 'none';
-    //             }
-    //         });
-
-    //         // Jika tidak ada item yang cocok, tutup dropdown
-    //         if (hasVisibleItems) {
-    //             dataList.classList.add('show');
-    //         } else {
-    //             dataList.classList.remove('show');
-    //         }
-    //     });
-
-    //     // Event listener untuk klik pada item dropdown
-    //     items.forEach(function (item) {
-    //         item.addEventListener('click', function () {
-    //             searchInput.value = this.textContent;
-    //             dataList.classList.remove('show');
-    //         });
-    //     });
-
-    //     // Menyembunyikan dropdown saat klik di luar
-    //     document.addEventListener('click', function (event) {
-    //         if (!event.target.closest('.dropdown')) {
-    //             dataList.classList.remove('show');
-    //         }
-    //     });
-    // });
 
     let typingTimer;
     let debounceTime = 500;
@@ -540,7 +492,7 @@
         unit = unitData;
         button = $this;
 
-         // Ubah teks tombol dan tambahkan spinner
+        // Ubah teks tombol dan tambahkan spinner
         $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Proses...');
         $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
 
