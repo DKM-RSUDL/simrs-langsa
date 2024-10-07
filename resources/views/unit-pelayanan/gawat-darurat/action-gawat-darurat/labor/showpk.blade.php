@@ -8,7 +8,7 @@
     </a>
 @else
     <button class="btn btn-sm btn-secondary btn-edit-rad"><i class="ti-pencil"></i></button>
-    <a href="#" class="btn btn-sm deleteOrder" data-id="{{ $laborPK->kd_order }}">
+    <a href="#" class="btn btn-sm">
         <i class="bi bi-x-circle text-danger"></i>
     </a>
 @endif
@@ -112,44 +112,3 @@
         </div>
     </div>
 </div>
-
-@push('js')
-<script>
-    // Event listener untuk tombol hapus
-    $('body').on('click', '.deleteOrder', function() {
-        var orderId = $(this).data('id'); // Ambil ID order dari data-id
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data yang dihapus tidak dapat dikembalikan!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#82868',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('labor.destroy', '') }}/" + orderId, // Menggunakan route yang sesuai
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        _method: 'DELETE' // Menyatakan bahwa ini adalah permintaan DELETE
-                    },
-                    success: function(response) {
-                        // Memperbarui tabel dengan Yajra
-                        table.draw();
-                        showToast('success', response.success ? response.message : 'Data berhasil dihapus.');
-                    },
-                    error: function(response) {
-                        var errorMessage = response.responseJSON.message || 'Terjadi kesalahan. Coba lagi.';
-                        showToast('error', errorMessage);
-                    }
-                });
-            }
-        });
-    });
-</script>
-@endpush
