@@ -23,8 +23,6 @@ class MrResep extends Model
         'TGL_ORDER',
         'STATUS',
         'URUT_MASUK',
-        'CAT_RACIKAN',
-        'TGL_ORDER',
         'DILAYANI',
         // Tambahkan kolom lain yang ada di tabel MR_RESEP
     ];

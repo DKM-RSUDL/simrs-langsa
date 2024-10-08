@@ -82,11 +82,9 @@ class FarmasiController extends Controller
             // Generate ID_MRRESEP
             $tglMasuk = Carbon::parse($kunjungan->tgl_masuk);
             $prefix = $tglMasuk->format('Ymd');
-
-            // Cari nomor urut terakhir untuk tanggal ini
             $lastResep = MrResep::where('ID_MRRESEP', 'like', $prefix . '%')
-            ->orderBy('ID_MRRESEP', 'desc')
-            ->first();
+                ->orderBy('ID_MRRESEP', 'desc')
+                ->first();
 
             if ($lastResep) {
                 $lastNumber = intval(substr($lastResep->ID_MRRESEP, -4));

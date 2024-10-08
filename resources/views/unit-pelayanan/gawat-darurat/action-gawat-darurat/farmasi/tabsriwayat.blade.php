@@ -103,7 +103,7 @@
                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                         <td>{{ $dosis }}</td>
                         <td>{{ $frekuensi }}</td>
-                        <td>{{ $resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                        <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
                         <td>Rute</td>
                         <td>{{ $keterangan }}</td>
                         <td>{{ $resep->nama_dokter }}</td>
