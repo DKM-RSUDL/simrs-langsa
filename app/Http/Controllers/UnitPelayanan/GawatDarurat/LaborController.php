@@ -212,17 +212,23 @@ class LaborController extends Controller
 
     public function destroy(string $kd_order)
     {
-        $order = SegalaOrder::with('orderDers')->find($kd_order);
+        try {
+            $soalKinestetik = SegalaOrder::findOrFail($kd_order);
+            $soalKinestetik->delete();
 
-        if (!$order) {
-            return response()->json(['message' => 'Order tidak ditemukan'], 404);
+            return redirect()->route('labor.index', [
+                'kd_pasien' => $soalKinestetik->kd_pasien,
+                'tgl_masuk' => $soalKinestetik->tgl_masuk
+            ])->with(['success' => 'Deleted successfully']);
+        } catch (\Exception $e) {
+            return redirect()->route('labor.index', [
+                'kd_pasien' => $soalKinestetik->kd_pasien ?? 'default_kd_pasien',
+                'tgl_masuk' => $soalKinestetik->tgl_masuk ?? 'default_tgl_masuk'
+            ])->with(['failed' => 'Ada kesalahan sistem. Error: ' . $e->getMessage()]);
         }
-        $order->orderDers()->delete();
-        $result = $order->delete();
-
-        // dd(''. $result);
-        return response()->json(['success' => $result]);
     }
+
+
 
 
 
