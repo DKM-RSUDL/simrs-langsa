@@ -15,9 +15,23 @@ class SegalaOrder extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'kd_order', 'kd_pasien', 'kd_unit', 'tgl_masuk', 'urut_masuk', 'kd_dokter',
-        'tgl_order', 'cyto', 'puasa', 'jadwal_pemeriksaan', 'diagnosis',
-        'dilayani', 'kategori', 'no_transaksi', 'kd_kasir', 'status_order', 'transaksi_penunjang'
+        'kd_order',
+        'kd_pasien',
+        'kd_unit',
+        'tgl_masuk',
+        'urut_masuk',
+        'kd_dokter',
+        'tgl_order',
+        'cyto',
+        'puasa',
+        'jadwal_pemeriksaan',
+        'diagnosis',
+        'dilayani',
+        'kategori',
+        'no_transaksi',
+        'kd_kasir',
+        'status_order',
+        'transaksi_penunjang'
     ];
 
     protected $casts = [
@@ -33,9 +47,23 @@ class SegalaOrder extends Model
         return $this->hasMany(SegalaOrderDet::class, 'kd_order', 'kd_order');
     }
 
+    public function laplisitempemeriksaan()
+    {
+        return $this->belongsTo(LaplisItemPemeriksaan::class, 'kd_produk', 'kd_produk');
+    }
+
     public function dokter()
     {
         return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
+    }
+    public function transaksi()
+    {
+        return $this->hasOne(Transaksi::class, 'kd_pasien', 'kd_pasien');
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(produk::class, 'kd_produk', 'kd_produk');
     }
 
     public function unit()

@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
                             });
                         });
                     });
-                    
+
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
                     Route::resource('tindakan', GawatDaruratTindakanController::class);
