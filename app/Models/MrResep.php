@@ -10,17 +10,20 @@ class MrResep extends Model
     use HasFactory;
 
     protected $table = 'MR_RESEP';
-    protected $primaryKey = 'ID_MRRESEP';
     public $timestamps = false;
+    // protected $guarded = [];
 
     protected $fillable = [
         'KD_PASIEN',
         'TGL_MASUK',
+        'KD_UNIT',
         'KD_DOKTER',
         'ID_MRRESEP',
         'CAT_RACIKAN',
         'TGL_ORDER',
         'STATUS',
+        'URUT_MASUK',
+        'DILAYANI',
         // Tambahkan kolom lain yang ada di tabel MR_RESEP
     ];
 
@@ -34,6 +37,11 @@ class MrResep extends Model
     public function dokter()
     {
         return $this->belongsTo(Dokter::class, 'KD_DOKTER', 'KD_DOKTER');
+    }
+
+    public function detailResep()
+    {
+        return $this->hasMany(MrResepDtl::class, 'ID_MRRESEP', 'ID_MRRESEP');
     }
 
 }   

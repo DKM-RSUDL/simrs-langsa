@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MrResepDtl extends Model
+class RacikDtl extends Model
 {
     use HasFactory;
 
-    protected $table ='MR_RESEPDTL';
+    protected $table = 'RACIK_DTL';
     protected $primaryKey = 'ID_MRRESEP';
     public $incrementing = false;
     protected $keyType = 'string';
