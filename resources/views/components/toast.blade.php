@@ -3,7 +3,7 @@
         iziToast[type]({
             title: type,
             message: message,
-            position: 'topCenter',
+            position: 'topRight',
             timeout: 3000,
             progressBar: true,
             displayMode: 'once',
