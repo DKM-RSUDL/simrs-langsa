@@ -62,8 +62,7 @@
                     @php
                         $cara_pakai_parts = explode(',', $resep->cara_pakai);
                         $frekuensi = trim($cara_pakai_parts[0] ?? '');
-                        $dosis = trim($cara_pakai_parts[1] ?? '');
-                        $keterangan = trim($cara_pakai_parts[2] ?? '');
+                        $keterangan = trim($cara_pakai_parts[1] ?? '');
 
                         switch($resep->status) {
                             case 0:
@@ -101,7 +100,7 @@
                     <tr>
                         <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d/m/Y') }}</td>    
                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
-                        <td>{{ $dosis }}</td>
+                        <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
                         <td>{{ $frekuensi }}</td>
                         <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
                         <td>Rute</td>

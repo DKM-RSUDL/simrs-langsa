@@ -51,6 +51,7 @@ class FarmasiController extends Controller
     public function store($kd_pasien, $tgl_masuk, Request $request)
     {
         // DB::beginTransaction();
+        // dd($request->all());
 
         try {
             // Validasi input
@@ -124,8 +125,10 @@ class FarmasiController extends Controller
                 $mrResepDtl->ID_MRRESEP = $ID_MRRESEP;
                 $mrResepDtl->URUT = $index + 1;
                 $mrResepDtl->KD_PRD = $obat['id'];
-                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ' , ' . $obat['dosis'] . ' ' . $obat['satuan'] . ' , ' . $obat['sebelumSesudahMakan'];
+                $mrResepDtl->CARA_PAKAI = $obat['frekuensi'] . ' , '  . $obat['sebelumSesudahMakan'];
                 $mrResepDtl->JUMLAH = $obat['jumlah'];
+                $mrResepDtl->JUMLAH_TAKARAN = $obat['dosis'];
+                $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
                 $mrResepDtl->KD_DOKTER = $validatedData['kd_dokter'];
                 $mrResepDtl->KET = $obat['aturanTambahan'];
                 $mrResep->STATUS = 0;
@@ -163,6 +166,7 @@ class FarmasiController extends Controller
                 'latest_price.HRG_BELI_OBT as harga',
                 'APT_SATUAN.SATUAN as satuan'
             )
+            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
             ->take(10)
             ->get();
 
@@ -172,12 +176,20 @@ class FarmasiController extends Controller
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')
-            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+                           FROM DATA_BATCH AS db
+                           WHERE TGL_MASUK = (
+                               SELECT MAX(TGL_MASUK)
+                               FROM DATA_BATCH
+                               WHERE KD_PRD = db.KD_PRD
+                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
+        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->select(
-                'MR_RESEP.TGL_MASUK',
+                DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
                 'DOKTER.NAMA as NAMA_DOKTER',
                 'MR_RESEP.ID_MRRESEP as ID_MRRESEP',
@@ -187,7 +199,12 @@ class FarmasiController extends Controller
                 'MR_RESEPDTL.CARA_PAKAI',
                 'MR_RESEPDTL.JUMLAH',
                 'MR_RESEPDTL.KET',
-                'APT_OBAT.NAMA_OBAT'
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'MR_RESEPDTL.KD_PRD',
+                'APT_OBAT.NAMA_OBAT',
+                'APT_SATUAN.SATUAN',
+                'latest_price.HRG_BELI_OBT as HARGA'
             )
             ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
             ->get();
