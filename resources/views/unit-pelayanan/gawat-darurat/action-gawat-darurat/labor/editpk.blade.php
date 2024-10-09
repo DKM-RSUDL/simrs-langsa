@@ -168,7 +168,6 @@
                         <div class="col-md-4">
                             <div class="patient-card">
                                 <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
-                                <i class="text-danger">Silakan hapus data terlebih dahulu sebelum menambah yang baru.</i>
                                 <ul id="order__list" class="list-group">
                                         @if (isset($laborPK->details) && $laborPK->details->count() > 0)
                                             @foreach ($laborPK->details as $orderDetail)
