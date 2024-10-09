@@ -4,8 +4,14 @@ namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\CpptPenyakit;
+use App\Models\CpptTindakLanjut;
 use App\Models\Kunjungan;
+use App\Models\MrAnamnesis;
 use App\Models\MrKondisiFisik;
+use App\Models\MrKonpas;
+use App\Models\MrKonpasDtl;
+use App\Models\Penyakit;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
@@ -13,7 +19,9 @@ use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CpptController extends Controller
 {
@@ -105,12 +113,6 @@ class CpptController extends Controller
                     ->leftJoin('mr_konpasdtl as kpd', 'kpd.id_konpas', '=', 'kp.id_konpas')
                     ->leftJoin('mr_kondisifisik as kf', 'kf.id_kondisi', '=', 'kpd.id_kondisi')
                     // diagnosa
-                    // ->leftJoin('mr_penyakit as mrp', function($j) {
-                    //     $j->on('mrp.kd_pasien', '=', 't.kd_pasien')
-                    //         ->on('mrp.kd_unit', '=', 't.kd_unit')
-                    //         ->on('mrp.tgl_cppt', '=', 'cppt.tanggal')
-                    //         ->on('mrp.urut_cppt', '=', 'cppt.urut');
-                    // })
                     ->leftJoin('cppt_penyakit as cp', function($j) {
                         $j->on('cp.kd_unit', '=', 't.kd_unit')
                             ->on('cp.no_transaksi', '=', 'cppt.no_transaksi')
@@ -190,7 +192,7 @@ class CpptController extends Controller
             ];
         });
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.index', [
+        return view('unit-pelayanan.rawat-jalan.pelayanan.cppt.index',[
             'dataMedis'         => $dataMedis,
             'tandaVital'        => $tandaVital,
             'faktorPemberat'    => $faktorPemberat,
@@ -401,9 +403,8 @@ class CpptController extends Controller
         }
     }
 
-    public function store($kd_pasien, $tgl_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
-
         // Validation Input
         $validatorMessage = [
             'anamnesis.required'            => 'Anamnesis harus di isi!',
@@ -468,8 +469,9 @@ class CpptController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                             ->first();
 
@@ -500,7 +502,6 @@ class CpptController extends Controller
         // insert data to mr_konpas
         $konpasMax = MrKonpas::select(['id_konpas'])
                             ->whereDate('tgl_masuk', $tanggal)
-                            // ->where('kd_unit', 3)
                             ->orderBy('id_konpas', 'desc')
                             ->max('id_konpas');
 
@@ -646,8 +647,9 @@ class CpptController extends Controller
         return back()->with('success', 'CPPT berhasil ditambah!');
     }
 
-    public function update($kd_pasien, $tgl_masuk, Request $request)
+    public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+
         // Validation Input
         $validatorMessage = [
             'anamnesis.required'            => 'Anamnesis harus di isi!',
@@ -667,24 +669,6 @@ class CpptController extends Controller
             // 'planning.required'             => 'Planning harus di isi!',
             'tindak_lanjut'                 => 'Tindak lanjut harus di isi!'
         ];
-
-        // $validator = Validator::make($request->all(), [
-        //     'anamnesis'         => 'required',
-        //     'skala_nyeri'       => 'required|min:0|max:10',
-        //     'lokasi'            => 'required',
-        //     'durasi'            => 'required',
-        //     'pemberat'          => 'required',
-        //     'peringan'          => 'required',
-        //     'kualitas_nyeri'    => 'required',
-        //     'frekuensi_nyeri'   => 'required',
-        //     'menjalar'          => 'required',
-        //     'jenis_nyeri'       => 'required',
-        //     'pemeriksaan_fisik' => 'required',
-        //     'data_objektif'     => 'required',
-        //     'planning'          => 'required',
-        //     'tindak_lanjut'     => 'required'
-        // ], $validatorMessage);
-
         
         $validatedData = $request->validate([
                 'anamnesis'         => 'required',
@@ -712,8 +696,9 @@ class CpptController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                             ->first();
 
@@ -849,9 +834,10 @@ class CpptController extends Controller
         return back()->with('success', 'CPPT berhasil diubah!');
     }
 
-    public function verifikasiCppt($kd_pasien, $tgl_masuk, Request $request)
+    public function verifikasiCppt($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
+
             $kdPasienReq = $request->kd_pasien;
             $noTransaksiReq = $request->no_transaksi;
             $kdKasirReq = $request->kd_kasir;
