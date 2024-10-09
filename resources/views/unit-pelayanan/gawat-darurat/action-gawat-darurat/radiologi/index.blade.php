@@ -120,7 +120,7 @@
                                         @else
                                         <button class="btn btn-sm btn-primary btn-show-rad" data-kode="{{ intval($rad->kd_order) }}" data-bs-target="#showRadiologiModal"><i class="ti-eye"></i></button>
                                     @endif
-                                    <a href="#" class="btn btn-sm"><i class="bi bi-x-circle {{ ($rad->status_order == 1) ? 'text-danger' : 'text-secondary' }}"></i></a>
+                                    <button class="btn btn-sm" data-kode="{{ intval($rad->kd_order) }}"><i class="bi bi-x-circle {{ ($rad->status_order == 1) ? 'text-danger' : 'text-secondary' }}"></i></button>
                                 </td>
                             </tr>
                         @endforeach

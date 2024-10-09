@@ -18,8 +18,7 @@
                         untuk satu diagnosis )
                     </p>
                     <div class="dropdown">
-                        <input type="hidden" id="dataListAdd">
-                        <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Cari data..." aria-expanded="false" autocomplete="off">
+                        <input type="text" class="form-control dropdown-toggle" id="searchInput" placeholder="Nama Diagnosis" aria-expanded="false" autocomplete="off">
                         <ul class="dropdown-menu" id="dataList" aria-labelledby="searchInput">
                             <!-- Daftar data -->
                             {{-- <li><a class="dropdown-item" href="#">Deman</a></li>
