@@ -17,7 +17,7 @@
 
         <div class="col-md-9">
             @include('components.navigation')
-            
+
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
                     <div class="card-body">
@@ -29,12 +29,12 @@
                                     Lab Patologi Klinik (PK)
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            {{-- <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
                                     type="button" role="tab" aria-controls="riwayat" aria-selected="false">
                                     Lab Patologi Anatomi (PA)
                                 </button>
-                            </li>
+                            </li> --}}
                         </ul>
 
                         {{-- Tab Content --}}

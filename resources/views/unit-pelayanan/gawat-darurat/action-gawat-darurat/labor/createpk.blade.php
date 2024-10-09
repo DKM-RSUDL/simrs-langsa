@@ -177,7 +177,7 @@
                 const addedDescriptions = new Set();
 
                 if (dataPemeriksaan[selectedCategory]) {
-                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {                        
+                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                         if (!addedDescriptions.has(item.produk.deskripsi)) {
                             addedDescriptions.add(item.produk
                             .deskripsi);
@@ -204,7 +204,7 @@
                 new Set();
 
                     if (dataPemeriksaan[selectedCategory]) {
-                        $.each(dataPemeriksaan[selectedCategory], function(index, item) {                            
+                        $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                             if (item.produk.deskripsi.toLowerCase().includes(inputValue) && !
                                 addedDescriptions.has(item.produk.deskripsi)) {
                                 addedDescriptions.add(item.produk
@@ -217,7 +217,7 @@
                             }
                         });
                     }
-                    
+
                     if ($dataList.children().length > 0) {
                         $dataList.show();
                     } else {
@@ -235,7 +235,7 @@
 
                 if (kdProduk) {
                     const $listItem = $('<li>').addClass('list-group-item');
-                                            
+
                     $listItem.html(`
                     ${selectedItemText}
                     <input type="hidden" name="kd_produk[]" value="${kdProduk}">

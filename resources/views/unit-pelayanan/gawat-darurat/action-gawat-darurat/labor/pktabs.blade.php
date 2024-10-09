@@ -48,7 +48,7 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal')
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.createpk')
             </div>
 
         </div>
@@ -92,14 +92,18 @@
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>
                             @if ($laborPK->status_order == 1)
+                                <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
+                            @elseif ($laborPK->status == 0)
                                 <i class="bi bi-check-circle-fill text-success"></i>
                                 <p class="text-success">Selesai</p>
-                            @elseif ($laborPK->status == 0)
-                                <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
                             @endif
                         </td>
                         <td>
-                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk')
+                            @if ($laborPK->status_order == 1)
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.editpk')
+                            @else
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk')
+                            @endif
                         </td>
 
                     </tr>
