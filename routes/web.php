@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\CpptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -44,10 +45,32 @@ Route::middleware('auth')->group(function () {
     // Grup rute untuk Unit Pelayanan
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
-        Route::resource('rawat-jalan', RawatJalanController::class);
-        // Rute untuk Klinik Bedah di dalam Rawat Jalan
-        Route::prefix('ruang-klinik')->group(function () {
-            Route::resource('bedah', BedahController::class);
+        Route::prefix('rawat-jalan')->group(function() {
+            Route::name('rawat-jalan')->group(function() {
+                Route::get('/', [RawatJalanController::class, 'index'])->name('.index');
+
+                Route::prefix('unit/{kd_unit}')->group(function() {
+                    Route::name('.unit')->group(function() {
+                        Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
+                    });
+
+                    // Pelayanan
+                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
+                        Route::name('.pelayanan')->group(function() {
+                            Route::get('/', [RawatJalanController::class, 'pelayanan']);
+                        });
+
+                        // CPPT
+                        Route::prefix('cppt')->group(function() {
+                            Route::name('.cppt')->group(function() {
+                                Route::controller(CpptController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
 
         Route::resource('gawat-darurat', GawatDaruratController::class);
@@ -77,6 +100,7 @@ Route::middleware('auth')->group(function () {
                                 Route::post('/', 'store')->name('.store');
                                 Route::put('/', 'update')->name('.update');
                                 Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                Route::delete('/', 'delete')->name('.delete');
                             });
                         });
                     });

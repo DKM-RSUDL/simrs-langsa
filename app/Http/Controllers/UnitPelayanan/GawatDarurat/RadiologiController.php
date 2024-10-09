@@ -17,7 +17,7 @@ class RadiologiController extends Controller
 {
     public function index($kd_pasien, $tgl_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                             ->join('transaksi as t', function($join) {
                                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
@@ -278,5 +278,29 @@ class RadiologiController extends Controller
         }
 
         return back()->with('success', 'Order berhasil di ubah');
+    }
+
+    public function delete($kd_pasien, $tgl_masuk, Request $request)
+    {
+        try {
+            $kdOrder = $request->kd_order;
+
+            // delete
+            SegalaOrder::where('kd_order', $kdOrder)->delete();
+            SegalaOrderDet::where('kd_order', $kdOrder)->delete();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Order berhasil dihapus',
+                'data'      => []
+            ],200);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ],500);
+        }
     }
 }

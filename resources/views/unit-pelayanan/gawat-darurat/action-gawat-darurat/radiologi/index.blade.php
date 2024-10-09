@@ -120,7 +120,7 @@
                                         @else
                                         <button class="btn btn-sm btn-primary btn-show-rad" data-kode="{{ intval($rad->kd_order) }}" data-bs-target="#showRadiologiModal"><i class="ti-eye"></i></button>
                                     @endif
-                                    <button class="btn btn-sm" data-kode="{{ intval($rad->kd_order) }}"><i class="bi bi-x-circle {{ ($rad->status_order == 1) ? 'text-danger' : 'text-secondary' }}"></i></button>
+                                    <button class="btn btn-sm {{ ($rad->status_order == 1) ? 'btn-delete-rad' : '' }}" data-kode="{{ intval($rad->kd_order) }}"><i class="bi bi-x-circle {{ ($rad->status_order == 1) ? 'text-danger' : 'text-secondary' }}"></i></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -371,5 +371,44 @@
             });
             
         })
+
+        // delete
+        $('.btn-delete-rad').click(function(e) {
+            let $this = $(this);
+            let kdOrder = $this.attr('data-kode');
+
+            Swal.fire({
+                title: "Apakah anda yakin ingin menghapus?",
+                text: "Anda tidak akan dapat mengembalikannya!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('radiologi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        data: {
+                            '_method' : 'delete',
+                            '_token' : "{{ csrf_token() }}",
+                            'kd_order' : kdOrder
+                        },
+                        dataType: "json",
+                        success: function (res) {
+                            showToast(res.status, res.message);
+                            
+                            if(res.status == 'success') {
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 3000);
+                            }
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endpush
