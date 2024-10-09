@@ -13,35 +13,18 @@
     <i class="ti-pencil"></i>
 </a>
 
-<!-- Tombol Hapus -->
-<a href="#" class="mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $laborPK->kd_order }}">
+<!-- Tombol Hapus dengan SweetAlert -->
+<a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
     <i class="bi bi-x-circle text-danger"></i>
 </a>
 
-<div class="modal fade" id="deleteModal{{ $laborPK->kd_order }}" tabindex="-1"
-    aria-labelledby="deleteModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel{{ $laborPK->kd_order }}">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin menghapus data ini?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form
-                    action="{{ route('labor.destroy', [$laborPK->kd_order, $laborPK->kd_pasien, $laborPK->tgl_masuk]) }}"
-                    method="POST" class="d-inline">
-                    @method('DELETE')
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Form Hapus (dihilangkan dari modal, tetap ada untuk digunakan oleh JS) -->
+<form id="delete-form-{{ $laborPK->kd_order }}"
+    action="{{ route('labor.destroy', [$laborPK->kd_order, $laborPK->kd_pasien, $laborPK->tgl_masuk]) }}" method="POST"
+    style="display: none;">
+    @method('DELETE')
+    @csrf
+</form>
 
 <!-- Modal untuk Edit -->
 <div class="modal fade" id="extraLargeModal{{ $laborPK->kd_order }}" tabindex="-1"
@@ -110,15 +93,15 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="puasa"
-                                                value="1" id="puasa_yes{{ $laborPK->kd_order }}"
+                                            <input class="form-check-input" type="radio" name="puasa" value="1"
+                                                id="puasa_yes{{ $laborPK->kd_order }}"
                                                 {{ old('puasa', $laborPK->puasa) == '1' ? 'checked' : '' }}>
                                             <label class="form-check-label"
                                                 for="puasa_yes{{ $laborPK->kd_order }}">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="puasa"
-                                                value="0" id="puasa_no{{ $laborPK->kd_order }}"
+                                            <input class="form-check-input" type="radio" name="puasa" value="0"
+                                                id="puasa_no{{ $laborPK->kd_order }}"
                                                 {{ old('puasa', $laborPK->puasa) == '0' ? 'checked' : '' }}>
                                             <label class="form-check-label"
                                                 for="puasa_no{{ $laborPK->kd_order }}">Tidak</label>
@@ -169,24 +152,24 @@
                             <div class="patient-card">
                                 <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
                                 <ul id="order__list" class="list-group">
-                                        @if (isset($laborPK->details) && $laborPK->details->count() > 0)
-                                            @foreach ($laborPK->details as $orderDetail)
-                                                <li class="list-group-item">
-                                                    {{ $orderDetail->produk->deskripsi ?? 'Produk tidak ditemukan' }}
-                                                    <input type="hidden" name="kd_produk[]"
-                                                        value="{{ $orderDetail->kd_produk }}" required>
-                                                    <input type="hidden" name="jumlah[]"
-                                                        value="{{ (int) $orderDetail->jumlah }}">
-                                                    <input type="hidden" name="status[]"
-                                                        value="{{ $orderDetail->status }}">
-                                                    <input type="hidden" name="urut[]" value="{{ $loop->iteration }}"
-                                                        required>
-                                                    <span class="remove-item" style="color: red; cursor: pointer;">
-                                                        <i class="bi bi-x-circle"></i>
-                                                    </span>
-                                                </li>
-                                            @endforeach
-                                        @endif
+                                    @if (isset($laborPK->details) && $laborPK->details->count() > 0)
+                                        @foreach ($laborPK->details as $orderDetail)
+                                            <li class="list-group-item">
+                                                {{ $orderDetail->produk->deskripsi ?? 'Produk tidak ditemukan' }}
+                                                <input type="hidden" name="kd_produk[]"
+                                                    value="{{ $orderDetail->kd_produk }}" required>
+                                                <input type="hidden" name="jumlah[]"
+                                                    value="{{ (int) $orderDetail->jumlah }}">
+                                                <input type="hidden" name="status[]"
+                                                    value="{{ $orderDetail->status }}">
+                                                <input type="hidden" name="urut[]" value="{{ $loop->iteration }}"
+                                                    required>
+                                                <span class="remove-item" style="color: red; cursor: pointer;">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </span>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -349,5 +332,24 @@
                 }
             });
         });
+
+        // sweetalert hapus data
+        function confirmDelete(orderId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data ini tidak bisa dikembalikan setelah dihapus!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form jika pengguna mengonfirmasi penghapusan
+                    document.getElementById('delete-form-' + orderId).submit();
+                }
+            });
+        }
     </script>
 @endpush
