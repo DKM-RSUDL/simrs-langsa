@@ -87,7 +87,16 @@
                             @endforeach
                         </td>
                         <td>{{ \Carbon\Carbon::parse($laborPK->tgl_order)->format('d M Y H:i') }}</td>
-                        <td>-</td>
+                        <td>
+                            @php
+                                $labHasil = $laborPK->labHasil->sortByDesc('tgl_otoritas_det')->first();
+                            @endphp
+                            @if ($labHasil && $labHasil->tgl_otoritas_det)
+                                {{ \Carbon\Carbon::parse($labHasil->tgl_otoritas_det)->format('d M Y H:i') }}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{ $laborPK->dokter->nama_lengkap }}</td>
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>

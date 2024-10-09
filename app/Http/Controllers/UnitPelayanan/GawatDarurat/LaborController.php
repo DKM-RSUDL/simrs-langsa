@@ -43,7 +43,7 @@ class LaborController extends Controller
         $endDate = $request->input('end_date');
 
         $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'labHasil'])
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
@@ -150,12 +150,27 @@ class LaborController extends Controller
         $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
 
         if (empty($validatedData['no_transaksi'])) {
-            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
-            $validatedData['no_transaksi'] = $existingTransaction ? $existingTransaction->no_transaksi : Transaksi::generateNoTransaksi();
+            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
+                ->orderBy('tgl_transaksi', 'desc')
+                ->first();
+
+            if ($existingTransaction) {
+                $validatedData['no_transaksi'] = $existingTransaction->no_transaksi;
+            } else {
+                $validatedData['no_transaksi'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+            }
         }
         if (empty($validatedData['kd_kasir'])) {
-            $existingkdKasir = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
-            $validatedData['kd_kasir'] = $existingkdKasir ? $existingkdKasir->kd_kasir : Transaksi::generateNoTransaksi();
+            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
+                ->whereNotNull('kd_kasir')
+                ->orderBy('tgl_transaksi', 'desc')
+                ->first();
+
+            if ($existingTransaction) {
+                $validatedData['kd_kasir'] = $existingTransaction->kd_kasir;
+            } else {
+                $validatedData['kd_kasir'] = Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+            }
         }
 
         $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
@@ -246,9 +261,23 @@ class LaborController extends Controller
 
         // Update no_transaksi and kd_kasir if not provided
         if (empty($validatedData['no_transaksi']) || empty($validatedData['kd_kasir'])) {
-            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
-            $validatedData['no_transaksi'] = $validatedData['no_transaksi'] ?? ($existingTransaction ? $existingTransaction->no_transaksi : Transaksi::generateNoTransaksi());
-            $validatedData['kd_kasir'] = $validatedData['kd_kasir'] ?? ($existingTransaction ? $existingTransaction->kd_kasir : Transaksi::generateNoKasir());
+            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])
+                ->whereNotNull('no_transaksi')
+                ->whereNotNull('kd_kasir')
+                ->orderBy('tgl_transaksi', 'desc')
+                ->first();
+
+            if (empty($validatedData['no_transaksi'])) {
+                $validatedData['no_transaksi'] = $existingTransaction
+                    ? $existingTransaction->no_transaksi
+                    : Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+            }
+
+            if (empty($validatedData['kd_kasir'])) {
+                $validatedData['kd_kasir'] = $existingTransaction
+                    ? $existingTransaction->kd_kasir
+                    : Transaksi::generateNoTransaksi($validatedData['kd_pasien']);
+            }
         }
 
         $segalaOrder->update([
