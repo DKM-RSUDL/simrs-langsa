@@ -31,7 +31,7 @@
         [
             'icon' => 'microbeam_radiation_therapy.png',
             'label' => 'Radiologi',
-            'link' => route('radiologi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('rawat-jalan.radiologi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'pill.png',

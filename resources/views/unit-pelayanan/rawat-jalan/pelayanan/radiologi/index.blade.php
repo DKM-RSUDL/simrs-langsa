@@ -16,7 +16,7 @@
     </div>
 
     <div class="col-md-9">
-        @include('components.navigation')
+        @include('components.navigation-rajal')
         
         <div class="row">
             <div class="d-flex justify-content-between align-items-center m-3">
@@ -60,7 +60,7 @@
                     <!-- Add Button -->
                     <!-- Include the modal file -->
                     <div class="col-md-2">
-                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.modal')
+                        @include('unit-pelayanan.rawat-jalan.pelayanan.radiologi.modal')
                     </div>
         
                 </div>
@@ -145,7 +145,7 @@
             let target = $this.attr('data-bs-target');
             let kdOrder = $this.attr('data-kode');
             let $modal = $(target);
-            let url = "{{ route('radiologi.get-rad-detail-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
+            let url = "{{ route('rawat-jalan.radiologi.get-rad-detail-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
             // Ubah teks tombol dan tambahkan spinner
             $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
@@ -299,7 +299,7 @@
             let target = $this.attr('data-bs-target');
             let kdOrder = $this.attr('data-kode');
             let $modal = $(target);
-            let url = "{{ route('radiologi.get-rad-detail-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}";
+            let url = "{{ route('rawat-jalan.radiologi.get-rad-detail-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}";
 
             // Ubah teks tombol dan tambahkan spinner
             $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
@@ -390,7 +390,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('radiologi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('rawat-jalan.radiologi.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         data: {
                             '_method' : 'delete',
                             '_token' : "{{ csrf_token() }}",

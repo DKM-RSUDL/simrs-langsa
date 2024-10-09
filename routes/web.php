@@ -26,6 +26,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 Route::middleware('guest')->group(function () {
@@ -73,6 +74,19 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+                        // Radologi
+                    Route::prefix('radiologi')->group(function() {
+                        Route::name('.radiologi')->group(function() {
+                            Route::controller(RadiologiController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
+                                Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                Route::delete('/', 'delete')->name('.delete');
+                            });
+                        });
+                    });
                     });
                 });
             });
