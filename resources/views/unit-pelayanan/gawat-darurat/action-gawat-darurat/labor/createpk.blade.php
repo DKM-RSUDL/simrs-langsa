@@ -159,7 +159,7 @@
             const $orderList = $('#orderList');
             const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
             const dataPemeriksaan = @json($DataLapPemeriksaan);
-            console.log(dataPemeriksaan);
+            // console.log(dataPemeriksaan);
 
             let urut = 1;
 
@@ -171,7 +171,7 @@
 
             $jenisPemeriksaanSelect.on('change', function() {
                 const selectedCategory = $(this).val();
-                console.log(selectedCategory);
+                // console.log(selectedCategory);
 
                 $dataList.empty();
                 const addedDescriptions = new Set();
@@ -231,7 +231,7 @@
 
                 const selectedItemText = $(this).text();
                 const kdProduk = $(this).attr('data-kd-produk');
-                console.log(kdProduk);
+                // console.log(kdProduk);
 
                 if (kdProduk) {
                     const $listItem = $('<li>').addClass('list-group-item');
@@ -253,7 +253,7 @@
                     $listItem.find('.remove-item').on('click', function() {
                         $(this).closest('li').remove();
                         urut--;
-                        console.log(urut);
+                        // console.log(urut);
                     });
 
                     $searchInput.val('');

@@ -193,8 +193,8 @@
             const $jenisPemeriksaanSelect = $('#jenis__pemeriksaan');
             const dataPemeriksaan = @json($DataLapPemeriksaan);
             const existingOrders = @json($laborPK->details);
-            console.log('Data Pemeriksaan:', dataPemeriksaan);
-            console.log('Existing Orders:', existingOrders);
+            // console.log('Data Pemeriksaan:', dataPemeriksaan);
+            // console.log('Existing Orders:', existingOrders);
 
             let urut = 1;
 
@@ -222,7 +222,7 @@
                 } else {
                     $dataList.hide();
                 }
-                console.log('Data list updated:', $dataList.children().length, 'items');
+                // console.log('Data list updated:', $dataList.children().length, 'items');
             }
 
             function addItemToOrderList(kdProduk, deskripsi, jumlah = 1, status = 1) {
@@ -230,7 +230,7 @@
                 const existingItem = $orderList.find(`input[name="kd_produk[]"][value="${kdProduk}"]`).closest(
                     'li');
                 if (existingItem.length) {
-                    console.log('Item already exists in order list:', deskripsi);
+                    // console.log('Item already exists in order list:', deskripsi);
                     return; // If item exists, don't add it again
                 }
 
@@ -247,7 +247,7 @@
         `);
                 $orderList.append($listItem);
                 urut++;
-                console.log('Item added to order list:', deskripsi);
+                // console.log('Item added to order list:', deskripsi);
             }
 
             function populateOrderList() {
@@ -259,12 +259,12 @@
                             .status);
                     });
                 }
-                console.log('Order list populated with', existingOrders.length, 'items');
+                // console.log('Order list populated with', existingOrders.length, 'items');
             }
 
             $jenisPemeriksaanSelect.off('change').on('change', function() {
                 const selectedCategory = $(this).val();
-                console.log('Selected category:', selectedCategory);
+                // console.log('Selected category:', selectedCategory);
                 updateDataList(selectedCategory);
             });
 
@@ -280,7 +280,7 @@
                 e.preventDefault();
                 const selectedItemText = $(this).text();
                 const kdProduk = $(this).attr('data-kd-produk');
-                console.log('Selected product:', kdProduk, selectedItemText);
+                // console.log('Selected product:', kdProduk, selectedItemText);
 
                 if (kdProduk) {
                     addItemToOrderList(kdProduk, selectedItemText);
@@ -320,7 +320,7 @@
                 );
                 if (kategori) {
                     $jenisPemeriksaanSelect.val(kategori).trigger('change');
-                    console.log('Initial category set:', kategori);
+                    // console.log('Initial category set:', kategori);
                 }
             }
 
