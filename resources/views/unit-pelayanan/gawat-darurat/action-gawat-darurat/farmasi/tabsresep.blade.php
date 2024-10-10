@@ -7,7 +7,7 @@
         <!-- Wrapper untuk Tanggal dan Radio Button di Sebelah Kiri -->
         <div class="d-flex align-items-center flex-wrap">
             <div class="mb-2 me-3">
-                <label class="form-label" style="font-size: 15px; font-weight: bold;"> {{ \Carbon\Carbon::now()->translatedFormat('l, d-m-Y') }}</label>
+                <label class="form-label" style="font-size: 15px; font-weight: bold;">{{ \Carbon\Carbon::now()->translatedFormat('l, d-m-Y') }}</label>
             </div>
         </div>
 
@@ -26,6 +26,7 @@
             <thead>
                 <tr>
                     <th>#Order</th>
+                    <th>Tanggal Order</th>
                     <th>Nama Obat</th>
                     <th>Dosis</th>
                     <th>Frekuensi</th>
@@ -37,7 +38,7 @@
                 </tr>
             </thead>
         <tbody>
-            @forelse ($riwayatObat as $resep)
+            @forelse ($riwayatObatHariIni as $resep)
                 @php
                     $cara_pakai_parts = explode(',', $resep->cara_pakai);
                     $frekuensi = trim($cara_pakai_parts[0] ?? '');
@@ -78,6 +79,7 @@
                 
                 <tr>
                     <td>{{ (int)$resep->id_mrresep }}</td>    
+                    <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d-m-Y H:i') }}</td>
                     <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                     <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
                     <td>{{ $frekuensi }}</td>
@@ -97,7 +99,7 @@
         </tbody>
         </table>
     </div>
-    <div id="pesanKosong" class="alert alert-info d-none">Tidak ada data resep obat.</div>
+    <div id="pesanKosong" class="alert alert-info d-none">Tidak ada data resep obat untuk hari ini.</div>
 </div>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.modalresep')

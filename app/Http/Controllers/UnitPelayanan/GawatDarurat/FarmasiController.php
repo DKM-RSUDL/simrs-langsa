@@ -39,12 +39,13 @@ class FarmasiController extends Controller
         }
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
 
         $dokters = Dokter::all();
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'kd_pasien', 'tgl_masuk', 'dokters')
+            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters')
         );
     }
 
@@ -207,6 +208,41 @@ class FarmasiController extends Controller
                 'latest_price.HRG_BELI_OBT as HARGA'
             )
             ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
+            ->get();
+    }
+
+
+    private function getRiwayatObatHariIni($kd_pasien)
+    {
+        $today = Carbon::today()->toDateString();
+
+        return DB::table('MR_RESEP')
+        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+                           FROM DATA_BATCH AS db
+                           WHERE TGL_MASUK = (
+                               SELECT MAX(TGL_MASUK)
+                               FROM DATA_BATCH
+                               WHERE KD_PRD = db.KD_PRD
+                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
+        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.TGL_ORDER', $today)
+            ->select(
+                'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP as ID_MRRESEP',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'APT_OBAT.NAMA_OBAT',
+            )
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
     }
 }

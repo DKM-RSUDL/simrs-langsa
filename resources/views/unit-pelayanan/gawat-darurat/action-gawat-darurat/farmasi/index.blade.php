@@ -56,7 +56,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
 
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
@@ -138,64 +138,75 @@
                     kd_dokter: selectedDokter
                 });
 
-                // Tampilkan di tabel sebelah kanan
                 renderDaftarObat();
-
                 resetInputObat();
             });
 
-            // Listener untuk tombol Copy Obat di tabel riwayat
+
             $(document).on('click', '.copy-obat', function() {
-                var obatData = $(this).data('obat');
-                // console.log('Data obat yang diterima:', obatData);
 
                 if (!selectedDokter) {
-                    iziToast.warning({
-                        title: 'Warning',
-                        message: "Sebelum Mengcopy Obat Silahkan Pilih Dokter dan Tanggal Order",
+                    iziToast.error({
+                        title: 'Error',
+                        message: "Silakan pilih dokter terlebih dahulu.",
                         position: 'topRight'
                     });
                     return;
                 }
+                
+                var modaledit = new bootstrap.Modal($('#editObatModal'), {
+                    backdrop: 'static',
+                });
+                modaledit.show();
 
-                // Cek jika obat sudah ada dalam daftar
-                const exists = daftarObat.some(obat => obat.nama === obatData.nama_obat);
-                if (exists) {
-                    iziToast.warning({
-                        title: 'Perhatian',
-                        message: 'Obat sudah ada dalam daftar.',
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
+                var obatData = $(this).data('obat');
                 var caraPakai = obatData.cara_pakai ? obatData.cara_pakai.split(',') : [];
                 var frekuensi = caraPakai[0] ? caraPakai[0].trim() : 'N/A';
                 var sebelumSesudahMakan = caraPakai[1] ? caraPakai[1].trim() : 'N/A';
 
-                // Tambah obat dari riwayat ke daftarObat
-                daftarObat.push({
-                    id: obatData.kd_prd,
-                    nama: obatData.nama_obat || 'Tidak ada informasi',
-                    dosis: obatData.jumlah_takaran || 'N/A', 
-                    satuan: obatData.satuan_takaran || 'N/A',
-                    frekuensi: frekuensi || 'N/A', 
-                    jumlah: parseInt(obatData.jumlah) || 0, 
-                    sebelumSesudahMakan: sebelumSesudahMakan || '',
-                    aturanTambahan: obatData.ket || '-',
-                    harga: parseFloat(obatData.harga) || 0,
-                    jenisObat: 'Non Racikan',
-                    kd_dokter: selectedDokter
-                });
+                // Isi modal edit dengan data obat dari elemen yang diklik
+                $('#editNamaObat').val(obatData.nama_obat || 'Tidak ada informasi');
+                $('#editJumlahHari').val(obatData.jumlah_hari || '7');
+                $('#editFrekuensi').val(frekuensi || '');
+                $('#editDosis').val(obatData.jumlah_takaran || '');
+                $('#editSatuanObat').val(obatData.satuan_takaran || '');
+                $('#editJumlah').val(parseInt(obatData.jumlah) || 1);
+                $('#editSebelumSesudahMakan').val(sebelumSesudahMakan || 'Sesudah Makan');
+                $('#editKeterangan').val(obatData.ket || '');
 
-                iziToast.success({
-                    title: 'Sukses',
-                    message: 'Obat berhasil disalin ke Daftar Order Obat.',
-                    position: 'topRight'
-                });
+                $('#editObatModal').modal('show');
 
-                renderDaftarObat();
+                $('#saveEditObat').on('click', function() {
+                    var editedData = {
+                        id: obatData.kd_prd,
+                        nama: obatData.nama_obat || 'Tidak ada informasi',
+                        jumlah_hari: $('#editJumlahHari').val(),
+                        frekuensi: $('#editFrekuensi').val(),
+                        dosis: $('#editDosis').val(),
+                        satuan: $('#editSatuanObat').val(),
+                        frekuensi: $('#editFrekuensi').val(),
+                        jumlah: parseInt($('#editJumlah').val()),
+                        sebelumSesudahMakan: $('#editSebelumSesudahMakan').val(),
+                        aturanTambahan: $('#editKeterangan').val(),
+                        harga: parseFloat(obatData.harga) || 0,
+                        jenisObat: 'Non Racikan',
+                        kd_dokter: selectedDokter
+                    };
+
+                    daftarObat.push(editedData);
+
+                    iziToast.success({
+                        title: 'Sukses',
+                        message: 'Obat berhasil disalin dan diubah.',
+                        position: 'topRight'
+                    });
+
+                    renderDaftarObat();
+
+                    $('#editObatModal').modal('hide');
+                });
             });
+
 
              // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
             function renderDaftarObat() {
@@ -235,8 +246,8 @@
                 renderDaftarObat();
             };
 
-           // ------------ 4. Fungsi AJAX untuk Pengiriman Data ke Server ------------ //
-            $('#resepForm').on('submit', function(e) {
+            // ------------ 4. Fungsi AJAX untuk Pengiriman Data ke Server ------------ //
+            $(document).on('submit', '#resepForm', function(e) {
                 e.preventDefault();
 
                 // Validasi form sebelum mengirim
@@ -284,7 +295,6 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        // Sembunyikan loading spinner dan aktifkan kembali tombol Order
                         $('#loadingIndicator').addClass('d-none');
                         $('#orderButton').prop('disabled', false);
 
@@ -320,6 +330,11 @@
                         alert(errorMessage);
                     }
                 });
+            });
+
+            $(document).on('click', '#orderButton', function(e) {
+                e.preventDefault();
+                $('#resepForm').submit();
             });
 
             // ------------ 5. Fungsi Pendukung (Helper) ------------ //

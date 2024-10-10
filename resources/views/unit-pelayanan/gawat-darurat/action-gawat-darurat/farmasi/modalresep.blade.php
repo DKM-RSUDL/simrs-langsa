@@ -2,7 +2,7 @@
 <div class="modal fade" id="tambahResep" tabindex="-1" aria-labelledby="tambahResepLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-
+            <div id="modal-overlay" class="modal-overlay"></div>
             <!-- Modal Header -->
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="tambahResepLabel">Order Obat</h5>
@@ -12,7 +12,9 @@
 
             <!-- Modal Body -->
             <div class="modal-body">
-               <form id="resepForm" action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post">
+                <form id="resepForm"
+                    action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
+                    method="post">
                     @csrf
                     <div class="container-fluid">
                         <div class="row">
@@ -51,11 +53,13 @@
                                             <div class="tab-pane fade show active" id="nonracikan" role="tabpanel"
                                                 aria-labelledby="nonracikan-tab">
                                                 <div class="mb-3">
-                                                    <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
+                                                    <label for="dokterPengirim" class="form-label">Dokter
+                                                        Pengirim</label>
                                                     <select class="form-select" id="dokterPengirim" name="kd_dokter">
                                                         <option value="">-Pilih dokter-</option>
                                                         @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->kd_dokter }}">{{ $dokter->nama }}</option>
+                                                            <option value="{{ $dokter->kd_dokter }}">{{ $dokter->nama }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -68,17 +72,16 @@
                                                         </div>
                                                         <div class="col-4">
                                                             <label for="jamOrder" class="form-label">Jam</label>
-                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order" value="08:45">
+                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order">
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                
-
                                                 <!-- Aturan Pakai -->
                                                 <div class="mb-3 border p-3">
                                                     <div class="mb-3">
-                                                        <label for="cariObat" class="form-label">Cari Nama Obat</label>
+                                                        <label for="cariObat" class="form-label">Cari Nama
+                                                            Obat</label>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control" id="cariObat"
                                                                 name="nama_obat" placeholder="Ketik nama obat...">
@@ -107,8 +110,8 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <div class="col-md-4">
-                                                            <label for="dosis" class="form-label">Dosis</label>
+                                                        <div class="col-md-6">
+                                                            <label for="dosis" class="form-label">Dosis Sekali Minum</label>
                                                             <select class="form-select" id="dosis">
                                                                 <option selected>1/2</option>
                                                                 <option>1</option>
@@ -116,35 +119,36 @@
                                                                 <option>3</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col md-4">
+                                                        <div class="col md-6">
                                                             <label for="satuanObat" class="form-label">Satuan
                                                                 Obat</label>
-                                                                <select class="form-select" id="satuanObat">
-                                                                    <option value="tablet">Tablet</option>
-                                                                    <option value="kapsul">Kapsul (caps)</option>
-                                                                    <option value="bungkus">Bungkus (bks)</option>
-                                                                    <option value="sendok_makan">Sendok makan</option>
-                                                                    <option value="sendok_teh">Sendok teh</option>
-                                                                    <option value="tetes">Tetes</option>
-                                                                    <option value="cc">CC</option>
-                                                                    <option value="olesan">Olesan</option>
-                                                                    <option value="taburan">Taburan</option>
-                                                                    <option value="semprotan">Semprotan</option>
-                                                                    <option value="kali">Kali</option>
-                                                                    <option value="ampul">Ampul</option>
-                                                                    <option value="unit">Unit</option>
-                                                                    <option value="sub">Sub</option>
-                                                                </select>
+                                                            <select class="form-select" id="satuanObat">
+                                                                <option value="tablet">Tablet</option>
+                                                                <option value="kapsul">Kapsul (caps)</option>
+                                                                <option value="bungkus">Bungkus (bks)</option>
+                                                                <option value="sendok_makan">Sendok makan</option>
+                                                                <option value="sendok_teh">Sendok teh</option>
+                                                                <option value="tetes">Tetes</option>
+                                                                <option value="cc">CC</option>
+                                                                <option value="olesan">Olesan</option>
+                                                                <option value="taburan">Taburan</option>
+                                                                <option value="semprotan">Semprotan</option>
+                                                                <option value="kali">Kali</option>
+                                                                <option value="ampul">Ampul</option>
+                                                                <option value="unit">Unit</option>
+                                                                <option value="sub">Sub</option>
+                                                            </select>
                                                             <input type="text" id="hargaObat"
                                                                 class="form-control d-none" readonly></input>
                                                         </div>
-                                                        <div class="col-md-4">
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
                                                             <label for="jumlah" class="form-label">Jumlah</label>
                                                             <input type="number" class="form-control" id="jumlah"
                                                                 value="12">
                                                         </div>
                                                     </div>
-
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
                                                             <label for="sebelumSesudahMakan"
@@ -159,12 +163,14 @@
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
-                                                            <label for="aturanTambahan" class="form-label">Aturan tambahan</label>
-                                                                <input type="text" class="form-control" id="aturanTambahan" name="cat_racikan">
+                                                            <label for="aturanTambahan" class="form-label">Aturan
+                                                                tambahan</label>
+                                                            <textarea class="form-control" id="aturanTambahan" name="cat_racikan"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="button" id="tambahObatNonRacikan" class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
+                                                <button type="button" id="tambahObatNonRacikan"
+                                                    class="btn btn-primary w-100">Tambah Obat Non Racikan</button>
                                             </div>
 
                                             <!-- Racikan Tab -->
@@ -249,7 +255,8 @@
                                         <div class="mt-4">
                                             <h5>Catatan Resep (Opsional)</h5>
                                             <div class="form-group">
-                                                <textarea class="form-control" id="cat_racikan" rows="3" placeholder="Masukkan catatan tambahan untuk resep ini..."></textarea>
+                                                <textarea class="form-control" id="cat_racikan" rows="3"
+                                                    placeholder="Masukkan catatan tambahan untuk resep ini..."></textarea>
                                             </div>
                                         </div>
 
@@ -277,29 +284,31 @@
                                             <tbody>
                                                 @forelse ($riwayatObat as $resep)
                                                     @php
-                                                    $cara_pakai_parts = explode(',', $resep->cara_pakai);
-                                                    $frekuensi = trim($cara_pakai_parts[0] ?? '');
-                                                    $keterangan = trim($cara_pakai_parts[1] ?? '');
-                                                @endphp
+                                                        $cara_pakai_parts = explode(',', $resep->cara_pakai);
+                                                        $frekuensi = trim($cara_pakai_parts[0] ?? '');
+                                                        $keterangan = trim($cara_pakai_parts[1] ?? '');
+                                                    @endphp
                                                     <tr>
-                                                        <td>{{ (int)$resep->id_mrresep }}</td> 
-                                                        <td>Jenis Obat</td>   
+                                                        <td>{{ (int) $resep->id_mrresep }}</td>
+                                                        <td>Jenis Obat</td>
                                                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
-                                                        <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
+                                                        <td>{{ $resep->jumlah_takaran }}
+                                                            {{ Str::title($resep->satuan_takaran) }}</td>
                                                         <td>{{ $frekuensi }}</td>
-                                                        <td>{{ (int)$resep->jumlah ?? 'Tidak ada informasi' }}</td>
+                                                        <td>{{ (int) $resep->jumlah ?? 'Tidak ada informasi' }}</td>
                                                         <td>Rute</td>
                                                         <td>{{ $keterangan }}</td>
                                                         <td>{{ $resep->ket }}</td>
                                                         <td>{{ $resep->nama_dokter }}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-success btn-sm copy-obat" data-obat='@json($resep)'>Copy Obat</button>
+                                                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.copyobat')
                                                         </td>
 
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="10" class="text-center">Tidak ada data resep obat.</td>
+                                                        <td colspan="10" class="text-center">Tidak ada data resep
+                                                            obat.</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -334,8 +343,37 @@
                 <button type="submit" id="orderButton" class="btn btn-primary">Order</button>
             </div>
 
-        </form>
+            </form>
 
         </div>
     </div>
 </div>
+
+@push('js')
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fungsi untuk mendapatkan tanggal saat ini dalam format YYYY-MM-DD
+            function getCurrentDate() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // Fungsi untuk mendapatkan waktu saat ini dalam format HH:MM
+            function getCurrentTime() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+
+            // Set nilai default untuk input tanggal dan jam
+            document.getElementById('tanggalOrder').value = getCurrentDate();
+            document.getElementById('jamOrder').value = getCurrentTime();
+        });
+    
+    </script>
+@endpush
