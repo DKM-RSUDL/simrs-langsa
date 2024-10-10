@@ -30,7 +30,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCppt
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
-use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -133,7 +133,7 @@ Route::middleware('auth')->group(function () {
                         // labor PK
                         Route::prefix('lab-patologi-klinik')->group(function () {
                             Route::name('.lab-patologi-klinik')->group(function () {
-                                Route::controller(LabPatologiKlinikController::class)->group(function () {
+                                Route::controller(RawatJalanLabPatologiKlinikController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
