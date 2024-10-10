@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
+namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
@@ -77,7 +77,7 @@ class RadiologiController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.radiologi.index',[
+        return view('unit-pelayanan.rawat-inap.pelayanan.radiologi.index',[
             'dataMedis'     => $dataMedis,
             'dokter'        => $dokter,
             'produk'        => $produk,
@@ -152,6 +152,8 @@ class RadiologiController extends Controller
             'jadwal_pemeriksaan'    => "$request->tgl_pemeriksaan $request->jam_pemeriksaan",
             'diagnosis'             => $request->diagnosis
         ];
+
+        dd($segalaOrderData);
 
         SegalaOrder::create($segalaOrderData);
 
@@ -290,6 +292,7 @@ class RadiologiController extends Controller
     public function delete($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
+
             $kdOrder = $request->kd_order;
 
             // delete
