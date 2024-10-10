@@ -26,6 +26,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
@@ -77,6 +78,31 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Radologi
+                        Route::prefix('radiologi')->group(function() {
+                            Route::name('.radiologi')->group(function() {
+                                Route::controller(RadiologiController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                        Route::prefix('farmasi')->group(function () {
+                            Route::name('.farmasi')->group(function () {
+                                Route::controller(FarmasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                });
+                            });
+                        });
+
+
+
                         Route::prefix('radiologi')->group(function () {
                             Route::name('.radiologi')->group(function () {
                                 Route::controller(RadiologiController::class)->group(function () {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\AptObat;
@@ -8,14 +8,14 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class FarmasiController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -25,6 +25,8 @@ class FarmasiController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -44,12 +46,12 @@ class FarmasiController extends Controller
         $dokters = Dokter::all();
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
+            'unit-pelayanan.rawat-jalan.pelayanan.farmasi.index',
             compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters')
         );
     }
 
-    public function store($kd_pasien, $tgl_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // DB::beginTransaction();
         // dd($request->all());
@@ -76,8 +78,9 @@ class FarmasiController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_unit', $kd_unit)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->first();
 
@@ -177,18 +180,18 @@ class FarmasiController extends Controller
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
@@ -217,18 +220,18 @@ class FarmasiController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
