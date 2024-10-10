@@ -63,6 +63,7 @@ class RadiologiController extends Controller
         $radList = SegalaOrder::with(['details', 'dokter'])
                                 ->where('kd_pasien', $kd_pasien)
                                 ->where('kategori', 'RD')
+                                ->orderBy('kd_order', 'desc')
                                 ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
