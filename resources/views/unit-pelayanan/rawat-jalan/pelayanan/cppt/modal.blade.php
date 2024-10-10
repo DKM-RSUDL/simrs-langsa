@@ -8,7 +8,7 @@
 <div class="modal fade" id="addCpptModal" tabindex="-1" aria-labelledby="addCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post" id="formAddCppt">
+            <form action="{{ route('rawat-jalan.cppt.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post" id="formAddCppt">
                 @csrf
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
@@ -225,7 +225,7 @@
                                 <p class="fw-bold col-sm-5">Asesmen /Diagnosis</p>
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
-                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.create-diagnosis')
+                                    @include('unit-pelayanan.rawat-jalan.pelayanan.cppt.create-diagnosis')
                                     {{-- <a href="#" class="btn btn-sm"><i class="bi bi-plus-square"></i>
                                         ICD-10</a> --}}
                                 </div>
@@ -306,7 +306,7 @@
 <div class="modal fade" id="editCpptModal" tabindex="-1" aria-labelledby="editCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('cppt.update', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post" id="formEditCppt">
+            <form action="{{ route('rawat-jalan.cppt.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="post" id="formEditCppt">
                 @csrf
                 @method('put')
 

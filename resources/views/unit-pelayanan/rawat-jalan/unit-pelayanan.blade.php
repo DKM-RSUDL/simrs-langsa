@@ -50,41 +50,25 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h4 class="fw-bold">Gawat Darurat</h4>
-            <div class="d-flex justify-content-end align-items-end gap-3">
-                <div class="d-flex align-items-center">
-                    <label for="dokterSelect" class="form-label me-2">Dokter:</label>
-                    <select class="form-select" id="dokterSelect" aria-label="Pilih dokter">
-                        <option value="semua" selected>Semua</option>
-                        <option value="dokter1">dr. A</option>
-                        <option value="dokter2">dr. B</option>
-                        <option value="dokter3">dr. C</option>
-                    </select>
-                </div>
-                <button type="button" class="btn btn-primary btn-sm" id="createRawatDarurat">
-                    <i class="ti-plus"></i> Tambah Data
-                </button>
-            </div>
+            <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="rawatDaruratTable">
+                <table class="table table-bordered dataTable" id="patientUnitDatatable">
                     <thead>
                         <tr>
+                            <th width="100px">No</th>
                             <th width="100px">Aksi</th>
                             <th>Pasien</th>
-                            <th>Triase</th>
-                            <th>Bed</th>
                             <th>No RM / Reg</th>
                             <th>Alamat</th>
                             <th>Jaminan</th>
-                            <th>Tgl Masuk</th>
-                            <th>Dokter</th>
-                            <th>Instruksi</th>
-                            <th>Del</th>
+                            <th>Status Pelayanan</th>
+                            <th>Keterangan</th>
+                            <th>Tindak Lanjut</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,22 +81,37 @@
 @endsection
 
 @push('js')
-    <script type="text/javascript">
-        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";        
-        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
+    <script>
+        let pelayananUrl = "{{ url('unit-pelayanan/rawat-jalan/unit') }}/";
 
         $(document).ready(function() {
-            $('#rawatDaruratTable').DataTable({
+            $('#patientUnitDatatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: gawatDaruratIndexUrl,
-                columns: [{
+                ajax: "{{ route('rawat-jalan.unit', $unit->kd_unit) }}",
+                columns: [
+                    {
+                        data: 'antrian',
+                        name: 'no',
+                        orderable: false,
+                        searchable: false,
+                        defaultContent: ''
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `<a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a> <a href="#" class="btn btn-secondary btn-sm">...</a>`;
+                            return `<a href="#" class="edit btn btn-primary btn-sm m-2">
+                                        <i class="bi bi-volume-up-fill"></i>
+                                    </a>
+                                    <a href="#" class="edit btn btn-outline-secondary btn-sm m-2">
+                                        <i class="bi bi-volume-mute-fill"></i>
+                                    </a>
+                                    <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
+                                        <i class="ti-pencil-alt"></i>
+                                    </a>`;
                         }
                     },
                     {
@@ -135,16 +134,6 @@
                         },
                         orderable: false,
                         searchable: false
-                    },
-                    {
-                        data: 'triase',
-                        name: 'triase',
-                        defaultContent: 'null'
-                    },
-                    {
-                        data: 'bed',
-                        name: 'bed',
-                        defaultContent: ''
                     },
                     {
                         data: 'kd_pasien',
@@ -171,28 +160,19 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'waktu_masuk',
-                        name: 'tgl_masuk',
-                        defaultContent: 'null'
-                    },
-                    {
-                        data: 'kd_dokter',
-                        name: 'kd_dokter',
-                        defaultContent: 'null'
-                    },
-                    {
-                        data: 'instruksi',
-                        name: 'instruksi',
+                        data: 'status_pelayanan',
+                        name: 'status_pelayanan',
                         defaultContent: ''
                     },
                     {
-                        data: 'del',
-                        name: 'del',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return '<a href="#" class="edit btn btn-danger btn-sm"><i class="bi bi-x-circle"></i></a>';
-                        }
+                        data: 'keterangan',
+                        name: 'keterangan',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'tindak_lanjut',
+                        name: 'tindak_lanjut',
+                        defaultContent: ''
                     },
                 ],
                 paging: true,

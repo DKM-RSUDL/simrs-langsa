@@ -16,7 +16,7 @@
 <div class="modal fade" id="addRadiologiModal" tabindex="-1" aria-labelledby="addRadiologiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('radiologi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+            <form action="{{ route('rawat-jalan.radiologi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
                 @csrf
 
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
@@ -165,7 +165,7 @@
 <div class="modal fade" id="editRadiologiModal" tabindex="-1" aria-labelledby="editRadiologiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('radiologi.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+            <form action="{{ route('rawat-jalan.radiologi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
                 @csrf
                 @method('put')
 

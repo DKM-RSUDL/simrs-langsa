@@ -23,4 +23,8 @@ class SegalaOrderDet extends Model
     {
         return $this->belongsTo(SegalaOrder::class, 'kd_order', 'kd_order');
     }
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kp_produk');
+    }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\CpptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 Route::middleware('guest')->group(function () {
@@ -44,10 +46,50 @@ Route::middleware('auth')->group(function () {
     // Grup rute untuk Unit Pelayanan
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
-        Route::resource('rawat-jalan', RawatJalanController::class);
-        // Rute untuk Klinik Bedah di dalam Rawat Jalan
-        Route::prefix('ruang-klinik')->group(function () {
-            Route::resource('bedah', BedahController::class);
+        Route::prefix('rawat-jalan')->group(function() {
+            Route::name('rawat-jalan')->group(function() {
+                Route::get('/', [RawatJalanController::class, 'index'])->name('.index');
+
+                Route::prefix('unit/{kd_unit}')->group(function() {
+                    Route::name('.unit')->group(function() {
+                        Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
+                    });
+
+                    // Pelayanan
+                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
+                        Route::name('.pelayanan')->group(function() {
+                            Route::get('/', [RawatJalanController::class, 'pelayanan']);
+                        });
+
+                        // CPPT
+                        Route::prefix('cppt')->group(function() {
+                            Route::name('.cppt')->group(function() {
+                                Route::controller(CpptController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
+                                    Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
+                                });
+                            });
+                        });
+
+                        // Radologi
+                    Route::prefix('radiologi')->group(function() {
+                        Route::name('.radiologi')->group(function() {
+                            Route::controller(RadiologiController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
+                                Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                Route::delete('/', 'delete')->name('.delete');
+                            });
+                        });
+                    });
+                    });
+                });
+            });
         });
 
         Route::resource('gawat-darurat', GawatDaruratController::class);
@@ -55,9 +97,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('gawat-darurat')->group(function () {
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
-                    Route::resource('/', MedisGawatDaruratController::class);
-                    Route::resource('asesmen', GawatDaruratAsesmenController::class);
-
                     // CPPT
                     Route::prefix('cppt')->group(function() {
                         Route::name('cppt')->group(function() {
@@ -72,10 +111,18 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
-                    Route::resource('tindakan', GawatDaruratTindakanController::class);
-                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
-                    Route::resource('labor', GawatDaruratLaborController::class);
-                    Route::resource('radiologi', GawatDaruratRadiologiController::class);
+                    // Radologi
+                    Route::prefix('radiologi')->group(function() {
+                        Route::name('radiologi')->group(function() {
+                            Route::controller(GawatDaruratRadiologiController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
+                                Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                Route::delete('/', 'delete')->name('.delete');
+                            });
+                        });
+                    });
 
                     // Route::resource('farmasi', GawatDaruratFarmasiController::class);
                     Route::prefix('farmasi')->group(function () {
@@ -87,7 +134,12 @@ Route::middleware('auth')->group(function () {
                             });
                         });
                     });
-                    
+
+                    Route::resource('/', MedisGawatDaruratController::class);
+                    Route::resource('asesmen', GawatDaruratAsesmenController::class);
+                    Route::resource('tindakan', GawatDaruratTindakanController::class);
+                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
+                    Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);
                     Route::resource('resume', GawatDaruratResumeController::class);

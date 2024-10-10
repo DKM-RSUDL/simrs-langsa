@@ -8,6 +8,8 @@ use App\Models\Kunjungan;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
+use App\Models\Transaksi;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,7 @@ class LaborController extends Controller
 {
     public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
@@ -27,30 +29,58 @@ class LaborController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $DataLapPemeriksaan = LapLisItemPemeriksaan::select('kategori', 'nama', 'kd_produk')
+        $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
+            ->select('kategori', 'kd_produk')
             ->get()
             ->groupBy('kategori');
 
+
         $dataDokter = Dokter::all();
 
-        // foreach data di Labor
         $search = $request->input('search');
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-        $dataLabor = SegalaOrder::with(['details', 'dokter'])
+        $search = $request->input('search');
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+            ->when($periode, function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_order', $now->year)
+                            ->whereMonth('tgl_order', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_order', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_order', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_order', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_order', '>=', $now->subMonths(9));
+                    default:
+                        return $query;
+                }
+            })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_order', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_order', '<=', $endDate);
+            })
             ->when($search, function ($query, $search) {
-                return $query->where('tgl_masuk', 'like', "%$search%")
-                    ->orWhere('tgl_order', 'like', "%$search%")
-                    ->orWhere('kd_order', 'like', "%$search%")
+                $search = strtolower($search);
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('kd_order', $search);
+                }
+                return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
                     ->orWhereHas('dokter', function ($q) use ($search) {
-                        $q->where('nama', 'like', "%$search%");
+                        $q->whereRaw('LOWER(nama) like ?', ["%$search%"]);
                     });
             })
-            ->orderBy('tgl_order', 'desc')
+            ->where('kd_pasien', $kd_pasien)
+            ->orderBy('tgl_order',  'desc')
             ->paginate(10);
-        // $dataLabor = SegalaOrder::with(['details', 'dokter'])
-        //     ->orderBy('tgl_order', 'desc')
-        //     ->paginate(10);
-
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -72,7 +102,6 @@ class LaborController extends Controller
 
     public function create($kd_pasien, $tgl_masuk)
     {
-        // Logika untuk mendapatkan data yang diperlukan
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -83,9 +112,9 @@ class LaborController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        // Mengirim data ke view
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.modal', compact('kd_pasien', 'tgl_masuk'));
     }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -120,6 +149,15 @@ class LaborController extends Controller
 
         $validatedData['kategori'] = $validatedData['kategori'] ?? 'LB';
 
+        if (empty($validatedData['no_transaksi'])) {
+            $existingTransaction = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
+            $validatedData['no_transaksi'] = $existingTransaction ? $existingTransaction->no_transaksi : Transaksi::generateNoTransaksi();
+        }
+        if (empty($validatedData['kd_kasir'])) {
+            $existingkdKasir = Transaksi::where('kd_pasien', $validatedData['kd_pasien'])->first();
+            $validatedData['kd_kasir'] = $existingkdKasir ? $existingkdKasir->kd_kasir : Transaksi::generateNoTransaksi();
+        }
+
         $tglOrder = \Carbon\Carbon::parse($validatedData['tgl_order'])->format('Ymd');
         $lastOrder = SegalaOrder::where('kd_order', 'like', $tglOrder . '%')
             ->orderBy('kd_order', 'desc')
@@ -149,7 +187,7 @@ class LaborController extends Controller
             'diagnosis' => $validatedData['diagnosis'] ?? null,
             'dilayani' => 0,
             'kategori' => $validatedData['kategori'],
-            'no_transaksi' => $validatedData['no_transaksi'] ?? null,
+            'no_transaksi' => $validatedData['no_transaksi'],
             'kd_kasir' => $validatedData['kd_kasir'] ?? null,
             'status_order' => $validatedData['status_order'] ?? 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
@@ -160,7 +198,7 @@ class LaborController extends Controller
                 'kd_order' => $newKdOrder,
                 'urut' => $validatedData['urut'][$index],
                 'kd_produk' => $kd_produk,
-                'jumlah' => $validatedData['jumlah'][$index] ?? 1,
+                'jumlah' => $validatedData['jumlah'][$index] ?? ['kd_produk' => $kd_produk],
                 'status' => $validatedData['status'][$index] ?? 1,
                 'kd_dokter' => $validatedData['kd_dokter'],
             ]);
@@ -169,6 +207,65 @@ class LaborController extends Controller
         return redirect()->route('labor.index', [
             'kd_pasien' => $validatedData['kd_pasien'],
             'tgl_masuk' => $validatedData['tgl_masuk']
-        ])->with(['success' => 'Order created successfully']);
+        ])->with(['success' => 'created successfully']);
     }
+
+    public function destroy(string $kd_order)
+    {
+        try {
+            $soalKinestetik = SegalaOrder::findOrFail($kd_order);
+            $soalKinestetik->delete();
+
+            return redirect()->route('labor.index', [
+                'kd_pasien' => $soalKinestetik->kd_pasien,
+                'tgl_masuk' => $soalKinestetik->tgl_masuk
+            ])->with(['success' => 'Deleted successfully']);
+        } catch (\Exception $e) {
+            return redirect()->route('labor.index', [
+                'kd_pasien' => $soalKinestetik->kd_pasien ?? 'default_kd_pasien',
+                'tgl_masuk' => $soalKinestetik->tgl_masuk ?? 'default_tgl_masuk'
+            ])->with(['failed' => 'Ada kesalahan sistem. Error: ' . $e->getMessage()]);
+        }
+    }
+
+
+
+
+
+    // dari  bg rizaldi
+    // public function getProdukByKategoriAjax(Request $request)
+    // {
+    //     try {
+    //         $katProduk = $request->kat_produk;
+
+    //         $produk = LapLisItemPemeriksaan::with(['produk'])
+    //                                 ->select([
+    //                                     'kd_produk'
+    //                                 ])
+    //                                 ->where('kategori', $katProduk)
+    //                                 ->groupBy('kd_produk')
+    //                                 ->get();
+
+    //         if(count( $produk ) > 0) {
+    //             return response()->json([
+    //                 'status'    => 'success',
+    //                 'message'   => 'Data ditemukan!',
+    //                 'data'      => $produk
+    //             ],200);
+    //         } else {
+    //             return response()->json([
+    //                 'status'    => 'error',
+    //                 'message'   => 'Data tidak ditemukan',
+    //                 'data'      => []
+    //             ], status: 204);
+    //         }
+
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'status'    => 'error',
+    //             'message'   => $e->getMessage(),
+    //             'data'      => []
+    //         ], 500);
+    //     }
+    // }
 }
