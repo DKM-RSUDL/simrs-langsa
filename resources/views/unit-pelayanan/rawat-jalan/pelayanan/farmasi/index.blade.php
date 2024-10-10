@@ -38,11 +38,11 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsresep')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.tabsresep')
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsriwayat')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.tabsriwayat')
                             </div>
                         </div>
                     </div>
@@ -301,7 +301,7 @@
                     }))
                 };
 
-                console.log('Sending data:', formData);
+                // console.log('Sending data:', formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
