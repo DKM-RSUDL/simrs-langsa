@@ -20,7 +20,7 @@
         <div class="patient-meta mt-2">
             <p class="mb-0"><i class="bi bi-file-earmark-medical"></i>RM: {{ $dataMedis->pasien->kd_pasien }}</p>
             <p class="mb-0"><i class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}</p>
-            <p><i class="bi bi-hospital"></i>Rawat Jalan (Klinik Internis Pria)</p>
+            <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }} ({{ $dataMedis->unit->nama_unit }})</p>
         </div>
     </div>
 </div>

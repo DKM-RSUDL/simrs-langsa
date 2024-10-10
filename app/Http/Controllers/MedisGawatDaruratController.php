@@ -10,7 +10,7 @@ class MedisGawatDaruratController extends Controller
 {
     public function index($kd_pasien, $tgl_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->where('kd_unit', 3)
             ->where('kd_pasien', $kd_pasien)
             ->whereDate('tgl_masuk', $tgl_masuk)

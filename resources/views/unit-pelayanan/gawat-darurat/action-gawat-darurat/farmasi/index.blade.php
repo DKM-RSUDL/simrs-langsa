@@ -147,6 +147,16 @@
             // Listener untuk tombol Copy Obat di tabel riwayat
             $(document).on('click', '.copy-obat', function() {
                 var obatData = $(this).data('obat');
+                // console.log('Data obat yang diterima:', obatData);
+
+                if (!selectedDokter) {
+                    iziToast.warning({
+                        title: 'Warning',
+                        message: "Sebelum Mengcopy Obat Silahkan Pilih Dokter dan Tanggal Order",
+                        position: 'topRight'
+                    });
+                    return;
+                }
 
                 // Cek jika obat sudah ada dalam daftar
                 const exists = daftarObat.some(obat => obat.nama === obatData.nama_obat);
@@ -159,17 +169,21 @@
                     return;
                 }
 
+                var caraPakai = obatData.cara_pakai ? obatData.cara_pakai.split(',') : [];
+                var frekuensi = caraPakai[0] ? caraPakai[0].trim() : 'N/A';
+                var sebelumSesudahMakan = caraPakai[1] ? caraPakai[1].trim() : 'N/A';
+
                 // Tambah obat dari riwayat ke daftarObat
                 daftarObat.push({
-                    id: obatData.id,
+                    id: obatData.kd_prd,
                     nama: obatData.nama_obat || 'Tidak ada informasi',
-                    dosis: obatData.dosis || 'N/A', 
-                    frekuensi: obatData.frekuensi || 'N/A', 
+                    dosis: obatData.jumlah_takaran || 'N/A', 
+                    satuan: obatData.satuan_takaran || 'N/A',
+                    frekuensi: frekuensi || 'N/A', 
                     jumlah: parseInt(obatData.jumlah) || 0, 
-                    sebelumSesudahMakan: obatData.sebelum_sesudah_makan || 'Sesudah Makan',
+                    sebelumSesudahMakan: sebelumSesudahMakan || '',
                     aturanTambahan: obatData.ket || '-',
                     harga: parseFloat(obatData.harga) || 0,
-                    satuan: obatData.satuan || '',
                     jenisObat: 'Non Racikan',
                     kd_dokter: selectedDokter
                 });
@@ -184,7 +198,6 @@
             });
 
              // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
-            var obatSelect;
             function renderDaftarObat() {
                 var tbody = $('#daftarObatBody');
                 tbody.empty();
@@ -260,7 +273,7 @@
                     }))
                 };
 
-                // console.log('Sending data:', formData);
+                console.log('Sending data:', formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -371,7 +384,7 @@
 
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
-                $('#satuanObat').val(obatSatuan);
+                // $('#satuanObat').val(obatSatuan);
                 $('#hargaObat').val(obatHarga);
                 obatList.html('');
                 clearObat.show();
@@ -380,10 +393,18 @@
             clearObat.on('click', function() {
                 cariObat.val('').prop('readonly', false);
                 selectedObatId.val('');
-                $('#satuanObat').val('');
                 clearObat.hide();
             });
-            //------------- End Fungsi untuk menampilkan obat---------- //
+
+            function resetInputObat() {
+                $('#cariObat').val('').prop('readonly', false);
+                $('#selectedObatId').val('');
+                $('#jumlah').val('12');
+                $('#aturanTambahan').val('');
+                $('#jumlahHari').val('');
+                $('#clearObat').hide();
+                $('#obatList').html('');
+            }
 
 
             //----------- Fungsi untuk menonaktifkan side column -------------//

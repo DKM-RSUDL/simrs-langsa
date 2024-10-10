@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
@@ -8,14 +8,14 @@ use App\Models\Kunjungan;
 use App\Models\Produk;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
+use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RadiologiController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                             ->join('transaksi as t', function($join) {
@@ -24,8 +24,9 @@ class RadiologiController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->where('kunjungan.kd_unit', $kd_unit)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                             ->first();
 
@@ -75,7 +76,7 @@ class RadiologiController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.index', [
+        return view('unit-pelayanan.rawat-jalan.pelayanan.radiologi.index',[
             'dataMedis'     => $dataMedis,
             'dokter'        => $dokter,
             'produk'        => $produk,
@@ -83,7 +84,7 @@ class RadiologiController extends Controller
         ]);
     }
 
-    public function store($kd_pasien, $tgl_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
 
         $valMessage = [
@@ -113,8 +114,9 @@ class RadiologiController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                             ->where('kunjungan.urut_masuk', $request->urut_masuk)
                             ->first();
@@ -212,8 +214,9 @@ class RadiologiController extends Controller
         }
     }
 
-    public function update($kd_pasien, $tgl_masuk, Request $request)
+    public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+
         $valMessage = [
             'kd_dokter.required'    => 'Dokter harus dipilih!',
             'tgl_order.required'    => 'Tanggal order harus dipilih!',
@@ -242,10 +245,10 @@ class RadiologiController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->where('kunjungan.urut_masuk', $request->urut_masuk)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->first();
 
 
@@ -283,7 +286,7 @@ class RadiologiController extends Controller
         return back()->with('success', 'Order berhasil di ubah');
     }
 
-    public function delete($kd_pasien, $tgl_masuk, Request $request)
+    public function delete($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             $kdOrder = $request->kd_order;
