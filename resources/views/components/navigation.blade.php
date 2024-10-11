@@ -61,7 +61,7 @@
     <div class="nav-icons shadow-sm">
         @foreach ($navItems as $item)
             <a href="{{ $item['link'] }}">
-                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="25">
+                <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }} Icon" width="20">
                 <span>{{ $item['label'] }}</span>
             </a>
         @endforeach

@@ -180,12 +180,16 @@
                         $modal.find('#kd_order').val(Math.floor(orderData.kd_order));
                         $modal.find('#urut_masuk').val(orderData.urut_masuk);
                         $modal.find('#kd_dokter').val(orderData.kd_dokter);
-                        $modal.find('#tgl_order').val(tglOrder.split('T')[0]);
-                        $modal.find('#jam_order').val(jamOrder);
+                        if(tglOrder) {
+                            $modal.find('#tgl_order').val(tglOrder.split('T')[0]);
+                            $modal.find('#jam_order').val(jamOrder);
+                        }
                         $modal.find(`input[name="cyto"][value="${orderData.cyto}"]`).attr('checked', 'checked');
                         $modal.find(`input[name="puasa"][value="${orderData.puasa}"]`).attr('checked', 'checked');
-                        $modal.find('#tgl_pemeriksaan').val(tglPemeriksaan.split('T')[0]);
-                        $modal.find('#jam_pemeriksaan').val(jamPemeriksaan);
+                        if(tglPemeriksaan) {
+                            $modal.find('#tgl_pemeriksaan').val(tglPemeriksaan.split('T')[0]);
+                            $modal.find('#jam_pemeriksaan').val(jamPemeriksaan);
+                        }
                         $modal.find('#diagnosis').val(orderData.diagnosis);
 
                         let listProduk = '';
@@ -317,8 +321,6 @@
                     if(response.status == 'success') {
                         let orderData = response.data.order;
                         let orderDetailData = response.data.order_detail
-                        console.log(orderData);
-                        console.log(orderDetailData);
                         
                         // set value
                         // format jadwal order
@@ -344,10 +346,10 @@
 
 
                         $modal.find('#dokter').text(orderData.dokter.nama_lengkap);
-                        $modal.find('#jadwal_order').text(jadwalOrder);
+                        if(tglOrder) $modal.find('#jadwal_order').text(jadwalOrder);
                         $modal.find('#cyto').text(cytoLabel);
                         $modal.find('#puasa').text(puasaLabel);
-                        $modal.find('#jadwal_pemeriksaan').text(jadwalPemeriksaan);
+                        if(tglPemeriksaan) $modal.find('#jadwal_pemeriksaan').text(jadwalPemeriksaan);
                         $modal.find('#diagnosis').text(orderData.diagnosis);
 
                         let listProduk = '';
