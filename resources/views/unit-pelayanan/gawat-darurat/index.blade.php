@@ -61,7 +61,7 @@
                         <option value="dokter3">dr. C</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary btn-sm" id="createRawatDarurat">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPatientTriage">
                     <i class="ti-plus"></i> Tambah Data
                 </button>
             </div>
@@ -91,6 +91,40 @@
                         {{-- Tabel diisi oleh DataTables --}}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPatientTriage" tabindex="-1" aria-labelledby="addPatientTriageLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <form action="#" method="post">
+                    @csrf
+    
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title text-white" id="addPatientTriageLabel">
+                            Triase Pasien Gawat Darurat
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+    
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-5">
+                                
+                            </div>
+                            
+                            <div class="col-7">
+
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
