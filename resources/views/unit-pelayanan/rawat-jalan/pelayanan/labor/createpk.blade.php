@@ -16,7 +16,7 @@
 <div class="modal fade" id="extraLargeModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('labor.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+            <form action="{{ route('rawat-jalan.lab-patologi-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
@@ -159,7 +159,7 @@
             const $orderList = $('#orderList');
             const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
             const dataPemeriksaan = @json($DataLapPemeriksaan);
-            console.log(dataPemeriksaan);
+            // console.log(dataPemeriksaan);
 
             let urut = 1;
 
@@ -171,13 +171,13 @@
 
             $jenisPemeriksaanSelect.on('change', function() {
                 const selectedCategory = $(this).val();
-                console.log(selectedCategory);
+                // console.log(selectedCategory);
 
                 $dataList.empty();
                 const addedDescriptions = new Set();
 
                 if (dataPemeriksaan[selectedCategory]) {
-                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {                        
+                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                         if (!addedDescriptions.has(item.produk.deskripsi)) {
                             addedDescriptions.add(item.produk
                             .deskripsi);
@@ -204,7 +204,7 @@
                 new Set();
 
                     if (dataPemeriksaan[selectedCategory]) {
-                        $.each(dataPemeriksaan[selectedCategory], function(index, item) {                            
+                        $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                             if (item.produk.deskripsi.toLowerCase().includes(inputValue) && !
                                 addedDescriptions.has(item.produk.deskripsi)) {
                                 addedDescriptions.add(item.produk
@@ -217,7 +217,7 @@
                             }
                         });
                     }
-                    
+
                     if ($dataList.children().length > 0) {
                         $dataList.show();
                     } else {
@@ -231,11 +231,11 @@
 
                 const selectedItemText = $(this).text();
                 const kdProduk = $(this).attr('data-kd-produk');
-                console.log(kdProduk);
+                // console.log(kdProduk);
 
                 if (kdProduk) {
                     const $listItem = $('<li>').addClass('list-group-item');
-                                            
+
                     $listItem.html(`
                     ${selectedItemText}
                     <input type="hidden" name="kd_produk[]" value="${kdProduk}">
@@ -253,7 +253,7 @@
                     $listItem.find('.remove-item').on('click', function() {
                         $(this).closest('li').remove();
                         urut--;
-                        console.log(urut);
+                        // console.log(urut);
                     });
 
                     $searchInput.val('');
@@ -270,122 +270,4 @@
             });
         });
     </script>
-
-    {{-- <script>
-        // dari  bg rizaldi
-        $(document).ready(function() {
-            const $searchInput = $('#searchInput');
-            const $dataList = $('#dataList');
-            const $orderList = $('#orderList');
-            const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
-            const dataPemeriksaan = @json($DataLapPemeriksaan);
-            // console.log(dataPemeriksaan);
-
-            let urut = 1;
-
-            $searchInput.on('focus', function() {
-                    $dataList.show();
-                    console.log('yes');
-
-            });
-
-            $jenisPemeriksaanSelect.on('change', function() {
-                const selectedCategory = $(this).val();
-                // console.log(selectedCategory);
-
-                // $.ajax({
-                    // url: "{{ route('labor.get-produk-kategori-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
-                //     method: 'post',
-                //     data: {
-                //         '_token': "{{ csrf_token() }}",
-                //         'kat_produk': selectedCategory
-                //     },
-                //     success: function(res) {
-                //         if(res.status == 'success') {
-                //             let itemData = res.data;
-
-                //             let list = '';
-
-                //             itemData.forEach(item => {
-                //                 list += `<li>
-                //                             <a class="dropdown-item" href="#" data-kd-produk="${item.produk.kp_produk}">
-                //                                 ${item.produk.deskripsi}
-                //                             </a>
-                //                         </li>`;
-                //             });
-
-                //             $dataList.html(list);
-
-                //         } else {
-                //             showToast(res.status, res.message)
-                //         }
-                //     },
-                //     error: function() {
-                //         showToast('error', 'Internal server error');
-                //     }
-                // });
-
-                $dataList.empty();
-
-                if (dataPemeriksaan[selectedCategory]) {
-                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
-                        console.log(item);
-                        const $li = $('<li>');
-                        $li.html(
-                            `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
-                        );
-                        $dataList.append($li);
-                    });
-                }
-
-                $searchInput.val('');
-                $dataList.hide();
-            });
-
-            $dataList.on('click', '.dropdown-item', function(e) {
-                e.preventDefault();
-
-                const selectedItemText = $(this).text();
-                const kdProduk = $(this).attr('data-kd-produk');
-                console.log(kdProduk);
-
-                if (kdProduk) {
-                    const $listItem = $('<li>').addClass('list-group-item');
-
-                    // Set hidden inputs dynamically
-                    $listItem.html(`
-                        ${selectedItemText}
-                        <input type="hidden" name="kd_produk[]" value="${kdProduk}">
-                        <input type="hidden" name="jumlah[]" value="1">
-                        <input type="hidden" name="status[]" value="1">
-                        <input type="hidden" name="urut[]" value="${urut}">
-                        <span class="remove-item" style="color: red; cursor: pointer;">
-                            <i class="bi bi-x-circle"></i>
-                        </span>
-                    `);
-
-                    $orderList.append($listItem);
-
-                    urut++;
-
-                    $listItem.find('.remove-item').on('click', function() {
-                        $(this).closest('li').remove();
-                        urut--;
-                        console.log(urut);
-                    });
-
-                    $searchInput.val('');
-                    $dataList.hide();
-                } else {
-                    console.error('Error: kd_produk is undefined');
-                }
-            });
-
-            $(document).on('click', function(event) {
-                if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
-                    $dataList.hide();
-                }
-            });
-        });
-    </script> --}}
 @endpush

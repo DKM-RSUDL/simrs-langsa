@@ -102,4 +102,4 @@
     <div id="pesanKosong" class="alert alert-info d-none">Tidak ada data resep obat untuk hari ini.</div>
 </div>
 
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.modalresep')
+@include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.modalresep')

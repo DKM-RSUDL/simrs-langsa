@@ -70,4 +70,10 @@ class SegalaOrder extends Model
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
+
+    public function labHasil()
+    {
+        return $this->hasMany(LabHasil::class, 'kd_pasien', 'kd_pasien')
+            ->whereColumn('tgl_masuk', 'tgl_masuk');
+    }
 }

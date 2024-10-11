@@ -28,7 +28,10 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -49,25 +52,25 @@ Route::middleware('auth')->group(function () {
     // Grup rute untuk Unit Pelayanan
     Route::prefix('unit-pelayanan')->group(function () {
         // Rute untuk Rawat Jalan
-        Route::prefix('rawat-jalan')->group(function() {
-            Route::name('rawat-jalan')->group(function() {
+        Route::prefix('rawat-jalan')->group(function () {
+            Route::name('rawat-jalan')->group(function () {
                 Route::get('/', [RawatJalanController::class, 'index'])->name('.index');
 
-                Route::prefix('unit/{kd_unit}')->group(function() {
-                    Route::name('.unit')->group(function() {
+                Route::prefix('unit/{kd_unit}')->group(function () {
+                    Route::name('.unit')->group(function () {
                         Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
                     });
 
                     // Pelayanan
-                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
-                        Route::name('.pelayanan')->group(function() {
+                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                        Route::name('.pelayanan')->group(function () {
                             Route::get('/', [RawatJalanController::class, 'pelayanan']);
                         });
 
                         // CPPT
-                        Route::prefix('cppt')->group(function() {
-                            Route::name('.cppt')->group(function() {
-                                Route::controller(CpptController::class)->group(function() {
+                        Route::prefix('cppt')->group(function () {
+                            Route::name('.cppt')->group(function () {
+                                Route::controller(CpptController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                                     Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
@@ -79,42 +82,91 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Radiologi
-                    Route::prefix('radiologi')->group(function() {
-                        Route::name('.radiologi')->group(function() {
-                            Route::controller(RadiologiController::class)->group(function() {
-                                Route::get('/', 'index')->name('.index');
-                                Route::post('/', 'store')->name('.store');
-                                Route::put('/', 'update')->name('.update');
-                                Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
-                                Route::delete('/', 'delete')->name('.delete');
+                        Route::prefix('radiologi')->group(function () {
+                            Route::name('.radiologi')->group(function () {
+                                Route::controller(RadiologiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                });
                             });
                         });
-                    });
+                        // Radologi
+                        Route::prefix('radiologi')->group(function () {
+                            Route::name('.radiologi')->group(function () {
+                                Route::controller(RadiologiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                        Route::prefix('farmasi')->group(function () {
+                            Route::name('.farmasi')->group(function () {
+                                Route::controller(FarmasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                });
+                            });
+                        });
+
+
+
+                        Route::prefix('radiologi')->group(function () {
+                            Route::name('.radiologi')->group(function () {
+                                Route::controller(RadiologiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // labor PK
+                        Route::prefix('lab-patologi-klinik')->group(function () {
+                            Route::name('.lab-patologi-klinik')->group(function () {
+                                Route::controller(RawatJalanLabPatologiKlinikController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
                     });
                 });
             });
         });
 
         // Rute untuk Rawat Inap
-        Route::prefix('rawat-inap')->group(function() {
-            Route::name('rawat-inap')->group(function() {
+        Route::prefix('rawat-inap')->group(function () {
+            Route::name('rawat-inap')->group(function () {
                 Route::get('/', [RawatInapController::class, 'index'])->name('.index');
 
-                Route::prefix('unit/{kd_unit}')->group(function() {
-                    Route::name('.unit')->group(function() {
+                Route::prefix('unit/{kd_unit}')->group(function () {
+                    Route::name('.unit')->group(function () {
                         Route::get('/', [RawatInapController::class, 'unitPelayanan']);
                     });
 
                     // Pelayanan
-                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
-                        Route::name('.pelayanan')->group(function() {
+                    Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                        Route::name('.pelayanan')->group(function () {
                             Route::get('/', [RawatInapController::class, 'pelayanan']);
                         });
 
                         // CPPT
-                        Route::prefix('cppt')->group(function() {
-                            Route::name('.cppt')->group(function() {
-                                Route::controller(RawatInapCpptController::class)->group(function() {
+                        Route::prefix('cppt')->group(function () {
+                            Route::name('.cppt')->group(function () {
+                                Route::controller(RawatInapCpptController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                                     Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
@@ -126,14 +178,26 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Radiologi
-                        Route::prefix('radiologi')->group(function() {
-                            Route::name('.radiologi')->group(function() {
-                                Route::controller(RawatInapRadiologiController::class)->group(function() {
+                        Route::prefix('radiologi')->group(function () {
+                            Route::name('.radiologi')->group(function () {
+                                Route::controller(RawatInapRadiologiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
                                     Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                                     Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // labor PK
+                        Route::prefix('lab-patologi-klinik')->group(function () {
+                            Route::name('.lab-patologi-klinik')->group(function () {
+                                Route::controller(RawatInapLabPatologiKlinikController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
                             });
                         });
@@ -150,9 +214,9 @@ Route::middleware('auth')->group(function () {
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
                     // CPPT
-                    Route::prefix('cppt')->group(function() {
-                        Route::name('cppt')->group(function() {
-                            Route::controller(GawatDaruratCpptController::class)->group(function() {
+                    Route::prefix('cppt')->group(function () {
+                        Route::name('cppt')->group(function () {
+                            Route::controller(GawatDaruratCpptController::class)->group(function () {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/get-icd10-ajax', 'getIcdTenAjax')->name('.get-icd10-ajax');
                                 Route::post('/get-cppt-ajax', 'getCpptAjax')->name('.get-cppt-ajax');
@@ -164,9 +228,9 @@ Route::middleware('auth')->group(function () {
                     });
 
                     // Radologi
-                    Route::prefix('radiologi')->group(function() {
-                        Route::name('radiologi')->group(function() {
-                            Route::controller(GawatDaruratRadiologiController::class)->group(function() {
+                    Route::prefix('radiologi')->group(function () {
+                        Route::name('radiologi')->group(function () {
+                            Route::controller(GawatDaruratRadiologiController::class)->group(function () {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/', 'store')->name('.store');
                                 Route::put('/', 'update')->name('.update');

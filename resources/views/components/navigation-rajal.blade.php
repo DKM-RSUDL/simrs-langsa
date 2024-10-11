@@ -26,7 +26,7 @@
         [
             'icon' => 'test_tube.png',
             'label' => 'Labor',
-            'link' => route('labor.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('rawat-jalan.lab-patologi-klinik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'microbeam_radiation_therapy.png',
@@ -36,7 +36,7 @@
         [
             'icon' => 'pill.png',
             'label' => 'Farmasi',
-            'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('rawat-jalan.farmasi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'info.png',
