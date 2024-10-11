@@ -13,7 +13,7 @@
         <h6>{{ $dataMedis->pasien->nama ?? 'Tidak Diketahui' }}</h6>
         <p class="mb-0">
             {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
-        </p>/
+        </p>
         <small>{{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
             ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</small>
 
