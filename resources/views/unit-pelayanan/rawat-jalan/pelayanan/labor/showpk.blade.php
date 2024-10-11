@@ -64,11 +64,17 @@
                                         </div>
                                     </div>
                                     <p class="mt-4">
-                                        Jadwal Pemeriksaan: <span
-                                            class="fw-bold">{{ \Carbon\Carbon::parse($laborPK->jadwal_pemeriksaan)->format('d M Y H:i') }}</span>
+                                        Jadwal Pemeriksaan:
+                                        <span class="fw-bold">
+                                            {{ $laborPK->jadwal_pemeriksaan
+                                                ? \Carbon\Carbon::parse($laborPK->jadwal_pemeriksaan)->format('d M Y H:i')
+                                                : '-' }}
+                                        </span>
                                     </p>
                                     <p class="mt-4">
-                                        Diagnosis: <span class="fw-bold">{{ $laborPK->diagnosis }}</span>
+                                        Diagnosis: <span class="fw-bold">
+                                            {{ $laborPK->diagnosis ?? '-' }}
+                                        </span>
                                     </p>
                                 </div>
                             </div>
