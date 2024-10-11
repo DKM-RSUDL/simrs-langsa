@@ -4,6 +4,20 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
+    .modal-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+    }
+    
+    #editObatModal {
+        z-index: 1060;
+    }
     </style>
 @endpush
 
@@ -153,13 +167,25 @@
                     return;
                 }
 
-                var modaledit = new bootstrap.Modal($('#editObatModal'), {
-                    backdrop: 'static',
-                });
-                modaledit.show();
-
                 var obatData = $(this).data('obat');
+                $('#modal-overlay').show();
+
+                var editModal = new bootstrap.Modal($('#editObatModal'));
+                editModal.show();
+
+                $('#editObatModal').css({
+                    'position': 'absolute',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
+                });
+
                 openEditModal(obatData);
+            });
+
+            $('#editObatModal').on('hidden.bs.modal', function () {
+                // Sembunyikan overlay ketika modal edit ditutup
+                $('#modal-overlay').hide();
             });
 
             function openEditModal(obatData) {
@@ -222,6 +248,7 @@
                 }
                 renderDaftarObat();
                 $('#editObatModal').modal('hide');
+                $('#modal-overlay').hide();
             }
 
 

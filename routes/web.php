@@ -28,6 +28,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
@@ -188,6 +189,16 @@ Route::middleware('auth')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
                                     Route::delete('/', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        Route::prefix('farmasi')->group(function () {
+                            Route::name('.farmasi')->group(function () {
+                                Route::controller(RawatInapFarmasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                 });
                             });
                         });
