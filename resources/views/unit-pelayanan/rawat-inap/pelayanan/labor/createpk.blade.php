@@ -16,7 +16,7 @@
 <div class="modal fade" id="extraLargeModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-jalan.lab-patologi-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+            <form action="{{ route('rawat-inap.lab-patologi-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">

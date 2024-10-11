@@ -12,7 +12,7 @@
     aria-labelledby="laborModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-jalan.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}" method="post">
+            <form action="{{ route('rawat-inap.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}" method="post">
                 @csrf
 
                 <div class="modal-header bg-primary text-white">

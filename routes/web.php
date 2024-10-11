@@ -28,6 +28,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
@@ -185,6 +186,18 @@ Route::middleware('auth')->group(function () {
                                     Route::put('/', 'update')->name('.update');
                                     Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                                     Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // labor PK
+                        Route::prefix('lab-patologi-klinik')->group(function () {
+                            Route::name('.lab-patologi-klinik')->group(function () {
+                                Route::controller(RawatInapLabPatologiKlinikController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
                             });
                         });
