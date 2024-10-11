@@ -13,7 +13,7 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 <form id="resepForm"
-                    action="{{ route('farmasi.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
+                    action="{{ route('rawat-inap.farmasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
                     <div class="container-fluid">
@@ -301,7 +301,7 @@
                                                         <td>{{ $resep->ket }}</td>
                                                         <td>{{ $resep->nama_dokter }}</td>
                                                         <td>
-                                                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.copyobat')
+                                                            @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.copyobat')
                                                         </td>
 
                                                     </tr>

@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
-    .modal-overlay {
+        .modal-overlay {
         display: none;
         position: absolute;
         top: 0;
@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-ranap')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -52,11 +52,11 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.tabsresep')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsresep')
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.tabsriwayat')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsriwayat')
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,9 @@
                 var obatData = $(this).data('obat');
                 $('#modal-overlay').show();
 
-                var editModal = new bootstrap.Modal($('#editObatModal'));
+                var editModal = new bootstrap.Modal($('#editObatModal'), {
+                    backdrop: 'static',
+                });
                 editModal.show();
 
                 $('#editObatModal').css({

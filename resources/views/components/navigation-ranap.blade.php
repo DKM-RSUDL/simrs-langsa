@@ -36,7 +36,7 @@
         [
             'icon' => 'pill.png',
             'label' => 'Farmasi',
-            'link' => '#',
+            'link' => route('rawat-inap.farmasi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'info.png',
