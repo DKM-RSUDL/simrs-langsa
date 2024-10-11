@@ -162,6 +162,13 @@
                     iziToast.error({
                         title: 'Error',
                         message: "Silakan pilih dokter terlebih dahulu.",
+                var obatData = $(this).data('obat');
+                // console.log('Data obat yang diterima:', obatData);
+
+                if (!selectedDokter) {
+                    iziToast.warning({
+                        title: 'Warning',
+                        message: "Sebelum Mengcopy Obat Silahkan Pilih Dokter dan Tanggal Order",
                         position: 'topRight'
                     });
                     return;
@@ -224,6 +231,17 @@
                     sebelumSesudahMakan: $('#editSebelumSesudahMakan').val(),
                     aturanTambahan: $('#editKeterangan').val(),
                     harga: parseFloat(originalObatData.harga) || 0,
+                // Tambah obat dari riwayat ke daftarObat
+                daftarObat.push({
+                    id: obatData.kd_prd,
+                    nama: obatData.nama_obat || 'Tidak ada informasi',
+                    dosis: obatData.jumlah_takaran || 'N/A',
+                    satuan: obatData.satuan_takaran || 'N/A',
+                    frekuensi: frekuensi || 'N/A',
+                    jumlah: parseInt(obatData.jumlah) || 0,
+                    sebelumSesudahMakan: sebelumSesudahMakan || '',
+                    aturanTambahan: obatData.ket || '-',
+                    harga: parseFloat(obatData.harga) || 0,
                     jenisObat: 'Non Racikan',
                     kd_dokter: selectedDokter
                 };
@@ -253,6 +271,7 @@
 
 
             // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
+             // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
             function renderDaftarObat() {
                 var tbody = $('#daftarObatBody');
                 tbody.empty();
@@ -329,6 +348,7 @@
                 };
 
                 console.log('Sending data:', formData);
+                console.log('Sending data:', formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -357,7 +377,7 @@
                         $('#tambahResep').modal('hide');
                         location.reload();
                     },
-                    
+
                     error: function(xhr, status, error) {
                         $('#loadingIndicator').addClass('d-none');
                         $('#orderButton').prop('disabled', false);
@@ -410,7 +430,7 @@
                                         html +=
                                             '<a href="#" class="list-group-item list-group-item-action" ' +
                                             'data-id="' + obat.id + '" ' +
-                                            'data-harga="' + obat.harga + '" ' + 
+                                            'data-harga="' + obat.harga + '" ' +
                                             'data-satuan="' + obat.satuan + '">' +
                                             obat.text + '</a>';
                                     });
@@ -444,6 +464,7 @@
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
                 // $('#satuanObat').val(obatSatuan);
+                // $('#satuanObat').val(obatSatuan);
                 $('#hargaObat').val(obatHarga);
                 obatList.html('');
                 clearObat.show();
@@ -454,6 +475,16 @@
                 selectedObatId.val('');
                 clearObat.hide();
             });
+
+            function resetInputObat() {
+                $('#cariObat').val('').prop('readonly', false);
+                $('#selectedObatId').val('');
+                $('#jumlah').val('12');
+                $('#aturanTambahan').val('');
+                $('#jumlahHari').val('');
+                $('#clearObat').hide();
+                $('#obatList').html('');
+            }
 
             function resetInputObat() {
                 $('#cariObat').val('').prop('readonly', false);
@@ -493,7 +524,7 @@
                 if (!date || !time) {
                     return '';
                 }
-                
+
                 let formattedDate;
                 if (date.includes('-')) {
                     formattedDate = date;

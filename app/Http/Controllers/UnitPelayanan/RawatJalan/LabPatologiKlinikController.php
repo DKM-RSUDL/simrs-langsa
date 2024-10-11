@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
@@ -9,14 +9,13 @@ use App\Models\LapLisItemPemeriksaan;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
-use Exception;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
-class LaborController extends Controller
+class LabPatologiKlinikController extends Controller
 {
-    public function index(Request $request, $kd_pasien, $tgl_masuk)
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -26,6 +25,8 @@ class LaborController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -92,7 +93,7 @@ class LaborController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.index', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.labor.index', compact(
             'dataMedis',
             'DataLapPemeriksaan',
             'dataDokter',
@@ -100,19 +101,22 @@ class LaborController extends Controller
         ));
     }
 
-    public function create($kd_pasien, $tgl_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.labor.createpk', compact('kd_pasien', 'tgl_masuk'));
     }
 
     public function store(Request $request)
@@ -219,13 +223,15 @@ class LaborController extends Controller
             ]);
         }
 
-        return redirect()->route('labor.index', [
+        return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
+            'kd_unit' => $validatedData['kd_unit'],
             'kd_pasien' => $validatedData['kd_pasien'],
-            'tgl_masuk' => $validatedData['tgl_masuk']
+            'tgl_masuk' => $validatedData['tgl_masuk'],
+            'urut_masuk' => $validatedData['urut_masuk']
         ])->with(['success' => 'created successfully']);
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $kd_order)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validatedData = $request->validate([
             // Field untuk SegalaOrder
@@ -257,7 +263,13 @@ class LaborController extends Controller
             'kd_dokter' => 'required|string|max:3',
         ]);
 
-        $segalaOrder = SegalaOrder::findOrFail($kd_order);
+        $segalaOrder = SegalaOrder::where('kd_unit', $kd_unit)
+        ->where('kd_pasien', $kd_pasien)
+        ->where('tgl_masuk', $tgl_masuk)
+        ->where('urut_masuk', $urut_masuk)
+        ->firstOrFail();
+
+    $kd_order = $segalaOrder->kd_order;
 
         // Update no_transaksi and kd_kasir if not provided
         if (empty($validatedData['no_transaksi']) || empty($validatedData['kd_kasir'])) {
@@ -313,66 +325,38 @@ class LaborController extends Controller
             ]);
         }
 
-        return redirect()->route('labor.index', [
+        return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
+            'kd_unit' => $validatedData['kd_unit'],
             'kd_pasien' => $validatedData['kd_pasien'],
-            'tgl_masuk' => $validatedData['tgl_masuk']
-        ])->with(['success' => 'updated successfully']);
+            'tgl_masuk' => $validatedData['tgl_masuk'],
+            'urut_masuk' => $validatedData['urut_masuk']
+        ])->with(['success' => 'Updated successfully']);
     }
 
-    public function destroy(string $kd_order)
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         try {
-            $labPK = SegalaOrder::findOrFail($kd_order);
-            $labPK->delete();
+            $laborPK = SegalaOrder::where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
 
-            return redirect()->route('labor.index', [
-                'kd_pasien' => $labPK->kd_pasien,
-                'tgl_masuk' => $labPK->tgl_masuk
+            $laborPK->delete();
+
+            return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
             ])->with(['success' => 'Deleted successfully']);
         } catch (\Exception $e) {
-            return redirect()->route('labor.index', [
-                'kd_pasien' => $labPK->kd_pasien ?? 'default_kd_pasien',
-                'tgl_masuk' => $labPK->tgl_masuk ?? 'default_tgl_masuk'
-            ])->with(['error' => 'Ada kesalahan sistem. Error: ' . $e->getMessage()]);
+            return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with(['error' => 'Ada kesalahan sistem. Silakan coba lagi.']);
         }
     }
-
-
-
-    // dari  bg rizaldi
-    // public function getProdukByKategoriAjax(Request $request)
-    // {
-    //     try {
-    //         $katProduk = $request->kat_produk;
-
-    //         $produk = LapLisItemPemeriksaan::with(['produk'])
-    //                                 ->select([
-    //                                     'kd_produk'
-    //                                 ])
-    //                                 ->where('kategori', $katProduk)
-    //                                 ->groupBy('kd_produk')
-    //                                 ->get();
-
-    //         if(count( $produk ) > 0) {
-    //             return response()->json([
-    //                 'status'    => 'success',
-    //                 'message'   => 'Data ditemukan!',
-    //                 'data'      => $produk
-    //             ],200);
-    //         } else {
-    //             return response()->json([
-    //                 'status'    => 'error',
-    //                 'message'   => 'Data tidak ditemukan',
-    //                 'data'      => []
-    //             ], status: 204);
-    //         }
-
-    //     } catch (Exception $e) {
-    //         return response()->json([
-    //             'status'    => 'error',
-    //             'message'   => $e->getMessage(),
-    //             'data'      => []
-    //         ], 500);
-    //     }
-    // }
 }

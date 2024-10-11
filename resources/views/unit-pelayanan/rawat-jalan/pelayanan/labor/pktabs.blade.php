@@ -32,7 +32,7 @@
             <!-- Search Bar -->
             <div class="col-md-3">
                 <form method="GET"
-                    action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+                    action="{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">
@@ -48,7 +48,7 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.createpk')
+                @include('unit-pelayanan.rawat-jalan.pelayanan.labor.createpk')
             </div>
 
         </div>
@@ -109,9 +109,9 @@
                         </td>
                         <td>
                             @if ($laborPK->status_order == 1)
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.editpk')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.labor.editpk')
                             @else
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.labor.showpk')
                             @endif
                         </td>
 
@@ -131,7 +131,7 @@
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
                 window.location.href =
-                    "{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -152,7 +152,7 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });

@@ -91,6 +91,21 @@
                                                         <input type="hidden" id="selectedObatId" name="obat_id">
                                                         <div id="obatList" class="list-group mt-2"></div>
                                                     </div>
+
+
+                                                <!-- Aturan Pakai -->
+                                                <div class="mb-3 border p-3">
+                                                    <div class="mb-3">
+                                                        <label for="cariObat" class="form-label">Cari Nama Obat</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" id="cariObat"
+                                                                name="nama_obat" placeholder="Ketik nama obat...">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                id="clearObat" style="display:none;">X</button>
+                                                        </div>
+                                                        <input type="hidden" id="selectedObatId" name="obat_id">
+                                                        <div id="obatList" class="list-group mt-2"></div>
+                                                    </div>
                                                     <label class="form-label">Aturan Pakai</label>
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
@@ -138,6 +153,22 @@
                                                                 <option value="unit">Unit</option>
                                                                 <option value="sub">Sub</option>
                                                             </select>
+                                                                <select class="form-select" id="satuanObat">
+                                                                    <option value="tablet">Tablet</option>
+                                                                    <option value="kapsul">Kapsul (caps)</option>
+                                                                    <option value="bungkus">Bungkus (bks)</option>
+                                                                    <option value="sendok_makan">Sendok makan</option>
+                                                                    <option value="sendok_teh">Sendok teh</option>
+                                                                    <option value="tetes">Tetes</option>
+                                                                    <option value="cc">CC</option>
+                                                                    <option value="olesan">Olesan</option>
+                                                                    <option value="taburan">Taburan</option>
+                                                                    <option value="semprotan">Semprotan</option>
+                                                                    <option value="kali">Kali</option>
+                                                                    <option value="ampul">Ampul</option>
+                                                                    <option value="unit">Unit</option>
+                                                                    <option value="sub">Sub</option>
+                                                                </select>
                                                             <input type="text" id="hargaObat"
                                                                 class="form-control d-none" readonly></input>
                                                         </div>
@@ -288,12 +319,18 @@
                                                         $frekuensi = trim($cara_pakai_parts[0] ?? '');
                                                         $keterangan = trim($cara_pakai_parts[1] ?? '');
                                                     @endphp
+                                                    @php
+                                                    $cara_pakai_parts = explode(',', $resep->cara_pakai);
+                                                    $frekuensi = trim($cara_pakai_parts[0] ?? '');
+                                                    $keterangan = trim($cara_pakai_parts[1] ?? '');
+                                                @endphp
                                                     <tr>
                                                         <td>{{ (int) $resep->id_mrresep }}</td>
                                                         <td>Jenis Obat</td>
                                                         <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>
                                                         <td>{{ $resep->jumlah_takaran }}
                                                             {{ Str::title($resep->satuan_takaran) }}</td>
+                                                        <td>{{ $resep->jumlah_takaran }} {{ Str::title($resep->satuan_takaran) }}</td>
                                                         <td>{{ $frekuensi }}</td>
                                                         <td>{{ (int) $resep->jumlah ?? 'Tidak ada informasi' }}</td>
                                                         <td>Rute</td>
@@ -375,6 +412,6 @@
             document.getElementById('tanggalOrder').value = getCurrentDate();
             document.getElementById('jamOrder').value = getCurrentTime();
         });
-    
+
     </script>
 @endpush

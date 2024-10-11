@@ -16,7 +16,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-rajal')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -42,11 +42,11 @@
                             <div class="tab-pane fade show active" id="resep" role="tabpanel"
                                 aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.pktabs')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.labor.pktabs')
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.patabs')
+                                @include('unit-pelayanan.rawat-jalan.pelayanan.labor.patabs')
                             </div>
                         </div>
                     </div>
