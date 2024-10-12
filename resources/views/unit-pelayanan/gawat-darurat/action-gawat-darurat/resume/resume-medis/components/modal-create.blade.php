@@ -1,0 +1,345 @@
+<div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header  bg-primary">
+                <h5 class="modal-title text-white" id="extraLargeModalLabel">Resume Medis Gawat Darurat</h5>
+                <button type="button" class="btn-close btn-close-modified" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="patient-card">
+                            <div class="patient-photo">
+                                <img src="{{ asset('assets/img/profile.jpg') }}" alt="Patient Photo">
+                            </div>
+
+                            <div class="patient-info">
+                                <h6><strong>{{ $dataMedis->pasien->nama ?? 'Tidak Diketahui' }}</strong></h6>
+                                <small class="mb-0">
+                                    {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }},
+                                    {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
+                                    ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})
+                                </small>
+                                <p class="mb-0 fw-bold">RM: {{ $dataMedis->pasien->kd_pasien }}</p>
+
+                                <div class="patient-meta mt-2">
+                                    <p class="mb-0"><i
+                                            class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}
+                                    </p>
+                                    <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }}
+                                        ({{ $dataMedis->unit->nama_unit }})</p>
+                                </div>
+                            </div>
+
+                            <div class="info__pasien">
+                                <div class="bg-secondary rounded-2 p-1">
+                                    <h6 class="text-white text-center">Informasi Pasien</h6>
+                                </div>
+                                <div class="info__pasien">
+                                    <div class="row mt-3">
+                                        <div class="col-5">
+                                            <h6 class="fw-bold">ALERGI</h6>
+                                        </div>
+                                        <div class="col-7">
+                                            <a href="#" class="text-secondary text-decoration-none fw-bold"><i
+                                                    class="bi bi-plus-square"></i> Tambah</a>
+                                        </div>
+                                        <hr class="text-secondary">
+                                    </div>
+                                    <ul class="p-2">
+                                        <li>Paracetamol</li>
+                                        <li>Ikan tongkol</li>
+                                    </ul>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <h6 class="fw-bold">GOL. DARAH</h6>
+                                            <hr class="text-secondary">
+                                            <span>A+</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="col__dua">
+                            <label class="form-label fw-bold">Anamnesis/ Keluhan Utama</label>
+                            <textarea class="form-control" rows="3"></textarea>
+
+                            <div class="mt-4">
+                                <strong class="fw-bold">Pemeriksaan Fisik</strong>
+                                <div class="bg-light p-3 border rounded">
+                                    <div class="row">
+                                        <div class="col-6 col-md-4">
+                                            <small>TD: __/__ mmHg</small><br>
+                                            <small>Temp: __ C</small><br>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <small>RR: __ x/mnt</small><br>
+                                            <small>Resp: __ x/mnt</small>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <small>TB: __ M</small><br>
+                                            <small>BB: __ Kg</small><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">Hasil Pemeriksaan Laboratorium</strong>
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-secondary">
+                                                <tr>
+                                                    <th>NO</th>
+                                                    <th>Pemeriksaan</th>
+                                                    <th>Tgl</th>
+                                                    <th>Status</th>
+                                                    <th>Hasil</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Darah Rutin, KGDS</td>
+                                                    <td>21/04/2024</td>
+                                                    <td>Selesai</td>
+                                                    <td><a href="#">Lihat Hasil</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>KGDS</td>
+                                                    <td>21/04/2024</td>
+                                                    <td>Selesai</td>
+                                                    <td><a href="#">Lihat Hasil</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">Hasil Pemeriksaan Radiologi</strong>
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-secondary">
+                                                <tr>
+                                                    <th>NO</th>
+                                                    <th>Pemeriksaan</th>
+                                                    <th>Tgl</th>
+                                                    <th>Status</th>
+                                                    <th>Hasil</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Thorax AP</td>
+                                                    <td>21/04/2024</td>
+                                                    <td>Selesai</td>
+                                                    <td><a href="#">Lihat Hasil</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>MRI Head</td>
+                                                    <td>21/04/2024</td>
+                                                    <td>Selesai</td>
+                                                    <td><a href="#">Lihat Hasil</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">
+                                    Diagnosis
+                                    <a href="javascript:void(0)"
+                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis"><i
+                                            class="bi bi-plus-square"></i> Tambah</a>
+                                    <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
+                                            class="bi bi-plus-square"></i> ICD-10</a>
+                                </strong>
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;">
+                                        <a href="javascript:void(0)" id="btn-input-diagnosis" class="fw-bold">HYPERTENSI
+                                            KRONIS</a> <br>
+                                        <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
+                                        <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">Kode ICD 10 (Koder)
+                                    <a href="javascript:void(0)"
+                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
+                                        <i class="bi bi-plus-square"></i> Tambah</a>
+                                </strong>
+                                <div class="bg-light p-3 border rounded">
+                                    <p class="list">
+                                        z09.8 ; i10; k30; f41.9
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <strong class="fw-bold">Tindakan/Prosedur</strong>
+                        <div class="bg-light p-3 border rounded">
+                            <div style="max-height: 150px; overflow-y: auto;">
+                                <ol type="1">
+                                    <li>
+                                        <a href="#" class="fw-bold">lab tes- darah rutin</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="fw-bold">x-ray thorax</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="fw-bold">fisiotherapi</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <strong class="fw-bold">Kode ICD-9 CM (Koder)
+                                <a href="#" class="text-secondary text-decoration-none fw-bold ms-3">
+                                    <i class="bi bi-plus-square"></i> Tambah</a>
+                            </strong>
+                            <div class="bg-light p-3 border rounded">
+                                <p class="list">
+                                    99.18; 87.49; 99.13
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <strong class="fw-bold">Resep Obat</strong>
+                            <div class="bg-light p-3 border rounded">
+                                <div style="max-height: 150px; overflow-y: auto;">
+                                    <table class="table table-bordered table-hover">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>NO</th>
+                                                <th>Nama Obat</th>
+                                                <th>Dosis</th>
+                                                <th>Frek</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Paracetamol 500 mg (tab)</td>
+                                                <td>1/2 tablet</td>
+                                                <td>3 x 1 hari</td>
+                                                <td>21</td>
+                                                <td>Oral</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>OBH (Syrup)</td>
+                                                <td>1/2 sdm</td>
+                                                <td>3 x 1 hari</td>
+                                                <td>1</td>
+                                                <td>Oral</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>Asam Mefenamat 5mg (tab)</td>
+                                                <td>1 tablet</td>
+                                                <td>3 x 1 hari</td>
+                                                <td>21</td>
+                                                <td>Oral</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <strong class="fw-bold">Tindak Lanjut</strong>
+                            <div class="bg-light p-3 border rounded">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="kontrol" name="tindakLanjut"
+                                                class="form-check-input me-2">
+                                            <label for="kontrol">Kontrol ulang, tgl:</label>
+                                            <input type="date" id="kontrolDate" class="form-control mt-1"
+                                                style="display: none;">
+                                        </a>
+
+                                        <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
+                                            <input type="radio" id="konsul" name="tindakLanjut"
+                                                class="form-check-input me-2">
+                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
+                                            <input type="text" id="konsulText" class="form-control mt-1"
+                                                style="display: none;">
+                                        </a>
+
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="selesai" name="tindakLanjut"
+                                                class="form-check-input me-2">
+                                            <label for="selesai">Selesai di Klinik ini</label>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="rujuk" name="tindakLanjut"
+                                                class="form-check-input me-2">
+                                            <label for="rujuk">Rujuk RS lain bagian:</label>
+                                            <input type="text" id="rujukText" class="form-control mt-1"
+                                                style="display: none;">
+                                        </a>
+
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="rawat" name="tindakLanjut"
+                                                class="form-check-input me-2">
+                                            <label for="rawat">Rawat Inap</label>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i> Print</button>
+                <button type="button" class="btn btn-sm btn-primary">Simpan</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-diagnosi')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
+
+<script>
+    //button create post event
+    $('#btn-validasi-resume').on('click', function() {
+
+        //open modal
+        $('#modal-create').modal('show');
+    });
+</script>
