@@ -83,7 +83,7 @@
     @stack('js')
     <!-- ======= -->
     <script>
-        Main.init()
+        Main.init();
     </script>
 </body>
 

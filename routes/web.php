@@ -209,9 +209,11 @@ Route::middleware('auth')->group(function () {
 
 
         // Rute untuk Gawat Darurat
-        Route::resource('gawat-darurat', GawatDaruratController::class);
 
         Route::prefix('gawat-darurat')->group(function () {
+            Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
+            Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
+
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
                     // CPPT

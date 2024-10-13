@@ -56,6 +56,8 @@ class Kunjungan extends Model
         'stts_v',
         'stts_cbg',
         'kd_user_cbg',
+        'is_rujukan',
+        'rujukan_ket',
     ];
 
     public function pasien()
