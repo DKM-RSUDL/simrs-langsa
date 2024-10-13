@@ -790,6 +790,9 @@
             });
 
             initSelect2();
+
+            let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
+            if(rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
         });
 
 
@@ -886,11 +889,11 @@
             // kalau value y input rujukan ket required, kalau n input rujukan ket disabled
             if(rujukanValue == '1') {
                 $('#addPatientTriage #rujukan_ket').prop('required', true);
-                $('#addPatientTriage #rujukan_ket').prop('disabled', false);
+                $('#addPatientTriage #rujukan_ket').prop('readonly', false);
             } else {
                 $('#addPatientTriage #rujukan_ket').val('');
                 $('#addPatientTriage #rujukan_ket').prop('required', false);
-                $('#addPatientTriage #rujukan_ket').prop('disabled', true);
+                $('#addPatientTriage #rujukan_ket').prop('readonly', true);
             }
         });
         
@@ -906,5 +909,121 @@
                 width: '100%'
             });
         }
+
+        function isNumber(value) {
+            return !isNaN(parseFloat(value)) && isFinite(value);
+        }
+
+        function hitungUmur(tanggalLahir) {
+            // Parsing tanggal lahir
+            const tglLahir = new Date(tanggalLahir);
+            
+            // Tanggal hari ini
+            const hariIni = new Date();
+            
+            // Menghitung selisih tahun
+            let tahun = hariIni.getFullYear() - tglLahir.getFullYear();
+            let bulan = hariIni.getMonth() - tglLahir.getMonth();
+            
+            // Menyesuaikan jika bulan lahir belum terlewati tahun ini
+            if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tglLahir.getDate())) {
+                tahun--;
+                bulan += 12;
+            }
+            
+            // Menghitung sisa bulan
+            bulan = bulan % 12;
+            
+            return { tahun, bulan };
+        }
+
+        function getWaktuSekarang() {
+            const sekarang = new Date();
+            
+            // Format tanggal (Y-m-d)
+            const tahun = sekarang.getFullYear();
+            const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
+            const tanggal = String(sekarang.getDate()).padStart(2, '0');
+            const formatTanggal = `${tahun}-${bulan}-${tanggal}`;
+            
+            // Format waktu (H:i)
+            const jam = String(sekarang.getHours()).padStart(2, '0');
+            const menit = String(sekarang.getMinutes()).padStart(2, '0');
+            const formatWaktu = `${jam}:${menit}`;
+            
+            return { formatTanggal, formatWaktu };
+        }
+
+        // Search Nik
+        $('#addPatientTriage #button-nik-pasien').click(function(e) {
+            let $this = $(this);
+            let $nikEl = $('#addPatientTriage #nik_pasien');
+            let nikPasien = $nikEl.val();
+            
+            if(nikPasien == '' || nikPasien.length != 16 || !isNumber(nikPasien)) {
+                showToast('error', 'NIK pasien harus di isi 16 angka!');
+
+                $('#addPatientTriage #no_rm_label').text('');
+                $('#addPatientTriage input, select').not('input[name="rujukan"], input[type="checkbox"]').val('');
+                $('#addPatientTriage input, select').prop('readonly', false);
+
+                let nowDate = getWaktuSekarang();
+                $('#addPatientTriage #nik_pasien').val(nikPasien);
+                $('#addPatientTriage #tgl_masuk').val(nowDate.formatTanggal);
+                $('#addPatientTriage #jam_masuk').val(nowDate.formatWaktu);
+                return false;
+            }
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('gawat-darurat.get-patient-bynik-ajax') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'nik': nikPasien
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    // Ubah teks tombol dan tambahkan spinner
+                    $nikEl.prop('disabled', true);
+                    $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
+                },
+                complete: function() {
+                    // Ubah teks tombol jadi icon search dan disable nonaktif
+                    $nikEl.prop('disabled', false);
+                    $this.html('<i class="ti ti-search"></i>');
+                    $this.prop('disabled', false);
+                },
+                success: function (res) {
+                    showToast(res.status, res.message);
+
+                    if(res.status == 'success') {
+                        let data = res.data;
+                        console.log(data);
+                        
+                        // set value
+                        $('#addPatientTriage #no_rm_label').text(data.kd_pasien);
+                        $('#addPatientTriage #no_rm').val(data.kd_pasien);
+
+                        $('#addPatientTriage #nama_pasien').val(data.nama);
+                        $('#addPatientTriage #nama_pasien').prop('readonly', true);
+                        
+                        $('#addPatientTriage #jenis_kelamin').val(data.jenis_kelamin);
+                        $('#addPatientTriage #jenis_kelamin').prop('readonly', true);
+
+                        let umur = hitungUmur(data.tgl_lahir);
+                        $('#addPatientTriage #usia_tahun').val(umur.tahun);
+                        $('#addPatientTriage #usia_bulan').val(umur.bulan);
+                        $('#addPatientTriage #usia_tahun').prop('readonly', true);
+                        $('#addPatientTriage #usia_bulan').prop('readonly', true);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showToast('error', 'Internal server error');
+                }
+            });
+            
+            
+        });
     </script>
 @endpush

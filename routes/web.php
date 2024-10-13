@@ -213,6 +213,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('gawat-darurat')->group(function () {
             Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
             Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
+            Route::post('/get-patient-bynik-ajax', [GawatDaruratController::class, 'getPatientByNikAjax'])->name('gawat-darurat.get-patient-bynik-ajax');
 
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {

@@ -204,7 +204,7 @@ class RadiologiController extends Controller
                     'status'    => 'error',
                     'message'   => 'Data tidak ditemukan',
                     'data'      => []
-                ], 204);
+                ], 200);
             }
 
         } catch (Exception $e) {
