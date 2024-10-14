@@ -42,8 +42,9 @@
                                             <h6 class="fw-bold">ALERGI</h6>
                                         </div>
                                         <div class="col-7">
-                                            <a href="#" class="text-secondary text-decoration-none fw-bold"><i
-                                                    class="bi bi-plus-square"></i> Tambah</a>
+                                            <a href="javascript:void(0)"
+                                                class="text-secondary text-decoration-none fw-bold"
+                                                id="btn-create-alergi"><i class="bi bi-plus-square"></i> Tambah</a>
                                         </div>
                                         <hr class="text-secondary">
                                     </div>
@@ -55,7 +56,7 @@
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
                                             <hr class="text-secondary">
-                                            <span>A+</span>
+                                                <span>{{ $dataMedis->pasien->golonganDarah->jenis ?? 'Tidak Diketahui' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +278,8 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="kontrol">Kontrol ulang, tgl:</label>
@@ -285,7 +287,9 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
+                                        <a href="javascript:void(0)"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
+                                            id="btn-konsul-rujukan">
                                             <input type="radio" id="konsul" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
@@ -293,7 +297,8 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="selesai" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="selesai">Selesai di Klinik ini</label>
@@ -301,7 +306,8 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="rujuk">Rujuk RS lain bagian:</label>
@@ -309,7 +315,8 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="rawat">Rawat Inap</label>
@@ -334,6 +341,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 
 <script>
     //button create post event

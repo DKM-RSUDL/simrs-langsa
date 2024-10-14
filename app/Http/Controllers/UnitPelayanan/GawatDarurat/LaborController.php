@@ -43,7 +43,7 @@ class LaborController extends Controller
         $endDate = $request->input('end_date');
 
         $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'labHasil'])
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'produk.labHasil'])
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {

@@ -74,6 +74,7 @@ class SegalaOrder extends Model
     public function labHasil()
     {
         return $this->hasMany(LabHasil::class, 'kd_pasien', 'kd_pasien')
-            ->whereColumn('tgl_masuk', 'tgl_masuk');
+            ->whereColumn('tgl_masuk', 'tgl_masuk')
+            ->whereColumn('kd_produk', 'kd_produk');
     }
 }

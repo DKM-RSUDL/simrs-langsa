@@ -11,4 +11,9 @@ class Pasien extends Model
 
     protected $table = 'pasien';
     public $timestamps = false;
+
+    public function golonganDarah()
+    {
+        return $this->belongsTo(GolonganDarah::class, 'gol_darah', 'kode');
+    }
 }

@@ -82,4 +82,9 @@ class Kunjungan extends Model
     // {
     //     return $this->hasMany(MrResep::class, 'KD_PASIEN', 'KD_PASIEN');
     // }
+
+    public function cppt()
+    {
+        return $this->belongsTo(Cppt::class, 'kd_kasir', 'kd_kasir');
+    }
 }
