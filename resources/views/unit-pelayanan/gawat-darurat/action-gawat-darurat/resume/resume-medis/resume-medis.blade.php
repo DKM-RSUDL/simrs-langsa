@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-sm table-hover">
         <thead class="table-primary">
             <tr>
                 <th>Jenis Pelayanan</th>
@@ -61,7 +61,7 @@
                 <td>1 Hari</td>
                 <td>Klinik Internis</td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-success">Validasi</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" id="btn-validasi-resume">Validasi</a>
                 </td>
             </tr>
             <tr>
@@ -78,3 +78,5 @@
         </tbody>
     </table>
 </div>
+
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')
