@@ -489,6 +489,181 @@
                                                 </div>
 
                                             </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Diagnosis</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>  
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">E-Resep</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Nama Obat</th>
+                                                                <th>Dosis</th>
+                                                                <th>Cara Pemberian</th>
+                                                                <th>PPA</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Catatan Pemberian Obat</h6>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Nama Obat</th>
+                                                                <th>Dosis</th>
+                                                                <th>Cara Pemberian</th>
+                                                                <th>PPA</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Tindakan</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Tindakan</th>
+                                                                <th>PPA</th>
+                                                                <th>Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Observasi Lanjutan/Re-Triase</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Keluhan</th>
+                                                                <th>Vital Sign</th>
+                                                                <th>Re-Triase/EWS</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>
+                                                                    <ul>
+                                                                        <li>xxx</li>
+                                                                        <li>xxx</li>
+                                                                        <li>xxx</li>
+                                                                    </ul>
+                                                                </td>
+                                                                <td>xxx</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Alat yang terpasang</th>
+                                                                <th>Lokasi</th>
+                                                                <th>Ket</th>
+                                                                <th>Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                                <td>xxx</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
+                                                <textarea class="form-control mb-2" rows="3" placeholder="Isikan riwayat penyakit pasien"></textarea>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
