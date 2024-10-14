@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -33,6 +34,10 @@ class AsesmenController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact('dataMedis'));
+        $dataTriase =
+
+        $dokter = Dokter::where('status', 1)->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact('dataMedis', 'dokter'));
     }
 }

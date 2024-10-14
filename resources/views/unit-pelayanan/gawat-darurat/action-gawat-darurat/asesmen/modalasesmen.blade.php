@@ -76,8 +76,7 @@
                                                                 <td>23 Apr 2024 &nbsp; 13:30 Wib</td>
                                                                 <td>dr. Nuansa Chalid</td>
                                                                 <td>
-                                                                    <div><span
-                                                                            class="badge bg-warning text-dark">Triase</span>
+                                                                    <div>
                                                                     </div>
                                                                 </td>
                                                                 <td><a href="#">detail</a></td>
@@ -439,8 +438,8 @@
                                                 <div class="d-flex align-items-center mb-3">
                                                     <img src="{{ asset('assets/img/icons/test_tube.png') }}">
                                                     <h6 class="mb-0 me-3">Laboratorium</h6>
-                                                    <button class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-plus"></i> Tambah
+                                                    <button class="btn btn-sm">
+                                                        <i class="bi bi-plus-square"></i> Tambah
                                                     </button>
                                                 </div>
                                                 <div class="table-responsive mb-3">
