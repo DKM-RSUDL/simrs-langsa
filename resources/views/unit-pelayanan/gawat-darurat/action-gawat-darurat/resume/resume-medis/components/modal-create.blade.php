@@ -56,7 +56,7 @@
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
                                             <hr class="text-secondary">
-                                                <span>{{ $dataMedis->pasien->golonganDarah->jenis ?? 'Tidak Diketahui' }}</span>
+                                            <span>{{ $dataMedis->pasien->golonganDarah->jenis ?? 'Tidak Diketahui' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -103,20 +103,25 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Darah Rutin, KGDS</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>KGDS</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
+                                                @foreach ($dataLabor->details as $detail)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                        </td>
+                                                        <td>
+                                                            {{-- {{ $detail->status_order ?? 'Selesai' }} --}}
+                                                            @if ($detail->status_order == 1)
+                                                                Diorder
+                                                            @elseif ($detail->status_order == 0)
+                                                                Selesai
+                                                            @endif
+                                                        </td>
+                                                        <td><a href="#">Lihat Hasil</a></td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -138,20 +143,25 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Thorax AP</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>MRI Head</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
+                                                @foreach ($dataRagiologi->details as $radiologi)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                        </td>
+                                                        <td>
+                                                            {{-- {{ $detail->status_order ?? 'Selesai' }} --}}
+                                                            @if ($detail->status_order == 1)
+                                                                Diorder
+                                                            @elseif ($detail->status_order == 0)
+                                                                Selesai
+                                                            @endif
+                                                        </td>
+                                                        <td><a href="#">Lihat Hasil</a></td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
