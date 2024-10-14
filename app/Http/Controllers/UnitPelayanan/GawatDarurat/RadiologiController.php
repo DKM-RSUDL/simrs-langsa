@@ -130,6 +130,9 @@ class RadiologiController extends Controller
 
         $newOrderNumber = (empty($lastOrder)) ? $tglFormat . '0001' : $lastOrder->kd_order + 1;
 
+        $jadwalPemeriksaan = null;
+        if(!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
+
         // store segala order
         $segalaOrderData = [
             'kd_pasien'             => $kunjungan->kd_pasien,
@@ -147,7 +150,7 @@ class RadiologiController extends Controller
             'transaksi_penunjang'   => null,
             'cyto'                  => $request->cyto,
             'puasa'                 => $request->puasa,
-            'jadwal_pemeriksaan'    => "$request->tgl_pemeriksaan $request->jam_pemeriksaan",
+            'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
             'diagnosis'             => $request->diagnosis
         ];
 
@@ -201,7 +204,7 @@ class RadiologiController extends Controller
                     'status'    => 'error',
                     'message'   => 'Data tidak ditemukan',
                     'data'      => []
-                ], 204);
+                ], 200);
             }
         } catch (Exception $e) {
             return response()->json([
@@ -253,12 +256,15 @@ class RadiologiController extends Controller
         $order = SegalaOrder::where('kd_order', $request->kd_order)
             ->first();
 
+        $jadwalPemeriksaan = null;
+        if(!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
+
         $order->kd_dokter = $request->kd_dokter;
         $order->tgl_order = "$request->tgl_order $request->jam_order";
         $order->cyto = $request->cyto;
         $order->puasa = $request->puasa;
         $order->diagnosis = $request->diagnosis;
-        $order->jadwal_pemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
+        $order->jadwal_pemeriksaan = $jadwalPemeriksaan;
         $order->save();
 
         // update order detail

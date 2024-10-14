@@ -4,6 +4,20 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
+        .modal-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+    }
+    
+    #editObatModal {
+        z-index: 1060;
+    }
     </style>
 @endpush
 
@@ -148,40 +162,32 @@
                     iziToast.error({
                         title: 'Error',
                         message: "Silakan pilih dokter terlebih dahulu.",
+                        position: 'topRight'
+                    });
+                    return;
+                }
+
                 var obatData = $(this).data('obat');
-                // console.log('Data obat yang diterima:', obatData);
+                $('#modal-overlay').show();
 
-                if (!selectedDokter) {
-                    iziToast.warning({
-                        title: 'Warning',
-                        message: "Sebelum Mengcopy Obat Silahkan Pilih Dokter dan Tanggal Order",
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
-                // Cek jika obat sudah ada dalam daftar
-                const exists = daftarObat.some(obat => obat.nama === obatData.nama_obat);
-                if (exists) {
-                    iziToast.warning({
-                        title: 'Perhatian',
-                        message: 'Obat sudah ada dalam daftar.',
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
-                var caraPakai = obatData.cara_pakai ? obatData.cara_pakai.split(',') : [];
-                var frekuensi = caraPakai[0] ? caraPakai[0].trim() : 'N/A';
-                var sebelumSesudahMakan = caraPakai[1] ? caraPakai[1].trim() : 'N/A';
-
-                var modaledit = new bootstrap.Modal($('#editObatModal'), {
+                var editModal = new bootstrap.Modal($('#editObatModal'), {
                     backdrop: 'static',
                 });
-                modaledit.show();
+                editModal.show();
 
-                var obatData = $(this).data('obat');
+                $('#editObatModal').css({
+                    'position': 'absolute',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
+                });
+
                 openEditModal(obatData);
+            });
+
+            $('#editObatModal').on('hidden.bs.modal', function () {
+                // Sembunyikan overlay ketika modal edit ditutup
+                $('#modal-overlay').hide();
             });
 
             function openEditModal(obatData) {
@@ -220,17 +226,6 @@
                     sebelumSesudahMakan: $('#editSebelumSesudahMakan').val(),
                     aturanTambahan: $('#editKeterangan').val(),
                     harga: parseFloat(originalObatData.harga) || 0,
-                // Tambah obat dari riwayat ke daftarObat
-                daftarObat.push({
-                    id: obatData.kd_prd,
-                    nama: obatData.nama_obat || 'Tidak ada informasi',
-                    dosis: obatData.jumlah_takaran || 'N/A',
-                    satuan: obatData.satuan_takaran || 'N/A',
-                    frekuensi: frekuensi || 'N/A',
-                    jumlah: parseInt(obatData.jumlah) || 0,
-                    sebelumSesudahMakan: sebelumSesudahMakan || '',
-                    aturanTambahan: obatData.ket || '-',
-                    harga: parseFloat(obatData.harga) || 0,
                     jenisObat: 'Non Racikan',
                     kd_dokter: selectedDokter
                 };
@@ -255,11 +250,11 @@
                 }
                 renderDaftarObat();
                 $('#editObatModal').modal('hide');
+                $('#modal-overlay').hide();
             }
 
 
             // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
-             // ------------ 3. Fungsi CRUD Obat (Tambah, Hapus, Render) ------------ //
             function renderDaftarObat() {
                 var tbody = $('#daftarObatBody');
                 tbody.empty();
@@ -335,8 +330,7 @@
                     }))
                 };
 
-                console.log('Sending data:', formData);
-                console.log('Sending data:', formData);
+                // console.log('Sending data:', formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -365,7 +359,7 @@
                         $('#tambahResep').modal('hide');
                         location.reload();
                     },
-
+                    
                     error: function(xhr, status, error) {
                         $('#loadingIndicator').addClass('d-none');
                         $('#orderButton').prop('disabled', false);
@@ -418,7 +412,7 @@
                                         html +=
                                             '<a href="#" class="list-group-item list-group-item-action" ' +
                                             'data-id="' + obat.id + '" ' +
-                                            'data-harga="' + obat.harga + '" ' +
+                                            'data-harga="' + obat.harga + '" ' + 
                                             'data-satuan="' + obat.satuan + '">' +
                                             obat.text + '</a>';
                                     });
@@ -452,7 +446,6 @@
                 cariObat.val(obatName).prop('readonly', true);
                 selectedObatId.val(obatId);
                 // $('#satuanObat').val(obatSatuan);
-                // $('#satuanObat').val(obatSatuan);
                 $('#hargaObat').val(obatHarga);
                 obatList.html('');
                 clearObat.show();
@@ -463,16 +456,6 @@
                 selectedObatId.val('');
                 clearObat.hide();
             });
-
-            function resetInputObat() {
-                $('#cariObat').val('').prop('readonly', false);
-                $('#selectedObatId').val('');
-                $('#jumlah').val('12');
-                $('#aturanTambahan').val('');
-                $('#jumlahHari').val('');
-                $('#clearObat').hide();
-                $('#obatList').html('');
-            }
 
             function resetInputObat() {
                 $('#cariObat').val('').prop('readonly', false);
@@ -512,7 +495,7 @@
                 if (!date || !time) {
                     return '';
                 }
-
+                
                 let formattedDate;
                 if (date.includes('-')) {
                     formattedDate = date;

@@ -26,10 +26,13 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
+
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
@@ -81,22 +84,10 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
-                        // Radiologi
-                        Route::prefix('radiologi')->group(function () {
-                            Route::name('.radiologi')->group(function () {
-                                Route::controller(RadiologiController::class)->group(function () {
-                                    Route::get('/', 'index')->name('.index');
-                                    Route::post('/', 'store')->name('.store');
-                                    Route::put('/', 'update')->name('.update');
-                                    Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
-                                    Route::delete('/', 'delete')->name('.delete');
-                                });
-                            });
-                        });
                         // Radologi
-                        Route::prefix('radiologi')->group(function () {
-                            Route::name('.radiologi')->group(function () {
-                                Route::controller(RadiologiController::class)->group(function () {
+                        Route::prefix('radiologi')->group(function() {
+                            Route::name('.radiologi')->group(function() {
+                                Route::controller(RadiologiController::class)->group(function() {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
@@ -201,6 +192,16 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+                        Route::prefix('farmasi')->group(function () {
+                            Route::name('.farmasi')->group(function () {
+                                Route::controller(RawatInapFarmasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -208,9 +209,12 @@ Route::middleware('auth')->group(function () {
 
 
         // Rute untuk Gawat Darurat
-        Route::resource('gawat-darurat', GawatDaruratController::class);
 
         Route::prefix('gawat-darurat')->group(function () {
+            Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
+            Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
+            Route::post('/get-patient-bynik-ajax', [GawatDaruratController::class, 'getPatientByNikAjax'])->name('gawat-darurat.get-patient-bynik-ajax');
+
             Route::prefix('pelayanan')->group(function () {
                 Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
                     // CPPT

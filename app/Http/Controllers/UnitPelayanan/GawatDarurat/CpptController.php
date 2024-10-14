@@ -446,7 +446,7 @@ class CpptController extends Controller
                     'status'    => 'error',
                     'message'   => 'Data tidak ditemukan!',
                     'data'      => []
-                ], 404);
+                ], 200);
             } else {
                 return response()->json([
                     'status'    => 'success',

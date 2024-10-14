@@ -346,6 +346,7 @@
             </form>
 
         </div>
+        <div id="modal-overlay" class="modal-overlay"></div>
     </div>
 </div>
 
