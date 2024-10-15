@@ -4,8 +4,8 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
-use App\Models\GolonganDarah;
 use App\Models\Kunjungan;
+use App\Models\MrResep;
 use App\Models\SegalaOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -28,12 +28,26 @@ class ResumeController extends Controller
         $dataDokter = Dokter::all();
         // Hasil Pemeriksaan Laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
-            ->orderBy('tgl_order', 'desc')
-            ->first();
+            ->where('kd_pasien', $kd_pasien)
+            ->whereHas('details', function ($query) {
+                $query->where('status_order', 1);
+            })
+            ->orderBy('tgl_order', 'desc')   // Urutkan dari yang terbaru
+            ->get();
+
         // Hasil Pemeriksaan Radiologi
         $dataRagiologi = SegalaOrder::with(['details.produk'])
-            ->orderBy('tgl_order', 'desc')
-            ->first();
+            ->where('kd_pasien', $kd_pasien)
+            ->whereHas('details', function ($query) {
+                $query->where('status_order', 1);
+            })
+            ->orderBy('tgl_order', 'desc')   // Urutkan dari yang terbaru
+            ->get();
+
+        // Resep Obat
+        // $dataResepObat = MrResep::with(['detailResep.aptObat'])
+        // ->orderBy('tgl_order', 'desc')
+        // ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;

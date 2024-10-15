@@ -9,7 +9,7 @@ class MrResepDtl extends Model
 {
     use HasFactory;
 
-    protected $table ='MR_RESEPDTL';
+    protected $table = 'MR_RESEPDTL';
     protected $primaryKey = 'ID_MRRESEP';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -25,4 +25,10 @@ class MrResepDtl extends Model
         'JUMLAH',
         'KD_DOKTER',
     ];
+
+    // anas
+    public function aptObat()
+    {
+        return $this->belongsTo(AptObat::class, 'kd_prd', 'kd_prd');
+    }
 }

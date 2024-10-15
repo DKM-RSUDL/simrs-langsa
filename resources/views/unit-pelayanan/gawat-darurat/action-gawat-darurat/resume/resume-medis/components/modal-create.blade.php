@@ -103,25 +103,32 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($dataLabor->details as $detail)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
-                                                        </td>
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
-                                                        </td>
-                                                        <td>
-                                                            {{-- {{ $detail->status_order ?? 'Selesai' }} --}}
-                                                            @if ($detail->status_order == 1)
-                                                                Diorder
-                                                            @elseif ($detail->status_order == 0)
-                                                                Selesai
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="#">Lihat Hasil</a></td>
-                                                    </tr>
+                                                @php
+                                                    $counter = 1;
+                                                @endphp
+                                                @foreach ($dataLabor as $order)
+                                                    @foreach ($order->details as $detail)
+                                                        <tr>
+                                                            <td>{{ $counter++ }}</td>
+                                                            <td>
+                                                                {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                            </td>
+                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($detail->status_order == 1)
+                                                                    Diorder
+                                                                @elseif ($detail->status_order == 0)
+                                                                    Selesai
+                                                                @else
+                                                                    Status tidak diketahui
+                                                                @endif
+                                                            </td>
+                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endforeach
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -143,25 +150,31 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($dataRagiologi->details as $radiologi)
+                                                @php
+                                                $counter = 1;
+                                            @endphp
+                                            @foreach ($dataRagiologi as $order)
+                                                @foreach ($order->details as $detail)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                        <td>{{ $counter++ }}</td>
+                                                        <td>
+                                                            {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                        </td>
+                                                        <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
                                                         </td>
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
-                                                        </td>
-                                                        <td>
-                                                            {{-- {{ $detail->status_order ?? 'Selesai' }} --}}
                                                             @if ($detail->status_order == 1)
                                                                 Diorder
                                                             @elseif ($detail->status_order == 0)
                                                                 Selesai
+                                                            @else
+                                                                Status tidak diketahui
                                                             @endif
                                                         </td>
                                                         <td><a href="#">Lihat Hasil</a></td>
                                                     </tr>
                                                 @endforeach
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -253,30 +266,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {{-- {{ $dataResepObat }} --}}
+                                            {{-- @foreach ($dataResepObat->detailResep as $resepDetail) --}}
                                             <tr>
+                                                {{-- <td>{{ $loop->iteration }}</td> --}}
                                                 <td>1</td>
-                                                <td>Paracetamol 500 mg (tab)</td>
+                                                <td>-</td>
                                                 <td>1/2 tablet</td>
                                                 <td>3 x 1 hari</td>
                                                 <td>21</td>
                                                 <td>Oral</td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>OBH (Syrup)</td>
-                                                <td>1/2 sdm</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>1</td>
-                                                <td>Oral</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Asam Mefenamat 5mg (tab)</td>
-                                                <td>1 tablet</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>21</td>
-                                                <td>Oral</td>
-                                            </tr>
+                                            {{-- @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
