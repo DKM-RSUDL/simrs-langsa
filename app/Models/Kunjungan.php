@@ -80,19 +80,6 @@ class Kunjungan extends Model
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 
-    public function order()
-    {
-        return $this->belongsTo(SegalaOrder::class, 'kd_order', 'kd_order');
-    }
-    public function details()
-    {
-        return $this->hasMany(SegalaOrderDet::class, 'kd_order', 'kd_order');
-    }
-    public function produk()
-    {
-        return $this->belongsTo(produk::class, 'kd_produk', 'kd_produk');
-    }
-
 
     // public function resep()
     // {

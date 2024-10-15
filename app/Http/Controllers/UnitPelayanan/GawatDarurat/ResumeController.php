@@ -9,6 +9,8 @@ use App\Models\MrResep;
 use App\Models\SegalaOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ResumeController extends Controller
 {
@@ -25,38 +27,34 @@ class ResumeController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // Mengambil semua data dokter
         $dataDokter = Dokter::all();
-        // Hasil Pemeriksaan Laboratorium
+
+        // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
-            ->whereHas('details', function ($query) {
-                $query->where('status_order', 1);
-            })
-            ->orderBy('tgl_order', 'desc')   // Urutkan dari yang terbaru
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_order', 'desc')
             ->get();
 
-        // Hasil Pemeriksaan Radiologi
+        // Mengambil data hasil pemeriksaan radiologi
         $dataRagiologi = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
-            ->whereHas('details', function ($query) {
-                $query->where('status_order', 1);
-            })
-            ->orderBy('tgl_order', 'desc')   // Urutkan dari yang terbaru
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_order', 'desc')
             ->get();
 
-        // Resep Obat
-        // $dataResepObat = MrResep::with(['detailResep.aptObat'])
-        // ->orderBy('tgl_order', 'desc')
-        // ->get();
+        // Mengambil data obat
+        $riwayatObat = $this->getRiwayatObat($kd_pasien, $tgl_masuk);
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
         }
 
         return view(
@@ -65,8 +63,47 @@ class ResumeController extends Controller
                 'dataMedis',
                 'dataDokter',
                 'dataLabor',
-                'dataRagiologi'
+                'dataRagiologi',
+                'riwayatObat',
             )
         );
+    }
+
+    private function getRiwayatObat($kd_pasien, $tgl_masuk)
+    {
+        return DB::table('MR_RESEP')
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+                            FROM DATA_BATCH AS db
+                            WHERE TGL_MASUK = (
+                                SELECT MAX(TGL_MASUK)
+                                FROM DATA_BATCH
+                                WHERE KD_PRD = db.KD_PRD
+                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.tgl_masuk', $tgl_masuk)
+            ->select(
+                DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
+                'MR_RESEP.KD_DOKTER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP as ID_MRRESEP',
+                'MR_RESEP.CAT_RACIKAN',
+                'MR_RESEP.TGL_ORDER',
+                'MR_RESEP.STATUS',
+                'MR_RESEPDTL.CARA_PAKAI',
+                'MR_RESEPDTL.JUMLAH',
+                'MR_RESEPDTL.KET',
+                'MR_RESEPDTL.JUMLAH_TAKARAN',
+                'MR_RESEPDTL.SATUAN_TAKARAN',
+                'MR_RESEPDTL.KD_PRD',
+                'APT_OBAT.NAMA_OBAT',
+                'APT_SATUAN.SATUAN',
+                'latest_price.HRG_BELI_OBT as HARGA'
+            )
+            ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
+            ->get();
     }
 }

@@ -116,13 +116,25 @@
                                                             <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
                                                             </td>
                                                             <td>
-                                                                @if ($detail->status_order == 1)
-                                                                    Diorder
-                                                                @elseif ($detail->status_order == 0)
-                                                                    Selesai
-                                                                @else
-                                                                    Status tidak diketahui
-                                                                @endif
+                                                                @php
+                                                                    $statusOrder = $detail->status_order;
+                                                                    $statusLabel = '';
+
+                                                                    if ($statusOrder == 0) {
+                                                                        $statusLabel =
+                                                                            'Diproses';
+                                                                    }
+                                                                    if ($statusOrder == 1) {
+                                                                        $statusLabel =
+                                                                            'Diorder';
+                                                                    }
+                                                                    if ($statusOrder == 2) {
+                                                                        $statusLabel =
+                                                                            'Selesai';
+                                                                    }
+                                                                @endphp
+
+                                                                {!! $statusLabel !!}
                                                             </td>
                                                             <td><a href="#">Lihat Hasil</a></td>
                                                         </tr>
@@ -151,30 +163,42 @@
                                             </thead>
                                             <tbody>
                                                 @php
-                                                $counter = 1;
-                                            @endphp
-                                            @foreach ($dataRagiologi as $order)
-                                                @foreach ($order->details as $detail)
-                                                    <tr>
-                                                        <td>{{ $counter++ }}</td>
-                                                        <td>
-                                                            {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
-                                                        </td>
-                                                        <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($detail->status_order == 1)
-                                                                Diorder
-                                                            @elseif ($detail->status_order == 0)
-                                                                Selesai
-                                                            @else
-                                                                Status tidak diketahui
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="#">Lihat Hasil</a></td>
-                                                    </tr>
+                                                    $counter = 1;
+                                                @endphp
+                                                @foreach ($dataRagiologi as $order)
+                                                    @foreach ($order->details as $radiologi)
+                                                        <tr>
+                                                            <td>{{ $counter++ }}</td>
+                                                            <td>
+                                                                {{ $radiologi->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                            </td>
+                                                            <td>{{ \Carbon\Carbon::parse($radiologi->tgl_order)->format('d M Y H:i') }}
+                                                            </td>
+                                                            <td>
+                                                                @php
+                                                                    $statusOrder = $radiologi->status_order;
+                                                                    $statusLabel = '';
+
+                                                                    if ($statusOrder == 0) {
+                                                                        $statusLabel =
+                                                                            'Diproses';
+                                                                    }
+                                                                    if ($statusOrder == 1) {
+                                                                        $statusLabel =
+                                                                            'Diorder';
+                                                                    }
+                                                                    if ($statusOrder == 2) {
+                                                                        $statusLabel =
+                                                                            'Selesai';
+                                                                    }
+                                                                @endphp
+
+                                                                {!! $statusLabel !!}
+                                                            </td>
+                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endforeach
-                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -254,32 +278,35 @@
                             <strong class="fw-bold">Resep Obat</strong>
                             <div class="bg-light p-3 border rounded">
                                 <div style="max-height: 150px; overflow-y: auto;">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-secondary">
-                                            <tr>
-                                                <th>NO</th>
-                                                <th>Nama Obat</th>
-                                                <th>Dosis</th>
-                                                <th>Frek</th>
-                                                <th>Qty</th>
-                                                <th>Rate</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{-- {{ $dataResepObat }} --}}
-                                            {{-- @foreach ($dataResepObat->detailResep as $resepDetail) --}}
-                                            <tr>
-                                                {{-- <td>{{ $loop->iteration }}</td> --}}
-                                                <td>1</td>
-                                                <td>-</td>
-                                                <td>1/2 tablet</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>21</td>
-                                                <td>Oral</td>
-                                            </tr>
-                                            {{-- @endforeach --}}
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-secondary">
+                                                <tr>
+                                                    <th>NO</th>
+                                                    <th>Nama Obat</th>
+                                                    <th>Dosis</th>
+                                                    <th>Frek</th>
+                                                    <th>Qty</th>
+                                                    <th>Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- {{ $dataResepObat }} --}}
+                                                @foreach ($riwayatObat as $obat)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>
+                                                            {{ $obat->nama_obat ?? '-' }}
+                                                        </td>
+                                                        <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}</td>
+                                                        <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
+                                                        <td>{{ (int) $obat->jumlah }}</td>
+                                                        <td>Oral</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
