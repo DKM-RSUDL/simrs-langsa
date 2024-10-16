@@ -216,15 +216,20 @@
                                     <a href="javascript:void(0)"
                                         class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis"><i
                                             class="bi bi-plus-square"></i> Tambah</a>
-                                    <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
-                                            class="bi bi-plus-square"></i> ICD-10</a>
+                                    {{-- <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
+                                            class="bi bi-plus-square"></i> ICD-10</a> --}}
                                 </strong>
-                                <div class="bg-light p-3 border rounded">
+                                {{-- <div class="bg-light p-3 border rounded">
                                     <div style="max-height: 150px; overflow-y: auto;">
                                         <a href="javascript:void(0)" id="btn-input-diagnosis" class="fw-bold">HYPERTENSI
                                             KRONIS</a> <br>
                                         <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
                                         <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br>
+                                    </div>
+                                </div> --}}
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
+
                                     </div>
                                 </div>
                             </div>
@@ -300,8 +305,8 @@
                                                         </td>
                                                         <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}</td>
                                                         <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
-                                                        <td>{{ (int) $obat->jumlah }}</td>
-                                                        <td>Oral</td>
+                                                        <td>{{ (int) $obat->jumlah ?? '-'}}</td>
+                                                        <td>-</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
