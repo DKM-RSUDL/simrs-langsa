@@ -31,7 +31,7 @@
         const icdData = @json($kodeICD);
 
         // Fungsi pencarian
-        searchInput.on('input', function() {
+        searchInput.on('keyup', function() {
             const searchTerm = $(this).val().toLowerCase();
             const filteredData = icdData.filter(item =>
                 item.kd_penyakit.toLowerCase().includes(searchTerm) ||
@@ -56,7 +56,6 @@
         btnPilih.on('click', function() {
             const selectedItem = dataList.find('li.active').text();
             if (selectedItem) {
-                // Ambil hanya kode ICD dan deskripsi
                 const selectedCode = selectedItem.split(' - ')[0];
                 const selectedDescription = selectedItem.split(' - ')[1];
 

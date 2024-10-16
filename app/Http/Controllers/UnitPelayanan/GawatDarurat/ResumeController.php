@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\Penyakit;
@@ -51,6 +52,8 @@ class ResumeController extends Controller
 
         // Kode ICD 10 (Koder)
         $kodeICD = Penyakit::all();
+        // Kode ICD-9 CM (Koder)
+        $kodeICD9 = ICD9Baru::all();
 
         // Mengambil data obat
         $riwayatObat = $this->getRiwayatObat($kd_pasien, $tgl_masuk);
@@ -69,7 +72,8 @@ class ResumeController extends Controller
                 'dataLabor',
                 'dataRagiologi',
                 'riwayatObat',
-                'kodeICD'
+                'kodeICD',
+                'kodeICD9'
             )
         );
     }

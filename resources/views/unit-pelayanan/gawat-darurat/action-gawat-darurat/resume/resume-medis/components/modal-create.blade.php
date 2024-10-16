@@ -270,13 +270,13 @@
 
                         <div class="mt-3">
                             <strong class="fw-bold">Kode ICD-9 CM (Koder)
-                                <a href="#" class="text-secondary text-decoration-none fw-bold ms-3">
+                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd9">
                                     <i class="bi bi-plus-square"></i> Tambah</a>
                             </strong>
                             <div class="bg-light p-3 border rounded">
-                                <p class="list">
-                                    99.18; 87.49; 99.13
-                                </p>
+                                <ul class="list" id="icd9List">
+                                    {{-- Daftar Kode ICD-9 akan muncul di sini --}}
+                                </ul>
                             </div>
                         </div>
 
@@ -384,6 +384,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-diagnosi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 
