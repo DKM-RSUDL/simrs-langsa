@@ -244,6 +244,19 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
+                    // Tindakan
+                    Route::prefix('tindakan')->group(function() {
+                        Route::name('tindakan')->group(function() {
+                            Route::controller(GawatDaruratTindakanController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'storeTindakan')->name('.store');
+                                Route::put('/', 'updateTindakan')->name('.update');
+                                Route::delete('/', 'deleteTindakan')->name('.delete');
+                                Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                            });
+                        });
+                    });
+
                     // Route::resource('farmasi', GawatDaruratFarmasiController::class);
                     Route::prefix('farmasi')->group(function () {
                         Route::name('farmasi')->group(function () {
@@ -257,7 +270,6 @@ Route::middleware('auth')->group(function () {
 
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
-                    Route::resource('tindakan', GawatDaruratTindakanController::class);
                     Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
