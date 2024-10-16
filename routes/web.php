@@ -85,9 +85,9 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Radologi
-                        Route::prefix('radiologi')->group(function() {
-                            Route::name('.radiologi')->group(function() {
-                                Route::controller(RadiologiController::class)->group(function() {
+                        Route::prefix('radiologi')->group(function () {
+                            Route::name('.radiologi')->group(function () {
+                                Route::controller(RadiologiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');

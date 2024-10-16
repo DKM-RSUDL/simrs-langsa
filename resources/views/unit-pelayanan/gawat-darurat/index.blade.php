@@ -175,18 +175,18 @@
                 <div class="modal-content">
                     <form action="{{ route('gawat-darurat.store-triase') }}" method="post" enctype="multipart/form-data">
                         @csrf
-        
+
                         <div class="modal-header">
                             <h5 class="modal-title fw-bold" id="addPatientTriageLabel">
                                 Triase Pasien Gawat Darurat
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-        
+
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-3">
-    
+
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
@@ -195,7 +195,7 @@
                                                     <p>Isikan minimal nama, JK dan usia pasien</p>
                                                 </div>
                                             </div>
-            
+
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="">
@@ -207,7 +207,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-            
+
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="form-group">
@@ -234,20 +234,20 @@
                                                             <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control @error('tgl_masuk') is-invalid @enderror" value="{{ old('tgl_masuk', date('Y-m-d')) }}" required>
                                                             <input type="time" name="jam_masuk" id="jam_masuk" class="form-control @error('jam_masuk') is-invalid @enderror ms-2" value="{{ old('jam_masuk', date('H:i')) }}" required>
                                                         </div>
-                                                        
+
                                                         @error('tgl_masuk')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                         @enderror
-                                                        
+
                                                         @error('jam_masuk')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                         @enderror
                                                     </div>
-    
+
                                                     <div class="form-group mt-3">
                                                         <label for="#nik_pasien">
                                                             <p class="text-primary m-0 p-0">
@@ -261,7 +261,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
-    
+
                                                     <div class="form-group mt-3">
                                                         <label for="#nama_pasien">
                                                             <p class="text-primary m-0 p-0">
@@ -269,14 +269,14 @@
                                                             </p>
                                                         </label>
                                                         <input type="text" name="nama_pasien" id="nama_pasien" class="form-control @error('nama_pasien') is-invalid @enderror" value="{{ old('nama_pasien') }}" required>
-                                                        
+
                                                         @error('nama_pasien')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                         @enderror
                                                     </div>
-    
+
                                                     <div class="form-group mt-3">
                                                         <div class="row">
                                                             <div class="col-5">
@@ -308,7 +308,7 @@
                                                                 <input type="number" name="usia_bulan" id="usia_bulan" min="0" max="11" class="form-control" value="{{ old('usia_bulan') }}">
                                                             </div>
                                                         </div>
-                                                        
+
                                                         @error('jenis_kelamin')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -320,7 +320,7 @@
                                                             </div>
                                                         @enderror
                                                     </div>
-    
+
                                                     <div class="form-group mt-3">
                                                         <div class="d-flex align-items-center">
                                                             <p class="text-primary fw-bold m-0 p-0">Rujukan</p>
@@ -337,22 +337,22 @@
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         @error('rujukan')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                         @enderror
                                                     </div>
-    
+
                                                     <div class="form-group mt-1">
                                                         <label for="#rujukan_ket" class="text-primary">Jika ya, dari</label>
                                                         <input type="text" name="rujukan_ket" id="rujukan_ket" class="form-control" value="{{ old('rujukan_ket') }}">
                                                     </div>
-    
+
                                                     <div class="form-group mt-3 w-100">
                                                         <p class="text-primary fw-bold m-0 p-0">Foto Pasien</p>
-                                                        
+
                                                         <div id="fotoPasienlabel" tabindex="0" class="form-control px-5 @error('foto_pasien') is-invalid @enderror">
                                                             <div class="text-center py-5">
                                                                 <img src="{{ asset('assets/images/avatar1.png') }}" alt="" width="150">
@@ -362,7 +362,7 @@
                                                                 Upload gambar pasien
                                                             </p>
                                                         </div>
-                                                        
+
                                                         <input type="file" name="foto_pasien" id="foto_pasien" class="d-none">
                                                         @error('foto_pasien')
                                                             <div class="invalid-feedback">
@@ -374,11 +374,11 @@
                                             </div>
                                         </div>
                                     </div>
-    
+
                                 </div>
-                                
+
                                 <div class="col-9">
-    
+
                                     <div class="card">
                                         <div class="card-header bg-primary">
                                             <h4 class="text-white mb-2">Triase Pasien Gawat Darurat (Skala ATS)</h4>
@@ -654,11 +654,11 @@
                                             </div>
                                         </div>
                                     </div>
-    
+
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -672,7 +672,7 @@
 
 @push('js')
     <script>
-        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";        
+        var gawatDaruratIndexUrl = "{{ route('gawat-darurat.index') }}";
         var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/gawat-darurat/pelayanan/') }}/";
 
         $(document).ready(function() {
@@ -884,7 +884,7 @@
         $('#addPatientTriage input[name="rujukan"]').change(function(e) {
             let $this = $(this);
             let rujukanValue = $this.val();
-            
+
 
             // kalau value y input rujukan ket required, kalau n input rujukan ket disabled
             if(rujukanValue == '1') {
@@ -896,7 +896,7 @@
                 $('#addPatientTriage #rujukan_ket').prop('readonly', true);
             }
         });
-        
+
         // Reinisialisasi Select2 ketika modal dibuka
         $('#addPatientTriage').on('shown.bs.modal', function () {
             // Destroy existing Select2 instance before reinitializing
@@ -917,40 +917,40 @@
         function hitungUmur(tanggalLahir) {
             // Parsing tanggal lahir
             const tglLahir = new Date(tanggalLahir);
-            
+
             // Tanggal hari ini
             const hariIni = new Date();
-            
+
             // Menghitung selisih tahun
             let tahun = hariIni.getFullYear() - tglLahir.getFullYear();
             let bulan = hariIni.getMonth() - tglLahir.getMonth();
-            
+
             // Menyesuaikan jika bulan lahir belum terlewati tahun ini
             if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tglLahir.getDate())) {
                 tahun--;
                 bulan += 12;
             }
-            
+
             // Menghitung sisa bulan
             bulan = bulan % 12;
-            
+
             return { tahun, bulan };
         }
 
         function getWaktuSekarang() {
             const sekarang = new Date();
-            
+
             // Format tanggal (Y-m-d)
             const tahun = sekarang.getFullYear();
             const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
             const tanggal = String(sekarang.getDate()).padStart(2, '0');
             const formatTanggal = `${tahun}-${bulan}-${tanggal}`;
-            
+
             // Format waktu (H:i)
             const jam = String(sekarang.getHours()).padStart(2, '0');
             const menit = String(sekarang.getMinutes()).padStart(2, '0');
             const formatWaktu = `${jam}:${menit}`;
-            
+
             return { formatTanggal, formatWaktu };
         }
 
@@ -959,7 +959,7 @@
             let $this = $(this);
             let $nikEl = $('#addPatientTriage #nik_pasien');
             let nikPasien = $nikEl.val();
-            
+
             if(nikPasien == '' || nikPasien.length != 16 || !isNumber(nikPasien)) {
                 showToast('error', 'NIK pasien harus di isi 16 angka!');
 
@@ -1000,14 +1000,14 @@
                     if(res.status == 'success') {
                         let data = res.data;
                         console.log(data);
-                        
+
                         // set value
                         $('#addPatientTriage #no_rm_label').text(data.kd_pasien);
                         $('#addPatientTriage #no_rm').val(data.kd_pasien);
 
                         $('#addPatientTriage #nama_pasien').val(data.nama);
                         $('#addPatientTriage #nama_pasien').prop('readonly', true);
-                        
+
                         $('#addPatientTriage #jenis_kelamin').val(data.jenis_kelamin);
                         $('#addPatientTriage #jenis_kelamin').prop('readonly', true);
 
@@ -1022,8 +1022,8 @@
                     showToast('error', 'Internal server error');
                 }
             });
-            
-            
+
+
         });
     </script>
 @endpush

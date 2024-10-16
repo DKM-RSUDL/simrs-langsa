@@ -86,13 +86,35 @@
                                 <div class="card-header bg-light fw-bold">Detail Pemeriksaan</div>
                                 <div class="card-body">
                                     <h6 class="fw-bold">Daftar Order Pemeriksaan:</h6>
-                                    <ol class="p-3" type="1">
+                                    {{-- <ol class="p-3" type="1">
                                         @foreach ($laborPK->details as $detail)
                                             <li>
                                                 {{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}
                                             </li>
                                         @endforeach
-                                    </ol>
+                                    </ol> --}}
+                                    <table class="table table-bordered table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Pemeriksaan</th>
+                                                {{-- <th>kd_produk</th> --}}
+                                                <th>Hasil</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($laborPK->details as $detail)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}</td>
+                                                {{-- <td>{{ $detail->kd_produk }}</td> --}}
+                                                <td>
+                                                    {{ $detail->labHasil->hasil ?? '-' }}
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

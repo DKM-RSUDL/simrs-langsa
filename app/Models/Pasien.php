@@ -56,4 +56,9 @@ class Pasien extends Model
         'passport',
         'ihs_number',
     ];
+
+    public function golonganDarah()
+    {
+        return $this->belongsTo(GolonganDarah::class, 'gol_darah', 'kode');
+    }
 }

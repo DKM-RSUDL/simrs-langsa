@@ -42,8 +42,9 @@
                                             <h6 class="fw-bold">ALERGI</h6>
                                         </div>
                                         <div class="col-7">
-                                            <a href="#" class="text-secondary text-decoration-none fw-bold"><i
-                                                    class="bi bi-plus-square"></i> Tambah</a>
+                                            <a href="javascript:void(0)"
+                                                class="text-secondary text-decoration-none fw-bold"
+                                                id="btn-create-alergi"><i class="bi bi-plus-square"></i> Tambah</a>
                                         </div>
                                         <hr class="text-secondary">
                                     </div>
@@ -55,7 +56,7 @@
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
                                             <hr class="text-secondary">
-                                            <span>A+</span>
+                                            <span>{{ $dataMedis->pasien->golonganDarah->jenis ?? 'Tidak Diketahui' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -102,20 +103,44 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Darah Rutin, KGDS</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>KGDS</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
+                                                @php
+                                                    $counter = 1;
+                                                @endphp
+                                                @foreach ($dataLabor as $order)
+                                                    @foreach ($order->details as $detail)
+                                                        <tr>
+                                                            <td>{{ $counter++ }}</td>
+                                                            <td>
+                                                                {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                            </td>
+                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                            </td>
+                                                            <td>
+                                                                @php
+                                                                    $statusOrder = $detail->status_order;
+                                                                    $statusLabel = '';
+
+                                                                    if ($statusOrder == 0) {
+                                                                        $statusLabel =
+                                                                            'Diproses';
+                                                                    }
+                                                                    if ($statusOrder == 1) {
+                                                                        $statusLabel =
+                                                                            'Diorder';
+                                                                    }
+                                                                    if ($statusOrder == 2) {
+                                                                        $statusLabel =
+                                                                            'Selesai';
+                                                                    }
+                                                                @endphp
+
+                                                                {!! $statusLabel !!}
+                                                            </td>
+                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endforeach
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -137,20 +162,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Thorax AP</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>MRI Head</td>
-                                                    <td>21/04/2024</td>
-                                                    <td>Selesai</td>
-                                                    <td><a href="#">Lihat Hasil</a></td>
-                                                </tr>
+                                                @php
+                                                    $counter = 1;
+                                                @endphp
+                                                @foreach ($dataRagiologi as $order)
+                                                    @foreach ($order->details as $radiologi)
+                                                        <tr>
+                                                            <td>{{ $counter++ }}</td>
+                                                            <td>
+                                                                {{ $radiologi->produk->deskripsi ?? 'Tidak ada deskripsi' }}
+                                                            </td>
+                                                            <td>{{ \Carbon\Carbon::parse($radiologi->tgl_order)->format('d M Y H:i') }}
+                                                            </td>
+                                                            <td>
+                                                                @php
+                                                                    $statusOrder = $radiologi->status_order;
+                                                                    $statusLabel = '';
+
+                                                                    if ($statusOrder == 0) {
+                                                                        $statusLabel =
+                                                                            'Diproses';
+                                                                    }
+                                                                    if ($statusOrder == 1) {
+                                                                        $statusLabel =
+                                                                            'Diorder';
+                                                                    }
+                                                                    if ($statusOrder == 2) {
+                                                                        $statusLabel =
+                                                                            'Selesai';
+                                                                    }
+                                                                @endphp
+
+                                                                {!! $statusLabel !!}
+                                                            </td>
+                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -168,31 +216,37 @@
                                     <a href="javascript:void(0)"
                                         class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis"><i
                                             class="bi bi-plus-square"></i> Tambah</a>
-                                    <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
-                                            class="bi bi-plus-square"></i> ICD-10</a>
+                                    {{-- <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
+                                            class="bi bi-plus-square"></i> ICD-10</a> --}}
                                 </strong>
-                                <div class="bg-light p-3 border rounded">
+                                {{-- <div class="bg-light p-3 border rounded">
                                     <div style="max-height: 150px; overflow-y: auto;">
                                         <a href="javascript:void(0)" id="btn-input-diagnosis" class="fw-bold">HYPERTENSI
                                             KRONIS</a> <br>
                                         <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
                                         <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br>
                                     </div>
+                                </div> --}}
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
+
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Kode ICD 10 (Koder)
-                                    <a href="javascript:void(0)"
-                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
-                                        <i class="bi bi-plus-square"></i> Tambah</a>
+                                    <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
+                                        <i class="bi bi-plus-square"></i> Tambah
+                                    </a>
                                 </strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <p class="list">
-                                        z09.8 ; i10; k30; f41.9
-                                    </p>
+                                    <ul class="list" id="icdList">
+                                        <!-- Kode ICD akan ditambahkan di sini -->
+                                    </ul>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>
@@ -216,13 +270,13 @@
 
                         <div class="mt-3">
                             <strong class="fw-bold">Kode ICD-9 CM (Koder)
-                                <a href="#" class="text-secondary text-decoration-none fw-bold ms-3">
+                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd9">
                                     <i class="bi bi-plus-square"></i> Tambah</a>
                             </strong>
                             <div class="bg-light p-3 border rounded">
-                                <p class="list">
-                                    99.18; 87.49; 99.13
-                                </p>
+                                <ul class="list" id="icd9List">
+                                    {{-- Daftar Kode ICD-9 akan muncul di sini --}}
+                                </ul>
                             </div>
                         </div>
 
@@ -230,44 +284,35 @@
                             <strong class="fw-bold">Resep Obat</strong>
                             <div class="bg-light p-3 border rounded">
                                 <div style="max-height: 150px; overflow-y: auto;">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-secondary">
-                                            <tr>
-                                                <th>NO</th>
-                                                <th>Nama Obat</th>
-                                                <th>Dosis</th>
-                                                <th>Frek</th>
-                                                <th>Qty</th>
-                                                <th>Rate</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Paracetamol 500 mg (tab)</td>
-                                                <td>1/2 tablet</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>21</td>
-                                                <td>Oral</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>OBH (Syrup)</td>
-                                                <td>1/2 sdm</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>1</td>
-                                                <td>Oral</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Asam Mefenamat 5mg (tab)</td>
-                                                <td>1 tablet</td>
-                                                <td>3 x 1 hari</td>
-                                                <td>21</td>
-                                                <td>Oral</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-secondary">
+                                                <tr>
+                                                    <th>NO</th>
+                                                    <th>Nama Obat</th>
+                                                    <th>Dosis</th>
+                                                    <th>Frek</th>
+                                                    <th>Qty</th>
+                                                    <th>Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- {{ $dataResepObat }} --}}
+                                                @foreach ($riwayatObat as $obat)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>
+                                                            {{ $obat->nama_obat ?? '-' }}
+                                                        </td>
+                                                        <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}</td>
+                                                        <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
+                                                        <td>{{ (int) $obat->jumlah ?? '-'}}</td>
+                                                        <td>-</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +322,8 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="kontrol">Kontrol ulang, tgl:</label>
@@ -285,7 +331,9 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
+                                        <a href="javascript:void(0)"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
+                                            id="btn-konsul-rujukan">
                                             <input type="radio" id="konsul" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
@@ -293,7 +341,8 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="selesai" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="selesai">Selesai di Klinik ini</label>
@@ -301,7 +350,8 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="rujuk">Rujuk RS lain bagian:</label>
@@ -309,7 +359,8 @@
                                                 style="display: none;">
                                         </a>
 
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindakLanjut"
                                                 class="form-check-input me-2">
                                             <label for="rawat">Rawat Inap</label>
@@ -333,7 +384,9 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-diagnosi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 
 <script>
     //button create post event

@@ -44,4 +44,8 @@ class MrResep extends Model
         return $this->hasMany(MrResepDtl::class, 'ID_MRRESEP', 'ID_MRRESEP');
     }
 
-}   
+    public function aptObat()
+    {
+        return $this->belongsTo(AptObat::class, 'KD_PRD', 'KD_PRD');
+    }
+}
