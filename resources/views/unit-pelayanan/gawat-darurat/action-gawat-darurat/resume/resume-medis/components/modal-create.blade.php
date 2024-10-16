@@ -236,16 +236,17 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Kode ICD 10 (Koder)
-                                    <a href="javascript:void(0)"
-                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
-                                        <i class="bi bi-plus-square"></i> Tambah</a>
+                                    <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
+                                        <i class="bi bi-plus-square"></i> Tambah
+                                    </a>
                                 </strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <p class="list">
-                                        z09.8 ; i10; k30; f41.9
-                                    </p>
+                                    <ul class="list" id="icdList">
+                                        <!-- Kode ICD akan ditambahkan di sini -->
+                                    </ul>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

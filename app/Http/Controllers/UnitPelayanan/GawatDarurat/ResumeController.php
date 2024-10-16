@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
+use App\Models\Penyakit;
 use App\Models\SegalaOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -48,6 +49,9 @@ class ResumeController extends Controller
             ->orderBy('tgl_order', 'desc')
             ->get();
 
+        // Kode ICD 10 (Koder)
+        $kodeICD = Penyakit::all();
+
         // Mengambil data obat
         $riwayatObat = $this->getRiwayatObat($kd_pasien, $tgl_masuk);
 
@@ -65,6 +69,7 @@ class ResumeController extends Controller
                 'dataLabor',
                 'dataRagiologi',
                 'riwayatObat',
+                'kodeICD'
             )
         );
     }
