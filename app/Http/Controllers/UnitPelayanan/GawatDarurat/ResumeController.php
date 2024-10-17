@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
@@ -35,10 +36,12 @@ class ResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::where('kd_pasien', $kd_pasien)
+        $dataResume = RMEResume::with(['rmeResumeDet'])
+            ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
+        // dd($dataResume);
 
         // Mengambil semua data dokter
         $dataDokter = Dokter::all();
@@ -85,6 +88,8 @@ class ResumeController extends Controller
             )
         );
     }
+
+
 
     private function getRiwayatObat($kd_pasien, $tgl_masuk)
     {

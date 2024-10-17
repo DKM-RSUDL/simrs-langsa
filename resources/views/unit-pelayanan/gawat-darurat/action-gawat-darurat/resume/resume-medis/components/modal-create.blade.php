@@ -21,14 +21,16 @@
                                     {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
                                     ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})
                                 </small>
-                                <p class="mb-0 fw-bold">RM: {{ $dataMedis->pasien->kd_pasien }}</p>
+                                <p class="mb-0 fw-bold">RM: {{ $dataMedis->pasien->kd_pasien ?? '-' }}</p>
 
                                 <div class="patient-meta mt-2">
-                                    <p class="mb-0"><i
-                                            class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}
+                                    <p class="mb-0"><i class="bi bi-calendar3"></i>
+                                        {{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') ?? '-' }}
                                     </p>
-                                    <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }}
-                                        ({{ $dataMedis->unit->nama_unit }})</p>
+                                    <p><i class="bi bi-hospital"></i>
+                                        {{ $dataMedis->unit->bagian->bagian ?? '-' }}
+                                        ({{ $dataMedis->unit->nama_unit ?? '-' }})
+                                    </p>
                                 </div>
                             </div>
 
@@ -66,23 +68,34 @@
                     <div class="col-md-5">
                         <div class="col__dua">
                             <label class="form-label fw-bold">Anamnesis/ Keluhan Utama</label>
-                            <textarea class="form-control" rows="3">{{ $dataResume->anamnesis }}</textarea>
+                            <textarea class="form-control" rows="3">{{ $dataResume->anamnesis ?? '-' }}</textarea>
 
                             <div class="mt-4">
                                 <strong class="fw-bold">Pemeriksaan Fisik</strong>
+                                {{-- {{ $dataResume->konpas }} --}}
+
                                 <div class="bg-light p-3 border rounded">
                                     <div class="row">
                                         <div class="col-6 col-md-4">
-                                            <small>TD: __/__ mmHg</small><br>
-                                            <small>Temp: __ C</small><br>
+                                            @php
+                                                $konpas = json_decode($dataResume->konpas, true);
+                                            @endphp
+
+                                            <small>TD:
+                                                {{ $konpas['sistole']['hasil'] ?? '__' }} /
+                                                {{ $konpas['diastole']['hasil'] ?? '__' }} mmHg
+                                            </small><br>
+                                            <small>Temp: {{ $konpas['suhu']['hasil'] ?? '__' }} C</small><br>
                                         </div>
                                         <div class="col-6 col-md-4">
-                                            <small>RR: __ x/mnt</small><br>
-                                            <small>Resp: __ x/mnt</small>
+                                            <small>
+                                                RR: {{ $konpas['respiration_rate']['hasil'] ?? '__' }} x/mnt
+                                            </small><br>
+                                            <small>Resp:{{ $konpas['nadi']['hasil'] ?? '__' }} x/mnt</small>
                                         </div>
                                         <div class="col-6 col-md-4">
-                                            <small>TB: __ M</small><br>
-                                            <small>BB: __ Kg</small><br>
+                                            <small>TB: {{ $konpas['tinggi_badan']['hasil'] ?? '__' }} M</small><br>
+                                            <small>BB: {{ $konpas['berat_badan']['hasil'] ?? '__' }} Kg</small><br>
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +214,7 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ $dataResume->pemeriksaan_penunjang }}</textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
                             <div class="mt-3">
@@ -251,13 +264,7 @@
                             <div style="max-height: 150px; overflow-y: auto;">
                                 <ol type="1">
                                     <li>
-                                        <a href="#" class="fw-bold">lab tes- darah rutin</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="fw-bold">x-ray thorax</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="fw-bold">fisiotherapi</a>
+                                        <a href="#" class="fw-bold">{{ $dataResume->rmeResumeDet->tindak_lanjut_name }}</a>
                                     </li>
                                 </ol>
                             </div>
