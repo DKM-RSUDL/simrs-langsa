@@ -8,8 +8,8 @@
 @endpush
 
 <!-- Modal untuk Edit -->
-<div class="modal fade" id="extraLargeModal{{ $laborPK->kd_order }}" tabindex="-1"
-    aria-labelledby="extraLargeModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
+<div class="modal fade" id="extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
+    aria-labelledby="extraLargeModalLabel{{str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form

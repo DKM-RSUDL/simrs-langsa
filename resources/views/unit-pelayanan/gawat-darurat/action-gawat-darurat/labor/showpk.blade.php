@@ -1,5 +1,5 @@
-<div class="modal fade" id="laborModal{{ $laborPK->kd_order }}" tabindex="-1"
-    aria-labelledby="laborModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
+<div class="modal fade" id="laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
+    aria-labelledby="laborModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form action="{{ route('labor.index', [$laborPK->kd_pasien, $laborPK->tgl_masuk]) }}" method="post">

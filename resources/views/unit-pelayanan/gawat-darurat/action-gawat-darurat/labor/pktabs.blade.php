@@ -110,7 +110,7 @@
                         <td>
                             @if ($laborPK->status_order == 1)
                                 <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#extraLargeModal{{ $laborPK->kd_order }}">
+                                    data-bs-target="#extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
                                     <i class="ti-pencil"></i>
                                 </a>
                                 <a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
@@ -118,7 +118,7 @@
                                 </a>
                             @else
                                 <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#laborModal{{ $laborPK->kd_order }}">
+                                    data-bs-target="#laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
                                     <i class="ti-eye"></i>
                                 </a>
                                 <a href="#" class="mb-2">
