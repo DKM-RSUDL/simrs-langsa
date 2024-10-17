@@ -8,6 +8,7 @@ use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\Penyakit;
+use App\Models\RMEResume;
 use App\Models\SegalaOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -32,6 +33,12 @@ class ResumeController extends Controller
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
+
+        // ambil data Resume
+        $dataResume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
 
         // Mengambil semua data dokter
         $dataDokter = Dokter::all();
@@ -73,7 +80,8 @@ class ResumeController extends Controller
                 'dataRagiologi',
                 'riwayatObat',
                 'kodeICD',
-                'kodeICD9'
+                'kodeICD9',
+                'dataResume'
             )
         );
     }

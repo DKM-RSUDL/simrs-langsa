@@ -66,7 +66,7 @@
                     <div class="col-md-5">
                         <div class="col__dua">
                             <label class="form-label fw-bold">Anamnesis/ Keluhan Utama</label>
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control" rows="3">{{ $dataResume->anamnesis }}</textarea>
 
                             <div class="mt-4">
                                 <strong class="fw-bold">Pemeriksaan Fisik</strong>
@@ -121,16 +121,13 @@
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
-                                                                        $statusLabel =
-                                                                            'Diproses';
+                                                                        $statusLabel = 'Diproses';
                                                                     }
                                                                     if ($statusOrder == 1) {
-                                                                        $statusLabel =
-                                                                            'Diorder';
+                                                                        $statusLabel = 'Diorder';
                                                                     }
                                                                     if ($statusOrder == 2) {
-                                                                        $statusLabel =
-                                                                            'Selesai';
+                                                                        $statusLabel = 'Selesai';
                                                                     }
                                                                 @endphp
 
@@ -180,16 +177,13 @@
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
-                                                                        $statusLabel =
-                                                                            'Diproses';
+                                                                        $statusLabel = 'Diproses';
                                                                     }
                                                                     if ($statusOrder == 1) {
-                                                                        $statusLabel =
-                                                                            'Diorder';
+                                                                        $statusLabel = 'Diorder';
                                                                     }
                                                                     if ($statusOrder == 2) {
-                                                                        $statusLabel =
-                                                                            'Selesai';
+                                                                        $statusLabel = 'Selesai';
                                                                     }
                                                                 @endphp
 
@@ -207,7 +201,7 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ $dataResume->pemeriksaan_penunjang }}</textarea>
                             </div>
 
                             <div class="mt-3">
@@ -236,7 +230,8 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Kode ICD 10 (Koder)
-                                    <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
+                                    <a href="javascript:void(0)"
+                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
                                         <i class="bi bi-plus-square"></i> Tambah
                                     </a>
                                 </strong>
@@ -270,7 +265,8 @@
 
                         <div class="mt-3">
                             <strong class="fw-bold">Kode ICD-9 CM (Koder)
-                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd9">
+                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3"
+                                    id="btn-kode-icd9">
                                     <i class="bi bi-plus-square"></i> Tambah</a>
                             </strong>
                             <div class="bg-light p-3 border rounded">
@@ -304,9 +300,10 @@
                                                         <td>
                                                             {{ $obat->nama_obat ?? '-' }}
                                                         </td>
-                                                        <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}</td>
+                                                        <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}
+                                                        </td>
                                                         <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
-                                                        <td>{{ (int) $obat->jumlah ?? '-'}}</td>
+                                                        <td>{{ (int) $obat->jumlah ?? '-' }}</td>
                                                         <td>-</td>
                                                     </tr>
                                                 @endforeach

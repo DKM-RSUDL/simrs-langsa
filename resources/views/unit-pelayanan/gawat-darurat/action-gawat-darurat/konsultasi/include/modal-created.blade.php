@@ -26,12 +26,12 @@
                                 <div class="col-7">
                                 <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal Konsul :</label>
                                 <input type="date" id="tgl_order" name="tgl_order" class="form-control"
-                                    value="" required>
+                                    value="">
                                 </div>
                                 <div class="col-5">
                                     <label for="tgl_order" class="form-label fw-bold h5 text-dark">Jam :</label>
                                 <input type="time" id="tgl_order" name="tgl_order" class="form-control"
-                                    value="" required>
+                                    value="">
                                 </div>
                             </div>
                         </div>

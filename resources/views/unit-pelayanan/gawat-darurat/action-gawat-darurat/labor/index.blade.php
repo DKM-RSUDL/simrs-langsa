@@ -2,14 +2,14 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
+        .dropdown-menu {
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 @endpush
 
 @section('content')
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -24,8 +24,9 @@
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-bold" id="resep-tab" data-bs-toggle="tab" data-bs-target="#resep"
-                                    type="button" role="tab" aria-controls="resep" aria-selected="true">
+                                <button class="nav-link active fw-bold" id="resep-tab" data-bs-toggle="tab"
+                                    data-bs-target="#resep" type="button" role="tab" aria-controls="resep"
+                                    aria-selected="true">
                                     Lab Patologi Klinik (PK)
                                 </button>
                             </li>

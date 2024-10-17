@@ -91,7 +91,7 @@
                 </td>
                 <td>
                     <a href="#" class="btn btn-sm btn-secondary">Edit</a>
-                    <i class="bi bi-x-circle text-secondary"></i>
+                    <a href="#"><i class="bi bi-x-circle text-secondary"></i></a>
                 </td>
             </tr>
             <tr>
@@ -108,7 +108,7 @@
                 </td>
                 <td>
                     <a href="#" class="btn btn-sm btn-success">Edit</a>
-                    <i class="bi bi-x-circle text-danger"></i>
+                    <a href="#"><i class="bi bi-x-circle text-danger"></i></a>
                 </td>
             </tr>
         </tbody>
