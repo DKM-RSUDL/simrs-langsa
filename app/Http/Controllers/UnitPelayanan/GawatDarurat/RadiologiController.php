@@ -29,7 +29,7 @@ class RadiologiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dokter = Dokter::all();
+        $dokter = Dokter::where('status', 1)->get();
 
         $produk = Produk::with(['klas'])
             ->distinct()

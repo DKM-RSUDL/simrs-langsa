@@ -91,7 +91,7 @@ class ResumeController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             // rme_resume
@@ -121,8 +121,9 @@ class ResumeController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Simpan data ke tabel rme_resume
-        $rmeResume = RMEResume::create([
+        $rmeResume = RMEResume::findOrFail($id);
+
+        $rmeResume->update([
             'kd_pasien' => $request->kd_pasien,
             'kd_unit' => $request->kd_unit,
             'tgl_masuk' => $request->tgl_masuk,
@@ -137,9 +138,9 @@ class ResumeController extends Controller
             'user_validasi' => Auth::id(),
         ]);
 
-        // Simpan data ke tabel rme_resume_dtl
-        $rmeResumeDtl = RmeResumeDtl::create([
-            'id_resume' => $rmeResume->id,
+        $rmeResumeDtl = RmeResumeDtl::where('id_resume', $rmeResume->id)->firstOrFail();
+
+        $rmeResumeDtl->update([
             'tindak_lanjut_code' => $request->tindak_lanjut_code,
             'tindak_lanjut_name' => $request->tindak_lanjut_name,
             'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
@@ -151,12 +152,11 @@ class ResumeController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Disimpan',
+            'message' => 'Data Berhasil Diperbarui',
             'rmeResume' => $rmeResume,
             'rmeResumeDtl' => $rmeResumeDtl
         ]);
     }
-
 
 
     private function getRiwayatObat($kd_pasien, $tgl_masuk)

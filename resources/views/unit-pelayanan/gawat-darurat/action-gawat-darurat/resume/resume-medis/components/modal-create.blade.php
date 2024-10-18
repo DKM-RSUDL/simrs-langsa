@@ -7,8 +7,12 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('resume.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="POST">
-                <div class="row">
+                <form
+                    action="{{ route('resume.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataResume->id]) }}"
+                    method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
                         @csrf
                         <div class="col-md-2">
                             <div class="patient-card">
@@ -35,11 +39,13 @@
                                         </p>
                                     </div>
 
+                                    <!-- Hidden fields for passing necessary data -->
                                     <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                                     <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
                                     <input type="hidden" name="tgl_masuk"
                                         value="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d H:i:s') }}">
                                     <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                                 </div>
 
                                 <div class="info__pasien">
