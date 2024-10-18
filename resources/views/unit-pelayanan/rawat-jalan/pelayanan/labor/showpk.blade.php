@@ -12,7 +12,9 @@
     aria-labelledby="laborModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-jalan.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-jalan.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <div class="modal-header bg-primary text-white">
@@ -86,15 +88,42 @@
                                 <div class="card-header bg-light fw-bold">Detail Pemeriksaan</div>
                                 <div class="card-body">
                                     <h6 class="fw-bold">Daftar Order Pemeriksaan:</h6>
-                                    <ol class="p-3" type="1">
+                                    <table class="table table-bordered table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Pemeriksaan</th>
+                                                {{-- <th>kd_produk</th> --}}
+                                                <th>Hasil</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($laborPK->details as $detail)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}
+                                                    </td>
+                                                    {{-- <td>{{ $detail->kd_produk }}</td> --}}
+                                                    <td>
+                                                        {{ $detail->labHasil->hasil ?? '-' }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    {{-- <ol class="p-3" type="1">
                                         @foreach ($laborPK->details as $detail)
                                             <li>
                                                 {{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}
                                             </li>
                                         @endforeach
-                                    </ol>
+                                    </ol> --}}
                                 </div>
+
+                                {{-- <strong class="fw-bold">Hasil :</strong>
+                                <p>{{ $dataMedis->->kd_produk->hasil }}</p> --}}
                             </div>
+
                         </div>
 
                     </div>

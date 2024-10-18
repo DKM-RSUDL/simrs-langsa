@@ -13,4 +13,15 @@ class AptObat extends Model
     protected $primaryKey = 'kd_prd';
     public $incrementing = false;
     protected $keyType = 'string';
+
+    // anas
+    public function mrResepDtl()
+    {
+        return $this->belongsTo(MrResepDtl::class, 'kd_prd', 'kd_prd');
+    }
+
+    public function mrResep()
+    {
+        return $this->belongsTo(MrResep::class,'id_mrresep', 'id_mrresep');
+    }
 }

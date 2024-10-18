@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
+use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
@@ -44,7 +45,7 @@ class LabPatologiKlinikController extends Controller
         $endDate = $request->input('end_date');
 
         $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'labHasil'])
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'produk.labHasil'])
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
@@ -231,6 +232,7 @@ class LabPatologiKlinikController extends Controller
         ])->with(['success' => 'created successfully']);
     }
 
+
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validatedData = $request->validate([
@@ -264,12 +266,12 @@ class LabPatologiKlinikController extends Controller
         ]);
 
         $segalaOrder = SegalaOrder::where('kd_unit', $kd_unit)
-        ->where('kd_pasien', $kd_pasien)
-        ->where('tgl_masuk', $tgl_masuk)
-        ->where('urut_masuk', $urut_masuk)
-        ->firstOrFail();
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->firstOrFail();
 
-    $kd_order = $segalaOrder->kd_order;
+        $kd_order = $segalaOrder->kd_order;
 
         // Update no_transaksi and kd_kasir if not provided
         if (empty($validatedData['no_transaksi']) || empty($validatedData['kd_kasir'])) {

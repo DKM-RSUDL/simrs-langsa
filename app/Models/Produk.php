@@ -24,5 +24,9 @@ class Produk extends Model
         return $this->belongsTo(KlasProduk::class, 'kd_klas', 'kd_klas');
     }
 
+    public function labHasil()
+    {
+        return $this->hasMany(LabHasil::class, 'kd_produk', 'kd_produk');
+    }
 
 }

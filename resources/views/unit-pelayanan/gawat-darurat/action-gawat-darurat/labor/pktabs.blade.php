@@ -102,7 +102,7 @@
                         <td>
                             @if ($laborPK->status_order == 1)
                                 <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
-                            @elseif ($laborPK->status == 0)
+                            @elseif ($laborPK->status_order == 0)
                                 <i class="bi bi-check-circle-fill text-success"></i>
                                 <p class="text-success">Selesai</p>
                             @endif
