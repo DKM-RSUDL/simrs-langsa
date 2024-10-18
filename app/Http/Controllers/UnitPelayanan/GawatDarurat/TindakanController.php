@@ -169,18 +169,18 @@ class TindakanController extends Controller
 
         // insert detail_transaksi
 
-        // $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
-        //                                     ->where('no_transaksi', $kunjungan->no_transaksi)
-        //                                     ->orderBy('urut', 'desc')
-        //                                     ->first();
+        $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
+                                            ->where('no_transaksi', $kunjungan->no_transaksi)
+                                            ->orderBy('urut', 'desc')
+                                            ->first();
 
-        // $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
+        $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
 
         $dataDetailTransaksi = [
             'no_transaksi'  => $kunjungan->no_transaksi,
             'kd_kasir'      => '06',
             'tgl_transaksi' => $tgl_masuk,
-            'urut'          => $urut_list,
+            'urut'          => $urut,
             'kd_tarif'      => 'TU',
             'kd_produk'     => $request->tindakan,
             'kd_unit'       => 3,
@@ -195,49 +195,6 @@ class TindakanController extends Controller
         ];
 
         DetailTransaksi::create($dataDetailTransaksi);
-
-
-        // // insert detail_prsh
-        // $lastDetailPrshUrut = DetailPrsh::select(['urut'])
-        //                                     ->where('no_transaksi', $kunjungan->no_transaksi)
-        //                                     ->orderBy('urut', 'desc')
-        //                                     ->first();
-
-        // $urutPrsh = !empty($lastDetailPrshUrut) ? $lastDetailPrshUrut->urut + 1 : 1;
-
-        // $dataDetailPrsh = [
-        //     'kd_kasir'      => '06',
-        //     'no_transaksi'  => $kunjungan->no_transaksi,
-        //     'urut'          => $urutPrsh,
-        //     'tgl_transaksi' => $tgl_masuk,
-        //     'hak'           => $request->tarif_tindakan,
-        //     'selisih'       => 0,
-        //     'disc'          => 0
-        // ];
-
-        // DetailPrsh::create($dataDetailPrsh);
-
-
-        // // insert detail_component
-        // $lastDetailCompUrut = DetailComponent::select(['urut'])
-        //                                     ->where('no_transaksi', $kunjungan->no_transaksi)
-        //                                     ->orderBy('urut', 'desc')
-        //                                     ->first();
-
-        // $urutComp = !empty($lastDetailCompUrut) ? $lastDetailCompUrut->urut + 1 : 1;
-
-        // $dataDetailComponent = [
-        //     'kd_kasir'      => '06',
-        //     'no_transaksi'  => $kunjungan->no_transaksi,
-        //     'tgl_transaksi' => $tgl_masuk,
-        //     'urut'          => $urutComp,
-        //     'kd_component'  => '30',
-        //     'tarif'         => $request->tarif_tindakan,
-        //     'disc'          => 0
-        // ];
-
-        // DetailComponent::create($dataDetailComponent);
-
 
         return back()->with('success', 'Tindakan berhasil ditambah');
     }
@@ -357,7 +314,7 @@ class TindakanController extends Controller
         $detailTransaksi = DetailTransaksi::where('no_transaksi', $request->no_transaksi)
                                         ->where('kd_kasir', '06')
                                         ->where('kd_unit', 3)
-                                        ->where('urut', $request->urut_list)
+                                        ->where('kd_produk', $tindakan->kd_produk)
                                         ->whereDate('tgl_transaksi', $tgl_masuk)
                                         ->first();
 
@@ -397,7 +354,7 @@ class TindakanController extends Controller
         DetailTransaksi::where('no_transaksi', $request->no_transaksi)
                     ->where('kd_kasir', '06')
                     ->where('kd_unit', 3)
-                    ->where('urut', $request->urut_list)
+                    ->where('kd_produk', $tindakan->kd_produk)
                     ->whereDate('tgl_transaksi', $tgl_masuk)
                     ->update($dataDetailTransaksi);
 
@@ -407,6 +364,13 @@ class TindakanController extends Controller
     public function deleteTindakan($kd_pasien, $tgl_masuk, Request $request)
     {
         try {
+
+            $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
+                                    ->where('kd_unit', 3)
+                                    ->whereDate('tgl_masuk', $tgl_masuk)
+                                    ->where('urut_masuk', $request->urut_masuk)
+                                    ->where('urut_list', $request->urut_list)
+                                    ->first();
 
             // delete tindakan
             ListTindakanPasien::where('kd_pasien', $kd_pasien)
@@ -420,7 +384,7 @@ class TindakanController extends Controller
             DetailTransaksi::where('no_transaksi', $request->no_transaksi)
                                             ->where('kd_kasir', '06')
                                             ->where('kd_unit', 3)
-                                            ->where('urut', $request->urut_list)
+                                            ->where('kd_produk', $tindakan->kd_produk)
                                             ->whereDate('tgl_transaksi', $tgl_masuk)
                                             ->delete();
 
