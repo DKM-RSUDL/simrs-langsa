@@ -58,14 +58,15 @@
 
         <!-- Add Button -->
         <div class="col-md-2">
-            <a href="javascript:void(0)" class="btn btn-primary" id="btn-created"><i class="bi bi-plus"></i>Tambah</a>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKonsulModal"><i
+                    class="bi bi-plus"></i>Tambah</button>
         </div>
 
     </div>
 </div>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-sm table-hover" id="rawatDaruratTable">
+    <table class="table table-bordered table-sm table-hover" id="rawatDaruratKonsultasiTable">
         <thead class="table-primary">
             <tr>
                 <th>Tanggal</th>
@@ -78,41 +79,29 @@
         </thead>
         <tbody>
             <tr>
-                <td>03 Apri 2024 <br> 11:30</td>
-                <td>Dr. Gunardi, SP.PD <br> klinik: Internis</td>
-                <td>klinik: Bedah Thorax</td>
+                <td>03 Apr 2024 11:30</td>
+                <td>Dr. Gunardi, SP.PD (Internist Pria)</td>
+                <td>Mata</td>
                 <td>
-                    <Strong class="fw-bold">Konsul Sewaktu</Strong>
-                    Mohon Pemeriksaan selanjutnya atas keluhan pasien di bagian dada atas
+                    <p class="text-primary fw-bold m-0 p-0" id="konsulenHarapLabel">Konsul Sewaktu</p>
+                    <p class="m-0 p-0" id="konsulDimintaLabel">Mohon pemeriksaan selanjutnya atas keluhan pasien di
+                        bagian dada atas</p>
                 </td>
                 <td>
-                    <strong class="fw-bold">Dijawab Konsulen</strong>
-                    (dr.Shira..) Saran untuk dilakukan pemeriksaan
+                    <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">Dijawab Konsulen</p>
+                    <p class="m-0 p-0" id="konsulenKetLabel">Saran untuk dilakukan pemeriksaan</p>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-secondary">Edit</a>
-                    <i class="bi bi-x-circle text-secondary"></i>
-                </td>
-            </tr>
-            <tr>
-                <td>01 Apri 2024 <br> 11:30</td>
-                <td>Dr. Gunardi, SP.PD <br> klinik: Internis</td>
-                <td>klinik: Bedah Thorax</td>
-                <td>
-                    <Strong class="fw-bold">Konsul Sewaktu</Strong>
-                    Mohon Pemeriksaan selanjutnya atas keluhan pasien di bagian dada atas
-                </td>
-                <td>
-                    <strong class="fw-bold">Dikirim</strong>
-
-                </td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-success">Edit</a>
-                    <i class="bi bi-x-circle text-danger"></i>
+                    <button class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm">
+                        <i class="bi bi-x-circle-fill text-danger"></i>
+                    </button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
 
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.modal-created')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.modal')
