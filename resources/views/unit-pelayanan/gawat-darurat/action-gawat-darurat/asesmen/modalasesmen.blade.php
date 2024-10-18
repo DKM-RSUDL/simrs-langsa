@@ -527,6 +527,7 @@
                                                         <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
                                                         @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.tindaklanjut')
                                                     </div>
+                                                    <div id="tindakLanjutInfo"></div>
                                                 </div>
                                                 
                                             </div>

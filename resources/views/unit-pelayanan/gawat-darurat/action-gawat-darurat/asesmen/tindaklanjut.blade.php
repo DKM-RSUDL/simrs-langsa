@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="editIndex" value="-1">
-                
+
                 <div class="mb-3">
                     <label class="form-label">Tindak Lanjut</label>
                     <div>
@@ -21,16 +21,20 @@
                         <input type="radio" name="tindakLanjut" value="kamarOperasi" id="kamarOperasi"> Kamar Operasi
                     </div>
                     <div>
-                        <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar"> Rujuk Keluar RS Bagian
+                        <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar"> Rujuk Keluar RS
+                        Bagian
                     </div>
                     <div>
-                        <input type="radio" name="tindakLanjut" value="pulangKontrol" id="pulangKontrol"> Pulang Kontrol di Klinik
+                        <input type="radio" name="tindakLanjut" value="pulangKontrol" id="pulangKontrol"> Pulang
+                        Kontrol di Klinik
                     </div>
                     <div>
-                        <input type="radio" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap"> Menolak Rawat Inap
+                        <input type="radio" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap">
+                        Menolak Rawat Inap
                     </div>
                     <div>
-                        <input type="radio" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia"> Meninggal Dunia
+                        <input type="radio" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia"> Meninggal
+                        Dunia
                     </div>
                 </div>
 
@@ -54,14 +58,18 @@
     </div>
 </div>
 
+@push('js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var tindakLanjut = new bootstrap.Modal(document.getElementById('tindakLanjut'));
-    var tindakLanjutData = [];
+    var tindakLanjutModal = new bootstrap.Modal(document.getElementById('tindakLanjut'));
+    var tindakLanjutData = null;
+    var openTindakLanjutButton = document.getElementById('openTindakLanjut');
 
-    document.getElementById('openTindakLanjut').addEventListener('click', function() {
+    openTindakLanjutButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         resetForm();
-        tindakLanjut.show();
+        tindakLanjutModal.show();
     });
 
     document.querySelectorAll('input[name="tindakLanjut"]').forEach(function(radio) {
@@ -77,22 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var jamMeninggal = document.getElementById('jamMeninggal').value;
 
         if (selectedOption) {
-            var editIndex = document.getElementById('editIndex').value;
-            var tindakLanjut = {
+            tindakLanjutData = {
                 option: selectedOption.value,
                 keterangan: keterangan,
                 tanggalMeninggal: tanggalMeninggal,
                 jamMeninggal: jamMeninggal
             };
 
-            if (editIndex === "-1") {
-                tindakLanjutData.push(tindakLanjut);
-            } else {
-                tindakLanjutData[parseInt(editIndex)] = tindakLanjut;
-            }
-
-            updateTindakLanjutTable();
-            tindakLanjut.hide();
+            displayTindakLanjut();
+            tindakLanjutModal.hide();
             resetForm();
         } else {
             alert('Harap pilih salah satu tindak lanjut');
@@ -106,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('keteranganTindakLanjut').value = '';
         document.getElementById('tanggalMeninggal').value = '';
         document.getElementById('jamMeninggal').value = '';
-        document.getElementById('editIndex').value = "-1";
         toggleInputFields(null);
     }
 
@@ -114,9 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('textareaInput').style.display = 'none';
         document.getElementById('tanggalJamInput').style.display = 'none';
 
-        if (selectedOption === 'rawatInap' || selectedOption === 'kamarOperasi' || 
-            selectedOption === 'rujukKeluar' || selectedOption === 'pulangKontrol' || 
-            selectedOption === 'menolakRawatInap') {
+        if (['rawatInap', 'kamarOperasi', 'rujukKeluar', 'pulangKontrol', 'menolakRawatInap'].includes(selectedOption)) {
             document.getElementById('textareaInput').style.display = 'block';
         }
 
@@ -125,55 +123,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function updateTindakLanjutTable() {
-        var tableBody = document.querySelector('#tindakLanjutTable tbody');
-        if (tableBody) {
-            tableBody.innerHTML = '';
-            tindakLanjutData.forEach(function(tindakLanjut, index) {
-                var row = tableBody.insertRow();
-                row.innerHTML = `
-                <td>${tindakLanjut.option}</td>
-                <td>${tindakLanjut.keterangan || ''}</td>
-                <td>${tindakLanjut.tanggalMeninggal || ''}</td>
-                <td>${tindakLanjut.jamMeninggal || ''}</td>
-                <td>
-                    <button class="btn btn-sm btn-link edit-tindakLanjut" data-index="${index}">
-                    <i class="bi bi-pencil-fill text-primary"></i>
-                    </button>
-                    <button class="btn btn-sm btn-link hapus-tindakLanjut" data-index="${index}">
-                        <i class="bi bi-trash-fill text-danger"></i>
-                    </button>
-                </td>
-            `;
-            });
+    function displayTindakLanjut() {
+        var tindakLanjutInfo = document.getElementById('tindakLanjutInfo');
+        tindakLanjutInfo.innerHTML = ''; // Kosongkan div terlebih dahulu
+        if (tindakLanjutData) {
+            var div = document.createElement('div');
+            div.classList.add('mb-2', 'd-flex', 'justify-content-between', 'align-items-center');
+            var infoText = `Tindak Lanjut: ${tindakLanjutData.option}`;
 
-            // Tambahkan event listener untuk tombol edit dan hapus
-            document.querySelectorAll('.edit-tindakLanjut').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var index = this.getAttribute('data-index');
-                    editTindakLanjut(index);
-                });
-            });
+            if (tindakLanjutData.keterangan) {
+                infoText += ` | Keterangan: ${tindakLanjutData.keterangan}`;
+            }
+            if (tindakLanjutData.tanggalMeninggal) {
+                infoText += ` | Tanggal: ${tindakLanjutData.tanggalMeninggal}`;
+            }
+            if (tindakLanjutData.jamMeninggal) {
+                infoText += ` | Jam: ${tindakLanjutData.jamMeninggal}`;
+            }
 
-            document.querySelectorAll('.hapus-tindakLanjut').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var index = this.getAttribute('data-index');
-                    tindakLanjutData.splice(index, 1);
-                    updateTindakLanjutTable();
-                });
-            });
+            var textSpan = document.createElement('span');
+            textSpan.innerText = infoText;
+            div.appendChild(textSpan);
+
+            var buttonGroup = document.createElement('div');
+            
+            var editButton = document.createElement('button');
+            editButton.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+            editButton.className = 'btn btn-sm btn-outline-primary me-2';
+            editButton.addEventListener('click', editTindakLanjut);
+
+            var deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '<i class="bi bi-trash-fill"></i>';
+            deleteButton.className = 'btn btn-sm btn-outline-danger';
+            deleteButton.addEventListener('click', deleteTindakLanjut);
+
+            buttonGroup.appendChild(editButton);
+            buttonGroup.appendChild(deleteButton);
+            div.appendChild(buttonGroup);
+
+            tindakLanjutInfo.appendChild(div);
         }
     }
 
-    function editTindakLanjut(index) {
-        var tindakLanjut = tindakLanjutData[index];
-        document.querySelector(`input[name="tindakLanjut"][value="${tindakLanjut.option}"]`).checked = true;
-        toggleInputFields(tindakLanjut.option);
-        document.getElementById('keteranganTindakLanjut').value = tindakLanjut.keterangan;
-        document.getElementById('tanggalMeninggal').value = tindakLanjut.tanggalMeninggal;
-        document.getElementById('jamMeninggal').value = tindakLanjut.jamMeninggal;
-        document.getElementById('editIndex').value = index;
-        tindakLanjut.show();
+    function editTindakLanjut() {
+        if (tindakLanjutData) {
+            document.querySelector(`input[name="tindakLanjut"][value="${tindakLanjutData.option}"]`).checked = true;
+            document.getElementById('keteranganTindakLanjut').value = tindakLanjutData.keterangan || '';
+            document.getElementById('tanggalMeninggal').value = tindakLanjutData.tanggalMeninggal || '';
+            document.getElementById('jamMeninggal').value = tindakLanjutData.jamMeninggal || '';
+            toggleInputFields(tindakLanjutData.option);
+            tindakLanjutModal.show();
+        }
     }
+
+    function deleteTindakLanjut() {
+        if (confirm('Apakah Anda yakin ingin menghapus tindak lanjut ini?')) {
+            tindakLanjutData = null;
+            displayTindakLanjut();
+            openTindakLanjutButton.disabled = false;
+        }
+    }
+
+    window.getTindakLanjutData = function() {
+        return JSON.stringify(tindakLanjutData);
+    };
 });
 </script>
+@endpush
