@@ -38,11 +38,13 @@ class ResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::with(['rmeResumeDet'])
+        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
+        $dataGet = RMEResume::orderBy('tgl_masuk', 'desc')
+            ->get();
         // dd($dataResume);
 
         // Mengambil semua data dokter
@@ -52,6 +54,9 @@ class ResumeController extends Controller
         $dataLabor = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'LB');
+            })
             ->orderBy('tgl_order', 'desc')
             ->get();
 
@@ -59,6 +64,9 @@ class ResumeController extends Controller
         $dataRagiologi = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->whereHas('details.produk', function ($query) {
+                $query->where('kategori', 'RD');
+            })
             ->orderBy('tgl_order', 'desc')
             ->get();
 
@@ -86,7 +94,8 @@ class ResumeController extends Controller
                 'riwayatObat',
                 'kodeICD',
                 'kodeICD9',
-                'dataResume'
+                'dataResume',
+                'dataGet'
             )
         );
     }
@@ -95,66 +104,35 @@ class ResumeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             // rme_resume
-            'kd_pasien' => 'required',
-            'kd_unit' => 'required',
-            'tgl_masuk' => 'required',
-            'urut_masuk' => 'required',
             'anamnesis' => 'required',
-            'konpas' => 'required|array',
             'pemeriksaan_penunjang' => 'required',
             'diagnosis' => 'required|array',
             'icd_10' => 'required|array',
             'icd_9' => 'required|array',
             'status' => 'required',
-
-            // rme_resume_dtl
-            'tindak_lanjut_code' => 'required',
-            'tindak_lanjut_name' => 'required',
-            'tgl_kontrol_ulang' => 'nullable',
-            'unit_rujuk_internal' => 'nullable',
-            'unit_rawat_inap' => 'nullable',
-            'rs_rujuk' => 'nullable',
-            'rs_rujuk_bagian' => 'nullable',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $rmeResume = RMEResume::findOrFail($id);
+        $data = RMEResume::findOrFail($id);
 
-        $rmeResume->update([
-            'kd_pasien' => $request->kd_pasien,
-            'kd_unit' => $request->kd_unit,
-            'tgl_masuk' => $request->tgl_masuk,
-            'urut_masuk' => $request->urut_masuk,
+        $data->update([
             'anamnesis' => $request->anamnesis,
-            'konpas' => json_encode($request->konpas),
             'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
             'diagnosis' => json_encode($request->diagnosis),
             'icd_10' => json_encode($request->icd_10),
             'icd_9' => json_encode($request->icd_9),
-            'status' => $request->status,
+            'status' => 1,
             'user_validasi' => Auth::id(),
         ]);
 
-        $rmeResumeDtl = RmeResumeDtl::where('id_resume', $rmeResume->id)->firstOrFail();
-
-        $rmeResumeDtl->update([
-            'tindak_lanjut_code' => $request->tindak_lanjut_code,
-            'tindak_lanjut_name' => $request->tindak_lanjut_name,
-            'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
-            'unit_rujuk_internal' => $request->unit_rujuk_internal,
-            'unit_rawat_inap' => $request->unit_rawat_inap,
-            'rs_rujuk' => $request->rs_rujuk,
-            'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
-        ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diperbarui',
-            'rmeResume' => $rmeResume,
-            'rmeResumeDtl' => $rmeResumeDtl
+            'data' => $data,
         ]);
     }
 

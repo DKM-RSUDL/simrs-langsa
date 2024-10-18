@@ -19,8 +19,7 @@
                 @method('PUT') {{-- Method PUT untuk update --}}
                 <input type="hidden" name="kd_pasien" value="{{ $laborPK->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $laborPK->kd_unit }}">
-                <input type="hidden" name="tgl_masuk"
-                    value="{{ \Carbon\Carbon::parse($laborPK->tgl_masuk)->format('Y-m-d H:i:s') }}">
+                <input type="hidden" name="tgl_masuk" value="{{ \Carbon\Carbon::parse($laborPK->tgl_masuk)->format('Y-m-d H:i:s') }}">
                 <input type="hidden" name="urut_masuk" value="{{ $laborPK->urut_masuk }}">
 
                 <div class="modal-header bg-primary">

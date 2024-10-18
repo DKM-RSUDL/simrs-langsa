@@ -21,4 +21,14 @@ class RMEResume extends Model
     {
         return $this->belongsTo(RmeResumeDtl::class, 'id', 'id_resume');
     }
+
+    public function listTindakanPasien()
+    {
+        return $this->belongsTo(ListTindakanPasien::class, 'kd_pasien', 'kd_pasien');
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+    }
 }
