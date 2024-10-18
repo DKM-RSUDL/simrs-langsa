@@ -8,11 +8,15 @@ use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\Penyakit;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
@@ -32,6 +36,14 @@ class ResumeController extends Controller
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
+
+        // ambil data Resume
+        $dataResume = RMEResume::with(['rmeResumeDet'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+        // dd($dataResume);
 
         // Mengambil semua data dokter
         $dataDokter = Dokter::all();
@@ -73,10 +85,79 @@ class ResumeController extends Controller
                 'dataRagiologi',
                 'riwayatObat',
                 'kodeICD',
-                'kodeICD9'
+                'kodeICD9',
+                'dataResume'
             )
         );
     }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            // rme_resume
+            'kd_pasien' => 'required',
+            'kd_unit' => 'required',
+            'tgl_masuk' => 'required',
+            'urut_masuk' => 'required',
+            'anamnesis' => 'required',
+            'konpas' => 'required|array',
+            'pemeriksaan_penunjang' => 'required',
+            'diagnosis' => 'required|array',
+            'icd_10' => 'required|array',
+            'icd_9' => 'required|array',
+            'status' => 'required',
+
+            // rme_resume_dtl
+            'tindak_lanjut_code' => 'required',
+            'tindak_lanjut_name' => 'required',
+            'tgl_kontrol_ulang' => 'nullable',
+            'unit_rujuk_internal' => 'nullable',
+            'unit_rawat_inap' => 'nullable',
+            'rs_rujuk' => 'nullable',
+            'rs_rujuk_bagian' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $rmeResume = RMEResume::findOrFail($id);
+
+        $rmeResume->update([
+            'kd_pasien' => $request->kd_pasien,
+            'kd_unit' => $request->kd_unit,
+            'tgl_masuk' => $request->tgl_masuk,
+            'urut_masuk' => $request->urut_masuk,
+            'anamnesis' => $request->anamnesis,
+            'konpas' => json_encode($request->konpas),
+            'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
+            'diagnosis' => json_encode($request->diagnosis),
+            'icd_10' => json_encode($request->icd_10),
+            'icd_9' => json_encode($request->icd_9),
+            'status' => $request->status,
+            'user_validasi' => Auth::id(),
+        ]);
+
+        $rmeResumeDtl = RmeResumeDtl::where('id_resume', $rmeResume->id)->firstOrFail();
+
+        $rmeResumeDtl->update([
+            'tindak_lanjut_code' => $request->tindak_lanjut_code,
+            'tindak_lanjut_name' => $request->tindak_lanjut_name,
+            'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
+            'unit_rujuk_internal' => $request->unit_rujuk_internal,
+            'unit_rawat_inap' => $request->unit_rawat_inap,
+            'rs_rujuk' => $request->rs_rujuk,
+            'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diperbarui',
+            'rmeResume' => $rmeResume,
+            'rmeResumeDtl' => $rmeResumeDtl
+        ]);
+    }
+
 
     private function getRiwayatObat($kd_pasien, $tgl_masuk)
     {

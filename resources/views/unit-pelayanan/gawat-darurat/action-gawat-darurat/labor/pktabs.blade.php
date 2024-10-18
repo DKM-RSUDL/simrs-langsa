@@ -109,9 +109,21 @@
                         </td>
                         <td>
                             @if ($laborPK->status_order == 1)
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.editpk')
+                                <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    <i class="ti-pencil"></i>
+                                </a>
+                                <a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
+                                    <i class="bi bi-x-circle text-danger"></i>
+                                </a>
                             @else
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk')
+                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    <i class="ti-eye"></i>
+                                </a>
+                                <a href="#" class="mb-2">
+                                    <i class="bi bi-x-circle text-secondary"></i>
+                                </a>
                             @endif
                         </td>
 
@@ -121,8 +133,16 @@
         </table>
         {{ $dataLabor->withQueryString()->links() }}
     </div>
-
 </div>
+<!-- Include Modals Edit and Showand delete -->
+@foreach ($dataLabor as $laborPK)
+    @if ($laborPK->status_order == 1)
+        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.editpk', ['laborPK' => $laborPK])
+        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.deletepk', ['laborPK' => $laborPK])
+    @else
+        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk', ['laborPK' => $laborPK])
+    @endif
+@endforeach
 
 @push('js')
     <script type="text/javascript">
