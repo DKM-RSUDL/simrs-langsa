@@ -7,33 +7,9 @@
     </style>
 @endpush
 
-<!-- Tombol Edit -->
-<a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-    data-bs-target="#extraLargeModal{{ $laborPK->kd_order }}">
-    <i class="ti-pencil"></i>
-</a>
-
-<!-- Tombol Hapus dengan SweetAlert -->
-<a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
-    <i class="bi bi-x-circle text-danger"></i>
-</a>
-
-<!-- Form Hapus (dihilangkan dari modal, tetap ada untuk digunakan oleh JS) -->
-<form id="delete-form-{{ $laborPK->kd_order }}"
-    action="{{ route('rawat-jalan.lab-patologi-klinik.destroy', [
-        'kd_unit' => $laborPK->kd_unit,
-        'kd_pasien' => $laborPK->kd_pasien,
-        'tgl_masuk' => $laborPK->tgl_masuk,
-        'urut_masuk' => $laborPK->urut_masuk,
-    ]) }}"
-    method="POST" style="display: none;">
-    @method('DELETE')
-    @csrf
-</form>
-
 <!-- Modal untuk Edit -->
-<div class="modal fade" id="extraLargeModal{{ $laborPK->kd_order }}" tabindex="-1"
-    aria-labelledby="extraLargeModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
+<div class="modal fade" id="extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
+    aria-labelledby="extraLargeModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form
