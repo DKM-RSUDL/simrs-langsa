@@ -257,6 +257,16 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
+                    // Konsultasi
+                    Route::prefix('konsultasi')->group(function() {
+                        Route::name('konsultasi')->group(function() {
+                            Route::controller(GawatDaruratKonsultasiController::class)->group(function() {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                            });
+                        });
+                    });
+
                     // Route::resource('farmasi', GawatDaruratFarmasiController::class);
                     Route::prefix('farmasi')->group(function () {
                         Route::name('farmasi')->group(function () {
@@ -270,7 +280,6 @@ Route::middleware('auth')->group(function () {
 
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
-                    Route::resource('konsultasi', GawatDaruratKonsultasiController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
                     Route::resource('edukasi', GawatDaruratEdukasiController::class);
                     Route::resource('careplan', GawatDaruratCarePlanController::class);

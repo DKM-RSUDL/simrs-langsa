@@ -24,6 +24,7 @@ class FarmasiController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
