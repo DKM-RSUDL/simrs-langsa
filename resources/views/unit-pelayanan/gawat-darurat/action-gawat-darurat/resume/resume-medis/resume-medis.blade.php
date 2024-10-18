@@ -52,29 +52,20 @@
                 <th>Aksi</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>Rawat Jalan</td>
-                <td>dr. Gunardi, Sp.PD</td>
-                <td>03 Apr 2024</td>
-                <td>03 Apr 2024</td>
-                <td>1 Hari</td>
-                <td>Klinik Internis</td>
-                <td>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" id="btn-validasi-resume">Validasi</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Rawat Inap</td>
-                <td>dr. Helmiza Fahry, Sp.OT</td>
-                <td>01 Apr 2024</td>
-                <td>03 Apr 2024</td>
-                <td>3 Hari</td>
-                <td>Ruang Kelas Utama B</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-info">Lihat</a>
-                </td>
-            </tr>
+        <tbody id="table-resume">
+            @foreach ($dataGet as $post)
+            <tr id="index_{{ $post->id }}">
+                    <td>{{ $post->kd_pasien }}</td>
+                    <td>-</td>
+                    <td>{{ $post->tgl_masuk }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>
+                        <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2 btn-edit-resume" data-id="{{ $post->id }}">Validasi</a>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 </div>
