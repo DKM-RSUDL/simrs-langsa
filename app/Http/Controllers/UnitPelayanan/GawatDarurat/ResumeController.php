@@ -111,6 +111,10 @@ class ResumeController extends Controller
             'diagnosis' => 'required|json',
             'icd_10' => 'required|json',
             'icd_9' => 'required|json',
+
+            // RmeResumeDtl
+            'tindak_lanjut_code' => 'required|string',
+            'tindak_lanjut_name' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -138,7 +142,6 @@ class ResumeController extends Controller
         $newIcd10 = $cleanArray($newIcd10);
         $newIcd9 = $cleanArray($newIcd9);
 
-        // Simpan data yang baru
         $data->update([
             'anamnesis' => $request->anamnesis,
             'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
@@ -148,6 +151,14 @@ class ResumeController extends Controller
             'status' => 1,
             'user_validasi' => Auth::id(),
         ]);
+
+        RmeResumeDtl::updateOrCreate(
+            ['id_resume' => Auth::id(), 'id' => $id],
+            [
+                'tindak_lanjut_name' => $request->tindak_lanjut_name,
+                'tindak_lanjut_code' => $request->tindak_lanjut_code
+            ]
+        );
 
         return response()->json([
             'success' => true,

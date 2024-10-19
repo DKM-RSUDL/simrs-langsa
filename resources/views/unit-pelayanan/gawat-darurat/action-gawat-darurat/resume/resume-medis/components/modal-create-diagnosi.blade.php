@@ -61,7 +61,7 @@
                     diagnosisList += `
                     <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
                         <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                        <button type="button" class="btn btn-sm btn-danger remove-diagnosis" data-id="${uniqueId}">X</button>
+                        <button type="button" class="btn btn-sm btn-danger remove-diagnosis mt-1" data-id="${uniqueId}">X</button>
                     </li>
                 `;
 

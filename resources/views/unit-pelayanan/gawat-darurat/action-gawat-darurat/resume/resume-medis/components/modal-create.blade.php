@@ -326,62 +326,39 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="selesai" name="tindakLanjut"
-                                                class="form-check-input me-2">
-                                            <label
-                                                for="selesai">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="kontrol" name="tindak_lanjut_name" class="form-check-input me-2" value="Kontrol ulang, tgl:" data-code="1">
+                                            <label for="kontrol">Kontrol ulang, tgl:</label>
+                                        </a>
+
+                                        <a href="j#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
+                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
+                                        </a>
+                                        {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
+                                            <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
+                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
+                                        </a> --}}
+
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="selesai" name="tindak_lanjut_name" class="form-check-input me-2" value="Selesai di Klinik ini" data-code="3">
+                                            <label for="selesai">Selesai di Klinik ini</label>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="rujuk" name="tindak_lanjut_name" class="form-check-input me-2" value="Rujuk RS lain bagian:" data-code="4">
+                                            <label for="rujuk">Rujuk RS lain bagian:</label>
+                                        </a>
+
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="rawat" name="tindak_lanjut_name" class="form-check-input me-2" value="Rawat Inap" data-code="5">
+                                            <label for="rawat">Rawat Inap</label>
                                         </a>
                                     </div>
                                 </div>
-                                {{-- <div class="row">
-                                            <div class="col-md-6">
-                                                <a href="#"
-                                                    class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                                    <input type="radio" id="kontrol" name="tindakLanjut"
-                                                        class="form-check-input me-2">
-                                                    <label for="kontrol">Kontrol ulang, tgl:</label>
-                                                    <input type="date" id="kontrolDate" class="form-control mt-1"
-                                                        style="display: none;">
-                                                </a>
 
-                                                <a href="javascript:void(0)"
-                                                    class="tindak-lanjut-option d-block mb-2 text-decoration-none"
-                                                    id="btn-konsul-rujukan">
-                                                    <input type="radio" id="konsul" name="tindakLanjut"
-                                                        class="form-check-input me-2">
-                                                    <label for="konsul">Konsul/Rujuk Internal Ke:</label>
-                                                    <input type="text" id="konsulText" class="form-control mt-1"
-                                                        style="display: none;">
-                                                </a>
-
-                                                <a href="#"
-                                                    class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                                    <input type="radio" id="selesai" name="tindakLanjut"
-                                                        class="form-check-input me-2">
-                                                    <label for="selesai">Selesai di Klinik ini</label>
-                                                </a>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <a href="#"
-                                                    class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                                    <input type="radio" id="rujuk" name="tindakLanjut"
-                                                        class="form-check-input me-2">
-                                                    <label for="rujuk">Rujuk RS lain bagian:</label>
-                                                    <input type="text" id="rujukText" class="form-control mt-1"
-                                                        style="display: none;">
-                                                </a>
-
-                                                <a href="#"
-                                                    class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                                    <input type="radio" id="rawat" name="tindakLanjut"
-                                                        class="form-check-input me-2">
-                                                    <label for="rawat">Rawat Inap</label>
-                                                </a>
-                                            </div>
-                                        </div> --}}
                             </div>
                         </div>
 
@@ -389,7 +366,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i> Print</button>
+                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
+                    Print</button>
                 <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -440,6 +418,13 @@
         }).get().filter(Boolean);
         formData.append('icd_9', JSON.stringify(icd9Array));
 
+        // Ambil nilai dari radio button tindak lanjut yang dipilih
+        let tindakLanjutName = $('input[name="tindak_lanjut_name"]:checked').val();
+        let tindakLanjutCode = $('input[name="tindak_lanjut_name"]:checked').data('code');
+
+        formData.append('tindak_lanjut_name', tindakLanjutName);
+        formData.append('tindak_lanjut_code', tindakLanjutCode);
+
         formData.append('_method', 'PUT');
 
         $.ajax({
@@ -452,7 +437,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                console.log('Update response:', response);
+                // console.log('Update response:', response);
                 if (response.success) {
                     Swal.fire({
                         icon: 'success',
@@ -472,7 +457,7 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.error("Error updating data:", error);
+                // console.error("Error updating data:", error);
                 let errorMessage = "Terjadi kesalahan saat memperbarui data.";
                 if (xhr.responseJSON) {
                     if (xhr.responseJSON.errors) {
@@ -485,7 +470,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: errorMessage
+                    text: "Oops! Sepertinya ada beberapa field yang belum diisi. Mohon lengkapi 😊",
                 });
             }
         });

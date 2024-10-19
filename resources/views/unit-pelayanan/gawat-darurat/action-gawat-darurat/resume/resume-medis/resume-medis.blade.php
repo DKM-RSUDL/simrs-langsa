@@ -62,8 +62,11 @@
                     <td>-</td>
                     <td>-</td>
                     <td>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" data-id="{{ $post->id }}" id="btn-edit-resume"
-                        >Validasi</a>
+                        @if ($post->status == 0)
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
+                        @elseif ($post->status == 1)
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2" data-id="{{ $post->id }}" id="btn-view-resume">Lihat</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach
