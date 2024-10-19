@@ -180,5 +180,154 @@
             });
 
         });
+
+
+        // edit
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        $('.btn-edit-konsultasi').click(function(e) {
+            let $this = $(this);
+            let $modal = $($this.attr('data-bs-target'));
+            let unitTujuan = $this.attr('data-unittujuan');
+            let tglKonsul = $this.attr('data-tglkonsul');
+            let jamKonsul = $this.attr('data-jamkonsul');
+            let urutKonsul = $this.attr('data-urutkonsul');
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('konsultasi.get-konsul-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'kd_unit_tujuan': unitTujuan,
+                    'tgl_masuk_tujuan': tglKonsul,
+                    'jam_masuk_tujuan': jamKonsul,
+                    'urut_konsul': urutKonsul,
+                    'urut_masuk': "{{ $dataMedis->urut_masuk }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    // Ubah teks tombol dan tambahkan spinner
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
+                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
+                },
+                complete: function() {
+                    // Ubah teks tombol jadi icon search dan disable nonaktif
+                    $this.html('<i class="bi bi-pencil-square"></i>');
+                    $this.prop('disabled', false);
+                },
+                success: function(res) {
+
+                    if (res.status == 'success') {
+                        let data = res.data;
+
+                        let optEl = '<option value="">--Pilih Dokter--</option>';
+                        data.dokter.forEach(e => {
+                            optEl +=
+                                `<option value="${e.dokter.kd_dokter}">${e.dokter.nama_lengkap}</option>`;
+                        });
+
+                        $modal.find('#dokter_unit_tujuan').html(optEl);
+
+                        $modal.find('#old_kd_unit_tujuan').val(data.konsultasi.kd_unit_tujuan);
+                        $modal.find('#old_tgl_konsul').val(data.konsultasi.tgl_masuk_tujuan);
+                        $modal.find('#old_jam_konsul').val(data.konsultasi.jam_masuk_tujuan);
+                        $modal.find('#urut_konsul').val(data.konsultasi.urut_konsul);
+
+                        $modal.find('#dokter_pengirim').val(data.konsultasi.kd_dokter).trigger(
+                            'change');
+                        $modal.find('#tgl_konsul').val(data.konsultasi.tgl_masuk_tujuan.split(' ')[0]);
+                        $modal.find('#jam_konsul').val(formatTime(data.konsultasi.jam_masuk_tujuan));
+                        $modal.find('#unit_tujuan').val(data.konsultasi.kd_unit_tujuan).trigger(
+                            'change');
+                        $modal.find('#dokter_unit_tujuan').val(data.konsultasi.kd_dokter_tujuan)
+                            .trigger('change');
+                        $modal.find(
+                            `input[name="konsulen_harap"][value="${data.konsultasi.kd_konsulen_diharapkan}"]`
+                        ).prop('checked', true);
+                        $modal.find('#catatan').val(data.konsultasi.catatan);
+                        $modal.find('#konsul').val(data.konsultasi.konsul);
+
+                        $modal.modal('show');
+                    } else {
+                        showToast('error', res.message);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    showToast('error', 'Internal server error');
+                }
+            });
+
+
+        })
+
+
+        // delete
+        $('.btn-delete-konsultasi').click(function(e) {
+            let $this = $(this);
+            let unitTujuan = $this.attr('data-unittujuan');
+            let tglKonsul = $this.attr('data-tglkonsul');
+            let jamKonsul = $this.attr('data-jamkonsul');
+            let urutKonsul = $this.attr('data-urutkonsul');
+
+            Swal.fire({
+                title: "Apakah anda yakin ingin menghapus?",
+                text: "Anda tidak akan dapat mengembalikannya!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('konsultasi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        data: {
+                            '_method': 'delete',
+                            '_token': "{{ csrf_token() }}",
+                            'kd_unit_tujuan': unitTujuan,
+                            'tgl_masuk_tujuan': tglKonsul,
+                            'jam_masuk_tujuan': jamKonsul,
+                            'urut_konsul': urutKonsul,
+                            'urut_masuk': "{{ $dataMedis->urut_masuk }}",
+                            'no_transaksi': "{{ $dataMedis->no_transaksi }}"
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            // Ubah teks tombol dan tambahkan spinner
+                            $this.html(
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                            );
+                            $this.prop('disabled', true);
+                        },
+                        complete: function() {
+                            // Ubah teks tombol jadi icon search dan disable nonaktif
+                            $this.html('<i class="bi bi-x-circle-fill text-danger"></i>');
+                            $this.prop('disabled', false);
+                        },
+                        success: function(res) {
+                            showToast(res.status, res.message);
+
+                            if (res.status == 'success') {
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            });
+
+
+        })
     </script>
 @endpush
