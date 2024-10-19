@@ -11,7 +11,12 @@
         [
             'icon' => 'positive_dynamic.png',
             'label' => 'CPPT',
-            'link' => route('rawat-inap.cppt.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-inap.cppt.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'tools.png',
@@ -21,22 +26,42 @@
         [
             'icon' => 'agree.png',
             'label' => 'Konsultasi',
-            'link' => '#',
+            'link' => route('rawat-inap.konsultasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'test_tube.png',
             'label' => 'Labor',
-            'link' => route('rawat-inap.lab-patologi-klinik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-inap.lab-patologi-klinik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'microbeam_radiation_therapy.png',
             'label' => 'Radiologi',
-            'link' => route('rawat-inap.radiologi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-inap.radiologi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'pill.png',
             'label' => 'Farmasi',
-            'link' => route('rawat-inap.farmasi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-inap.farmasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'info.png',

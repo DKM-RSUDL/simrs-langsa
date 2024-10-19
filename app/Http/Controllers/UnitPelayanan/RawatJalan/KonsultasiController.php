@@ -1,26 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
-use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Konsultasi;
 use App\Models\Kunjungan;
-use App\Models\Pasien;
 use App\Models\RujukanKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 class KonsultasiController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
                             ->join('transaksi as t', function ($join) {
@@ -29,27 +27,29 @@ class KonsultasiController extends Controller
                                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->first();
 
         
         $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
-                                    ->where('kd_unit', 3)
+                                    ->where('kd_unit', $kd_unit)
                                     ->whereRelation('dokter', 'status', 1)
                                     ->get();
     
         $unit = Unit::where('kd_bagian', 2)
                     ->where('aktif', 1)
+                    ->whereNot('kd_unit', $kd_unit)
                     ->get();
 
         
         $konsultasi = Konsultasi::with(['unit_tujuan', 'dokter_asal', 'unit_asal'])
                                 ->where('kd_pasien', $kd_pasien)
                                 ->whereDate('tgl_masuk', $tgl_masuk)
-                                ->where('kd_unit', 3)
-                                ->where('urut_masuk', $dataMedis->urut_masuk)
+                                ->where('kd_unit', $kd_unit)
+                                ->where('urut_masuk', $urut_masuk)
                                 ->get();
 
 
@@ -64,7 +64,7 @@ class KonsultasiController extends Controller
         }
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.index',
+            'unit-pelayanan.rawat-jalan.pelayanan.konsultasi.index',
             compact(
                 'dataMedis',
                 'dokterPengirim',
@@ -105,7 +105,7 @@ class KonsultasiController extends Controller
         }
     }
 
-    public function storeKonsultasi($kd_pasien, $tgl_masuk, Request $request)
+    public function storeKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation
         $msgErr = [
@@ -142,10 +142,12 @@ class KonsultasiController extends Controller
                                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                             })
                             ->where('kunjungan.kd_pasien', $kd_pasien)
-                            ->where('kunjungan.kd_unit', 3)
+                            ->where('kunjungan.kd_unit', $kd_unit)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->where('kunjungan.urut_masuk', $request->urut_masuk)
+                            ->where('kunjungan.urut_masuk', $urut_masuk)
                             ->first();
+
+        $unit = Unit::where('kd_unit', $kd_unit)->first();
 
                     
         if(empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
@@ -179,14 +181,14 @@ class KonsultasiController extends Controller
                                                 ->orderBy('urut_masuk', 'desc')
                                                 ->first();
 
-        $urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
+        $new_urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
 
         // insert ke tabel kunjungan
         $dataKunjungan = [
             'kd_pasien'         => $kd_pasien,
             'kd_unit'           => $unit_tujuan,
             'tgl_masuk'         => $tgl_konsul,
-            'urut_masuk'        => $urut_masuk,
+            'urut_masuk'        => $new_urut_masuk,
             'jam_masuk'         => $jam_konsul,
             'asal_pasien'       => 0,
             'cara_penerimaan'   => 99,
@@ -202,7 +204,7 @@ class KonsultasiController extends Controller
             'jasa_raharja'      => 0,
             'catatan'           => '',
             'is_rujukan'        => 1,
-            'rujukan_ket'       => "Instalasi Gawat Darurat"
+            'rujukan_ket'       => $unit->nama_unit
         ];
 
         Kunjungan::create($dataKunjungan);
@@ -211,7 +213,7 @@ class KonsultasiController extends Controller
         RujukanKunjungan::where('kd_pasien', $kd_pasien)
                         ->where('kd_unit', $unit_tujuan)
                         ->whereDate('tgl_masuk', $tgl_konsul)
-                        ->where('urut_masuk', $urut_masuk)
+                        ->where('urut_masuk', $new_urut_masuk)
                         ->delete();
 
 
@@ -240,7 +242,7 @@ class KonsultasiController extends Controller
             'app'           => 0,
             'ispay'         => 0,
             'co_status'     => 0,
-            'urut_masuk'    => $urut_masuk,
+            'urut_masuk'    => $new_urut_masuk,
             'kd_user'       => $dokter_pengirim, // nanti diambil dari user yang login
             'lunas'         => 0,
         ];
@@ -257,7 +259,7 @@ class KonsultasiController extends Controller
             'kd_tarif'      => 'TU',
             'kd_produk'     => 3634,
             'kd_unit'       => $unit_tujuan,
-            'kd_unit_tr'    => 3,
+            'kd_unit_tr'    => $kd_unit,
             'tgl_berlaku'   => '2019-07-01',
             'kd_user'       => $dokter_pengirim,
             'shift'         => 0,
@@ -310,9 +312,9 @@ class KonsultasiController extends Controller
         // Insert konsultasi
         $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])
                                     ->where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', 3)
+                                    ->where('kd_unit', $kd_unit)
                                     ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $kunjungan->urut_masuk)
+                                    ->where('urut_masuk', $urut_masuk)
                                     ->orderBy('urut_konsul', 'desc')
                                     ->first();
 
@@ -320,13 +322,13 @@ class KonsultasiController extends Controller
 
         $konsultasiData = [
             'kd_pasien'                 => $kd_pasien,
-            'kd_unit'                   => 3,
+            'kd_unit'                   => $kd_unit,
             'tgl_masuk'                 => $tgl_masuk,
-            'urut_masuk'                => $kunjungan->urut_masuk,
+            'urut_masuk'                => $urut_masuk,
             'kd_pasien_tujuan'          => $kd_pasien,
             'kd_unit_tujuan'            => $unit_tujuan,
             'tgl_masuk_tujuan'          => $tgl_konsul,
-            'urut_masuk_tujuan'         => $urut_masuk,
+            'urut_masuk_tujuan'         => $new_urut_masuk,
             'urut_konsul'               => $urut_konsul,
             'jam_masuk_tujuan'          => $jam_konsul,
             'kd_dokter'                 => $dokter_pengirim,
@@ -341,14 +343,14 @@ class KonsultasiController extends Controller
         return back()->with('success', 'Konsultasi berhasil di tambah!');
     }
 
-    public function getKonsulAjax($kd_pasien, $tgl_masuk, Request $request)
+    public function getKonsulAjax($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             // get konsultasi
             $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', 3)
+                                    ->where('kd_unit', $kd_unit)
                                     ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $request->urut_masuk)
+                                    ->where('urut_masuk', $urut_masuk)
                                     ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
                                     ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
                                     ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
@@ -386,7 +388,7 @@ class KonsultasiController extends Controller
         }
     }
 
-    public function updateKonsultasi($kd_pasien, $tgl_masuk, Request $request)
+    public function updateKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Validation
         $msgErr = [
@@ -404,9 +406,9 @@ class KonsultasiController extends Controller
 
         // update konsul
         Konsultasi::where('kd_pasien', $kd_pasien)
-                    ->where('kd_unit', 3)
+                    ->where('kd_unit', $kd_unit)
                     ->whereDate('tgl_masuk', $tgl_masuk)
-                    ->where('urut_masuk', $request->urut_masuk)
+                    ->where('urut_masuk', $urut_masuk)
                     ->where('kd_unit_tujuan', $request->old_kd_unit_tujuan)
                     ->where('tgl_masuk_tujuan', $request->old_tgl_konsul)
                     ->where('jam_masuk_tujuan', $request->old_jam_konsul)
@@ -420,14 +422,14 @@ class KonsultasiController extends Controller
         return back()->with('success', 'Konsultasi berhasil di ubah');
     }
 
-    public function deleteKonsultasi($kd_pasien, $tgl_masuk, Request $request)
+    public function deleteKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             // get konsultasi
             $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', 3)
+                                    ->where('kd_unit', $kd_unit)
                                     ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $request->urut_masuk)
+                                    ->where('urut_masuk', $urut_masuk)
                                     ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
                                     ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
                                     ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
@@ -477,9 +479,9 @@ class KonsultasiController extends Controller
 
             // delete konsultasi
             Konsultasi::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', 3)
+                        ->where('kd_unit', $kd_unit)
                         ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $request->urut_masuk)
+                        ->where('urut_masuk', $urut_masuk)
                         ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
                         ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
                         ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)

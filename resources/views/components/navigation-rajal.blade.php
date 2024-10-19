@@ -6,52 +6,77 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
-            'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => '#',
         ],
         [
             'icon' => 'positive_dynamic.png',
             'label' => 'CPPT',
-            'link' => route('rawat-jalan.cppt.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-jalan.cppt.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'tools.png',
             'label' => 'Tindakan',
-            'link' => route('tindakan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => '#',
         ],
         [
             'icon' => 'agree.png',
             'label' => 'Konsultasi',
-            'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('rawat-jalan.konsultasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'test_tube.png',
             'label' => 'Labor',
-            'link' => route('rawat-jalan.lab-patologi-klinik.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-jalan.lab-patologi-klinik.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'microbeam_radiation_therapy.png',
             'label' => 'Radiologi',
-            'link' => route('rawat-jalan.radiologi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-jalan.radiologi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'pill.png',
             'label' => 'Farmasi',
-            'link' => route('rawat-jalan.farmasi.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-jalan.farmasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'info.png',
             'label' => 'Edukasi',
-            'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => '#',
         ],
         [
             'icon' => 'goal.png',
             'label' => 'Care Plan',
-            'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => '#',
         ],
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
-            'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => '#',
         ],
     ];
 

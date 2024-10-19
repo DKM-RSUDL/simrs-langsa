@@ -29,11 +29,13 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 
@@ -93,6 +95,20 @@ Route::middleware('auth')->group(function () {
                                     Route::put('/', 'update')->name('.update');
                                     Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                                     Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // Konsultasi
+                        Route::prefix('konsultasi')->group(function() {
+                            Route::name('.konsultasi')->group(function() {
+                                Route::controller(KonsultasiController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                                    Route::post('/', 'storeKonsultasi')->name('.store');
+                                    Route::put('/', 'updateKonsultasi')->name('.update');
+                                    Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                                    Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                                 });
                             });
                         });
@@ -177,6 +193,20 @@ Route::middleware('auth')->group(function () {
                                     Route::put('/', 'update')->name('.update');
                                     Route::post('/get-rad-detail-ajax', 'getRadDetailAjax')->name('.get-rad-detail-ajax');
                                     Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
+                        // Konsultasi
+                        Route::prefix('konsultasi')->group(function() {
+                            Route::name('.konsultasi')->group(function() {
+                                Route::controller(RawatInapKonsultasiController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                                    Route::post('/', 'storeKonsultasi')->name('.store');
+                                    Route::put('/', 'updateKonsultasi')->name('.update');
+                                    Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                                    Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                                 });
                             });
                         });
