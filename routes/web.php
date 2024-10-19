@@ -278,6 +278,17 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
+                    // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::prefix('asesmen')->group(function () {
+                        Route::name('asesmen')->group(function () {
+                            Route::controller(GawatDaruratAsesmenController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                            });
+                        });
+                    });
+
+                    
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);
