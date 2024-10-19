@@ -54,7 +54,7 @@
         </thead>
         <tbody id="table-resume">
             @foreach ($dataGet as $post)
-                <tr>
+                <tr id="index_{{ $post->id }}">
                     <td>-</td>
                     <td>-</td>
                     <td>{{ $post->tgl_masuk }}</td>
@@ -75,3 +75,4 @@
 </div>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-resume')

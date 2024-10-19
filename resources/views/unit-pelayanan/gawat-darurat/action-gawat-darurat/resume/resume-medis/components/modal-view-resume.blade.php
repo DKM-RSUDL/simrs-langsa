@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-edit-resume" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-view-resume" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header  bg-primary">
@@ -44,15 +44,10 @@
                                 </div>
                                 <div class="info__pasien">
                                     <div class="row mt-3">
-                                        <div class="col-5">
+                                        <div class="col-12">
                                             <h6 class="fw-bold">ALERGI</h6>
                                         </div>
-                                        <div class="col-7">
-                                            <a href="javascript:void(0)"
-                                                class="text-secondary text-decoration-none fw-bold"
-                                                id="btn-create-alergi"><i class="bi bi-plus-square"></i>
-                                                Tambah</a>
-                                        </div>
+
                                         <hr class="text-secondary">
                                     </div>
                                     <ul class="p-2">
@@ -73,7 +68,7 @@
                     <div class="col-md-5">
                         <div class="col__dua">
                             <label class="form-label fw-bold">Anamnesis/ Keluhan Utama</label>
-                            <textarea class="form-control" rows="3" id="anamnesis">{{ $dataResume->anamnesis ?? '-' }}</textarea>
+                            <textarea class="form-control" rows="3" readonly>{{ $dataResume->anamnesis ?? '-' }}</textarea>
 
                             <div class="mt-4">
                                 <strong class="fw-bold">Pemeriksaan Fisik</strong>
@@ -222,34 +217,41 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
-                                <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                                <textarea class="form-control" id="pemeriksaan_penunjang" rows="3" readonly>{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
                             <div class="mt-3">
                                 <strong class="fw-bold">
                                     Diagnosis
-                                    <a href="javascript:void(0)"
-                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis"><i
-                                            class="bi bi-plus-square"></i> Tambah</a>
                                 </strong>
 
                                 <div class="bg-light p-3 border rounded">
-                                    <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
-
+                                    <div style="max-height: 150px; overflow-y: auto;">
+                                        <ol type="1">
+                                            @if (isset($dataResume->diagnosis) && is_array($dataResume->diagnosis))
+                                                @foreach ($dataResume->diagnosis as $diagnosis)
+                                                    <li>{{ $diagnosis }}</li>
+                                                @endforeach
+                                            @else
+                                                <li>-</li>
+                                            @endif
+                                        </ol>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Kode ICD 10 (Koder)
-                                    <a href="javascript:void(0)"
-                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
-                                        <i class="bi bi-plus-square"></i> Tambah
-                                    </a>
                                 </strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <ul class="list" id="icdList">
-                                        <!-- Kode ICD akan ditambahkan di sini -->
+                                    <ul class="list p-3" id="icdList">
+                                        @if (isset($dataResume->icd_10) && is_array($dataResume->icd_10))
+                                            @foreach ($dataResume->icd_10 as $icd10)
+                                                <li>{{ $icd10 }}</li>
+                                            @endforeach
+                                        @else
+                                            <li>-</li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -272,13 +274,16 @@
 
                         <div class="mt-3">
                             <strong class="fw-bold">Kode ICD-9 CM (Koder)
-                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3"
-                                    id="btn-kode-icd9">
-                                    <i class="bi bi-plus-square"></i> Tambah</a>
                             </strong>
                             <div class="bg-light p-3 border rounded">
-                                <ul class="list" id="icd9List">
-                                    {{-- Daftar Kode ICD-9 akan muncul di sini --}}
+                                <ul class="list p-3" id="icd9List">
+                                    @if (isset($dataResume->icd_9) && is_array($dataResume->icd_9))
+                                        @foreach ($dataResume->icd_9 as $icd9)
+                                            <li>{{ $icd9 }}</li>
+                                        @endforeach
+                                    @else
+                                        <li>-</li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -326,53 +331,14 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Kontrol ulang, tgl:"
-                                                data-code="1">
-                                            <label for="kontrol">Kontrol ulang, tgl:</label>
-                                        </a>
-
-                                        <a href="j#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="konsul" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
-                                                data-code="2">
-                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
-                                        </a>
-                                        {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
-                                            <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
-                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
-                                        </a> --}}
-
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="selesai" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Selesai di Klinik ini"
-                                                data-code="3">
-                                            <label for="selesai">Selesai di Klinik ini</label>
-                                        </a>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rujuk" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rujuk RS lain bagian:"
-                                                data-code="4">
-                                            <label for="rujuk">Rujuk RS lain bagian:</label>
-                                        </a>
-
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rawat" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rawat Inap" data-code="5">
-                                            <label for="rawat">Rawat Inap</label>
+                                                class="form-check-input me-2" value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name }}"
+                                                data-code="1" checked>
+                                            <label for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
                                         </a>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -380,115 +346,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
-                    Print</button>
-                <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
+                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i> Print</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-diagnosi')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
-
-
 
 <script>
-    $('#btn-edit-resume').on('click', function() {
-        $('#modal-edit-resume').modal('show');
-    });
-
-    $('#update').click(function(e) {
-        e.preventDefault();
-
-        let kd_pasien = '{{ $dataMedis->kd_pasien }}';
-        let tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
-        let resume_id = '{{ $dataResume->id ?? '-' }}';
-
-        let formData = new FormData();
-
-        formData.append('anamnesis', $('#anamnesis').val());
-        formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val());
-
-        // Ambil data diagnosis
-        let diagnosisArray = $('#diagnoseDisplay').children().map(function() {
-            return $(this).find('.fw-bold').text().trim();
-        }).get().filter(Boolean);
-        formData.append('diagnosis', JSON.stringify(diagnosisArray));
-
-        // Ambil data ICD-10
-        let icd10Array = $('#icdList').children().map(function() {
-            return $(this).text().trim().split(' ')[0];
-        }).get().filter(Boolean);
-        formData.append('icd_10', JSON.stringify(icd10Array));
-
-        // Ambil data ICD-9
-        let icd9Array = $('#icd9List').children().map(function() {
-            return $(this).text().trim().split(' ')[0];
-        }).get().filter(Boolean);
-        formData.append('icd_9', JSON.stringify(icd9Array));
-
-        // Ambil nilai dari radio button tindak lanjut yang dipilih
-        let tindakLanjutName = $('input[name="tindak_lanjut_name"]:checked').val();
-        let tindakLanjutCode = $('input[name="tindak_lanjut_name"]:checked').data('code');
-
-        formData.append('tindak_lanjut_name', tindakLanjutName);
-        formData.append('tindak_lanjut_code', tindakLanjutCode);
-
-        formData.append('_method', 'PUT');
-
-        $.ajax({
-            url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume/${resume_id}`,
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                // console.log('Update response:', response);
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukses',
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-                    $('#modal-edit-resume').modal('hide');
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: response.message ||
-                            'Terjadi kesalahan saat memperbarui data.',
-                    });
-                }
-
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                // console.error("Error updating data:", error);
-                let errorMessage = "Terjadi kesalahan saat memperbarui data.";
-                if (xhr.responseJSON) {
-                    if (xhr.responseJSON.errors) {
-                        errorMessage += " Detail: " + Object.values(xhr.responseJSON.errors).join(
-                            ", ");
-                    } else if (xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: "Oops! Sepertinya ada beberapa field yang belum diisi. Mohon lengkapi 😊",
-                });
-            }
-        });
+    $('#btn-view-resume').on('click', function() {
+        $('#modal-view-resume').modal('show');
     });
 </script>
