@@ -21,16 +21,37 @@
 </div>
 
 <script>
+    let icd_10 = @json($dataResume->icd_10 ?? []);
+    console.log(icd_10);
+
     $(document).ready(function() {
         const searchInput = $('#searchInput');
         const dataList = $('#dataList');
         const btnPilih = $('#btnPilih');
-        const icdList = $('#icdList'); // Element untuk menambah kode ICD di modal utama
+        const icdList = $('#icdList');
 
         // Data ICD-10 dari database
         const icdData = @json($kodeICD);
 
-        // Fungsi pencarian
+        // Fungsi untuk menampilkan ICD-10 yang sudah ada
+        function displayExistingICD() {
+            icdList.empty();
+            if (Array.isArray(icd_10)) {
+                icd_10.forEach((icd, index) => {
+                    const [code] = icd.split(' - ');
+                    const newItem = `<li class="list-group-item d-flex justify-content-between align-items-center" data-index="${index}">
+                    ${code}
+                    <button type="button" class="btn btn-danger btn-sm remove-icd mt-2">X</button>
+                </li>`;
+                    icdList.append(newItem);
+                });
+            }
+        }
+
+        // Tampilkan ICD-10 yang sudah ada
+        displayExistingICD();
+
+        //pencarian
         searchInput.on('keyup', function() {
             const searchTerm = $(this).val().toLowerCase();
             const filteredData = icdData.filter(item =>
@@ -42,11 +63,11 @@
             filteredData.forEach(item => {
                 dataList.append(
                     `<li class="list-group-item">${item.kd_penyakit} - ${item.penyakit}</li>`
-                    );
+                );
             });
         });
 
-        // Pilih item dari daftar
+        // Pilih yang daftar
         dataList.on('click', 'li', function() {
             dataList.find('li').removeClass('active');
             $(this).addClass('active');
@@ -56,32 +77,50 @@
         btnPilih.on('click', function() {
             const selectedItem = dataList.find('li.active').text();
             if (selectedItem) {
-                const selectedCode = selectedItem.split(' - ')[0];
-                const selectedDescription = selectedItem.split(' - ')[1];
+                if (!icd_10.includes(selectedItem)) {
+                    icd_10.push(selectedItem);
+                    displayExistingICD();
+                } else {
+                    alert('Kode ICD-10 ini sudah ada dalam daftar');
+                }
 
-                const newItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${selectedCode} - ${selectedDescription}
-                    <button type="button" class="btn btn-danger btn-sm remove-icd mt-2">X</button>
-                </li>`;
-                icdList.append(newItem);
-
-                // Tutup modal setelah memilih
+                // Tutup modal
                 $('#modal-kode-icd').modal('hide');
             } else {
                 alert('Silakan pilih item terlebih dahulu');
             }
         });
 
-        // Hapus kode ICD ketika tombol X ditekan
+        // Hapus kode ICD X
         icdList.on('click', '.remove-icd', function() {
-            $(this).closest('li').remove();
+            const index = $(this).closest('li').data('index');
+            icd_10.splice(index, 1);
+            displayExistingICD();
         });
 
-        // Reset modal ketika dibuka kembali
+        // Reset modal
         $('#btn-kode-icd').on('click', function() {
             $('#modal-kode-icd').modal('show');
             searchInput.val('');
             dataList.empty();
+        });
+
+        // Simpan perubahan
+        $('#btnSaveChanges').on('click', function() {
+            // Kirim data icd_10 ke server dgn AJAX
+            $.ajax({
+                url: '/update-icd-10', // Ganti dengan URL
+                method: 'POST',
+                data: {
+                    icd_10: JSON.stringify(icd_10)
+                },
+                success: function(response) {
+                    alert('Data ICD-10 berhasil disimpan');
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat menyimpan data');
+                }
+            });
         });
     });
 </script>

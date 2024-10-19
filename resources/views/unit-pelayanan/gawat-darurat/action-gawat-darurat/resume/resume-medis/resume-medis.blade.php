@@ -54,15 +54,16 @@
         </thead>
         <tbody id="table-resume">
             @foreach ($dataGet as $post)
-            <tr id="index_{{ $post->id }}">
-                    <td>{{ $post->kd_pasien }}</td>
+                <tr>
+                    <td>-</td>
                     <td>-</td>
                     <td>{{ $post->tgl_masuk }}</td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
                     <td>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2 btn-edit-resume" data-id="{{ $post->id }}">Validasi</a>
+                        <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" data-id="{{ $post->id }}" id="btn-edit-resume"
+                        >Validasi</a>
                     </td>
                 </tr>
             @endforeach

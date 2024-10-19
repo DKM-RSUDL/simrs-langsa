@@ -24,16 +24,11 @@
                         <ol type="1" id="diagnosisList">
                             <!-- List of Diagnoses -->
                         </ol>
-                        {{-- <a href="javascript:void(0)" id="btn-daftar-input-diagnosis" class="fw-bold">HYPERTENSI
-                            KRONIS</a> <br>
-                        <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                        <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                {{-- <button type="button" class="btn btn-sm btn-primary">Simpan</button> --}}
                 <button type="button" id="btnSaveDiagnose" class="btn btn-primary">Simpan</button>
             </div>
         </div>
@@ -49,84 +44,100 @@
         $('#modal-create-diagnosis').modal('show');
     });
 
+    let dataDiagnosis = @json($dataResume->diagnosis ?? []);
+    console.log(dataDiagnosis);
+
     $(document).ready(function() {
-    // Add diagnosis ke modal 2
-    $('#btnAddDiagnosis').click(function() {
-        var diagnosis = $('#searchDiagnosisInput').val();
+        // Fungsi untuk menampilkan diagnosis
+        function displayDiagnosis() {
+            let diagnosisList = '';
+            let diagnoseDisplay = '';
 
-        if (diagnosis !== '') {
-            var uniqueId = 'diagnosis-' + Math.random().toString(36).substr(2, 9); // Generate unique ID
-            $('#diagnosisList').append(`
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                    <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                    <button type="button" class="btn btn-sm btn-danger remove-diagnosis mt-1" data-id="${uniqueId}">X</button>
-                </li>
-            `);
-            $('#searchDiagnosisInput').val('');
+            if (dataDiagnosis && Array.isArray(dataDiagnosis)) {
+                dataDiagnosis.forEach((diagnosis, index) => {
+                    let uniqueId = 'diagnosis-' + index;
+
+                    // Untuk modal diagnosis
+                    diagnosisList += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                        <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
+                        <button type="button" class="btn btn-sm btn-danger remove-diagnosis" data-id="${uniqueId}">X</button>
+                    </li>
+                `;
+
+                    // Untuk tampilan utama
+                    diagnoseDisplay += `
+                    <div class="d-flex justify-content-between align-items-center" id="main-${uniqueId}">
+                        <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
+                        <button type="button" class="btn btn-sm btn-danger remove-main-diagnosis" data-id="${uniqueId}">X</button>
+                    </div><br>
+                `;
+                });
+            }
+
+            $('#diagnosisList').html(diagnosisList);
+            $('#diagnoseDisplay').html(diagnoseDisplay);
         }
-    });
 
-    // Open edit modal edit diagnosis
-    $(document).on('click', '.edit-diagnosis', function() {
-        var diagnosisText = $(this).text(); // Get  text
-        var diagnosisId = $(this).data('id'); // Get ID
+        // Panggil fungsi saat dokumen siap
+        displayDiagnosis();
 
-        $('#editDiagnosisTextarea').val(diagnosisText);
-        $('#editDiagnosisId').val(diagnosisId);
-
-        $('#modal-daftar-input-diagnosis').modal('show');
-    });
-
-    // Save edit diagnosis
-    $('#btnUpdateDiagnosis').click(function() {
-        var updatedDiagnosis = $('#editDiagnosisTextarea').val(); // Get text
-        var diagnosisId = $('#editDiagnosisId').val(); // Get ID edit
-
-        // Update diagnosismodal 2 dan modal 1
-        $('#' + diagnosisId + ' .edit-diagnosis').text(updatedDiagnosis); // Update di modal 2
-        $('#main-' + diagnosisId + ' .fw-bold').text(updatedDiagnosis); // Update di modal 1
-
-        // Close edit modal
-        $('#modal-daftar-input-diagnosis').modal('hide');
-    });
-
-    // Remove diagnosis list di modal 2
-    $(document).on('click', '.remove-diagnosis', function() {
-        var diagnosisId = $(this).data('id');
-        $('#' + diagnosisId).remove();
-        $('#main-' + diagnosisId).remove();
-    });
-
-    // Save diagnosis dan transfer modal 1
-    $('#btnSaveDiagnose').click(function() {
-        var diagnosisList = '';
-        let diagnoses = $('#diagnosisList li');
-
-        // Loop all diagnoses di modal 2
-        $(diagnoses).each(function(i, e) {
-            var diagnosisText = $(e).find('.edit-diagnosis').text().trim();
-            var diagnosisId = $(e).attr('id');
-
-            diagnosisList += `
-                <div class="d-flex justify-content-between align-items-center" id="main-${diagnosisId}">
-                    <a href="javascript:void(0)" class="fw-bold">${diagnosisText}</a>
-                    <button type="button" class="btn btn-sm btn-danger remove-main-diagnosis" data-id="${diagnosisId}">X</button>
-                </div><br>
-            `;
+        // Tampilkan diagnosis saat modal dibuka
+        $('#btn-diagnosis').on('click', function() {
+            displayDiagnosis();
+            $('#modal-create-diagnosis').modal('show');
         });
 
-        // Transfer diagnosis list modal 1
-        $('#diagnoseDisplay').html(diagnosisList);
+        // Add diagnosis ke modal
+        $('#btnAddDiagnosis').click(function() {
+            var diagnosis = $('#searchDiagnosisInput').val();
 
-        $('#modal-create-diagnosis').modal('hide');
+            if (diagnosis !== '') {
+                dataDiagnosis.push(diagnosis);
+                displayDiagnosis();
+                $('#searchDiagnosisInput').val('');
+            }
+        });
+
+        // Open edit modal
+        $(document).on('click', '.edit-diagnosis', function() {
+            var diagnosisId = $(this).data('id');
+            var index = diagnosisId.split('-')[1];
+            var diagnosisText = dataDiagnosis[index];
+
+            $('#editDiagnosisTextarea').val(diagnosisText);
+            $('#editDiagnosisId').val(index);
+
+            $('#modal-daftar-input-diagnosis').modal('show');
+        });
+
+        // Save edit diagnosis
+        $('#btnUpdateDiagnosis').click(function() {
+            var updatedDiagnosis = $('#editDiagnosisTextarea').val();
+            var index = $('#editDiagnosisId').val();
+
+            dataDiagnosis[index] = updatedDiagnosis;
+            displayDiagnosis();
+
+            $('#modal-daftar-input-diagnosis').modal('hide');
+        });
+
+        // Remove diagnosis
+        $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
+            var diagnosisId = $(this).data('id');
+            var index = diagnosisId.split('-')[1];
+
+            dataDiagnosis.splice(index, 1);
+            displayDiagnosis();
+        });
+
+        // Save diagnosis
+        $('#btnSaveDiagnose').click(function() {
+            displayDiagnosis();
+            $('#modal-create-diagnosis').modal('hide');
+
+            // Di sini Anda bisa menambahkan kode untuk mengirim dataDiagnosis ke server
+            // misalnya dengan Ajax request
+        });
     });
-
-    // Remove diagnosis modal 1
-    $(document).on('click', '.remove-main-diagnosis', function() {
-        var diagnosisId = $(this).data('id');
-        $('#main-' + diagnosisId).remove(); // Remove di modal 1
-        $('#' + diagnosisId).remove(); // Remove di modal 2
-    });
-});
-
 </script>

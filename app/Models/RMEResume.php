@@ -9,6 +9,20 @@ class RMEResume extends Model
 {
     use HasFactory;
     protected $table = 'RME_RESUME';
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'float';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'anamnesis',
+        'pemeriksaan_penunjang',
+        'diagnosis',
+        'icd_10',
+        'icd_9',
+        'status',
+        'user_validasi'
+    ];
 
     protected $casts = [
         'konpas' => 'array',

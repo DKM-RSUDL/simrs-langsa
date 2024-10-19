@@ -30,6 +30,7 @@ class ResumeController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 3)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -43,7 +44,9 @@ class ResumeController extends Controller
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
-        $dataGet = RMEResume::orderBy('tgl_masuk', 'desc')
+        $dataGet = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_masuk', 'desc')
             ->get();
         // dd($dataResume);
 
@@ -100,39 +103,56 @@ class ResumeController extends Controller
         );
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
     {
         $validator = Validator::make($request->all(), [
-            // rme_resume
             'anamnesis' => 'required',
             'pemeriksaan_penunjang' => 'required',
-            'diagnosis' => 'required|array',
-            'icd_10' => 'required|array',
-            'icd_9' => 'required|array',
-            'status' => 'required',
+            'diagnosis' => 'required|json',
+            'icd_10' => 'required|json',
+            'icd_9' => 'required|json',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = RMEResume::findOrFail($id);
+        $data = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->findOrFail($id);
 
+        // newline
+        $cleanArray = function ($array) {
+            return array_map(function ($item) {
+                return trim(preg_replace('/\s+/', ' ', $item));
+            }, $array);
+        };
+
+        // Data baru
+        $newDiagnosis = json_decode($request->diagnosis, true);
+        $newIcd10 = json_decode($request->icd_10, true);
+        $newIcd9 = json_decode($request->icd_9, true);
+
+        // Bersihkan data newline
+        $newDiagnosis = $cleanArray($newDiagnosis);
+        $newIcd10 = $cleanArray($newIcd10);
+        $newIcd9 = $cleanArray($newIcd9);
+
+        // Simpan data yang baru
         $data->update([
             'anamnesis' => $request->anamnesis,
             'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
-            'diagnosis' => json_encode($request->diagnosis),
-            'icd_10' => json_encode($request->icd_10),
-            'icd_9' => json_encode($request->icd_9),
+            'diagnosis' => $newDiagnosis,
+            'icd_10' => $newIcd10,
+            'icd_9' => $newIcd9,
             'status' => 1,
             'user_validasi' => Auth::id(),
         ]);
 
-
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Diperbarui',
-            'data' => $data,
+            'message' => 'Data berhasil diperbarui',
+            'data' => $data
         ]);
     }
 
