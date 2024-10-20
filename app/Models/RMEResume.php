@@ -45,4 +45,8 @@ class RMEResume extends Model
     {
         return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
     }
+    public function kunjungan()
+    {
+        return $this->belongsTo(Kunjungan::class, 'kd_pasien', 'kd_pasien');
+    }
 }

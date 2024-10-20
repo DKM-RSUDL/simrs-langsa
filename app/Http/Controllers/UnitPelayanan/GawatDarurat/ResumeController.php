@@ -44,7 +44,8 @@ class ResumeController extends Controller
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
-        $dataGet = RMEResume::where('kd_pasien', $kd_pasien)
+        $dataGet = RMEResume::with(['rmeResumeDet', 'kunjungan'])
+            ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->get();

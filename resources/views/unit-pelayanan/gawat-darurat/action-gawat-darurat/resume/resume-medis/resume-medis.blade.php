@@ -55,12 +55,12 @@
         <tbody id="table-resume">
             @foreach ($dataGet as $post)
                 <tr id="index_{{ $post->id }}">
+                    <td>Gawat Darurat</td>
+                    <td>{{ $post->kunjungan->dokter->nama_lengkap ?? '-' }}</td>
+                    <td>{{ $post->tgl_masuk ?? '-' }}</td>
+                    <td>{{ $post->kunjungan->tgl_keluar ?? '-' }}</td>
                     <td>-</td>
-                    <td>-</td>
-                    <td>{{ $post->tgl_masuk }}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td>{{ $post->rmeResumeDet->tindak_lanjut_name ?? '-' }}</td>
                     <td>
                         @if ($post->status == 0)
                             <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
