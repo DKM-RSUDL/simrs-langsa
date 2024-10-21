@@ -68,7 +68,8 @@
                         {{ $post->kunjungan->tgl_keluar ? substr($post->kunjungan->tgl_keluar, 0, 10) : '-' }}
                     </td>
                     <td>-</td>
-                    <td>
+                    <td>{{ $post->kunjungan->unit->bagian->bagian }}</td>
+                    {{-- <td>
                         @switch($post->rmeResumeDet->tindak_lanjut_code)
                             @case(1)
                                 Ranap
@@ -83,7 +84,7 @@
                             @break
 
                             @case(4)
-                                Rujuk Interna
+                                Rujuk Internal
                             @break
 
                             @case(5)
@@ -93,7 +94,7 @@
                             @default
                                 -
                         @endswitch
-                    </td>
+                    </td> --}}
 
                     <td>
                         @if ($post->status == 0)

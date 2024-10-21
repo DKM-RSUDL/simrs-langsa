@@ -49,7 +49,7 @@ class ResumeController extends Controller
         $periode = $request->input('periode');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        $dataGet = RMEResume::with(['rmeResumeDet', 'kunjungan.dokter'])
+        $dataGet = RMEResume::with(['rmeResumeDet', 'kunjungan.dokter', 'unit'])
             // filter data
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
