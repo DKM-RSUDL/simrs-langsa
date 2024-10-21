@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk)
+    public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien.golonganDarah', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -39,7 +39,26 @@ class ResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet'])
+        $periode = $request->input('periode');
+        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan'])
+            ->when($periode, function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_masuk', $now->year)
+                            ->whereMonth('tgl_masuk', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_masuk', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_masuk', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_masuk', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_masuk', '>=', $now->subMonths(9));
+                    default:
+                        return $query;
+                }
+            })
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')

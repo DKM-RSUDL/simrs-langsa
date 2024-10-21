@@ -330,7 +330,7 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
-                                                data-code="1">
+                                                data-code="2">
                                             <label for="kontrol">Kontrol ulang, tgl:</label>
                                         </a>
 
@@ -338,7 +338,7 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
-                                                data-code="2">
+                                                data-code="4">
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
                                         </a>
                                         {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
@@ -360,14 +360,14 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rujuk RS lain bagian:"
-                                                data-code="4">
+                                                data-code="5">
                                             <label for="rujuk">Rujuk RS lain bagian:</label>
                                         </a>
 
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rawat Inap" data-code="5">
+                                                class="form-check-input me-2" value="Rawat Inap" data-code="1">
                                             <label for="rawat">Rawat Inap</label>
                                         </a>
                                     </div>

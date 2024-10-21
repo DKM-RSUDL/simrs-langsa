@@ -1,12 +1,12 @@
 <div>
     <div class="d-flex justify-content-between m-3">
         <div class="row">
-            <!-- Select PPA Option -->
+            <!-- Select Option -->
             <div class="col-md-2">
                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
                     <option value="semua" selected>Semua Episode</option>
                     <option value="option1">Episode Sekarang</option>
-                    <option value="option2">1 Bulan/option>
+                    <option value="option2">1 Bulan</option>
                     <option value="option3">3 Bulan</option>
                     <option value="option4">6 Bulan</option>
                     <option value="option5">9 Bulan</option>
@@ -57,15 +57,42 @@
                 <tr id="index_{{ $post->id }}">
                     <td>Gawat Darurat</td>
                     <td>{{ $post->kunjungan->dokter->nama_lengkap ?? '-' }}</td>
-                    <td>{{ $post->tgl_masuk ?? '-' }}</td>
-                    <td>{{ $post->kunjungan->tgl_keluar ?? '-' }}</td>
+                    <td>
+                        {{ $post->tgl_masuk ? substr($post->tgl_masuk, 0, 10) : '-' }}
+                    </td>
+                    <td>
+                        {{ $post->kunjungan->tgl_keluar ? substr($post->kunjungan->tgl_keluar, 0, 10) : '-' }}
+                    </td>
                     <td>-</td>
-                    <td>{{ $post->rmeResumeDet->tindak_lanjut_name ?? '-' }}</td>
+                    <td>
+                        @switch($post->rmeResumeDet->tindak_lanjut_code)
+                            @case(1)
+                                Ranap
+                            @break
+                            @case(2)
+                                Kontrol Ulang
+                            @break
+                            @case(3)
+                                Selesai di Unit
+                            @break
+                            @case(4)
+                                Rujuk Interna
+                            @break
+                            @case(5)
+                                Rujuk RS Lain
+                            @break
+                            @default
+                                -
+                        @endswitch
+                    </td>
+
                     <td>
                         @if ($post->status == 0)
-                            <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2" data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2"
+                                data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
                         @elseif ($post->status == 1)
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2" data-id="{{ $post->id }}" id="btn-view-resume">Lihat</a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2" data-id="{{ $post->id }}"
+                                id="btn-view-resume">Lihat</a>
                         @endif
                     </td>
                 </tr>
