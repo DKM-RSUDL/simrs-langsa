@@ -69,33 +69,6 @@
                     </td>
                     <td>-</td>
                     <td>{{ $post->kunjungan->unit->nama_unit }}</td>
-                    {{-- <td>
-                        @switch($post->rmeResumeDet->tindak_lanjut_code)
-                            @case(1)
-                                Ranap
-                            @break
-
-                            @case(2)
-                                Kontrol Ulang
-                            @break
-
-                            @case(3)
-                                Selesai di Unit
-                            @break
-
-                            @case(4)
-                                Rujuk Internal
-                            @break
-
-                            @case(5)
-                                Rujuk RS Lain
-                            @break
-
-                            @default
-                                -
-                        @endswitch
-                    </td> --}}
-
                     <td>
                         @if ($post->status == 0)
                             <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2"
