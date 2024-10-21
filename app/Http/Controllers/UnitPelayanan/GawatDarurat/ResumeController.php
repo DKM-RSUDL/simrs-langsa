@@ -39,8 +39,18 @@ class ResumeController extends Controller
         }
 
         // ambil data Resume
-        $periode = $request->input('periode');
         $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
+        $search = $request->input('search');
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dataGet = RMEResume::with(['rmeResumeDet', 'kunjungan.dokter'])
+            // filter data
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
@@ -59,16 +69,24 @@ class ResumeController extends Controller
                         return $query;
                 }
             })
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->orderBy('tgl_masuk', 'desc')
-            ->first();
-        $dataGet = RMEResume::with(['rmeResumeDet', 'kunjungan'])
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_masuk', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_masuk', '<=', $endDate);
+            })
+            ->when($search, function ($query, $search) {
+                $search = strtolower($search);
+                return $query->orWhereHas('kunjungan.dokter', function ($q) use ($search) {
+                    $q->whereRaw('LOWER(kd_dokter) like ?', ["%$search%"])
+                        ->orWhereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+                });
+            })
+            // end filter
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->orderBy('tgl_masuk', 'desc')
             ->get();
-        // dd($dataResume);
 
         // Mengambil semua data dokter
         $dataDokter = Dokter::all();

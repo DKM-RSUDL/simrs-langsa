@@ -49,4 +49,9 @@ class RMEResume extends Model
     {
         return $this->belongsTo(Kunjungan::class, 'kd_pasien', 'kd_pasien');
     }
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
+    }
 }
