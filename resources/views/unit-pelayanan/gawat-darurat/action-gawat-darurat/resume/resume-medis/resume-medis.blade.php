@@ -33,7 +33,7 @@
                     action="{{ route('resume.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
 
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari"
+                        <input type="text" name="search" class="form-control" placeholder="Cari nama dokter" aria-label="Cari"
                             value="{{ request('search') }}" aria-describedby="basic-addon1">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </div>
