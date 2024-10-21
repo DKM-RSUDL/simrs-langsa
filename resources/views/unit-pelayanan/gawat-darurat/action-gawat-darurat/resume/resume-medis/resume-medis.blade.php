@@ -44,6 +44,7 @@
         </div>
     </div>
 
+    <div class="table-responsive">
     <table class="table table-bordered table-sm table-hover">
         <thead class="table-primary">
             <tr>
@@ -82,6 +83,8 @@
             @endforeach
         </tbody>
     </table>
+    {{ $dataGet->withQueryString()->links() }}
+    </div>
 </div>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')

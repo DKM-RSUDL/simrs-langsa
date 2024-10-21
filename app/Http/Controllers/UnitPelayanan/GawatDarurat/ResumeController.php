@@ -90,7 +90,7 @@ class ResumeController extends Controller
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->where('kd_unit', $dataMedis->kd_unit)
             ->orderBy('tgl_masuk', 'desc')
-            ->get();
+            ->paginate(10);
 
         // Mengambil semua data dokter
         $dataDokter = Dokter::all();
