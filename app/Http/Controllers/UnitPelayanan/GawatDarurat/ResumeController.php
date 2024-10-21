@@ -42,6 +42,8 @@ class ResumeController extends Controller
         $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', 3)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
 
@@ -85,6 +87,8 @@ class ResumeController extends Controller
             // end filter
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->orderBy('tgl_masuk', 'desc')
             ->get();
 
@@ -95,6 +99,8 @@ class ResumeController extends Controller
         $dataLabor = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->whereHas('details.produk', function ($query) {
                 $query->where('kategori', 'LB');
             })
@@ -105,6 +111,8 @@ class ResumeController extends Controller
         $dataRagiologi = SegalaOrder::with(['details.produk'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->whereHas('details.produk', function ($query) {
                 $query->where('kategori', 'RD');
             })

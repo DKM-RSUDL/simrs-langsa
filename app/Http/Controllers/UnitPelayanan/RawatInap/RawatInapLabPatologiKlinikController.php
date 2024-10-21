@@ -75,10 +75,13 @@ class RawatInapLabPatologiKlinikController extends Controller
                 }
                 return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
                     ->orWhereHas('dokter', function ($q) use ($search) {
-                        $q->whereRaw('LOWER(nama) like ?', ["%$search%"]);
+                        $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
                     });
             })
             ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->orderBy('tgl_order',  'desc')
             ->paginate(10);
 
