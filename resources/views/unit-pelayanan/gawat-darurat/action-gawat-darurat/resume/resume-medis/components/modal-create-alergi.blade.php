@@ -21,10 +21,7 @@
 </div>
 
 <script>
-    //button create post event
     $('#btn-create-alergi').on('click', function() {
-
-        //open modal
         $('#modal-create-alergi').modal('show');
     });
 </script>

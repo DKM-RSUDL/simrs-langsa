@@ -224,7 +224,6 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
-                        // Route::resource('rawat-inap-resume', RawatInapResumeController::class);
                     });
                 });
             });

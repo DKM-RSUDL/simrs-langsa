@@ -149,69 +149,89 @@ class RawatInapResumeController extends Controller
         );
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'anamnesis' => 'required',
-            'pemeriksaan_penunjang' => 'required',
-            'diagnosis' => 'required|json',
-            'icd_10' => 'required|json',
-            'icd_9' => 'required|json',
+        try {
+            DB::beginTransaction();
+            $validator = Validator::make($request->all(), [
+                'anamnesis' => 'required|string',
+                'pemeriksaan_penunjang' => 'required|string',
+                'diagnosis' => 'required|json',
+                'icd_10' => 'required|json',
+                'icd_9' => 'required|json',
+                'tindak_lanjut_code' => 'required',
+                'tindak_lanjut_name' => 'required'
+            ]);
 
-            // RmeResumeDtl
-            'tindak_lanjut_code' => 'required|string',
-            'tindak_lanjut_name' => 'required|string'
-        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            $resume = RMEResume::where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->first();
+
+            // newline
+            $cleanArray = function ($array) {
+                return array_map(function ($item) {
+                    return trim(preg_replace('/\s+/', ' ', $item));
+                }, $array);
+            };
+
+            if (!$resume) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data resume tidak ditemukan'
+                ], 404);
+            }
+
+            // Data baru
+            $newDiagnosis = json_decode($request->diagnosis, true);
+            $newIcd10 = json_decode($request->icd_10, true);
+            $newIcd9 = json_decode($request->icd_9, true);
+
+            // Bersihkan data newline
+            $newDiagnosis = $cleanArray($newDiagnosis);
+            $newIcd10 = $cleanArray($newIcd10);
+            $newIcd9 = $cleanArray($newIcd9);
+
+            $resume->update([
+                'anamnesis' => trim($request->anamnesis),
+                'pemeriksaan_penunjang' => trim($request->pemeriksaan_penunjang),
+                'diagnosis' => $newDiagnosis,
+                'icd_10' => $newIcd10,
+                'icd_9' => $newIcd9,
+                'status' => 1,
+                'user_validasi' => Auth::id()
+            ]);
+
+            RmeResumeDtl::updateOrCreate(
+                ['id_resume' => $id],
+                [
+                    'tindak_lanjut_name' => trim($request->tindak_lanjut_name),
+                    'tindak_lanjut_code' => $request->tindak_lanjut_code
+                ]
+            );
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diperbarui',
+                'data' => $resume
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data'
+            ], 500);
         }
-
-        $data = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('id', $id)
-            ->firstOrFail();
-
-        // newline
-        $cleanArray = function ($array) {
-            return array_map(function ($item) {
-                return trim(preg_replace('/\s+/', ' ', $item));
-            }, $array);
-        };
-
-        // Data baru
-        $newDiagnosis = json_decode($request->diagnosis, true);
-        $newIcd10 = json_decode($request->icd_10, true);
-        $newIcd9 = json_decode($request->icd_9, true);
-
-        // Bersihkan data newline
-        $newDiagnosis = $cleanArray($newDiagnosis);
-        $newIcd10 = $cleanArray($newIcd10);
-        $newIcd9 = $cleanArray($newIcd9);
-
-        $data->update([
-            'anamnesis' => $request->anamnesis,
-            'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
-            'diagnosis' => $newDiagnosis,
-            'icd_10' => $newIcd10,
-            'icd_9' => $newIcd9,
-            'status' => 1,
-            'user_validasi' => Auth::id(),
-        ]);
-
-        RmeResumeDtl::updateOrCreate(
-            ['id_resume' => $id],
-            [
-                'tindak_lanjut_name' => $request->tindak_lanjut_name,
-                'tindak_lanjut_code' => $request->tindak_lanjut_code
-            ]
-        );
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil diperbarui',
-            'data' => $data
-        ]);
     }
 
 

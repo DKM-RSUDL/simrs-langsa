@@ -395,8 +395,7 @@
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-create-alergi')
 
-
-<script>
+<script type="text/javascript">
     $('#btn-edit-resume').on('click', function() {
         $('#modal-edit-resume').modal('show');
     });
@@ -404,48 +403,83 @@
     $('#update').click(function(e) {
         e.preventDefault();
 
-        let kd_unit = '{{ $dataMedis->kd_unit }}';
-        let kd_pasien = '{{ $dataMedis->kd_pasien }}';
-        let tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
-        let urut_masuk = '{{ $dataMedis->urut_masuk }}';
-        let resume_id = '{{ $dataResume->id ?? '-' }}';
+        if (!validateForm()) {
+            return;
+        }
 
-        let formData = new FormData();
+        const formData = new FormData();
 
-        formData.append('anamnesis', $('#anamnesis').val());
-        formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val());
+        const anamnesis = $('#anamnesis').val().trim();
+        const pemeriksaanPenunjang = $('#pemeriksaan_penunjang').val().trim();
 
-        // Ambil data diagnosis
-        let diagnosisArray = $('#diagnoseDisplay').children().map(function() {
-            return $(this).find('.fw-bold').text().trim();
-        }).get().filter(Boolean);
+        if (!anamnesis || !pemeriksaanPenunjang) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Anamnesis dan Pemeriksaan Penunjang wajib diisi'
+            });
+            return;
+        }
+
+        formData.append('anamnesis', anamnesis);
+        formData.append('pemeriksaan_penunjang', pemeriksaanPenunjang);
+
+        const diagnosisArray = $('#diagnoseDisplay').children()
+            .map(function() {
+                return $(this).find('.fw-bold').text().trim();
+            }).get().filter(Boolean);
+
+        if (diagnosisArray.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Minimal satu diagnosis harus diisi'
+            });
+            return;
+        }
         formData.append('diagnosis', JSON.stringify(diagnosisArray));
 
-        // Ambil data ICD-10
-        let icd10Array = $('#icdList').children().map(function() {
-            return $(this).text().trim().split(' ')[0];
-        }).get().filter(Boolean);
+        // Ambil data ICD
+        const icd10Array = $('#icdList').children()
+            .map(function() {
+                return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
         formData.append('icd_10', JSON.stringify(icd10Array));
 
-        // Ambil data ICD-9
-        let icd9Array = $('#icd9List').children().map(function() {
-            return $(this).text().trim().split(' ')[0];
-        }).get().filter(Boolean);
+        const icd9Array = $('#icd9List').children()
+            .map(function() {
+                return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
         formData.append('icd_9', JSON.stringify(icd9Array));
 
-        // Ambil nilai dari radio button tindak lanjut yang dipilih
-        let tindakLanjutName = $('input[name="tindak_lanjut_name"]:checked').val();
-        let tindakLanjutCode = $('input[name="tindak_lanjut_name"]:checked').data('code');
+        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+        if (tindakLanjutElement.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Mohon pilih tindak lanjut'
+            });
+            return;
+        }
 
-        formData.append('tindak_lanjut_name', tindakLanjutName);
-        formData.append('tindak_lanjut_code', tindakLanjutCode);
-
+        formData.append('tindak_lanjut_name', tindakLanjutElement.val());
+        formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
         formData.append('_method', 'PUT');
 
-        let url = `/unit-pelayanan/rawat-jalan/unit/${kd_unit}/pelayanan/${kd_pasien}/${tgl_masuk}/${urut_masuk}/rawat-jalan-resume/${resume_id}`;
+        const resume_id = '{{ $dataResume->id }}';
+        const url =
+            `{{ route('rawat-jalan.rawat-jalan-resume.update', [
+                'kd_unit' => $dataMedis->kd_unit,
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'tgl_masuk' => $dataMedis->tgl_masuk,
+                'urut_masuk' => $dataMedis->urut_masuk,
+                'id' => ':id',
+            ]) }}`
+            .replace(':id', resume_id);
+
         $.ajax({
             url: url,
-            type: "POST",
+            type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
@@ -453,7 +487,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                // console.log('Update response:', response);
                 if (response.success) {
                     Swal.fire({
                         icon: 'success',
@@ -461,39 +494,51 @@
                         text: response.message,
                         showConfirmButton: false,
                         timer: 3000
+                    }).then(() => {
+                        window.location.reload();
                     });
-                    $('#modal-edit-resume').modal('hide');
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: response.message ||
-                            'Terjadi kesalahan saat memperbarui data.',
+                        text: response.message || 'Terjadi kesalahan saat memperbarui data'
                     });
                 }
-
-                window.location.reload();
             },
-            error: function(xhr, status, error) {
-                // console.error("Error updating data:", error);
-                let errorMessage = "Terjadi kesalahan saat memperbarui data.";
+            error: function(xhr) {
+                let errorMessage = 'Terjadi kesalahan saat memperbarui data';
                 if (xhr.responseJSON) {
                     if (xhr.responseJSON.errors) {
-                        errorMessage += " Detail: " + Object.values(xhr.responseJSON.errors).join(
-                            ", ");
+                        errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
                     } else if (xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
                     }
-                } else {
-
-                    errorMessage += " " + error;
                 }
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: "Oops! Ada field yang belum diisi. Mohon lengkapi 😊" + errorMessage,
+                    text: 'Oops! Ada field yang belum diisi. Mohon lengkapi 😊' + errorMessage
                 });
             }
         });
     });
+
+    function validateForm() {
+        const requiredFields = ['anamnesis', 'pemeriksaan_penunjang'];
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!$(`#${field}`).val().trim()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `${field.replace('_', ' ')} wajib diisi`
+                });
+                isValid = false;
+                return false;
+            }
+        });
+
+        return isValid;
+    }
 </script>

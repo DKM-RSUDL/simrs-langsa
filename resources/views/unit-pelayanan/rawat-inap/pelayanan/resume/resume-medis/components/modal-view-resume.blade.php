@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header  bg-primary">
-                <h5 class="modal-title text-white" id="extraLargeModalLabel">Resume Medis Gawat Darurat</h5>
+                <h5 class="modal-title text-white" id="extraLargeModalLabel">Resume Medis Rawat Inap</h5>
                 <button type="button" class="btn-close btn-close-modified" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>

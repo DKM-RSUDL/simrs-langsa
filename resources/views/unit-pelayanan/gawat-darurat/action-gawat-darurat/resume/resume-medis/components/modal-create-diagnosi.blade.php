@@ -37,15 +37,12 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-daftar-input-diagnosis')
 
 <script>
-    //button create post event
     $('#btn-diagnosis').on('click', function() {
-
-        //open modal
         $('#modal-create-diagnosis').modal('show');
     });
 
     let dataDiagnosis = @json($dataResume->diagnosis ?? []);
-    console.log(dataDiagnosis);
+    // console.log(dataDiagnosis);
 
     $(document).ready(function() {
         // Fungsi untuk menampilkan diagnosis

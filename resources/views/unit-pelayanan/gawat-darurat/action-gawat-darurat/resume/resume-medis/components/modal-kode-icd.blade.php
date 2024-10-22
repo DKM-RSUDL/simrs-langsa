@@ -22,7 +22,7 @@
 
 <script>
     let icd_10 = @json($dataResume->icd_10 ?? []);
-    console.log(icd_10);
+    // console.log(icd_10);
 
     $(document).ready(function() {
         const searchInput = $('#searchInput');

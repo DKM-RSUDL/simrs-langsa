@@ -19,10 +19,7 @@
 </div>
 
 <script>
-    //button create post event
     $('#btn-input-diagnosis').on('click', function() {
-
-        //open modal
         $('#modal-input-diagnosis').modal('show');
     });
 </script>

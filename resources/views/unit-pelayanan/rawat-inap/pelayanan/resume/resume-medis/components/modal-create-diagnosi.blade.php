@@ -42,7 +42,7 @@
     });
 
     let dataDiagnosis = @json($dataResume->diagnosis ?? []);
-    console.log(dataDiagnosis);
+    // console.log(dataDiagnosis);
 
     $(document).ready(function() {
         // Fungsi untuk menampilkan diagnosis
