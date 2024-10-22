@@ -2,7 +2,8 @@
 <div class="modal fade" id="detailPasienModal" tabindex="-1" aria-labelledby="detailPasienModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form id="asesmenForm" method="POST" action="{{ route('asesmen.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}">
+            <form id="asesmenForm" method="POST"
+                action="{{ route('asesmen.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->pasien->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
@@ -259,7 +260,7 @@
                                                     <div class="row mb-3">
                                                         <div class="col-2">
                                                             <label>GCS</label>
-                                                            <select class="form-select">
+                                                            <select class="form-select" name="vital_sign[gcs]">
                                                                 <option selected disabled>Pilih</option>
                                                                 <option>0</option>
                                                                 <option>1</option>
@@ -268,7 +269,7 @@
                                                         </div>
                                                         <div class="col-4">
                                                             <label>AVPU</label>
-                                                            <select class="form-select">
+                                                            <select class="form-select" name="vital_sign[avpu]">
                                                                 <option selected disabled>Pilih</option>
                                                                 <option>Sadar Baik/Alert : 0</option>
                                                                 <option>Berespon dengan kata-kata/Voice: 1</option>
@@ -281,11 +282,13 @@
                                                         </div>
                                                         <div class="col-3">
                                                             <label>SpO2 (tanpa O2)</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="vital_sign[spo2]">
                                                         </div>
                                                         <div class="col-3">
                                                             <label>SpO2 (dengan O2)</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="vital_sign[spo2_o2]">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -295,23 +298,28 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label>TB (meter)</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="antropometri[tb]">
                                                         </div>
                                                         <div class="col">
                                                             <label>BB (kg)</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="antropometri[bb]">
                                                         </div>
                                                         <div class="col">
                                                             <label>Ling. Kepala</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="antropometri[ling_kepala]">
                                                         </div>
                                                         <div class="col">
                                                             <label>LPT</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="antropometri[lpt]">
                                                         </div>
                                                         <div class="col">
                                                             <label>IMT</label>
-                                                            <input type="number" class="form-control">
+                                                            <input type="number" class="form-control"
+                                                                name="antropometri[imt]">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -347,7 +355,7 @@
                                                     </div>
                                                     <div class="col">
                                                         <label for="manjalar">Manjalar</label>
-                                                        <select id="manjalar" class="form-select">
+                                                        <select id="manjalar" class="form-select" name="menjalar">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($menjalar as $option)
                                                                 <option value="{{ $option->id }}">
@@ -358,7 +366,7 @@
                                                     </div>
                                                     <div class="col mt-3">
                                                         <label for="frekuensi">Frekuensi</label>
-                                                        <select id="frekuensi" class="form-select">
+                                                        <select id="frekuensi" class="form-select" name="frekuensi">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($frekuensinyeri as $option)
                                                                 <option value="{{ $option->id }}">
@@ -369,7 +377,7 @@
                                                     </div>
                                                     <div class="col mt-3">
                                                         <label for="kualitas">Kualitas</label>
-                                                        <select id="kualitas" class="form-select">
+                                                        <select id="kualitas" class="form-select" name="kualitas">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($kualitasnyeri as $option)
                                                                 <option value="{{ $option->id }}">
@@ -380,7 +388,8 @@
                                                     </div>
                                                     <div class="col mt-3">
                                                         <label for="faktor-pemberat">Faktor Pemberat</label>
-                                                        <select id="faktor-pemberat" class="form-select">
+                                                        <select id="faktor-pemberat" class="form-select"
+                                                            name="faktor_pemberat">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($faktorpemberat as $option)
                                                                 <option value="{{ $option->id }}">
@@ -391,7 +400,8 @@
                                                     </div>
                                                     <div class="col mt-3">
                                                         <label for="faktor-peringanan">Faktor Peringanan</label>
-                                                        <select id="faktor-peringanan" class="form-select">
+                                                        <select id="faktor-peringanan" class="form-select"
+                                                            name="faktor_peringan">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($faktorperingan as $option)
                                                                 <option value="{{ $option->id }}">
@@ -402,7 +412,8 @@
                                                     </div>
                                                     <div class="col mt-3">
                                                         <label for="efek-nyeri">Efek Nyeri</label>
-                                                        <select id="efek-nyeri" class="form-select">
+                                                        <select id="efek-nyeri" class="form-select"
+                                                            name="efek_nyeri">
                                                             <option selected disabled>Pilih</option>
                                                             @foreach ($efeknyeri as $option)
                                                                 <option value="{{ $option->id }}">
@@ -440,7 +451,8 @@
                                                                                         for="{{ $item->id }}-normal">Normal</label>
                                                                                 </div>
                                                                                 <button
-                                                                                    class="btn btn-sm btn-outline-primary tambah-keterangan" type="button"
+                                                                                    class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                    type="button"
                                                                                     data-target="{{ $item->id }}-keterangan">+</button>
                                                                             </div>
                                                                             <div class="keterangan mt-2"
@@ -455,6 +467,133 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-line">
+                                                    <h6>Pemeriksaan Penunjang Klinis</h6>
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <img src="{{ asset('assets/img/icons/test_tube.png') }}">
+                                                        <h6 class="mb-0 me-3">Laboratorium</h6>
+                                                    </div>
+                                                    <div class="table-responsive mb-3">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal</th>
+                                                                    <th>Nama Pemeriksaan</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse($laborData as $data)
+                                                                    <tr>
+                                                                        <td>{{ $data['Tanggal-Jam'] }}</td>
+                                                                        <td>{{ $data['Nama pemeriksaan'] }}</td>
+                                                                        <td>
+                                                                            @if ($data['Status'] == 'Diorder')
+                                                                                <i
+                                                                                    class="bi bi-check-circle-fill text-secondary"></i>
+                                                                                Diorder
+                                                                            @elseif ($data['Status'] == 'Selesai')
+                                                                                <i
+                                                                                    class="bi bi-check-circle-fill text-success"></i>
+                                                                                <p class="text-success">Selesai</p>
+                                                                            @else
+                                                                                {{ $data['Status'] }}
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="7" class="text-center">Tidak
+                                                                            ada
+                                                                            data laboratorium</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <img
+                                                            src="{{ asset('assets/img/icons/microbeam_radiation_therapy.png') }}">
+                                                        <h6 class="mb-0 me-3">Radiologi</h6>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal dan Jam</th>
+                                                                    <th>Nama Pemeriksaan</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse($radiologiData as $rad)
+                                                                    <tr>
+                                                                        <td>{{ $rad['Tanggal-Jam'] }}</td>
+                                                                        <td>{{ $rad['Nama Pemeriksaan'] }}</td>
+                                                                        <td>{!! $rad['Status'] !!}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="3" class="text-center">Tidak
+                                                                            ada
+                                                                            data radiologi</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-line">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <img src="{{ asset('assets/img/icons/pill.png') }}">
+                                                        <h6 class="mb-0 me-3">E-Resep</h6>
+                                                    </div>
+                                                    <div class="table-responsive mb-3">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal</th>
+                                                                    <th>Nama Obat</th>
+                                                                    <th>Dosis</th>
+                                                                    <th>Cara Pemberian</th>
+                                                                    <th>PPA</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse ($riwayatObat as $resep)
+                                                                    @php
+                                                                        $cara_pakai_parts = explode(
+                                                                            ',',
+                                                                            $resep->cara_pakai,
+                                                                        );
+                                                                        $frekuensi = trim($cara_pakai_parts[0] ?? '');
+                                                                        $keterangan = trim($cara_pakai_parts[1] ?? '');
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d M Y H:i') }}
+                                                                        </td>
+                                                                        <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}
+                                                                        </td>
+                                                                        <td>{{ $resep->jumlah_takaran }}
+                                                                            {{ Str::title($resep->satuan_takaran) }}
+                                                                        </td>
+                                                                        <td>{{ $keterangan }}</td>
+                                                                        <td>{{ $resep->nama_dokter }}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="3" class="text-center">Tidak
+                                                                            ada Resep Obat</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
 
@@ -529,7 +668,7 @@
                                                     </div>
                                                     <div id="tindakLanjutInfo"></div>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -541,70 +680,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveForm">Save Changes</button>
+                    <button class="btn btn-primary" id="saveForm">KIRIM ASESMEN</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-@push('js')
-    <script>
-        document.querySelectorAll('.tambah-keterangan').forEach(button => {
-            button.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const targetElement = document.getElementById(targetId);
-                if (targetElement.style.display === 'none') {
-                    targetElement.style.display = 'block';
-                } else {
-                    targetElement.style.display = 'none';
-                }
-            });
-        });
-
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const row = this.closest('.row');
-                const keteranganDiv = row.querySelector('.keterangan');
-                const tambahButton = row.querySelector('.tambah-keterangan');
-                if (this.checked) {
-                    keteranganDiv.style.display = 'none';
-                    tambahButton.disabled = true;
-                } else {
-                    tambahButton.disabled = false;
-                }
-            });
-        });
-
-        document.getElementById('asesmenForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            var alergiDataJson = window.getAlergiData();
-            var reTriaseDataJson = window.getReTriaseData();
-            
-            var hiddenAlergiInput = document.createElement('input');
-            hiddenAlergiInput.type = 'hidden';
-            hiddenAlergiInput.name = 'riwayat_alergi';
-            hiddenAlergiInput.value = alergiDataJson;
-
-            var hiddenReTriaseInput = document.createElement('input');
-            hiddenReTriaseInput.type = 'hidden';
-            hiddenReTriaseInput.name = 'retriage_data';
-            hiddenReTriaseInput.value = reTriaseDataJson;
-            
-            this.appendChild(hiddenAlergiInput);
-            this.appendChild(hiddenReTriaseInput);
-            
-            this.submit();
-        });
-
-        // Funsi Submit Ajax
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('saveFormBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                
-            })
-        })
-
-    </script>
-@endpush

@@ -27,8 +27,11 @@ class DataTriase extends Model
         'dokter_triase',
         'kode_triase',
         'kd_pasien_triase',
-        'foto_pasien'
+        'foto_pasien',
+        'id_asesmen',
     ];
+
+    protected $dates = ['tanggal_triase'];
 
     public function pasien()
     {

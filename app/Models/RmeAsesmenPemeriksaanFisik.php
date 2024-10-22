@@ -11,4 +11,11 @@ class RmeAsesmenPemeriksaanFisik extends Model
 
     protected $table = 'RME_ASESMEN_PEMERIKSAAN_FISIK';
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_asesmen',
+        'id_item_fisik',
+        'is_normal',
+        'keterangan',
+    ];
 }

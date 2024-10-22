@@ -11,4 +11,39 @@ class RmeAsesmen extends Model
 
     protected $table = 'RME_ASESMEN';
     public $timestamps = false;
+
+    protected $fillable = [
+        'kd_pasien',
+        'kd_unit',
+        'tgl_masuk',
+        'urut_masuk',
+        'tindakan_resusitasi',
+        'anamnesis',
+        'riwayat_penyakit',
+        'riwayat_pengobatan',
+        'riwayat_alergi',
+        'vital_sign',
+        'antropometri',
+        'skala_nyeri',
+        'manjalar_id',
+        'frekuensi_nyeri_id',
+        'kualitas_nyeri_id',
+        'faktor_pemberat_id',
+        'faktor_peringan_id',
+        'efek_nyeri',
+        'diagnosis',
+        'alat_terpasang',
+        'kondisi_pasien',
+        'lokasi',
+        'durasi'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function dataTriage()
+    {
+        return $this->hasOne(DataTriase::class, 'asesmen_id', 'id');
+    }
 }

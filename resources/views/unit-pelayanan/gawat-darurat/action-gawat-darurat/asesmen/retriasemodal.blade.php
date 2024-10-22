@@ -22,7 +22,7 @@
                                 <div class="card-body">
                                     <div class="form-line">
                                         <h6>Keluhan/Anamnesis</h6>
-                                        <textarea class="form-control mb-2" rows="3"
+                                        <textarea class="form-control mb-2" rows="3" name="anamnesis_retriage"
                                             placeholder="Isikan keluhan dan anamnesis pasien, jika terjadi cidera jelaskan mekanisme cideranya"></textarea>
                                     </div>
 
@@ -31,39 +31,39 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label>TD (Sistole)</label>
-                                                <input type="number" class="form-control" name="td_sistole">
+                                                <input type="number" class="form-control" name="td_sistole_retriage">
                                             </div>
                                             <div class="col">
                                                 <label>TD (Diastole)</label>
-                                                <input type="number" class="form-control" name="td_diastole">
+                                                <input type="number" class="form-control" name="td_diastole_retriage">
                                             </div>
                                             <div class="col">
                                                 <label>Nadi (x/mnt)</label>
-                                                <input type="number" class="form-control" name="nadi">
+                                                <input type="number" class="form-control" name="nadi_retriage">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label>Resp (x/mnt)</label>
-                                                <input type="number" class="form-control" name="resp">
+                                                <input type="number" class="form-control" name="resp_retriage">
                                             </div>
                                             <div class="col">
                                                 <label>Suhu (°C)</label>
-                                                <input type="number" class="form-control" name="suhu">
+                                                <input type="number" class="form-control" name="suhu_retriage">
                                             </div>
                                             <div class="col">
                                                 <label>SpO2 (tanpa O2)</label>
-                                                <input type="number" class="form-control" name="spo2_tanpa_o2">
+                                                <input type="number" class="form-control" name="spo2_tanpa_o2_retriage">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-4">
                                                 <label>SpO2 (dengan O2)</label>
-                                                <input type="number" class="form-control" name="spo2_dengan_o2">
+                                                <input type="number" class="form-control" name="spo2_dengan_o2_retriage">
                                             </div>
                                             <div class="col-4">
                                                 <label>GCS</label>
-                                                <select class="form-select" name="gcs">
+                                                <select class="form-select" name="gcs_retriage">
                                                     <option selected disabled>Pilih</option>
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
@@ -71,7 +71,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <label>AVPU</label>
-                                                <select class="form-select" name="avpu">
+                                                <select class="form-select" name="avpu_retriage">
                                                     <option selected disabled>Pilih</option>
                                                     <option>Sadar Baik/Alert : 0</option>
                                                     <option>Berespon dengan kata-kata/Voice: 1</option>
@@ -87,7 +87,7 @@
 
                                     <div class="form-line">
                                         <h6>Catatan</h6>
-                                        <textarea class="form-control mb-2" rows="3" name="catatan" placeholder="Isikan Catatan"></textarea>
+                                        <textarea class="form-control mb-2" rows="3" name="catatan_retriage" placeholder="Isikan Catatan"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +127,9 @@
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input resusitasi-check" type="checkbox"
-                                                            name="airway[]" value="Sumbatan" id="airway_sumbatan">
+                                                        <input class="form-check-input resusitasi-check"
+                                                            type="checkbox" name="airway[]" value="Sumbatan"
+                                                            id="airway_sumbatan">
                                                         <label class="form-check-label" for="airway_sumbatan">
                                                             Sumbatan
                                                         </label>
@@ -457,7 +458,7 @@
                                                 </p>
                                                 <button type="button" id="triaseStatusLabel"
                                                     class="btn btn-block ms-3 w-100"></button>
-                                                <input type="hidden" name="kd_triase" id="kd_triase">
+                                                <input type="hidden" name="kode_triase" id="kode_triase">
                                                 <input type="hidden" name="ket_triase" id="ket_triase">
                                             </div>
                                         </div>
@@ -479,247 +480,216 @@
 </div>
 
 @push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded");
-            var reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatient'));
-            var reTriaseTable = document.querySelector('#reTriaseTable tbody');
-            var reTriaseData = [];
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatient'));
+    var reTriaseTable = document.querySelector('#reTriaseTable tbody');
+    var reTriaseData = [];
 
-            document.getElementById('openReTriaseModal').addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                reTriaseModal.show();
-            });
-
-            // Triase Item Check
-            // Perubahan pada checkbox DOA
-            document.querySelectorAll('#reTriagePatient .doa-check').forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    let doaChecked = document.querySelectorAll(
-                        '#reTriagePatient .doa-check:checked').length > 0;
-                    document.querySelectorAll(
-                        '#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(
-                        function(cb) {
-                            cb.disabled = doaChecked;
-                        });
-                    updateTriaseStatus();
-                });
-            });
-
-            // perubahan pada checkbox non DOA
-            document.querySelectorAll('#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(function(
-                checkbox) {
-                checkbox.addEventListener('change', function() {
-                    let nonDoaChecked = document.querySelectorAll(
-                            '#reTriagePatient input[type="checkbox"]:checked:not(.doa-check)')
-                        .length > 0;
-                    document.querySelectorAll('#reTriagePatient input[type="checkbox"].doa-check')
-                        .forEach(function(cb) {
-                            cb.disabled = nonDoaChecked;
-                        });
-                    updateTriaseStatus();
-                });
-            });
-
-            function updateTriaseStatus() {
-                var status = '';
-                var kode_triase = '';
-
-                // Menetapkan prioritas dari tinggi ke rendah
-                if (document.querySelectorAll('#reTriagePatient .doa-check:checked').length > 0) {
-                    status = 'DOA';
-                    kode_triase = 5;
-                } else if (document.querySelectorAll('#reTriagePatient .resusitasi-check:checked').length > 0) {
-                    status = 'RESUSITASI (segera)';
-                    kode_triase = 4;
-                } else if (document.querySelectorAll('#reTriagePatient .emergency-check:checked').length > 0) {
-                    status = 'EMERGENCY (10 menit)';
-                    kode_triase = 3;
-                } else if (document.querySelectorAll('#reTriagePatient .urgent-check:checked').length > 0) {
-                    status = 'URGENT (30 menit)';
-                    kode_triase = 2;
-                } else if (document.querySelectorAll('#reTriagePatient .false-emergency-check:checked').length >
-                    0) {
-                    status = 'FALSE EMERGENCY (60 menit)';
-                    kode_triase = 1;
-                }
-
-                document.getElementById('triaseStatusLabel').textContent = status;
-                document.getElementById('triaseStatusLabel').className = determineClass(status);
-                document.getElementById('kd_triase').value = kode_triase;
-                document.getElementById('ket_triase').value = status;
-            }
-
-            function determineClass(status) {
-                switch (status) {
-                    case 'RESUSITASI (segera)':
-                        return 'btn btn-block btn-danger ms-3 w-100';
-                    case 'EMERGENCY (10 menit)':
-                        return 'btn btn-block btn-danger ms-3 w-100';
-                    case 'URGENT (30 menit)':
-                        return 'btn btn-block btn-warning ms-3 w-100';
-                    case 'FALSE EMERGENCY (60 menit)':
-                        return 'btn btn-block btn-success ms-3 w-100';
-                    case 'DOA':
-                        return 'btn btn-block btn-dark ms-3 w-100';
-                    default:
-                        return 'btn btn-block ms-3 w-100';
-                }
-            }
-
-            document.getElementById('simpanReTriase').addEventListener('click', function() {
-                var modalBody = document.querySelector('#reTriagePatient .modal-body');
-                if (!modalBody) {
-                    console.error('Modal body tidak ditemukan');
-                    iziToast.error({
-                        title: 'Error',
-                        message: 'Modal body tidak ditemukan',
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
-                var emptyFields = [];
-                var keluhan = modalBody.querySelector('textarea[placeholder="Isikan keluhan dan anamnesis pasien, jika terjadi cidera jelaskan mekanisme cideranya"]').value;
-                var vitalSigns = getVitalSigns(modalBody);
-                var kd_triase = document.getElementById('kd_triase').value;
-                var ket_triase = document.getElementById('ket_triase').value;
-
-                // Periksa setiap field vital sign
-                vitalSigns.forEach(function(vs) {
-                    if (!vs.value && vs.name !== 'keluhan') {
-                        emptyFields.push(vs.label);
+    // Fungsi untuk mengumpulkan data form secara manual
+    function getFormData(container) {
+        const data = {};
+        container.querySelectorAll('input, textarea, select').forEach((input) => {
+            if (input.type === 'checkbox') {
+                if (input.checked) {
+                    if (!data[input.name]) {
+                        data[input.name] = [];
                     }
-                });
-
-                if (emptyFields.length > 0) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: `Form tidak lengkap. Field berikut masih kosong: ${emptyFields.join(', ')}`,
-                        position: 'topRight'
-                    });
-                    return;
+                    data[input.name].push(input.value);
                 }
-
-                // Jika semua field terisi, lanjutkan dengan menyimpan data
-                var tanggalJam = new Date().toLocaleString();
-                var reTriaseEWS = {
-                    triase: kd_triase,
-                    ews: ket_triase
-                };
-
-                reTriaseData.push({
-                    tanggalJam: tanggalJam,
-                    keluhan: keluhan || 'Tidak ada keluhan',
-                    vitalSigns: vitalSigns,
-                    reTriaseEWS: reTriaseEWS
-                });
-
-                updateReTriaseTable();
-                reTriaseModal.hide();
-                resetModalInputs(modalBody);
-                iziToast.success({
-                    title: 'Sukses',
-                    message: 'Data berhasil disimpan',
-                    position: 'topRight'
-                });
-            });
-
-            const vitalSignLabels = {
-                td_sistole: 'TD Sistole',
-                td_diastole: 'TD Diastole',
-                nadi: 'Nadi',
-                resp: 'Respirasi',
-                suhu: 'Suhu',
-                spo2_tanpa_o2: 'SpO2 (tanpa O2)',
-                spo2_dengan_o2: 'SpO2 (dengan O2)',
-                gcs: 'GCS',
-                avpu: 'AVPU'
-            };
-
-            function getVitalSigns(modalBody) {
-                var vitalSigns = [];
-                var vitalSignFields = ['td_sistole', 'td_diastole', 'nadi', 'resp', 'suhu', 'spo2_tanpa_o2',
-                    'spo2_dengan_o2', 'gcs', 'avpu'
-                ];
-
-                vitalSignFields.forEach(function(field) {
-                    var input = modalBody.querySelector(`[name="${field}"]`);
-                    if (input) {
-                        var label = modalBody.querySelector(`label[for="${field}"]`);
-                        vitalSigns.push({
-                            name: field,
-                            label: vitalSignLabels[field] || field,
-                            value: input.value
-                        });
-                    }
-                });
-
-                return vitalSigns;
+            } else {
+                data[input.name] = input.value;
             }
+        });
+        return data;
+    }
 
-            function resetModalInputs(modalBody) {
-                modalBody.querySelectorAll('input, textarea, select').forEach(function(input) {
-                    input.value = '';
-                });
-                modalBody.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
-                    checkbox.checked = false;
-                });
-                updateTriaseStatus(); // Reset triase status
+    // Event listener untuk membuka modal re-triase
+    document.getElementById('openReTriaseModal').addEventListener('click', function(event) {
+        event.preventDefault();
+        reTriaseModal.show();
+    });
+
+    // Perubahan pada checkbox DOA
+    document.querySelectorAll('#reTriagePatient .doa-check').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            let doaChecked = document.querySelectorAll('#reTriagePatient .doa-check:checked').length > 0;
+            document.querySelectorAll('#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(function(cb) {
+                cb.disabled = doaChecked;
+            });
+            updateTriaseStatus();
+        });
+    });
+
+    // Perubahan pada checkbox non-DOA
+    document.querySelectorAll('#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            let nonDoaChecked = document.querySelectorAll('#reTriagePatient input[type="checkbox"]:checked:not(.doa-check)').length > 0;
+            document.querySelectorAll('#reTriagePatient input[type="checkbox"].doa-check').forEach(function(cb) {
+                cb.disabled = nonDoaChecked;
+            });
+            updateTriaseStatus();
+        });
+    });
+
+    // Fungsi untuk memperbarui status triase dan kode triase
+    function updateTriaseStatus() {
+        var status = '';
+        var kode_triase = '';
+
+        if (document.querySelectorAll('#reTriagePatient .doa-check:checked').length > 0) {
+            status = 'DOA';
+            kode_triase = 5;
+        } else if (document.querySelectorAll('#reTriagePatient .resusitasi-check:checked').length > 0) {
+            status = 'RESUSITASI (segera)';
+            kode_triase = 4;
+        } else if (document.querySelectorAll('#reTriagePatient .emergency-check:checked').length > 0) {
+            status = 'EMERGENCY (10 menit)';
+            kode_triase = 3;
+        } else if (document.querySelectorAll('#reTriagePatient .urgent-check:checked').length > 0) {
+            status = 'URGENT (30 menit)';
+            kode_triase = 2;
+        } else if (document.querySelectorAll('#reTriagePatient .false-emergency-check:checked').length > 0) {
+            status = 'FALSE EMERGENCY (60 menit)';
+            kode_triase = 1;
+        }
+
+        document.getElementById('triaseStatusLabel').textContent = status;
+        document.getElementById('triaseStatusLabel').className = determineClass(status);
+        document.getElementById('kode_triase').value = kode_triase;
+        document.getElementById('ket_triase').value = status;
+    }
+
+    // Fungsi untuk menentukan kelas berdasarkan status triase (dengan warna)
+    function determineClass(status) {
+        switch (status) {
+            case 'RESUSITASI (segera)':
+            case 'EMERGENCY (10 menit)':
+                return 'btn btn-block btn-danger ms-3 w-100';
+            case 'URGENT (30 menit)':
+                return 'btn btn-block btn-warning ms-3 w-100';
+            case 'FALSE EMERGENCY (60 menit)':
+                return 'btn btn-block btn-success ms-3 w-100';
+            case 'DOA':
+                return 'btn btn-block btn-dark ms-3 w-100';
+            default:
+                return 'btn btn-block ms-3 w-100';
+        }
+    }
+
+    // Fungsi untuk menyimpan data re-triase dan menambahkan ke tabel
+    document.getElementById('simpanReTriase').addEventListener('click', function() {
+        var modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
+        var formData = getFormData(modalBody);
+
+        var emptyFields = [];
+        var requiredFields = ['td_sistole_retriage', 'td_diastole_retriage', 'nadi_retriage', 'resp_retriage', 'suhu_retriage', 'spo2_tanpa_o2_retriage', 'spo2_dengan_o2_retriage', 'gcs_retriage', 'avpu_retriage'];
+
+        // Validasi input yang diperlukan
+        requiredFields.forEach(function(field) {
+            if (!formData[field]) {
+                emptyFields.push(field);
             }
+        });
 
-            reTriaseTable.addEventListener('click', function(e) {
-                if (e.target.closest('.delete-retriage')) {
-                    var index = parseInt(e.target.closest('.delete-retriage').dataset.index);
-                    reTriaseData.splice(index, 1);
-                    updateReTriaseTable();
-                }
+        if (emptyFields.length > 0) {
+            iziToast.error({
+                title: 'Error',
+                message: 'Field berikut masih kosong: ' + emptyFields.join(', '),
+                position: 'topRight'
             });
+            return;
+        }
 
-            document.getElementById('reTriagePatient').addEventListener('hidden.bs.modal', function(event) {
-                event.stopPropagation();
-            });
+        var newData = {
+            tanggalJam: new Date().toLocaleString(),
+            keluhan: formData.anamnesis_retriage || 'Tidak ada keluhan',
+            vitalSigns: {
+                td_sistole: formData.td_sistole_retriage,
+                td_diastole: formData.td_diastole_retriage,
+                nadi: formData.nadi_retriage,
+                resp: formData.resp_retriage,
+                suhu: formData.suhu_retriage,
+                spo2_tanpa_o2: formData.spo2_tanpa_o2_retriage,
+                spo2_dengan_o2: formData.spo2_dengan_o2_retriage,
+                gcs: formData.gcs_retriage,
+                avpu: formData.avpu_retriage,
+            },
+            triase: {
+                kode_triase: formData.kode_triase,
+                ket_triase: formData.ket_triase
+            },
+            catatan: formData.catatan_retriage || 'Tidak ada catatan'
+        };
 
-            // Add this function to get re-triage data for form submission
-            window.getReTriageData = function() {
-                return JSON.stringify(reTriaseData);
-            };
+        // Tambahkan data ke array reTriaseData
+        reTriaseData.push(newData);
 
-            function updateReTriaseTable() {
-                reTriaseTable.innerHTML = reTriaseData.map((data, index) => `
+        // Update UI tabel dengan data baru
+        updateReTriaseTable();
+
+        // Sembunyikan modal setelah data disimpan
+        reTriaseModal.hide();
+    });
+
+    // Fungsi untuk memperbarui tabel re-triase
+    function updateReTriaseTable() {
+        var tbody = document.querySelector('#reTriaseTable tbody');
+        tbody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
+
+        reTriaseData.forEach(function(data, index) {
+            var row = `
                 <tr>
                     <td>${data.tanggalJam}</td>
                     <td>${data.keluhan}</td>
                     <td>
-                        <ul>${data.vitalSigns.map(vs => `<li>${vs.label}: ${vs.value}</li>`).join('')}</ul>
-                    </td>
-                    <td>
                         <ul>
-                            <li><div class="triase-circle ${getTriaseClass(data.reTriaseEWS.triase)}"></div></li>
-                            <li>EWS: ${data.reTriaseEWS.ews}</li>
+                            <li>TD Sistole: ${data.vitalSigns.td_sistole}</li>
+                            <li>TD Diastole: ${data.vitalSigns.td_diastole}</li>
+                            <li>Nadi: ${data.vitalSigns.nadi}</li>
+                            <li>Resp: ${data.vitalSigns.resp}</li>
+                            <li>Suhu: ${data.vitalSigns.suhu}</li>
+                            <li>SpO2 (tanpa O2): ${data.vitalSigns.spo2_tanpa_o2}</li>
+                            <li>SpO2 (dengan O2): ${data.vitalSigns.spo2_dengan_o2}</li>
+                            <li>GCS: ${data.vitalSigns.gcs}</li>
+                            <li>AVPU: ${data.vitalSigns.avpu}</li>
                         </ul>
                     </td>
+                    <td>
+                        <div class="triase-circle ${getTriaseClass(data.triase.kode_triase)}"></div>
+                        <div class="triase-label">${data.triase.ket_triase}</div>
+                    </td>
                 </tr>
-                `).join('');
-            }
-
-            function getTriaseClass(triaseValue) {
-                switch (parseInt(triaseValue)) {
-                    case 5:
-                        return 'triase-doa';
-                    case 4:
-                        return 'triase-resusitasi';
-                    case 3:
-                        return 'triase-emergency';
-                    case 2:
-                        return 'triase-urgent';
-                    case 1:
-                        return 'triase-false-emergency';
-                    default:
-                        return '';
-                }
-            }
+            `;
+            tbody.innerHTML += row;
         });
-    </script>
+
+        // Tambahkan event listener untuk tombol hapus
+        document.querySelectorAll('.delete-retriage').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var index = this.getAttribute('data-index');
+                reTriaseData.splice(index, 1); // Hapus data dari array
+                updateReTriaseTable(); // Update tabel setelah data dihapus
+            });
+        });
+    }
+
+    // Fungsi untuk memberikan kelas warna berdasarkan kode triase
+    function getTriaseClass(kode_triase) {
+        switch (parseInt(kode_triase)) {
+            case 5: return 'triase-doa';
+            case 4: return 'triase-resusitasi';
+            case 3: return 'triase-emergency';
+            case 2: return 'triase-urgent';
+            case 1: return 'triase-false-emergency';
+            default: return '';
+        }
+    }
+
+    // Fungsi untuk mengirim data re-triase dalam bentuk JSON ke server
+    window.getReTriageData = function() {
+        return JSON.stringify(reTriaseData);
+    };
+});
+</script>
 @endpush
