@@ -51,7 +51,7 @@
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
-            'link' => route('resume.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('rawat-jalan.rawat-jalan-resume.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
     ];
 

@@ -30,7 +30,7 @@
             <!-- Search Bar -->
             <div class="col-md-4">
                 <form method="GET"
-                    action="{{ route('resume.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+                    action="{{ route('rawat-jalan.rawat-jalan-resume.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Cari nama dokter" aria-label="Cari"
@@ -60,13 +60,13 @@
         <tbody id="table-resume">
             @foreach ($dataGet as $post)
                 <tr id="index_{{ $post->id }}">
-                    <td>Gawat Darurat</td>
+                    <td>Rawat Jalan</td>
                     <td>{{ $dataMedis->dokter->nama_lengkap ?? '-' }}</td>
                     <td>
-                        {{ $post->tgl_masuk ? substr($post->tgl_masuk, 0, 10) : '-' }}
+                        {{ $post->tgl_masuk ? \Carbon\Carbon::parse($post->tgl_masuk)->format('Y-m-d') : '-' }}
                     </td>
                     <td>
-                        {{ $dataMedis->tgl_keluar ? substr($dataMedis->tgl_keluar, 0, 10) : '-' }}
+                        {{ $dataMedis->tgl_keluar ? \Carbon\Carbon::parse($dataMedis->tgl_keluar)->format('Y-m-d') : '-' }}
                     </td>
                     <td>-</td>
                     <td>{{ $dataMedis->unit->nama_unit }}</td>
@@ -87,22 +87,23 @@
     </div>
 </div>
 
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-resume')
+@include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-create')
+@include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-view-resume')
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         // Filter by period
         $('#SelectOption').change(function() {
             var periode = $(this).val();
-            var kd_pasien =
-            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
-            var tgl_masuk =
-            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            var kd_unit = "{{ $dataMedis->kd_unit }}";
+            var kd_pasien = "{{ $dataMedis->kd_pasien }}";
+            var tgl_masuk = "{{ $dataMedis->tgl_masuk }}";
+            var urut_masuk = "{{ $dataMedis->urut_masuk }}";
 
             var queryString = '?periode=' + periode;
-            window.location.href = "/unit-pelayanan/gawat-darurat/pelayanan/" + kd_pasien + "/" +
-                tgl_masuk + "/resume" + queryString;
+            window.location.href = "/unit-pelayanan/rawat-jalan/unit/" + kd_unit + "/pelayanan/" +
+                kd_pasien + "/" +
+                tgl_masuk + "/" + urut_masuk + "/rawat-jalan-resume/" + queryString;
         });
 
         // Filter by start date and end date
@@ -111,10 +112,10 @@
 
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
-            var kd_pasien =
-            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
-            var tgl_masuk =
-            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            var kd_unit = "{{ $dataMedis->kd_unit }}";
+            var kd_pasien = "{{ $dataMedis->kd_pasien }}";
+            var tgl_masuk = "{{ $dataMedis->tgl_masuk }}";
+            var urut_masuk = "{{ $dataMedis->urut_masuk }}";
 
             if (!startDate || !endDate) {
                 alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
@@ -122,9 +123,9 @@
             }
 
             var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
-
-            window.location.href = "/unit-pelayanan/gawat-darurat/pelayanan/" + kd_pasien + "/" +
-                tgl_masuk + "/resume" + queryString;
+            window.location.href = "/unit-pelayanan/rawat-jalan/unit/" + kd_unit + "/pelayanan/" +
+                kd_pasien + "/" +
+                tgl_masuk + "/" + urut_masuk + "/rawat-jalan-resume/" + queryString;
         });
     });
 </script>

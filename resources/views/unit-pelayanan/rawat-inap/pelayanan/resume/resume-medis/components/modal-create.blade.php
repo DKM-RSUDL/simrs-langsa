@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header  bg-primary">
-                <h5 class="modal-title text-white" id="extraLargeModalLabel">Resume Medis Gawat Darurat</h5>
+                <h5 class="modal-title text-white" id="extraLargeModalLabel">Resume Medis Rawat Inap</h5>
                 <button type="button" class="btn-close btn-close-modified" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
@@ -388,13 +388,12 @@
         </div>
     </div>
 </div>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-diagnosi')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-input-diagnosis')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
-
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-diagnosi')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-input-diagnosis')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kode-icd')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kode-icd9')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-konsul-rujukan')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-alergi')
 
 
 <script>
@@ -405,8 +404,10 @@
     $('#update').click(function(e) {
         e.preventDefault();
 
+        let kd_unit = '{{ $dataMedis->kd_unit }}';
         let kd_pasien = '{{ $dataMedis->kd_pasien }}';
         let tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
+        let urut_masuk = '{{ $dataMedis->urut_masuk }}';
         let resume_id = '{{ $dataResume->id ?? '-' }}';
 
         let formData = new FormData();
@@ -441,8 +442,9 @@
 
         formData.append('_method', 'PUT');
 
+        let url = `/unit-pelayanan/rawat-inap/unit/${kd_unit}/pelayanan/${kd_pasien}/${tgl_masuk}/${urut_masuk}/rawat-inap-resume/${resume_id}`;
         $.ajax({
-            url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume/${resume_id}`,
+            url: url,
             type: "POST",
             data: formData,
             processData: false,
@@ -465,8 +467,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: response.message ||
-                            'Terjadi kesalahan saat memperbarui data.',
+                        text: response.message || 'Terjadi kesalahan saat memperbarui data.',
                     });
                 }
 
