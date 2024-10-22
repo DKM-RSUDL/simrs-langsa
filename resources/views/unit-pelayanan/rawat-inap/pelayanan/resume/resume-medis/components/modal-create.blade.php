@@ -300,7 +300,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($riwayatObat as $obat)
+                                                @foreach ($riwayatObatHariIni as $obat)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>

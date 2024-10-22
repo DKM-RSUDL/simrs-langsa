@@ -300,7 +300,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($riwayatObat as $obat)
+                                                @foreach ($riwayatObatHariIni as $obat)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>
@@ -396,14 +396,28 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 
 
-
 <script type="text/javascript">
     $('#btn-edit-resume').on('click', function() {
         $('#modal-edit-resume').modal('show');
     });
 
+    $('.tindak-lanjut-option').on('click', function(e) {
+        e.preventDefault();
+        $(this).find('input[type="radio"]').prop('checked', true);
+    });
+
     $('#update').click(function(e) {
         e.preventDefault();
+
+        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+        if (!tindakLanjutElement.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Error',
+                text: 'Mohon pilih tindak lanjut terlebih dahulu'
+            });
+            return false;
+        }
 
         const kd_pasien = '{{ $dataMedis->kd_pasien }}';
         const tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
@@ -424,7 +438,6 @@
         if (!validateForm()) {
             return;
         }
-        // Jika ada resume_id, lanjutkan dengan proses update
         let formData = new FormData();
 
         formData.append('anamnesis', $('#anamnesis').val().trim());
@@ -434,7 +447,6 @@
             .map(function() {
                 return $(this).find('.fw-bold').text().trim();
             }).get().filter(Boolean);
-
         if (diagnosisArray.length === 0) {
             Swal.fire({
                 icon: 'error',
@@ -450,6 +462,14 @@
             .map(function() {
                 return $(this).text().trim().split(' ')[0];
             }).get().filter(Boolean);
+        if (icd10Array.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Minimal satu ICD 10 harus diisi'
+            });
+            return;
+        }
         formData.append('icd_10', JSON.stringify(icd10Array));
 
         // Get ICD-9 data
@@ -457,30 +477,28 @@
             .map(function() {
                 return $(this).text().trim().split(' ')[0];
             }).get().filter(Boolean);
-        formData.append('icd_9', JSON.stringify(icd9Array));
-
-        // Get and validate tindak lanjut
-        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
-        if (tindakLanjutElement.length === 0) {
+        if (icd9Array.length === 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Mohon pilih tindak lanjut'
+                text: 'Minimal satu ICD 9 harus diisi'
             });
             return;
         }
+        formData.append('icd_9', JSON.stringify(icd9Array));
 
         formData.append('tindak_lanjut_name', tindakLanjutElement.val());
         formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
+
         formData.append('_method', 'PUT');
 
         // Show konfirmasi
         Swal.fire({
             title: 'Konfirmasi',
-            text: 'Apakah Anda yakin ingin memperbarui data resume ini?',
+            text: 'Apakah Anda yakin ingin validasi data resume ini?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Pembarui',
+            confirmButtonText: 'Ya, validasi',
             cancelButtonText: 'Batal',
             showLoaderOnConfirm: true,
             preConfirm: () => {
@@ -524,6 +542,7 @@
                 }
             }
         }).catch(error => {
+            console.error('Error details:', error);
             let errorMessage = "Terjadi kesalahan saat memperbarui data.";
             if (error.responseJSON) {
                 if (error.responseJSON.errors) {
@@ -547,6 +566,7 @@
             'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
         };
 
+        // Check required fields
         for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
             const value = $(`#${fieldId}`).val().trim();
             if (!value) {
@@ -559,6 +579,17 @@
             }
         }
 
+        // Check tindak lanjut
+        const tindakLanjutChecked = $('input[name="tindak_lanjut_name"]:checked').length > 0;
+        if (!tindakLanjutChecked) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Error',
+                text: 'Mohon pilih tindak lanjut terlebih dahulu'
+            });
+            return false;
+        }
+
         return true;
     }
 
@@ -566,4 +597,9 @@
     function sanitizeInput(input) {
         return input ? input.trim() : '';
     }
+
+    $('input[name="tindak_lanjut_name"]').on('change', function() {
+        console.log('Radio button changed:', $(this).val());
+        console.log('Code:', $(this).data('code'));
+    });
 </script>

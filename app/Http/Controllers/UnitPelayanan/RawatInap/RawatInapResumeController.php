@@ -125,7 +125,7 @@ class RawatInapResumeController extends Controller
         $kodeICD9 = ICD9Baru::all();
 
         // Mengambil data obat
-        $riwayatObat = $this->getRiwayatObat($kd_pasien, $tgl_masuk);
+        $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -140,7 +140,7 @@ class RawatInapResumeController extends Controller
                 'dataDokter',
                 'dataLabor',
                 'dataRagiologi',
-                'riwayatObat',
+                'riwayatObatHariIni',
                 'kodeICD',
                 'kodeICD9',
                 'dataResume',
@@ -235,41 +235,31 @@ class RawatInapResumeController extends Controller
     }
 
 
-    private function getRiwayatObat($kd_pasien, $tgl_masuk)
+    private function getRiwayatObatHariIni($kd_pasien, $tgl_masuk)
     {
+        $today = Carbon::today()->toDateString();
+
         return DB::table('MR_RESEP')
-            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                            FROM DATA_BATCH AS db
-                            WHERE TGL_MASUK = (
-                                SELECT MAX(TGL_MASUK)
-                                FROM DATA_BATCH
-                                WHERE KD_PRD = db.KD_PRD
-                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
-            ->where('MR_RESEP.tgl_masuk', $tgl_masuk)
+        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
-                DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
-                'MR_RESEP.KD_DOKTER',
-                'DOKTER.NAMA as NAMA_DOKTER',
-                'MR_RESEP.ID_MRRESEP as ID_MRRESEP',
-                'MR_RESEP.CAT_RACIKAN',
                 'MR_RESEP.TGL_ORDER',
+                'DOKTER.NAMA as NAMA_DOKTER',
+                'MR_RESEP.ID_MRRESEP',
                 'MR_RESEP.STATUS',
                 'MR_RESEPDTL.CARA_PAKAI',
                 'MR_RESEPDTL.JUMLAH',
                 'MR_RESEPDTL.KET',
                 'MR_RESEPDTL.JUMLAH_TAKARAN',
                 'MR_RESEPDTL.SATUAN_TAKARAN',
-                'MR_RESEPDTL.KD_PRD',
-                'APT_OBAT.NAMA_OBAT',
-                'APT_SATUAN.SATUAN',
-                'latest_price.HRG_BELI_OBT as HARGA'
+                'APT_OBAT.NAMA_OBAT'
             )
-            ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
+            ->distinct()
+            ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
     }
 }

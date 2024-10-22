@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\LapLisItemPemeriksaan;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LaborController extends Controller
@@ -223,6 +226,14 @@ class LaborController extends Controller
             ]);
         }
 
+        // Buat atau dapatkan resume
+        $resume = $this->checkAndCreateResume([
+            'kd_pasien' => $validatedData['kd_pasien'],
+            'kd_unit' => $validatedData['kd_unit'],
+            'tgl_masuk' => $validatedData['tgl_masuk'],
+            'urut_masuk' => $validatedData['urut_masuk']
+        ]);
+
         return redirect()->route('labor.index', [
             'kd_pasien' => $validatedData['kd_pasien'],
             'tgl_masuk' => $validatedData['tgl_masuk']
@@ -341,42 +352,31 @@ class LaborController extends Controller
         }
     }
 
+    private function checkAndCreateResume($data)
+    {
+        try {
+            // Cek apakah resume sudah ada
+            $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
+                ->where('kd_unit', $data['kd_unit'])
+                ->where('tgl_masuk', $data['tgl_masuk'])
+                ->where('urut_masuk', $data['urut_masuk'])
+                ->first();
 
+            if (!$resume) {
+                // Jika belum ada
+                $resume = RMEResume::create([
+                    'kd_pasien' => $data['kd_pasien'],
+                    'kd_unit' => $data['kd_unit'],
+                    'tgl_masuk' => $data['tgl_masuk'],
+                    'urut_masuk' => $data['urut_masuk'],
+                    'status' => 0,
+                    'user_validasi' => Auth::id()
+                ]);
+            }
 
-    // dari  bg rizaldi
-    // public function getProdukByKategoriAjax(Request $request)
-    // {
-    //     try {
-    //         $katProduk = $request->kat_produk;
-
-    //         $produk = LapLisItemPemeriksaan::with(['produk'])
-    //                                 ->select([
-    //                                     'kd_produk'
-    //                                 ])
-    //                                 ->where('kategori', $katProduk)
-    //                                 ->groupBy('kd_produk')
-    //                                 ->get();
-
-    //         if(count( $produk ) > 0) {
-    //             return response()->json([
-    //                 'status'    => 'success',
-    //                 'message'   => 'Data ditemukan!',
-    //                 'data'      => $produk
-    //             ],200);
-    //         } else {
-    //             return response()->json([
-    //                 'status'    => 'error',
-    //                 'message'   => 'Data tidak ditemukan',
-    //                 'data'      => []
-    //             ], status: 204);
-    //         }
-
-    //     } catch (Exception $e) {
-    //         return response()->json([
-    //             'status'    => 'error',
-    //             'message'   => $e->getMessage(),
-    //             'data'      => []
-    //         ], 500);
-    //     }
-    // }
+            return $resume;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

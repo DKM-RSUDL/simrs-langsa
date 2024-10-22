@@ -19,4 +19,9 @@ class RmeResumeDtl extends Model
         'tindak_lanjut_code',
         'tindak_lanjut_name',
     ];
+
+    public function resume()
+    {
+        return $this->belongsTo(RMEResume::class, 'id_resume', 'id');
+    }
 }

@@ -15,6 +15,10 @@ class RMEResume extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'kd_pasien',
+        'kd_unit',
+        'tgl_masuk',
+        'urut_masuk',
         'anamnesis',
         'pemeriksaan_penunjang',
         'diagnosis',
