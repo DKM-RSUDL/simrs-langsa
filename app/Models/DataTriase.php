@@ -31,7 +31,7 @@ class DataTriase extends Model
         'id_asesmen',
     ];
 
-    protected $dates = ['tanggal_triase'];
+    // protected $dates = ['tanggal_triase'];
 
     public function pasien()
     {
