@@ -32,6 +32,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapF
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 
@@ -39,6 +40,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -164,6 +166,17 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+                        // Resume
+                        Route::prefix('rawat-jalan-resume')->group(function () {
+                            Route::name('.rawat-jalan-resume')->group(function () {
+                                Route::controller(RawatJalanResumeController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -260,6 +273,16 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+                        // resume
+                        Route::prefix('rawat-inap-resume')->group(function () {
+                            Route::name('.rawat-inap-resume')->group(function () {
+                                Route::controller(RawatInapResumeController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -338,6 +361,17 @@ Route::middleware('auth')->group(function () {
                             });
                         });
                     });
+
+                    // Route::resource('farmasi', GawatDaruratFarmasiController::class);
+                    Route::prefix('asesmen')->group(function () {
+                        Route::name('asesmen')->group(function () {
+                            Route::controller(GawatDaruratAsesmenController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                            });
+                        });
+                    });
+
 
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);

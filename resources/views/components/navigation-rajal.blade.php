@@ -81,7 +81,12 @@
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
-            'link' => '#',
+            'link' => route('rawat-jalan.rawat-jalan-resume.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
     ];
 

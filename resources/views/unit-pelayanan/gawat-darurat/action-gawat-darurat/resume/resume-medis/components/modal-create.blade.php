@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-edit-resume" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header  bg-primary">
@@ -7,6 +7,7 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="post_id">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="patient-card">
@@ -21,14 +22,19 @@
                                     {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
                                     ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})
                                 </small>
-                                <p class="mb-0 fw-bold">RM: {{ $dataMedis->pasien->kd_pasien }}</p>
+                                <p class="mb-0 fw-bold">RM:
+                                    {{ $dataMedis->pasien->kd_pasien ?? '-' }}</p>
 
                                 <div class="patient-meta mt-2">
-                                    <p class="mb-0"><i
-                                            class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}
+                                    <p class="mb-0">
+                                        <i class="bi bi-calendar3"></i>
+                                        {{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') ?? '-' }}
                                     </p>
-                                    <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }}
-                                        ({{ $dataMedis->unit->nama_unit }})</p>
+                                    <p>
+                                        <i class="bi bi-hospital"></i>
+                                        {{ $dataMedis->unit->bagian->bagian ?? '-' }}
+                                        ({{ $dataMedis->unit->nama_unit ?? '-' }})
+                                    </p>
                                 </div>
                             </div>
 
@@ -44,7 +50,8 @@
                                         <div class="col-7">
                                             <a href="javascript:void(0)"
                                                 class="text-secondary text-decoration-none fw-bold"
-                                                id="btn-create-alergi"><i class="bi bi-plus-square"></i> Tambah</a>
+                                                id="btn-create-alergi"><i class="bi bi-plus-square"></i>
+                                                Tambah</a>
                                         </div>
                                         <hr class="text-secondary">
                                     </div>
@@ -66,25 +73,39 @@
                     <div class="col-md-5">
                         <div class="col__dua">
                             <label class="form-label fw-bold">Anamnesis/ Keluhan Utama</label>
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control" rows="3" id="anamnesis">{{ $dataResume->anamnesis ?? '-' }}</textarea>
 
                             <div class="mt-4">
                                 <strong class="fw-bold">Pemeriksaan Fisik</strong>
                                 <div class="bg-light p-3 border rounded">
                                     <div class="row">
                                         <div class="col-6 col-md-4">
-                                            <small>TD: __/__ mmHg</small><br>
-                                            <small>Temp: __ C</small><br>
+                                            <small>TD:
+                                                {{ $dataResume->konpas['sistole']['hasil'] ?? '__' }} /
+                                                {{ $dataResume->konpas['diastole']['hasil'] ?? '__' }} mmHg
+                                            </small><br>
+                                            <small>Temp: {{ $dataResume->konpas['suhu']['hasil'] ?? '__' }}
+                                                C</small><br>
                                         </div>
                                         <div class="col-6 col-md-4">
-                                            <small>RR: __ x/mnt</small><br>
-                                            <small>Resp: __ x/mnt</small>
+                                            <small>
+                                                RR:
+                                                {{ $dataResume->konpas['respiration_rate']['hasil'] ?? '__' }}
+                                                x/mnt
+                                            </small><br>
+                                            <small>Resp: {{ $dataResume->konpas['nadi']['hasil'] ?? '__' }}
+                                                x/mnt</small>
                                         </div>
                                         <div class="col-6 col-md-4">
-                                            <small>TB: __ M</small><br>
-                                            <small>BB: __ Kg</small><br>
+                                            <small>TB:
+                                                {{ $dataResume->konpas['tinggi_badan']['hasil'] ?? '__' }}
+                                                M</small><br>
+                                            <small>BB:
+                                                {{ $dataResume->konpas['berat_badan']['hasil'] ?? '__' }}
+                                                Kg</small><br>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -121,16 +142,13 @@
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
-                                                                        $statusLabel =
-                                                                            'Diproses';
+                                                                        $statusLabel = 'Diproses';
                                                                     }
                                                                     if ($statusOrder == 1) {
-                                                                        $statusLabel =
-                                                                            'Diorder';
+                                                                        $statusLabel = 'Diorder';
                                                                     }
                                                                     if ($statusOrder == 2) {
-                                                                        $statusLabel =
-                                                                            'Selesai';
+                                                                        $statusLabel = 'Selesai';
                                                                     }
                                                                 @endphp
 
@@ -180,16 +198,13 @@
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
-                                                                        $statusLabel =
-                                                                            'Diproses';
+                                                                        $statusLabel = 'Diproses';
                                                                     }
                                                                     if ($statusOrder == 1) {
-                                                                        $statusLabel =
-                                                                            'Diorder';
+                                                                        $statusLabel = 'Diorder';
                                                                     }
                                                                     if ($statusOrder == 2) {
-                                                                        $statusLabel =
-                                                                            'Selesai';
+                                                                        $statusLabel = 'Selesai';
                                                                     }
                                                                 @endphp
 
@@ -207,7 +222,7 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
                             <div class="mt-3">
@@ -216,17 +231,8 @@
                                     <a href="javascript:void(0)"
                                         class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis"><i
                                             class="bi bi-plus-square"></i> Tambah</a>
-                                    {{-- <a href="#" class="text-secondary text-decoration-none fw-bold ms-3"><i
-                                            class="bi bi-plus-square"></i> ICD-10</a> --}}
                                 </strong>
-                                {{-- <div class="bg-light p-3 border rounded">
-                                    <div style="max-height: 150px; overflow-y: auto;">
-                                        <a href="javascript:void(0)" id="btn-input-diagnosis" class="fw-bold">HYPERTENSI
-                                            KRONIS</a> <br>
-                                        <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                                        <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br>
-                                    </div>
-                                </div> --}}
+
                                 <div class="bg-light p-3 border rounded">
                                     <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
 
@@ -236,7 +242,8 @@
 
                             <div class="mt-3">
                                 <strong class="fw-bold">Kode ICD 10 (Koder)
-                                    <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
+                                    <a href="javascript:void(0)"
+                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd">
                                         <i class="bi bi-plus-square"></i> Tambah
                                     </a>
                                 </strong>
@@ -256,13 +263,8 @@
                             <div style="max-height: 150px; overflow-y: auto;">
                                 <ol type="1">
                                     <li>
-                                        <a href="#" class="fw-bold">lab tes- darah rutin</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="fw-bold">x-ray thorax</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="fw-bold">fisiotherapi</a>
+                                        <a href="#"
+                                            class="fw-bold">{{ $dataResume->listTindakanPasien->produk->deskripsi ?? '-' }}</a>
                                     </li>
                                 </ol>
                             </div>
@@ -270,7 +272,8 @@
 
                         <div class="mt-3">
                             <strong class="fw-bold">Kode ICD-9 CM (Koder)
-                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3" id="btn-kode-icd9">
+                                <a href="javascript:void(0)" class="text-secondary text-decoration-none fw-bold ms-3"
+                                    id="btn-kode-icd9">
                                     <i class="bi bi-plus-square"></i> Tambah</a>
                             </strong>
                             <div class="bg-light p-3 border rounded">
@@ -297,16 +300,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- {{ $dataResepObat }} --}}
-                                                @foreach ($riwayatObat as $obat)
+                                                @foreach ($riwayatObatHariIni as $obat)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>
                                                             {{ $obat->nama_obat ?? '-' }}
                                                         </td>
-                                                        <td>{{ $obat->jumlah_takaran }} {{ $obat->satuan_takaran }}</td>
+                                                        <td>{{ $obat->jumlah_takaran }}
+                                                            {{ $obat->satuan_takaran }}
+                                                        </td>
                                                         <td>{{ explode(',', $obat->cara_pakai)[0] }}</td>
-                                                        <td>{{ (int) $obat->jumlah ?? '-'}}</td>
+                                                        <td>{{ (int) $obat->jumlah ?? '-' }}</td>
                                                         <td>-</td>
                                                     </tr>
                                                 @endforeach
@@ -324,27 +328,29 @@
                                     <div class="col-md-6">
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="kontrol" name="tindakLanjut"
-                                                class="form-check-input me-2">
+                                            <input type="radio" id="kontrol" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Kontrol ulang, tgl:"
+                                                data-code="2">
                                             <label for="kontrol">Kontrol ulang, tgl:</label>
-                                            <input type="date" id="kontrolDate" class="form-control mt-1"
-                                                style="display: none;">
                                         </a>
 
-                                        <a href="javascript:void(0)"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
-                                            id="btn-konsul-rujukan">
-                                            <input type="radio" id="konsul" name="tindakLanjut"
-                                                class="form-check-input me-2">
+                                        <a href="j#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="konsul" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
+                                                data-code="4">
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
-                                            <input type="text" id="konsulText" class="form-control mt-1"
-                                                style="display: none;">
                                         </a>
+                                        {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
+                                            <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
+                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
+                                        </a> --}}
 
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="selesai" name="tindakLanjut"
-                                                class="form-check-input me-2">
+                                            <input type="radio" id="selesai" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Selesai di Klinik ini"
+                                                data-code="3">
                                             <label for="selesai">Selesai di Klinik ini</label>
                                         </a>
                                     </div>
@@ -352,21 +358,21 @@
                                     <div class="col-md-6">
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rujuk" name="tindakLanjut"
-                                                class="form-check-input me-2">
+                                            <input type="radio" id="rujuk" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Rujuk RS lain bagian:"
+                                                data-code="5">
                                             <label for="rujuk">Rujuk RS lain bagian:</label>
-                                            <input type="text" id="rujukText" class="form-control mt-1"
-                                                style="display: none;">
                                         </a>
 
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rawat" name="tindakLanjut"
-                                                class="form-check-input me-2">
+                                            <input type="radio" id="rawat" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Rawat Inap" data-code="1">
                                             <label for="rawat">Rawat Inap</label>
                                         </a>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -374,8 +380,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i> Print</button>
-                <button type="button" class="btn btn-sm btn-primary">Simpan</button>
+                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
+                    Print</button>
+                <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -388,11 +395,212 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 
-<script>
-    //button create post event
-    $('#btn-validasi-resume').on('click', function() {
 
-        //open modal
-        $('#modal-create').modal('show');
+<script type="text/javascript">
+    $('#btn-edit-resume').on('click', function() {
+        $('#modal-edit-resume').modal('show');
+    });
+
+    $('.tindak-lanjut-option').on('click', function(e) {
+        e.preventDefault();
+        $(this).find('input[type="radio"]').prop('checked', true);
+    });
+
+    $('#update').click(function(e) {
+        e.preventDefault();
+
+        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+        if (!tindakLanjutElement.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Error',
+                text: 'Mohon pilih tindak lanjut terlebih dahulu'
+            });
+            return false;
+        }
+
+        const kd_pasien = '{{ $dataMedis->kd_pasien }}';
+        const tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
+        const resume_id = '{{ $dataResume->id ?? null }}';
+
+        // Ambil resume_id, biarkan null jika tidak ada
+        if (!resume_id || resume_id === 'null') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Resume Tidak Tersedia',
+                text: 'Data resume belum tersedia. Silahkan buat resume baru terlebih dahulu.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        if (!validateForm()) {
+            return;
+        }
+        let formData = new FormData();
+
+        formData.append('anamnesis', $('#anamnesis').val().trim());
+        formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
+
+        const diagnosisArray = $('#diagnoseDisplay').children()
+            .map(function() {
+                return $(this).find('.fw-bold').text().trim();
+            }).get().filter(Boolean);
+        if (diagnosisArray.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Minimal satu diagnosis harus diisi'
+            });
+            return;
+        }
+        formData.append('diagnosis', JSON.stringify(diagnosisArray));
+
+        // Get ICD-10 data
+        const icd10Array = $('#icdList').children()
+            .map(function() {
+                return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
+        if (icd10Array.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Minimal satu ICD 10 harus diisi'
+            });
+            return;
+        }
+        formData.append('icd_10', JSON.stringify(icd10Array));
+
+        // Get ICD-9 data
+        const icd9Array = $('#icd9List').children()
+            .map(function() {
+                return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
+        if (icd9Array.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Minimal satu ICD 9 harus diisi'
+            });
+            return;
+        }
+        formData.append('icd_9', JSON.stringify(icd9Array));
+
+        formData.append('tindak_lanjut_name', tindakLanjutElement.val());
+        formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
+
+        formData.append('_method', 'PUT');
+
+        // Show konfirmasi
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah Anda yakin ingin validasi data resume ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Validasi',
+            cancelButtonText: 'Batal',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                            url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume/${resume_id}`,
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            }
+                        })
+                        .done(response => resolve(response))
+                        .fail(xhr => reject(xhr));
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const response = result.value;
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 3000
+                    }).then(() => {
+                        $('#modal-edit-resume').modal('hide');
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: response.message || 'Terjadi kesalahan saat memperbarui data.'
+                    });
+                }
+            }
+        }).catch(error => {
+            console.error('Error details:', error);
+            let errorMessage = "Terjadi kesalahan saat memperbarui data.";
+            if (error.responseJSON) {
+                if (error.responseJSON.errors) {
+                    errorMessage = Object.values(error.responseJSON.errors).join("\n");
+                } else if (error.responseJSON.message) {
+                    errorMessage = error.responseJSON.message;
+                }
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage
+            });
+        });
+    });
+
+    // Form validation function
+    function validateForm() {
+        const requiredFields = {
+            'anamnesis': 'Anamnesis',
+            'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
+        };
+        let isValid = true;
+
+        // Check required fields
+        for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+            const value = $(`#${fieldId}`).val().trim();
+            if (!value) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validasi Error',
+                    text: `${fieldName} wajib diisi`
+                });
+                return false;
+            }
+        }
+
+        // Check tindak lanjut
+        const tindakLanjutChecked = $('input[name="tindak_lanjut_name"]:checked').length > 0;
+        if (!tindakLanjutChecked) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Error',
+                text: 'Mohon pilih tindak lanjut terlebih dahulu'
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    // Helper function
+    function sanitizeInput(input) {
+        return input ? input.trim() : '';
+    }
+
+    $('input[name="tindak_lanjut_name"]').on('change', function() {
+        console.log('Radio button changed:', $(this).val());
+        console.log('Code:', $(this).data('code'));
     });
 </script>

@@ -1,15 +1,5 @@
-<a href="#" class="btn btn-sm {{ $laborPK->status == 1 ? 'btn-primary' : 'btn-info' }}" data-bs-toggle="modal"
-    data-bs-target="#laborModal{{ $laborPK->kd_order }}">
-    <i class="ti-eye"></i>
-</a>
-
-<!-- Tombol Hapus -->
-<a href="#" class="mb-2">
-    <i class="bi bi-x-circle text-secondary"></i>
-</a>
-
-<div class="modal fade" id="laborModal{{ $laborPK->kd_order }}" tabindex="-1"
-    aria-labelledby="laborModalLabel{{ $laborPK->kd_order }}" aria-hidden="true">
+<div class="modal fade" id="laborModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
+    aria-labelledby="laborModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form

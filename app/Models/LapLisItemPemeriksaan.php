@@ -13,6 +13,6 @@ class LapLisItemPemeriksaan extends Model
 
     public function produk()
     {
-        return $this->belongsTo(produk::class, 'kd_produk', 'kd_produk');
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
     }
 }
