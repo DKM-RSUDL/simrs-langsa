@@ -21,7 +21,12 @@
         [
             'icon' => 'tools.png',
             'label' => 'Tindakan',
-            'link' => '#',
+            'link' => route('rawat-inap.tindakan.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'agree.png',
