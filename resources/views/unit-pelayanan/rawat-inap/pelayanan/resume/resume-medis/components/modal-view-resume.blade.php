@@ -332,7 +332,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="kontrol" name="tindak_lanjut_name"
+                                            <input type="radio" id="kontrol"
                                                 class="form-check-input me-2" value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}"
                                                 data-code="1" checked>
                                             <label for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>

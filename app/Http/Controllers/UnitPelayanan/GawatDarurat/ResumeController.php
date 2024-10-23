@@ -164,7 +164,10 @@ class ResumeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $data = RMEResume::where('kd_pasien', $kd_pasien)

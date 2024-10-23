@@ -498,7 +498,7 @@
             text: 'Apakah Anda yakin ingin validasi data resume ini?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Ya, validasi',
+            confirmButtonText: 'Ya, Validasi',
             cancelButtonText: 'Batal',
             showLoaderOnConfirm: true,
             preConfirm: () => {
@@ -565,6 +565,7 @@
             'anamnesis': 'Anamnesis',
             'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
         };
+        let isValid = true;
 
         // Check required fields
         for (const [fieldId, fieldName] of Object.entries(requiredFields)) {

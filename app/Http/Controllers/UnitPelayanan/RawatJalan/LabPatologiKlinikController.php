@@ -7,11 +7,14 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class LabPatologiKlinikController extends Controller
@@ -227,6 +230,14 @@ class LabPatologiKlinikController extends Controller
             ]);
         }
 
+        // Buat atau dapatkan resume
+        $resume = $this->checkAndCreateResume([
+            'kd_pasien' => $validatedData['kd_pasien'],
+            'kd_unit' => $validatedData['kd_unit'],
+            'tgl_masuk' => $validatedData['tgl_masuk'],
+            'urut_masuk' => $validatedData['urut_masuk']
+        ]);
+
         return redirect()->route('rawat-jalan.lab-patologi-klinik.index', [
             'kd_unit' => $validatedData['kd_unit'],
             'kd_pasien' => $validatedData['kd_pasien'],
@@ -362,6 +373,53 @@ class LabPatologiKlinikController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
             ])->with(['error' => 'Ada kesalahan sistem. Silakan coba lagi.']);
+        }
+    }
+
+    private function checkAndCreateResume($data)
+    {
+        try {
+            // Cek apakah resume sudah ada
+            $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
+                ->where('kd_unit', $data['kd_unit'])
+                ->where('tgl_masuk', $data['tgl_masuk'])
+                ->where('urut_masuk', $data['urut_masuk'])
+                ->first();
+
+            if (!$resume) {
+                // Jika belum ada
+                $resume = RMEResume::create([
+                    'kd_pasien' => $data['kd_pasien'],
+                    'kd_unit' => $data['kd_unit'],
+                    'tgl_masuk' => $data['tgl_masuk'],
+                    'urut_masuk' => $data['urut_masuk'],
+                    'status' => 0,
+                ]);
+
+                $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
+                    ->where('kd_unit', $data['kd_unit'])
+                    ->where('tgl_masuk', $data['tgl_masuk'])
+                    ->where('urut_masuk', $data['urut_masuk'])
+                    ->first();
+            }
+
+            // Entri di RMEResumeDtl
+            if ($resume) {
+                $resumeDetail = RmeResumeDtl::where('id_resume', $resume->id)->first();
+
+                if (!$resumeDetail) {
+                    DB::table('RME_RESUME_DTL')->insert([
+                        'id_resume' => $resume->id
+                    ]);
+                }
+
+                DB::commit();
+                return $resume;
+            }
+            throw new \Exception('Gagal membuat atau mendapatkan data resume');
+
+        } catch (\Exception $e) {
+            throw $e;
         }
     }
 }
