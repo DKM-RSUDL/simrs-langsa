@@ -93,17 +93,26 @@ class AsesmenController extends Controller
             // Parse tanggal tanpa waktu
             $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
 
-            $asesmen = RmeAsesmen::where('id', $id)
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $date)
-                ->firstOrFail();
+            $asesmen = RmeAsesmen::with([
+                'menjalar',
+                'frekuensiNyeri',
+                'kualitasNyeri',
+                'faktorPemberat',
+                'faktorPeringan',
+                'efekNyeri'
+            ])
+            ->where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $date)
+            ->firstOrFail();
+
 
             $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
                 ? json_decode($asesmen->tindakan_resusitasi, true)
                 : $asesmen->tindakan_resusitasi;
 
             $riwayatAlergi = is_string($asesmen->riwayat_alergi)
-            ? json_decode($asesmen->riwayat_alergi, true)
+                ? json_decode($asesmen->riwayat_alergi, true)
                 : $asesmen->riwayat_alergi;
 
             return response()->json([
@@ -115,6 +124,17 @@ class AsesmenController extends Controller
                         'riwayat_penyakit' => $asesmen->riwayat_penyakit,
                         'riwayat_pengobatan' => $asesmen->riwayat_pengobatan,
                         'riwayat_alergi' => $riwayatAlergi,
+                        'vital_sign' => json_decode($asesmen->vital_sign, true),
+                        'antropometri' => json_decode($asesmen->antropometri, true),
+                        'show_skala_nyeri' => $asesmen->skala_nyeri,
+                        'show_lokasi'=> $asesmen->lokasi,
+                        'show_durasi'=> $asesmen->durasi,
+                        'show_menjalar' => $asesmen->menjalar ? $asesmen->menjalar->name : null,
+                        'show_frekuensi' => $asesmen->frekuensiNyeri ? $asesmen->frekuensiNyeri->name : null,
+                        'show_kualitas' => $asesmen->kualitasNyeri ? $asesmen->kualitasNyeri->name : null,
+                        'show_faktor_pemberat' => $asesmen->faktorPemberat ? $asesmen->faktorPemberat->name : null,
+                        'show_faktor_peringan' => $asesmen->faktorPeringan ? $asesmen->faktorPeringan->name : null,
+                        'show_efek_nyeri'=> $asesmen->efekNyeri ? $asesmen->efekNyeri->name : null
                     ]
                 ]
             ]);
@@ -123,6 +143,43 @@ class AsesmenController extends Controller
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'
             ], 404);
+        }
+    }
+
+    public function update($kd_pasien, $tgl_masuk, $id, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            $asesmen = RmeAsesmen::where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
+
+            $updateData = [
+                'tindakan_resusitasi' => json_encode($request->tindakan_resusitasi),
+                'anamnesis' => $request->anamnesis,
+                'riwayat_penyakit' => $request->riwayat_penyakit,
+                'riwayat_pengobatan' => $request->riwayat_pengobatan,
+                'vital_sign' => json_encode($request->vital_sign),
+                'riwayat_alergi' => json_encode($request->riwayat_alergi)
+            ];
+
+            $asesmen->update($updateData);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil diupdate'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data: ' . $e->getMessage()
+            ], 500);
         }
     }
 

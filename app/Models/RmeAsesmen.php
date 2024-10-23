@@ -46,4 +46,34 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(DataTriase::class, 'asesmen_id', 'id');
     }
+
+    public function menjalar()
+    {
+        return $this->belongsTo(RmeMenjalar::class, 'menjalar_id');
+    }
+
+    public function frekuensiNyeri()
+    {
+        return $this->belongsTo(RmeFrekuensiNyeri::class, 'frekuensi_nyeri_id');
+    }
+
+    public function kualitasNyeri()
+    {
+        return $this->belongsTo(RmeKualitasNyeri::class, 'kualitas_nyeri_id');
+    }
+
+    public function faktorPemberat()
+    {
+        return $this->belongsTo(RmeFaktorPemberat::class, 'faktor_pemberat_id');
+    }
+
+    public function faktorPeringan()
+    {
+        return $this->belongsTo(RmeFaktorPeringan::class, 'faktor_peringan_id');
+    }
+
+    public function efekNyeri()
+    {
+        return $this->belongsTo(RmeEfekNyeri::class, 'efek_nyeri');
+    }
 }

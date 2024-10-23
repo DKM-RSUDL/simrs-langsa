@@ -77,10 +77,15 @@
                 <button type="button" onclick="showAsesmen('{{ $item->id }}')"
                     data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
                     class="btn btn-info btn-sm">
-                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye"></i> Lihat
                 </button>
                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-                <button class="btn btn-secondary">Edit</button>
+                <button type="button" onclick="editAsesmen('{{ $item->id }}')"
+                    data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                    class="btn btn-secondary btn-sm">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
             </div>
         </li>
     @endforeach

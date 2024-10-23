@@ -283,12 +283,12 @@
                                                         <div class="col-3">
                                                             <label>SpO2 (tanpa O2)</label>
                                                             <input type="number" class="form-control"
-                                                                name="vital_sign[spo2]">
+                                                                name="vital_sign[spo2_tanpa_o2]">
                                                         </div>
                                                         <div class="col-3">
                                                             <label>SpO2 (dengan O2)</label>
                                                             <input type="number" class="form-control"
-                                                                name="vital_sign[spo2_o2]">
+                                                                name="vital_sign[spo2_dengan_o2]">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -658,7 +658,7 @@
                                                 <div class="form-line">
                                                     <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
                                                     <textarea class="form-control mb-2" rows="3" name="kondisi_pasien"
-                                                        placeholder="Isikan riwayat penyakit pasien"></textarea>
+                                                        placeholder="Isikan Kondisi pasien"></textarea>
                                                 </div>
 
                                                 <div class="form-line">
