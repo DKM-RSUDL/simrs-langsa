@@ -211,7 +211,7 @@
                                                         @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.alergimodal')
                                                     </div>
                                                     <div class="table-responsive">
-                                                        <table class="table table-bordered" id="alergiTable">
+                                                        <table class="table table-bordered" id="createAlergiTable">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Jenis</th>

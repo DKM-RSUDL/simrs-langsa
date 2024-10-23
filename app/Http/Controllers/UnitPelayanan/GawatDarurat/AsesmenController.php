@@ -65,9 +65,9 @@ class AsesmenController extends Controller
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
         $asesmen = RmeAsesmen::join('DATA_TRIASE', 'RME_ASESMEN.id', '=', 'DATA_TRIASE.id_asesmen')
-        ->where('RME_ASESMEN.user_id', $user->id)
-        ->select('RME_ASESMEN.*', 'DATA_TRIASE.tanggal_triase')
-        ->get();
+            ->where('RME_ASESMEN.user_id', $user->id)
+            ->select('RME_ASESMEN.*', 'DATA_TRIASE.tanggal_triase')
+            ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
             'dataMedis',
@@ -85,6 +85,45 @@ class AsesmenController extends Controller
             'efeknyeri',
             'asesmen'
         ));
+    }
+
+    public function show($kd_pasien, $tgl_masuk, $id)
+    {
+        try {
+            // Parse tanggal tanpa waktu
+            $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
+
+            $asesmen = RmeAsesmen::where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $date)
+                ->firstOrFail();
+
+            $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
+                ? json_decode($asesmen->tindakan_resusitasi, true)
+                : $asesmen->tindakan_resusitasi;
+
+            $riwayatAlergi = is_string($asesmen->riwayat_alergi)
+            ? json_decode($asesmen->riwayat_alergi, true)
+                : $asesmen->riwayat_alergi;
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'asesmen' => [
+                        'tindakan_resusitasi' => $tindakanResusitasi,
+                        'anamnesis' => $asesmen->anamnesis,
+                        'riwayat_penyakit' => $asesmen->riwayat_penyakit,
+                        'riwayat_pengobatan' => $asesmen->riwayat_pengobatan,
+                        'riwayat_alergi' => $riwayatAlergi,
+                    ]
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
     }
 
     private function getTriageClass($kdTriase)
@@ -221,7 +260,7 @@ class AsesmenController extends Controller
                 $dataMedis->pasien->umur = 'Tidak Diketahui';
             }
 
-                // dd( $request->vital_sign);
+            // dd( $request->vital_sign);
 
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $dataMedis->kd_pasien;
@@ -353,7 +392,6 @@ class AsesmenController extends Controller
         } catch (\Exception $e) {
             // DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
-
         }
     }
 }

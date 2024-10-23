@@ -430,6 +430,10 @@
                         $('.modal-backdrop').remove();
                         $('body').removeClass('modal-open');
                         $('body').css('padding-right', '');
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
                     })
                     .catch(error => {
                         console.error('Error:', error);

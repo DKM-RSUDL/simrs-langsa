@@ -68,18 +68,21 @@
                 <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
                     width="70" height="70">
                 <div>
-                    <span class="text-primary fw-bold">Asesmen Awal Keperawatan-Paseien Umum/Dewasa</span> <br>
+                    <span class="text-primary fw-bold">Asesmen Medis-Paseien Umum/Dewasa</span> <br>
                     By: <span class="fw-bold">{{ $item->user->name }}</span>
                 </div>
             </div>
             <div>
-                <button class="btn btn-success" onclick="showAsesmen({{ $item->id }})" type="button">
-                    <i class="fas fa-eye"></i> Lihat
+                <!-- In your blade view -->
+                <button type="button" onclick="showAsesmen('{{ $item->id }}')"
+                    data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                    class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i>
                 </button>
+                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
                 <button class="btn btn-secondary">Edit</button>
             </div>
         </li>
     @endforeach
 </ul>
-{{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show') --}}
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modalasesmen')

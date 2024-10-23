@@ -17,34 +17,10 @@
                                     <p class="mb-0">
                                         {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
                                     </p>
-                                    <small> {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn </small>
-
-                                    <div class="patient-meta mt-2">
-                                        <p class="mb-0"><i
-                                                class="bi bi-file-earmark-medical"></i>RM:{{ $dataMedis->pasien->kd_pasien }}
-                                        </p>
-                                        <p class="mb-0"><i
-                                                class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d M Y') }}
-                                        </p>
-                                        <p><i class="bi bi-hospital"></i>{{ $dataMedis->unit->bagian->bagian }}
-                                            ({{ $dataMedis->unit->nama_unit }})</p>
-                                    </div>
+                                    <small>{{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn</small>
                                 </div>
 
-                                <div class="mt-2">
-                                    <div class="card-header">
-                                        <h4 class="text-primary">Informasi Pasien:</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <p style="margin-bottom: 5px;"><strong>Alergi</strong></p>
-                                        <ul style="margin-bottom: 5px; padding-left: 15px;">
-                                            <li>Ikan Tongkol</li>
-                                            <li>Asap</li>
-                                        </ul>
-                                        <p style="margin-bottom: 5px;"><strong>Golongan Darah</strong></p>
-                                        <p style="margin-bottom: 5px;">A+</p>
-                                    </div>
-                                </div>
+                                <!-- Informasi lainnya -->
                             </div>
                         </div>
 
@@ -53,40 +29,11 @@
                             <div class="row">
                                 <div class="col-12">
                                     <h4 class="text-primary">Asesmen Awal Gawat Darurat Medis</h4>
-                                    <p>Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan</p>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="card w-100 h-100">
                                         <div class="card-body">
-
-                                            <div class="form-line">
-                                                <h6>Triage Pasien</h6>
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Tanggal/Jam</th>
-                                                                <th>Dokter</th>
-                                                                <th>Triage</th>
-                                                                <th>Aksi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td> {{ $dataMedis->waktu_masuk }} </td>
-                                                                <td> {{ $dataMedis->nama_dokter ?? 'Tidak Ada Dokter' }}
-                                                                </td>
-                                                                <td>
-                                                                    <div class="rounded-circle {{ $triageClass }}"
-                                                                        style="width: 35px; height: 35px;"></div>
-                                                                </td>
-                                                                <td><a href="#">detail</a></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
+                                            <!-- Tindakan Resusitasi -->
                                             <div class="form-line">
                                                 <h6>Tindakan Resusitasi</h6>
                                                 <div class="table-responsive">
@@ -100,39 +47,55 @@
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td class="show-air-way">
-                                                                </td>
-                                                                <td class="show-breathing">
-                                                                </td>
-                                                                <td class="show-circulation">
-                                                                </td>
+                                                                <td class="show-air-way"></td>
+                                                                <td class="show-breathing"></td>
+                                                                <td class="show-circulation"></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
 
+                                            <!-- Form fields -->
                                             <div class="form-line">
                                                 <h6>Keluhan/Anamnesis</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="anamnesis" readonly
-                                                    placeholder="Isikan keluhan dan anamnesis pasien, jika terjadi cidera jelaskan mekanisme cideranya"></textarea>
+                                                <textarea class="form-control mb-2" rows="3" name="anamnesis" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Penyakit Pasien</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit" readonly
-                                                    placeholder="Isikan riwayat penyakit pasien"></textarea>
+                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Pengobatan</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan" readonly
-                                                    placeholder="Isikan riwayat pengobatan pasien"></textarea>
+                                                <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan" readonly></textarea>
                                             </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Riwayat Alergi</h6>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered" id="showAlergiTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Jenis</th>
+                                                                <th>Alergen</th>
+                                                                <th>Reaksi</th>
+                                                                <th>Serve</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{-- data --}}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -145,13 +108,14 @@
     </div>
 </div>
 
-{{-- @push('js')
+@push('js')
     <script>
         function showAsesmen(id) {
-            // Inisialisasi modal
+            const button = event.target.closest('button');
+            const url = button.dataset.url;
+
             const modal = new bootstrap.Modal(document.getElementById('showasesmenModal'));
 
-            // Tampilkan loading
             Swal.fire({
                 title: 'Loading...',
                 allowOutsideClick: false,
@@ -160,98 +124,102 @@
                 }
             });
 
-            // Fetch data
             $.ajax({
-                url: `asesmen/${id}/show`,
+                url: url,
                 method: 'GET',
                 success: function(response) {
-                    if (response.status == 'success') {
-                        const data = response.data;
-
-                        handleTindakanResusitasi(data.asesmen.tindakan_resusitasi);
-                        handleTextareaData(data.asesmen);
-                        // ... kode lainnya untuk data yang lain ...
-                        Swal.close();
+                    console.log('Success Response:', response);
+                    Swal.close();
+                    if (response.status === 'success') {
+                        handleTindakanResusitasi(response.data.asesmen.tindakan_resusitasi);
+                        handleTextareaData(response.data.asesmen);
+                        handleRiwayatAlergi(response.data.asesmen.riwayat_alergi);
                         modal.show();
+                    } else {
+                        Swal.fire('Error', 'Data tidak ditemukan', 'error');
                     }
                 },
-                error: function(xhr) {
-                    Swal.fire('Error', 'Terjadi kesalahan saat memuat data', 'error');
+                error: function(xhr, status, error) {
+                    console.log('Error Response:', xhr.responseJSON);
+                    Swal.close();
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data',
+                        'error');
                 }
             });
         }
 
         function handleTextareaData(asesmen) {
-            // Isi textarea dan set disabled
-            $('textarea[name="anamnesis"]')
-                .val(asesmen.anamnesis || '-')
-                .prop('disabled', true);
-
-            $('textarea[name="riwayat_penyakit"]')
-                .val(asesmen.riwayat_penyakit || '-')
-                .prop('disabled', true);
-
-            $('textarea[name="riwayat_pengobatan"]')
-                .val(asesmen.riwayat_pengobatan || '-')
-                .prop('disabled', true);
+            $('textarea[name="anamnesis"]').val(asesmen.anamnesis || '-');
+            $('textarea[name="riwayat_penyakit"]').val(asesmen.riwayat_penyakit || '-');
+            $('textarea[name="riwayat_pengobatan"]').val(asesmen.riwayat_pengobatan || '-');
         }
 
-        $('#showasesmenModal').on('hidden.bs.modal', function() {
-            // Reset semua textarea
-            $(this).find('textarea').val('');
-        });
-
         function handleTindakanResusitasi(tindakanData) {
+            if (!tindakanData) {
+                $('.show-air-way, .show-breathing, .show-circulation').html('<em>Tidak ada tindakan</em>');
+                return;
+            }
+
             const createItemElement = (text) =>
                 `<div class="selected-item"><i class="fas fa-check text-success"></i> ${text}</div>`;
 
-            $('.show-air-way, .show-breathing, .show-circulation').empty();
-
-            if (tindakanData && tindakanData.air_way && tindakanData.air_way.length > 0) {
-                const airWayHtml = tindakanData.air_way
-                    .map(item => createItemElement(item))
-                    .join('');
-                $('.show-air-way').html(airWayHtml);
+            // Air Way
+            if (tindakanData.air_way?.length > 0) {
+                $('.show-air-way').html(tindakanData.air_way.map(createItemElement).join(''));
             } else {
                 $('.show-air-way').html('<em>Tidak ada tindakan</em>');
             }
 
-            if (tindakanData && tindakanData.breathing && tindakanData.breathing.length > 0) {
-                const breathingHtml = tindakanData.breathing
-                    .map(item => createItemElement(item))
-                    .join('');
-                $('.show-breathing').html(breathingHtml);
+            // Breathing
+            if (tindakanData.breathing?.length > 0) {
+                $('.show-breathing').html(tindakanData.breathing.map(createItemElement).join(''));
             } else {
                 $('.show-breathing').html('<em>Tidak ada tindakan</em>');
             }
 
-            // Handle Circulation
-            if (tindakanData && tindakanData.circulation && tindakanData.circulation.length > 0) {
-                const circulationHtml = tindakanData.circulation
-                    .map(item => createItemElement(item))
-                    .join('');
-                $('.show-circulation').html(circulationHtml);
+            // Circulation
+            if (tindakanData.circulation?.length > 0) {
+                $('.show-circulation').html(tindakanData.circulation.map(createItemElement).join(''));
             } else {
                 $('.show-circulation').html('<em>Tidak ada tindakan</em>');
             }
         }
 
-        // Style untuk tampilan
-        const style = `
-    <style>
-        .selected-item {
-            padding: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .selected-item i {
-            font-size: 14px;
-        }
-    </style>
-    `;
+        function handleRiwayatAlergi(alergiData) {
+            const tbody = $('#showAlergiTable tbody');
+            tbody.empty();
 
-        // Tambahkan style ke head
-        $('head').append(style);
+            if (typeof alergiData === 'string') {
+                try {
+                    alergiData = JSON.parse(alergiData);
+                } catch (e) {
+                    console.error('Error parsing alergi data:', e);
+                    alergiData = null;
+                }
+            }
+
+            if (!alergiData || alergiData.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada data alergi</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            alergiData.forEach(function(alergi) {
+                const row = `
+                    <tr>
+                        <td>${alergi.jenis || '-'}</td>
+                        <td>${alergi.alergen || '-'}</td>
+                        <td>${alergi.reaksi || '-'}</td>
+                        <td>${alergi.keparahan || '-'}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
     </script>
-@endpush --}}
+@endpush

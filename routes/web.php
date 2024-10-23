@@ -278,12 +278,13 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
-                    // Route::resource('ASESMEN', GawatDaruratAsesmenController::class);
+                    
                     Route::prefix('asesmen')->group(function () {
                         Route::name('asesmen')->group(function () {
                             Route::controller(GawatDaruratAsesmenController::class)->group(function () {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/', 'store')->name('.store');
+                                Route::get('/{id}', 'show')->name('.show');
                             });
                         });
                     });
