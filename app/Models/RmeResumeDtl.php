@@ -18,6 +18,11 @@ class RmeResumeDtl extends Model
         'id_resume',
         'tindak_lanjut_code',
         'tindak_lanjut_name',
+        'tgl_kontrol_ulang',
+        'unit_rujuk_internal',
+        'unit_rawat_inap',
+        'rs_rujuk',
+        'rs_rujuk_bagian'
     ];
 
     public function resume()

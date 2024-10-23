@@ -370,11 +370,30 @@ class LaborController extends Controller
                     'tgl_masuk' => $data['tgl_masuk'],
                     'urut_masuk' => $data['urut_masuk'],
                     'status' => 0,
-                    'user_validasi' => Auth::id()
                 ]);
+
+                $resume = RMEResume::where('kd_pasien', $data['kd_pasien'])
+                    ->where('kd_unit', $data['kd_unit'])
+                    ->where('tgl_masuk', $data['tgl_masuk'])
+                    ->where('urut_masuk', $data['urut_masuk'])
+                    ->first();
             }
 
-            return $resume;
+            // Entri di RMEResumeDtl
+            if ($resume) {
+                $resumeDetail = RmeResumeDtl::where('id_resume', $resume->id)->first();
+
+                if (!$resumeDetail) {
+                    DB::table('RME_RESUME_DTL')->insert([
+                        'id_resume' => $resume->id
+                    ]);
+                }
+
+                DB::commit();
+                return $resume;
+            }
+            throw new \Exception('Gagal membuat atau mendapatkan data resume');
+
         } catch (\Exception $e) {
             throw $e;
         }

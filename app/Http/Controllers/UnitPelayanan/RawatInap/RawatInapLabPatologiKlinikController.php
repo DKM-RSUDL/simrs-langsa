@@ -361,4 +361,5 @@ class RawatInapLabPatologiKlinikController extends Controller
             ])->with(['error' => 'Ada kesalahan sistem. Silakan coba lagi.']);
         }
     }
+
 }
