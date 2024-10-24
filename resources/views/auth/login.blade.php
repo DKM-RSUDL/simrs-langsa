@@ -69,7 +69,7 @@
         .form-control {
             height: 45px;
             border-radius: 10px;
-            color: white;
+            color: #000;
         }
 
         .form-control:focus {
