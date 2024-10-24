@@ -99,12 +99,13 @@ class AsesmenController extends Controller
                 'kualitasNyeri',
                 'faktorPemberat',
                 'faktorPeringan',
-                'efekNyeri'
+                'efekNyeri',
+                'tindaklanjut'
             ])
-            ->where('id', $id)
-            ->where('kd_pasien', $kd_pasien)
-            ->whereDate('tgl_masuk', $date)
-            ->firstOrFail();
+                ->where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $date)
+                ->firstOrFail();
 
 
             $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
@@ -114,6 +115,12 @@ class AsesmenController extends Controller
             $riwayatAlergi = is_string($asesmen->riwayat_alergi)
                 ? json_decode($asesmen->riwayat_alergi, true)
                 : $asesmen->riwayat_alergi;
+            
+            $alatTerpasang = is_string($asesmen->alat_terpasang)
+                ? json_decode($asesmen->alat_terpasang, true)
+                : $asesmen->alat_terpasang;
+
+            $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
             return response()->json([
                 'status' => 'success',
@@ -127,21 +134,27 @@ class AsesmenController extends Controller
                         'vital_sign' => json_decode($asesmen->vital_sign, true),
                         'antropometri' => json_decode($asesmen->antropometri, true),
                         'show_skala_nyeri' => $asesmen->skala_nyeri,
-                        'show_lokasi'=> $asesmen->lokasi,
-                        'show_durasi'=> $asesmen->durasi,
+                        'show_lokasi' => $asesmen->lokasi,
+                        'show_durasi' => $asesmen->durasi,
                         'show_menjalar' => $asesmen->menjalar ? $asesmen->menjalar->name : null,
                         'show_frekuensi' => $asesmen->frekuensiNyeri ? $asesmen->frekuensiNyeri->name : null,
                         'show_kualitas' => $asesmen->kualitasNyeri ? $asesmen->kualitasNyeri->name : null,
                         'show_faktor_pemberat' => $asesmen->faktorPemberat ? $asesmen->faktorPemberat->name : null,
                         'show_faktor_peringan' => $asesmen->faktorPeringan ? $asesmen->faktorPeringan->name : null,
-                        'show_efek_nyeri'=> $asesmen->efekNyeri ? $asesmen->efekNyeri->name : null
+                        'show_efek_nyeri' => $asesmen->efekNyeri ? $asesmen->efekNyeri->name : null,
+                        'show_diagnosis' => json_decode($asesmen->diagnosis, true),
+                        'retriase_data' => $retriaseData,
+                        'alat_terpasang' => $alatTerpasang,
+                        'show_kondisi_pasien' => $asesmen->kondisi_pasien,
+                        'tindaklanjut' => $asesmen->tindaklanjut
+
                     ]
                 ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data tidak ditemukan'
+                'message' => $e->getMessage()
             ], 404);
         }
     }

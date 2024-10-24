@@ -42,4 +42,9 @@ class DataTriase extends Model
     {
         return $this->belongsTo(Dokter::class, 'dokter_triase', 'kd_dokter');
     }
+
+    public function asesmen()
+    {
+        return $this->belongsTo(RmeAsesmen::class, 'id_asesmen', 'id');
+    }
 }

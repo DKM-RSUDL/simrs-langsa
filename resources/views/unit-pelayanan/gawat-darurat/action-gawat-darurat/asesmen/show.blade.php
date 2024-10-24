@@ -190,15 +190,18 @@
                                                         <h6 class="mb-3">Karakteristik Nyeri</h6>
                                                         <div class="mb-2">
                                                             <label>Skala Nyeri</label>
-                                                            <input type="number" name="show_skala_nyeri" class="form-control" readonly>
+                                                            <input type="number" name="show_skala_nyeri"
+                                                                class="form-control" readonly>
                                                         </div>
                                                         <div class="mb-2">
                                                             <label>Lokasi Nyeri</label>
-                                                            <input type="text" name="show_lokasi" class="form-control" readonly>
+                                                            <input type="text" name="show_lokasi"
+                                                                class="form-control" readonly>
                                                         </div>
                                                         <div class="mb-2">
                                                             <label>Durasi</label>
-                                                            <input type="text" name="show_durasi" class="form-control" readonly>
+                                                            <input type="text" name="show_durasi"
+                                                                class="form-control" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -216,7 +219,7 @@
                                                 </div>
                                                 <div class="col mt-3">
                                                     <label for="faktor-pemberat">Faktor Pemberat</label>
-                                                    <input  class="form-control" name="show_faktor_pemberat" readonly>
+                                                    <input class="form-control" name="show_faktor_pemberat" readonly>
                                                 </div>
                                                 <div class="col mt-3">
                                                     <label for="faktor-peringanan">Faktor Peringanan</label>
@@ -226,6 +229,200 @@
                                                     <label for="efek-nyeri">Efek Nyeri</label>
                                                     <input class="form-control" name="show_efek_nyeri" readonly>
                                                 </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <h6>Pemeriksaan Penunjang Klinis</h6>
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <img src="{{ asset('assets/img/icons/test_tube.png') }}">
+                                                    <h6 class="mb-0 me-3">Laboratorium</h6>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal</th>
+                                                                <th>Nama Pemeriksaan</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse($laborData as $data)
+                                                                <tr>
+                                                                    <td>{{ $data['Tanggal-Jam'] }}</td>
+                                                                    <td>{{ $data['Nama pemeriksaan'] }}</td>
+                                                                    <td>
+                                                                        @if ($data['Status'] == 'Diorder')
+                                                                            <i
+                                                                                class="bi bi-check-circle-fill text-secondary"></i>
+                                                                            Diorder
+                                                                        @elseif ($data['Status'] == 'Selesai')
+                                                                            <i
+                                                                                class="bi bi-check-circle-fill text-success"></i>
+                                                                            <p class="text-success">Selesai</p>
+                                                                        @else
+                                                                            {{ $data['Status'] }}
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td colspan="7" class="text-center">Tidak
+                                                                        ada
+                                                                        data laboratorium</td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <img
+                                                        src="{{ asset('assets/img/icons/microbeam_radiation_therapy.png') }}">
+                                                    <h6 class="mb-0 me-3">Radiologi</h6>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Nama Pemeriksaan</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse($radiologiData as $rad)
+                                                                <tr>
+                                                                    <td>{{ $rad['Tanggal-Jam'] }}</td>
+                                                                    <td>{{ $rad['Nama Pemeriksaan'] }}</td>
+                                                                    <td>{!! $rad['Status'] !!}</td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td colspan="3" class="text-center">Tidak
+                                                                        ada
+                                                                        data radiologi</td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <img src="{{ asset('assets/img/icons/pill.png') }}">
+                                                    <h6 class="mb-0 me-3">E-Resep</h6>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal</th>
+                                                                <th>Nama Obat</th>
+                                                                <th>Dosis</th>
+                                                                <th>Cara Pemberian</th>
+                                                                <th>PPA</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse ($riwayatObat as $resep)
+                                                                @php
+                                                                    $cara_pakai_parts = explode(
+                                                                        ',',
+                                                                        $resep->cara_pakai,
+                                                                    );
+                                                                    $frekuensi = trim($cara_pakai_parts[0] ?? '');
+                                                                    $keterangan = trim($cara_pakai_parts[1] ?? '');
+                                                                @endphp
+                                                                <tr>
+                                                                    <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d M Y H:i') }}
+                                                                    </td>
+                                                                    <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}
+                                                                    </td>
+                                                                    <td>{{ $resep->jumlah_takaran }}
+                                                                        {{ Str::title($resep->satuan_takaran) }}
+                                                                    </td>
+                                                                    <td>{{ $keterangan }}</td>
+                                                                    <td>{{ $resep->nama_dokter }}</td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td colspan="3" class="text-center">Tidak
+                                                                        ada Resep Obat</td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Diagnosis</h6>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="bg-secondary-subtle rounded-2 p-3">
+                                                            <input name="show_diagnosis" class="form-control"
+                                                                readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Observasi Lanjutan/Re-Triase</h6>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered" id="ShowreTriaseTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Tanggal dan Jam</th>
+                                                                <th>Keluhan</th>
+                                                                <th>Vital Sign</th>
+                                                                <th>Re-Triase/EWS</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data re-triase akan ditampilkan di sini -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
+                                                </div>
+                                                <div class="table-responsive mb-3">
+                                                    <table class="table table-bordered" id="showAlatTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Alat yang terpasang</th>
+                                                                <th>Lokasi</th>
+                                                                <th>Ket</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data akan ditampilkan di sini -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
+                                                <textarea class="form-control mb-2" rows="3" name="show_kondisi_pasien" readonly></textarea>
+                                            </div>
+
+                                            <div class="form-line">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
+                                                </div>
+                                                <div id="showTindakLanjutInfo"></div>
                                             </div>
 
                                         </div>
@@ -271,6 +468,9 @@
                         handleRiwayatAlergi(response.data.asesmen.riwayat_alergi);
                         handleVitalSign(response.data.asesmen.vital_sign);
                         handleAntropometri(response.data.asesmen.antropometri);
+                        handleReTriase(response.data.asesmen.retriase_data);
+                        handleAlatTerpasang(response.data.asesmen.alat_terpasang);
+                        handleTindakLanjut(response.data.asesmen.tindaklanjut);
                         modal.show();
                     } else {
                         Swal.fire('Error', 'Data tidak ditemukan', 'error');
@@ -298,6 +498,8 @@
             $('input[name="show_faktor_pemberat"]').val(asesmen.show_faktor_pemberat || '-');
             $('input[name="show_faktor_peringan"]').val(asesmen.show_faktor_peringan || '-');
             $('input[name="show_efek_nyeri"]').val(asesmen.show_efek_nyeri || '-');
+            $('input[name="show_diagnosis"]').val(asesmen.show_diagnosis || '-');
+            $('textarea[name="show_kondisi_pasien"]').val(asesmen.show_kondisi_pasien || '-');
         }
 
         function handleTindakanResusitasi(tindakanData) {
@@ -368,8 +570,43 @@
             });
         }
 
+        function handleAlatTerpasang(alatTerpasang) {
+            const tbody = $('#showAlatTable tbody');
+            tbody.empty();
+
+            if (typeof alatTerpasang === 'string') {
+                try {
+                    alatTerpasang = JSON.parse(alatTerpasang);
+                } catch (e) {
+                    console.error('Error data:', e);
+                    alatTerpasang = null;
+                }
+            }
+
+            if (!alatTerpasang || alatTerpasang.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada data Alat Terpasang</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            alatTerpasang.forEach(function(alat) {
+                const row = `
+                    <tr>
+                        <td>${alat.nama || '-'}</td>
+                        <td>${alat.lokasi || '-'}</td>
+                        <td>${alat.keterangan || '-'}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
         function handleVitalSign(vitalSignData) {
-            console.log('Handling vital sign data:', vitalSignData); // Debug log
 
             if (typeof vitalSignData === 'string') {
                 try {
@@ -409,5 +646,147 @@
             $('input[name="show_antropometri_imt"]').val(AntropometriData.imt || '-');
 
         }
+
+        function handleReTriase(retriaseData) {
+            console.log(retriaseData);
+
+            const tbody = $('#ShowreTriaseTable tbody');
+            tbody.empty();
+
+            if (!retriaseData || retriaseData.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada data re-triase</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            retriaseData.forEach(function(triase) {
+                // Parse triase JSON if needed
+                const triaseData = typeof triase.triase === 'string' ?
+                    JSON.parse(triase.triase) : triase.triase;
+
+                // Format vital signs
+                const vitalSigns = triaseData.vitalSigns || {};
+                const formattedVitalSigns = `
+                    <ul class="list-unstyled mb-0">
+                        ${vitalSigns.td_sistole ? `<li>TD Diastole: ${vitalSigns.td_diastole} mmHg</li>` : ''}
+                        ${vitalSigns.td_diastole ? `<li>TD Sistole: ${vitalSigns.td_sistole} mmHg</li>` : ''}
+                        ${vitalSigns.nadi ? `<li>Nadi: ${vitalSigns.nadi} x/mnt</li>` : ''}
+                        ${vitalSigns.resp ? `<li>Resp: ${vitalSigns.resp} x/mnt</li>` : ''}
+                        ${vitalSigns.suhu ? `<li>Suhu: ${vitalSigns.suhu}°C</li>` : ''}
+                        ${vitalSigns.spo2 ? `<li>SpO2: ${vitalSigns.spo2}%</li>` : ''}
+                        ${vitalSigns.gcs ? `<li>GCS: ${vitalSigns.gcs}</li>` : ''}
+                        ${vitalSigns.avpu ? `<li>AVPU: ${vitalSigns.avpu}</li>` : ''}
+                    </ul>
+                `;
+
+                // Get triase status style
+                const getTriaseClass = (kodeTriase) => {
+                    switch (parseInt(kodeTriase)) {
+                        case 5:
+                            return 'bg-dark text-white';
+                        case 4:
+                            return 'bg-danger text-white';
+                        case 3:
+                            return 'bg-danger text-white';
+                        case 2:
+                            return 'bg-warning text-dark';
+                        case 1:
+                            return 'bg-success text-white';
+                        default:
+                            return 'bg-secondary text-white';
+                    }
+                };
+
+                const row = `
+                    <tr>
+                        <td>${triase.tanggal_triase}</td>
+                        <td>${triaseData.keluhan || '-'}</td>
+                        <td>${formattedVitalSigns}</td>
+                        <td>
+                            <span class="badge ${getTriaseClass(triase.kode_triase)}">
+                                ${triase.hasil_triase || '-'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        function handleTindakLanjut(tindakLanjutData) {
+            const container = $('#showTindakLanjutInfo');
+            container.empty();
+
+            // Check if tindakLanjutData is array and has data
+            if (!tindakLanjutData || !Array.isArray(tindakLanjutData) || tindakLanjutData.length === 0) {
+                container.html(`
+                    <div class="alert alert-info">
+                        <em>Tidak ada data tindak lanjut</em>
+                    </div>
+                `);
+                return;
+            }
+
+            // Get the first tindak lanjut data (since it's in array)
+            const data = tindakLanjutData[0];
+
+            // Get badge color based on tindak_lanjut_code
+            const getBadgeClass = (code) => {
+                switch (parseInt(code)) {
+                    case 1: return 'bg-primary'; // Rawat Inap
+                    case 2: return 'bg-success'; // Kontrol Ulang
+                    case 3: return 'bg-secondary'; // Selesai di Unit
+                    case 4: return 'bg-info'; // Rujuk Internal
+                    case 5: return 'bg-warning'; // Rujuk RS Lain
+                    default: return 'bg-secondary';
+                }
+            };
+
+            // Format tanggal dan jam meninggal jika ada
+            // const meninggalInfo = data.tanggal_meninggal ? `
+            //     <div class="col-md-12 mt-3">
+            //         <label class="fw-bold">Waktu Meninggal:</label>
+            //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
+            //     </div>
+            // ` : '';
+
+            // Format tanggal kontrol jika ada
+            const kontrolInfo = data.tgl_kontrol_ulang ? `
+                <div class="col-md-12 mt-3">
+                    <label class="fw-bold">Tanggal Kontrol:</label>
+                    <p class="mb-0">${data.tgl_kontrol_ulang}</p>
+                </div>
+            ` : '';
+
+            const infoBox = `
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="fw-bold">Tindak Lanjut:</label>
+                                <div class="mt-2">
+                                    <span class="badge ${getBadgeClass(data.tindak_lanjut_code)}">
+                                        ${data.tindak_lanjut_name || '-'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold">Keterangan:</label>
+                                <p class="mb-0">${data.keterangan || '-'}</p>
+                            </div>
+                            ${kontrolInfo}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.html(infoBox);
+        }
+
     </script>
 @endpush

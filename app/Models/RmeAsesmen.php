@@ -76,4 +76,14 @@ class RmeAsesmen extends Model
     {
         return $this->belongsTo(RmeEfekNyeri::class, 'efek_nyeri');
     }
+    
+    public function retriase()
+    {
+        return $this->hasMany(DataTriase::class, 'id_asesmen', 'id');
+    }
+
+    public function tindaklanjut()
+    {
+        return $this->hasMany(RmeAsesmenDtl::class, 'id_asesmen', 'id');
+    }
 }
