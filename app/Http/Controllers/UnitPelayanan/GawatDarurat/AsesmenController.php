@@ -64,9 +64,8 @@ class AsesmenController extends Controller
         $faktorpemberat = RmeFaktorPemberat::all();
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
-        $asesmen = RmeAsesmen::join('DATA_TRIASE', 'RME_ASESMEN.id', '=', 'DATA_TRIASE.id_asesmen')
-            ->where('RME_ASESMEN.user_id', $user->id)
-            ->select('RME_ASESMEN.*', 'DATA_TRIASE.tanggal_triase')
+        $asesmen = RmeAsesmen::with(['retriase'])
+            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
             ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
@@ -115,7 +114,7 @@ class AsesmenController extends Controller
             $riwayatAlergi = is_string($asesmen->riwayat_alergi)
                 ? json_decode($asesmen->riwayat_alergi, true)
                 : $asesmen->riwayat_alergi;
-            
+
             $alatTerpasang = is_string($asesmen->alat_terpasang)
                 ? json_decode($asesmen->alat_terpasang, true)
                 : $asesmen->alat_terpasang;
@@ -175,6 +174,7 @@ class AsesmenController extends Controller
                 'riwayat_penyakit' => $request->riwayat_penyakit,
                 'riwayat_pengobatan' => $request->riwayat_pengobatan,
                 'vital_sign' => json_encode($request->vital_sign),
+                'antropometri' => json_encode($request->antropometri),
                 'riwayat_alergi' => json_encode($request->riwayat_alergi)
             ];
 

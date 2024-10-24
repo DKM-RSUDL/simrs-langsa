@@ -104,7 +104,30 @@
                             <textarea class="form-control mb-2" rows="3" name="edit_riwayat_pengobatan"></textarea>
                         </div>
 
-                        <!-- Vital Sign -->
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Riwayat Alergi</h6>
+                                <button type="button" class="btn btn-sm" id="editAddAlergi">
+                                    <i class="bi bi-plus-square"></i> Tambah
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="editAlergiTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Jenis</th>
+                                            <th>Alergen</th>
+                                            <th>Reaksi</th>
+                                            <th>Serve</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <div class="form-line">
                             <h6>Vital Sign</h6>
                             <div class="row mb-3">
@@ -162,30 +185,128 @@
                             </div>
                         </div>
 
-                        <!-- Riwayat Alergi -->
                         <div class="form-line">
-                            <div class="d-flex align-items-center mb-3">
-                                <h6 class="mb-0 me-3">Riwayat Alergi</h6>
-                                <button type="button" class="btn btn-sm btn-primary" id="editAddAlergi">
-                                    <i class="bi bi-plus"></i> Tambah
-                                </button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="editAlergiTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Jenis</th>
-                                            <th>Alergen</th>
-                                            <th>Reaksi</th>
-                                            <th>Serve</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <h6>Antropometri</h6>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>TB (meter)</label>
+                                    <input type="number" class="form-control" name="edit_antropometri_tb">
+                                </div>
+                                <div class="col">
+                                    <label>BB (kg)</label>
+                                    <input type="number" class="form-control" name="edit_antropometri_bb">
+                                </div>
+                                <div class="col">
+                                    <label>Ling. Kepala</label>
+                                    <input type="number" class="form-control" name="edit_antropometri_ling_kepala">
+                                </div>
+                                <div class="col">
+                                    <label>LPT</label>
+                                    <input type="number" class="form-control" name="edit_antropometri_lpt">
+                                </div>
+                                <div class="col">
+                                    <label>IMT</label>
+                                    <input type="number" class="form-control" name="edit_antropometri_imt">
+                                </div>
                             </div>
                         </div>
+
+                        <div class="form-line">
+                            <h6>Skala Nyeri Visual Analog</h6>
+                            <p class="text-muted">*Pilih angka pada skala nyeri yang sesuai</p>
+                            <div class="row align-items-center mb-3">
+                                <div class="col-md-6">
+                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                        alt="Descriptive Alt Text" style="width: 100%; height: auto;">
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Karakteristik Nyeri</h6>
+                                    <div class="mb-2">
+                                        <label>Skala Nyeri</label>
+                                        <input type="number" id="skalaNyeri" name="edit_skala_nyeri" min="0"
+                                            max="10" class="form-control" value="0">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Lokasi Nyeri</label>
+                                        <input type="text" id="lokasiNyeri" name="edit_lokasi" class="form-control"
+                                            placeholder="Lokasi Nyeri">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Durasi</label>
+                                        <input type="text" id="durasiNyeri" name="edit_durasi" class="form-control"
+                                            placeholder="Durasi Nyeri">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="manjalar">Manjalar</label>
+                                <select id="manjalar" class="form-select" name="edit_menjalar">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($menjalar as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mt-3">
+                                <label for="frekuensi">Frekuensi</label>
+                                <select id="frekuensi" class="form-select" name="edit_frekuensi">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($frekuensinyeri as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mt-3">
+                                <label for="kualitas">Kualitas</label>
+                                <select id="kualitas" class="form-select" name="edit_kualitas">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($kualitasnyeri as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mt-3">
+                                <label for="faktor-pemberat">Faktor Pemberat</label>
+                                <select id="faktor-pemberat" class="form-select" name="edit_faktor_pemberat">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($faktorpemberat as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mt-3">
+                                <label for="faktor-peringanan">Faktor Peringanan</label>
+                                <select id="faktor-peringanan" class="form-select" name="edit_faktor_peringan">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($faktorperingan as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mt-3">
+                                <label for="efek-nyeri">Efek Nyeri</label>
+                                <select id="efek-nyeri" class="form-select" name="edit_efek_nyeri">
+                                    <option selected disabled>Pilih</option>
+                                    @foreach ($efeknyeri as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+
                     </form>
                 </div>
             </div>
@@ -269,6 +390,18 @@
                 $('input[name="edit_vital_sign_spo2_dengan_o2"]').val(vitalSign.spo2_dengan_o2 || '');
             }
 
+            // Isi antropometri
+            if (data.antropometri) {
+                const antropometri = typeof data.antropometri === 'string' ?
+                    JSON.parse(data.antropometri) : data.antropometri;
+
+                $('input[name="edit_antropometri_tb"]').val(antropometri.tb || '');
+                $('input[name="edit_antropometri_bb"]').val(antropometri.bb || '');
+                $('input[name="edit_antropometri_ling_kepala"]').val(antropometri.ling_kepala || '');
+                $('input[name="edit_antropometri_lpt"]').val(antropometri.lpt || '');
+                $('input[name="edit_antropometri_imt"]').val(antropometri.imt || '');
+            }
+
             // Parse dan isi riwayat alergi
             const riwayatAlergi = typeof data.riwayat_alergi === 'string' ?
                 JSON.parse(data.riwayat_alergi) : data.riwayat_alergi;
@@ -327,12 +460,12 @@
 
             if ($('#editAlergiTable tbody tr').length === 0) {
                 $('#editAlergiTable tbody').html(`
-            <tr>
-                <td colspan="5" class="text-center">
-                    <em>Tidak ada data alergi</em>
-                </td>
-            </tr>
-        `);
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <em>Tidak ada data alergi</em>
+                    </td>
+                </tr>
+            `);
             }
         });
 
@@ -372,24 +505,22 @@
 
         function collectEditTindakanResusitasi() {
 
-            let air_way_all = $('#editAsesmenModal input[name="edit_tindakan_resusitasi[air_way][]"]:checkbox:checked').map(function() {
-                return $(this).val();
-            }).get();
+            let air_way_all = $('#editAsesmenModal input[name="edit_tindakan_resusitasi[air_way][]"]:checkbox:checked').map(
+                function() {
+                    return $(this).val();
+                }).get();
 
-            let breathing_all = $('#editAsesmenModal input[name="edit_tindakan_resusitasi[breathing][]"]:checkbox:checked').map(function() {
-                return $(this).val();
-            }).get();
+            let breathing_all = $('#editAsesmenModal input[name="edit_tindakan_resusitasi[breathing][]"]:checkbox:checked')
+                .map(function() {
+                    return $(this).val();
+                }).get();
 
-            let circulation_all = $('#editAsesmenModal input[name="edit_tindakan_resusitasi[circulation][]"]:checkbox:checked').map(function() {
-                return $(this).val();
-            }).get();
+            let circulation_all = $(
+                '#editAsesmenModal input[name="edit_tindakan_resusitasi[circulation][]"]:checkbox:checked').map(
+                function() {
+                    return $(this).val();
+                }).get();
 
-            // // Filter checkbox yang dicentang dan hindari duplikasi dengan menggunakan Set
-            // const air_way_final = [...new Set(air_way_all.filter(item => item.checked).map(item => item.value))];
-            // const breathing_final = [...new Set(breathing_all.filter(item => item.checked).map(item => item.value))];
-            // const circulation_final = [...new Set(circulation_all.filter(item => item.checked).map(item => item.value))];
-
-            // Return the collected data without duplication
             return {
                 air_way: air_way_all,
                 breathing: breathing_all,
@@ -457,6 +588,14 @@
                     avpu: $('select[name="edit_vital_sign_avpu"]').val() || null,
                     spo2_tanpa_o2: $('input[name="edit_vital_sign_spo2_tanpa_o2"]').val() || null,
                     spo2_dengan_o2: $('input[name="edit_vital_sign_spo2_dengan_o2"]').val() || null
+                },
+                antropometri: {
+                    tb: $('input[name="edit_antropometri_tb"]').val() || null,
+                    bb: $('input[name="edit_antropometri_bb"]').val() || null,
+                    ling_kepala: $('input[name="edit_antropometri_ling_kepala"]').val() || null,
+                    lpt: $('input[name="edit_antropometri_lpt"]').val() || null,
+                    imt: $('input[name="edit_antropometri_imt"]').val() || null
+
                 },
                 riwayat_alergi: collectEditAlergi()
             };
