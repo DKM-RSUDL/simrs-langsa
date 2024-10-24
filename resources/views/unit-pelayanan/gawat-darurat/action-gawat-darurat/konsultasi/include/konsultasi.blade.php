@@ -78,28 +78,59 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>03 Apr 2024 11:30</td>
-                <td>Dr. Gunardi, SP.PD (Internist Pria)</td>
-                <td>Mata</td>
-                <td>
-                    <p class="text-primary fw-bold m-0 p-0" id="konsulenHarapLabel">Konsul Sewaktu</p>
-                    <p class="m-0 p-0" id="konsulDimintaLabel">Mohon pemeriksaan selanjutnya atas keluhan pasien di
-                        bagian dada atas</p>
-                </td>
-                <td>
-                    <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">Dijawab Konsulen</p>
-                    <p class="m-0 p-0" id="konsulenKetLabel">Saran untuk dilakukan pemeriksaan</p>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-warning">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm">
-                        <i class="bi bi-x-circle-fill text-danger"></i>
-                    </button>
-                </td>
-            </tr>
+            @foreach ($konsultasi as $konsul)
+                @php
+                    $konsulenHarap = $konsul->kd_konsulen_diharapkan;
+                    $konsulenHarapLabel = '';
+
+                    switch ($konsulenHarap) {
+                        case 1:
+                            $konsulenHarapLabel = 'Konsul Sewaktu';
+                            break;
+                        case 2:
+                            $konsulenHarapLabel = 'Rawat Bersama';
+                            break;
+                        case 3:
+                            $konsulenHarapLabel = 'Alih Rawat';
+                            break;
+                        case 4:
+                            $konsulenHarapLabel =
+                                'Kembali ke unit yang meminta untuk persetujuan tindakan & pengobatan';
+                            break;
+                    }
+                @endphp
+
+                <tr>
+                    <td>{{ date('d M Y', strtotime($konsul->tgl_masuk_tujuan)) }}
+                        {{ date('H:i', strtotime($konsul->jam_masuk_tujuan)) }}</td>
+                    <td>{{ $konsul->dokter_asal->nama_lengkap }} ({{ $konsul->unit_asal->nama_unit ?? '-' }})</td>
+                    <td>{{ $konsul->unit_tujuan->nama_unit }}</td>
+                    <td>
+                        <p class="text-primary fw-bold m-0 p-0" id="konsulenHarapLabel">{{ $konsulenHarapLabel }}</p>
+                        <p class="m-0 p-0" id="konsulDimintaLabel">{{ $konsul->konsul }}</p>
+                    </td>
+                    <td>
+                        <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">Dikirim</p>
+                        {{-- <p class="m-0 p-0" id="konsulenKetLabel">Saran untuk dilakukan pemeriksaan</p> --}}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning btn-edit-konsultasi" data-bs-target="#editKonsulModal"
+                            data-unittujuan="{{ $konsul->kd_unit_tujuan }}"
+                            data-tglkonsul="{{ $konsul->tgl_masuk_tujuan }}"
+                            data-jamkonsul="{{ $konsul->jam_masuk_tujuan }}"
+                            data-urutkonsul="{{ $konsul->urut_konsul }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-delete-konsultasi"
+                            data-unittujuan="{{ $konsul->kd_unit_tujuan }}"
+                            data-tglkonsul="{{ $konsul->tgl_masuk_tujuan }}"
+                            data-jamkonsul="{{ $konsul->jam_masuk_tujuan }}"
+                            data-urutkonsul="{{ $konsul->urut_konsul }}">
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 </div>

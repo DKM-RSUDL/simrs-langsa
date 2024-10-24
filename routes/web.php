@@ -29,13 +29,19 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
 Route::middleware('guest')->group(function () {
@@ -97,6 +103,33 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
+                        // Konsultasi
+                        Route::prefix('konsultasi')->group(function() {
+                            Route::name('.konsultasi')->group(function() {
+                                Route::controller(KonsultasiController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                                    Route::post('/', 'storeKonsultasi')->name('.store');
+                                    Route::put('/', 'updateKonsultasi')->name('.update');
+                                    Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                                    Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
+                                });
+                            });
+                        });
+
+                        // Tindakan
+                        Route::prefix('tindakan')->group(function() {
+                            Route::name('.tindakan')->group(function() {
+                                Route::controller(TindakanController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'storeTindakan')->name('.store');
+                                    Route::put('/', 'updateTindakan')->name('.update');
+                                    Route::delete('/', 'deleteTindakan')->name('.delete');
+                                    Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                                });
+                            });
+                        });
+
                         // Route::resource('farmasi', GawatDaruratFarmasiController::class);
                         Route::prefix('farmasi')->group(function () {
                             Route::name('.farmasi')->group(function () {
@@ -130,6 +163,17 @@ Route::middleware('auth')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
                                     Route::delete('/', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // Resume
+                        Route::prefix('rawat-jalan-resume')->group(function () {
+                            Route::name('.rawat-jalan-resume')->group(function () {
+                                Route::controller(RawatJalanResumeController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{id}', 'update')->name('.update');
                                 });
                             });
                         });
@@ -181,6 +225,33 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
+                        // Konsultasi
+                        Route::prefix('konsultasi')->group(function() {
+                            Route::name('.konsultasi')->group(function() {
+                                Route::controller(RawatInapKonsultasiController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                                    Route::post('/', 'storeKonsultasi')->name('.store');
+                                    Route::put('/', 'updateKonsultasi')->name('.update');
+                                    Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                                    Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
+                                });
+                            });
+                        });
+
+                        // Tindakan
+                        Route::prefix('tindakan')->group(function() {
+                            Route::name('.tindakan')->group(function() {
+                                Route::controller(RawatInapTindakanController::class)->group(function() {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'storeTindakan')->name('.store');
+                                    Route::put('/', 'updateTindakan')->name('.update');
+                                    Route::delete('/', 'deleteTindakan')->name('.delete');
+                                    Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                                });
+                            });
+                        });
+
                         // labor PK
                         Route::prefix('lab-patologi-klinik')->group(function () {
                             Route::name('.lab-patologi-klinik')->group(function () {
@@ -202,6 +273,16 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+                        // resume
+                        Route::prefix('rawat-inap-resume')->group(function () {
+                            Route::name('.rawat-inap-resume')->group(function () {
+                                Route::controller(RawatInapResumeController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -209,7 +290,6 @@ Route::middleware('auth')->group(function () {
 
 
         // Rute untuk Gawat Darurat
-
         Route::prefix('gawat-darurat')->group(function () {
             Route::get('/', [GawatDaruratController::class, 'index'])->name('gawat-darurat.index');
             Route::post('/store-triase', [GawatDaruratController::class, 'storeTriase'])->name('gawat-darurat.store-triase');
@@ -263,6 +343,10 @@ Route::middleware('auth')->group(function () {
                             Route::controller(GawatDaruratKonsultasiController::class)->group(function() {
                                 Route::get('/', 'index')->name('.index');
                                 Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
+                                Route::post('/', 'storeKonsultasi')->name('.store');
+                                Route::put('/', 'updateKonsultasi')->name('.update');
+                                Route::delete('/', 'deleteKonsultasi')->name('.delete');
+                                Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                             });
                         });
                     });
@@ -290,7 +374,7 @@ Route::middleware('auth')->group(function () {
                         });
                     });
 
-                    
+
                     Route::resource('/', MedisGawatDaruratController::class);
                     Route::resource('asesmen', GawatDaruratAsesmenController::class);
                     Route::resource('labor', GawatDaruratLaborController::class);

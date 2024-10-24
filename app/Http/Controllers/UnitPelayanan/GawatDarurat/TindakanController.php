@@ -222,7 +222,6 @@ class TindakanController extends Controller
                                         ])
                                         ->join('detail_transaksi as dt', function($join) {
                                             $join->on('dt.tgl_transaksi', '=', 'list_tindakan_pasien.tgl_masuk')
-                                                ->on('dt.urut', '=', 'list_tindakan_pasien.urut_list')
                                                 ->on('dt.kd_unit', '=', 'list_tindakan_pasien.kd_unit')
                                                 ->on('dt.kd_produk', '=', 'list_tindakan_pasien.kd_produk');
                                         })
@@ -289,21 +288,6 @@ class TindakanController extends Controller
         $request->validate($rules, $messageErr);
 
 
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->join('transaksi as t', function($join) {
-                                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                            })
-                            ->where('kunjungan.kd_pasien', $kd_pasien)
-                            ->where('kunjungan.kd_unit', 3)
-                            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->where('kunjungan.urut_masuk', $request->urut_masuk)
-                            ->where('kunjungan.urut_masuk', $request->urut_masuk)
-                            ->where('t.no_transaksi', $request->no_transaksi)
-                            ->first();
-
         $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
                                     ->where('kd_unit', 3)
                                     ->whereDate('tgl_masuk', $tgl_masuk)
@@ -311,12 +295,6 @@ class TindakanController extends Controller
                                     ->where('urut_list', $request->urut_list)
                                     ->first();
 
-        $detailTransaksi = DetailTransaksi::where('no_transaksi', $request->no_transaksi)
-                                        ->where('kd_kasir', '06')
-                                        ->where('kd_unit', 3)
-                                        ->where('kd_produk', $tindakan->kd_produk)
-                                        ->whereDate('tgl_transaksi', $tgl_masuk)
-                                        ->first();
 
         // update data tindakan
         $tindakanData = [

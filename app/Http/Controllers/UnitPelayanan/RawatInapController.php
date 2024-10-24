@@ -14,9 +14,9 @@ class RawatInapController extends Controller
     public function index()
     {
         $unit = Unit::with(['bagian'])
-                    ->where('kd_bagian', 1)
-                    ->where('aktif', 1)
-                    ->get();
+            ->where('kd_bagian', 1)
+            ->where('aktif', 1)
+            ->get();
 
         return view('unit-pelayanan.rawat-inap.index', compact('unit'));
     }
@@ -24,14 +24,37 @@ class RawatInapController extends Controller
     public function unitPelayanan($kd_unit, Request $request)
     {
         $unit = Unit::with(['bagian'])
-                    ->where('kd_unit', $kd_unit)
-                    ->first();
+            ->where('kd_unit', $kd_unit)
+            ->first();
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit);
 
             return DataTables::of($data)
+                ->filter(function ($query) use ($request) {
+                    if ($searchValue = $request->get('search')['value']) {
+                        $query->where(function ($q) use ($searchValue) {
+                            if (is_numeric($searchValue) && strlen($searchValue) == 4) {
+                                $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
+                            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                                $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
+                            } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
+                                $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
+                            } else {
+                                $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
+                                    ->orWhereHas('pasien', function ($q) use ($searchValue) {
+                                        $q->where('nama', 'like', "%{$searchValue}%")
+                                            ->orWhere('alamat', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('customer', function ($q) use ($searchValue) {
+                                        $q->where('customer', 'like', "%{$searchValue}%");
+                                    });
+                            }
+                        });
+                    }
+                })
+
                 ->order(function ($query) {
                     $query->orderBy('tgl_masuk', 'desc')
                         ->orderBy('jam_masuk', 'desc');
@@ -62,11 +85,11 @@ class RawatInapController extends Controller
     public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                    ->where('kd_unit', $kd_unit)
-                    ->where('kd_pasien', $kd_pasien)
-                    ->where('urut_masuk', $urut_masuk)
-                    ->whereDate('tgl_masuk', $tgl_masuk)
-                    ->first();
+            ->where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {

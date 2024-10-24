@@ -112,10 +112,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-daftar-input-diagnosis')
 
 <script>
-    //button create post event
     $('#btn-konsul-rujukan').on('click', function() {
-
-        //open modal
         $('#modal-konsul-rujukan').modal('show');
     });
 </script>

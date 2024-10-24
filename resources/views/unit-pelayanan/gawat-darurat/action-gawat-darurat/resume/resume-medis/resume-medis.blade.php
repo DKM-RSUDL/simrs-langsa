@@ -1,12 +1,12 @@
 <div>
     <div class="d-flex justify-content-between m-3">
         <div class="row">
-            <!-- Select PPA Option -->
+            <!-- Select Option -->
             <div class="col-md-2">
                 <select class="form-select" id="SelectOption" aria-label="Pilih...">
                     <option value="semua" selected>Semua Episode</option>
                     <option value="option1">Episode Sekarang</option>
-                    <option value="option2">1 Bulan/option>
+                    <option value="option2">1 Bulan</option>
                     <option value="option3">3 Bulan</option>
                     <option value="option4">6 Bulan</option>
                     <option value="option5">9 Bulan</option>
@@ -23,23 +23,28 @@
                 <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
             </div>
             <div class="col-md-2">
-                <a href="#" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></a>
+                <a href="#" class="btn btn-secondary rounded-3" id="filterButton"><i
+                        class="bi bi-funnel-fill"></i></a>
             </div>
 
             <!-- Search Bar -->
             <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                        aria-describedby="basic-addon1">
-                </div>
+                <form method="GET"
+                    action="{{ route('resume.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Cari nama dokter" aria-label="Cari"
+                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </form>
             </div>
+
 
         </div>
     </div>
 
+    <div class="table-responsive">
     <table class="table table-bordered table-sm table-hover">
         <thead class="table-primary">
             <tr>
@@ -54,20 +59,72 @@
         </thead>
         <tbody id="table-resume">
             @foreach ($dataGet as $post)
-            <tr id="index_{{ $post->id }}">
-                    <td>{{ $post->kd_pasien }}</td>
-                    <td>-</td>
-                    <td>{{ $post->tgl_masuk }}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
+                <tr id="index_{{ $post->id }}">
+                    <td>Gawat Darurat</td>
+                    <td>{{ $dataMedis->dokter->nama_lengkap ?? '-' }}</td>
                     <td>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2 btn-edit-resume" data-id="{{ $post->id }}">Validasi</a>
+                        {{ $post->tgl_masuk ? substr($post->tgl_masuk, 0, 10) : '-' }}
+                    </td>
+                    <td>
+                        {{ $dataMedis->tgl_keluar ? substr($dataMedis->tgl_keluar, 0, 10) : '-' }}
+                    </td>
+                    <td>-</td>
+                    <td>{{ $dataMedis->unit->nama_unit }}</td>
+                    <td>
+                        @if ($post->status == 0)
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success mb-2"
+                                data-id="{{ $post->id }}" id="btn-edit-resume">Validasi</a>
+                        @elseif ($post->status == 1)
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info mb-2" data-id="{{ $post->id }}"
+                                id="btn-view-resume">Lihat</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    {{ $dataGet->withQueryString()->links() }}
+    </div>
 </div>
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-resume')
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Filter by period
+        $('#SelectOption').change(function() {
+            var periode = $(this).val();
+            var kd_pasien =
+            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            var tgl_masuk =
+            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+
+            var queryString = '?periode=' + periode;
+            window.location.href = "/unit-pelayanan/gawat-darurat/pelayanan/" + kd_pasien + "/" +
+                tgl_masuk + "/resume" + queryString;
+        });
+
+        // Filter by start date and end date
+        $('#filterButton').click(function(e) {
+            e.preventDefault();
+
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+            var kd_pasien =
+            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            var tgl_masuk =
+            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+
+            if (!startDate || !endDate) {
+                alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
+                return;
+            }
+
+            var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
+
+            window.location.href = "/unit-pelayanan/gawat-darurat/pelayanan/" + kd_pasien + "/" +
+                tgl_masuk + "/resume" + queryString;
+        });
+    });
+</script>
