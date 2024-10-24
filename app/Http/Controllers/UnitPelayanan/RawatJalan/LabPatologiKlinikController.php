@@ -39,8 +39,7 @@ class LabPatologiKlinikController extends Controller
             ->get()
             ->groupBy('kategori');
 
-
-        $dataDokter = Dokter::all();
+        $dataDokter = Dokter::where('status', 1)->get();
 
         $search = $request->input('search');
         $periode = $request->input('periode');

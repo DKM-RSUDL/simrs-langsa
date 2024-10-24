@@ -5,11 +5,10 @@
                 <h5 class="modal-title" id="addKonsulModalLabel">Konsultasi/ Rujukan Intern</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('konsultasi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}"
+            <form
+                action="{{ route('rawat-jalan.konsultasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                 method="post">
                 @csrf
-
-                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                 <div class="modal-body">
 
@@ -174,7 +173,9 @@
                 <h5 class="modal-title" id="editKonsulModalLabel">Konsultasi/ Rujukan Intern</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('konsultasi.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-jalan.konsultasi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
                 @method('put')
 
@@ -182,7 +183,6 @@
                 <input type="hidden" name="old_tgl_konsul" id="old_tgl_konsul">
                 <input type="hidden" name="old_jam_konsul" id="old_jam_konsul">
                 <input type="hidden" name="urut_konsul" id="urut_konsul">
-                <input type="hidden" name="urut_masuk" id="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                 <div class="modal-body">
 

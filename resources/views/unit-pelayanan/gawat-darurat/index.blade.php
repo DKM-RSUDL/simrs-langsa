@@ -63,7 +63,7 @@
             }
 
             /* Menghilangkan elemen Select2 yang tidak diinginkan */
-            .select2-container + .select2-container {
+            .select2-container+.select2-container {
                 display: none;
             }
 
@@ -129,13 +129,14 @@
                 <div class="d-flex align-items-center">
                     <label for="dokterSelect" class="form-label me-2">Dokter:</label>
                     <select class="form-select" id="dokterSelect" aria-label="Pilih dokter">
-                        <option value="semua" selected>Semua</option>
-                        <option value="dokter1">dr. A</option>
-                        <option value="dokter2">dr. B</option>
-                        <option value="dokter3">dr. C</option>
+                        <option value="" selected>Semua</option>
+                        @foreach ($dokter as $d)
+                            <option value="{{ $d->dokter->kd_dokter }}">{{ $d->dokter->nama_lengkap }}</option>
+                        @endforeach
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPatientTriage">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#addPatientTriage">
                     <i class="ti-plus"></i> Tambah Data
                 </button>
             </div>
@@ -199,11 +200,11 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="">
-                                                            <p>
-                                                                <strong class="text-primary">No RM : </strong>
-                                                                <span id="no_rm_label"></span>
-                                                            </p>
-                                                            <input type="hidden" name="no_rm" id="no_rm">
+                                                        <p>
+                                                            <strong class="text-primary">No RM : </strong>
+                                                            <span id="no_rm_label"></span>
+                                                        </p>
+                                                        <input type="hidden" name="no_rm" id="no_rm">
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,10 +217,14 @@
                                                                 <strong>Dokter Triase :</strong>
                                                             </p>
                                                         </label>
-                                                        <select name="dokter_triase" id="dokter_triase" class="form-select @error('dokter_triase') is-invalid @enderror" required>
+                                                        <select name="dokter_triase" id="dokter_triase"
+                                                            class="form-select @error('dokter_triase') is-invalid @enderror"
+                                                            required>
                                                             <option value="">--Pilih Dokter--</option>
                                                             @foreach ($dokter as $dok)
-                                                                <option value="{{ $dok->kd_dokter }}" @selected(old('dokter_triase') == $dok->kd_dokter)>{{ $dok->nama_lengkap }}</option>
+                                                                <option value="{{ $dok->kd_dokter }}"
+                                                                    @selected(old('dokter_triase') == $dok->kd_dokter)>{{ $dok->nama_lengkap }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -231,8 +236,12 @@
                                                             </p>
                                                         </label>
                                                         <div class="d-flex">
-                                                            <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control @error('tgl_masuk') is-invalid @enderror" value="{{ old('tgl_masuk', date('Y-m-d')) }}" required>
-                                                            <input type="time" name="jam_masuk" id="jam_masuk" class="form-control @error('jam_masuk') is-invalid @enderror ms-2" value="{{ old('jam_masuk', date('H:i')) }}" required>
+                                                            <input type="date" name="tgl_masuk" id="tgl_masuk"
+                                                                class="form-control @error('tgl_masuk') is-invalid @enderror"
+                                                                value="{{ old('tgl_masuk', date('Y-m-d')) }}" required>
+                                                            <input type="time" name="jam_masuk" id="jam_masuk"
+                                                                class="form-control @error('jam_masuk') is-invalid @enderror ms-2"
+                                                                value="{{ old('jam_masuk', date('H:i')) }}" required>
                                                         </div>
 
                                                         @error('tgl_masuk')
@@ -255,8 +264,12 @@
                                                             </p>
                                                         </label>
                                                         <div class="input-group mb-3">
-                                                            <input type="text" name="nik_pasien" id="nik_pasien" class="form-control" placeholder="Nik Pasien" aria-label="Nik Pasien" aria-describedby="button-nik-pasien" value="{{ old('nik_pasien') }}">
-                                                            <button class="btn btn-outline-secondary" type="button" id="button-nik-pasien">
+                                                            <input type="text" name="nik_pasien" id="nik_pasien"
+                                                                class="form-control" placeholder="Nik Pasien"
+                                                                aria-label="Nik Pasien" aria-describedby="button-nik-pasien"
+                                                                value="{{ old('nik_pasien') }}">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                id="button-nik-pasien">
                                                                 <i class="ti ti-search"></i>
                                                             </button>
                                                         </div>
@@ -268,7 +281,9 @@
                                                                 <strong>Nama Pasien :</strong>
                                                             </p>
                                                         </label>
-                                                        <input type="text" name="nama_pasien" id="nama_pasien" class="form-control @error('nama_pasien') is-invalid @enderror" value="{{ old('nama_pasien') }}" required>
+                                                        <input type="text" name="nama_pasien" id="nama_pasien"
+                                                            class="form-control @error('nama_pasien') is-invalid @enderror"
+                                                            value="{{ old('nama_pasien') }}" required>
 
                                                         @error('nama_pasien')
                                                             <div class="invalid-feedback">
@@ -285,10 +300,14 @@
                                                                         <strong>Jenis Kelamin:</strong>
                                                                     </p>
                                                                 </label>
-                                                                <select name="jenis_kelamin" id="jenis_kelamin" class="form-control @error('jenis_kelamin') is-invalid @enderror" required>
+                                                                <select name="jenis_kelamin" id="jenis_kelamin"
+                                                                    class="form-control @error('jenis_kelamin') is-invalid @enderror"
+                                                                    required>
                                                                     <option value="">--Pilih--</option>
-                                                                    <option value="1" @selected(old('jenis_kelamin') == '1')>Laki-laki</option>
-                                                                    <option value="0" @selected(old('jenis_kelamin') == '0')>Perempuan</option>
+                                                                    <option value="1" @selected(old('jenis_kelamin') == '1')>
+                                                                        Laki-laki</option>
+                                                                    <option value="0" @selected(old('jenis_kelamin') == '0')>
+                                                                        Perempuan</option>
                                                                 </select>
                                                             </div>
                                                             <div class="col-4">
@@ -297,7 +316,8 @@
                                                                         <strong>Usia (Tahun):</strong>
                                                                     </p>
                                                                 </label>
-                                                                <input type="number" name="usia_tahun" id="usia_tahun" class="form-control" value="{{ old('usia_tahun') }}">
+                                                                <input type="number" name="usia_tahun" id="usia_tahun"
+                                                                    class="form-control" value="{{ old('usia_tahun') }}">
                                                             </div>
                                                             <div class="col-3">
                                                                 <label for="#usia_bulan">
@@ -305,7 +325,9 @@
                                                                         <strong>Bulan:</strong>
                                                                     </p>
                                                                 </label>
-                                                                <input type="number" name="usia_bulan" id="usia_bulan" min="0" max="11" class="form-control" value="{{ old('usia_bulan') }}">
+                                                                <input type="number" name="usia_bulan" id="usia_bulan"
+                                                                    min="0" max="11" class="form-control"
+                                                                    value="{{ old('usia_bulan') }}">
                                                             </div>
                                                         </div>
 
@@ -325,13 +347,19 @@
                                                         <div class="d-flex align-items-center">
                                                             <p class="text-primary fw-bold m-0 p-0">Rujukan</p>
                                                             <div class="form-check mx-5">
-                                                                <input class="form-check-input @error('rujukan') is-invalid @enderror" type="radio" name="rujukan" id="rujukan_yes" value="1" @checked(old('rujukan') == '1') required>
+                                                                <input
+                                                                    class="form-check-input @error('rujukan') is-invalid @enderror"
+                                                                    type="radio" name="rujukan" id="rujukan_yes"
+                                                                    value="1" @checked(old('rujukan') == '1') required>
                                                                 <label class="form-check-label" for="rujukan_yes">
                                                                     Ya
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input @error('rujukan') is-invalid @enderror" type="radio" name="rujukan" id="rujukan_no" value="0" @checked(old('rujukan') == '0') required>
+                                                                <input
+                                                                    class="form-check-input @error('rujukan') is-invalid @enderror"
+                                                                    type="radio" name="rujukan" id="rujukan_no"
+                                                                    value="0" @checked(old('rujukan') == '0') required>
                                                                 <label class="form-check-label" for="rujukan_no">
                                                                     Tidak
                                                                 </label>
@@ -346,16 +374,20 @@
                                                     </div>
 
                                                     <div class="form-group mt-1">
-                                                        <label for="#rujukan_ket" class="text-primary">Jika ya, dari</label>
-                                                        <input type="text" name="rujukan_ket" id="rujukan_ket" class="form-control" value="{{ old('rujukan_ket') }}">
+                                                        <label for="#rujukan_ket" class="text-primary">Jika ya,
+                                                            dari</label>
+                                                        <input type="text" name="rujukan_ket" id="rujukan_ket"
+                                                            class="form-control" value="{{ old('rujukan_ket') }}">
                                                     </div>
 
                                                     <div class="form-group mt-3 w-100">
                                                         <p class="text-primary fw-bold m-0 p-0">Foto Pasien</p>
 
-                                                        <div id="fotoPasienlabel" tabindex="0" class="form-control px-5 @error('foto_pasien') is-invalid @enderror">
+                                                        <div id="fotoPasienlabel" tabindex="0"
+                                                            class="form-control px-5 @error('foto_pasien') is-invalid @enderror">
                                                             <div class="text-center py-5">
-                                                                <img src="{{ asset('assets/images/avatar1.png') }}" alt="" width="150">
+                                                                <img src="{{ asset('assets/images/avatar1.png') }}"
+                                                                    alt="" width="150">
                                                             </div>
                                                             <p class="fw-bold">
                                                                 <i class="bi bi-camera-fill text-primary"></i>
@@ -363,7 +395,8 @@
                                                             </p>
                                                         </div>
 
-                                                        <input type="file" name="foto_pasien" id="foto_pasien" class="d-none">
+                                                        <input type="file" name="foto_pasien" id="foto_pasien"
+                                                            class="d-none">
                                                         @error('foto_pasien')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -394,25 +427,34 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="form-check mt-3">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="airway[]" value="Bebas" id="airway_bebas">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="airway[]" value="Bebas"
+                                                                    id="airway_bebas">
                                                                 <label class="form-check-label" for="airway_bebas">
                                                                     Bebas
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="airway[]" value="Ancaman" id="airway_ancaman">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="airway[]" value="Ancaman"
+                                                                    id="airway_ancaman">
                                                                 <label class="form-check-label" for="airway_ancaman">
                                                                     Ancaman
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="airway[]" value="Sumbatan" id="airway_sumbatan">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="airway[]" value="Sumbatan"
+                                                                    id="airway_sumbatan">
                                                                 <label class="form-check-label" for="airway_sumbatan">
                                                                     Sumbatan
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input doa-check" type="checkbox" name="airway[]" value="Tidak ada tanda-tanda kehidupan" id="airway_mati">
+                                                                <input class="form-check-input doa-check" type="checkbox"
+                                                                    name="airway[]"
+                                                                    value="Tidak ada tanda-tanda kehidupan"
+                                                                    id="airway_mati">
                                                                 <label class="form-check-label" for="airway_mati">
                                                                     Tidak ada tanda-tanda kehidupan
                                                                 </label>
@@ -429,43 +471,58 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="form-check mt-3">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="breathing[]" value="Normal" id="breathing_normal">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="breathing[]" value="Normal"
+                                                                    id="breathing_normal">
                                                                 <label class="form-check-label" for="breathing_normal">
                                                                     Normal
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input urgent-check" type="checkbox" name="breathing[]" value="Mengi" id="breathing_Mengi">
+                                                                <input class="form-check-input urgent-check"
+                                                                    type="checkbox" name="breathing[]" value="Mengi"
+                                                                    id="breathing_Mengi">
                                                                 <label class="form-check-label" for="breathing_Mengi">
                                                                     Mengi
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="breathing[]" value="Takipnoe" id="breathing_takipnoe">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="breathing[]" value="Takipnoe"
+                                                                    id="breathing_takipnoe">
                                                                 <label class="form-check-label" for="breathing_takipnoe">
                                                                     Takipnoe
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="breathing[]" value="RR > 20 X/mnt" id="breathing_rr">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="breathing[]"
+                                                                    value="RR > 20 X/mnt" id="breathing_rr">
                                                                 <label class="form-check-label" for="breathing_rr">
                                                                     RR > 20 X/mnt
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="breathing[]" value="Henti Nafas" id="breathing_henti_nafas">
-                                                                <label class="form-check-label" for="breathing_henti_nafas">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="breathing[]"
+                                                                    value="Henti Nafas" id="breathing_henti_nafas">
+                                                                <label class="form-check-label"
+                                                                    for="breathing_henti_nafas">
                                                                     Henti Nafas
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="breathing[]" value="Bradipnoe" id="breathing_bradipnoe">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="breathing[]" value="Bradipnoe"
+                                                                    id="breathing_bradipnoe">
                                                                 <label class="form-check-label" for="breathing_bradipnoe">
                                                                     Bradipnoe
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input doa-check" type="checkbox" name="breathing[]" value="Tidak ada denyut nadi" id="breathing_mati">
+                                                                <input class="form-check-input doa-check" type="checkbox"
+                                                                    name="breathing[]" value="Tidak ada denyut nadi"
+                                                                    id="breathing_mati">
                                                                 <label class="form-check-label" for="breathing_mati">
                                                                     Tidak ada denyut nadi
                                                                 </label>
@@ -482,86 +539,130 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="form-check mt-3">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="circulation[]" value="Nadi Kuat" id="circulation_nadi_kuat">
-                                                                <label class="form-check-label" for="circulation_nadi_kuat">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Nadi Kuat" id="circulation_nadi_kuat">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_nadi_kuat">
                                                                     Nadi Kuat
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="circulation[]" value="Frekuensi Normal" id="circulation_frekuensi_normal">
-                                                                <label class="form-check-label" for="circulation_frekuensi_normal">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Frekuensi Normal"
+                                                                    id="circulation_frekuensi_normal">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_frekuensi_normal">
                                                                     Frekuensi Normal
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="circulation[]" value="TD sistole 90-159 mmHg" id="circulation_sistole_90_159">
-                                                                <label class="form-check-label" for="circulation_sistole_90_159">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="TD sistole 90-159 mmHg"
+                                                                    id="circulation_sistole_90_159">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_sistole_90_159">
                                                                     TD sistole 90-159 mmHg
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input urgent-check" type="checkbox" name="circulation[]" value="TD sistole >= 160 atau <= 90" id="circulation_sistole_160_90">
-                                                                <label class="form-check-label" for="circulation_sistole_160_90">
-                                                                    TD sistole >= 160 atau <= 90
-                                                                </label>
+                                                                <input class="form-check-input urgent-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="TD sistole >= 160 atau <= 90"
+                                                                    id="circulation_sistole_160_90">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_sistole_160_90">
+                                                                    TD sistole >= 160 atau <= 90 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Nadi Lemah" id="circulation_nadi_lemah">
-                                                                <label class="form-check-label" for="circulation_nadi_lemah">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Nadi Lemah" id="circulation_nadi_lemah">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_nadi_lemah">
                                                                     Nadi Lemah
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Bradikardia" id="circulation_bradikardia">
-                                                                <label class="form-check-label" for="circulation_bradikardia">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Bradikardia" id="circulation_bradikardia">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_bradikardia">
                                                                     Bradikardia
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Takikardi" id="circulation_takikardi">
-                                                                <label class="form-check-label" for="circulation_takikardi">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Takikardi" id="circulation_takikardi">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_takikardi">
                                                                     Takikardi
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Pucat" id="circulation_pucat">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]" value="Pucat"
+                                                                    id="circulation_pucat">
                                                                 <label class="form-check-label" for="circulation_pucat">
                                                                     Pucat
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="CRT > 2 detik" id="circulation_crt">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="CRT > 2 detik" id="circulation_crt">
                                                                 <label class="form-check-label" for="circulation_crt">
                                                                     CRT > 2 detik
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Tanda-tanda dehidrasi sedang-berat" id="circulation_dehidrasi">
-                                                                <label class="form-check-label" for="circulation_dehidrasi">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Tanda-tanda dehidrasi sedang-berat"
+                                                                    id="circulation_dehidrasi">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_dehidrasi">
                                                                     Tanda-tanda dehidrasi sedang-berat
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="circulation[]" value="Suhu > 40 C" id="circulation_suhu">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Suhu > 40 C" id="circulation_suhu">
                                                                 <label class="form-check-label" for="circulation_suhu">
                                                                     Suhu > 40 C
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="circulation[]" value="Henti Jantung / Ketiadaan Sirkulasi" id="circulation_henti_jantung">
-                                                                <label class="form-check-label" for="circulation_henti_jantung">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Henti Jantung / Ketiadaan Sirkulasi"
+                                                                    id="circulation_henti_jantung">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_henti_jantung">
                                                                     Henti Jantung / Ketiadaan Sirkulasi
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="circulation[]" value="Nadi tak teraba" id="circulation_nadi_tak_teraba">
-                                                                <label class="form-check-label" for="circulation_nadi_tak_teraba">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="circulation[]"
+                                                                    value="Nadi tak teraba"
+                                                                    id="circulation_nadi_tak_teraba">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_nadi_tak_teraba">
                                                                     Nadi tak teraba
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="circulation[]" value="Cianosis" id="circulation_cianosis">
-                                                                <label class="form-check-label" for="circulation_cianosis">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="circulation[]" value="Cianosis"
+                                                                    id="circulation_cianosis">
+                                                                <label class="form-check-label"
+                                                                    for="circulation_cianosis">
                                                                     Cianosis
                                                                 </label>
                                                             </div>
@@ -577,61 +678,85 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="form-check mt-3">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="disability[]" value="Sadar" id="disability_sadar">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="disability[]" value="Sadar"
+                                                                    id="disability_sadar">
                                                                 <label class="form-check-label" for="disability_sadar">
                                                                     Sadar
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input false-emergency-check" type="checkbox" name="disability[]" value="GCS 15" id="disability_gcs_15">
+                                                                <input class="form-check-input false-emergency-check"
+                                                                    type="checkbox" name="disability[]" value="GCS 15"
+                                                                    id="disability_gcs_15">
                                                                 <label class="form-check-label" for="disability_gcs_15">
                                                                     GCS 15
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input urgent-check" type="checkbox" name="disability[]" value="GCS >= 12" id="disability_gcs_12">
+                                                                <input class="form-check-input urgent-check"
+                                                                    type="checkbox" name="disability[]" value="GCS >= 12"
+                                                                    id="disability_gcs_12">
                                                                 <label class="form-check-label" for="disability_gcs_12">
                                                                     GCS >= 12
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="disability[]" value="GCS 9-12" id="disability_gcs_9_12">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="disability[]" value="GCS 9-12"
+                                                                    id="disability_gcs_9_12">
                                                                 <label class="form-check-label" for="disability_gcs_9_12">
                                                                     GCS 9-12
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="disability[]" value="Gelisah" id="disability_gelisah">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="disability[]" value="Gelisah"
+                                                                    id="disability_gelisah">
                                                                 <label class="form-check-label" for="disability_gelisah">
                                                                     Gelisah
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="disability[]" value="Nyeri Dada" id="disability_nyeri_dada">
-                                                                <label class="form-check-label" for="disability_nyeri_dada">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="disability[]"
+                                                                    value="Nyeri Dada" id="disability_nyeri_dada">
+                                                                <label class="form-check-label"
+                                                                    for="disability_nyeri_dada">
                                                                     Nyeri Dada
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input emergency-check" type="checkbox" name="disability[]" value="Hemiparese Akut" id="disability_hemiparese_akut">
-                                                                <label class="form-check-label" for="disability_hemiparese_akut">
+                                                                <input class="form-check-input emergency-check"
+                                                                    type="checkbox" name="disability[]"
+                                                                    value="Hemiparese Akut"
+                                                                    id="disability_hemiparese_akut">
+                                                                <label class="form-check-label"
+                                                                    for="disability_hemiparese_akut">
                                                                     Hemiparese Akut
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="disability[]" value="GCS < 9" id="disability_gcs_under_9">
-                                                                <label class="form-check-label" for="disability_gcs_under_9">
-                                                                    GCS < 9
-                                                                </label>
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="disability[]" value="GCS < 9"
+                                                                    id="disability_gcs_under_9">
+                                                                <label class="form-check-label"
+                                                                    for="disability_gcs_under_9">
+                                                                    GCS < 9 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="disability[]" value="Tidak ada respon" id="disability_no_respon">
-                                                                <label class="form-check-label" for="disability_no_respon">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="disability[]"
+                                                                    value="Tidak ada respon" id="disability_no_respon">
+                                                                <label class="form-check-label"
+                                                                    for="disability_no_respon">
                                                                     Tidak ada respon
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input resusitasi-check" type="checkbox" name="disability[]" value="Kejang" id="disability_kejang">
+                                                                <input class="form-check-input resusitasi-check"
+                                                                    type="checkbox" name="disability[]" value="Kejang"
+                                                                    id="disability_kejang">
                                                                 <label class="form-check-label" for="disability_kejang">
                                                                     Kejang
                                                                 </label>
@@ -646,7 +771,8 @@
                                                 <div class="col-12">
                                                     <div class="d-flex align-items-center w-100">
                                                         <p class="fw-medium text-primary m-0 p-0">Kesimpulan Triase :</p>
-                                                        <button type="button" id="triaseStatusLabel" class="btn btn-block ms-3 w-100"></button>
+                                                        <button type="button" id="triaseStatusLabel"
+                                                            class="btn btn-block ms-3 w-100"></button>
                                                         <input type="hidden" name="kd_triase" id="kd_triase">
                                                         <input type="hidden" name="ket_triase" id="ket_triase">
                                                     </div>
@@ -679,7 +805,12 @@
             $('#rawatDaruratTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: gawatDaruratIndexUrl,
+                ajax: {
+                    url: gawatDaruratIndexUrl,
+                    data: function(d) {
+                        d.dokter = $('#dokterSelect').val();
+                    }
+                },
                 columns: [{
                         data: 'action',
                         name: 'action',
@@ -696,7 +827,7 @@
                             let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
                                 .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
                             let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
-                            'Perempuan';
+                                'Perempuan';
                             return `
                                 <div class="profile">
                                     <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
@@ -717,10 +848,10 @@
                             let kdTriase = row.kd_triase;
                             let classEl = '';
 
-                            if(kdTriase == 5) classEl = 'bg-dark';
-                            if(kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
-                            if(kdTriase == 2) classEl = 'bg-warning';
-                            if(kdTriase == 1) classEl = 'bg-success';
+                            if (kdTriase == 5) classEl = 'bg-dark';
+                            if (kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
+                            if (kdTriase == 2) classEl = 'bg-warning';
+                            if (kdTriase == 1) classEl = 'bg-success';
 
                             return `<div class="rounded-circle ${classEl}" style="width: 35px; height: 35px;"></div>`;
                         },
@@ -783,6 +914,7 @@
                 paging: true,
                 lengthChange: true,
                 searching: true,
+                orderCellsTop: true,
                 ordering: true,
                 info: true,
                 autoWidth: false,
@@ -792,7 +924,7 @@
             initSelect2();
 
             let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
-            if(rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
+            if (rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
         });
 
 
@@ -864,7 +996,7 @@
         }
 
         function determineClass(status) {
-            switch(status) {
+            switch (status) {
                 case 'RESUSITASI (segera)':
                     return 'btn btn-block btn-danger ms-3 w-100';
                 case 'EMERGENCY (10 menit)':
@@ -887,7 +1019,7 @@
 
 
             // kalau value y input rujukan ket required, kalau n input rujukan ket disabled
-            if(rujukanValue == '1') {
+            if (rujukanValue == '1') {
                 $('#addPatientTriage #rujukan_ket').prop('required', true);
                 $('#addPatientTriage #rujukan_ket').prop('readonly', false);
             } else {
@@ -898,7 +1030,7 @@
         });
 
         // Reinisialisasi Select2 ketika modal dibuka
-        $('#addPatientTriage').on('shown.bs.modal', function () {
+        $('#addPatientTriage').on('shown.bs.modal', function() {
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
@@ -934,7 +1066,10 @@
             // Menghitung sisa bulan
             bulan = bulan % 12;
 
-            return { tahun, bulan };
+            return {
+                tahun,
+                bulan
+            };
         }
 
         function getWaktuSekarang() {
@@ -951,7 +1086,10 @@
             const menit = String(sekarang.getMinutes()).padStart(2, '0');
             const formatWaktu = `${jam}:${menit}`;
 
-            return { formatTanggal, formatWaktu };
+            return {
+                formatTanggal,
+                formatWaktu
+            };
         }
 
         // Search Nik
@@ -960,7 +1098,7 @@
             let $nikEl = $('#addPatientTriage #nik_pasien');
             let nikPasien = $nikEl.val();
 
-            if(nikPasien == '' || nikPasien.length != 16 || !isNumber(nikPasien)) {
+            if (nikPasien == '' || nikPasien.length != 16 || !isNumber(nikPasien)) {
                 showToast('error', 'NIK pasien harus di isi 16 angka!');
 
                 $('#addPatientTriage #no_rm_label').text('');
@@ -985,7 +1123,9 @@
                 beforeSend: function() {
                     // Ubah teks tombol dan tambahkan spinner
                     $nikEl.prop('disabled', true);
-                    $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
                     $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
                 },
                 complete: function() {
@@ -994,10 +1134,10 @@
                     $this.html('<i class="ti ti-search"></i>');
                     $this.prop('disabled', false);
                 },
-                success: function (res) {
+                success: function(res) {
                     showToast(res.status, res.message);
 
-                    if(res.status == 'success') {
+                    if (res.status == 'success') {
                         let data = res.data;
                         console.log(data);
 
@@ -1024,6 +1164,10 @@
             });
 
 
+        });
+
+        $('#dokterSelect').on('change', function() {
+            $('#rawatDaruratTable').DataTable().ajax.reload();
         });
     </script>
 @endpush

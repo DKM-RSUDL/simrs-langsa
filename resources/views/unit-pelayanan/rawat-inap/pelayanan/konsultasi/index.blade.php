@@ -85,7 +85,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-ranap')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -106,7 +106,7 @@
                             <div class="tab-pane fade show active" id="resep" role="tabpanel"
                                 aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.konsultasi')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.konsultasi.include.konsultasi')
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
@@ -145,7 +145,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "{{ route('rawat-inap.konsultasi.get-dokter-unit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "kd_unit": optVal
@@ -200,14 +200,13 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('konsultasi.get-konsul-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "{{ route('rawat-inap.konsultasi.get-konsul-ajax', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                 data: {
                     '_token': "{{ csrf_token() }}",
                     'kd_unit_tujuan': unitTujuan,
                     'tgl_masuk_tujuan': tglKonsul,
                     'jam_masuk_tujuan': jamKonsul,
                     'urut_konsul': urutKonsul,
-                    'urut_masuk': "{{ $dataMedis->urut_masuk }}"
                 },
                 dataType: "json",
                 beforeSend: function() {
@@ -290,7 +289,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('konsultasi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('rawat-inap.konsultasi.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         data: {
                             '_method': 'delete',
                             '_token': "{{ csrf_token() }}",
@@ -298,7 +297,6 @@
                             'tgl_masuk_tujuan': tglKonsul,
                             'jam_masuk_tujuan': jamKonsul,
                             'urut_konsul': urutKonsul,
-                            'urut_masuk': "{{ $dataMedis->urut_masuk }}",
                             'no_transaksi': "{{ $dataMedis->no_transaksi }}"
                         },
                         dataType: "json",

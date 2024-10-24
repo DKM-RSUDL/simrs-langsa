@@ -135,4 +135,4 @@
     </table>
 </div>
 
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.include.modal')
+@include('unit-pelayanan.rawat-inap.pelayanan.konsultasi.include.modal')
