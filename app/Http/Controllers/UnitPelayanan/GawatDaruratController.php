@@ -8,6 +8,7 @@ use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RujukanKunjungan;
@@ -22,11 +23,43 @@ class GawatDaruratController extends Controller
     protected $roleService;
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
+            $dokterFilter = $request->get('dokter');
+
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', 3);
 
+            // Filte dokter
+            if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);
+
             return DataTables::of($data)
+                ->filter(function ($query) use ($request) {
+                    if ($searchValue = $request->get('search')['value']) {
+                        $query->where(function ($q) use ($searchValue) {
+                            if (is_numeric($searchValue) && strlen($searchValue) == 4) {
+                                $q->whereRaw("YEAR(kunjungan.tgl_masuk) = ?", [$searchValue]);
+                            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                                $q->whereRaw("CONVERT(varchar, kunjungan.tgl_masuk, 23) like ?", ["%{$searchValue}%"]);
+                            } elseif (preg_match('/^\d{2}:\d{2}$/', $searchValue)) {
+                                $q->whereRaw("FORMAT(kunjungan.jam_masuk, 'HH:mm') like ?", ["%{$searchValue}%"]);
+                            } else {
+                                $q->where('kunjungan.kd_pasien', 'like', "%{$searchValue}%")
+                                    ->orWhereHas('pasien', function ($q) use ($searchValue) {
+                                        $q->where('nama', 'like', "%{$searchValue}%")
+                                            ->orWhere('alamat', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('dokter', function ($q) use ($searchValue) {
+                                        $q->where('nama_lengkap', 'like', "%{$searchValue}%");
+                                    })
+                                    ->orWhereHas('customer', function ($q) use ($searchValue) {
+                                        $q->where('customer', 'like', "%{$searchValue}%");
+                                    });
+                            }
+                        });
+                    }
+                })
+
                 ->order(function ($query) {
                     $query->orderBy('tgl_masuk', 'desc')
                         ->orderBy('antrian', 'desc')
@@ -59,9 +92,12 @@ class GawatDaruratController extends Controller
                 ->make(true);
         }
 
-        $dokter = Dokter::where('status', 1)->get();
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+                            ->where('kd_unit', 3)
+                            ->whereRelation('dokter', 'status', 1)
+                            ->get();
 
-        return view('unit-pelayanan.gawat-darurat.index', compact('dokter'));
+        return view('unit-pelayanan.gawat-darurat.index', compact('dokter',));
     }
 
     public function storeTriase(Request $request)
@@ -90,12 +126,12 @@ class GawatDaruratController extends Controller
             'usia_bulan'        => 'nullable|min:0|max:11',
             'foto_pasien'       => 'nullable|image|file|max:5120',
         ], $messageErr);
-        
+
         $no_rm = $request->no_rm ?? null;
 
         // get pasien
         $pasien = Pasien::where('kd_pasien', $no_rm)->first();
-        
+
         // get request data
         $dokter_triase = $request->dokter_triase;
         $tgl_masuk = $request->tgl_masuk;
@@ -122,9 +158,9 @@ class GawatDaruratController extends Controller
         // set new number
         $prefix = 'IGD-';
         $lastIgdNumber = Pasien::select('kd_pasien')
-                                ->where('kd_pasien', 'like', "$prefix%")
-                                ->orderBy('kd_pasien', 'desc')
-                                ->first();
+            ->where('kd_pasien', 'like', "$prefix%")
+            ->orderBy('kd_pasien', 'desc')
+            ->first();
 
         if (empty($lastIgdNumber)) {
             $lastIgdNumber = $prefix . '000001';
@@ -138,7 +174,7 @@ class GawatDaruratController extends Controller
         }
 
         // ganti last ig number dgn kode pasien jika pasien ada
-        if(!empty($pasien)) $lastIgdNumber = $pasien->kd_pasien;
+        if (!empty($pasien)) $lastIgdNumber = $pasien->kd_pasien;
 
         // upload foto pasien
         $pathFotoPasien = ($request->hasFile('foto_pasien')) ? $request->file('foto_pasien')->store('uploads/gawat-darurat/triase') : '';
@@ -167,7 +203,7 @@ class GawatDaruratController extends Controller
 
 
         // insert ke tabel pasien
-        if(empty($pasien)) {
+        if (empty($pasien)) {
             $dataPasien = [
                 'kd_pasien'         => $lastIgdNumber,
                 'nama'              => $nama_pasien,
@@ -201,28 +237,28 @@ class GawatDaruratController extends Controller
                 'kd_negara'         => '',
                 'tgl_pass'          => null,
             ];
-            
+
             Pasien::create($dataPasien);
         }
 
 
         // get antrian terakhir
         $getLastAntrianToday = Kunjungan::select('antrian')
-                                        ->whereDate('tgl_masuk', $tgl_masuk)
-                                        ->where('kd_unit', 3)
-                                        ->orderBy('antrian', 'desc')
-                                        ->first();
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', 3)
+            ->orderBy('antrian', 'desc')
+            ->first();
 
         $no_antrian = !empty($getLastAntrianToday) ? $getLastAntrianToday->antrian + 1 : 1;
 
         // pasien not null get last urut masuk
         $urut_masuk = 0;
-        if(!empty($pasien)) {
+        if (!empty($pasien)) {
             $getLastUrutMasukPatientToday = Kunjungan::select('urut_masuk')
-                                                    ->where('kd_pasien', $pasien->kd_pasien)
-                                                    ->whereDate('tgl_masuk', $tgl_masuk)
-                                                    ->orderBy('urut_masuk', 'desc')
-                                                    ->first();
+                ->where('kd_pasien', $pasien->kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->orderBy('urut_masuk', 'desc')
+                ->first();
 
             $urut_masuk = !empty($getLastUrutMasukPatientToday) ? $getLastUrutMasukPatientToday->urut_masuk + 1 : $urut_masuk;
         }
@@ -256,18 +292,18 @@ class GawatDaruratController extends Controller
 
         // delete rujukan_kunjungan
         RujukanKunjungan::where('kd_pasien', $lastIgdNumber)
-                        ->where('kd_unit', 3)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->delete();
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->delete();
 
 
         // insert transaksi
         $lastTransaction = Transaksi::select('no_transaksi')
-                                    ->where('kd_unit', 3)
-                                    ->where('kd_kasir', '06')
-                                    ->orderBy('no_transaksi', 'desc')
-                                    ->first();
+            ->where('kd_unit', 3)
+            ->where('kd_kasir', '06')
+            ->orderBy('no_transaksi', 'desc')
+            ->first();
 
         if ($lastTransaction) {
             $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
@@ -334,9 +370,9 @@ class GawatDaruratController extends Controller
 
         // delete detail_component
         DetailComponent::where('kd_kasir', '06')
-                        ->where('no_transaksi', $formattedTransactionNumber)
-                        ->where('urut', 1)
-                        ->delete();
+            ->where('no_transaksi', $formattedTransactionNumber)
+            ->where('urut', 1)
+            ->delete();
 
 
         // insert detail_component
@@ -361,9 +397,9 @@ class GawatDaruratController extends Controller
     {
         try {
             $pasien = Pasien::where('no_pengenal', $request->nik)
-                            ->first();
+                ->first();
 
-            if(empty($pasien)) {
+            if (empty($pasien)) {
                 return response()->json([
                     'status'    => 'error',
                     'message'   => 'Data tidak ditemukan',
@@ -376,13 +412,12 @@ class GawatDaruratController extends Controller
                     'data'      => $pasien
                 ], 200);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),
                 'data'      => []
-            ]. 500);
+            ] . 500);
         }
     }
 }
