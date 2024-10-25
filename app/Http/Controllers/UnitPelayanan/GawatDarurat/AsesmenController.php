@@ -125,6 +125,7 @@ class AsesmenController extends Controller
                 'status' => 'success',
                 'data' => [
                     'asesmen' => [
+                        'asesmen' => $asesmen,
                         'tindakan_resusitasi' => $tindakanResusitasi,
                         'anamnesis' => $asesmen->anamnesis,
                         'riwayat_penyakit' => $asesmen->riwayat_penyakit,
@@ -160,7 +161,7 @@ class AsesmenController extends Controller
 
     public function update($kd_pasien, $tgl_masuk, $id, Request $request)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         try {
 
             $asesmen = RmeAsesmen::where('id', $id)
@@ -171,23 +172,31 @@ class AsesmenController extends Controller
             $updateData = [
                 'tindakan_resusitasi' => json_encode($request->tindakan_resusitasi),
                 'anamnesis' => $request->anamnesis,
+                'skala_nyeri' => $request->skala_nyeri,
+                'lokasi' => $request->lokasi,
+                'durasi' => $request->durasi,
                 'riwayat_penyakit' => $request->riwayat_penyakit,
                 'riwayat_pengobatan' => $request->riwayat_pengobatan,
                 'vital_sign' => json_encode($request->vital_sign),
                 'antropometri' => json_encode($request->antropometri),
-                'riwayat_alergi' => json_encode($request->riwayat_alergi)
+                'riwayat_alergi' => json_encode($request->riwayat_alergi),
+                'menjalar_id' => $request->menjalar_id,
+                'frekuensi_nyeri_id' => $request->frekuensi_nyeri_id,
+                'kualitas_nyeri_id' => $request->kualitas_nyeri_id,
+                'faktor_pemberat_id' => $request->faktor_pemberat_id,
+                'faktor_peringan_id' => $request->faktor_peringan_id,
+                'efek_nyeri' => $request->efek_nyeri
             ];
 
             $asesmen->update($updateData);
 
-            DB::commit();
-
+            // DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Exception $e) {
-            DB::rollback();
+            // DB::rollback();
 
             return response()->json([
                 'status' => 'error',

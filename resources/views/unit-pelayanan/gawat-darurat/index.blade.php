@@ -222,8 +222,8 @@
                                                             required>
                                                             <option value="">--Pilih Dokter--</option>
                                                             @foreach ($dokter as $dok)
-                                                                <option value="{{ $dok->kd_dokter }}"
-                                                                    @selected(old('dokter_triase') == $dok->kd_dokter)>{{ $dok->nama_lengkap }}
+                                                                <option value="{{ $dok->dokter->kd_dokter }}"
+                                                                    @selected(old('dokter_triase') == $dok->dokter->kd_dokter)>{{ $dok->dokter->nama_lengkap }}
                                                                 </option>
                                                             @endforeach
                                                         </select>

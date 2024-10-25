@@ -25,7 +25,7 @@ class RmeAsesmen extends Model
         'vital_sign',
         'antropometri',
         'skala_nyeri',
-        'manjalar_id',
+        'menjalar_id',
         'frekuensi_nyeri_id',
         'kualitas_nyeri_id',
         'faktor_pemberat_id',

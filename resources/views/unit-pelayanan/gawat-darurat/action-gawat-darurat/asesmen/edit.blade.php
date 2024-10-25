@@ -223,46 +223,42 @@
                                     <h6 class="mb-3">Karakteristik Nyeri</h6>
                                     <div class="mb-2">
                                         <label>Skala Nyeri</label>
-                                        <input type="number" id="skalaNyeri" name="edit_skala_nyeri" min="0"
-                                            max="10" class="form-control" value="0">
+                                        <input type="number" name="edit_skala_nyeri" min="0" max="10"
+                                            class="form-control" value="0">
                                     </div>
                                     <div class="mb-2">
                                         <label>Lokasi Nyeri</label>
-                                        <input type="text" id="lokasiNyeri" name="edit_lokasi" class="form-control"
+                                        <input type="text" name="edit_lokasi" class="form-control"
                                             placeholder="Lokasi Nyeri">
                                     </div>
                                     <div class="mb-2">
                                         <label>Durasi</label>
-                                        <input type="text" id="durasiNyeri" name="edit_durasi" class="form-control"
+                                        <input type="text" name="edit_durasi" class="form-control"
                                             placeholder="Durasi Nyeri">
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <label for="manjalar">Manjalar</label>
-                                <select id="manjalar" class="form-select" name="edit_menjalar">
+                                <select class="form-select" name="edit_menjalar">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($menjalar as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
+                                        <option value="{{ $option->id }}">{{ $option->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col mt-3">
                                 <label for="frekuensi">Frekuensi</label>
-                                <select id="frekuensi" class="form-select" name="edit_frekuensi">
+                                <select class="form-select" name="edit_frekuensi">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($frekuensinyeri as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
+                                        <option value="{{ $option->id }}">{{ $option->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col mt-3">
                                 <label for="kualitas">Kualitas</label>
-                                <select id="kualitas" class="form-select" name="edit_kualitas">
+                                <select class="form-select" name="edit_kualitas">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($kualitasnyeri as $option)
                                         <option value="{{ $option->id }}">
@@ -273,7 +269,7 @@
                             </div>
                             <div class="col mt-3">
                                 <label for="faktor-pemberat">Faktor Pemberat</label>
-                                <select id="faktor-pemberat" class="form-select" name="edit_faktor_pemberat">
+                                <select class="form-select" name="edit_faktor_pemberat">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($faktorpemberat as $option)
                                         <option value="{{ $option->id }}">
@@ -284,7 +280,7 @@
                             </div>
                             <div class="col mt-3">
                                 <label for="faktor-peringanan">Faktor Peringanan</label>
-                                <select id="faktor-peringanan" class="form-select" name="edit_faktor_peringan">
+                                <select class="form-select" name="edit_faktor_peringan">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($faktorperingan as $option)
                                         <option value="{{ $option->id }}">
@@ -295,7 +291,7 @@
                             </div>
                             <div class="col mt-3">
                                 <label for="efek-nyeri">Efek Nyeri</label>
-                                <select id="efek-nyeri" class="form-select" name="edit_efek_nyeri">
+                                <select class="form-select" name="edit_efek_nyeri">
                                     <option selected disabled>Pilih</option>
                                     @foreach ($efeknyeri as $option)
                                         <option value="{{ $option->id }}">
@@ -305,7 +301,7 @@
                                 </select>
                             </div>
                         </div>
-
+                        
 
                     </form>
                 </div>
@@ -367,7 +363,18 @@
             $('textarea[name="edit_anamnesis"]').val(data.anamnesis || '');
             $('textarea[name="edit_riwayat_penyakit"]').val(data.riwayat_penyakit || '');
             $('textarea[name="edit_riwayat_pengobatan"]').val(data.riwayat_pengobatan || '');
-
+            $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
+            $('input[name="edit_lokasi"]').val(data.show_lokasi || '');
+            $('input[name="edit_durasi"]').val(data.show_durasi || '');
+            $('select[name="edit_menjalar"]').val(data.asesmen.menjalar_id);
+            $('select[name="edit_frekuensi"]').val(data.asesmen.frekuensi_nyeri_id);
+            $('select[name="edit_kualitas"]').val(data.asesmen.kualitas_nyeri_id);
+            $('select[name="edit_faktor_pemberat"]').val(data.asesmen.faktor_pemberat_id);
+            $('select[name="edit_faktor_peringan"]').val(data.asesmen.faktor_peringan_id);
+            $('select[name="edit_efek_nyeri"]').val(data.asesmen.efek_nyeri.id);
+            
+            console.log(data.asesmen);
+            
             originalResusitasiData = data.tindakan_resusitasi;
 
             const tindakanResusitasi = typeof data.tindakan_resusitasi === 'string' ?
@@ -528,7 +535,6 @@
             };
         }
 
-
         // Fungsi collect data alergi
         function collectEditAlergi() {
             if (!$('#editAddAlergi').data('hasChanges')) {
@@ -571,6 +577,12 @@
 
             // if ($(this).prop('disabled')) return;
             $(this).prop('disabled', true);
+            const menjalarId = $('select[name="edit_menjalar"]').val();
+            const frekuensiId = $('select[name="edit_frekuensi"]').val();
+            const kualitasId = $('select[name="edit_kualitas"]').val();
+            const faktorPemberatId = $('select[name="edit_faktor_pemberat"]').val();
+            const faktorPeringanId = $('select[name="edit_faktor_peringan"]').val();
+            const efekNyeriId = $('select[name="edit_efek_nyeri"]').val();
 
             const formData = {
                 _method: 'PUT',
@@ -597,9 +609,18 @@
                     imt: $('input[name="edit_antropometri_imt"]').val() || null
 
                 },
-                riwayat_alergi: collectEditAlergi()
+                riwayat_alergi: collectEditAlergi(),
+                skala_nyeri: $('input[name="edit_skala_nyeri"]').val(),
+                lokasi: $('input[name="edit_lokasi"]').val(),
+                durasi: $('input[name="edit_durasi"]').val(),
+                menjalar_id: menjalarId,
+                frekuensi_nyeri_id: frekuensiId,
+                kualitas_nyeri_id: kualitasId,
+                faktor_pemberat_id: faktorPemberatId,
+                faktor_peringan_id: faktorPeringanId,
+                efek_nyeri: efekNyeriId
+                
             };
-
 
             const editButton = $(`button[onclick="editAsesmen('${window.currentAsesmenId}')"]`);
             const baseUrl = editButton.data('url');
