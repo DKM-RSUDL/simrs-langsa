@@ -249,7 +249,7 @@ class AsesmenController extends Controller
                     'Tanggal-Jam' => $order->tgl_order->format('d M Y H:i'),
                     'Nama pemeriksaan' => $namaPemeriksaan,
                     'Status' => $this->getStatusOrder($order->status_order),
-                    'Waktu Hasil' => $labHasil && $labHasil->tgl_otoritas_det ? $labHasil->tgl_otoritas_det->format('d M Y H:i') : '-',
+                    // 'Waktu Hasil' => $labHasil && $labHasil->tgl_otoritas_det ? $labHasil->tgl_otoritas_det->format('d M Y H:i') : '-',
                     'Dokter Pengirim' => $order->dokter->nama_lengkap ?? '',
                     'Cito/Non Cito' => $order->cyto == 1 ? 'Cyto' : 'Non-Cyto',
                     'No Order' => (int) $order->kd_order
