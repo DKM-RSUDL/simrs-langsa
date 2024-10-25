@@ -1,17 +1,14 @@
-<div class="d-grid gap-2">
-    <button class="btn mb-2 btn-primary" data-bs-toggle="modal" data-bs-target="#addCpptModal" type="button">
-        <i class="ti-plus"></i> Tambah
-    </button>
-</div>
-
 {{-- START : ADD CPPT MODAL --}}
 <div class="modal fade" id="addCpptModal" tabindex="-1" aria-labelledby="addCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post" id="formAddCppt">
+            <form
+                action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
+                method="post" id="formAddCppt">
                 @csrf
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
+                    <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi
+                        (CPPT)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -36,28 +33,34 @@
 
                                     @foreach ($tandaVital as $item)
                                         <div class="col-md-4">
-                                            <label for="kondisi{{ $item->id_kondisi }}" class="form-label">{{ $item->kondisi }}</label>
-                                            <input type="text" name="tanda_vital[]" class="form-control" id="kondisi{{ $item->id_kondisi }}">
+                                            <label for="kondisi{{ $item->id_kondisi }}"
+                                                class="form-label">{{ $item->kondisi }}</label>
+                                            <input type="text" name="tanda_vital[]" class="form-control"
+                                                id="kondisi{{ $item->id_kondisi }}">
                                         </div>
                                     @endforeach
 
                                 </div>
                             </div>
 
-                            <div class="row mt-4">      
+                            <div class="row mt-4">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <p class="fw-bold">
                                             Skala Nyeri
                                             <label for="skala_nyeri"></label>
                                         </p>
-                                        <input type="number" name="skala_nyeri" class="form-control @error('skala_nyeri') is-invalid @enderror" min="0" max="10" id="skala_nyeri" value="{{ old('skala_nyeri', 0) }}">
+                                        <input type="number" name="skala_nyeri"
+                                            class="form-control @error('skala_nyeri') is-invalid @enderror"
+                                            min="0" max="10" id="skala_nyeri"
+                                            value="{{ old('skala_nyeri', 0) }}">
                                         @error('skala_nyeri')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
                                             </div>
                                         @enderror
-                                        <button type="button" class="btn btn-sm btn-success mt-2" id="skalaNyeriBtn">Tidak Nyeri</button>
+                                        <button type="button" class="btn btn-sm btn-success mt-2"
+                                            id="skalaNyeriBtn">Tidak Nyeri</button>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -69,7 +72,8 @@
                             <div class="row mt-3">
                                 <label for="lokasi" class="col-sm-2 col-form-label">Lokasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Lokasi">
+                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror"
+                                        name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Lokasi">
                                     @error('lokasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -79,7 +83,8 @@
 
                                 <label for="durasi" class="col-sm-2 col-form-label">Durasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror" name="durasi" id="durasi" placeholder="Durasi" value="{{ old('durasi') }}">
+                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror"
+                                        name="durasi" id="durasi" placeholder="Durasi" value="{{ old('durasi') }}">
                                     @error('durasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -91,10 +96,12 @@
                             <div class="row mt-3">
                                 <label for="pemberat" class="col-sm-2 col-form-label">Pemberat</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('pemberat') is-invalid @enderror" name="pemberat" id="pemberat" aria-label="---Pilih---">
+                                    <select class="form-select @error('pemberat') is-invalid @enderror" name="pemberat"
+                                        id="pemberat" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPemberat as $pemberat)
-                                            <option value="{{ $pemberat->id }}" @selected(old('pemberat') == $pemberat->id)>{{ $pemberat->name }}</option>
+                                            <option value="{{ $pemberat->id }}" @selected(old('pemberat') == $pemberat->id)>
+                                                {{ $pemberat->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('pemberat')
@@ -106,10 +113,12 @@
 
                                 <label for="peringan" class="col-sm-2 col-form-label">Peringan</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('peringan') is-invalid @enderror" name="peringan" id="peringan" aria-label="---Pilih---">
+                                    <select class="form-select @error('peringan') is-invalid @enderror" name="peringan"
+                                        id="peringan" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPeringan as $peringan)
-                                            <option value="{{ $peringan->id }}" @selected(old('peringan') == $peringan->id)>{{ $peringan->name }}</option>
+                                            <option value="{{ $peringan->id }}" @selected(old('peringan') == $peringan->id)>
+                                                {{ $peringan->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('peringan')
@@ -123,10 +132,12 @@
                             <div class="row mt-3">
                                 <label for="kualitas_nyeri" class="col-sm-2 col-form-label">Kualitas</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror" name="kualitas_nyeri" id="kualitas_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror"
+                                        name="kualitas_nyeri" id="kualitas_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($kualitasNyeri as $kualitas)
-                                            <option value="{{ $kualitas->id }}" @selected(old('kualitas_nyeri') == $kualitas->id)>{{ $kualitas->name }}</option>
+                                            <option value="{{ $kualitas->id }}" @selected(old('kualitas_nyeri') == $kualitas->id)>
+                                                {{ $kualitas->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('kualitas_nyeri')
@@ -137,10 +148,12 @@
                                 </div>
                                 <label for="frekuensi_nyeri" class="col-sm-2 col-form-label">Frekuensi</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror" name="frekuensi_nyeri" id="frekuensi_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror"
+                                        name="frekuensi_nyeri" id="frekuensi_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($frekuensiNyeri as $frekuensi)
-                                            <option value="{{ $frekuensi->id }}" @selected(old('frekuensi_nyeri') == $frekuensi->id)>{{ $frekuensi->name }}</option>
+                                            <option value="{{ $frekuensi->id }}" @selected(old('frekuensi_nyeri') == $frekuensi->id)>
+                                                {{ $frekuensi->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('frekuensi_nyeri')
@@ -154,10 +167,12 @@
                             <div class="row mt-3">
                                 <label for="menjalar" class="col-sm-2 col-form-label">Menjalar</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('menjalar') is-invalid @enderror" name="menjalar" id="menjalar" aria-label="---Pilih---">
+                                    <select class="form-select @error('menjalar') is-invalid @enderror"
+                                        name="menjalar" id="menjalar" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($menjalar as $mjlr)
-                                            <option value="{{ $mjlr->id }}" @selected(old('menjalar') == $mjlr->id)>{{ $mjlr->name }}</option>
+                                            <option value="{{ $mjlr->id }}" @selected(old('menjalar') == $mjlr->id)>
+                                                {{ $mjlr->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('menjalar')
@@ -168,10 +183,12 @@
                                 </div>
                                 <label for="jenis_nyeri" class="col-sm-2 col-form-label">Jenis</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror" name="jenis_nyeri" id="jenis_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror"
+                                        name="jenis_nyeri" id="jenis_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($jenisNyeri as $jenis)
-                                            <option value="{{ $jenis->id }}" @selected(old('jenis_nyeri') == $jenis->id)>{{ $jenis->name }}</option>
+                                            <option value="{{ $jenis->id }}" @selected(old('jenis_nyeri') == $jenis->id)>
+                                                {{ $jenis->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('jenis_nyeri')
@@ -194,7 +211,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="bg-secondary-subtle rounded-2">
-                                        <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror" name="pemeriksaan_fisik" id="pemeriksaan_fisik">{{ old('pemeriksaan_fisik') }}</textarea>
+                                        <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror" name="pemeriksaan_fisik"
+                                            id="pemeriksaan_fisik">{{ old('pemeriksaan_fisik') }}</textarea>
                                         @error('pemeriksaan_fisik')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -221,7 +239,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-3">  
+                            <div class="row mt-3">
                                 <p class="fw-bold col-sm-5">Asesmen /Diagnosis</p>
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
@@ -256,28 +274,38 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_konrol_ulang" name="tindak_lanjut" value="2" @checked(old('tindak_lanjut') == 2) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_konrol_ulang" name="tindak_lanjut" value="2"
+                                            @checked(old('tindak_lanjut') == 2) required>
                                         <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rujuk_internal" name="tindak_lanjut" value="4" @checked(old('tindak_lanjut') == 4) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rujuk_internal" name="tindak_lanjut" value="4"
+                                            @checked(old('tindak_lanjut') == 4) required>
                                         <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_selesai" name="tindak_lanjut" value="3" @checked(old('tindak_lanjut') == 3) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_selesai" name="tindak_lanjut" value="3"
+                                            @checked(old('tindak_lanjut') == 3) required>
                                         <label for="plan_selesai">Selesai di Klinik ini</label>
                                     </div>
 
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rujuk" name="tindak_lanjut" value="5" @checked(old('tindak_lanjut') == 5) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rujuk" name="tindak_lanjut" value="5"
+                                            @checked(old('tindak_lanjut') == 5) required>
                                         <label for="plan_rujuk">Rujuk RS lain bagian:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rawat_inap" name="tindak_lanjut" value="1" @checked(old('tindak_lanjut') == 1) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rawat_inap" name="tindak_lanjut" value="1"
+                                            @checked(old('tindak_lanjut') == 1) required>
                                         <label for="plan_rawat_inap">Rawat Inap</label>
                                     </div>
                                     <div class="input-grou">
@@ -306,12 +334,15 @@
 <div class="modal fade" id="editCpptModal" tabindex="-1" aria-labelledby="editCpptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('cppt.update', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}" method="post" id="formEditCppt">
+            <form
+                action="{{ route('cppt.update', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
+                method="post" id="formEditCppt">
                 @csrf
                 @method('put')
 
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white" id="editCpptModalLabel">Edit Catatan Perkembangan Pasien Terintegrasi (CPPT)</h5>
+                    <h5 class="modal-title text-white" id="editCpptModalLabel">Edit Catatan Perkembangan Pasien
+                        Terintegrasi (CPPT)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -341,28 +372,34 @@
 
                                     @foreach ($tandaVital as $item)
                                         <div class="col-md-4">
-                                            <label for="kondisi{{ $item->id_kondisi }}" class="form-label">{{ $item->kondisi }}</label>
-                                            <input type="text" name="tanda_vital[]" class="form-control" id="kondisi{{ $item->id_kondisi }}">
+                                            <label for="kondisi{{ $item->id_kondisi }}"
+                                                class="form-label">{{ $item->kondisi }}</label>
+                                            <input type="text" name="tanda_vital[]" class="form-control"
+                                                id="kondisi{{ $item->id_kondisi }}">
                                         </div>
                                     @endforeach
 
                                 </div>
                             </div>
 
-                            <div class="row mt-4">      
+                            <div class="row mt-4">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <p class="fw-bold">
                                             Skala Nyeri
                                             <label for="skala_nyeri"></label>
                                         </p>
-                                        <input type="number" name="skala_nyeri" class="form-control @error('skala_nyeri') is-invalid @enderror" min="0" max="10" id="skala_nyeri" value="{{ old('skala_nyeri') }}">
+                                        <input type="number" name="skala_nyeri"
+                                            class="form-control @error('skala_nyeri') is-invalid @enderror"
+                                            min="0" max="10" id="skala_nyeri"
+                                            value="{{ old('skala_nyeri') }}">
                                         @error('skala_nyeri')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
                                             </div>
                                         @enderror
-                                        <button type="button" class="btn btn-sm btn-success mt-2" id="skalaNyeriBtn">Tidak Nyeri</button>
+                                        <button type="button" class="btn btn-sm btn-success mt-2"
+                                            id="skalaNyeriBtn">Tidak Nyeri</button>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -374,7 +411,9 @@
                             <div class="row mt-3">
                                 <label for="lokasi" class="col-sm-2 col-form-label">Lokasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Lokasi">
+                                    <input type="text" class="form-control @error('lokasi') is-invalid @enderror"
+                                        name="lokasi" id="lokasi" value="{{ old('lokasi') }}"
+                                        placeholder="Lokasi">
                                     @error('lokasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -384,7 +423,9 @@
 
                                 <label for="durasi" class="col-sm-2 col-form-label">Durasi</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror" name="durasi" id="durasi" placeholder="Durasi" value="{{ old('durasi') }}">
+                                    <input type="text" class="form-control @error('durasi') is-invalid @enderror"
+                                        name="durasi" id="durasi" placeholder="Durasi"
+                                        value="{{ old('durasi') }}">
                                     @error('durasi')
                                         <div class="invalid-feedback">
                                             {{ $error }}
@@ -396,10 +437,12 @@
                             <div class="row mt-3">
                                 <label for="pemberat" class="col-sm-2 col-form-label">Pemberat</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('pemberat') is-invalid @enderror" name="pemberat" id="pemberat" aria-label="---Pilih---">
+                                    <select class="form-select @error('pemberat') is-invalid @enderror"
+                                        name="pemberat" id="pemberat" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPemberat as $pemberat)
-                                            <option value="{{ $pemberat->id }}" @selected(old('pemberat') == $pemberat->id)>{{ $pemberat->name }}</option>
+                                            <option value="{{ $pemberat->id }}" @selected(old('pemberat') == $pemberat->id)>
+                                                {{ $pemberat->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('pemberat')
@@ -411,10 +454,12 @@
 
                                 <label for="peringan" class="col-sm-2 col-form-label">Peringan</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('peringan') is-invalid @enderror" name="peringan" id="peringan" aria-label="---Pilih---">
+                                    <select class="form-select @error('peringan') is-invalid @enderror"
+                                        name="peringan" id="peringan" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($faktorPeringan as $peringan)
-                                            <option value="{{ $peringan->id }}" @selected(old('peringan') == $peringan->id)>{{ $peringan->name }}</option>
+                                            <option value="{{ $peringan->id }}" @selected(old('peringan') == $peringan->id)>
+                                                {{ $peringan->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('peringan')
@@ -428,10 +473,12 @@
                             <div class="row mt-3">
                                 <label for="kualitas_nyeri" class="col-sm-2 col-form-label">Kualitas</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror" name="kualitas_nyeri" id="kualitas_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('kualitas_nyeri') is-invalid @enderror"
+                                        name="kualitas_nyeri" id="kualitas_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($kualitasNyeri as $kualitas)
-                                            <option value="{{ $kualitas->id }}" @selected(old('kualitas_nyeri') == $kualitas->id)>{{ $kualitas->name }}</option>
+                                            <option value="{{ $kualitas->id }}" @selected(old('kualitas_nyeri') == $kualitas->id)>
+                                                {{ $kualitas->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('kualitas_nyeri')
@@ -442,10 +489,12 @@
                                 </div>
                                 <label for="frekuensi_nyeri" class="col-sm-2 col-form-label">Frekuensi</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror" name="frekuensi_nyeri" id="frekuensi_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('frekuensi_nyeri') is-invalid @enderror"
+                                        name="frekuensi_nyeri" id="frekuensi_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($frekuensiNyeri as $frekuensi)
-                                            <option value="{{ $frekuensi->id }}" @selected(old('frekuensi_nyeri') == $frekuensi->id)>{{ $frekuensi->name }}</option>
+                                            <option value="{{ $frekuensi->id }}" @selected(old('frekuensi_nyeri') == $frekuensi->id)>
+                                                {{ $frekuensi->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('frekuensi_nyeri')
@@ -459,10 +508,12 @@
                             <div class="row mt-3">
                                 <label for="menjalar" class="col-sm-2 col-form-label">Menjalar</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('menjalar') is-invalid @enderror" name="menjalar" id="menjalar" aria-label="---Pilih---">
+                                    <select class="form-select @error('menjalar') is-invalid @enderror"
+                                        name="menjalar" id="menjalar" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($menjalar as $mjlr)
-                                            <option value="{{ $mjlr->id }}" @selected(old('menjalar') == $mjlr->id)>{{ $mjlr->name }}</option>
+                                            <option value="{{ $mjlr->id }}" @selected(old('menjalar') == $mjlr->id)>
+                                                {{ $mjlr->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('menjalar')
@@ -473,10 +524,12 @@
                                 </div>
                                 <label for="jenis_nyeri" class="col-sm-2 col-form-label">Jenis</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror" name="jenis_nyeri" id="jenis_nyeri" aria-label="---Pilih---">
+                                    <select class="form-select @error('jenis_nyeri') is-invalid @enderror"
+                                        name="jenis_nyeri" id="jenis_nyeri" aria-label="---Pilih---">
                                         <option value="">--Pilih--</option>
                                         @foreach ($jenisNyeri as $jenis)
-                                            <option value="{{ $jenis->id }}" @selected(old('jenis_nyeri') == $jenis->id)>{{ $jenis->name }}</option>
+                                            <option value="{{ $jenis->id }}" @selected(old('jenis_nyeri') == $jenis->id)>
+                                                {{ $jenis->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('jenis_nyeri')
@@ -499,12 +552,13 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="bg-secondary-subtle rounded-2">
-                                        <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror" name="pemeriksaan_fisik" id="pemeriksaan_fisik">{{ old('pemeriksaan_fisik') }}</textarea>
+                                        <textarea class="form-control @error('pemeriksaan_fisik') is-invalid @enderror" name="pemeriksaan_fisik"
+                                            id="pemeriksaan_fisik">{{ old('pemeriksaan_fisik') }}</textarea>
                                         @error('pemeriksaan_fisik')
-                                        <div class="invalid-feedback">
-                                            {{ $error }}
-                                        </div>
-                                    @enderror
+                                            <div class="invalid-feedback">
+                                                {{ $error }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -526,7 +580,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-3">  
+                            <div class="row mt-3">
                                 <p class="fw-bold col-sm-5">Asesmen /Diagnosis</p>
                                 <div class="col-sm-6">
                                     <!-- Modal 2 -->
@@ -561,28 +615,38 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_konrol_ulang" name="tindak_lanjut" value="2" @checked(old('tindak_lanjut') == 2) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_konrol_ulang" name="tindak_lanjut" value="2"
+                                            @checked(old('tindak_lanjut') == 2) required>
                                         <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rujuk_internal" name="tindak_lanjut" value="4" @checked(old('tindak_lanjut') == 4) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rujuk_internal" name="tindak_lanjut" value="4"
+                                            @checked(old('tindak_lanjut') == 4) required>
                                         <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_selesai" name="tindak_lanjut" value="3" @checked(old('tindak_lanjut') == 3) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_selesai" name="tindak_lanjut" value="3"
+                                            @checked(old('tindak_lanjut') == 3) required>
                                         <label for="plan_selesai">Selesai di Klinik ini</label>
                                     </div>
 
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rujuk" name="tindak_lanjut" value="5" @checked(old('tindak_lanjut') == 5) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rujuk" name="tindak_lanjut" value="5"
+                                            @checked(old('tindak_lanjut') == 5) required>
                                         <label for="plan_rujuk">Rujuk RS lain bagian:</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror id="plan_rawat_inap" name="tindak_lanjut" value="1" @checked(old('tindak_lanjut') == 1) required>
+                                        <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
+                                            id="plan_rawat_inap" name="tindak_lanjut" value="1"
+                                            @checked(old('tindak_lanjut') == 1) required>
                                         <label for="plan_rawat_inap">Rawat Inap</label>
                                     </div>
                                     <div class="input-grou">
