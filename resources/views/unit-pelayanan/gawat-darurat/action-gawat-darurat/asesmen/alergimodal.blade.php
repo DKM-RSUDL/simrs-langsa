@@ -53,7 +53,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var mainModal = document.querySelector('.modal:not(#addAlergiModal)');
     var alergiModal = new bootstrap.Modal(document.getElementById('addAlergiModal'));
-    var alergiTable = document.querySelector('#alergiTable tbody');
+    var alergiTable = document.querySelector('#createAlergiTable tbody');
     var listAlergi = document.getElementById('listAlergi');
     var alergis = []; // Array untuk menyimpan daftar alergi
 

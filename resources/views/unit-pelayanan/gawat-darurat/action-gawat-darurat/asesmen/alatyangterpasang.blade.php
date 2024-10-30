@@ -130,5 +130,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    window.getAlatTerpasangData = function() {
+        return JSON.stringify(alatData);
+    };
+
+    window.updateAlatTerpasangData = function(newData) {
+        alatData = newData;
+        updateAlatTable();
+    };
+
+    updateAlatTable();
+
 });
+
+if (typeof window.getAlatTerpasangData === 'undefined') {
+    window.getAlatTerpasangData = function() {
+        return JSON.stringify([]);
+    };
+}
 </script>

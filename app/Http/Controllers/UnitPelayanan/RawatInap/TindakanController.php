@@ -40,14 +40,30 @@ class TindakanController extends Controller
                             'tarif.tgl_berakhir',
                             'tarif.tgl_berlaku'
                         ])
-                        ->leftJoin('tarif', 'produk.Kd_Produk', '=', 'tarif.Kd_Produk')
-                        ->where('tarif.kd_unit', '10012')
-                        ->where('tarif.kd_tarif', 'AS')
-                        ->where('tarif.tgl_berlaku', '2016-05-08')
+                        ->leftJoin('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
+                        ->where('tarif.kd_unit', $kd_unit)
+                        ->where('tarif.kd_tarif', 'TU')
+                        // ->whereDate('tarif.tgl_berlaku','2016-05-08')
+                        ->where('tarif.tgl_berlaku', '<=', Carbon::now()->toDateString())
+                        ->whereIn('tarif.tgl_berlaku', function ($query) {
+                            $query->select('tgl_berlaku')
+                                ->from('tarif as t')
+                                ->whereColumn('t.KD_PRODUK', 'tarif.kd_produk')
+                                ->whereColumn('t.KD_TARIF', 'tarif.kd_tarif')
+                                ->whereColumn('t.KD_UNIT', 'tarif.kd_unit')
+                                ->where(function ($q) {
+                                    $q->whereNull('t.Tgl_Berakhir')
+                                        ->orWhere('t.Tgl_Berakhir', '>=', Carbon::now()->toDateString());
+                                })
+                                ->orderBy('t.tgl_berlaku', 'asc')
+                                ->limit(1);
+                        })
                         ->whereRaw('LEFT(produk.kd_klas, 1) = ?', ['6'])
                         ->orderBy('produk.deskripsi')
                         ->orderBy('tarif.kd_unit')
                         ->orderBy('tarif.kd_produk')
+                        ->orderBy('tarif.TGL_BERLAKU', 'desc')
+                        ->distinct()
                         ->get();
 
 
@@ -106,6 +122,7 @@ class TindakanController extends Controller
             'kesimpulan'        => 'required',
             'gambar_tindakan'   => 'required|image|file|max:5120',
         ], $messageErr);
+
 
 
         $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -167,7 +184,7 @@ class TindakanController extends Controller
             'kd_kasir'      => $kunjungan->kd_kasir,
             'tgl_transaksi' => $tgl_masuk,
             'urut'          => $urut,
-            'kd_tarif'      => 'AS',
+            'kd_tarif'      => 'TU',
             'kd_produk'     => $request->tindakan,
             'kd_unit'       => $kd_unit,
             'kd_unit_tr'    => $kd_unit,

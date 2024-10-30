@@ -97,5 +97,9 @@
         document.getElementById('addDiagnosisModal').addEventListener('hidden.bs.modal', function(event) {
             event.stopPropagation();
         });
+
+        window.getDiagnosaData = function() {
+        return JSON.stringify(diagnoses);
+    };
     });
 </script>

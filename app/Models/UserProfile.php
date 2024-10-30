@@ -15,4 +15,9 @@ class UserProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function asesmen()
+    {
+        return $this->hasMany(RmeAsesmen::class, 'user_id', 'id');
+    }
 }

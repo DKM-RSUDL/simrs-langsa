@@ -27,8 +27,11 @@ class DataTriase extends Model
         'dokter_triase',
         'kode_triase',
         'kd_pasien_triase',
-        'foto_pasien'
+        'foto_pasien',
+        'id_asesmen',
     ];
+
+    // protected $dates = ['tanggal_triase'];
 
     public function pasien()
     {
@@ -38,5 +41,10 @@ class DataTriase extends Model
     public function dokter()
     {
         return $this->belongsTo(Dokter::class, 'dokter_triase', 'kd_dokter');
+    }
+
+    public function asesmen()
+    {
+        return $this->belongsTo(RmeAsesmen::class, 'id_asesmen', 'id');
     }
 }
