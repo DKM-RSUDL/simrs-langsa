@@ -203,11 +203,11 @@
                             <div class="tab-pane fade show active" id="asesmen" role="tabpanel"
                                 aria-labelledby="asesmen-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.asesmenawal')
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-asesmenawal')
                             </div>
                             <div class="tab-pane fade" id="skrining" role="tabpanel" aria-labelledby="skrining-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.skriningkhusus')
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-skriningkhusus')
                             </div>
                         </div>
                     </div>
@@ -247,9 +247,14 @@
 
         function getVitalSignData() {
             const vitalSign = {};
+            vitalSign.gcs = window.gcsData || {
+                eye: { value: 0, description: "" },
+                verbal: { value: 0, description: "" },
+                motoric: { value: 0, description: "" },
+                total: 0
+            };
             const fields = [
-                'td_sistole', 'td_diastole', 'nadi', 'resp', 'suhu',
-                'gcs', 'avpu', 'spo2_tanpa_o2', 'spo2_dengan_o2'
+                'td_sistole', 'td_diastole', 'nadi', 'resp', 'suhu', 'avpu', 'spo2_tanpa_o2', 'spo2_dengan_o2'
             ];
 
             fields.forEach(field => {

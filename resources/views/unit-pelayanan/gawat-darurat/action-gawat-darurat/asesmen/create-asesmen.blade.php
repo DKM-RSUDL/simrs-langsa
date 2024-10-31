@@ -208,7 +208,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Riwayat Alergi</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.alergimodal')
+                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-alergimodal')
                                                     </div>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered" id="createAlergiTable">
@@ -258,15 +258,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <div class="col-2">
+                                                        <div class="col-2 position-relative">
                                                             <label>GCS</label>
-                                                            <select class="form-select" name="vital_sign[gcs]">
-                                                                <option selected disabled>Pilih</option>
-                                                                <option>0</option>
-                                                                <option>1</option>
-                                                                <option>2</option>
-                                                            </select>
+                                                            <input type="text" class="form-control" id="gcsValue" name="vital_sign[gcs_display]" readonly onclick="openGCSModal()">
+                                                            <i class="bi bi-pencil position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);" onclick="openGCSModal()"></i>
+                                                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-gcs')
                                                         </div>
+
                                                         <div class="col-4">
                                                             <label>AVPU</label>
                                                             <select class="form-select" name="vital_sign[avpu]">
@@ -600,7 +598,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Diagnosis</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.diagnosismodal')
+                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-diagnosis')
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
@@ -614,7 +612,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Observasi Lanjutan/Re-Triase</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.retriasemodal')
+                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-retriase')
                                                     </div>
                                                     <div class="table-responsive mb-3">
                                                         <table class="table table-bordered" id="reTriaseTable">
@@ -636,7 +634,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.alatyangterpasang')
+                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-alatyangterpasang')
                                                     </div>
                                                     <div class="table-responsive mb-3">
                                                         <table class="table table-bordered" id="alatTable">
@@ -657,14 +655,13 @@
 
                                                 <div class="form-line">
                                                     <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
-                                                    <textarea class="form-control mb-2" rows="3" name="kondisi_pasien"
-                                                        placeholder="Isikan Kondisi pasien"></textarea>
+                                                    <textarea class="form-control mb-2" rows="3" name="kondisi_pasien" placeholder="Isikan Kondisi pasien"></textarea>
                                                 </div>
 
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.tindaklanjut')
+                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-tindaklanjut')
                                                     </div>
                                                     <div id="tindakLanjutInfo"></div>
                                                 </div>

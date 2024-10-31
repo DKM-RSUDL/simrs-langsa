@@ -185,7 +185,8 @@ class AsesmenController extends Controller
                 'kualitas_nyeri_id' => $request->kualitas_nyeri_id,
                 'faktor_pemberat_id' => $request->faktor_pemberat_id,
                 'faktor_peringan_id' => $request->faktor_peringan_id,
-                'efek_nyeri' => $request->efek_nyeri
+                'efek_nyeri' => $request->efek_nyeri,
+                'diagnosis' => json_encode($request->diagnosis)
             ];
 
             $asesmen->update($updateData);

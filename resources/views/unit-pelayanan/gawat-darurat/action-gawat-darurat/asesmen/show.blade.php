@@ -623,7 +623,7 @@
             $('input[name="show_vital_sign_nadi"]').val(vitalSignData.nadi || '-');
             $('input[name="show_vital_sign_resp"]').val(vitalSignData.resp || '-');
             $('input[name="show_vital_sign_suhu"]').val(vitalSignData.suhu || '-');
-            $('input[name="show_vital_sign_gcs"]').val(vitalSignData.gcs || '-');
+            $('input[name="show_vital_sign_gcs"]').val(vitalSignData.gcs.total || '-');
             $('input[name="show_vital_sign_avpu"]').val(vitalSignData.avpu || '-');
             $('input[name="show_vital_sign_spo2_tanpa_o2"]').val(vitalSignData.spo2_tanpa_o2 || '-');
             $('input[name="show_vital_sign_spo2_dengan_o2"]').val(vitalSignData.spo2_dengan_o2 || '-');
