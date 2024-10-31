@@ -95,7 +95,10 @@
 
         .nav-icons .nav-item.active {
             background-color: #0d6efd;
-            text-color: #fff;
+        }
+
+        .nav-icons .nav-item.active span {
+            color: white;
         }
 
         .nav-icons .nav-item.active img {
