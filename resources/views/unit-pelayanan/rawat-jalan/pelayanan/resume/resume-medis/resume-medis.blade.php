@@ -30,7 +30,7 @@
             <!-- Search Bar -->
             <div class="col-md-4">
                 <form method="GET"
-                    action="{{ route('rawat-jalan.rawat-jalan-resume.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}">
+                    action="{{ route('rawat-jalan.rawat-jalan-resume.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Cari nama dokter" aria-label="Cari"
@@ -97,7 +97,7 @@
             var periode = $(this).val();
             var kd_unit = "{{ $dataMedis->kd_unit }}";
             var kd_pasien = "{{ $dataMedis->kd_pasien }}";
-            var tgl_masuk = "{{ $dataMedis->tgl_masuk }}";
+            var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
             var urut_masuk = "{{ $dataMedis->urut_masuk }}";
 
             var queryString = '?periode=' + periode;
@@ -114,7 +114,7 @@
             var endDate = $('#end_date').val();
             var kd_unit = "{{ $dataMedis->kd_unit }}";
             var kd_pasien = "{{ $dataMedis->kd_pasien }}";
-            var tgl_masuk = "{{ $dataMedis->tgl_masuk }}";
+            var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
             var urut_masuk = "{{ $dataMedis->urut_masuk }}";
 
             if (!startDate || !endDate) {
