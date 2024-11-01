@@ -90,4 +90,4 @@
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modalasesmen')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
