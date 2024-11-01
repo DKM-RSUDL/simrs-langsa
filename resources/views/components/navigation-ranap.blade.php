@@ -24,7 +24,10 @@
 
         .nav-icons .nav-item.active {
             background-color: #0d6efd;
-            text-color: #fff;
+        }
+
+        .nav-icons .nav-item.active span {
+            color: white;
         }
 
         .nav-icons .nav-item.active img {
@@ -118,7 +121,12 @@
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
-            'link' => route('rawat-inap.rawat-inap-resume.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+            'link' => route('rawat-inap.rawat-inap-resume.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
     ];
 
