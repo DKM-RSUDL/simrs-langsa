@@ -31,8 +31,6 @@ class RadiologiController extends Controller
 
         $dokter = Dokter::where('status', 1)->get();
 
-        $periode = $request->input('periode');
-
         $produk = Produk::with(['klas'])
             ->distinct()
             ->select('produk.kd_produk', 'produk.kp_produk', 'produk.deskripsi', 't.kd_tarif', 't.tarif', 't.kd_unit', 't.tgl_berlaku', 'produk.kd_klas')
@@ -62,6 +60,11 @@ class RadiologiController extends Controller
             ->orderBy('t.tgl_berlaku', 'desc')
             ->get();
 
+
+        $search = $request->input('search');
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $radList = SegalaOrder::with(['details', 'dokter'])
             // filter data per periode
             ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
@@ -80,6 +83,23 @@ class RadiologiController extends Controller
                         return $query->where('tgl_order', '>=', $now->subMonths(9));
                 }
             })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_order', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_order', '<=', $endDate);
+            })
+            ->when($search, function ($query, $search) {
+                $search = strtolower($search);
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('kd_order', $search);
+                }
+                return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
+                    ->orWhereHas('dokter', function ($q) use ($search) {
+                        $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+                    });
+            })
+            // end filter
             ->where('kd_pasien', $kd_pasien)
             ->where('kategori', 'RD')
             ->orderBy('kd_order', 'desc')

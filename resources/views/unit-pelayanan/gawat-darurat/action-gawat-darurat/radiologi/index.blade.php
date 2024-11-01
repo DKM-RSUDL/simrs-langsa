@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                        background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                    } */
+                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                        } */
     </style>
 @endpush
 
@@ -44,17 +44,22 @@
                             <input type="date" name="end_date" id="end_date" class="form-control"
                                 placeholder="S.d Tanggal">
                         </div>
+
+                        <!-- Button Filter -->
                         <div class="col-md-1">
-                            <a href="#" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></a>
+                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                    class="bi bi-funnel-fill"></i></button>
                         </div>
 
                         <!-- Search Bar -->
                         <div class="col-md-3">
-                            <form method="GET" action="#">
+                            <form method="GET"
+                                action="{{ route('radiologi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Cari"
-                                        aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                                    <input type="text" name="search" class="form-control" placeholder="dokter & no order" aria-label="Cari"
+                                        value="{{ request('search') }}" aria-describedby="basic-addon1">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
                                 </div>
                             </form>
                         </div>
@@ -156,7 +161,29 @@
             $('#SelectOption').change(function() {
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
-                window.location.href = "{{ route('radiologi.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" + queryString;
+                window.location.href =
+                    "{{ route('radiologi.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    queryString;
+            });
+        });
+
+        $(document).ready(function() {
+            $('#filterButton').click(function(e) {
+                e.preventDefault();
+
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+
+                if (!startDate || !endDate) {
+                    alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
+                    return;
+                }
+
+                var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
+
+                window.location.href =
+                    "{{ route('radiologi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    queryString;
             });
         });
     </script>
