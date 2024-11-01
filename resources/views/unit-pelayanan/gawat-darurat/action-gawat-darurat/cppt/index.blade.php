@@ -7,6 +7,10 @@
             color: #fff;
         }
 
+        .patient-card .nav-link.active small {
+            color: white !important;
+        }
+
         .patient-card img.rounded-circle {
             object-fit: cover;
         }
@@ -36,51 +40,55 @@
                     <h6 class="text-secondary mb-0">Grafik</h6>
                 </div>
 
-                <form action="#" method="post">
+                <form
+                    action="{{ route('cppt.search', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
+                    method="post">
                     @csrf
+
+                    <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                     <div class="row g-3">
                         <!-- Select PPA Option -->
                         <div class="col-md-2">
-                            <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                <option value="semua" selected>Semua PPA</option>
-                                <option value="option1">Dokter Spesialis</option>
-                                <option value="option2">Dokter Umum</option>
-                                <option value="option3">Perawat/bidan</option>
-                                <option value="option4">Nutrisionis</option>
-                                <option value="option5">Apoteker</option>
-                                <option value="option6">Fisioterapis</option>
+                            <select class="form-select" name="ppa" id="selectPpa">
+                                <option value="" selected>Semua PPA</option>
+                                <option value="dokter_spesialis">Dokter Spesialis</option>
+                                <option value="dokter_umum">Dokter Umum</option>
+                                <option value="perawat">Perawat/bidan</option>
+                                <option value="nutrisionis">Nutrisionis</option>
+                                <option value="apoteker">Apoteker</option>
+                                <option value="fisioterapis">Fisioterapis</option>
                             </select>
                         </div>
 
                         <!-- Select Episode Option -->
                         <div class="col-md-2">
-                            <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
-                                <option value="semua" selected>Semua Episode</option>
-                                <option value="Episode1">Episode Sekarang</option>
-                                <option value="Episode2">1 Bulan</option>
-                                <option value="Episode3">3 Bulan</option>
-                                <option value="Episode4">6 Bulan</option>
-                                <option value="Episode5">9 Bulan</option>
+                            <select class="form-select" name="episode" id="SelectEpisode">
+                                <option value="" selected>Semua Episode</option>
+                                <option value="sekarang">Episode Sekarang</option>
+                                <option value="1_bulan">1 Bulan</option>
+                                <option value="3_bulan">3 Bulan</option>
+                                <option value="6_bulan">6 Bulan</option>
+                                <option value="9_bulan">9 Bulan</option>
                             </select>
                         </div>
 
                         <!-- Start Date -->
                         <div class="col-md-2">
-                            <input type="date" name="start_date" id="start_date" class="form-control"
+                            <input type="date" name="tgl_awal" id="tgl_awal" class="form-control"
                                 placeholder="Dari Tanggal">
                         </div>
 
                         <!-- End Date -->
                         <div class="col-md-2">
-                            <input type="date" name="end_date" id="end_date" class="form-control"
+                            <input type="date" name="tgl_akhir" id="tgl_akhir" class="form-control"
                                 placeholder="S.d Tanggal">
                         </div>
 
                         <!-- Search Bar -->
                         <div class="col-md-2">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Cari">
+                                <input type="text" name="keyword" class="form-control" placeholder="Cari">
                                 <button class="btn btn-outline-secondary" type="submit">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -361,6 +369,16 @@
             $('#addCpptModal #skalaNyeriBtn').removeClass('btn-danger');
             $('#addCpptModal #skalaNyeriBtn').addClass(valColor);
             $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
+        });
+
+        $('#addCpptModal #plan_rujuk_internal').click(function(e) {
+            let modalKedua = new bootstrap.Modal($('#konsulModal'), {
+                backdrop: 'static',
+                keyboard: false,
+                focus: false
+            });
+
+            modalKedua.show();
         });
 
         $('#formAddCppt').submit(function(e) {
