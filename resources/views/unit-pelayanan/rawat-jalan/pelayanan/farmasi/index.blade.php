@@ -4,32 +4,31 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         /* .header-background { background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");} */
-    .modal-overlay {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1050;
-    }
-    
-    #editObatModal {
-        z-index: 1060;
-    }
+        .modal-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+        }
+
+        #editObatModal {
+            z-index: 1060;
+        }
     </style>
 @endpush
 
 @section('content')
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-rajal')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
@@ -50,7 +49,8 @@
 
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="resep" role="tabpanel" aria-labelledby="resep-tab">
+                            <div class="tab-pane fade show active" id="resep" role="tabpanel"
+                                aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.tabsresep')
                             </div>
@@ -78,7 +78,7 @@
             let activeTab = 'Non Racikan';
 
             // ------------ 2. Event Listener untuk Pengguna ------------ //
-            $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
+            $('#obatTabs .nav-link').on('shown.bs.tab', function(e) {
                 activeTab = $(e.target).text().trim();
             });
 
@@ -183,7 +183,7 @@
                 openEditModal(obatData);
             });
 
-            $('#editObatModal').on('hidden.bs.modal', function () {
+            $('#editObatModal').on('hidden.bs.modal', function() {
                 // Sembunyikan overlay ketika modal edit ditutup
                 $('#modal-overlay').hide();
             });
@@ -281,7 +281,8 @@
 
                 // Tampilkan total item dan biaya
                 $('.fw-bold:contains("Jumlah Item Obat")').text(`Jumlah Item Obat: ${daftarObat.length}`);
-                $('.fw-bold:contains("Total Biaya Obat")').text(`Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
+                $('.fw-bold:contains("Total Biaya Obat")').text(
+                    `Total Biaya Obat: Rp. ${totalBiaya.toLocaleString()}`);
             }
 
             // Fungsi untuk menghapus obat dari daftar
@@ -344,7 +345,8 @@
 
                         iziToast.success({
                             title: 'Sukses',
-                            message: 'Resep berhasil disimpan dengan ID: ' + response.id_mrresep,
+                            message: 'Resep berhasil disimpan dengan ID: ' + response
+                                .id_mrresep,
                             position: 'topRight'
                         });
                         daftarObat = [];
@@ -357,7 +359,7 @@
                         $('#tambahResep').modal('hide');
                         location.reload();
                     },
-                    
+
                     error: function(xhr, status, error) {
                         $('#loadingIndicator').addClass('d-none');
                         $('#orderButton').prop('disabled', false);
@@ -368,7 +370,8 @@
                         if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
                             errorMessage = 'Validasi gagal:\n';
                             for (let field in xhr.responseJSON.errors) {
-                                errorMessage += `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
+                                errorMessage +=
+                                    `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
                             }
                         }
                         alert(errorMessage);
@@ -410,8 +413,9 @@
                                         html +=
                                             '<a href="#" class="list-group-item list-group-item-action" ' +
                                             'data-id="' + obat.id + '" ' +
-                                            'data-harga="' + obat.harga + '" ' + 
-                                            'data-satuan="' + obat.satuan + '">' +
+                                            'data-harga="' + obat.harga + '" ' +
+                                            'data-satuan="' + obat.satuan +
+                                            '">' +
                                             obat.text + '</a>';
                                     });
                                 } else {
@@ -493,7 +497,7 @@
                 if (!date || !time) {
                     return '';
                 }
-                
+
                 let formattedDate;
                 if (date.includes('-')) {
                     formattedDate = date;
