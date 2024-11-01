@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class RadiologiController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk)
+    public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -30,6 +30,8 @@ class RadiologiController extends Controller
             ->first();
 
         $dokter = Dokter::where('status', 1)->get();
+
+        $periode = $request->input('periode');
 
         $produk = Produk::with(['klas'])
             ->distinct()
@@ -61,6 +63,23 @@ class RadiologiController extends Controller
             ->get();
 
         $radList = SegalaOrder::with(['details', 'dokter'])
+            // filter data per periode
+            ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_order', $now->year)
+                            ->whereMonth('tgl_order', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_order', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_order', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_order', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_order', '>=', $now->subMonths(9));
+                }
+            })
             ->where('kd_pasien', $kd_pasien)
             ->where('kategori', 'RD')
             ->orderBy('kd_order', 'desc')
@@ -131,7 +150,7 @@ class RadiologiController extends Controller
         $newOrderNumber = (empty($lastOrder)) ? $tglFormat . '0001' : $lastOrder->kd_order + 1;
 
         $jadwalPemeriksaan = null;
-        if(!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
+        if (!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
 
         // store segala order
         $segalaOrderData = [
@@ -257,7 +276,7 @@ class RadiologiController extends Controller
             ->first();
 
         $jadwalPemeriksaan = null;
-        if(!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
+        if (!empty($request->tgl_pemeriksaan) && !empty($request->jam_pemeriksaan)) $jadwalPemeriksaan = "$request->tgl_pemeriksaan $request->jam_pemeriksaan";
 
         $order->kd_dokter = $request->kd_dokter;
         $order->tgl_order = "$request->tgl_order $request->jam_order";
