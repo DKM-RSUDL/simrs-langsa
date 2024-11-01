@@ -95,10 +95,14 @@
 
         .nav-icons .nav-item.active {
             background-color: #0d6efd;
+<<<<<<< HEAD
+            color: #fff;
+=======
         }
 
         .nav-icons .nav-item.active span {
             color: white;
+>>>>>>> origin/rizaldev
         }
 
         .nav-icons .nav-item.active img {
