@@ -186,10 +186,59 @@ class AsesmenController extends Controller
                 'faktor_pemberat_id' => $request->faktor_pemberat_id,
                 'faktor_peringan_id' => $request->faktor_peringan_id,
                 'efek_nyeri' => $request->efek_nyeri,
-                'diagnosis' => json_encode($request->diagnosis)
+                'diagnosis' => json_encode($request->diagnosis),
+                'alat_terpasang' => json_encode($request->alat_terpasang),
+                'kondisi_pasien' => $request->kondisi_pasien,
             ];
 
             $asesmen->update($updateData);
+
+            if ($request->has('tindak_lanjut')) {
+                $tindakLanjutData = $request->tindak_lanjut;
+
+                $tindakLanjutDtl = RmeAsesmenDtl::firstOrNew(['id_asesmen' => $id]);
+
+                switch ($tindakLanjutData['option']) {
+                    case 'rawatInap':
+                        $tindakLanjutDtl->tindak_lanjut_code = 1;
+                        $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+                        break;
+                    case 'pulangKontrol':
+                        $tindakLanjutDtl->tindak_lanjut_code = 2;
+                        $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
+                        break;
+                    case 'rujukKeluar':
+                        $tindakLanjutDtl->tindak_lanjut_code = 5;
+                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                        break;
+                    case 'kamarOperasi':
+                        $tindakLanjutDtl->tindak_lanjut_code = 4;
+                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
+                        break;
+                    case 'menolakRawatInap':
+                    case 'meninggalDunia':
+                        $tindakLanjutDtl->tindak_lanjut_code = 3;
+                        $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
+                        break;
+                    default:
+                        $tindakLanjutDtl->tindak_lanjut_code = null;
+                        $tindakLanjutDtl->tindak_lanjut_name = $tindakLanjutData['option'];
+                }
+
+                // Update keterangan jika ada
+                if (isset($tindakLanjutData['keterangan'])) {
+                    $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
+                }
+
+                if (isset($tindakLanjutData['tanggalMeninggal'])) {
+                    $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
+                }
+                if (isset($tindakLanjutData['jamMeninggal'])) {
+                    $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
+                }
+
+                $tindakLanjutDtl->save();
+            }
 
             // DB::commit();
             return response()->json([
@@ -317,6 +366,7 @@ class AsesmenController extends Controller
         // dd($request->all());
 
         try {
+            
 
             $user = auth()->user();
 
@@ -403,20 +453,22 @@ class AsesmenController extends Controller
                     $triase->status = $dataMedis->status;
                     $triase->usia_bulan = $dataMedis->usia_bulan;
                     $triase->foto_pasien = $dataMedis->foto_pasien;
+                    $triase->hasil_triase = $reTriase['triase']['ket_triase'];
+                    $triase->kode_triase = $reTriase['triase']['kode_triase'];
+                    $triase->anamnesis_retriase = $reTriase['keluhan'];
+                    $triase->catatan_retriase = $reTriase['catatan'];
+                    $triase->vitalsign_retriase = json_encode($reTriase['vitalSigns']);
 
-                    // Extract vital signs
-                    $vitalSigns = $reTriase['vitalSigns'];
                     $triaseData = [
-                        'keluhan' => $reTriase['keluhan'],
-                        'vitalSigns' => $vitalSigns,
-                        'airway' => $reTriase['airway'] ?? [],
-                        'breathing' => $reTriase['breathing'] ?? [],
-                        'circulation' => $reTriase['circulation'] ?? [],
-                        'disability' => $reTriase['disability'] ?? [],
+                        'hasil_triase' => $reTriase['triase']['ket_triase'],
+                        'kode_triase' => $reTriase['triase']['kode_triase'],
+                        'air_way' => $reTriase['triase']['air_way'],
+                        'breathing' => $reTriase['triase']['breathing'],
+                        'circulation' => $reTriase['triase']['circulation'],
+                        'disability' => $reTriase['triase']['disability']
                     ];
                     $triase->triase = json_encode($triaseData);
-                    $triase->kode_triase = $reTriase['triase']['kode_triase'];
-                    $triase->hasil_triase = $reTriase['triase']['ket_triase'];
+                    
                     $triase->save();
                 }
             }

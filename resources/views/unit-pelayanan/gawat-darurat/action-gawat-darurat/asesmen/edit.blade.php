@@ -335,6 +335,41 @@
                             </div>
                         </div>
 
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-alatyangterpasang')
+                            </div>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-bordered" id="editalatTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Alat yang terpasang</th>
+                                            <th>Lokasi</th>
+                                            <th>Ket</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data akan ditampilkan di sini -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-line">
+                            <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
+                            <textarea class="form-control mb-2" rows="3" name="edit_kondisi_pasien"></textarea>
+                        </div>
+
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-tindaklanjut')
+                            </div>
+                            <div id="editTindakLanjutInfo"></div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -351,6 +386,7 @@
         // Variable global
         let originalAlergiData = [];
         let originalDiagnosisData = [];
+        let originalAlatData = [];
 
         // Fungsi edit
         function editAsesmen(id) {
@@ -396,6 +432,7 @@
             $('textarea[name="edit_anamnesis"]').val(data.anamnesis || '');
             $('textarea[name="edit_riwayat_penyakit"]').val(data.riwayat_penyakit || '');
             $('textarea[name="edit_riwayat_pengobatan"]').val(data.riwayat_pengobatan || '');
+            $('textarea[name="edit_kondisi_pasien"]').val(data.show_kondisi_pasien || '');
             $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
             $('input[name="edit_lokasi"]').val(data.show_lokasi || '');
             $('input[name="edit_durasi"]').val(data.show_durasi || '');
@@ -405,8 +442,6 @@
             $('select[name="edit_faktor_pemberat"]').val(data.asesmen.faktor_pemberat_id);
             $('select[name="edit_faktor_peringan"]').val(data.asesmen.faktor_peringan_id);
             $('select[name="edit_efek_nyeri"]').val(data.asesmen.efek_nyeri.id);
-
-            console.log(data.asesmen);
 
             originalResusitasiData = data.tindakan_resusitasi;
 
@@ -460,11 +495,14 @@
             // Parse dan isi riwayat alergi
             const riwayatAlergi = typeof data.riwayat_alergi === 'string' ?
                 JSON.parse(data.riwayat_alergi) : data.riwayat_alergi;
-
-            // Simpan data alergi awal
             originalAlergiData = riwayatAlergi || [];
-
             fillEditAlergiTable(riwayatAlergi);
+
+            // Parse alat yang terpasang
+            const alatTerpasang = typeof data.alat_terpasang === 'string' ?
+                JSON.parse(data.alat_terpasang) : data.alat_terpasang;
+            originalAlatData = alatTerpasang || [];
+            fillEditAlatTable(alatTerpasang);
 
             if (data.show_diagnosis && Array.isArray(data.show_diagnosis)) {
                 // Set data diagnosis ke variable global
@@ -496,6 +534,134 @@
             } else {
                 originalReTriaseData = [];
                 updateEditReTriaseTable();
+            }
+
+            if (data.tindaklanjut && data.tindaklanjut.length > 0) {
+                const tindakLanjut = data.tindaklanjut[0]; // Ambil data pertama
+                let tindakLanjutData = {
+                    option: getTindakLanjutOption(tindakLanjut.tindak_lanjut_code),
+                    keterangan: tindakLanjut.keterangan || '',
+                    tanggalMeninggal: tindakLanjut.tanggal_meninggal ? formatDate(tindakLanjut.tanggal_meninggal) : '',
+                    jamMeninggal: tindakLanjut.jam_meninggal ? formatTime(tindakLanjut.jam_meninggal) : '',
+                    rs_rujuk: tindakLanjut.rs_rujuk || '',
+                    rs_rujuk_bagian: tindakLanjut.rs_rujuk_bagian || '',
+                    tgl_kontrol_ulang: tindakLanjut.tgl_kontrol_ulang || '',
+                    unit_rawat_inap: tindakLanjut.unit_rawat_inap || '',
+                    unit_rujuk_internal: tindakLanjut.unit_rujuk_internal || ''
+                };
+
+                // Memperbarui display dan menyimpan data
+                window.fillEditTindakLanjut(tindakLanjutData);
+            }
+
+        }
+
+        function getTindakLanjutOption(code) {
+            switch (code) {
+                case '1':
+                    return 'rawatInap';
+                case '2':
+                    return 'pulangKontrol';
+                case '3':
+                    return 'menolakRawatInap'; // atau 'meninggalDunia' tergantung kondisi
+                case '4':
+                    return 'kamarOperasi';
+                case '5':
+                    return 'rujukKeluar';
+                default:
+                    return '';
+            }
+        }
+
+        // Fungsi untuk format tanggal dari database
+        function formatDate(dateString) {
+            if (!dateString || dateString === '1900-01-01 00:00:00.000') return '';
+            return dateString.split(' ')[0]; // Ambil bagian tanggal saja
+        }
+
+        // Fungsi untuk format jam dari database
+        function formatTime(timeString) {
+            if (!timeString || timeString === '1900-01-01 00:00:00.000') return '';
+            return timeString.split(' ')[1].substring(0, 5); // Ambil bagian jam:menit
+        }
+
+        // Update fungsi displayEditTindakLanjut untuk menampilkan data yang lebih lengkap
+        function displayEditTindakLanjut() {
+            var tindakLanjutInfo = document.getElementById('editTindakLanjutInfo');
+            tindakLanjutInfo.innerHTML = '';
+            
+            if (editTindakLanjutData) {
+                var div = document.createElement('div');
+                div.classList.add('mb-2', 'd-flex', 'justify-content-between', 'align-items-center');
+                
+                // Format display text berdasarkan tipe tindak lanjut
+                let infoText = `Tindak Lanjut: ${formatTindakLanjutText(editTindakLanjutData.option)}`;
+                
+                if (editTindakLanjutData.keterangan) {
+                    infoText += ` | Keterangan: ${editTindakLanjutData.keterangan}`;
+                }
+
+                // Tambahkan informasi tambahan sesuai tipe
+                switch(editTindakLanjutData.option) {
+                    case 'meninggalDunia':
+                        if (editTindakLanjutData.tanggalMeninggal) {
+                            infoText += ` | Tanggal: ${editTindakLanjutData.tanggalMeninggal}`;
+                        }
+                        if (editTindakLanjutData.jamMeninggal) {
+                            infoText += ` | Jam: ${editTindakLanjutData.jamMeninggal}`;
+                        }
+                        break;
+                    case 'rujukKeluar':
+                        if (editTindakLanjutData.rs_rujuk) {
+                            infoText += ` | RS Rujukan: ${editTindakLanjutData.rs_rujuk}`;
+                        }
+                        break;
+                    case 'pulangKontrol':
+                        if (editTindakLanjutData.tgl_kontrol_ulang) {
+                            infoText += ` | Tanggal Kontrol: ${editTindakLanjutData.tgl_kontrol_ulang}`;
+                        }
+                        break;
+                    case 'rawatInap':
+                        if (editTindakLanjutData.unit_rawat_inap) {
+                            infoText += ` | Unit: ${editTindakLanjutData.unit_rawat_inap}`;
+                        }
+                        break;
+                }
+
+                var textSpan = document.createElement('span');
+                textSpan.innerText = infoText;
+                div.appendChild(textSpan);
+
+                var buttonGroup = document.createElement('div');
+                
+                var editButton = document.createElement('button');
+                editButton.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+                editButton.className = 'btn btn-sm btn-outline-primary me-2';
+                editButton.addEventListener('click', editTindakLanjut);
+
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '<i class="bi bi-trash-fill"></i>';
+                deleteButton.className = 'btn btn-sm btn-outline-danger';
+                deleteButton.addEventListener('click', deleteEditTindakLanjut);
+
+                buttonGroup.appendChild(editButton);
+                buttonGroup.appendChild(deleteButton);
+                div.appendChild(buttonGroup);
+
+                tindakLanjutInfo.appendChild(div);
+            }
+        }
+
+        // Fungsi untuk format text tindak lanjut
+        function formatTindakLanjutText(option) {
+            switch(option) {
+                case 'rawatInap': return 'Rawat Inap';
+                case 'kamarOperasi': return 'Kamar Operasi';
+                case 'rujukKeluar': return 'Rujuk Keluar RS';
+                case 'pulangKontrol': return 'Pulang Kontrol';
+                case 'menolakRawatInap': return 'Menolak Rawat Inap';
+                case 'meninggalDunia': return 'Meninggal Dunia';
+                default: return option;
             }
         }
 
@@ -716,6 +882,85 @@
             return originalAlergiData;
         }
 
+        function fillEditAlatTable(alatData) {
+            const tbody = $('#editalatTable tbody');
+            tbody.empty();
+
+            if (!alatData || !Array.isArray(alatData) || alatData.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada alat yang terpasang</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            alatData.forEach((alat, index) => {
+                const row = `
+                    <tr>
+                        <td>${alat.nama || '-'}</td>
+                        <td>${alat.lokasi || '-'}</td>
+                        <td>${alat.keterangan || '-'}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-edit-alat" data-index="${index}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        // Event handler untuk delete alat
+        $(document).on('click', '.delete-edit-alat', function() {
+            const index = $(this).data('index');
+            originalAlatData.splice(index, 1);
+            fillEditAlatTable(originalAlatData);
+        });
+
+        // Event handler untuk modal edit alat
+        $('#openEditAlatModal').click(function() {
+            $('#editAlatModal').modal('show');
+        });
+
+        // Event handler untuk simpan alat
+        $('#simpanEditAlat').click(function() {
+            const namaAlat = $('#editNamaAlat').val();
+            const lokasiAlat = $('#editLokasiAlat').val();
+            const keteranganAlat = $('#editKeteranganAlat').val();
+
+            if (!namaAlat || !lokasiAlat || !keteranganAlat) {
+                alert('Harap isi semua field');
+                return;
+            }
+
+            const newAlat = {
+                nama: namaAlat,
+                lokasi: lokasiAlat,
+                keterangan: keteranganAlat
+            };
+
+            originalAlatData.push(newAlat);
+            fillEditAlatTable(originalAlatData);
+            $('#editAlatModal').modal('hide');
+            resetEditAlatForm();
+        });
+
+        // Fungsi reset form
+        function resetEditAlatForm() {
+            $('#editNamaAlat').val('');
+            $('#editLokasiAlat').val('');
+            $('#editKeteranganAlat').val('');
+        }
+
+        // Fungsi untuk collect data alat
+        function collectEditAlat() {
+            return originalAlatData;
+        }
+
         $('#btnUpdateAsesmen').click(function(event) {
             event.preventDefault();
 
@@ -734,6 +979,7 @@
                 anamnesis: $('textarea[name="edit_anamnesis"]').val(),
                 riwayat_penyakit: $('textarea[name="edit_riwayat_penyakit"]').val(),
                 riwayat_pengobatan: $('textarea[name="edit_riwayat_pengobatan"]').val(),
+                kondisi_pasien: $('textarea[name="edit_kondisi_pasien"]').val(),
                 vital_sign: {
                     td_sistole: $('input[name="edit_vital_sign_td_sistole"]').val() || null,
                     td_diastole: $('input[name="edit_vital_sign_td_diastole"]').val() || null,
@@ -764,7 +1010,9 @@
                 faktor_peringan_id: faktorPeringanId,
                 efek_nyeri: efekNyeriId,
                 diagnosis: window.originalDiagnosisData,
-                retriase_data: window.originalReTriaseData
+                retriase_data: window.originalReTriaseData,
+                alat_terpasang: collectEditAlat(),
+                tindak_lanjut: window.collectEditTindakLanjut()
 
             };
 

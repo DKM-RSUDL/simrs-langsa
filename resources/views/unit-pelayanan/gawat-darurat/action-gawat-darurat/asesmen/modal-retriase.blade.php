@@ -503,8 +503,21 @@
                         data[input.name] = input.value;
                     }
                 });
+
+                // Organisasi ulang data triase sesuai dengan format JSON yang diperlukan
+                const triaseData = {
+                    hasil_triase: data.ket_triase || '',
+                    kode_triase: data.kode_triase || '',
+                    air_way: data['airway[]'] || [],  
+                    breathing: data['breathing[]'] || [], 
+                    circulation: data['circulation[]'] || [], 
+                    disability: data['disability[]'] || []   
+                };
+
+                data['triase'] = triaseData;                
                 return data;
             }
+
 
             // Event listener untuk membuka modal re-triase
             document.getElementById('openReTriaseModal').addEventListener('click', function(event) {
@@ -604,7 +617,8 @@
             document.getElementById('simpanReTriase').addEventListener('click', function() {
                 var modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
                 var formData = getFormData(modalBody);
-
+                console.log(formData);
+                
                 var emptyFields = [];
                 var requiredFields = ['td_sistole_retriage', 'td_diastole_retriage', 'nadi_retriage',
                     'resp_retriage', 'suhu_retriage', 'spo2_tanpa_o2_retriage',
@@ -643,18 +657,19 @@
                     },
                     triase: {
                         kode_triase: formData.kode_triase,
-                        ket_triase: formData.ket_triase
+                        ket_triase: formData.ket_triase,
+                        air_way: formData.triase.air_way,
+                        breathing: formData.triase.breathing,
+                        circulation: formData.triase.circulation,
+                        disability: formData.triase.disability
                     },
                     catatan: formData.catatan_retriage || 'Tidak ada catatan'
                 };
 
                 // Tambahkan data ke array reTriaseData
-                reTriaseData.push(newData);
-
+                reTriaseData.push(newData);                
                 updateReTriaseTable();
-
                 resetReTriaseForm();
-
                 reTriaseModal.hide();
             });
 
