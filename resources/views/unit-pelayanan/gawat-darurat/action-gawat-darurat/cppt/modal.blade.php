@@ -6,6 +6,9 @@
                 action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
                 method="post" id="formAddCppt">
                 @csrf
+
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi
                         (CPPT)</h5>
@@ -275,19 +278,23 @@
                                 </div>
                             </div>
 
+                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.modal-tindaklanjut')
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_konrol_ulang" name="tindak_lanjut" value="2"
                                             @checked(old('tindak_lanjut') == 2) required>
-                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
+                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl: <span
+                                                id="tgl-kontrol-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk_internal" name="tindak_lanjut" value="4"
                                             @checked(old('tindak_lanjut') == 4) required>
-                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
+                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke: <span
+                                                id="unit-rujuk-internal-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
@@ -300,7 +307,8 @@
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk" name="tindak_lanjut" value="5"
                                             @checked(old('tindak_lanjut') == 5) required>
-                                        <label for="plan_rujuk">Rujuk RS lain bagian:</label>
+                                        <label for="plan_rujuk">Rujuk RS lain bagian: <span
+                                                id="rs-tujuan-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
@@ -616,38 +624,43 @@
                                 </div>
                             </div>
 
+                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.modal-tindaklanjut')
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_konrol_ulang" name="tindak_lanjut" value="2"
                                             @checked(old('tindak_lanjut') == 2) required>
-                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
+                                        <label for="">Kontrol ulang, tgl: <span
+                                                id="tgl-kontrol-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk_internal" name="tindak_lanjut" value="4"
                                             @checked(old('tindak_lanjut') == 4) required>
-                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
+                                        <label for="">Konsul/Rujuk Internal Ke: <span
+                                                id="unit-rujuk-internal-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_selesai" name="tindak_lanjut" value="3"
                                             @checked(old('tindak_lanjut') == 3) required>
-                                        <label for="plan_selesai">Selesai di Klinik ini</label>
+                                        <label for="">Selesai di Klinik ini</label>
                                     </div>
 
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk" name="tindak_lanjut" value="5"
                                             @checked(old('tindak_lanjut') == 5) required>
-                                        <label for="plan_rujuk">Rujuk RS lain bagian:</label>
+                                        <label for="">Rujuk RS lain bagian: <span
+                                                id="rs-tujuan-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rawat_inap" name="tindak_lanjut" value="1"
                                             @checked(old('tindak_lanjut') == 1) required>
-                                        <label for="plan_rawat_inap">Rawat Inap</label>
+                                        <label for="">Rawat Inap</label>
                                     </div>
                                     <div class="input-grou">
                                         @error('tindak_lanjut')
@@ -670,173 +683,3 @@
     </div>
 </div>
 {{-- END : EDIT CPPT MODAL --}}
-
-{{-- START: KONSULTASI MODAL --}}
-<div class="modal fade second-modal" id="konsulModal" tabindex="-1" aria-labelledby="konsulModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="konsulModalLabel">Konsultasi/ Rujukan Intern</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            {{-- <form action="{{ route('konsultasi.store', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}"
-                method="post">
-                @csrf --}}
-
-            <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
-
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-5">
-                        <label for="dokter_pengirim" class="form-label fw-bold h5 text-dark">Dokter
-                            Pengirim:</label>
-                        <select id="dokter_pengirim" name="dokter_pengirim"
-                            class="form-select select2 @error('dokter_pengirim') is-invalid @enderror" required>
-                            <option value="">--Pilih Dokter--</option>
-                            {{-- @foreach ($dokterPengirim as $dok)
-                                    <option value="{{ $dok->dokter->kd_dokter }}">{{ $dok->dokter->nama_lengkap }}
-                                    </option>
-                                @endforeach --}}
-                        </select>
-
-                        @error('dokter_pengirim')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        <div class="mt-3">
-                            <div class="row">
-                                <div class="col-7">
-                                    <label for="tgl_konsul" class="form-label fw-bold h5 text-dark">Tanggal Konsul
-                                        :</label>
-                                    <input type="date" id="tgl_konsul" name="tgl_konsul"
-                                        class="form-control @error('tgl_konsul') is-invalid @enderror" required>
-                                </div>
-                                <div class="col-5">
-                                    <label for="jam_konsul" class="form-label fw-bold h5 text-dark">Jam :</label>
-                                    <input type="time" id="jam_konsul" name="jam_konsul"
-                                        class="form-control @error('jam_konsul') is-invalid @enderror" required>
-                                </div>
-                            </div>
-
-                            @error('tgl_konsul')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                            @error('jam_konsul')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="unit_tujuan" class="form-label fw-bold h5 text-dark">Kepada Unit Pelayanan
-                                :</label>
-                            <select id="unit_tujuan" name="unit_tujuan"
-                                class="form-select select2 @error('unit_tujuan') is-invalid @enderror" required>
-                                <option value="">-Pilih Unit Pelayanan-</option>
-                                {{-- @foreach ($unit as $unt)
-                                        <option value="{{ $unt->kd_unit }}">{{ $unt->nama_unit }}</option>
-                                    @endforeach --}}
-                            </select>
-                            @error('unit_tujuan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="dokter_unit_tujuan" class="form-label fw-bold h5 text-dark">Yth Dokter
-                                :</label>
-                            <select id="dokter_unit_tujuan" name="dokter_unit_tujuan"
-                                class="form-select select2 @error('dokter_unit_tujuan') is-invalid @enderror"
-                                required>
-                                <option value="">--Pilih Dokter--</option>
-                            </select>
-                            @error('dokter_unit_tujuan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="mt-3">
-                            <h6 class="fw-bold">Konsulen diharapkan</h6>
-                            <div class="form-check">
-                                <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="1" id="konsul-sewaktu"
-                                    required>
-                                <label class="form-check-label" for="konsul-sewaktu">
-                                    Konsul Sewaktu
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="2" id="rawat-bersama" required>
-                                <label class="form-check-label" for="rawat-bersama">
-                                    Rawat Bersama
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="3" id="alih-rawat" required>
-                                <label class="form-check-label" for="alih-rawat">
-                                    Alih Rawat
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="4" id="kembali-unit-asal"
-                                    required>
-                                <label class="form-check-label" for="kembali-unit-asal">
-                                    kembali ke unit yang meminta untuk persetujuan tindakan & pengobatan
-                                </label>
-                            </div>
-                            @error('konsulen_harap')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                    </div>
-                    <div class="col-7">
-                        <strong class="fw-bold">Catatan Klinik/Diagnosis</strong>
-                        <textarea class="form-control @error('catatan') is-invalid @enderror" name="catatan" id="catatan" rows="3"
-                            required></textarea>
-                        @error('catatan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        <div class="mt-3">
-                            <strong class="fw-bold">Konsul yang di minta</strong>
-                            <textarea class="form-control @error('konsul') is-invalid @enderror" name="konsul" id="konsul" rows="5"
-                                required></textarea>
-                            @error('konsul')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-{{-- END: KONSULTASI MODAL --}}
