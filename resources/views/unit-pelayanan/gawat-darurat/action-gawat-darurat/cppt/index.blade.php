@@ -635,10 +635,12 @@
                 if (!checkKonsulFormValidation('#addCpptModal')) return false;
             }
 
+            // Tindak Lanjut kontrol ulang
             if (tindakLanjut == 2) {
                 if (!checkKontrolFormValidation('#addCpptModal')) return false;
             }
 
+            // Tindak Lanjut rujuk rs lain
             if (tindakLanjut == 5) {
                 if (!checkRSLainFormValidation('#addCpptModal')) return false;
             }
@@ -776,10 +778,29 @@
                                 let tindakLanjut = patient.tindak_lanjut_code;
 
 
-                                if (tindakLanjut == '5')
+                                if (tindakLanjut == '2') {
+                                    $('#editCpptModal #tgl-kontrol-label').text(
+                                        `${patient.tgl_kontrol_ulang}`);
+                                    $('#editCpptModal #kontrolModal #tgl_kontrol').val(patient
+                                        .tgl_kontrol_ulang);
+                                }
 
-                                    // diagnosis set value
-                                    var penyakit = patient.cppt_penyakit;
+                                if (tindakLanjut == '4') {
+                                    $('#editCpptModal #unit-rujuk-internal-label').text(
+                                        `${patient.nama_unit_tujuan_konsul}`);
+                                }
+
+                                if (tindakLanjut == '5') {
+                                    $('#editCpptModal #rs-tujuan-label').text(
+                                        `${patient.rs_rujuk_bagian} (${patient.rs_rujuk})`);
+
+                                    $('#editCpptModal #rsLainModal #nama_rs').val(patient.rs_rujuk);
+                                    $('#editCpptModal #rsLainModal #bagian_rs').val(patient
+                                        .rs_rujuk_bagian);
+                                }
+
+                                // diagnosis set value
+                                var penyakit = patient.cppt_penyakit;
                                 var dignoseListContent = '';
 
                                 for (let d in penyakit) {
@@ -818,6 +839,9 @@
                     // console.log("XHR Object:", xhr);
                     // alert("Terjadi kesalahan: " + error);
                     showToast('error', 'internal server error');
+                    // Ubah teks tombol jadi edit
+                    button.html('Edit');
+                    button.prop('disabled', false);
                 }
             });
         });
@@ -924,14 +948,66 @@
             $('#editCpptModal #skalaNyeriBtn').text(skalaLabel);
         });
 
+        // TINDAK LANNUT
+        // kontrol ulang
+        $('#editCpptModal #plan_konrol_ulang').click(function(e) {
+
+            let modalKedua = new bootstrap.Modal($('#editCpptModal #kontrolModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#editCpptModal #kontrolModal .btn-save-kontrol').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkKontrolFormValidation('#editCpptModal')) $('#editCpptModal #kontrolModal').modal('hide');
+        });
+
+        // rujuk RS Lain
+        $('#editCpptModal #plan_rujuk').click(function(e) {
+
+            let modalKedua = new bootstrap.Modal($('#editCpptModal #rsLainModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#editCpptModal #rsLainModal .btn-save-rs-lain').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkRSLainFormValidation('#editCpptModal')) $('#editCpptModal #rsLainModal').modal('hide');
+        });
+
         $('#formEditCppt').submit(function(e) {
             let $this = $(this);
             let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
+            let tindakLanjut = $this.find('input[name="tindak_lanjut"]:checked').val();
 
             if (diagnoseNameEl.length < 1) {
                 showToast('error', 'Diagnosa harus di tambah minimal 1!');
                 return false;
             }
+
+            // Tindak Lanjut Konsul
+            // if (tindakLanjut == 4) {
+            //     if (!checkKonsulFormValidation('#editCpptModal')) return false;
+            // }
+
+            // Tindak Lanjut kontrol ulang
+            if (tindakLanjut == 2) {
+                if (!checkKontrolFormValidation('#editCpptModal')) return false;
+            }
+
+            // Tindak Lanjut rujuk rs lain
+            if (tindakLanjut == 5) {
+                if (!checkRSLainFormValidation('#editCpptModal')) return false;
+            }
+
         });
     </script>
 

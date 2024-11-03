@@ -347,7 +347,8 @@ class CpptController extends Controller
                         'kpd.hasil',
                         'p.kd_penyakit',
                         'p.penyakit',
-                        'cp.nama_penyakit'
+                        'cp.nama_penyakit',
+                        'unt.nama_unit as nama_unit_tujuan_konsul'
                     ])
                     // transaksi
                     ->join('transaksi as t', function($join) {
@@ -387,6 +388,7 @@ class CpptController extends Controller
                             ->on('cp.urut_cppt', '=', 'cppt.urut_total');
                     })
                     ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'cp.kd_penyakit')
+                    ->leftJoin('unit as unt', 'ctl.unit_rujuk_internal', '=', 'unt.kd_unit')
                     ->where('t.kd_pasien', $request->kd_pasien)
                     ->where('t.kd_unit', $request->kd_unit)
                     ->where('t.no_transaksi', $request->no_transaksi)
@@ -399,41 +401,42 @@ class CpptController extends Controller
 
             $cppt = $getCppt->groupBy(['urut_total'])->map(function($item) {
                 return [
-                    'kd_pasien'             => $item->first()->kd_pasien,
-                    'no_transaksi'          => $item->first()->no_transaksi,
-                    'kd_kasir'              => $item->first()->kd_kasir,
-                    'kd_unit'               => $item->first()->kd_unit,
-                    'nama_unit'             => $item->first()->nama_unit,
-                    'penanggung'            => $item->first()->dtCppt,
-                    'nama_penanggung'       => $item->first()->nama_penanggung,
-                    'tanggal'               => $item->first()->tanggal,
-                    'jam'                   => $item->first()->jam,
-                    'obyektif'              => $item->first()->obyektif,
-                    'planning'              => $item->first()->planning,
-                    'urut'                  => $item->first()->urut,
-                    'skala_nyeri'           => $item->first()->skala_nyeri,
-                    'lokasi'                => $item->first()->lokasi,
-                    'durasi'                => $item->first()->durasi,
-                    'pemberat'              => $item->first()->pemberat,
-                    'peringan'              => $item->first()->peringan,
-                    'kualitas'              => $item->first()->kualitas,
-                    'frekuensi'             => $item->first()->frekuensi,
-                    'menjalar'              => $item->first()->menjalar,
-                    'jenis'                 => $item->first()->jenis,
-                    'pemeriksaan_fisik'     => $item->first()->pemeriksaan_fisik,
-                    'urut_total'            => $item->first()->urut_total,
-                    'user_penanggung'       => $item->first()->user_penanggung,
-                    'anamnesis'             => $item->first()->anamnesis,
-                    'tindak_lanjut_code'    => $item->first()->tindak_lanjut_code,
-                    'tindak_lanjut_name'    => $item->first()->tindak_lanjut_name,
-                    'tgl_kontrol_ulang'     => $item->first()->tgl_kontrol_ulang,
-                    'unit_rujuk_internal'   => $item->first()->unit_rujuk_internal,
-                    'unit_rawat_inap'       => $item->first()->unit_rawat_inap,
-                    'rs_rujuk'              => $item->first()->rs_rujuk,
-                    'rs_rujuk_bagian'       => $item->first()->rs_rujuk_bagian,
-                    'verified'              => $item->first()->verified,
-                    'user_verified'         => $item->first()->user_verified,
-                    'kondisi'               => [
+                    'kd_pasien'                 => $item->first()->kd_pasien,
+                    'no_transaksi'              => $item->first()->no_transaksi,
+                    'kd_kasir'                  => $item->first()->kd_kasir,
+                    'kd_unit'                   => $item->first()->kd_unit,
+                    'nama_unit'                 => $item->first()->nama_unit,
+                    'penanggung'                => $item->first()->dtCppt,
+                    'nama_penanggung'           => $item->first()->nama_penanggung,
+                    'tanggal'                   => $item->first()->tanggal,
+                    'jam'                       => $item->first()->jam,
+                    'obyektif'                  => $item->first()->obyektif,
+                    'planning'                  => $item->first()->planning,
+                    'urut'                      => $item->first()->urut,
+                    'skala_nyeri'               => $item->first()->skala_nyeri,
+                    'lokasi'                    => $item->first()->lokasi,
+                    'durasi'                    => $item->first()->durasi,
+                    'pemberat'                  => $item->first()->pemberat,
+                    'peringan'                  => $item->first()->peringan,
+                    'kualitas'                  => $item->first()->kualitas,
+                    'frekuensi'                 => $item->first()->frekuensi,
+                    'menjalar'                  => $item->first()->menjalar,
+                    'jenis'                     => $item->first()->jenis,
+                    'pemeriksaan_fisik'         => $item->first()->pemeriksaan_fisik,
+                    'urut_total'                => $item->first()->urut_total,
+                    'user_penanggung'           => $item->first()->user_penanggung,
+                    'anamnesis'                 => $item->first()->anamnesis,
+                    'tindak_lanjut_code'        => $item->first()->tindak_lanjut_code,
+                    'tindak_lanjut_name'        => $item->first()->tindak_lanjut_name,
+                    'tgl_kontrol_ulang'         => $item->first()->tgl_kontrol_ulang,
+                    'unit_rujuk_internal'       => $item->first()->unit_rujuk_internal,
+                    'nama_unit_tujuan_konsul'   => $item->first()->nama_unit_tujuan_konsul,
+                    'unit_rawat_inap'           => $item->first()->unit_rawat_inap,
+                    'rs_rujuk'                  => $item->first()->rs_rujuk,
+                    'rs_rujuk_bagian'           => $item->first()->rs_rujuk_bagian,
+                    'verified'                  => $item->first()->verified,
+                    'user_verified'             => $item->first()->user_verified,
+                    'kondisi'                   => [
                         "id_konpas"     => (int) $item->first()->id_konpas,
                         'konpas'        => $item->groupBy('id_kondisi')->map(function($konpas) {
                             return [
@@ -760,6 +763,8 @@ class CpptController extends Controller
 
     public function update($kd_pasien, $tgl_masuk, Request $request)
     {
+        dd($request);
+        
         // Validation Input
         $validatorMessage = [
             'anamnesis.required'            => 'Anamnesis harus di isi!',
