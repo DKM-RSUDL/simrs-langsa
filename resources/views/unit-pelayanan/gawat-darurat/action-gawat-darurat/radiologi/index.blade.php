@@ -155,7 +155,7 @@
 @endsection
 
 @push('js')
-    {{-- Filter data --}}
+    {{-- Filter data to anas --}}
     <script type="text/javascript">
         $(document).ready(function() {
             $('#SelectOption').change(function() {
