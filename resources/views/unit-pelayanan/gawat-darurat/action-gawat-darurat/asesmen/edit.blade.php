@@ -107,9 +107,7 @@
                         <div class="form-line">
                             <div class="d-flex align-items-center mb-3">
                                 <h6 class="mb-0 me-3">Riwayat Alergi</h6>
-                                <button type="button" class="btn btn-sm" id="editAddAlergi">
-                                    <i class="bi bi-plus-square"></i> Tambah
-                                </button>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-alergimodal')
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="editAlergiTable">
@@ -153,14 +151,14 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-2">
+                                <div class="col-2 position-relative">
                                     <label>GCS</label>
-                                    <select class="form-select" name="edit_vital_sign_gcs">
-                                        <option selected disabled>Pilih</option>
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="edit_gcsValue"
+                                        name="edit_vital_sign[gcs_display]" readonly onclick="openEditGCSModal()">
+                                    <i class="bi bi-pencil position-absolute"
+                                        style="top: 50%; right: 10px; transform: translateY(-50%);"
+                                        onclick="openEditGCSModal()"></i>
+                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-gcs')
                                 </div>
                                 <div class="col-4">
                                     <label>AVPU</label>
@@ -301,7 +299,41 @@
                                 </select>
                             </div>
                         </div>
-                        
+
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Diagnosis</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-diagnosismodal')
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="bg-secondary-subtle rounded-2 p-3" id="editDiagnoseList">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Observasi Lanjutan/Re-Triase</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-retriasemodal')
+                            </div>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-bordered" id="editreTriaseTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal dan Jam</th>
+                                            <th>Keluhan</th>
+                                            <th>Vital Sign</th>
+                                            <th>Re-Triase/EWS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data re-triase akan ditampilkan di sini -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                     </form>
                 </div>
@@ -318,6 +350,7 @@
     <script>
         // Variable global
         let originalAlergiData = [];
+        let originalDiagnosisData = [];
 
         // Fungsi edit
         function editAsesmen(id) {
@@ -372,9 +405,9 @@
             $('select[name="edit_faktor_pemberat"]').val(data.asesmen.faktor_pemberat_id);
             $('select[name="edit_faktor_peringan"]').val(data.asesmen.faktor_peringan_id);
             $('select[name="edit_efek_nyeri"]').val(data.asesmen.efek_nyeri.id);
-            
+
             console.log(data.asesmen);
-            
+
             originalResusitasiData = data.tindakan_resusitasi;
 
             const tindakanResusitasi = typeof data.tindakan_resusitasi === 'string' ?
@@ -391,7 +424,22 @@
                 $('input[name="edit_vital_sign_nadi"]').val(vitalSign.nadi || '');
                 $('input[name="edit_vital_sign_resp"]').val(vitalSign.resp || '');
                 $('input[name="edit_vital_sign_suhu"]').val(vitalSign.suhu || '');
-                $('select[name="edit_vital_sign_gcs"]').val(vitalSign.gcs || '');
+
+                if (vitalSign.gcs) {
+                    const gcs = vitalSign.gcs;
+
+                    // Set nilai untuk masing-masing komponen GCS
+                    $(`input[name="edit_gcs_eye"][value="${gcs.eye.value}"]`).prop('checked', true);
+                    $(`input[name="edit_gcs_verbal"][value="${gcs.verbal.value}"]`).prop('checked', true);
+                    $(`input[name="edit_gcs_motoric"][value="${gcs.motoric.value}"]`).prop('checked', true);
+
+                    // Set total nilai GCS pada input
+                    document.getElementById('edit_gcsValue').value = gcs.total;
+                    window.gcsData = gcs;
+                } else {
+                    document.getElementById('edit_gcsValue').value = window.gcsData?.total || '-';
+                }
+
                 $('select[name="edit_vital_sign_avpu"]').val(vitalSign.avpu || '');
                 $('input[name="edit_vital_sign_spo2_tanpa_o2"]').val(vitalSign.spo2_tanpa_o2 || '');
                 $('input[name="edit_vital_sign_spo2_dengan_o2"]').val(vitalSign.spo2_dengan_o2 || '');
@@ -417,6 +465,134 @@
             originalAlergiData = riwayatAlergi || [];
 
             fillEditAlergiTable(riwayatAlergi);
+
+            if (data.show_diagnosis && Array.isArray(data.show_diagnosis)) {
+                // Set data diagnosis ke variable global
+                window.originalDiagnosisData = [...data.show_diagnosis];
+
+                // Update tampilan di form utama
+                const diagnosisHtml = window.originalDiagnosisData.map((diagnosis, index) => `
+                    <div class="diagnosis-item mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                <span class="badge bg-primary">${index + 1}</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                ${diagnosis}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                $('#editDiagnoseList').html(diagnosisHtml);
+            } else {
+                window.originalDiagnosisData = [];
+                $('#editDiagnoseList').html('<em>Tidak ada diagnosis</em>');
+            }
+
+            if (data.retriase_data && Array.isArray(data.retriase_data)) {
+                originalReTriaseData = data.retriase_data;
+                updateEditReTriaseTable();
+            } else {
+                originalReTriaseData = [];
+                updateEditReTriaseTable();
+            }
+        }
+
+        // Fungsi untuk memperbarui tampilan tabel Re-Triase
+        function updateEditReTriaseTable() {
+            const tbody = $('#editreTriaseTable tbody');
+            tbody.empty();
+
+            if (!originalReTriaseData || originalReTriaseData.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada data re-triase</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            originalReTriaseData.forEach((data) => {
+                // Parse triase jika dalam bentuk string
+                let triaseData;
+                try {
+                    triaseData = typeof data.triase === 'string' ? JSON.parse(data.triase) : data.triase;
+                } catch (e) {
+                    console.error('Error parsing triase data:', e);
+                    triaseData = {
+                        keluhan: '',
+                        vitalSigns: {}
+                    };
+                }
+
+                const row = `
+                    <tr>
+                        <td>${data.tanggal_triase || ''}</td>
+                        <td>${triaseData.keluhan || ''}</td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                                <li>TD Sistole: ${triaseData.vitalSigns?.td_sistole || '-'}</li>
+                                <li>TD Diastole: ${triaseData.vitalSigns?.td_diastole || '-'}</li>
+                                <li>Nadi: ${triaseData.vitalSigns?.nadi || '-'}</li>
+                                <li>Resp: ${triaseData.vitalSigns?.resp || '-'}</li>
+                                <li>Suhu: ${triaseData.vitalSigns?.suhu || '-'}</li>
+                                <li>SpO2 (tanpa O2): ${triaseData.vitalSigns?.spo2_tanpa_o2 || '-'}</li>
+                                <li>SpO2 (dengan O2): ${triaseData.vitalSigns?.spo2_dengan_o2 || '-'}</li>
+                                <li>GCS: ${triaseData.vitalSigns?.gcs || '-'}</li>
+                                <li>AVPU: ${triaseData.vitalSigns?.avpu || '-'}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="triase-circle ${getTriaseClass(data.kode_triase)}"></div>
+                            <div class="triase-label">${data.hasil_triase || ''}</div>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        // Fungsi untuk menentukan kelas triase berdasarkan kode
+        function getTriaseClass(kode_triase) {
+            switch (parseInt(kode_triase)) {
+                case 5:
+                    return 'triase-doa'; // Hitam
+                case 4:
+                    return 'triase-resusitasi'; // Merah
+                case 3:
+                    return 'triase-emergency'; // Merah
+                case 2:
+                    return 'triase-urgent'; // Kuning
+                case 1:
+                    return 'triase-false-emergency'; // Hijau
+                default:
+                    return '';
+            }
+        }
+
+        // Memastikan tabel re-triase diperbarui saat data tersedia
+        $('#editAsesmenModal').on('show.bs.modal', function() {
+            updateEditReTriaseTable();
+        });
+
+        function updateMainDiagnosisView() {
+            const diagnosisHtml = window.originalDiagnosisData.map((diagnosis, index) => `
+                <div class="diagnosis-item mb-2">
+                    <div class="d-flex align-items-center">
+                        <div class="me-2">
+                            <span class="badge bg-primary">${index + 1}</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            ${diagnosis}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            $('#editDiagnoseList').html(diagnosisHtml || '<em>Tidak ada diagnosis</em>');
         }
 
         // Fungsi mengisi tindakan resusitasi
@@ -537,39 +713,7 @@
 
         // Fungsi collect data alergi
         function collectEditAlergi() {
-            if (!$('#editAddAlergi').data('hasChanges')) {
-                return originalAlergiData;
-            }
-
-            const uniqueAlergis = new Set();
-            const alergiData = [];
-
-            $('#editAlergiTable tbody tr').each(function() {
-                const $row = $(this);
-                const jenis = $row.find('td:eq(0)').text();
-
-                if (jenis === 'Tidak ada data alergi' || jenis === '-') {
-                    return;
-                }
-
-                const alergen = $row.find('td:eq(1)').text();
-                const reaksi = $row.find('td:eq(2)').text();
-                const keparahan = $row.find('td:eq(3)').text();
-
-                const key = `${jenis}-${alergen}-${reaksi}-${keparahan}`;
-
-                if (!uniqueAlergis.has(key)) {
-                    uniqueAlergis.add(key);
-                    alergiData.push({
-                        jenis: jenis,
-                        alergen: alergen,
-                        reaksi: reaksi,
-                        keparahan: keparahan
-                    });
-                }
-            });
-
-            return alergiData;
+            return originalAlergiData;
         }
 
         $('#btnUpdateAsesmen').click(function(event) {
@@ -596,7 +740,7 @@
                     nadi: $('input[name="edit_vital_sign_nadi"]').val() || null,
                     resp: $('input[name="edit_vital_sign_resp"]').val() || null,
                     suhu: $('input[name="edit_vital_sign_suhu"]').val() || null,
-                    gcs: $('select[name="edit_vital_sign_gcs"]').val() || null,
+                    gcs: window.gcsData || null,
                     avpu: $('select[name="edit_vital_sign_avpu"]').val() || null,
                     spo2_tanpa_o2: $('input[name="edit_vital_sign_spo2_tanpa_o2"]').val() || null,
                     spo2_dengan_o2: $('input[name="edit_vital_sign_spo2_dengan_o2"]').val() || null
@@ -618,8 +762,10 @@
                 kualitas_nyeri_id: kualitasId,
                 faktor_pemberat_id: faktorPemberatId,
                 faktor_peringan_id: faktorPeringanId,
-                efek_nyeri: efekNyeriId
-                
+                efek_nyeri: efekNyeriId,
+                diagnosis: window.originalDiagnosisData,
+                retriase_data: window.originalReTriaseData
+
             };
 
             const editButton = $(`button[onclick="editAsesmen('${window.currentAsesmenId}')"]`);
