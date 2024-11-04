@@ -2,7 +2,7 @@
     <i class="bi bi-plus-square"></i> Tambah
 </button>
 
-<div class="modal fade" id="reTriagePatient" tabindex="-1" aria-labelledby="editReTriagePatientLabel" aria-hidden="true">
+<div class="modal fade" id="reTriagePatientEdit" tabindex="-1" aria-labelledby="editReTriagePatientLabel" aria-hidden="true">
     <div class="container-fluid">
         <div class="modal-dialog modal-fullscreen h-auto w-100">
             <div class="modal-content">
@@ -472,7 +472,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="simpanReTriase">Simpan</button>
+                    <button type="button" class="btn btn-primary" id="simpanReTriaseEdit">Simpan</button>
                 </div>
             </div>
         </div>
@@ -482,7 +482,7 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatient'));
+            var reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatientEdit'));
             var reTriaseTable = document.querySelector('#reTriaseTable tbody');
             var reTriaseData = [];
 
@@ -520,17 +520,17 @@
             // Event listener untuk membuka modal re-triase
             document.getElementById('editOpenReTriaseModal').addEventListener('click', function() {
                 resetReTriaseForm();
-                const reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatient'));
+                const reTriaseModal = new bootstrap.Modal(document.getElementById('reTriagePatientEdit'));
                 reTriaseModal.show();
             });
 
             // Perubahan pada checkbox DOA
-            document.querySelectorAll('#reTriagePatient .doa-check').forEach(function(checkbox) {
+            document.querySelectorAll('#reTriagePatientEdit .doa-check').forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
                     let doaChecked = document.querySelectorAll(
-                        '#reTriagePatient .doa-check:checked').length > 0;
+                        '#reTriagePatientEdit .doa-check:checked').length > 0;
                     document.querySelectorAll(
-                        '#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(
+                        '#reTriagePatientEdit input[type="checkbox"]:not(.doa-check)').forEach(
                         function(cb) {
                             cb.disabled = doaChecked;
                         });
@@ -539,13 +539,13 @@
             });
 
             // Perubahan pada checkbox non-DOA
-            document.querySelectorAll('#reTriagePatient input[type="checkbox"]:not(.doa-check)').forEach(function(
+            document.querySelectorAll('#reTriagePatientEdit input[type="checkbox"]:not(.doa-check)').forEach(function(
                 checkbox) {
                 checkbox.addEventListener('change', function() {
                     let nonDoaChecked = document.querySelectorAll(
-                            '#reTriagePatient input[type="checkbox"]:checked:not(.doa-check)')
+                            '#reTriagePatientEdit input[type="checkbox"]:checked:not(.doa-check)')
                         .length > 0;
-                    document.querySelectorAll('#reTriagePatient input[type="checkbox"].doa-check')
+                    document.querySelectorAll('#reTriagePatientEdit input[type="checkbox"].doa-check')
                         .forEach(function(cb) {
                             cb.disabled = nonDoaChecked;
                         });
@@ -558,19 +558,19 @@
                 var status = '';
                 var kode_triase = '';
 
-                if (document.querySelectorAll('#reTriagePatient .doa-check:checked').length > 0) {
+                if (document.querySelectorAll('#reTriagePatientEdit .doa-check:checked').length > 0) {
                     status = 'DOA';
                     kode_triase = 5;
-                } else if (document.querySelectorAll('#reTriagePatient .resusitasi-check:checked').length > 0) {
+                } else if (document.querySelectorAll('#reTriagePatientEdit .resusitasi-check:checked').length > 0) {
                     status = 'RESUSITASI (segera)';
                     kode_triase = 4;
-                } else if (document.querySelectorAll('#reTriagePatient .emergency-check:checked').length > 0) {
+                } else if (document.querySelectorAll('#reTriagePatientEdit .emergency-check:checked').length > 0) {
                     status = 'EMERGENCY (10 menit)';
                     kode_triase = 3;
-                } else if (document.querySelectorAll('#reTriagePatient .urgent-check:checked').length > 0) {
+                } else if (document.querySelectorAll('#reTriagePatientEdit .urgent-check:checked').length > 0) {
                     status = 'URGENT (30 menit)';
                     kode_triase = 2;
-                } else if (document.querySelectorAll('#reTriagePatient .false-emergency-check:checked').length >
+                } else if (document.querySelectorAll('#reTriagePatientEdit .false-emergency-check:checked').length >
                     0) {
                     status = 'FALSE EMERGENCY (60 menit)';
                     kode_triase = 1;
@@ -600,7 +600,7 @@
             }
 
             function resetReTriaseForm() {
-                const modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
+                const modalBody = document.getElementById('reTriagePatientEdit').querySelector('.modal-body');
 
                 // Reset semua input
                 modalBody.querySelectorAll('input, textarea, select').forEach(function(input) {
@@ -621,14 +621,14 @@
                 document.getElementById('ket_triase').value = '';
             }
 
-            const simpanReTriaseBtn = document.getElementById('simpanReTriase');
-            if (simpanReTriaseBtn) {
+            const simpanReTriaseEditBtn = document.getElementById('simpanReTriaseEdit');
+            if (simpanReTriaseEditBtn) {
                 // Hapus event listener yang mungkin sudah ada sebelumnya
-                simpanReTriaseBtn.replaceWith(simpanReTriaseBtn.cloneNode(true));
+                simpanReTriaseEditBtn.replaceWith(simpanReTriaseEditBtn.cloneNode(true));
 
                 // Tambahkan event listener baru
-                document.getElementById('simpanReTriase').addEventListener('click', function() {
-                    const modalBody = document.getElementById('reTriagePatient').querySelector(
+                document.getElementById('simpanReTriaseEdit').addEventListener('click', function() {
+                    const modalBody = document.getElementById('reTriagePatientEdit').querySelector(
                         '.modal-body');
                     let formData = getFormData(modalBody);
 
@@ -737,7 +737,7 @@
                     // Reset form dan tutup modal
                     resetReTriaseForm();
                     const reTriaseModal = bootstrap.Modal.getInstance(document.getElementById(
-                        'reTriagePatient'));
+                        'reTriagePatientEdit'));
                     reTriaseModal.hide();
 
                     // Tampilkan notifikasi sukses

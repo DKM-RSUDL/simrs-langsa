@@ -508,13 +508,13 @@
                 const triaseData = {
                     hasil_triase: data.ket_triase || '',
                     kode_triase: data.kode_triase || '',
-                    air_way: data['airway[]'] || [],  
-                    breathing: data['breathing[]'] || [], 
-                    circulation: data['circulation[]'] || [], 
-                    disability: data['disability[]'] || []   
+                    air_way: data['airway[]'] || [],
+                    breathing: data['breathing[]'] || [],
+                    circulation: data['circulation[]'] || [],
+                    disability: data['disability[]'] || []
                 };
 
-                data['triase'] = triaseData;                
+                data['triase'] = triaseData;
                 return data;
             }
 
@@ -615,12 +615,15 @@
 
             // Fungsi untuk menyimpan data re-triase dan menambahkan ke tabel
             document.getElementById('simpanReTriase').addEventListener('click', function() {
+                updateTriaseStatus(); // Pastikan status triase diperbarui sebelum data disimpan
+
                 var modalBody = document.getElementById('reTriagePatient').querySelector('.modal-body');
                 var formData = getFormData(modalBody);
-                console.log(formData);
-                
+                console.log(formData); // Debugging untuk melihat formData yang dikumpulkan
+
                 var emptyFields = [];
-                var requiredFields = ['td_sistole_retriage', 'td_diastole_retriage', 'nadi_retriage',
+                var requiredFields = [
+                    'td_sistole_retriage', 'td_diastole_retriage', 'nadi_retriage',
                     'resp_retriage', 'suhu_retriage', 'spo2_tanpa_o2_retriage',
                     'spo2_dengan_o2_retriage', 'gcs_retriage', 'avpu_retriage'
                 ];
@@ -656,8 +659,10 @@
                         avpu: formData.avpu_retriage,
                     },
                     triase: {
-                        kode_triase: formData.kode_triase,
-                        ket_triase: formData.ket_triase,
+                        kode_triase: document.getElementById('kode_triase')
+                        .value, // Ambil nilai kode triase terbaru
+                        ket_triase: document.getElementById('ket_triase')
+                        .value, // Ambil nilai ket triase terbaru
                         air_way: formData.triase.air_way,
                         breathing: formData.triase.breathing,
                         circulation: formData.triase.circulation,
@@ -667,53 +672,48 @@
                 };
 
                 // Tambahkan data ke array reTriaseData
-                reTriaseData.push(newData);                
+                reTriaseData.push(newData);
                 updateReTriaseTable();
                 resetReTriaseForm();
                 reTriaseModal.hide();
             });
+
 
             // Fungsi untuk memperbarui tabel re-triase
             function updateReTriaseTable() {
                 var tbody = document.querySelector('#reTriaseTable tbody');
                 tbody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
 
+                console.log("Updating table with data:", reTriaseData); // Debugging line
+
                 reTriaseData.forEach(function(data, index) {
                     var row = `
-                <tr>
-                    <td>${data.tanggalJam}</td>
-                    <td>${data.keluhan}</td>
-                    <td>
-                        <ul>
-                            <li>TD Sistole: ${data.vitalSigns.td_sistole}</li>
-                            <li>TD Diastole: ${data.vitalSigns.td_diastole}</li>
-                            <li>Nadi: ${data.vitalSigns.nadi}</li>
-                            <li>Resp: ${data.vitalSigns.resp}</li>
-                            <li>Suhu: ${data.vitalSigns.suhu}</li>
-                            <li>SpO2 (tanpa O2): ${data.vitalSigns.spo2_tanpa_o2}</li>
-                            <li>SpO2 (dengan O2): ${data.vitalSigns.spo2_dengan_o2}</li>
-                            <li>GCS: ${data.vitalSigns.gcs}</li>
-                            <li>AVPU: ${data.vitalSigns.avpu}</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <div class="triase-circle ${getTriaseClass(data.triase.kode_triase)}"></div>
-                        <div class="triase-label">${data.triase.ket_triase}</div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td>${data.tanggalJam}</td>
+                        <td>${data.keluhan}</td>
+                        <td>
+                            <ul>
+                                <li>TD Sistole: ${data.vitalSigns.td_sistole}</li>
+                                <li>TD Diastole: ${data.vitalSigns.td_diastole}</li>
+                                <li>Nadi: ${data.vitalSigns.nadi}</li>
+                                <li>Resp: ${data.vitalSigns.resp}</li>
+                                <li>Suhu: ${data.vitalSigns.suhu}</li>
+                                <li>SpO2 (tanpa O2): ${data.vitalSigns.spo2_tanpa_o2}</li>
+                                <li>SpO2 (dengan O2): ${data.vitalSigns.spo2_dengan_o2}</li>
+                                <li>GCS: ${data.vitalSigns.gcs}</li>
+                                <li>AVPU: ${data.vitalSigns.avpu}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="triase-circle ${getTriaseClass(data.triase.kode_triase)}"></div>
+                            <div class="triase-label">${data.triase.ket_triase}</div>
+                        </td>
+                    </tr>
+                `;
                     tbody.innerHTML += row;
                 });
-
-                // Tambahkan event listener untuk tombol hapus
-                document.querySelectorAll('.delete-retriage').forEach(function(button) {
-                    button.addEventListener('click', function() {
-                        var index = this.getAttribute('data-index');
-                        reTriaseData.splice(index, 1); // Hapus data dari array
-                        updateReTriaseTable(); // Update tabel setelah data dihapus
-                    });
-                });
             }
+
 
             // Fungsi untuk memberikan kelas warna berdasarkan kode triase
             function getTriaseClass(kode_triase) {
