@@ -168,6 +168,11 @@ class AsesmenController extends Controller
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->firstOrFail();
+            
+            $dataMedis = Kunjungan::with(['pasien', 'dokter'])
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->first();
 
             $updateData = [
                 'tindakan_resusitasi' => json_encode($request->tindakan_resusitasi),
@@ -192,6 +197,50 @@ class AsesmenController extends Controller
             ];
 
             $asesmen->update($updateData);
+
+            if ($request->has('retriase_data')) {
+                // Get existing retriase data to compare
+                $existingRetriase = DataTriase::where('id_asesmen', $id)->get();
+
+                foreach ($request->retriase_data as $retriaseData) {
+                    // Check if this is a new retriase data
+                    $isNewData = true;
+                    foreach ($existingRetriase as $existing) {
+                        // Compare relevant fields to determine if it's new data
+                        if (
+                            $existing->tanggal_triase === $retriaseData['tanggal_triase'] &&
+                            $existing->hasil_triase === $retriaseData['hasil_triase'] &&
+                            $existing->kode_triase === $retriaseData['kode_triase']
+                        ) {
+                            $isNewData = false;
+                            break;
+                        }
+                    }
+
+                    // If it's new data, insert it
+                    if ($isNewData) {
+                        $triase = new DataTriase();
+                        $triase->id_asesmen = $id;
+                        $triase->nama_pasien = $dataMedis->pasien->nama;
+                        $triase->usia = $dataMedis->pasien->umur ?? 0;
+                        $triase->jenis_kelamin = $dataMedis->pasien->jenis_kelamin;
+                        $triase->tanggal_lahir = $dataMedis->pasien->tgl_lahir;
+                        $triase->tanggal_triase = $retriaseData['tanggal_triase'];
+                        $triase->dokter_triase = $dataMedis->dokter->kd_dokter;
+                        $triase->kd_pasien_triase = $kd_pasien;
+                        $triase->status = 1;
+                        $triase->usia_bulan = $dataMedis->usia_bulan ?? 0;
+                        $triase->foto_pasien = $dataMedis->foto_pasien ?? null;
+                        $triase->hasil_triase = $retriaseData['hasil_triase'];
+                        $triase->kode_triase = $retriaseData['kode_triase'];
+                        $triase->anamnesis_retriase = $retriaseData['anamnesis_retriase'];
+                        $triase->catatan_retriase = $retriaseData['catatan_retriase'];
+                        $triase->vitalsign_retriase = $retriaseData['vitalsign_retriase'];
+                        $triase->triase = $retriaseData['triase'];
+                        $triase->save();
+                    }
+                }
+            }
 
             if ($request->has('tindak_lanjut')) {
                 $tindakLanjutData = $request->tindak_lanjut;
