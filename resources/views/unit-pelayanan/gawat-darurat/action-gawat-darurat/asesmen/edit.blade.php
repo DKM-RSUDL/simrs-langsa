@@ -301,6 +301,50 @@
                         </div>
 
                         <div class="form-line">
+                            <div class="pemeriksaan-fisik">
+                                <h6>Pemeriksaan Fisik</h6>
+                                <p class="text-small">Centang normal jika fisik yang dinilai
+                                    normal,
+                                    pilih tanda tambah
+                                    untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                    Jika
+                                    tidak dipilih salah satunya, maka pemeriksaan tidak
+                                    dilakukan.
+                                </p>
+                                <div class="row" id="edit_pemeriksaan_fisik_container">
+                                    @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                        <div class="col-md-6">
+                                            @foreach ($chunk as $item)
+                                                <div class="pemeriksaan-item">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-grow-1">
+                                                            {{ $item->nama }}</div>
+                                                        <div class="form-check me-2">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="{{ $item->id }}-normal">
+                                                            <label class="form-check-label"
+                                                                for="{{ $item->id }}-normal">Normal</label>
+                                                        </div>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                            type="button"
+                                                            data-target="{{ $item->id }}-keterangan">+</button>
+                                                    </div>
+                                                    <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
+                                                        style="display:none;">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Keterangan">
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-line">
                             <div class="d-flex align-items-center mb-3">
                                 <h6 class="mb-0 me-3">Diagnosis</h6>
                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-diagnosismodal')
@@ -411,6 +455,7 @@
                     Swal.close();
                     if (response.status === 'success') {
                         fillEditForm(response.data.asesmen);
+                        fillEditPemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
                         window.currentAsesmenId = id;
                         modal.show();
                     } else {
@@ -589,20 +634,20 @@
         function displayEditTindakLanjut() {
             var tindakLanjutInfo = document.getElementById('editTindakLanjutInfo');
             tindakLanjutInfo.innerHTML = '';
-            
+
             if (editTindakLanjutData) {
                 var div = document.createElement('div');
                 div.classList.add('mb-2', 'd-flex', 'justify-content-between', 'align-items-center');
-                
+
                 // Format display text berdasarkan tipe tindak lanjut
                 let infoText = `Tindak Lanjut: ${formatTindakLanjutText(editTindakLanjutData.option)}`;
-                
+
                 if (editTindakLanjutData.keterangan) {
                     infoText += ` | Keterangan: ${editTindakLanjutData.keterangan}`;
                 }
 
                 // Tambahkan informasi tambahan sesuai tipe
-                switch(editTindakLanjutData.option) {
+                switch (editTindakLanjutData.option) {
                     case 'meninggalDunia':
                         if (editTindakLanjutData.tanggalMeninggal) {
                             infoText += ` | Tanggal: ${editTindakLanjutData.tanggalMeninggal}`;
@@ -633,7 +678,7 @@
                 div.appendChild(textSpan);
 
                 var buttonGroup = document.createElement('div');
-                
+
                 var editButton = document.createElement('button');
                 editButton.innerHTML = '<i class="bi bi-pencil-fill"></i>';
                 editButton.className = 'btn btn-sm btn-outline-primary me-2';
@@ -654,14 +699,21 @@
 
         // Fungsi untuk format text tindak lanjut
         function formatTindakLanjutText(option) {
-            switch(option) {
-                case 'rawatInap': return 'Rawat Inap';
-                case 'kamarOperasi': return 'Kamar Operasi';
-                case 'rujukKeluar': return 'Rujuk Keluar RS';
-                case 'pulangKontrol': return 'Pulang Kontrol';
-                case 'menolakRawatInap': return 'Menolak Rawat Inap';
-                case 'meninggalDunia': return 'Meninggal Dunia';
-                default: return option;
+            switch (option) {
+                case 'rawatInap':
+                    return 'Rawat Inap';
+                case 'kamarOperasi':
+                    return 'Kamar Operasi';
+                case 'rujukKeluar':
+                    return 'Rujuk Keluar RS';
+                case 'pulangKontrol':
+                    return 'Pulang Kontrol';
+                case 'menolakRawatInap':
+                    return 'Menolak Rawat Inap';
+                case 'meninggalDunia':
+                    return 'Meninggal Dunia';
+                default:
+                    return option;
             }
         }
 
@@ -685,7 +737,7 @@
                 // Parse vital sign data
                 let vitalSignData;
                 try {
-                    vitalSignData = typeof data.vitalsign_retriase === 'string' ? 
+                    vitalSignData = typeof data.vitalsign_retriase === 'string' ?
                         JSON.parse(data.vitalsign_retriase) : data.vitalsign_retriase;
                 } catch (e) {
                     console.error('Error parsing vital sign data:', e);
@@ -709,12 +761,18 @@
                 // Get triase badge class
                 const getTriaseClass = (kodeTriase) => {
                     switch (parseInt(kodeTriase)) {
-                        case 5: return 'bg-dark text-white';      // Meninggal
-                        case 4: return 'bg-danger text-white';    // Emergency
-                        case 3: return 'bg-danger text-white';    // Emergency
-                        case 2: return 'bg-warning text-dark';    // Urgency
-                        case 1: return 'bg-success text-white';   // False Emergency
-                        default: return 'bg-secondary text-white';
+                        case 5:
+                            return 'bg-dark text-white'; // Meninggal
+                        case 4:
+                            return 'bg-danger text-white'; // Emergency
+                        case 3:
+                            return 'bg-danger text-white'; // Emergency
+                        case 2:
+                            return 'bg-warning text-dark'; // Urgency
+                        case 1:
+                            return 'bg-success text-white'; // False Emergency
+                        default:
+                            return 'bg-secondary text-white';
                     }
                 };
 
@@ -978,6 +1036,82 @@
             return originalAlatData;
         }
 
+        function fillEditPemeriksaanFisik(pemeriksaanFisik) {
+            const container = $('#edit_pemeriksaan_fisik_container'); // Unique container for edit
+
+            container.empty();
+
+            pemeriksaanFisik.forEach(function(item) {
+                const isChecked = item.is_normal === '1';
+                const keterangan = item.keterangan || '';
+
+                const itemHtml = `
+                    <div class="col-md-6 pemeriksaan-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">${item.nama_item}</div>
+                            <div class="form-check me-2">
+                                <input type="checkbox" class="form-check-input edit-pemeriksaan-fisik-checkbox" 
+                                    id="edit_${item.id_item_fisik}_normal" ${isChecked ? 'checked' : ''} 
+                                    data-id="${item.id_item_fisik}">
+                                <label class="form-check-label" for="edit_${item.id_item_fisik}_normal">
+                                    ${isChecked ? 'Normal' : 'Tidak Normal'}
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary toggle-keterangan-btn" type="button"
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#edit_keterangan_${item.id_item_fisik}"
+                                style="display: ${isChecked ? 'none' : 'inline-block'};">
+                                Keterangan
+                            </button>
+                        </div>
+                        <div id="edit_keterangan_${item.id_item_fisik}" class="collapse mt-2 ${!isChecked ? 'show' : ''}">
+                            <input type="text" class="form-control edit-keterangan-field" 
+                                value="${keterangan}">
+                        </div>
+                    </div>
+                `;
+
+                container.append(itemHtml);
+            });
+
+            // Add event listeners to handle checkbox toggle
+            $('.edit-pemeriksaan-fisik-checkbox').change(function() {
+                const isChecked = $(this).is(':checked');
+                const label = $(this).next('label');
+                const keteranganBtn = $(this).closest('.pemeriksaan-item').find('.toggle-keterangan-btn');
+                const keteranganField = $(this).closest('.pemeriksaan-item').find('.collapse');
+
+                // Update label text and toggle keterangan field/button
+                label.text(isChecked ? 'Normal' : 'Tidak Normal');
+                keteranganBtn.toggle(!isChecked);
+                if (isChecked) {
+                    keteranganField.collapse('hide');
+                } else {
+                    keteranganField.collapse('show');
+                }
+            });
+        }
+
+
+        function collectEditPemeriksaanFisik() {
+            const pemeriksaanFisikData = [];
+
+            $('#edit_pemeriksaan_fisik_container .edit-pemeriksaan-fisik-checkbox').each(function() {
+                const id = $(this).data('id');
+                const isNormal = $(this).is(':checked') ? '1' : '0';
+                const keterangan = $(this).closest('.pemeriksaan-item').find('.edit-keterangan-field').val() || '';
+
+                pemeriksaanFisikData.push({
+                    id_item_fisik: id,
+                    is_normal: isNormal,
+                    keterangan: keterangan
+                });
+            });
+
+            return pemeriksaanFisikData;
+        }
+
+
         $('#btnUpdateAsesmen').click(function(event) {
             event.preventDefault();
 
@@ -993,6 +1127,7 @@
             const formData = {
                 _method: 'PUT',
                 tindakan_resusitasi: collectEditTindakanResusitasi(),
+                pemeriksaan_fisik: collectEditPemeriksaanFisik(),
                 anamnesis: $('textarea[name="edit_anamnesis"]').val(),
                 riwayat_penyakit: $('textarea[name="edit_riwayat_penyakit"]').val(),
                 riwayat_pengobatan: $('textarea[name="edit_riwayat_pengobatan"]').val(),

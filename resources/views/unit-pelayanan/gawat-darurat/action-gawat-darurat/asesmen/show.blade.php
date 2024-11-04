@@ -232,6 +232,51 @@
                                             </div>
 
                                             <div class="form-line">
+                                                <div class="pemeriksaan-fisik">
+                                                    <h6>Pemeriksaan Fisik</h6>
+                                                    <p class="text-small">Centang normal jika fisik yang dinilai
+                                                        normal,
+                                                        pilih tanda tambah
+                                                        untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                                        Jika
+                                                        tidak dipilih salah satunya, maka pemeriksaan tidak
+                                                        dilakukan.
+                                                    </p>
+                                                    <div class="row" id="show_pemeriksaan_fisik_container">
+                                                        @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                                            <div class="col-md-6">
+                                                                @foreach ($chunk as $item)
+                                                                    <div class="pemeriksaan-item">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="flex-grow-1">
+                                                                                {{ $item->nama }}</div>
+                                                                            <div class="form-check me-2">
+                                                                                <input type="checkbox"
+                                                                                    class="form-check-input"
+                                                                                    id="{{ $item->id }}-normal">
+                                                                                <label class="form-check-label"
+                                                                                    for="{{ $item->id }}-normal">Normal</label>
+                                                                            </div>
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">+</button>
+                                                                        </div>
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
+                                                                            style="display:none;">
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Keterangan">
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
                                                 <h6>Pemeriksaan Penunjang Klinis</h6>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <img src="{{ asset('assets/img/icons/test_tube.png') }}">
@@ -471,6 +516,7 @@
                         handleReTriase(response.data.asesmen.retriase_data);
                         handleAlatTerpasang(response.data.asesmen.alat_terpasang);
                         handleTindakLanjut(response.data.asesmen.tindaklanjut);
+                        handlePemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
                         modal.show();
                     } else {
                         Swal.fire('Error', 'Data tidak ditemukan', 'error');
@@ -666,7 +712,7 @@
 
             retriaseData.forEach(function(triase) {
                 // Parse triase JSON if needed
-                const vitalSignData = typeof triase.vitalsign_retriase === 'string' ? 
+                const vitalSignData = typeof triase.vitalsign_retriase === 'string' ?
                     JSON.parse(triase.vitalsign_retriase) : triase.vitalsign_retriase;
 
                 // Format vital signs
@@ -737,22 +783,28 @@
             // Get badge color based on tindak_lanjut_code
             const getBadgeClass = (code) => {
                 switch (parseInt(code)) {
-                    case 1: return 'bg-primary'; // Rawat Inap
-                    case 2: return 'bg-success'; // Kontrol Ulang
-                    case 3: return 'bg-secondary'; // Selesai di Unit
-                    case 4: return 'bg-info'; // Rujuk Internal
-                    case 5: return 'bg-warning'; // Rujuk RS Lain
-                    default: return 'bg-secondary';
+                    case 1:
+                        return 'bg-primary'; // Rawat Inap
+                    case 2:
+                        return 'bg-success'; // Kontrol Ulang
+                    case 3:
+                        return 'bg-secondary'; // Selesai di Unit
+                    case 4:
+                        return 'bg-info'; // Rujuk Internal
+                    case 5:
+                        return 'bg-warning'; // Rujuk RS Lain
+                    default:
+                        return 'bg-secondary';
                 }
             };
 
             // Format tanggal dan jam meninggal jika ada
             // const meninggalInfo = data.tanggal_meninggal ? `
-            //     <div class="col-md-12 mt-3">
-            //         <label class="fw-bold">Waktu Meninggal:</label>
-            //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
-            //     </div>
-            // ` : '';
+        //     <div class="col-md-12 mt-3">
+        //         <label class="fw-bold">Waktu Meninggal:</label>
+        //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
+        //     </div>
+        // ` : '';
 
             // Format tanggal kontrol jika ada
             const kontrolInfo = data.tgl_kontrol_ulang ? `
@@ -786,6 +838,36 @@
 
             container.html(infoBox);
         }
+
+
+        function handlePemeriksaanFisik(pemeriksaanFisik) {
+            const container = $('#show_pemeriksaan_fisik_container'); // Updated container ID for 'show'
+
+            container.empty();
+
+            pemeriksaanFisik.forEach(function(item) {
+                // Determine checked status based on is_normal value
+                const isChecked = item.is_normal === '1' ? 'checked' : '';
+                const keterangan = item.keterangan || '';
+
+                // Append item to the pemeriksaan fisik section
+                const itemHtml = `
+                    <div class="col-md-6 pemeriksaan-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">${item.nama_item}</div>
+                            <div class="form-check me-2">
+                                <input type="checkbox" class="form-check-input" id="show_${item.id_item_fisik}_normal" ${isChecked} disabled>
+                                <label class="form-check-label" for="show_${item.id_item_fisik}_normal">${isChecked ? 'Normal' : 'Tidak Normal'}</label>
+                            </div>
+                            ${keterangan ? `<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${item.id_item_fisik}">Lihat Keterangan</button>` : ''}
+                        </div>
+                        ${keterangan ? `<div id="show_keterangan_${item.id_item_fisik}" class="collapse mt-2"><input type="text" class="form-control" value="${keterangan}" readonly></div>` : ''}
+                    </div>
+                `;
+                container.append(itemHtml);
+            });
+        }
+
 
     </script>
 @endpush

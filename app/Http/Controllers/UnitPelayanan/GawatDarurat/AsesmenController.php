@@ -121,6 +121,18 @@ class AsesmenController extends Controller
 
             $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
+            $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
+            ->where('id_asesmen', $id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id_item_fisik' => $item->id_item_fisik,
+                    'nama_item' => $item->itemFisik->nama ?? 'Tidak Diketahui',
+                    'is_normal' => $item->is_normal,
+                    'keterangan' => $item->keterangan
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'data' => [
@@ -146,7 +158,8 @@ class AsesmenController extends Controller
                         'retriase_data' => $retriaseData,
                         'alat_terpasang' => $alatTerpasang,
                         'show_kondisi_pasien' => $asesmen->kondisi_pasien,
-                        'tindaklanjut' => $asesmen->tindaklanjut
+                        'tindaklanjut' => $asesmen->tindaklanjut,
+                        'pemeriksaan_fisik' => $pemeriksaanFisik
 
                     ]
                 ]
@@ -287,6 +300,25 @@ class AsesmenController extends Controller
                 }
 
                 $tindakLanjutDtl->save();
+            }
+
+            if ($request->has('pemeriksaan_fisik')) {
+                foreach ($request->pemeriksaan_fisik as $item) {
+                    // Clear 'keterangan' if 'is_normal' is set to 1 (normal)
+                    $keterangan = $item['is_normal'] == 1 ? '' : $item['keterangan'];
+
+                    // Update or create each 'pemeriksaan_fisik' record
+                    RmeAsesmenPemeriksaanFisik::updateOrCreate(
+                        [
+                            'id_asesmen' => $id,
+                            'id_item_fisik' => $item['id_item_fisik'],
+                        ],
+                        [
+                            'is_normal' => $item['is_normal'],
+                            'keterangan' => $keterangan,
+                        ]
+                    );
+                }
             }
 
             // DB::commit();

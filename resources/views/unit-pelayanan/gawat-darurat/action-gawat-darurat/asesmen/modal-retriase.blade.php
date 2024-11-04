@@ -65,11 +65,8 @@
                                             </div>
                                             <div class="col-4">
                                                 <label>GCS</label>
-                                                <select class="form-select" name="gcs_retriage">
-                                                    <option selected disabled>Pilih</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                </select>
+                                                <input type="number" class="form-control"
+                                                    name="gcs_retriage">
                                             </div>
                                             <div class="col-4">
                                                 <label>AVPU</label>
