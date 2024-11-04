@@ -682,38 +682,55 @@
             }
 
             originalReTriaseData.forEach((data) => {
-                // Parse triase jika dalam bentuk string
-                let triaseData;
+                // Parse vital sign data
+                let vitalSignData;
                 try {
-                    triaseData = typeof data.triase === 'string' ? JSON.parse(data.triase) : data.triase;
+                    vitalSignData = typeof data.vitalsign_retriase === 'string' ? 
+                        JSON.parse(data.vitalsign_retriase) : data.vitalsign_retriase;
                 } catch (e) {
-                    console.error('Error parsing triase data:', e);
-                    triaseData = {
-                        keluhan: '',
-                        vitalSigns: {}
-                    };
+                    console.error('Error parsing vital sign data:', e);
+                    vitalSignData = {};
                 }
+
+                // Format vital signs untuk tampilan
+                const formattedVitalSigns = `
+                    <ul class="list-unstyled mb-0">
+                        ${vitalSignData.td_sistole ? `<li>TD: ${vitalSignData.td_sistole}/${vitalSignData.td_diastole} mmHg</li>` : ''}
+                        ${vitalSignData.nadi ? `<li>Nadi: ${vitalSignData.nadi} x/mnt</li>` : ''}
+                        ${vitalSignData.resp ? `<li>Respirasi: ${vitalSignData.resp} x/mnt</li>` : ''}
+                        ${vitalSignData.suhu ? `<li>Suhu: ${vitalSignData.suhu}°C</li>` : ''}
+                        ${vitalSignData.spo2_tanpa_o2 ? `<li>SpO2 (tanpa O2): ${vitalSignData.spo2_tanpa_o2}%</li>` : ''}
+                        ${vitalSignData.spo2_dengan_o2 ? `<li>SpO2 (dengan O2): ${vitalSignData.spo2_dengan_o2}%</li>` : ''}
+                        ${vitalSignData.gcs ? `<li>GCS: ${vitalSignData.gcs}</li>` : ''}
+                        ${vitalSignData.avpu ? `<li>AVPU: ${vitalSignData.avpu}</li>` : ''}
+                    </ul>
+                `;
+
+                // Get triase badge class
+                const getTriaseClass = (kodeTriase) => {
+                    switch (parseInt(kodeTriase)) {
+                        case 5: return 'bg-dark text-white';      // Meninggal
+                        case 4: return 'bg-danger text-white';    // Emergency
+                        case 3: return 'bg-danger text-white';    // Emergency
+                        case 2: return 'bg-warning text-dark';    // Urgency
+                        case 1: return 'bg-success text-white';   // False Emergency
+                        default: return 'bg-secondary text-white';
+                    }
+                };
 
                 const row = `
                     <tr>
-                        <td>${data.tanggal_triase || ''}</td>
-                        <td>${triaseData.keluhan || ''}</td>
-                        <td>
-                            <ul class="list-unstyled mb-0">
-                                <li>TD Sistole: ${triaseData.vitalSigns?.td_sistole || '-'}</li>
-                                <li>TD Diastole: ${triaseData.vitalSigns?.td_diastole || '-'}</li>
-                                <li>Nadi: ${triaseData.vitalSigns?.nadi || '-'}</li>
-                                <li>Resp: ${triaseData.vitalSigns?.resp || '-'}</li>
-                                <li>Suhu: ${triaseData.vitalSigns?.suhu || '-'}</li>
-                                <li>SpO2 (tanpa O2): ${triaseData.vitalSigns?.spo2_tanpa_o2 || '-'}</li>
-                                <li>SpO2 (dengan O2): ${triaseData.vitalSigns?.spo2_dengan_o2 || '-'}</li>
-                                <li>GCS: ${triaseData.vitalSigns?.gcs || '-'}</li>
-                                <li>AVPU: ${triaseData.vitalSigns?.avpu || '-'}</li>
-                            </ul>
+                        <td class="align-middle">${data.tanggal_triase}</td>
+                        <td class="align-middle">${data.anamnesis_retriase || '-'}</td>
+                        <td class="align-middle">
+                            <div class="vital-signs-container">
+                                ${formattedVitalSigns}
+                            </div>
                         </td>
-                        <td>
-                            <div class="triase-circle ${getTriaseClass(data.kode_triase)}"></div>
-                            <div class="triase-label">${data.hasil_triase || ''}</div>
+                        <td class="align-middle text-center">
+                            <span class="badge ${getTriaseClass(data.kode_triase)} px-3 py-2">
+                                ${data.hasil_triase || '-'}
+                            </span>
                         </td>
                     </tr>
                 `;

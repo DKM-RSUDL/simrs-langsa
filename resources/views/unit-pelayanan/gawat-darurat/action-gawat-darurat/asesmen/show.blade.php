@@ -666,21 +666,20 @@
 
             retriaseData.forEach(function(triase) {
                 // Parse triase JSON if needed
-                const triaseData = typeof triase.triase === 'string' ?
-                    JSON.parse(triase.triase) : triase.triase;
+                const vitalSignData = typeof triase.vitalsign_retriase === 'string' ? 
+                    JSON.parse(triase.vitalsign_retriase) : triase.vitalsign_retriase;
 
                 // Format vital signs
-                const vitalSigns = triaseData.vitalSigns || {};
                 const formattedVitalSigns = `
                     <ul class="list-unstyled mb-0">
-                        ${vitalSigns.td_sistole ? `<li>TD Diastole: ${vitalSigns.td_diastole} mmHg</li>` : ''}
-                        ${vitalSigns.td_diastole ? `<li>TD Sistole: ${vitalSigns.td_sistole} mmHg</li>` : ''}
-                        ${vitalSigns.nadi ? `<li>Nadi: ${vitalSigns.nadi} x/mnt</li>` : ''}
-                        ${vitalSigns.resp ? `<li>Resp: ${vitalSigns.resp} x/mnt</li>` : ''}
-                        ${vitalSigns.suhu ? `<li>Suhu: ${vitalSigns.suhu}°C</li>` : ''}
-                        ${vitalSigns.spo2 ? `<li>SpO2: ${vitalSigns.spo2}%</li>` : ''}
-                        ${vitalSigns.gcs ? `<li>GCS: ${vitalSigns.gcs}</li>` : ''}
-                        ${vitalSigns.avpu ? `<li>AVPU: ${vitalSigns.avpu}</li>` : ''}
+                        ${vitalSignData.td_sistole ? `<li>TD: ${vitalSignData.td_sistole}/${vitalSignData.td_diastole} mmHg</li>` : ''}
+                        ${vitalSignData.nadi ? `<li>Nadi: ${vitalSignData.nadi} x/mnt</li>` : ''}
+                        ${vitalSignData.resp ? `<li>Resp: ${vitalSignData.resp} x/mnt</li>` : ''}
+                        ${vitalSignData.suhu ? `<li>Suhu: ${vitalSignData.suhu}°C</li>` : ''}
+                        ${vitalSignData.spo2_tanpa_o2 ? `<li>SpO2 (tanpa O2): ${vitalSignData.spo2_tanpa_o2}%</li>` : ''}
+                        ${vitalSignData.spo2_dengan_o2 ? `<li>SpO2 (dengan O2): ${vitalSignData.spo2_dengan_o2}%</li>` : ''}
+                        ${vitalSignData.gcs ? `<li>GCS: ${vitalSignData.gcs}</li>` : ''}
+                        ${vitalSignData.avpu ? `<li>AVPU: ${vitalSignData.avpu}</li>` : ''}
                     </ul>
                 `;
 
@@ -705,7 +704,7 @@
                 const row = `
                     <tr>
                         <td>${triase.tanggal_triase}</td>
-                        <td>${triaseData.keluhan || '-'}</td>
+                        <td>${triase.anamnesis_retriase  || '-'}</td>
                         <td>${formattedVitalSigns}</td>
                         <td>
                             <span class="badge ${getTriaseClass(triase.kode_triase)}">
