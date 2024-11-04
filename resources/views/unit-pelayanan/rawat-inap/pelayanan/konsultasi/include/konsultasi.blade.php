@@ -51,7 +51,7 @@
 
                 <div class="input-group">
                     <input type="text" name="search" class="form-control"
-                        placeholder="dokter & no order" aria-label="Cari" value="{{ request('search') }}"
+                        placeholder="dokter & Konsulen" aria-label="Cari" value="{{ request('search') }}"
                         aria-describedby="basic-addon1">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>

@@ -50,7 +50,7 @@
                 action="{{ route('rawat-inap.konsultasi.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control"
-                        placeholder="dokter & no order" aria-label="Cari" value="{{ request('search') }}"
+                        placeholder="dokter & Konsulen" aria-label="Cari" value="{{ request('search') }}"
                         aria-describedby="basic-addon1">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
