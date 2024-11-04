@@ -66,7 +66,7 @@ class RadiologiController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $radList = SegalaOrder::with(['details', 'dokter'])
-            // filter data per periode
+            // filter data per periode to anas
             ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
