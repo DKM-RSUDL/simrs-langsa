@@ -6,6 +6,9 @@
                 action="{{ route('cppt.store', [$dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk))]) }}"
                 method="post" id="formAddCppt">
                 @csrf
+
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="addCpptModalLabel">Catatan Perkembangan Pasien Terintegrasi
                         (CPPT)</h5>
@@ -275,19 +278,23 @@
                                 </div>
                             </div>
 
+                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.modal-tindaklanjut')
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_konrol_ulang" name="tindak_lanjut" value="2"
                                             @checked(old('tindak_lanjut') == 2) required>
-                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
+                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl: <span
+                                                id="tgl-kontrol-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk_internal" name="tindak_lanjut" value="4"
                                             @checked(old('tindak_lanjut') == 4) required>
-                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
+                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke: <span
+                                                id="unit-rujuk-internal-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
@@ -300,7 +307,8 @@
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk" name="tindak_lanjut" value="5"
                                             @checked(old('tindak_lanjut') == 5) required>
-                                        <label for="plan_rujuk">Rujuk RS lain bagian:</label>
+                                        <label for="plan_rujuk">Rujuk RS lain bagian: <span
+                                                id="rs-tujuan-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
@@ -616,38 +624,43 @@
                                 </div>
                             </div>
 
+                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.cppt.modal-tindaklanjut')
+
                             <div class="row mt-3">
                                 <div class="checkbox-container">
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_konrol_ulang" name="tindak_lanjut" value="2"
                                             @checked(old('tindak_lanjut') == 2) required>
-                                        <label for="plan_konrol_ulang">Kontrol ulang, tgl:</label>
+                                        <label for="">Kontrol ulang, tgl: <span
+                                                id="tgl-kontrol-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk_internal" name="tindak_lanjut" value="4"
                                             @checked(old('tindak_lanjut') == 4) required>
-                                        <label for="plan_rujuk_internal">Konsul/Rujuk Internal Ke:</label>
+                                        <label for="">Konsul/Rujuk Internal Ke: <span
+                                                id="unit-rujuk-internal-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_selesai" name="tindak_lanjut" value="3"
                                             @checked(old('tindak_lanjut') == 3) required>
-                                        <label for="plan_selesai">Selesai di Klinik ini</label>
+                                        <label for="">Selesai di Klinik ini</label>
                                     </div>
 
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rujuk" name="tindak_lanjut" value="5"
                                             @checked(old('tindak_lanjut') == 5) required>
-                                        <label for="plan_rujuk">Rujuk RS lain bagian:</label>
+                                        <label for="">Rujuk RS lain bagian: <span
+                                                id="rs-tujuan-label"></span></label>
                                     </div>
                                     <div class="input-group">
                                         <input type="radio" @error('tindak_lanjut') class="is-invalid" @enderror
                                             id="plan_rawat_inap" name="tindak_lanjut" value="1"
                                             @checked(old('tindak_lanjut') == 1) required>
-                                        <label for="plan_rawat_inap">Rawat Inap</label>
+                                        <label for="">Rawat Inap</label>
                                     </div>
                                     <div class="input-grou">
                                         @error('tindak_lanjut')

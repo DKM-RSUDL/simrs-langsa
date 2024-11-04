@@ -19,6 +19,80 @@
             flex-grow: 1;
             width: 350px;
         }
+
+        .select2-container {
+            z-index: 9999;
+        }
+
+        .modal-dialog {
+            z-index: 1050 !important;
+        }
+
+        .modal-content {
+            overflow: visible !important;
+        }
+
+        .select2-dropdown {
+            z-index: 99999 !important;
+        }
+
+        /* Menghilangkan elemen Select2 yang tidak diinginkan */
+        .select2-container+.select2-container {
+            display: none;
+        }
+
+        /* Menyamakan tampilan Select2 dengan Bootstrap */
+        .select2-container--default .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5;
+            padding-left: 0;
+            padding-right: 0;
+            color: #495057;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: calc(1.5em + 0.75rem);
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 20px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #6c757d transparent transparent transparent;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #6c757d transparent;
+        }
+
+        .select2-container--default .select2-dropdown {
+            border-color: #80bdff;
+            border-radius: 0.25rem;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #007bff;
+        }
+
+        /* Fokus */
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
     </style>
 @endpush
 
@@ -307,6 +381,133 @@
 
 @push('js')
     <script>
+        $(document).ready(function() {
+            initSelect2();
+        });
+
+        // form konsul validate
+        function checkKonsulFormValidation(modal = '') {
+            let formFields = {
+                'Dokter Pengirim': $(`${modal} #konsulModal #dokter_pengirim`).val(),
+                'Tanggal Konsul': $(`${modal} #konsulModal #tgl_konsul`).val(),
+                'Jam Konsul': $(`${modal} #konsulModal #jam_konsul`).val(),
+                'Unit Tujuan': $(`${modal} #konsulModal #unit_tujuan`).val(),
+                'Dokter Tujuan': $(`${modal} #konsulModal #dokter_unit_tujuan`).val(),
+                'Konsulen Harap': $(`${modal} #konsulModal input[name="konsulen_harap"]:checked`).val(),
+                'Catatan': $(`${modal} #konsulModal #catatan`).val(),
+                'Konsul': $(`${modal} #konsulModal #konsul`).val()
+            };
+
+            // Cek field kosong
+            let emptyFields = Object.entries(formFields)
+                .filter(([_, value]) => !value || value.trim() === '')
+                .map(([key, _]) => key);
+
+            if (emptyFields.length > 0) {
+                showToast('error', `Kolom berikut masih kosong: ${emptyFields.join(', ')}`);
+                return false;
+            }
+
+            let unitTujuan = $(`${modal} #konsulModal #unit_tujuan`).val();
+            let namaUnitTujuan = $(`${modal} #konsulModal #unit_tujuan option[value="${unitTujuan}"]`).text();
+            $(`${modal} #unit-rujuk-internal-label`).text(namaUnitTujuan);
+            return true;
+        }
+
+        // form kontrol ulang validate
+        function checkKontrolFormValidation(modal = '') {
+            let tglKontrol = $(`${modal} #kontrolModal #tgl_kontrol`).val();
+
+            if (tglKontrol == '') {
+                showToast('error', 'Tanggal kontrol harus di isi!');
+                return false;
+            }
+
+            $(`${modal} #tgl-kontrol-label`).text(tglKontrol);
+            return true;
+        }
+
+        // form kontrol ulang validate
+        function checkRSLainFormValidation(modal = '') {
+            let namaRS = $(`${modal} #rsLainModal #nama_rs`).val();
+            let bagianRS = $(`${modal} #rsLainModal #bagian_rs`).val();
+
+            let formFields = {
+                'RS Tujuan': namaRS,
+                'Bagian RS Tujuan': bagianRS,
+            };
+
+            // Cek field kosong
+            let emptyFields = Object.entries(formFields)
+                .filter(([_, value]) => !value || value.trim() === '')
+                .map(([key, _]) => key);
+
+            if (emptyFields.length > 0) {
+                showToast('error', `Kolom berikut masih kosong: ${emptyFields.join(', ')}`);
+                return false;
+            }
+
+            $(`${modal} #rs-tujuan-label`).text(`${bagianRS} (${namaRS})`);
+            return true;
+        }
+
+        // konsultasi form
+        // Reinisialisasi Select2 ketika modal dibuka
+        $('.konsul-modal').on('shown.bs.modal', function() {
+            // Destroy existing Select2 instance before reinitializing
+            initSelect2();
+        });
+
+        function initSelect2() {
+            $('.konsul-modal select').select2({
+                dropdownParent: $('.konsul-modal'),
+                width: '100%'
+            });
+        }
+
+        // unit di pilih / diubah
+        $('.konsul-modal #unit_tujuan').on('select2:select', function(e) {
+            let $selectedOption = $(e.currentTarget).find("option:selected");
+            let optVal = $selectedOption.val();
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "kd_unit": optVal
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $('.konsul-modal #dokter_unit_tujuan').prop('disabled', true);
+                },
+                complete: function() {
+                    $('.konsul-modal #dokter_unit_tujuan').prop('disabled', false);
+                },
+                success: function(res) {
+
+                    if (res.status == 'success') {
+                        let data = res.data;
+                        let optHtml = '<option value="">--Pilih Dokter--</option>';
+
+                        data.forEach(e => {
+                            optHtml +=
+                                `<option value="${e.dokter.kd_dokter}">${e.dokter.nama_lengkap}</option>`;
+                        });
+
+                        $('.konsul-modal #dokter_unit_tujuan').html(optHtml);
+                    } else {
+                        showToast('error', 'Internet server error');
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    showToast('error', 'Internal server error');
+                }
+            });
+
+        });
+
         // add
         var searchInputDiagnose = $('#addDiagnosisModal #searchInput');
         var dataListDiagnose = $('#addDiagnosisModal #dataList');
@@ -371,23 +572,77 @@
             $('#addCpptModal #skalaNyeriBtn').text(skalaLabel);
         });
 
+        // konsul
         $('#addCpptModal #plan_rujuk_internal').click(function(e) {
-            let modalKedua = new bootstrap.Modal($('#konsulModal'), {
+            let modalKedua = new bootstrap.Modal($('#addCpptModal #konsulModal'), {
                 backdrop: 'static',
-                keyboard: false,
-                focus: false
+                // keyboard: false
             });
 
             modalKedua.show();
         });
 
+        $('#addCpptModal #konsulModal .btn-save-konsul').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkKonsulFormValidation('#addCpptModal')) $('#addCpptModal #konsulModal').modal('hide');
+        });
+
+        // kontrol ulang
+        $('#addCpptModal #plan_konrol_ulang').click(function(e) {
+            let modalKedua = new bootstrap.Modal($('#addCpptModal #kontrolModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#addCpptModal #kontrolModal .btn-save-kontrol').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkKontrolFormValidation('#addCpptModal')) $('#addCpptModal #kontrolModal').modal('hide');
+        });
+
+        // rujuk RS Lain
+        $('#addCpptModal #plan_rujuk').click(function(e) {
+            let modalKedua = new bootstrap.Modal($('#addCpptModal #rsLainModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#addCpptModal #rsLainModal .btn-save-rs-lain').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkRSLainFormValidation('#addCpptModal')) $('#addCpptModal #rsLainModal').modal('hide');
+        });
+
         $('#formAddCppt').submit(function(e) {
             let $this = $(this);
             let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
+            let tindakLanjut = $this.find('input[name="tindak_lanjut"]:checked').val();
 
             if (diagnoseNameEl.length < 1) {
                 showToast('error', 'Diagnosa harus di tambah minimal 1!');
                 return false;
+            }
+
+            // Tindak Lanjut Konsul
+            if (tindakLanjut == 4) {
+                if (!checkKonsulFormValidation('#addCpptModal')) return false;
+            }
+
+            // Tindak Lanjut kontrol ulang
+            if (tindakLanjut == 2) {
+                if (!checkKontrolFormValidation('#addCpptModal')) return false;
+            }
+
+            // Tindak Lanjut rujuk rs lain
+            if (tindakLanjut == 5) {
+                if (!checkRSLainFormValidation('#addCpptModal')) return false;
             }
         });
 
@@ -395,6 +650,7 @@
         var tanggal, urut, unit, button;
         var editDataListDiagnose = $('#editDiagnosisModal #dataList');
         var editSearchInputDiagnose = $('#editDiagnosisModal #searchInput');
+        let cpptDataDetail;
 
         $('.btn-edit-cppt').click(function(e) {
             e.preventDefault();
@@ -442,6 +698,9 @@
                         for (let key in data) {
                             if (data.hasOwnProperty(key)) {
                                 let patient = data[key];
+                                cpptDataDetail = patient;
+                                console.log(patient);
+
 
                                 //set key to input
                                 $(target).find('input[name="tgl_cppt"]').val(tanggalData);
@@ -515,6 +774,31 @@
                                     `input[name="tindak_lanjut"][value="${patient.tindak_lanjut_code}"]`
                                 ).attr('checked', 'checked');
 
+
+                                let tindakLanjut = patient.tindak_lanjut_code;
+
+
+                                if (tindakLanjut == '2') {
+                                    $('#editCpptModal #tgl-kontrol-label').text(
+                                        `${patient.tgl_kontrol_ulang}`);
+                                    $('#editCpptModal #kontrolModal #tgl_kontrol').val(patient
+                                        .tgl_kontrol_ulang);
+                                }
+
+                                if (tindakLanjut == '4') {
+                                    $('#editCpptModal #unit-rujuk-internal-label').text(
+                                        `${patient.nama_unit_tujuan_konsul}`);
+                                }
+
+                                if (tindakLanjut == '5') {
+                                    $('#editCpptModal #rs-tujuan-label').text(
+                                        `${patient.rs_rujuk_bagian} (${patient.rs_rujuk})`);
+
+                                    $('#editCpptModal #rsLainModal #nama_rs').val(patient.rs_rujuk);
+                                    $('#editCpptModal #rsLainModal #bagian_rs').val(patient
+                                        .rs_rujuk_bagian);
+                                }
+
                                 // diagnosis set value
                                 var penyakit = patient.cppt_penyakit;
                                 var dignoseListContent = '';
@@ -555,6 +839,9 @@
                     // console.log("XHR Object:", xhr);
                     // alert("Terjadi kesalahan: " + error);
                     showToast('error', 'internal server error');
+                    // Ubah teks tombol jadi edit
+                    button.html('Edit');
+                    button.prop('disabled', false);
                 }
             });
         });
@@ -661,14 +948,66 @@
             $('#editCpptModal #skalaNyeriBtn').text(skalaLabel);
         });
 
+        // TINDAK LANNUT
+        // kontrol ulang
+        $('#editCpptModal #plan_konrol_ulang').click(function(e) {
+
+            let modalKedua = new bootstrap.Modal($('#editCpptModal #kontrolModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#editCpptModal #kontrolModal .btn-save-kontrol').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkKontrolFormValidation('#editCpptModal')) $('#editCpptModal #kontrolModal').modal('hide');
+        });
+
+        // rujuk RS Lain
+        $('#editCpptModal #plan_rujuk').click(function(e) {
+
+            let modalKedua = new bootstrap.Modal($('#editCpptModal #rsLainModal'), {
+                backdrop: 'static',
+                // keyboard: false
+            });
+
+            modalKedua.show();
+        });
+
+        $('#editCpptModal #rsLainModal .btn-save-rs-lain').click(function(e) {
+            // get value konsul
+            let $this = $(this);
+            if (checkRSLainFormValidation('#editCpptModal')) $('#editCpptModal #rsLainModal').modal('hide');
+        });
+
         $('#formEditCppt').submit(function(e) {
             let $this = $(this);
             let diagnoseNameEl = $this.find('input[name="diagnose_name[]"]');
+            let tindakLanjut = $this.find('input[name="tindak_lanjut"]:checked').val();
 
             if (diagnoseNameEl.length < 1) {
                 showToast('error', 'Diagnosa harus di tambah minimal 1!');
                 return false;
             }
+
+            // Tindak Lanjut Konsul
+            // if (tindakLanjut == 4) {
+            //     if (!checkKonsulFormValidation('#editCpptModal')) return false;
+            // }
+
+            // Tindak Lanjut kontrol ulang
+            if (tindakLanjut == 2) {
+                if (!checkKontrolFormValidation('#editCpptModal')) return false;
+            }
+
+            // Tindak Lanjut rujuk rs lain
+            if (tindakLanjut == 5) {
+                if (!checkRSLainFormValidation('#editCpptModal')) return false;
+            }
+
         });
     </script>
 

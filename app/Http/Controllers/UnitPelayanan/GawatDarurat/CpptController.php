@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cppt;
 use App\Models\CpptPenyakit;
 use App\Models\CpptTindakLanjut;
+use App\Models\DetailComponent;
+use App\Models\DetailPrsh;
+use App\Models\DetailTransaksi;
+use App\Models\DokterKlinik;
+use App\Models\Konsultasi;
 use App\Models\Kunjungan;
 use App\Models\MrAnamnesis;
 use App\Models\MrKondisiFisik;
@@ -19,6 +24,9 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RujukanKunjungan;
+use App\Models\Transaksi;
+use App\Models\Unit;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -49,6 +57,14 @@ class CpptController extends Controller
         $frekuensiNyeri = RmeFrekuensiNyeri::all();
         $menjalar = RmeMenjalar::all();
         $jenisNyeri = RmeJenisNyeri::all();
+        $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
+                                    ->where('kd_unit', 3)
+                                    ->whereRelation('dokter', 'status', 1)
+                                    ->get();
+                            
+        $unitKonsul = Unit::where('kd_bagian', 2)
+                    ->where('aktif', 1)
+                    ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -262,7 +278,9 @@ class CpptController extends Controller
             'frekuensiNyeri'    => $frekuensiNyeri,
             'menjalar'          => $menjalar,
             'jenisNyeri'        => $jenisNyeri,
-            'cppt'              => $cppt
+            'cppt'              => $cppt,
+            'dokterPengirim'    => $dokterPengirim,
+            'unitKonsul'        => $unitKonsul
         ]);
     }
 
@@ -329,7 +347,8 @@ class CpptController extends Controller
                         'kpd.hasil',
                         'p.kd_penyakit',
                         'p.penyakit',
-                        'cp.nama_penyakit'
+                        'cp.nama_penyakit',
+                        'unt.nama_unit as nama_unit_tujuan_konsul'
                     ])
                     // transaksi
                     ->join('transaksi as t', function($join) {
@@ -369,6 +388,7 @@ class CpptController extends Controller
                             ->on('cp.urut_cppt', '=', 'cppt.urut_total');
                     })
                     ->leftJoin('penyakit as p', 'p.kd_penyakit', '=', 'cp.kd_penyakit')
+                    ->leftJoin('unit as unt', 'ctl.unit_rujuk_internal', '=', 'unt.kd_unit')
                     ->where('t.kd_pasien', $request->kd_pasien)
                     ->where('t.kd_unit', $request->kd_unit)
                     ->where('t.no_transaksi', $request->no_transaksi)
@@ -381,41 +401,42 @@ class CpptController extends Controller
 
             $cppt = $getCppt->groupBy(['urut_total'])->map(function($item) {
                 return [
-                    'kd_pasien'             => $item->first()->kd_pasien,
-                    'no_transaksi'          => $item->first()->no_transaksi,
-                    'kd_kasir'              => $item->first()->kd_kasir,
-                    'kd_unit'               => $item->first()->kd_unit,
-                    'nama_unit'             => $item->first()->nama_unit,
-                    'penanggung'            => $item->first()->dtCppt,
-                    'nama_penanggung'       => $item->first()->nama_penanggung,
-                    'tanggal'               => $item->first()->tanggal,
-                    'jam'                   => $item->first()->jam,
-                    'obyektif'              => $item->first()->obyektif,
-                    'planning'              => $item->first()->planning,
-                    'urut'                  => $item->first()->urut,
-                    'skala_nyeri'           => $item->first()->skala_nyeri,
-                    'lokasi'                => $item->first()->lokasi,
-                    'durasi'                => $item->first()->durasi,
-                    'pemberat'              => $item->first()->pemberat,
-                    'peringan'              => $item->first()->peringan,
-                    'kualitas'              => $item->first()->kualitas,
-                    'frekuensi'             => $item->first()->frekuensi,
-                    'menjalar'              => $item->first()->menjalar,
-                    'jenis'                 => $item->first()->jenis,
-                    'pemeriksaan_fisik'     => $item->first()->pemeriksaan_fisik,
-                    'urut_total'            => $item->first()->urut_total,
-                    'user_penanggung'       => $item->first()->user_penanggung,
-                    'anamnesis'             => $item->first()->anamnesis,
-                    'tindak_lanjut_code'    => $item->first()->tindak_lanjut_code,
-                    'tindak_lanjut_name'    => $item->first()->tindak_lanjut_name,
-                    'tgl_kontrol_ulang'     => $item->first()->tgl_kontrol_ulang,
-                    'unit_rujuk_internal'   => $item->first()->unit_rujuk_internal,
-                    'unit_rawat_inap'       => $item->first()->unit_rawat_inap,
-                    'rs_rujuk'              => $item->first()->rs_rujuk,
-                    'rs_rujuk_bagian'       => $item->first()->rs_rujuk_bagian,
-                    'verified'              => $item->first()->verified,
-                    'user_verified'         => $item->first()->user_verified,
-                    'kondisi'               => [
+                    'kd_pasien'                 => $item->first()->kd_pasien,
+                    'no_transaksi'              => $item->first()->no_transaksi,
+                    'kd_kasir'                  => $item->first()->kd_kasir,
+                    'kd_unit'                   => $item->first()->kd_unit,
+                    'nama_unit'                 => $item->first()->nama_unit,
+                    'penanggung'                => $item->first()->dtCppt,
+                    'nama_penanggung'           => $item->first()->nama_penanggung,
+                    'tanggal'                   => $item->first()->tanggal,
+                    'jam'                       => $item->first()->jam,
+                    'obyektif'                  => $item->first()->obyektif,
+                    'planning'                  => $item->first()->planning,
+                    'urut'                      => $item->first()->urut,
+                    'skala_nyeri'               => $item->first()->skala_nyeri,
+                    'lokasi'                    => $item->first()->lokasi,
+                    'durasi'                    => $item->first()->durasi,
+                    'pemberat'                  => $item->first()->pemberat,
+                    'peringan'                  => $item->first()->peringan,
+                    'kualitas'                  => $item->first()->kualitas,
+                    'frekuensi'                 => $item->first()->frekuensi,
+                    'menjalar'                  => $item->first()->menjalar,
+                    'jenis'                     => $item->first()->jenis,
+                    'pemeriksaan_fisik'         => $item->first()->pemeriksaan_fisik,
+                    'urut_total'                => $item->first()->urut_total,
+                    'user_penanggung'           => $item->first()->user_penanggung,
+                    'anamnesis'                 => $item->first()->anamnesis,
+                    'tindak_lanjut_code'        => $item->first()->tindak_lanjut_code,
+                    'tindak_lanjut_name'        => $item->first()->tindak_lanjut_name,
+                    'tgl_kontrol_ulang'         => $item->first()->tgl_kontrol_ulang,
+                    'unit_rujuk_internal'       => $item->first()->unit_rujuk_internal,
+                    'nama_unit_tujuan_konsul'   => $item->first()->nama_unit_tujuan_konsul,
+                    'unit_rawat_inap'           => $item->first()->unit_rawat_inap,
+                    'rs_rujuk'                  => $item->first()->rs_rujuk,
+                    'rs_rujuk_bagian'           => $item->first()->rs_rujuk_bagian,
+                    'verified'                  => $item->first()->verified,
+                    'user_verified'             => $item->first()->user_verified,
+                    'kondisi'                   => [
                         "id_konpas"     => (int) $item->first()->id_konpas,
                         'konpas'        => $item->groupBy('id_kondisi')->map(function($konpas) {
                             return [
@@ -533,6 +554,7 @@ class CpptController extends Controller
                             })
                             ->where('kunjungan.kd_unit', 3)
                             ->where('kunjungan.kd_pasien', $kd_pasien)
+                            ->where('kunjungan.urut_masuk', $request->urut_masuk)
                             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                             ->first();
 
@@ -687,6 +709,36 @@ class CpptController extends Controller
             'urut'                  => 1
         ];
 
+
+        // TINDAK LANJURT
+        // kontrol ulang (2)
+        if($tindakLanjut == '2') {
+            $cpptTindakLanjutInsertData['tgl_kontrol_ulang'] = $request->tgl_kontrol;
+        }
+        
+        // kontrol ulang (5)
+        if($tindakLanjut == '5') {
+            $cpptTindakLanjutInsertData['rs_rujuk'] = $request->nama_rs;
+            $cpptTindakLanjutInsertData['rs_rujuk_bagian'] = $request->bagian_rs;
+        }
+
+        // konsul (4)
+        if($tindakLanjut == '4') {
+            $dataKonsul = [
+                'tgl_konsul'            => $request->tgl_konsul,
+                'jam_konsul'            => $request->jam_konsul,
+                'dokter_pengirim'       => $request->dokter_pengirim,
+                'unit_tujuan'           => $request->unit_tujuan,
+                'dokter_unit_tujuan'    => $request->dokter_unit_tujuan,
+                'konsulen_harap'        => $request->konsulen_harap,
+                'catatan'               => $request->catatan,
+                'konsul'                => $request->konsul,
+            ];
+
+            $cpptTindakLanjutInsertData['unit_rujuk_internal'] = $request->unit_tujuan;
+            $this->storeKonsultasi($kd_pasien, $tgl_masuk, $request->urut_masuk, $dataKonsul);
+        }
+
         CpptTindakLanjut::create($cpptTindakLanjutInsertData);
 
         // store diagnosis
@@ -711,6 +763,8 @@ class CpptController extends Controller
 
     public function update($kd_pasien, $tgl_masuk, Request $request)
     {
+        dd($request);
+        
         // Validation Input
         $validatorMessage = [
             'anamnesis.required'            => 'Anamnesis harus di isi!',
@@ -1156,6 +1210,199 @@ class CpptController extends Controller
         } catch (Exception $e) {
             return to_route('cppt.index', [$kd_pasien, $tgl_masuk])->with('error', 'Terjadi kesalahan saat pencarian');
         }
+    }
+
+
+    public function storeKonsultasi($kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // Create New Kunjungan Tujuan
+        
+        // get request data
+        $tgl_konsul = $data['tgl_konsul'];
+        $jam_konsul = $data['jam_konsul'];
+        $dokter_pengirim = $data['dokter_pengirim'];
+        $unit_tujuan = $data['unit_tujuan'];
+        $dokter_unit_tujuan = $data['dokter_unit_tujuan'];
+        $konsulen_harap = $data['konsulen_harap'];
+        $catatan = $data['catatan'];
+        $konsul = $data['konsul'];
+
+        // get antrian terakhir
+        $getLastAntrian = Kunjungan::select('antrian')
+                                        ->whereDate('tgl_masuk', $tgl_konsul)
+                                        ->where('kd_unit', $unit_tujuan)
+                                        ->orderBy('antrian', 'desc')
+                                        ->first();
+
+        $no_antrian = !empty($getLastAntrian) ? $getLastAntrian->antrian + 1 : 1;
+
+        // pasien not null get last urut masuk
+        $getLastUrutMasukPatient = Kunjungan::select('urut_masuk')
+                                                ->where('kd_pasien', $kd_pasien)
+                                                ->whereDate('tgl_masuk', $tgl_konsul)
+                                                ->orderBy('urut_masuk', 'desc')
+                                                ->first();
+
+        $urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
+
+        // insert ke tabel kunjungan
+        $dataKunjungan = [
+            'kd_pasien'         => $kd_pasien,
+            'kd_unit'           => $unit_tujuan,
+            'tgl_masuk'         => $tgl_konsul,
+            'urut_masuk'        => $urut_masuk,
+            'jam_masuk'         => $jam_konsul,
+            'asal_pasien'       => 0,
+            'cara_penerimaan'   => 99,
+            'kd_rujukan'        => 1,
+            'no_surat'          => '',
+            'kd_dokter'         => $dokter_unit_tujuan,
+            'baru'              => 1,
+            'kd_customer'       => '0000000001',
+            'shift'             => 0,
+            'kontrol'           => 0,
+            'antrian'           => $no_antrian,
+            'tgl_surat'         => $tgl_konsul,
+            'jasa_raharja'      => 0,
+            'catatan'           => '',
+            'is_rujukan'        => 1,
+            'rujukan_ket'       => "Instalasi Gawat Darurat"
+        ];
+
+        Kunjungan::create($dataKunjungan);
+
+        // delete rujukan_kunjungan
+        RujukanKunjungan::where('kd_pasien', $kd_pasien)
+                        ->where('kd_unit', $unit_tujuan)
+                        ->whereDate('tgl_masuk', $tgl_konsul)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->delete();
+
+
+        // insert transaksi
+        $lastTransaction = Transaksi::select('no_transaksi')
+                                    ->where('kd_kasir', '01')
+                                    ->orderBy('no_transaksi', 'desc')
+                                    ->first();
+
+        if ($lastTransaction) {
+            $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
+            $newTransactionNumber = $lastTransactionNumber + 1;
+        } else {
+            $newTransactionNumber = 1;
+        }
+
+        // formatted new transaction number with 7 digits length
+        $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
+
+        $dataTransaksi = [
+            'kd_kasir'      => '01',
+            'no_transaksi'  => $formattedTransactionNumber,
+            'kd_pasien'     => $kd_pasien,
+            'kd_unit'       => $unit_tujuan,
+            'tgl_transaksi' => $tgl_konsul,
+            'app'           => 0,
+            'ispay'         => 0,
+            'co_status'     => 0,
+            'urut_masuk'    => $urut_masuk,
+            'kd_user'       => $dokter_pengirim, // nanti diambil dari user yang login
+            'lunas'         => 0,
+        ];
+
+        Transaksi::create($dataTransaksi);
+
+
+        // insert detail_transaksi
+        $dataDetailTransaksi = [
+            'no_transaksi'  => $formattedTransactionNumber,
+            'kd_kasir'      => '01',
+            'tgl_transaksi' => $tgl_konsul,
+            'urut'          => 1,
+            'kd_tarif'      => 'TU',
+            'kd_produk'     => 3634,
+            'kd_unit'       => $unit_tujuan,
+            'kd_unit_tr'    => 3,
+            'tgl_berlaku'   => '2019-07-01',
+            'kd_user'       => $dokter_pengirim,
+            'shift'         => 0,
+            'harga'         => 15000,
+            'qty'           => 1,
+            'flag'          => 0,
+            'jns_trans'     => 0,
+        ];
+
+        DetailTransaksi::create($dataDetailTransaksi);
+
+
+        // insert detail_prsh
+        $dataDetailPrsh = [
+            'kd_kasir'      => '01',
+            'no_transaksi'  => $formattedTransactionNumber,
+            'urut'          => 1,
+            'tgl_transaksi' => $tgl_konsul,
+            'hak'           => 15000,
+            'selisih'       => 0,
+            'disc'          => 0
+        ];
+
+        DetailPrsh::create($dataDetailPrsh);
+
+
+        // delete detail_component
+        DetailComponent::where('kd_kasir', '01')
+                        ->where('no_transaksi', $formattedTransactionNumber)
+                        ->where('urut', 1)
+                        ->delete();
+
+
+        // insert detail_component
+        $dataDetailComponent = [
+            'kd_kasir'      => '01',
+            'no_transaksi'  => $formattedTransactionNumber,
+            'tgl_transaksi' => $tgl_konsul,
+            'urut'          => 1,
+            'kd_component'  => '30',
+            'tarif'         => 15000,
+            'disc'          => 0
+        ];
+
+        DetailComponent::create($dataDetailComponent);
+
+        // jangan lupa tambahkan insert into sjp_kunjungan
+
+
+        // Insert konsultasi
+        $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])
+                                    ->where('kd_pasien', $kd_pasien)
+                                    ->where('kd_unit', 3)
+                                    ->whereDate('tgl_masuk', $tgl_masuk)
+                                    ->where('urut_masuk', $urut_masuk)
+                                    ->orderBy('urut_konsul', 'desc')
+                                    ->first();
+
+        $urut_konsul = !empty($getLastUrutKonsul) ? $getLastUrutKonsul->urut_konsul + 1 : 1;
+
+        $konsultasiData = [
+            'kd_pasien'                 => $kd_pasien,
+            'kd_unit'                   => 3,
+            'tgl_masuk'                 => $tgl_masuk,
+            'urut_masuk'                => $urut_masuk,
+            'kd_pasien_tujuan'          => $kd_pasien,
+            'kd_unit_tujuan'            => $unit_tujuan,
+            'tgl_masuk_tujuan'          => $tgl_konsul,
+            'urut_masuk_tujuan'         => $urut_masuk,
+            'urut_konsul'               => $urut_konsul,
+            'jam_masuk_tujuan'          => $jam_konsul,
+            'kd_dokter'                 => $dokter_pengirim,
+            'kd_dokter_tujuan'          => $dokter_unit_tujuan,
+            'kd_konsulen_diharapkan'    => $konsulen_harap,
+            'catatan'                   => $catatan,
+            'konsul'                    => $konsul
+        ];
+
+        Konsultasi::create($konsultasiData);
+
+        return true;
     }
 }
 
