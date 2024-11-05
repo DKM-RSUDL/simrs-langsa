@@ -234,7 +234,7 @@
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const row = this.closest('.row');
-                const keteranganDiv = row.querySelector('.keterangan');
+                const keteranganDiv = row.querySelector('.keterangan-index');
                 const tambahButton = row.querySelector('.tambah-keterangan');
                 if (this.checked) {
                     keteranganDiv.style.display = 'none';
@@ -380,9 +380,9 @@
                 document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {
                     var checkbox = item.querySelector('.form-check-input');
                     if (checkbox) {
-                        var id = checkbox.id.replace('-normal', '');
+                        var id = checkbox.id.replace('-normal-index', '');
                         var isNormal = checkbox.checked;
-                        var keteranganInput = item.querySelector('.keterangan input');
+                        var keteranganInput = item.querySelector('.keterangan-index input');
                         var keterangan = keteranganInput ? keteranganInput.value : '';
 
                         pemeriksaanFisik.push({

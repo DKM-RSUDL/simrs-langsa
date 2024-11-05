@@ -26,15 +26,16 @@ class AsesmenController extends Controller
 {
     public function index($kd_pasien, $tgl_masuk)
     {
-
         $user = auth()->user();
+
+        // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
+        ->join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', 3)
@@ -42,15 +43,25 @@ class AsesmenController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
+        // Mengambil nama alergen dari riwayat_alergi
+        if ($dataMedis->riwayat_alergi) {
+            $dataMedis->riwayat_alergi = collect(json_decode($dataMedis->riwayat_alergi, true))
+                ->pluck('alergen')
+                ->all();
+        } else {
+            $dataMedis->riwayat_alergi = [];
         }
+
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
         $dokter = Dokter::where('status', 1)->get();
         $triageClass = $this->getTriageClass($dataMedis->kd_triase);
@@ -64,8 +75,13 @@ class AsesmenController extends Controller
         $faktorpemberat = RmeFaktorPemberat::all();
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
-        $asesmen = RmeAsesmen::with(['retriase'])
-            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+
+        // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
+        $asesmen = RmeAsesmen::with(['user']) // Pastikan relasi user tersedia
+        ->join('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+        ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+            ->select('RME_ASESMEN.*', 'data_triase.tanggal_triase') // Pilih kolom yang dibutuhkan, termasuk tanggal_triase
+            ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
             ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
@@ -85,6 +101,7 @@ class AsesmenController extends Controller
             'asesmen'
         ));
     }
+
 
     public function show($kd_pasien, $tgl_masuk, $id)
     {
@@ -122,16 +139,16 @@ class AsesmenController extends Controller
             $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
             $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
-            ->where('id_asesmen', $id)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id_item_fisik' => $item->id_item_fisik,
-                    'nama_item' => $item->itemFisik->nama ?? 'Tidak Diketahui',
-                    'is_normal' => $item->is_normal,
-                    'keterangan' => $item->keterangan
-                ];
-            });
+                ->where('id_asesmen', $id)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id_item_fisik' => $item->id_item_fisik,
+                        'nama_item' => $item->itemFisik->nama ?? 'Tidak Diketahui',
+                        'is_normal' => $item->is_normal,
+                        'keterangan' => $item->keterangan
+                    ];
+                });
 
             return response()->json([
                 'status' => 'success',
@@ -181,7 +198,7 @@ class AsesmenController extends Controller
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->firstOrFail();
-            
+
             $dataMedis = Kunjungan::with(['pasien', 'dokter'])
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
@@ -447,7 +464,7 @@ class AsesmenController extends Controller
         // dd($request->all());
 
         try {
-            
+
 
             $user = auth()->user();
 
@@ -505,15 +522,21 @@ class AsesmenController extends Controller
             $pemeriksaanFisik = json_decode($request->pemeriksaan_fisik, true);
             if (is_array($pemeriksaanFisik)) {
                 foreach ($pemeriksaanFisik as $itemFisik) {
+                    $id_item_fisik = filter_var($itemFisik['id'], FILTER_VALIDATE_INT);
+                    $is_normal = filter_var($itemFisik['is_normal'], FILTER_VALIDATE_INT);
+
+                    if ($id_item_fisik === false || $is_normal === false) {
+                        continue;
+                    }
+
                     RmeAsesmenPemeriksaanFisik::create([
                         'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $itemFisik['id'],
-                        'is_normal' => $itemFisik['is_normal'],
-                        'keterangan' => $itemFisik['keterangan']
+                        'id_item_fisik' => $id_item_fisik,
+                        'is_normal' => $is_normal,
+                        'keterangan' => $itemFisik['keterangan'] ?? null,
                     ]);
                 }
             } else {
-                // Error handling jika data bukan array
                 return response()->json(['message' => 'Pemeriksaan Fisik harus berupa array'], 400);
             }
 
@@ -549,7 +572,7 @@ class AsesmenController extends Controller
                         'disability' => $reTriase['triase']['disability']
                     ];
                     $triase->triase = json_encode($triaseData);
-                    
+
                     $triase->save();
                 }
             }
