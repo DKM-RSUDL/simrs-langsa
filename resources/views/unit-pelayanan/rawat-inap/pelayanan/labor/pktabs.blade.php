@@ -32,7 +32,7 @@
             <!-- Search Bar -->
             <div class="col-md-3">
                 <form method="GET"
-                    action="{{ route('rawat-inap.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}">
+                    action="{{ route('rawat-inap.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="dokter & no order" aria-label="Cari"
@@ -152,7 +152,7 @@
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
                 window.location.href =
-                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -173,7 +173,7 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk, 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });

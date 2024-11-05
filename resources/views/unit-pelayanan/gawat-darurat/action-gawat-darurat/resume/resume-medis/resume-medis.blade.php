@@ -30,7 +30,7 @@
             <!-- Search Bar -->
             <div class="col-md-4">
                 <form method="GET"
-                    action="{{ route('resume.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => $dataMedis->tgl_masuk]) }}">
+                    action="{{ route('resume.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Cari nama dokter" aria-label="Cari"
@@ -96,9 +96,9 @@
         $('#SelectOption').change(function() {
             var periode = $(this).val();
             var kd_pasien =
-            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            "{{ $dataMedis->kd_pasien }}";
             var tgl_masuk =
-            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
 
             var queryString = '?periode=' + periode;
             window.location.href = "/unit-pelayanan/gawat-darurat/pelayanan/" + kd_pasien + "/" +
@@ -112,9 +112,9 @@
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
             var kd_pasien =
-            "{{ $dataMedis->kd_pasien }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            "{{ $dataMedis->kd_pasien }}";
             var tgl_masuk =
-            "{{ $dataMedis->tgl_masuk }}"; // Pastikan variabel ini tersedia dari controller atau blade
+            "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
 
             if (!startDate || !endDate) {
                 alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
