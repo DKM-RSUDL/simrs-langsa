@@ -3,11 +3,11 @@
 </button>
 
 <!-- Modal Alergi -->
-<div class="modal fade" id="addAlergiModal" tabindex="-1" aria-labelledby="addAlergiModalLabel" aria-hidden="true" style="z-index: 1060;">
+<div class="modal fade" id="ranapAddAlergiModal" tabindex="-1" aria-labelledby="ranapAddAlergiModalLabel" aria-hidden="true" style="z-index: 1060;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAlergiModalLabel">Input Alergi</h5>
+                <h5 class="modal-title" id="ranapAddAlergiModalLabel">Input Alergi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -51,9 +51,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var mainModal = document.querySelector('.modal:not(#addAlergiModal)');
-    var alergiModal = new bootstrap.Modal(document.getElementById('addAlergiModal'));
-    var alergiTable = document.querySelector('#createAlergiTable tbody');
+    var mainModal = document.querySelector('.modal:not(#ranapAddAlergiModal)');
+    var alergiModal = new bootstrap.Modal(document.getElementById('ranapAddAlergiModal'));
+    var alergiTable = document.querySelector('#createAlergiTableRanap tbody');
     var listAlergi = document.getElementById('listAlergi');
     var alergis = []; // Array untuk menyimpan daftar alergi
 
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Prevent alergi modal from closing main modal
-    document.getElementById('addAlergiModal').addEventListener('hidden.bs.modal', function(event) {
+    document.getElementById('ranapAddAlergiModal').addEventListener('hidden.bs.modal', function(event) {
         event.stopPropagation();
     });
 
