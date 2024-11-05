@@ -54,25 +54,22 @@
             </div>
             <div>
                 <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                    data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                     class="btn btn-info btn-sm">
                     <i class="fas fa-eye"></i> Lihat
                 </button>
-                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.show')
+                @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.show')
                 <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                    data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_pasien . '/pelayanan/' . $dataMedis->kd_pasien .'/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                     class="btn btn-secondary btn-sm">
                     <i class="fas fa-edit"></i> Edit
                 </button>
-                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.edit')
+                @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit')
             </div>
         </li>
     @endforeach
 </ul>
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
-
-
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.create-asesmen')
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

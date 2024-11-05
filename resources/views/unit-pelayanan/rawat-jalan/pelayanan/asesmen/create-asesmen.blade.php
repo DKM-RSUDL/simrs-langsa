@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form id="asesmenForm" method="POST"
-                action="{{ route('rawat-inap.asesmen.store', [$dataMedis->kd_unit, $dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-jalan.asesmen.store', [$dataMedis->kd_unit, $dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->pasien->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
@@ -212,7 +212,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Riwayat Alergi</h6>
-                                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-alergimodal')
+                                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-alergimodal')
                                                     </div>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered" id="createAlergiTable">
@@ -270,7 +270,7 @@
                                                             <i class="bi bi-pencil position-absolute"
                                                                 style="top: 50%; right: 10px; transform: translateY(-50%);"
                                                                 onclick="openGCSModal()"></i>
-                                                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-gcs')
+                                                            @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-gcs')
                                                         </div>
 
                                                         <div class="col-4">
@@ -606,7 +606,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Diagnosis</h6>
-                                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-diagnosis')
+                                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-diagnosis')
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
@@ -620,7 +620,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Observasi Lanjutan/Re-Triase</h6>
-                                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-retriase')
+                                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-retriase')
                                                     </div>
                                                     <div class="table-responsive mb-3">
                                                         <table class="table table-bordered" id="reTriaseTable">
@@ -642,7 +642,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
-                                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-alatyangterpasang')
+                                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-alatyangterpasang')
                                                     </div>
                                                     <div class="table-responsive mb-3">
                                                         <table class="table table-bordered" id="alatTable">
@@ -669,7 +669,7 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
-                                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-tindaklanjut')
+                                                        @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.modal-tindaklanjut')
                                                     </div>
                                                     <div id="tindakLanjutInfo"></div>
                                                 </div>

@@ -35,7 +35,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
-
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
@@ -173,6 +173,17 @@ Route::middleware('auth')->group(function () {
                                 Route::controller(RawatJalanResumeController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('asesmen')->group(function () {
+                            Route::name('.asesmen')->group(function () {
+                                Route::controller(RawatJalanAsesmenController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}', 'show')->name('.show');
                                     Route::put('/{id}', 'update')->name('.update');
                                 });
                             });

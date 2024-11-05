@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DataTriase;
@@ -35,7 +35,7 @@ class AsesmenController extends Controller
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-        ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
@@ -82,7 +82,7 @@ class AsesmenController extends Controller
             ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
             ->get();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
+        return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen.index', compact(
             'dataMedis',
             'dokter',
             'triageClass',
@@ -100,8 +100,9 @@ class AsesmenController extends Controller
         ));
     }
 
-    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, Request $request)
     {
+
 
         try {
             $user = auth()->user();
