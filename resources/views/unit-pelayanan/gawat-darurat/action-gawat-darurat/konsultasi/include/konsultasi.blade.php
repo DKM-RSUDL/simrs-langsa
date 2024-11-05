@@ -3,18 +3,19 @@
     <div class="row">
         <!-- Select Option -->
         <div class="col-md-2">
-            <select class="form-select" id="SelectOption" aria-label="Pilih...">
+            <select class="form-select" id="SelectPPA" aria-label="Pilih...">
                 <option value="semua" selected>Semua PPA</option>
-                <option value="option1">Semua PPA</option>
-                <option value="option2">Dokter Spesialis</option>
-                <option value="option3">Dokter Umum</option>
-                <option value="option4">Perawat/Bidan</option>
-                <option value="option5">Nutrisionis</option>
-                <option value="option6">Apoteker</option>
-                <option value="option7">Fisioterapis</option>
+                <option value="optionPPA1">Semua PPA</option>
+                <option value="optionPPA2">Dokter Spesialis</option>
+                <option value="optionPPA3">Dokter Umum</option>
+                <option value="optionPPA4">Perawat/Bidan</option>
+                <option value="optionPPA5">Nutrisionis</option>
+                <option value="optionPPA6">Apoteker</option>
+                <option value="optionPPA7">Fisioterapis</option>
             </select>
         </div>
 
+        <!-- Select Option -->
         <div class="col-md-2">
             <select class="form-select" id="SelectOption" aria-label="Pilih...">
                 <option value="semua" selected>Semua Episode</option>
@@ -43,14 +44,12 @@
 
         <!-- Search Bar -->
         <div class="col-md-3">
-            <form method="GET" action="#">
+            <form method="GET"
+                action="{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari"
-                        value="" aria-describedby="basic-addon1">
+                    <input type="text" name="search" class="form-control" placeholder="Dokter & Konsulen" aria-label="Cari"
+                        value="{{ request('search') }}" aria-describedby="basic-addon1">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
             </form>
