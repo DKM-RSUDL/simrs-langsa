@@ -232,6 +232,51 @@
                                             </div>
 
                                             <div class="form-line">
+                                                <div class="pemeriksaan-fisik">
+                                                    <h6>Pemeriksaan Fisik</h6>
+                                                    <p class="text-small">Centang normal jika fisik yang dinilai
+                                                        normal,
+                                                        pilih tanda tambah
+                                                        untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                                        Jika
+                                                        tidak dipilih salah satunya, maka pemeriksaan tidak
+                                                        dilakukan.
+                                                    </p>
+                                                    <div class="row" id="show_pemeriksaan_fisik_container">
+                                                        @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                                            <div class="col-md-6">
+                                                                @foreach ($chunk as $item)
+                                                                    <div class="pemeriksaan-item">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="flex-grow-1">
+                                                                                {{ $item->nama }}</div>
+                                                                            <div class="form-check me-2">
+                                                                                <input type="checkbox"
+                                                                                    class="form-check-input"
+                                                                                    id="{{ $item->id }}-normal">
+                                                                                <label class="form-check-label"
+                                                                                    for="{{ $item->id }}-normal">Normal</label>
+                                                                            </div>
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">+</button>
+                                                                        </div>
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
+                                                                            style="display:none;">
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Keterangan">
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-line">
                                                 <h6>Pemeriksaan Penunjang Klinis</h6>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <img src="{{ asset('assets/img/icons/test_tube.png') }}">
@@ -471,6 +516,7 @@
                         handleReTriase(response.data.asesmen.retriase_data);
                         handleAlatTerpasang(response.data.asesmen.alat_terpasang);
                         handleTindakLanjut(response.data.asesmen.tindaklanjut);
+                        handlePemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
                         modal.show();
                     } else {
                         Swal.fire('Error', 'Data tidak ditemukan', 'error');
@@ -666,21 +712,20 @@
 
             retriaseData.forEach(function(triase) {
                 // Parse triase JSON if needed
-                const triaseData = typeof triase.triase === 'string' ?
-                    JSON.parse(triase.triase) : triase.triase;
+                const vitalSignData = typeof triase.vitalsign_retriase === 'string' ?
+                    JSON.parse(triase.vitalsign_retriase) : triase.vitalsign_retriase;
 
                 // Format vital signs
-                const vitalSigns = triaseData.vitalSigns || {};
                 const formattedVitalSigns = `
                     <ul class="list-unstyled mb-0">
-                        ${vitalSigns.td_sistole ? `<li>TD Diastole: ${vitalSigns.td_diastole} mmHg</li>` : ''}
-                        ${vitalSigns.td_diastole ? `<li>TD Sistole: ${vitalSigns.td_sistole} mmHg</li>` : ''}
-                        ${vitalSigns.nadi ? `<li>Nadi: ${vitalSigns.nadi} x/mnt</li>` : ''}
-                        ${vitalSigns.resp ? `<li>Resp: ${vitalSigns.resp} x/mnt</li>` : ''}
-                        ${vitalSigns.suhu ? `<li>Suhu: ${vitalSigns.suhu}°C</li>` : ''}
-                        ${vitalSigns.spo2 ? `<li>SpO2: ${vitalSigns.spo2}%</li>` : ''}
-                        ${vitalSigns.gcs ? `<li>GCS: ${vitalSigns.gcs}</li>` : ''}
-                        ${vitalSigns.avpu ? `<li>AVPU: ${vitalSigns.avpu}</li>` : ''}
+                        ${vitalSignData.td_sistole ? `<li>TD: ${vitalSignData.td_sistole}/${vitalSignData.td_diastole} mmHg</li>` : ''}
+                        ${vitalSignData.nadi ? `<li>Nadi: ${vitalSignData.nadi} x/mnt</li>` : ''}
+                        ${vitalSignData.resp ? `<li>Resp: ${vitalSignData.resp} x/mnt</li>` : ''}
+                        ${vitalSignData.suhu ? `<li>Suhu: ${vitalSignData.suhu}°C</li>` : ''}
+                        ${vitalSignData.spo2_tanpa_o2 ? `<li>SpO2 (tanpa O2): ${vitalSignData.spo2_tanpa_o2}%</li>` : ''}
+                        ${vitalSignData.spo2_dengan_o2 ? `<li>SpO2 (dengan O2): ${vitalSignData.spo2_dengan_o2}%</li>` : ''}
+                        ${vitalSignData.gcs ? `<li>GCS: ${vitalSignData.gcs}</li>` : ''}
+                        ${vitalSignData.avpu ? `<li>AVPU: ${vitalSignData.avpu}</li>` : ''}
                     </ul>
                 `;
 
@@ -705,7 +750,7 @@
                 const row = `
                     <tr>
                         <td>${triase.tanggal_triase}</td>
-                        <td>${triaseData.keluhan || '-'}</td>
+                        <td>${triase.anamnesis_retriase  || '-'}</td>
                         <td>${formattedVitalSigns}</td>
                         <td>
                             <span class="badge ${getTriaseClass(triase.kode_triase)}">
@@ -738,22 +783,28 @@
             // Get badge color based on tindak_lanjut_code
             const getBadgeClass = (code) => {
                 switch (parseInt(code)) {
-                    case 1: return 'bg-primary'; // Rawat Inap
-                    case 2: return 'bg-success'; // Kontrol Ulang
-                    case 3: return 'bg-secondary'; // Selesai di Unit
-                    case 4: return 'bg-info'; // Rujuk Internal
-                    case 5: return 'bg-warning'; // Rujuk RS Lain
-                    default: return 'bg-secondary';
+                    case 1:
+                        return 'bg-primary'; // Rawat Inap
+                    case 2:
+                        return 'bg-success'; // Kontrol Ulang
+                    case 3:
+                        return 'bg-secondary'; // Selesai di Unit
+                    case 4:
+                        return 'bg-info'; // Rujuk Internal
+                    case 5:
+                        return 'bg-warning'; // Rujuk RS Lain
+                    default:
+                        return 'bg-secondary';
                 }
             };
 
             // Format tanggal dan jam meninggal jika ada
             // const meninggalInfo = data.tanggal_meninggal ? `
-            //     <div class="col-md-12 mt-3">
-            //         <label class="fw-bold">Waktu Meninggal:</label>
-            //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
-            //     </div>
-            // ` : '';
+        //     <div class="col-md-12 mt-3">
+        //         <label class="fw-bold">Waktu Meninggal:</label>
+        //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
+        //     </div>
+        // ` : '';
 
             // Format tanggal kontrol jika ada
             const kontrolInfo = data.tgl_kontrol_ulang ? `
@@ -787,6 +838,36 @@
 
             container.html(infoBox);
         }
+
+
+        function handlePemeriksaanFisik(pemeriksaanFisik) {
+            const container = $('#show_pemeriksaan_fisik_container'); // Updated container ID for 'show'
+
+            container.empty();
+
+            pemeriksaanFisik.forEach(function(item) {
+                // Determine checked status based on is_normal value
+                const isChecked = item.is_normal === '1' ? 'checked' : '';
+                const keterangan = item.keterangan || '';
+
+                // Append item to the pemeriksaan fisik section
+                const itemHtml = `
+                    <div class="col-md-6 pemeriksaan-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">${item.nama_item}</div>
+                            <div class="form-check me-2">
+                                <input type="checkbox" class="form-check-input" id="show_${item.id_item_fisik}_normal" ${isChecked} disabled>
+                                <label class="form-check-label" for="show_${item.id_item_fisik}_normal">${isChecked ? 'Normal' : 'Tidak Normal'}</label>
+                            </div>
+                            ${keterangan ? `<button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#show_keterangan_${item.id_item_fisik}">Lihat Keterangan</button>` : ''}
+                        </div>
+                        ${keterangan ? `<div id="show_keterangan_${item.id_item_fisik}" class="collapse mt-2"><input type="text" class="form-control" value="${keterangan}" readonly></div>` : ''}
+                    </div>
+                `;
+                container.append(itemHtml);
+            });
+        }
+
 
     </script>
 @endpush

@@ -43,11 +43,15 @@
                                             <h4 class="text-primary">Informasi Pasien:</h4>
                                         </div>
                                         <div class="card-body">
-                                            <p style="margin-bottom: 5px;"><strong>Alergi</strong></p>
-                                            <ul style="margin-bottom: 5px; padding-left: 15px;">
-                                                <li>Ikan Tongkol</li>
-                                                <li>Asap</li>
+                                            <p>Riwayat Alergi:</p>
+                                            <ul class="mb-3">
+                                                @forelse($dataMedis->riwayat_alergi as $alergen)
+                                                    <li>{{ $alergen }}</li>
+                                                @empty
+                                                    <li>Tidak ada riwayat alergi</li>
+                                                @endforelse
                                             </ul>
+
                                             <p style="margin-bottom: 5px;"><strong>Golongan Darah</strong></p>
                                             <p style="margin-bottom: 5px;">A+</p>
                                         </div>
@@ -260,8 +264,12 @@
                                                     <div class="row mb-3">
                                                         <div class="col-2 position-relative">
                                                             <label>GCS</label>
-                                                            <input type="text" class="form-control" id="gcsValue" name="vital_sign[gcs_display]" readonly onclick="openGCSModal()">
-                                                            <i class="bi bi-pencil position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);" onclick="openGCSModal()"></i>
+                                                            <input type="text" class="form-control" id="gcsValue"
+                                                                name="vital_sign[gcs_display]" readonly
+                                                                onclick="openGCSModal()">
+                                                            <i class="bi bi-pencil position-absolute"
+                                                                style="top: 50%; right: 10px; transform: translateY(-50%);"
+                                                                onclick="openGCSModal()"></i>
                                                             @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-gcs')
                                                         </div>
 
@@ -444,17 +452,17 @@
                                                                                 <div class="form-check me-2">
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input"
-                                                                                        id="{{ $item->id }}-normal">
+                                                                                        id="{{ $item->id }}-normal-index">
                                                                                     <label class="form-check-label"
-                                                                                        for="{{ $item->id }}-normal">Normal</label>
+                                                                                        for="{{ $item->id }}-normal-index">Normal</label>
                                                                                 </div>
                                                                                 <button
                                                                                     class="btn btn-sm btn-outline-primary tambah-keterangan"
                                                                                     type="button"
-                                                                                    data-target="{{ $item->id }}-keterangan">+</button>
+                                                                                    data-target="{{ $item->id }}-keterangan-index">+</button>
                                                                             </div>
                                                                             <div class="keterangan mt-2"
-                                                                                id="{{ $item->id }}-keterangan"
+                                                                                id="{{ $item->id }}-keterangan-index"
                                                                                 style="display:none;">
                                                                                 <input type="text"
                                                                                     class="form-control"

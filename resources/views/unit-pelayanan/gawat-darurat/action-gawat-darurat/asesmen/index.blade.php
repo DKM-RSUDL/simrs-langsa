@@ -234,7 +234,7 @@
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const row = this.closest('.row');
-                const keteranganDiv = row.querySelector('.keterangan');
+                const keteranganDiv = row.querySelector('.keterangan-index');
                 const tambahButton = row.querySelector('.tambah-keterangan');
                 if (this.checked) {
                     keteranganDiv.style.display = 'none';
@@ -361,13 +361,15 @@
                     '<div class="loading-spinner"></div><span class="loading-text">Mengirim...</span>';
 
                 var formData = new FormData(form);
+                console.log(window.getReTriageData());
+                
 
                 // Tambahkan data tambahan ke formData
                 formData.append('antropometri', getAntropometriData());
                 formData.append('vital_sign', getVitalSignData());
                 formData.append('tindakan_resusitasi', getTindakanResusitasiData());
                 formData.append('riwayat_alergi', window.getAlergiData ? window.getAlergiData() : '');
-                formData.append('retriage_data', window.getReTriageData ? window.getReTriageData() : '');
+                formData.append('retriage_data', window.getReTriageData() ? window.getReTriageData() : '');
                 formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window
                     .getTindakLanjutData() : '');
                 formData.append('diagnosa_data', window.getDiagnosaData ? window.getDiagnosaData() : '');
@@ -378,9 +380,9 @@
                 document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {
                     var checkbox = item.querySelector('.form-check-input');
                     if (checkbox) {
-                        var id = checkbox.id.replace('-normal', '');
+                        var id = checkbox.id.replace('-normal-index', '');
                         var isNormal = checkbox.checked;
-                        var keteranganInput = item.querySelector('.keterangan input');
+                        var keteranganInput = item.querySelector('.keterangan-index input');
                         var keterangan = keteranganInput ? keteranganInput.value : '';
 
                         pemeriksaanFisik.push({
@@ -392,7 +394,8 @@
                 });
 
                 formData.append('pemeriksaan_fisik', JSON.stringify(pemeriksaanFisik));
-
+                // console.log(formData);
+                // return false;
                 // Kirim data menggunakan Fetch API
                 fetch(form.action, {
                         method: 'POST',
