@@ -86,11 +86,11 @@
             }
 
             .warning__icon {
-                color: #ff9900;
+                color: #ff0000;
                 font-style: normal;
                 font-weight: bold;
                 background-color: #fff9e6;
-                border: 2px solid #ff9900;
+                border: 2px solid #ff0000;
                 border-radius: 50%;
                 width: 20px;
                 height: 20px;
@@ -144,7 +144,7 @@
                         <div class="text-center">Selesai</div>
                     </div>
                     <div class="text-center">
-                        <i class="check-icon">✓</i>
+                        <i class="check__icon">✓</i>
                         22
                     </div>
                 </div>
