@@ -45,12 +45,110 @@
                 font-size: 12px;
                 color: #777;
             }
+
+            .emergency__container {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .custom__card {
+                border-radius: 15px;
+                padding: 8px 15px;
+                width: fit-content;
+                min-width: 150px;
+                gap: 5px;
+            }
+
+            .all__patients {
+                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+                border: 2px solid #a100c9;
+            }
+
+            .Pending {
+                background: linear-gradient(to bottom, #ffe499, #FFE31A);
+                border: 2px solid #ffbb00;
+            }
+
+            .Completed {
+                background: linear-gradient(to bottom, #e6ffe6, #99ff99);
+                border: 2px solid #48fa07;
+            }
+
+            .custom__icon {
+                margin-bottom: 5px;
+            }
+
+            .card__content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .warning__icon {
+                color: #ff0000;
+                font-style: normal;
+                font-weight: bold;
+                background-color: #fff9e6;
+                border: 2px solid #ff0000;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            }
+
+            .check__icon {
+                color: #00cc00;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 14px;
+            }
         </style>
     @endpush
 
     <div class="row">
         <div class="col-md-12">
-            <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
+            <div class="emergency__container">
+                <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
+                <div class="custom__card all__patients">
+                    <div class="card__content">
+                        <div class="custom__icon">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        </div>
+                        <div class="text-center">Semua Pasien</div>
+                    </div>
+                    <div class="text-center">55</div>
+                </div>
+
+                <div class="custom__card Pending">
+                    <div class="card__content">
+                        <div class="custom__icon">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        </div>
+                        <div class="text-center">Belum Selesai</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="warning__icon">!</i>
+                        33
+                    </div>
+                </div>
+
+                <div class="custom__card Completed">
+                    <div class="card__content">
+                        <div class="custom__icon">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        </div>
+                        <div class="text-center">Selesai</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="check__icon">✓</i>
+                        22
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -89,8 +187,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('rawat-jalan.unit', $unit->kd_unit) }}",
-                columns: [
-                    {
+                columns: [{
                         data: 'antrian',
                         name: 'no',
                         orderable: false,
@@ -121,7 +218,7 @@
                             let imageUrl = row.foto_pasien ? "{{ asset('storage/') }}" + '/' + row
                                 .foto_pasien : "{{ asset('assets/images/avatar1.png') }}";
                             let gender = row.pasien.jenis_kelamin == '1' ? 'Laki-Laki' :
-                            'Perempuan';
+                                'Perempuan';
                             return `
                                 <div class="profile">
                                     <img src="${imageUrl}" alt="Profile" width="50" height="50" class="rounded-circle"/>
