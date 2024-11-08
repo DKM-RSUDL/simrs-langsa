@@ -14,13 +14,20 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    protected $table = 'busers';
+    protected $connection = 'sqlsrv_hrd';
+
+    protected $table = 'rme_users';
+    // protected $primaryKey = 'kd_karyawan';
+    public $incrementing = false;
+
+    // protected $table = 'busers';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'kd_karyawan',
         'name',
         'email',
         'password',
@@ -45,8 +52,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function profile()
-    {
-        return $this->hasOne(UserProfile::class);
-    }
+    // public function profile()
+    // {
+    //     return $this->hasOne(UserProfile::class);
+    // }
 }

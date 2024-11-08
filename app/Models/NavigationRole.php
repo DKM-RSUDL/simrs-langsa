@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NavigationRole extends Model
 {
     use HasFactory;
+    protected $connection = 'sqlsrv_hrd';
 
     protected $table = 'navigation_role';
 
