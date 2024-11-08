@@ -151,13 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             editButton.className = 'btn btn-sm btn-outline-primary me-2';
             editButton.addEventListener('click', editTindakLanjut);
 
-            var deleteButton = document.createElement('button');
-            deleteButton.innerHTML = '<i class="bi bi-trash-fill"></i>';
-            deleteButton.className = 'btn btn-sm btn-outline-danger';
-            deleteButton.addEventListener('click', deleteEditTindakLanjut);
-
             buttonGroup.appendChild(editButton);
-            buttonGroup.appendChild(deleteButton);
             div.appendChild(buttonGroup);
 
             tindakLanjutInfo.appendChild(div);
@@ -179,15 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleEditInputFields(editTindakLanjutData.option);
             
             editTindakLanjutModal.show();
-        }
-    }
-
-    // Fungsi delete tindak lanjut
-    function deleteEditTindakLanjut() {
-        if (confirm('Apakah Anda yakin ingin menghapus tindak lanjut ini?')) {
-            editTindakLanjutData = null;
-            displayEditTindakLanjut();
-            openEditTindakLanjutButton.disabled = false;
         }
     }
 
