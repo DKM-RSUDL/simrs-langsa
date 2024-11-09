@@ -18,4 +18,9 @@ class RmeAsesmenPemeriksaanFisik extends Model
         'is_normal',
         'keterangan',
     ];
+
+    public function itemFisik()
+    {
+        return $this->belongsTo(MrItemFisik::class, 'id_item_fisik', 'id');
+    }
 }

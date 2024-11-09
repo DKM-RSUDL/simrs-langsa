@@ -301,6 +301,50 @@
                         </div>
 
                         <div class="form-line">
+                            <div class="pemeriksaan-fisik">
+                                <h6>Pemeriksaan Fisik</h6>
+                                <p class="text-small">Centang normal jika fisik yang dinilai
+                                    normal,
+                                    pilih tanda tambah
+                                    untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                    Jika
+                                    tidak dipilih salah satunya, maka pemeriksaan tidak
+                                    dilakukan.
+                                </p>
+                                <div class="row" id="edit_pemeriksaan_fisik_container">
+                                    @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                        <div class="col-md-6">
+                                            @foreach ($chunk as $item)
+                                                <div class="pemeriksaan-item">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-grow-1">
+                                                            {{ $item->nama }}</div>
+                                                        <div class="form-check me-2">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="{{ $item->id }}-normal">
+                                                            <label class="form-check-label"
+                                                                for="{{ $item->id }}-normal">Normal</label>
+                                                        </div>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                            type="button"
+                                                            data-target="{{ $item->id }}-keterangan">+</button>
+                                                    </div>
+                                                    <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
+                                                        style="display:none;">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Keterangan">
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-line">
                             <div class="d-flex align-items-center mb-3">
                                 <h6 class="mb-0 me-3">Diagnosis</h6>
                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-diagnosismodal')
@@ -335,6 +379,41 @@
                             </div>
                         </div>
 
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Alat yang Terpasang</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-alatyangterpasang')
+                            </div>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-bordered" id="editalatTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Alat yang terpasang</th>
+                                            <th>Lokasi</th>
+                                            <th>Ket</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data akan ditampilkan di sini -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-line">
+                            <h6>Kondisi Pasien sebelum meninggalkan IGD</h6>
+                            <textarea class="form-control mb-2" rows="3" name="edit_kondisi_pasien"></textarea>
+                        </div>
+
+                        <div class="form-line">
+                            <div class="d-flex align-items-center mb-3">
+                                <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-tindaklanjut')
+                            </div>
+                            <div id="editTindakLanjutInfo"></div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -351,6 +430,7 @@
         // Variable global
         let originalAlergiData = [];
         let originalDiagnosisData = [];
+        let originalAlatData = [];
 
         // Fungsi edit
         function editAsesmen(id) {
@@ -375,6 +455,7 @@
                     Swal.close();
                     if (response.status === 'success') {
                         fillEditForm(response.data.asesmen);
+                        fillEditPemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
                         window.currentAsesmenId = id;
                         modal.show();
                     } else {
@@ -396,6 +477,7 @@
             $('textarea[name="edit_anamnesis"]').val(data.anamnesis || '');
             $('textarea[name="edit_riwayat_penyakit"]').val(data.riwayat_penyakit || '');
             $('textarea[name="edit_riwayat_pengobatan"]').val(data.riwayat_pengobatan || '');
+            $('textarea[name="edit_kondisi_pasien"]').val(data.show_kondisi_pasien || '');
             $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
             $('input[name="edit_lokasi"]').val(data.show_lokasi || '');
             $('input[name="edit_durasi"]').val(data.show_durasi || '');
@@ -405,8 +487,6 @@
             $('select[name="edit_faktor_pemberat"]').val(data.asesmen.faktor_pemberat_id);
             $('select[name="edit_faktor_peringan"]').val(data.asesmen.faktor_peringan_id);
             $('select[name="edit_efek_nyeri"]').val(data.asesmen.efek_nyeri.id);
-
-            console.log(data.asesmen);
 
             originalResusitasiData = data.tindakan_resusitasi;
 
@@ -460,11 +540,14 @@
             // Parse dan isi riwayat alergi
             const riwayatAlergi = typeof data.riwayat_alergi === 'string' ?
                 JSON.parse(data.riwayat_alergi) : data.riwayat_alergi;
-
-            // Simpan data alergi awal
             originalAlergiData = riwayatAlergi || [];
-
             fillEditAlergiTable(riwayatAlergi);
+
+            // Parse alat yang terpasang
+            const alatTerpasang = typeof data.alat_terpasang === 'string' ?
+                JSON.parse(data.alat_terpasang) : data.alat_terpasang;
+            originalAlatData = alatTerpasang || [];
+            fillEditAlatTable(alatTerpasang);
 
             if (data.show_diagnosis && Array.isArray(data.show_diagnosis)) {
                 // Set data diagnosis ke variable global
@@ -497,6 +580,141 @@
                 originalReTriaseData = [];
                 updateEditReTriaseTable();
             }
+
+            if (data.tindaklanjut && data.tindaklanjut.length > 0) {
+                const tindakLanjut = data.tindaklanjut[0]; // Ambil data pertama
+                let tindakLanjutData = {
+                    option: getTindakLanjutOption(tindakLanjut.tindak_lanjut_code),
+                    keterangan: tindakLanjut.keterangan || '',
+                    tanggalMeninggal: tindakLanjut.tanggal_meninggal ? formatDate(tindakLanjut.tanggal_meninggal) : '',
+                    jamMeninggal: tindakLanjut.jam_meninggal ? formatTime(tindakLanjut.jam_meninggal) : '',
+                    rs_rujuk: tindakLanjut.rs_rujuk || '',
+                    rs_rujuk_bagian: tindakLanjut.rs_rujuk_bagian || '',
+                    tgl_kontrol_ulang: tindakLanjut.tgl_kontrol_ulang || '',
+                    unit_rawat_inap: tindakLanjut.unit_rawat_inap || '',
+                    unit_rujuk_internal: tindakLanjut.unit_rujuk_internal || ''
+                };
+
+                // Memperbarui display dan menyimpan data
+                window.fillEditTindakLanjut(tindakLanjutData);
+            }
+
+        }
+
+        function getTindakLanjutOption(code) {
+            switch (code) {
+                case '1':
+                    return 'rawatInap';
+                case '2':
+                    return 'pulangKontrol';
+                case '3':
+                    return 'menolakRawatInap'; // atau 'meninggalDunia' tergantung kondisi
+                case '4':
+                    return 'kamarOperasi';
+                case '5':
+                    return 'rujukKeluar';
+                default:
+                    return '';
+            }
+        }
+
+        // Fungsi untuk format tanggal dari database
+        function formatDate(dateString) {
+            if (!dateString || dateString === '1900-01-01 00:00:00.000') return '';
+            return dateString.split(' ')[0]; // Ambil bagian tanggal saja
+        }
+
+        // Fungsi untuk format jam dari database
+        function formatTime(timeString) {
+            if (!timeString || timeString === '1900-01-01 00:00:00.000') return '';
+            return timeString.split(' ')[1].substring(0, 5); // Ambil bagian jam:menit
+        }
+
+        // Update fungsi displayEditTindakLanjut untuk menampilkan data yang lebih lengkap
+        function displayEditTindakLanjut() {
+            var tindakLanjutInfo = document.getElementById('editTindakLanjutInfo');
+            tindakLanjutInfo.innerHTML = '';
+
+            if (editTindakLanjutData) {
+                var div = document.createElement('div');
+                div.classList.add('mb-2', 'd-flex', 'justify-content-between', 'align-items-center');
+
+                // Format display text berdasarkan tipe tindak lanjut
+                let infoText = `Tindak Lanjut: ${formatTindakLanjutText(editTindakLanjutData.option)}`;
+
+                if (editTindakLanjutData.keterangan) {
+                    infoText += ` | Keterangan: ${editTindakLanjutData.keterangan}`;
+                }
+
+                // Tambahkan informasi tambahan sesuai tipe
+                switch (editTindakLanjutData.option) {
+                    case 'meninggalDunia':
+                        if (editTindakLanjutData.tanggalMeninggal) {
+                            infoText += ` | Tanggal: ${editTindakLanjutData.tanggalMeninggal}`;
+                        }
+                        if (editTindakLanjutData.jamMeninggal) {
+                            infoText += ` | Jam: ${editTindakLanjutData.jamMeninggal}`;
+                        }
+                        break;
+                    case 'rujukKeluar':
+                        if (editTindakLanjutData.rs_rujuk) {
+                            infoText += ` | RS Rujukan: ${editTindakLanjutData.rs_rujuk}`;
+                        }
+                        break;
+                    case 'pulangKontrol':
+                        if (editTindakLanjutData.tgl_kontrol_ulang) {
+                            infoText += ` | Tanggal Kontrol: ${editTindakLanjutData.tgl_kontrol_ulang}`;
+                        }
+                        break;
+                    case 'rawatInap':
+                        if (editTindakLanjutData.unit_rawat_inap) {
+                            infoText += ` | Unit: ${editTindakLanjutData.unit_rawat_inap}`;
+                        }
+                        break;
+                }
+
+                var textSpan = document.createElement('span');
+                textSpan.innerText = infoText;
+                div.appendChild(textSpan);
+
+                var buttonGroup = document.createElement('div');
+
+                var editButton = document.createElement('button');
+                editButton.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+                editButton.className = 'btn btn-sm btn-outline-primary me-2';
+                editButton.addEventListener('click', editTindakLanjut);
+
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '<i class="bi bi-trash-fill"></i>';
+                deleteButton.className = 'btn btn-sm btn-outline-danger';
+                deleteButton.addEventListener('click', deleteEditTindakLanjut);
+
+                buttonGroup.appendChild(editButton);
+                buttonGroup.appendChild(deleteButton);
+                div.appendChild(buttonGroup);
+
+                tindakLanjutInfo.appendChild(div);
+            }
+        }
+
+        // Fungsi untuk format text tindak lanjut
+        function formatTindakLanjutText(option) {
+            switch (option) {
+                case 'rawatInap':
+                    return 'Rawat Inap';
+                case 'kamarOperasi':
+                    return 'Kamar Operasi';
+                case 'rujukKeluar':
+                    return 'Rujuk Keluar RS';
+                case 'pulangKontrol':
+                    return 'Pulang Kontrol';
+                case 'menolakRawatInap':
+                    return 'Menolak Rawat Inap';
+                case 'meninggalDunia':
+                    return 'Meninggal Dunia';
+                default:
+                    return option;
+            }
         }
 
         // Fungsi untuk memperbarui tampilan tabel Re-Triase
@@ -516,38 +734,61 @@
             }
 
             originalReTriaseData.forEach((data) => {
-                // Parse triase jika dalam bentuk string
-                let triaseData;
+                // Parse vital sign data
+                let vitalSignData;
                 try {
-                    triaseData = typeof data.triase === 'string' ? JSON.parse(data.triase) : data.triase;
+                    vitalSignData = typeof data.vitalsign_retriase === 'string' ?
+                        JSON.parse(data.vitalsign_retriase) : data.vitalsign_retriase;
                 } catch (e) {
-                    console.error('Error parsing triase data:', e);
-                    triaseData = {
-                        keluhan: '',
-                        vitalSigns: {}
-                    };
+                    console.error('Error parsing vital sign data:', e);
+                    vitalSignData = {};
                 }
+
+                // Format vital signs untuk tampilan
+                const formattedVitalSigns = `
+                    <ul class="list-unstyled mb-0">
+                        ${vitalSignData.td_sistole ? `<li>TD: ${vitalSignData.td_sistole}/${vitalSignData.td_diastole} mmHg</li>` : ''}
+                        ${vitalSignData.nadi ? `<li>Nadi: ${vitalSignData.nadi} x/mnt</li>` : ''}
+                        ${vitalSignData.resp ? `<li>Respirasi: ${vitalSignData.resp} x/mnt</li>` : ''}
+                        ${vitalSignData.suhu ? `<li>Suhu: ${vitalSignData.suhu}°C</li>` : ''}
+                        ${vitalSignData.spo2_tanpa_o2 ? `<li>SpO2 (tanpa O2): ${vitalSignData.spo2_tanpa_o2}%</li>` : ''}
+                        ${vitalSignData.spo2_dengan_o2 ? `<li>SpO2 (dengan O2): ${vitalSignData.spo2_dengan_o2}%</li>` : ''}
+                        ${vitalSignData.gcs ? `<li>GCS: ${vitalSignData.gcs}</li>` : ''}
+                        ${vitalSignData.avpu ? `<li>AVPU: ${vitalSignData.avpu}</li>` : ''}
+                    </ul>
+                `;
+
+                // Get triase badge class
+                const getTriaseClass = (kodeTriase) => {
+                    switch (parseInt(kodeTriase)) {
+                        case 5:
+                            return 'bg-dark text-white'; // Meninggal
+                        case 4:
+                            return 'bg-danger text-white'; // Emergency
+                        case 3:
+                            return 'bg-danger text-white'; // Emergency
+                        case 2:
+                            return 'bg-warning text-dark'; // Urgency
+                        case 1:
+                            return 'bg-success text-white'; // False Emergency
+                        default:
+                            return 'bg-secondary text-white';
+                    }
+                };
 
                 const row = `
                     <tr>
-                        <td>${data.tanggal_triase || ''}</td>
-                        <td>${triaseData.keluhan || ''}</td>
-                        <td>
-                            <ul class="list-unstyled mb-0">
-                                <li>TD Sistole: ${triaseData.vitalSigns?.td_sistole || '-'}</li>
-                                <li>TD Diastole: ${triaseData.vitalSigns?.td_diastole || '-'}</li>
-                                <li>Nadi: ${triaseData.vitalSigns?.nadi || '-'}</li>
-                                <li>Resp: ${triaseData.vitalSigns?.resp || '-'}</li>
-                                <li>Suhu: ${triaseData.vitalSigns?.suhu || '-'}</li>
-                                <li>SpO2 (tanpa O2): ${triaseData.vitalSigns?.spo2_tanpa_o2 || '-'}</li>
-                                <li>SpO2 (dengan O2): ${triaseData.vitalSigns?.spo2_dengan_o2 || '-'}</li>
-                                <li>GCS: ${triaseData.vitalSigns?.gcs || '-'}</li>
-                                <li>AVPU: ${triaseData.vitalSigns?.avpu || '-'}</li>
-                            </ul>
+                        <td class="align-middle">${data.tanggal_triase}</td>
+                        <td class="align-middle">${data.anamnesis_retriase || '-'}</td>
+                        <td class="align-middle">
+                            <div class="vital-signs-container">
+                                ${formattedVitalSigns}
+                            </div>
                         </td>
-                        <td>
-                            <div class="triase-circle ${getTriaseClass(data.kode_triase)}"></div>
-                            <div class="triase-label">${data.hasil_triase || ''}</div>
+                        <td class="align-middle text-center">
+                            <span class="badge ${getTriaseClass(data.kode_triase)} px-3 py-2">
+                                ${data.hasil_triase || '-'}
+                            </span>
                         </td>
                     </tr>
                 `;
@@ -716,6 +957,161 @@
             return originalAlergiData;
         }
 
+        function fillEditAlatTable(alatData) {
+            const tbody = $('#editalatTable tbody');
+            tbody.empty();
+
+            if (!alatData || !Array.isArray(alatData) || alatData.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <em>Tidak ada alat yang terpasang</em>
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            alatData.forEach((alat, index) => {
+                const row = `
+                    <tr>
+                        <td>${alat.nama || '-'}</td>
+                        <td>${alat.lokasi || '-'}</td>
+                        <td>${alat.keterangan || '-'}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-edit-alat" data-index="${index}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        // Event handler untuk delete alat
+        $(document).on('click', '.delete-edit-alat', function() {
+            const index = $(this).data('index');
+            originalAlatData.splice(index, 1);
+            fillEditAlatTable(originalAlatData);
+        });
+
+        // Event handler untuk modal edit alat
+        $('#openEditAlatModal').click(function() {
+            $('#editAlatModal').modal('show');
+        });
+
+        // Event handler untuk simpan alat
+        $('#simpanEditAlat').click(function() {
+            const namaAlat = $('#editNamaAlat').val();
+            const lokasiAlat = $('#editLokasiAlat').val();
+            const keteranganAlat = $('#editKeteranganAlat').val();
+
+            if (!namaAlat || !lokasiAlat || !keteranganAlat) {
+                alert('Harap isi semua field');
+                return;
+            }
+
+            const newAlat = {
+                nama: namaAlat,
+                lokasi: lokasiAlat,
+                keterangan: keteranganAlat
+            };
+
+            originalAlatData.push(newAlat);
+            fillEditAlatTable(originalAlatData);
+            $('#editAlatModal').modal('hide');
+            resetEditAlatForm();
+        });
+
+        // Fungsi reset form
+        function resetEditAlatForm() {
+            $('#editNamaAlat').val('');
+            $('#editLokasiAlat').val('');
+            $('#editKeteranganAlat').val('');
+        }
+
+        // Fungsi untuk collect data alat
+        function collectEditAlat() {
+            return originalAlatData;
+        }
+
+        function fillEditPemeriksaanFisik(pemeriksaanFisik) {
+            const container = $('#edit_pemeriksaan_fisik_container'); // Unique container for edit
+
+            container.empty();
+
+            pemeriksaanFisik.forEach(function(item) {
+                const isChecked = item.is_normal === '1';
+                const keterangan = item.keterangan || '';
+
+                const itemHtml = `
+                    <div class="col-md-6 pemeriksaan-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">${item.nama_item}</div>
+                            <div class="form-check me-2">
+                                <input type="checkbox" class="form-check-input edit-pemeriksaan-fisik-checkbox" 
+                                    id="edit_${item.id_item_fisik}_normal" ${isChecked ? 'checked' : ''} 
+                                    data-id="${item.id_item_fisik}">
+                                <label class="form-check-label" for="edit_${item.id_item_fisik}_normal">
+                                    ${isChecked ? 'Normal' : 'Tidak Normal'}
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary toggle-keterangan-btn" type="button"
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#edit_keterangan_${item.id_item_fisik}"
+                                style="display: ${isChecked ? 'none' : 'inline-block'};">
+                                Keterangan
+                            </button>
+                        </div>
+                        <div id="edit_keterangan_${item.id_item_fisik}" class="collapse mt-2 ${!isChecked ? 'show' : ''}">
+                            <input type="text" class="form-control edit-keterangan-field" 
+                                value="${keterangan}">
+                        </div>
+                    </div>
+                `;
+
+                container.append(itemHtml);
+            });
+
+            // Add event listeners to handle checkbox toggle
+            $('.edit-pemeriksaan-fisik-checkbox').change(function() {
+                const isChecked = $(this).is(':checked');
+                const label = $(this).next('label');
+                const keteranganBtn = $(this).closest('.pemeriksaan-item').find('.toggle-keterangan-btn');
+                const keteranganField = $(this).closest('.pemeriksaan-item').find('.collapse');
+
+                // Update label text and toggle keterangan field/button
+                label.text(isChecked ? 'Normal' : 'Tidak Normal');
+                keteranganBtn.toggle(!isChecked);
+                if (isChecked) {
+                    keteranganField.collapse('hide');
+                } else {
+                    keteranganField.collapse('show');
+                }
+            });
+        }
+
+
+        function collectEditPemeriksaanFisik() {
+            const pemeriksaanFisikData = [];
+
+            $('#edit_pemeriksaan_fisik_container .edit-pemeriksaan-fisik-checkbox').each(function() {
+                const id = $(this).data('id');
+                const isNormal = $(this).is(':checked') ? '1' : '0';
+                const keterangan = $(this).closest('.pemeriksaan-item').find('.edit-keterangan-field').val() || '';
+
+                pemeriksaanFisikData.push({
+                    id_item_fisik: id,
+                    is_normal: isNormal,
+                    keterangan: keterangan
+                });
+            });
+
+            return pemeriksaanFisikData;
+        }
+
+
         $('#btnUpdateAsesmen').click(function(event) {
             event.preventDefault();
 
@@ -731,9 +1127,11 @@
             const formData = {
                 _method: 'PUT',
                 tindakan_resusitasi: collectEditTindakanResusitasi(),
+                pemeriksaan_fisik: collectEditPemeriksaanFisik(),
                 anamnesis: $('textarea[name="edit_anamnesis"]').val(),
                 riwayat_penyakit: $('textarea[name="edit_riwayat_penyakit"]').val(),
                 riwayat_pengobatan: $('textarea[name="edit_riwayat_pengobatan"]').val(),
+                kondisi_pasien: $('textarea[name="edit_kondisi_pasien"]').val(),
                 vital_sign: {
                     td_sistole: $('input[name="edit_vital_sign_td_sistole"]').val() || null,
                     td_diastole: $('input[name="edit_vital_sign_td_diastole"]').val() || null,
@@ -764,7 +1162,9 @@
                 faktor_peringan_id: faktorPeringanId,
                 efek_nyeri: efekNyeriId,
                 diagnosis: window.originalDiagnosisData,
-                retriase_data: window.originalReTriaseData
+                retriase_data: window.originalReTriaseData,
+                alat_terpasang: collectEditAlat(),
+                tindak_lanjut: window.collectEditTindakLanjut()
 
             };
 

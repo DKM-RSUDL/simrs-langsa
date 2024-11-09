@@ -18,39 +18,83 @@ use Illuminate\Http\Request;
 
 class KonsultasiController extends Controller
 {
-    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->join('transaksi as t', function ($join) {
-                                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                            })
-                            ->where('kunjungan.kd_unit', $kd_unit)
-                            ->where('kunjungan.kd_pasien', $kd_pasien)
-                            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->where('kunjungan.urut_masuk', $urut_masuk)
-                            ->first();
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
 
-        
+
         $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
-                                    ->where('kd_unit', $kd_unit)
-                                    ->whereRelation('dokter', 'status', 1)
-                                    ->get();
-    
-        $unit = Unit::where('kd_bagian', 2)
-                    ->where('aktif', 1)
-                    ->whereNot('kd_unit', $kd_unit)
-                    ->get();
+            ->where('kd_unit', $kd_unit)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
-        
+        $unit = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->whereNot('kd_unit', $kd_unit)
+            ->get();
+
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $search = $request->input('search');
         $konsultasi = Konsultasi::with(['unit_tujuan', 'dokter_asal', 'unit_asal'])
-                                ->where('kd_pasien', $kd_pasien)
-                                ->whereDate('tgl_masuk', $tgl_masuk)
-                                ->where('kd_unit', $kd_unit)
-                                ->where('urut_masuk', $urut_masuk)
-                                ->get();
+            // filter data per periode to anas
+            ->when($periode && $periode !== 'semua', function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_masuk_tujuan', $now->year)
+                            ->whereMonth('tgl_masuk_tujuan', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_masuk_tujuan', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_masuk_tujuan', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_masuk_tujuan', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_masuk_tujuan', '>=', $now->subMonths(9));
+                }
+            })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_masuk_tujuan', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_masuk_tujuan', '<=', $endDate);
+            })
+            // end filter data
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            // Filter pencarian to anas
+            ->when($search, function ($query, $search) {
+                $search = strtolower($search);
+
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('tgl_masuk_tujuan', $search);
+                }
+                return $query->where(function ($q) use ($search) {
+                    $q->whereRaw('LOWER(tgl_masuk_tujuan) like ?', ["%$search%"])
+                        ->orWhereHas('dokter_asal', function ($q) use ($search) {
+                            $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+                        })
+                        ->orWhereHas('unit_tujuan', function ($q) use ($search) {
+                            $q->whereRaw('LOWER(nama_unit) like ?', ["%$search%"]);
+                        });
+                });
+            })
+            ->get();
 
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -78,11 +122,11 @@ class KonsultasiController extends Controller
     {
         try {
             $dokter = DokterKlinik::with(['dokter', 'unit'])
-                                ->where('kd_unit', $request->kd_unit)
-                                ->whereRelation('dokter', 'status', 1)
-                                ->get();
+                ->where('kd_unit', $request->kd_unit)
+                ->whereRelation('dokter', 'status', 1)
+                ->get();
 
-            if(count($dokter) > 0) {
+            if (count($dokter) > 0) {
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'Data ditemukan',
@@ -95,7 +139,6 @@ class KonsultasiController extends Controller
                     'data'      => []
                 ]);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status'    => 'error',
@@ -133,28 +176,28 @@ class KonsultasiController extends Controller
         ], $msgErr);
 
 
-        // get kunjungan 
+        // get kunjungan
         $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->join('transaksi as t', function($join) {
-                                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                            })
-                            ->where('kunjungan.kd_pasien', $kd_pasien)
-                            ->where('kunjungan.kd_unit', $kd_unit)
-                            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->where('kunjungan.urut_masuk', $urut_masuk)
-                            ->first();
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
 
         $unit = Unit::where('kd_unit', $kd_unit)->first();
 
-                    
-        if(empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
+
+        if (empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
 
 
         // Create New Kunjungan Tujuan
-        
+
         // get request data
         $tgl_konsul = $request->tgl_konsul;
         $jam_konsul = $request->jam_konsul;
@@ -167,19 +210,19 @@ class KonsultasiController extends Controller
 
         // get antrian terakhir
         $getLastAntrian = Kunjungan::select('antrian')
-                                        ->whereDate('tgl_masuk', $tgl_konsul)
-                                        ->where('kd_unit', $unit_tujuan)
-                                        ->orderBy('antrian', 'desc')
-                                        ->first();
+            ->whereDate('tgl_masuk', $tgl_konsul)
+            ->where('kd_unit', $unit_tujuan)
+            ->orderBy('antrian', 'desc')
+            ->first();
 
         $no_antrian = !empty($getLastAntrian) ? $getLastAntrian->antrian + 1 : 1;
 
         // pasien not null get last urut masuk
         $getLastUrutMasukPatient = Kunjungan::select('urut_masuk')
-                                                ->where('kd_pasien', $kd_pasien)
-                                                ->whereDate('tgl_masuk', $tgl_konsul)
-                                                ->orderBy('urut_masuk', 'desc')
-                                                ->first();
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_konsul)
+            ->orderBy('urut_masuk', 'desc')
+            ->first();
 
         $new_urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
 
@@ -211,17 +254,17 @@ class KonsultasiController extends Controller
 
         // delete rujukan_kunjungan
         RujukanKunjungan::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $unit_tujuan)
-                        ->whereDate('tgl_masuk', $tgl_konsul)
-                        ->where('urut_masuk', $new_urut_masuk)
-                        ->delete();
+            ->where('kd_unit', $unit_tujuan)
+            ->whereDate('tgl_masuk', $tgl_konsul)
+            ->where('urut_masuk', $new_urut_masuk)
+            ->delete();
 
 
         // insert transaksi
         $lastTransaction = Transaksi::select('no_transaksi')
-                                    ->where('kd_kasir', '01')
-                                    ->orderBy('no_transaksi', 'desc')
-                                    ->first();
+            ->where('kd_kasir', '01')
+            ->orderBy('no_transaksi', 'desc')
+            ->first();
 
         if ($lastTransaction) {
             $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
@@ -288,9 +331,9 @@ class KonsultasiController extends Controller
 
         // delete detail_component
         DetailComponent::where('kd_kasir', '01')
-                        ->where('no_transaksi', $formattedTransactionNumber)
-                        ->where('urut', 1)
-                        ->delete();
+            ->where('no_transaksi', $formattedTransactionNumber)
+            ->where('urut', 1)
+            ->delete();
 
 
         // insert detail_component
@@ -311,12 +354,12 @@ class KonsultasiController extends Controller
 
         // Insert konsultasi
         $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])
-                                    ->where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', $kd_unit)
-                                    ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $urut_masuk)
-                                    ->orderBy('urut_konsul', 'desc')
-                                    ->first();
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('urut_konsul', 'desc')
+            ->first();
 
         $urut_konsul = !empty($getLastUrutKonsul) ? $getLastUrutKonsul->urut_konsul + 1 : 1;
 
@@ -348,21 +391,21 @@ class KonsultasiController extends Controller
         try {
             // get konsultasi
             $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', $kd_unit)
-                                    ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $urut_masuk)
-                                    ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
-                                    ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
-                                    ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
-                                    ->where('urut_konsul', $request->urut_konsul)
-                                    ->first();
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
+                ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
+                ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
+                ->where('urut_konsul', $request->urut_konsul)
+                ->first();
 
             $dokter = DokterKlinik::with(['dokter', 'unit'])
-                                ->where('kd_unit', $request->kd_unit_tujuan)
-                                ->whereRelation('dokter', 'status', 1)
-                                ->get();
+                ->where('kd_unit', $request->kd_unit_tujuan)
+                ->whereRelation('dokter', 'status', 1)
+                ->get();
 
-            if(empty($konsultasi)) {
+            if (empty($konsultasi)) {
                 return response()->json([
                     'status'    => 'error',
                     'message'   => 'Data konsultasi tidak ditemukan!',
@@ -378,7 +421,6 @@ class KonsultasiController extends Controller
                     ]
                 ], 200);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status'    => 'error',
@@ -406,18 +448,18 @@ class KonsultasiController extends Controller
 
         // update konsul
         Konsultasi::where('kd_pasien', $kd_pasien)
-                    ->where('kd_unit', $kd_unit)
-                    ->whereDate('tgl_masuk', $tgl_masuk)
-                    ->where('urut_masuk', $urut_masuk)
-                    ->where('kd_unit_tujuan', $request->old_kd_unit_tujuan)
-                    ->where('tgl_masuk_tujuan', $request->old_tgl_konsul)
-                    ->where('jam_masuk_tujuan', $request->old_jam_konsul)
-                    ->where('urut_konsul', $request->urut_konsul)
-                    ->update([
-                        'kd_konsulen_diharapkan'    => $request->konsulen_harap,
-                        'catatan'                   => $request->catatan,
-                        'konsul'                    => $request->konsul,
-                    ]);
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->where('kd_unit_tujuan', $request->old_kd_unit_tujuan)
+            ->where('tgl_masuk_tujuan', $request->old_tgl_konsul)
+            ->where('jam_masuk_tujuan', $request->old_jam_konsul)
+            ->where('urut_konsul', $request->urut_konsul)
+            ->update([
+                'kd_konsulen_diharapkan'    => $request->konsulen_harap,
+                'catatan'                   => $request->catatan,
+                'konsul'                    => $request->konsul,
+            ]);
 
         return back()->with('success', 'Konsultasi berhasil di ubah');
     }
@@ -427,16 +469,16 @@ class KonsultasiController extends Controller
         try {
             // get konsultasi
             $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
-                                    ->where('kd_unit', $kd_unit)
-                                    ->whereDate('tgl_masuk', $tgl_masuk)
-                                    ->where('urut_masuk', $urut_masuk)
-                                    ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
-                                    ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
-                                    ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
-                                    ->where('urut_konsul', $request->urut_konsul)
-                                    ->first();
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
+                ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
+                ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
+                ->where('urut_konsul', $request->urut_konsul)
+                ->first();
 
-            if(empty($konsultasi)) {
+            if (empty($konsultasi)) {
                 return response()->json([
                     'status'    => 'error',
                     'message'   => 'Data konsultasi tidak ditemukan',
@@ -446,47 +488,47 @@ class KonsultasiController extends Controller
 
             // delete kunjungan
             Kunjungan::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $konsultasi->kd_unit_tujuan)
-                        ->where('tgl_masuk', $konsultasi->tgl_masuk_tujuan)
-                        ->where('urut_masuk', $konsultasi->urut_masuk_tujuan)
-                        ->delete();
+                ->where('kd_unit', $konsultasi->kd_unit_tujuan)
+                ->where('tgl_masuk', $konsultasi->tgl_masuk_tujuan)
+                ->where('urut_masuk', $konsultasi->urut_masuk_tujuan)
+                ->delete();
 
             // delete transaksi
             Transaksi::where('kd_pasien', $kd_pasien)
-                    ->where('kd_unit', $konsultasi->kd_unit_tujuan)
-                    ->where('tgl_transaksi', $konsultasi->tgl_masuk_tujuan)
-                    ->where('urut_masuk', $konsultasi->urut_masuk_tujuan)
-                    ->where('no_transaksi', $request->no_transaksi)
-                    ->delete();
+                ->where('kd_unit', $konsultasi->kd_unit_tujuan)
+                ->where('tgl_transaksi', $konsultasi->tgl_masuk_tujuan)
+                ->where('urut_masuk', $konsultasi->urut_masuk_tujuan)
+                ->where('no_transaksi', $request->no_transaksi)
+                ->delete();
 
             // delete detail transaksi
             DetailTransaksi::where('tgl_transaksi', $konsultasi->tgl_masuk_tujuan)
-                            ->where('no_transaksi', $request->no_transaksi)
-                            ->where('kd_kasir', '01')
-                            ->delete();
+                ->where('no_transaksi', $request->no_transaksi)
+                ->where('kd_kasir', '01')
+                ->delete();
 
             // delete detail prsh
             DetailPrsh::where('tgl_transaksi', $konsultasi->tgl_masuk_tujuan)
-                    ->where('no_transaksi', $request->no_transaksi)
-                    ->where('kd_kasir', '01')
-                    ->delete();
+                ->where('no_transaksi', $request->no_transaksi)
+                ->where('kd_kasir', '01')
+                ->delete();
 
             // delete detail component
             DetailComponent::where('tgl_transaksi', $konsultasi->tgl_masuk_tujuan)
-                            ->where('no_transaksi', $request->no_transaksi)
-                            ->where('kd_kasir', '01')
-                            ->delete();
+                ->where('no_transaksi', $request->no_transaksi)
+                ->where('kd_kasir', '01')
+                ->delete();
 
             // delete konsultasi
             Konsultasi::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
-                        ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
-                        ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
-                        ->where('urut_konsul', $request->urut_konsul)
-                        ->delete();
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_unit_tujuan', $request->kd_unit_tujuan)
+                ->where('tgl_masuk_tujuan', $request->tgl_masuk_tujuan)
+                ->where('jam_masuk_tujuan', $request->jam_masuk_tujuan)
+                ->where('urut_konsul', $request->urut_konsul)
+                ->delete();
 
 
             return response()->json([
@@ -494,7 +536,6 @@ class KonsultasiController extends Controller
                 'message'   => 'Konsultasi berhasil dihapus',
                 'data'      => []
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'status'    => 'error',

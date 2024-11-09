@@ -1,18 +1,5 @@
 <div class="d-flex justify-content-start align-items-center m-3">
     <div class="row g-3 w-100">
-        <!-- Select PPA Option -->
-        <div class="col-md-2">
-            <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                <option value="semua" selected>Semua PPA</option>
-                <option value="option1">Dokter Spesialis</option>
-                <option value="option2">Dokter Umum</option>
-                <option value="option3">Perawat/bidan</option>
-                <option value="option4">Nutrisionis</option>
-                <option value="option5">Apoteker</option>
-                <option value="option6">Fisioterapis</option>
-            </select>
-        </div>
-
         <!-- Select Episode Option -->
         <div class="col-md-2">
             <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
@@ -36,44 +23,40 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                    aria-describedby="basic-addon1">
+                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari" aria-describedby="basic-addon1" id="searchInput">
             </div>
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 d-grid gap-2">
-            <button class="btn mb-2 btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal"
-                type="button">
+        <div class="col-md-2 d-flex justify-content-end ms-auto">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                 <i class="ti-plus"></i> Tambah
             </button>
         </div>
     </div>
 </div>
 
-<ul class="list-group">
+<ul class="list-group" id="asesmenList">
     @foreach ($asesmen as $item)
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <li class="list-group-item d-flex justify-content-between align-items-center"
+            data-date="{{ \Carbon\Carbon::parse($item->tanggal_triase)->format('Y-m-d') }}"
+            data-name="{{ $item->user->name }}">
             <div class="d-flex align-items-center">
                 <div class="m-2">
-                    {{ \Carbon\Carbon::parse($item->tanggal_triase)->format('d') }}
-                    {{ \Carbon\Carbon::parse($item->tanggal_triase)->format('M-y') }}
-                    {{ \Carbon\Carbon::parse($item->tanggal_triase)->format('H:i') }}
+                    {{ $item->tanggal_triase ? \Carbon\Carbon::parse($item->tanggal_triase)->format('d M Y H:i') : 'Tidak tersedia' }}
                 </div>
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
-                    width="70" height="70">
+                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien" width="70" height="70">
                 <div>
-                    <span class="text-primary fw-bold">Asesmen Medis-Paseien Umum/Dewasa</span> <br>
+                    <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
                     By: <span class="fw-bold">{{ $item->user->name }}</span>
                 </div>
             </div>
             <div>
-                <!-- In your blade view -->
                 <button type="button" onclick="showAsesmen('{{ $item->id }}')"
                     data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
                     class="btn btn-info btn-sm">
@@ -91,3 +74,39 @@
     @endforeach
 </ul>
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all filter elements
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+        const searchInput = document.getElementById('searchInput');
+        const asesmenList = document.getElementById('asesmenList');
+
+        // Add event listeners to filter inputs
+        startDateInput.addEventListener('input', filterList);
+        endDateInput.addEventListener('input', filterList);
+        searchInput.addEventListener('input', filterList);
+
+        function filterList() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            const search = searchInput.value.toLowerCase();
+
+            // Loop through all items and filter based on criteria
+            Array.from(asesmenList.children).forEach(item => {
+                const itemDate = item.getAttribute('data-date');
+                const itemName = item.getAttribute('data-name').toLowerCase();
+
+                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate);
+                const searchMatch = itemName.includes(search);
+
+                if (dateMatch && searchMatch) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>

@@ -13,7 +13,7 @@
                 <input type="hidden" id="editIndex" value="-1">
                 <div class="mb-3">
                     <label for="namaAlat" class="form-label">Alat yang Terpasang</label>
-                    <select class="form-select" id="namaAlat" required>
+                    <select class="form-select" id="namaAlat" >
                         <option value="">Pilih</option>
                         <option value="IV Line">IV Line</option>
                         <option value="Kateter">Kateter</option>
@@ -24,11 +24,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="lokasiAlat" class="form-label">Lokasi</label>
-                    <input type="text" class="form-control" id="lokasiAlat" required>
+                    <input type="text" class="form-control" id="lokasiAlat">
                 </div>
                 <div class="mb-3">
                     <label for="keteranganAlat" class="form-label">Keterangan</label>
-                    <input type="text" class="form-control" id="keteranganAlat" required>
+                    <input type="text" class="form-control" id="keteranganAlat">
                 </div>
             </div>
             <div class="modal-footer">

@@ -3,15 +3,15 @@
     <div class="row">
         <!-- Select Option -->
         <div class="col-md-2">
-            <select class="form-select" id="SelectOption" aria-label="Pilih...">
+            <select class="form-select" id="SelectPPA" aria-label="Pilih...">
                 <option value="semua" selected>Semua PPA</option>
-                <option value="option1">Semua PPA</option>
-                <option value="option2">Dokter Spesialis</option>
-                <option value="option3">Dokter Umum</option>
-                <option value="option4">Perawat/Bidan</option>
-                <option value="option5">Nutrisionis</option>
-                <option value="option6">Apoteker</option>
-                <option value="option7">Fisioterapis</option>
+                <option value="optionPPA1">Semua PPA</option>
+                <option value="optionPPA2">Dokter Spesialis</option>
+                <option value="optionPPA3">Dokter Umum</option>
+                <option value="optionPPA4">Perawat/Bidan</option>
+                <option value="optionPPA5">Nutrisionis</option>
+                <option value="optionPPA6">Apoteker</option>
+                <option value="optionPPA7">Fisioterapis</option>
             </select>
         </div>
 
@@ -28,29 +28,31 @@
 
         <!-- Start Date -->
         <div class="col-md-1">
-            <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
+            <input type="date" name="start_date" id="start_date" class="form-control"
+                placeholder="Dari Tanggal">
         </div>
 
         <!-- End Date -->
         <div class="col-md-1">
-            <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
+            <input type="date" name="end_date" id="end_date" class="form-control"
+                placeholder="S.d Tanggal">
         </div>
 
         <!-- Button Filter -->
         <div class="col-md-1">
-            <button id="filterButton" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></button>
+            <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                    class="bi bi-funnel-fill"></i></button>
         </div>
 
         <!-- Search Bar -->
         <div class="col-md-3">
-            <form method="GET" action="#">
+            <form method="GET"
+                action="{{ route('rawat-inap.konsultasi.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" name="search" class="form-control" placeholder="Cari" aria-label="Cari"
-                        value="" aria-describedby="basic-addon1">
+                    <input type="text" name="search" class="form-control"
+                        placeholder="dokter & Konsulen" aria-label="Cari" value="{{ request('search') }}"
+                        aria-describedby="basic-addon1">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
             </form>
