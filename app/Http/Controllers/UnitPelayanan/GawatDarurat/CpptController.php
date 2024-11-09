@@ -763,7 +763,6 @@ class CpptController extends Controller
 
     public function update($kd_pasien, $tgl_masuk, Request $request)
     {
-        dd($request);
         
         // Validation Input
         $validatorMessage = [
@@ -932,6 +931,18 @@ class CpptController extends Controller
             'tindak_lanjut_name' => $tindakLanjutLabel,
         ];
 
+        // TINDAK LANJUT
+        // kontrol ulang (2)
+        if($tindakLanjut == '2') {
+            $cpptTL['tgl_kontrol_ulang'] = $request->tgl_kontrol;
+        }
+        
+        // kontrol ulang (5)
+        if($tindakLanjut == '5') {
+            $cpptTL['rs_rujuk'] = $request->nama_rs;
+            $cpptTL['rs_rujuk_bagian'] = $request->bagian_rs;
+        }
+
         CpptTindakLanjut::where('kd_kasir', $cppt->kd_kasir)
                                             ->where('no_transaksi', $cppt->no_transaksi)
                                             ->where('tanggal', $cppt->tanggal)
@@ -1016,6 +1027,14 @@ class CpptController extends Controller
             $frekuensiNyeri = RmeFrekuensiNyeri::all();
             $menjalar = RmeMenjalar::all();
             $jenisNyeri = RmeJenisNyeri::all();
+            $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
+                                        ->where('kd_unit', 3)
+                                        ->whereRelation('dokter', 'status', 1)
+                                        ->get();
+                                
+            $unitKonsul = Unit::where('kd_bagian', 2)
+                        ->where('aktif', 1)
+                        ->get();
 
             if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
                 $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -1205,7 +1224,9 @@ class CpptController extends Controller
                 'frekuensiNyeri'    => $frekuensiNyeri,
                 'menjalar'          => $menjalar,
                 'jenisNyeri'        => $jenisNyeri,
-                'cppt'              => $cppt
+                'cppt'              => $cppt,
+                'dokterPengirim'    => $dokterPengirim,
+                'unitKonsul'        => $unitKonsul,
             ]);
         } catch (Exception $e) {
             return to_route('cppt.index', [$kd_pasien, $tgl_masuk])->with('error', 'Terjadi kesalahan saat pencarian');

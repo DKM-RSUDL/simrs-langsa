@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
                                     Route::put('/verifikasi', 'verifikasiCppt')->name('.verifikasi');
+                                    Route::post('/search', 'searchCppt')->name('.search');
                                 });
                             });
                         });
