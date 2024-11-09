@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserProfile extends Model
 {
     use HasFactory;
+    protected $connection = 'sqlsrv_hrd';
 
     protected $guarded = ['id'];
 

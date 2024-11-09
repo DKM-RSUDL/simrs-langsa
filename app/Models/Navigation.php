@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Navigation extends Model
 {
     use HasFactory;
+    protected $connection = 'sqlsrv_hrd';
+    protected $table = 'navigations';
+    // protected $connection = 'sqlsrv_rslangsa';
+
     protected $guarded = ['id'];
 
     public function subMenus()

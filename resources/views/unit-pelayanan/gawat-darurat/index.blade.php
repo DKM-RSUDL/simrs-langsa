@@ -119,12 +119,48 @@
                 outline: 0;
                 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             }
+
+            .emergency__container {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .custom__card {
+                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+                border: 2px solid #a100c9;
+                border-radius: 15px;
+                padding: 8px 15px;
+                width: fit-content;
+                min-width: 150px;
+            }
+
+            .card__content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .user__icon {
+                width: 24px;
+                height: 24px;
+            }
         </style>
     @endpush
 
     <div class="row">
         <div class="col-md-12">
-            <h4 class="fw-bold">Gawat Darurat</h4>
+            <div class="emergency__container">
+                <h4 class="fw-bold">Gawat Darurat</h4>
+                <div class="custom__card">
+                    <div class="card__content">
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
+                        <div class="text-center">Aktif</div>
+                    </div>
+                    <div class="text-center">3</div>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-end align-items-end gap-3">
                 <div class="d-flex align-items-center">
                     <label for="dokterSelect" class="form-label me-2">Dokter:</label>
@@ -223,7 +259,8 @@
                                                             <option value="">--Pilih Dokter--</option>
                                                             @foreach ($dokter as $dok)
                                                                 <option value="{{ $dok->dokter->kd_dokter }}"
-                                                                    @selected(old('dokter_triase') == $dok->dokter->kd_dokter)>{{ $dok->dokter->nama_lengkap }}
+                                                                    @selected(old('dokter_triase') == $dok->dokter->kd_dokter)>
+                                                                    {{ $dok->dokter->nama_lengkap }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -266,7 +303,8 @@
                                                         <div class="input-group mb-3">
                                                             <input type="text" name="nik_pasien" id="nik_pasien"
                                                                 class="form-control" placeholder="Nik Pasien"
-                                                                aria-label="Nik Pasien" aria-describedby="button-nik-pasien"
+                                                                aria-label="Nik Pasien"
+                                                                aria-describedby="button-nik-pasien"
                                                                 value="{{ old('nik_pasien') }}">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 id="button-nik-pasien">

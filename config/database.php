@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 // $host = "192.168.13.4";
 $host = "DESKTOP-CMA08S6";
 $port = "";
-$database = "rslangsa";
+// $database = "rslangsa";
 
 return [
 
@@ -99,6 +99,22 @@ return [
         //     ],
         // ],
 
+        'sqlsrv_hrd' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HRD_HOST', 'localhost'),
+            'port' => env('DB_HRD_PORT', '1433'),
+            'database' => env('DB_HRD_DATABASE', ''),
+            'username' => env('DB_HRD_USERNAME', ''),
+            'password' => env('DB_HRD_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'schema' => 'dbo',
+            'options' => [
+                PDO::ATTR_CASE => PDO::CASE_LOWER,
+            ],
+        ],
+
         'sqlsrv_rslangsa' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
@@ -148,7 +164,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
