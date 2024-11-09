@@ -23,6 +23,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Kode Karyawan</th>
                             <th>Nama</th>
                             <th>Role</th>
                             {{-- <th>No HP</th>
@@ -52,8 +53,7 @@
                     "targets": "_all",
                     "className": "text-start"
                 }],
-                columns: [
-                    {
+                columns: [{
                         data: 'id',
                         name: 'id',
                         orderable: true,
@@ -61,6 +61,12 @@
                         render: function(data, type, full, meta) {
                             return meta.row + 1;
                         }
+                    },
+                    {
+                        data: 'kd_karyawan',
+                        name: 'kd_karyawan',
+                        orderable: true,
+                        searchable: true,
                     },
                     {
                         data: 'name',
@@ -71,8 +77,8 @@
                     {
                         data: 'roles[0].name',
                         name: 'roles[0].name',
-                        orderable: true,
-                        searchable: true,
+                        // orderable: true,
+                        // searchable: true,
                     },
                     // {
                     //     data: 'no_hp',
