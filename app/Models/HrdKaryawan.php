@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TestModel extends Model
+class HrdKaryawan extends Model
 {
     use HasFactory;
     protected $connection = 'sqlsrv_hrd';

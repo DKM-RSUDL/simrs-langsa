@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\HrdKaryawan;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,12 @@ class UserController extends Controller
     public function create()
     {
         $title = 'Tambah User';
-        return view('users.create', compact('title'));
+        $karyawan = HrdKaryawan::where('status_peg', 1)->get();
+
+        return view('users.create', compact(
+            'title',
+            'karyawan'
+        ));
     }
 
     /**
@@ -47,7 +53,7 @@ class UserController extends Controller
         $result = $this->userService->create($request->all());
 
         if ($result['success']) {
-            return redirect()->route('users.index')->with('success', $result['message']);
+            return to_route('users.index')->with('success', $result['message']);
         } else {
             return back()->withInput()->with('error', $result['message']);
         }

@@ -23,15 +23,15 @@ class UserRequest extends FormRequest
     {
 
         return [
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:busers,email',
-            'password' => 'required|string|min:8',
-            'role' => 'required|string',
-            'alamat' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'tanggal_lahir' => 'required|date',
-            'no_hp' => 'required|string|max:15|min:8',
-            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+            'karyawan'  => 'required|string|max:100',
+            // 'email' => 'required|email|unique:busers,email',
+            'password'  => 'required|string|min:8',
+            'role'      => 'required|string',
+            // 'alamat' => 'required|string',
+            // 'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'tanggal_lahir' => 'required|date',
+            // 'no_hp' => 'required|string|max:15|min:8',
+            // 'jenis_kelamin' => 'required|in:laki-laki,perempuan',
         ];
     }
 }
