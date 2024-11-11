@@ -75,10 +75,10 @@
                         searchable: true,
                     },
                     {
-                        data: 'roles[0].name',
-                        name: 'roles[0].name',
-                        // orderable: true,
-                        // searchable: true,
+                        data: 'roles',
+                        name: 'roles',
+                        orderable: true,
+                        searchable: true,
                     },
                     // {
                     //     data: 'no_hp',
