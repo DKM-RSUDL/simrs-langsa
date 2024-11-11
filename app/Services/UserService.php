@@ -13,23 +13,26 @@ class UserService
 {
     public function dataTable()
     {
-        $data = UserProfile::whereHas('user.roles', function ($query) {
-            $query->where('name', '!=', 'admin');
-        })->with('user.roles')->get();
+        // $data = UserProfile::whereHas('user.roles', function ($query) {
+        //     $query->where('name', '!=', 'admin');
+        // })->with('user.roles')->get();
+
+        $data = User::with(['roles']);
 
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('nama_user', function ($row) {
-                return $row->user->name;
-            })
-            ->addColumn('role', function ($row) {
-                $roles = $row->user->roles->pluck('name')->toArray();
-                return implode(', ', $roles);
-            })
+            // ->addColumn('nama_user', function ($row) {
+            //     return $row->name;
+            // })
+            // ->addColumn('roles', function ($row) {
+            //     // $roles = $row->roles->pluck('name')->toArray();
+            //     // return implode(', ', $roles);
+            //     // return json_decode($row->roles, true);
+            // })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . url("users", $row->user->id) . '/edit" name="edit" data-id="' . $row->user->id . '" class="editRole btn btn-warning btn-sm me-2"><i class="ti-pencil-alt"></i></a>';
-                $actionBtn .= '<button type="button" name="delete" data-id="' . $row->user->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
+                $actionBtn = '<a href="' . url("users", $row->id) . '/edit" name="edit" data-id="' . $row->id . '" class="editRole btn btn-warning btn-sm me-2"><i class="ti-pencil-alt"></i></a>';
+                $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
                 return '<div class="d-flex">' . $actionBtn . '</div>';
             })
             ->rawColumns(['action'])
@@ -50,7 +53,7 @@ class UserService
             $user = $this->createUser($data);
 
             // create user profile
-            $this->createUserProfile($data, $user);
+            // $this->createUserProfile($data, $user);
 
             DB::commit();
 
@@ -115,7 +118,7 @@ class UserService
             $this->updateUser($data, $user);
 
             // update user profile
-            $this->updateUserProfile($data, $user);
+            // $this->updateUserProfile($data, $user);
 
             DB::commit();
 
@@ -135,11 +138,11 @@ class UserService
 
     public function updateUser($data, $user)
     {
-        $user->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => isset($data['password']) ? bcrypt($data['password']) : $user->password,
-        ]);
+        // $user->update([
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        //     'password' => isset($data['password']) ? bcrypt($data['password']) : $user->password,
+        // ]);
 
         // sync role
         if (isset($data['role'])) {

@@ -6,12 +6,12 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="fw-bold">{{ $title }}</h4>
 
-                @can('create users')
+                {{-- @can('create users')
                     <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm" id="createUser">
                         <i class="ti-plus"></i>
                         Tambah Data
                     </a>
-                @endcan
+                @endcan --}}
             </div>
         </div>
     </div>
@@ -23,12 +23,13 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Kode Karyawan</th>
                             <th>Nama</th>
                             <th>Role</th>
-                            <th>No HP</th>
+                            {{-- <th>No HP</th>
                             <th>Tanggal Lahir</th>
                             <th>Jenis Kelamin</th>
-                            <th>Alamat</th>
+                            <th>Alamat</th> --}}
                             <th width="100px">Action</th>
                         </tr>
                     </thead>
@@ -62,29 +63,39 @@
                         }
                     },
                     {
-                        data: 'nama_user',
-                        name: 'nama_user'
+                        data: 'kd_karyawan',
+                        name: 'kd_karyawan',
+                        orderable: true,
+                        searchable: true,
                     },
                     {
-                        data: 'role',
-                        name: 'role'
+                        data: 'name',
+                        name: 'name',
+                        orderable: true,
+                        searchable: true,
                     },
                     {
-                        data: 'no_hp',
-                        name: 'no_hp'
+                        data: 'roles[0].name',
+                        name: 'roles[0].name',
+                        // orderable: true,
+                        // searchable: true,
                     },
-                    {
-                        data: 'tanggal_lahir',
-                        name: 'tanggal_lahir'
-                    },
-                    {
-                        data: 'jenis_kelamin',
-                        name: 'jenis_kelamin'
-                    },
-                    {
-                        data: 'alamat',
-                        name: 'alamat'
-                    },
+                    // {
+                    //     data: 'no_hp',
+                    //     name: 'no_hp'
+                    // },
+                    // {
+                    //     data: 'tanggal_lahir',
+                    //     name: 'tanggal_lahir'
+                    // },
+                    // {
+                    //     data: 'jenis_kelamin',
+                    //     name: 'jenis_kelamin'
+                    // },
+                    // {
+                    //     data: 'alamat',
+                    //     name: 'alamat'
+                    // },
                     {
                         data: 'action',
                         name: 'action',

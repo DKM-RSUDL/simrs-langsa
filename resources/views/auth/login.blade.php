@@ -136,7 +136,7 @@
                 </div>
 
                 <!-- Form Login -->
-                <div class="col-md-8">
+                {{-- <div class="col-md-8">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <h1 class="text-primary fw-bold text-center">{{ __('Login') }}</h1>
@@ -172,6 +172,47 @@
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn__custom btn-lg"> {{ __('Login') }}</button>
+                        </div>
+                    </form>
+                </div> --}}
+
+                <div class="col-md-8">
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <h1 class="text-primary fw-bold text-center">{{ __('Login') }}</h1>
+                        <div class="mb-4">
+                            <label for="kd_karyawan" class="form-label text-center">{{ __('Kode Karyawan') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
+                                <input type="text" id="kd_karyawan" name="kd_karyawan"
+                                    class="form-control @error('kd_karyawan') is-invalid @enderror"
+                                    placeholder="Masukkan kode karyawan" value="{{ old('kd_karyawan') }}" required
+                                    autofocus>
+
+                                @error('kd_karyawan')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label text-center">{{ __('Password') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" id="password" name="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    placeholder="Masukkan password" required>
+
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn__custom btn-lg">{{ __('Login') }}</button>
                         </div>
                     </form>
                 </div>

@@ -13,7 +13,7 @@
                             Nama
                         </label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                            name="name" value="{{ old('name', $user->name) }}" required>
+                            name="name" value="{{ old('name', $user->name) }}" required disabled>
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -21,12 +21,12 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="no_hp">
-                            Nomor HP
+                        <label for="kd_karyawan">
+                            KD Karyawan
                         </label>
-                        <input type="number" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
-                            name="no_hp" value="{{ old('no_hp', optional($user->profile)->no_hp) }}" required>
-                        @error('no_hp')
+                        <input type="number" class="form-control @error('kd_karyawan') is-invalid @enderror" id="kd_karyawan"
+                            name="kd_karyawan" value="{{ old('kd_karyawan', $user->kd_karyawan) }}" disabled>
+                        @error('kd_karyawan')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="row mt-2">
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div class="form-group">
                         <label for="email">
                             Email
@@ -48,8 +48,8 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-6">
+                </div> --}}
+                {{-- <div class="col-md-6">
                     <div class="form-group">
                         <label for="password">
                             Password
@@ -64,11 +64,11 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="row mt-2">
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <label for="tanggal_lahir">Tanggal Lahir</label>
                     <div class="input-group input-append date" data-date-format="dd-mm-yyyy">
                         <input class="form-control @error('tanggal_lahir') is-invalid @enderror" type="text"
@@ -81,8 +81,8 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-                <div class="col-md-6">
+                </div> --}}
+                {{-- <div class="col-md-6">
                     <div class="form-group">
                         <label for="jenis_kelamin">
                             Jenis Kelamin
@@ -101,7 +101,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="row mt-2">
@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="form-group">
                         <label for="image">
                             Gambar
@@ -137,21 +137,21 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-md-2">
+                {{-- <div class="col-md-2">
                     <div class="form-group">
                         @if ($user->profile && $user->profile->image)
                             <img src="{{ asset('assets/images/users/' . $user->profile->image) }}" alt="Gambar Pengguna"
                                 class="img-thumbnail" width="60">
                         @endif
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 
             <div class="row mt-2">
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div class="form-group">
                         <label for="alamat">
                             Alamat
@@ -161,7 +161,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <x-btn-submit-form />

@@ -15,7 +15,7 @@
                         <label for="dokter_pengirim" class="form-label fw-bold h5 text-dark">Dokter
                             Pengirim:</label>
                         <select id="dokter_pengirim" name="dokter_pengirim"
-                            class="form-select select2 @error('dokter_pengirim') is-invalid @enderror">
+                            class="form-select @error('dokter_pengirim') is-invalid @enderror">
                             <option value="">--Pilih Dokter--</option>
                             @foreach ($dokterPengirim as $dok)
                                 <option value="{{ $dok->dokter->kd_dokter }}">{{ $dok->dokter->nama_lengkap }}
@@ -61,7 +61,7 @@
                             <label for="unit_tujuan" class="form-label fw-bold h5 text-dark">Kepada Unit Pelayanan
                                 :</label>
                             <select id="unit_tujuan" name="unit_tujuan"
-                                class="form-select select2 @error('unit_tujuan') is-invalid @enderror">
+                                class="form-select @error('unit_tujuan') is-invalid @enderror">
                                 <option value="">-Pilih Unit Pelayanan-</option>
                                 @foreach ($unitKonsul as $unt)
                                     <option value="{{ $unt->kd_unit }}">{{ $unt->nama_unit }}</option>
@@ -78,7 +78,7 @@
                             <label for="dokter_unit_tujuan" class="form-label fw-bold h5 text-dark">Yth Dokter
                                 :</label>
                             <select id="dokter_unit_tujuan" name="dokter_unit_tujuan"
-                                class="form-select select2 @error('dokter_unit_tujuan') is-invalid @enderror">
+                                class="form-select @error('dokter_unit_tujuan') is-invalid @enderror">
                                 <option value="">--Pilih Dokter--</option>
                             </select>
                             @error('dokter_unit_tujuan')
