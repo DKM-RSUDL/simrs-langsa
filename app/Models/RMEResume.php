@@ -9,9 +9,9 @@ class RMEResume extends Model
 {
     use HasFactory;
     protected $table = 'RME_RESUME';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'float';
+    // protected $primaryKey = 'id';
+    // public $incrementing = false;
+    // protected $keyType = 'float';
     public $timestamps = false;
 
     protected $fillable = [

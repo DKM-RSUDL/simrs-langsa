@@ -17,6 +17,8 @@ use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -338,6 +340,49 @@ class AsesmenController extends Controller
                 }
             }
 
+            // dd($request->diagnosis);
+
+            $vitalSign = $request->vital_sign;
+            $antropometri = $request->antropometri;
+            $diagnosa = $request->diagnosis;
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $diagnosa,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $vitalSign['td_sistole']
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSign['td_diastole']
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSign['resp']
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSign['suhu']
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSign['nadi']
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $antropometri['tb']
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $antropometri['bb']
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
+
             // DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -464,7 +509,6 @@ class AsesmenController extends Controller
         // dd($request->all());
 
         try {
-
 
             $user = auth()->user();
 
@@ -622,6 +666,49 @@ class AsesmenController extends Controller
                 $tindakLanjutDtl->save();
             }
 
+            // dd($request->vital_sign[0]['td_sistole']);
+
+            $vitalSign = json_decode($request->vital_sign, true);
+            $antropometri = json_decode($request->antropometri, true);
+            $diagnosa = json_decode($request->diagnosa_data, true);
+            
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $diagnosa,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $vitalSign['td_sistole']
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSign['td_diastole']
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSign['resp']
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSign['suhu']
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSign['nadi']
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $antropometri['tb']
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $antropometri['bb']
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
+
             return response()->json(['message' => 'Berhasil']);
 
             // DB::commit();
@@ -630,4 +717,67 @@ class AsesmenController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
+
+    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => 3,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
+    }
+
+
+
 }

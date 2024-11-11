@@ -1126,6 +1126,7 @@
 
             const formData = {
                 _method: 'PUT',
+                urut_masuk: "{{ $dataMedis->urut_masuk }}",
                 tindakan_resusitasi: collectEditTindakanResusitasi(),
                 pemeriksaan_fisik: collectEditPemeriksaanFisik(),
                 anamnesis: $('textarea[name="edit_anamnesis"]').val(),
