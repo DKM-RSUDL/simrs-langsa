@@ -176,6 +176,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    }
+
     // Fungsi untuk collect data
     window.collectEditTindakLanjut = function() {
         if (!editTindakLanjutData) return null;
