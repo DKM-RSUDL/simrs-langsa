@@ -20,6 +20,7 @@ class RMEResume extends Model
         'tgl_masuk',
         'urut_masuk',
         'anamnesis',
+        'konpas',
         'pemeriksaan_penunjang',
         'diagnosis',
         'icd_10',

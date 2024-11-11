@@ -348,6 +348,8 @@
                 @csrf
                 @method('put')
 
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="editCpptModalLabel">Edit Catatan Perkembangan Pasien
                         Terintegrasi (CPPT)</h5>
