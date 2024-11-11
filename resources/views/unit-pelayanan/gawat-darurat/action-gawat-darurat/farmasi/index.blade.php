@@ -316,6 +316,7 @@
 
 
                 var formData = {
+                    urut_masuk: "{{ $dataMedis->urut_masuk }}",
                     kd_dokter: selectedDokter,
                     tgl_order: tglOrder,
                     cat_racikan: catRacikan,
