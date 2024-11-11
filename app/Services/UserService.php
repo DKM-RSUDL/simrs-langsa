@@ -26,14 +26,29 @@ class UserService
             //     return $row->name;
             // })
             // ->addColumn('roles', function ($row) {
-            //     // $roles = $row->roles->pluck('name')->toArray();
-            //     // return implode(', ', $roles);
-            //     // return json_decode($row->roles, true);
+            //     $roles = $row->roles->pluck('name')->toArray();
+            //     return implode(', ', $roles);
+            //     return json_decode($row->roles, true);
             // })
+            ->addColumn('roles', function ($row) {
+                return $row->roles->pluck('name')->implode(', ');
+            })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="' . url("users", $row->id) . '/edit" name="edit" data-id="' . $row->id . '" class="editRole btn btn-warning btn-sm me-2"><i class="ti-pencil-alt"></i></a>';
                 $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
                 return '<div class="d-flex">' . $actionBtn . '</div>';
+            })
+            ->filter(function ($query) {
+                if (request()->has('search.value')) {
+                    $search = request('search.value');
+                    $query->where(function ($q) use ($search) {
+                        $q->where('kd_karyawan', 'like', "%$search%")
+                            ->orWhere('name', 'like', "%$search%")
+                            ->orWhereHas('roles', function ($q) use ($search) {
+                                $q->where('name', 'like', "%$search%");
+                            });
+                    });
+                }
             })
             ->rawColumns(['action'])
             ->make(true);
