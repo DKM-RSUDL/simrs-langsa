@@ -778,6 +778,8 @@
 
 
                                 let tindakLanjut = patient.tindak_lanjut_code;
+                                console.log(patient);
+
 
 
                                 if (tindakLanjut == '2') {

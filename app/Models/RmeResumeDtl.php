@@ -9,9 +9,9 @@ class RmeResumeDtl extends Model
 {
     use HasFactory;
     protected $table = 'RME_RESUME_DTL';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'float';
+    // protected $primaryKey = 'id';
+    // public $incrementing = false;
+    // protected $keyType = 'float';
     public $timestamps = false;
 
     protected $fillable = [

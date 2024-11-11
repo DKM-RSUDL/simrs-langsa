@@ -10,6 +10,8 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\Produk;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -241,6 +243,7 @@ class TindakanController extends Controller
 
         DetailTransaksi::create($dataDetailTransaksi);
 
+        $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
         return back()->with('success', 'Tindakan berhasil ditambah');
     }
 
@@ -380,6 +383,7 @@ class TindakanController extends Controller
             ->whereDate('tgl_transaksi', $tgl_masuk)
             ->update($dataDetailTransaksi);
 
+        $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
         return back()->with('success', 'Tindakan berhasil diubah');
     }
 
@@ -421,6 +425,46 @@ class TindakanController extends Controller
                 'message'   => $e->getMessage(),
                 'data'      => []
             ], 500);
+        }
+    }
+
+
+    public function createResume($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+                        ->where('kd_unit', 3)
+                        ->whereDate('tgl_masuk', $tgl_masuk)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->first();
+
+        if(empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => 3,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData = [
+                'id_resume'     => $newResume->id
+            ];
+
+            RmeResumeDtl::create($resumeDtlData);
+
+        } else {
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData = [
+                'id_resume'     => $resume->id
+            ];
+
+            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

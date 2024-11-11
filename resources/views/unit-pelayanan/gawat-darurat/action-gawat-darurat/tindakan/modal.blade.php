@@ -5,6 +5,8 @@
                 enctype="multipart/form-data" id="addTindakanForm">
                 @csrf
 
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="addTindakanModalLabel">
                         Laporan Hasil Tindakan
@@ -172,6 +174,8 @@
                 method="post" enctype="multipart/form-data" id="editTindakanForm">
                 @csrf
                 @method('put')
+
+                <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
 
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="editTindakanModalLabel">

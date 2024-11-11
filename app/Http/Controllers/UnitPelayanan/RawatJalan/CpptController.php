@@ -643,8 +643,7 @@ class CpptController extends Controller
             'unit_rawat_inap'       => '',
             'rs_rujuk'              => '',
             'rs_rujuk_bagian'       => '',
-            // 'urut'                  => $lastUrutCPPT
-            'urut'                  => 1
+            'urut'                  => $lastUrutCPPT
         ];
 
         // TINDAK LANJURT
