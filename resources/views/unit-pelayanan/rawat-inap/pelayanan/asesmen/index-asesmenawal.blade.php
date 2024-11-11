@@ -33,7 +33,7 @@
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 d-flex justify-content-end ms-auto">
+        <div class="col-md-2 text-end ms-auto">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                 <i class="ti-plus"></i> Tambah
             </button>
