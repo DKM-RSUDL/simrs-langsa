@@ -8,6 +8,8 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -138,11 +140,10 @@ class FarmasiController extends Controller
                 $mrResep->STATUS = 0;
                 $mrResepDtl->save();
             }
-
-            // DB::commit();
+            
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
             Log::info('Resep berhasil disimpan', ['id_mrresep' => $ID_MRRESEP]);
-
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $ID_MRRESEP], 200);
         } catch (\Exception $e) {
             // DB::rollback();
@@ -220,11 +221,11 @@ class FarmasiController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -241,5 +242,43 @@ class FarmasiController extends Controller
             ->distinct()
             ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
+    }
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData = [
+                'id_resume'     => $newResume->id
+            ];
+
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData = [
+                'id_resume'     => $resume->id
+            ];
+
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+        }
     }
 }
