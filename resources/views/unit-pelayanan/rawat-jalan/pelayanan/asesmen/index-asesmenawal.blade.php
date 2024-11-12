@@ -60,7 +60,7 @@
                 </button>
                 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.show')
                 <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_pasien . '/pelayanan/' . $dataMedis->kd_pasien .'/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                    data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien .'/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                     class="btn btn-secondary btn-sm">
                     <i class="fas fa-edit"></i> Edit
                 </button>
