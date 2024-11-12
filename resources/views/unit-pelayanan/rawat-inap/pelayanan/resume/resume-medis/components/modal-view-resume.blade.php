@@ -77,7 +77,7 @@
                                         <div class="col-6 col-md-4">
                                             <small>TD:
                                                 {{ $dataResume->konpas['sistole']['hasil'] ?? '__' }} /
-                                                {{ $dataResume->konpas['diastole']['hasil'] ?? '__' }} mmHg
+                                                {{ $dataResume->konpas['distole']['hasil'] ?? '__' }} mmHg
                                             </small><br>
                                             <small>Temp: {{ $dataResume->konpas['suhu']['hasil'] ?? '__' }}
                                                 C</small><br>
