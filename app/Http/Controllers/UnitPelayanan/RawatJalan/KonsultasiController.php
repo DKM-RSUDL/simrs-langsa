@@ -9,6 +9,8 @@ use App\Models\DetailTransaksi;
 use App\Models\DokterKlinik;
 use App\Models\Konsultasi;
 use App\Models\Kunjungan;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\RujukanKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
@@ -383,6 +385,14 @@ class KonsultasiController extends Controller
 
         Konsultasi::create($konsultasiData);
 
+
+        // create resume
+        $resumeData = [
+            'unit_rujuk_internal'   => $unit_tujuan,
+        ];
+
+
+        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
         return back()->with('success', 'Konsultasi berhasil di tambah!');
     }
 
@@ -542,6 +552,54 @@ class KonsultasiController extends Controller
                 'message'   => $e->getMessage(),
                 'data'      => []
             ], 500);
+        }
+    }
+
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+                        ->where('kd_unit', $kd_unit)
+                        ->whereDate('tgl_masuk', $tgl_masuk)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => 4,
+            'tindak_lanjut_name'    => 'Konsul/Rujuk internal',
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+        ];
+
+        if(empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+
+        } else {
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if(empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = 4;
+                $resumeDtl->tindak_lanjut_name  = 'Konsul/Rujuk internal';
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->save();
+            }
         }
     }
 }
