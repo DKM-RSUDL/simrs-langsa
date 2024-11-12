@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\HrdKaryawan;
 use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
@@ -61,44 +62,70 @@ class UserService
 
     public function create($data)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try {
+        // try {
             // create user
             $user = $this->createUser($data);
+            return $user;
 
             // create user profile
             // $this->createUserProfile($data, $user);
 
-            DB::commit();
+            // DB::commit();
 
-            return [
-                'success' => true,
-                'message' => 'Data berhasil disimpan.',
-            ];
-        } catch (\Exception $e) {
-            DB::rollBack();
+            // return [
+            //     'success' => true,
+            //     'message' => 'Data berhasil disimpan.',
+            // ];
+        // } catch (\Exception $e) {
+        //     // DB::rollBack();
 
-            return [
-                'success' => false,
-                'message' => 'Gagal menyimpan data: ' . $e->getMessage()
-            ];
-        }
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Gagal menyimpan data: ' . $e->getMessage()
+        //     ];
+        // }
     }
 
     public function createUser($data)
     {
+        // Get karyawan data
+        $karyawan = HrdKaryawan::where('kd_karyawan', $data['karyawan'])->first();
+
+        if(empty($karyawan)) {
+            return [
+                'success'   => false,
+                'message'   => 'Karyawan tidak ditemukan'
+            ];
+        }
+
+        // check akun karyawan sudah ada atau belum
+        $rmeUser = User::where('kd_karyawan', $karyawan->kd_karyawan)->first();
+
+        if(!empty($rmeUser)) {
+            return [
+                'success'   => false,
+                'message'   => 'Karyawan telah memiliki akun!'
+            ];
+        }
+
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'kd_karyawan'   => $karyawan->kd_karyawan,
+            'name'          => $karyawan->nama,
+            'email'         => $karyawan->email,
+            'password'      => bcrypt($data['password']),
         ]);
 
         // assign role
         $role = Role::find($data['role']);
         $user->assignRole($role);
 
-        return $user;
+        // return $user;
+        return [
+            'success' => true,
+            'message' => 'Data berhasil disimpan.',
+        ];
     }
 
     public function createUserProfile($data, $user)
@@ -208,7 +235,7 @@ class UserService
             $user = User::find($id);
 
             // find user profile
-            $userProfile = UserProfile::where('user_id', $id)->first();
+            // $userProfile = UserProfile::where('user_id', $id)->first();
 
             if ($user) {
 
@@ -216,7 +243,7 @@ class UserService
                 $this->deleteUser($user);
 
                 // delete user profile
-                $this->deleteUserProfile($userProfile);
+                // $this->deleteUserProfile($userProfile);
 
                 // delete user roles
                 $user->roles()->detach();

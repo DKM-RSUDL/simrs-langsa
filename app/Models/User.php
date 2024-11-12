@@ -18,7 +18,7 @@ class User extends Authenticatable
 
     protected $table = 'rme_users';
     // protected $primaryKey = 'kd_karyawan';
-    public $incrementing = false;
+    // public $incrementing = false;
 
     // protected $table = 'busers';
     /**

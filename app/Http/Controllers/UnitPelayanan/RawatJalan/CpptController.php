@@ -23,6 +23,8 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\RujukanKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
@@ -694,6 +696,43 @@ class CpptController extends Controller
             CpptPenyakit::create($diagInsertData);
         }
 
+
+        // create resume
+        $resumeData = [
+            'anamnesis'             => $request->anamnesis,
+            'diagnosis'             => $diagnosisReq,
+            'tindak_lanjut_code'    => $tindakLanjut,
+            'tindak_lanjut_name'    => $tindakLanjutLabel,
+            'tgl_kontrol_ulang'     => $request->tgl_kontrol,
+            'unit_rujuk_internal'   => $request->unit_tujuan,
+            'rs_rujuk'              => $request->nama_rs,
+            'rs_rujuk_bagian'       => $request->bagian_rs,
+            'konpas'                => [
+                'sistole'   => [
+                    'hasil' => $tandaVitalReq[1]
+                ],
+                'distole'   => [
+                    'hasil' => $tandaVitalReq[2]
+                ],
+                'respiration_rate'   => [
+                    'hasil' => $tandaVitalReq[5]
+                ],
+                'suhu'   => [
+                    'hasil' => $tandaVitalReq[8]
+                ],
+                'nadi'   => [
+                    'hasil' => $tandaVitalReq[0]
+                ],
+                'tinggi_badan'   => [
+                    'hasil' => $tandaVitalReq[3]
+                ],
+                'berat_badan'   => [
+                    'hasil' => $tandaVitalReq[4]
+                ]
+            ]
+        ];
+
+        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
         return back()->with('success', 'CPPT berhasil ditambah!');
     }
 
@@ -895,6 +934,43 @@ class CpptController extends Controller
             CpptPenyakit::create($diagInsertData);
         }
 
+
+        // create resume
+        $resumeData = [
+            'anamnesis'             => $request->anamnesis,
+            'diagnosis'             => $diagnosisList,
+            'tindak_lanjut_code'    => $tindakLanjut,
+            'tindak_lanjut_name'    => $tindakLanjutLabel,
+            'tgl_kontrol_ulang'     => $request->tgl_kontrol,
+            'unit_rujuk_internal'   => $request->unit_tujuan,
+            'rs_rujuk'              => $request->nama_rs,
+            'rs_rujuk_bagian'       => $request->bagian_rs,
+            'konpas'                => [
+                'sistole'   => [
+                    'hasil' => $tandaVitalReq[1]
+                ],
+                'distole'   => [
+                    'hasil' => $tandaVitalReq[2]
+                ],
+                'respiration_rate'   => [
+                    'hasil' => $tandaVitalReq[5]
+                ],
+                'suhu'   => [
+                    'hasil' => $tandaVitalReq[8]
+                ],
+                'nadi'   => [
+                    'hasil' => $tandaVitalReq[0]
+                ],
+                'tinggi_badan'   => [
+                    'hasil' => $tandaVitalReq[3]
+                ],
+                'berat_badan'   => [
+                    'hasil' => $tandaVitalReq[4]
+                ]
+            ]
+        ];
+
+        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
         return back()->with('success', 'CPPT berhasil diubah!');
     }
 
@@ -1350,5 +1426,67 @@ class CpptController extends Controller
         Konsultasi::create($konsultasiData);
 
         return true;
+    }
+
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+                        ->where('kd_unit', $kd_unit)
+                        ->whereDate('tgl_masuk', $tgl_masuk)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if(empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if(empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
     }
 }
