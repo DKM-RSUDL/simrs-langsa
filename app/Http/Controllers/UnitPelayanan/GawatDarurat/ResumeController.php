@@ -4,18 +4,18 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
-use App\Models\MrResep;
 use App\Models\Penyakit;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Unit;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
@@ -39,7 +39,7 @@ class ResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan'])
+        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet.unitRujukanInternal', 'kunjungan', 'unit', 'konsultasi'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -92,8 +92,17 @@ class ResumeController extends Controller
             ->orderBy('tgl_masuk', 'desc')
             ->paginate(10);
 
-        // Mengambil semua data dokter
-        $dataDokter = Dokter::all();
+        // Ambil semua dokter
+        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        // Ambil dokter yang aktif saat ini
+        $dokterPengirim = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->first();
 
         // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
@@ -127,6 +136,11 @@ class ResumeController extends Controller
         // Mengambil data obat
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
 
+        // unit palayanan
+        $unitKonsul = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->get();
+
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
@@ -138,13 +152,15 @@ class ResumeController extends Controller
             compact(
                 'dataMedis',
                 'dataDokter',
+                'dokterPengirim',
                 'dataLabor',
                 'dataRagiologi',
                 'riwayatObatHariIni',
                 'kodeICD',
                 'kodeICD9',
                 'dataResume',
-                'dataGet'
+                'dataGet',
+                'unitKonsul'
             )
         );
     }
@@ -160,7 +176,12 @@ class ResumeController extends Controller
 
             // RmeResumeDtl
             'tindak_lanjut_code' => 'required|string',
-            'tindak_lanjut_name' => 'required|string'
+            'tindak_lanjut_name' => 'required|string',
+            'tgl_kontrol_ulang' => 'nullable|string',
+            'rs_rujuk' => 'nullable|string',
+            'rs_rujuk_bagian' => 'nullable|string',
+            'unit_rujuk_internal' => 'nullable|string',
+            'unit_rawat_inap' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -207,9 +228,16 @@ class ResumeController extends Controller
             ],
             [
                 'tindak_lanjut_name' => $request->tindak_lanjut_name,
-                'tindak_lanjut_code' => $request->tindak_lanjut_code
+                'tindak_lanjut_code' => $request->tindak_lanjut_code,
+                'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
+                'rs_rujuk' => $request->rs_rujuk,
+                'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+                'unit_rujuk_internal' => $request->unit_rujuk_internal,
+                'unit_rawat_inap' => $request->unit_rawat_inap
             ]
         );
+
+
 
         return response()->json([
             'success' => true,
@@ -227,11 +255,11 @@ class ResumeController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',

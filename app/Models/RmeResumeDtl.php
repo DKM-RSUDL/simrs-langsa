@@ -29,4 +29,9 @@ class RmeResumeDtl extends Model
     {
         return $this->belongsTo(RMEResume::class, 'id_resume', 'id');
     }
+
+    public function unitRujukanInternal()
+    {
+        return $this->belongsTo(Unit::class, 'unit_rujuk_internal', 'kd_unit');
+    }
 }
