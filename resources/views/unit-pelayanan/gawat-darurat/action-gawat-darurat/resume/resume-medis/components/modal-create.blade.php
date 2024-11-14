@@ -648,4 +648,5 @@
         console.log('Radio button changed:', $(this).val());
         console.log('Code:', $(this).data('code'));
     });
+
 </script>

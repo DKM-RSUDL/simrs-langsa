@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-5">
                         <label for="dokter_pengirim" class="form-label fw-bold">Dokter Pengirim:</label>
-                        <select name="dokter_pengirim" id="dokter_pengirim" class="form-select">
+                        <select name="kd_dokter" id="dokter_pengirim" class="form-select">
                             <option value="">-Pilih Dokter Pengirim-</option>
                             @foreach ($dataDokter as $dok)
                                 <option value="{{ $dok->dokter->kd_dokter }}"
@@ -24,20 +24,38 @@
                         @error('dokter_pengirim')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        <div class="mt-2 text-muted">
-                            <small>Dokter saat ini: {{ $dokterPengirim->dokter->nama_lengkap }}</small>
-                        </div>
 
                         <div class="mt-3">
-                            <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal Konsul & Jam
-                                :</label>
-                            <input type="datetime-local" id="tgl_order" name="tgl_order" class="form-control"
-                                value="{{ old('tgl_order', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}">
+                            <div class="row">
+                                <div class="col-7">
+                                    <label for="tgl_konsul" class="form-label fw-bold h5 text-dark">Tanggal Konsul
+                                        :</label>
+                                    <input type="date" id="tgl_konsul" name="tgl_konsul"
+                                        class="form-control @error('tgl_konsul') is-invalid @enderror">
+                                </div>
+                                <div class="col-5">
+                                    <label for="jam_konsul" class="form-label fw-bold h5 text-dark">Jam :</label>
+                                    <input type="time" id="jam_konsul" name="jam_konsul"
+                                        class="form-control @error('jam_konsul') is-invalid @enderror">
+                                </div>
+                            </div>
+
+                            @error('tgl_konsul')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                            @error('jam_konsul')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mt-3">
                             <label for="unit_tujuan">Kepada Unit Pelayanan:</label>
-                            <select name="unit_tujuan" id="unit_tujuan" class="form-select" required>
+                            <select name="kd_unit_tujuan" id="unit_tujuan" class="form-select" required>
                                 <option value="">-Pilih Unit Pelayanan-</option>
                                 @foreach ($unitKonsul as $unt)
                                     <option value="{{ $unt->kd_unit }}" data-id="{{ $unt->kd_unit }}"
@@ -49,9 +67,6 @@
                             @error('unit_tujuan')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
-                            <div class="mt-2 text-muted">
-                                <small>Dokter saat ini: {{ $dokterPengirim->dokter->nama_lengkap }}</small>
-                            </div>
                         </div>
 
                         <div class="mt-3">
@@ -70,22 +85,13 @@
                             @error('kd_dokter_tujuan')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
-
-                            <!-- Tampilkan informasi dokter saat ini -->
-                            <div class="mt-2 text-muted">
-                                <small>Dokter saat ini:
-                                    @if ($dokterPengirim->dokter)
-                                        {{ $dokterPengirim->dokter->nama_lengkap }}
-                                    @endif
-                                </small>
-                            </div>
                         </div>
 
                         <div class="mt-3">
                             <h6 class="fw-bold">Konsulen diharapkan</h6>
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="1" id="konsul-sewaktu"
+                                    type="radio" name="kd_konsulen_diharapkan" value="1" id="konsul-sewaktu"
                                     @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 1) checked @endif>
                                 <label class="form-check-label" for="konsul-sewaktu">
                                     Konsul Sewaktu
@@ -93,7 +99,7 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="2" id="rawat-bersama"
+                                    type="radio" name="kd_konsulen_diharapkan" value="2" id="rawat-bersama"
                                     @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 2) checked @endif>
                                 <label class="form-check-label" for="rawat-bersama">
                                     Rawat Bersama
@@ -101,7 +107,7 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="3" id="alih-rawat"
+                                    type="radio" name="kd_konsulen_diharapkan" value="3" id="alih-rawat"
                                     @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 3) checked @endif>
                                 <label class="form-check-label" for="alih-rawat">
                                     Alih Rawat
@@ -109,7 +115,7 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
-                                    type="radio" name="konsulen_harap" value="4" id="kembali-unit-asal"
+                                    type="radio" name="kd_konsulen_diharapkan" value="4" id="kembali-unit-asal"
                                     @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 4) checked @endif>
                                 <label class="form-check-label" for="kembali-unit-asal">
                                     kembali ke unit yang meminta untuk persetujuan tindakan & pengobatan
@@ -121,12 +127,12 @@
                     <div class="col-7">
                         <div class="mb-3">
                             <strong class="fw-bold">Catatan Klinik/Diagnosis</strong>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ $dataResume->konsultasi->catatan ?? '-' }}</textarea>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="catatan">{{ $dataResume->konsultasi->catatan ?? '-' }}</textarea>
                         </div>
 
                         <div class="mb-3">
                             <strong class="fw-bold">Catatan Klinik/Konsul</strong>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5">{{ $dataResume->konsultasi->konsul ?? '-' }}</textarea>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" name="konsul">{{ $dataResume->konsultasi->konsul ?? '-' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -189,6 +195,96 @@
             if (!$('#selected-unit-tujuan').text().trim()) {
                 $('#konsul').prop('checked', false);
             }
+        });
+    });
+
+    // tambah konsultasi untuk store ke databases.
+    const kd_pasien = '{{ $dataMedis->kd_pasien }}';
+    const tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
+    const urut_masuk = '{{ $dataMedis->urut_masuk }}';
+
+    $(document).ready(function() {
+        // Updated AJAX submission
+        $('#btn-simpan-konsul-rujukan').on('click', function() {
+            // Get all form values
+            const formData = {
+                dokter_pengirim: $('#dokter_pengirim').val(), // kd_dokter
+                dokter_unit_tujuan: $('#kd_dokter_tujuan').val(), // kd_dokter_tujuan
+                tgl_konsul: $('#tgl_konsul').val(), // tgl_masuk_tujuan
+                jam_konsul: $('#jam_konsul').val(), // jam_masuk_tujuan
+                unit_tujuan: $('#unit_tujuan').val(), // kd_unit_tujuan
+                konsulen_harap: $('input[name="kd_konsulen_diharapkan"]:checked')
+            .val(), // kd_konsulen_diharapkan
+                catatan: $('textarea[name="catatan"]').val(), // catatan
+                konsul: $('textarea[name="konsul"]').val(), // konsul
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+
+            // Basic validation
+            if (!formData.unit_tujuan || !formData.tgl_konsul || !formData.jam_konsul ||
+                !formData.dokter_pengirim || !formData.dokter_unit_tujuan || !formData.konsulen_harap) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Mohon lengkapi semua field yang diperlukan!'
+                });
+                return;
+            }
+
+            // Add loading state
+            const btnSimpan = $(this);
+            btnSimpan.prop('disabled', true).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...'
+            );
+
+            // Send Ajax request
+            $.ajax({
+                url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume`,
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    console.log('Success:', response);
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Close modal
+                                $('#modal-konsul-rujukan').modal('hide');
+                                // Reload page to refresh data
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                    let errorMessage = 'Terjadi kesalahan dalam menyimpan data';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage
+                    });
+                },
+                complete: function() {
+                    // Reset button state
+                    btnSimpan.prop('disabled', false).html('Simpan');
+                }
+            });
         });
     });
 </script>
