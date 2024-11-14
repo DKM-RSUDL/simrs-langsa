@@ -326,20 +326,29 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#"
+                                        <a href="javascript:void(0)" id="btn-tgl-kontrol-ulang"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
                                                 data-code="2" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
-                                            <label for="kontrol">Kontrol ulang, tgl:</label>
+                                            <label for="kontrol">Kontrol ulang, tgl:
+                                                <span id="selected-date">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
+                                                </span>
+                                            </label>
                                         </a>
 
-                                        <a href="j#"
+                                        <a href="javascript:void(0)" id="btn-konsul-rujukan"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
                                                 data-code="4" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? 'checked' : '' }}>
-                                            <label for="konsul">Konsul/Rujuk Internal Ke:</label>
+                                            <label for="konsul">Konsul/Rujuk Internal Ke:
+                                                <span id="selected-unit-tujuan"
+                                                    data-unit-id="{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}">
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? $dataResume->rmeResumeDet->unitRujukanInternal?->nama_unit : '' }}
+                                                </span>
+                                            </label>
                                         </a>
                                         {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name" class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:" data-code="2">
@@ -356,12 +365,19 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <a href="#"
+                                        <a href="javascript:void(0)" id="btn-rs-rujuk-bagian"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rujuk RS lain bagian:"
                                                 data-code="5" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
-                                            <label for="rujuk">Rujuk RS lain bagian:</label>
+                                            <label for="rujuk">Rujuk RS lain bagian:
+                                                <span id="selected-rs-info">
+                                                    @if (($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5')
+                                                        {{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}
+                                                        ({{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }})
+                                                    @endif
+                                                </span>
+                                            </label>
                                         </a>
 
                                         <a href="#"
@@ -394,6 +410,8 @@
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-create-alergi')
+@include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-rs-rujuk-bagian')
+@include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-kontrol-ulang')
 
 <script type="text/javascript">
     $('#btn-edit-resume').on('click', function() {
@@ -414,6 +432,11 @@
 
         // Ambil resume_id, biarkan null jika tidak ada
         const resume_id = '{{ $dataResume->id ?? null }}';
+
+        const previousTglKontrolUlang = '{{ $dataResume->rmeResumeDet->tgl_kontrol_ulang ?? '' }}';
+        const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
+        const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
+        const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
 
         if (!resume_id) {
             Swal.fire({
@@ -474,6 +497,29 @@
             return;
         }
         formData.append('icd_9', JSON.stringify(icd9Array));
+
+        // Get control ulang tgl
+        const ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
+        formData.append('tgl_kontrol_ulang', ControlUlangTgl);
+
+        // Get Rujuk RS lain bagian
+        const RujukRSBagian = $('#selected-rs-info').text().trim();
+        let rs_rujuk_bagian, rs_rujuk;
+        if (RujukRSBagian) {
+            const parts = RujukRSBagian.split(' - ');
+            rs_rujuk_bagian = parts[0].trim() || previousRsRujukBagian;
+            rs_rujuk = parts.length > 1 ? parts[1].trim() || previousRsRujuk : previousRsRujuk;
+        } else {
+            rs_rujuk_bagian = previousRsRujukBagian;
+            rs_rujuk = previousRsRujuk;
+        }
+        formData.append('rs_rujuk_bagian', rs_rujuk_bagian);
+        formData.append('rs_rujuk', rs_rujuk);
+
+        // Ambil ID unit dari atribut data-unit-id
+        const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
+        console.log('Sending unit_rujuk_internal:', unitId);
+        formData.append('unit_rujuk_internal', unitId);
 
         // Validasi tindak lanjut
         const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');

@@ -25,4 +25,9 @@ class DokterKlinik extends Model
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
+
+    public function konsultasi()
+    {
+        return $this->hasMany(Konsultasi::class, 'kd_dokter_tujuan', 'kd_dokter');
+    }
 }
