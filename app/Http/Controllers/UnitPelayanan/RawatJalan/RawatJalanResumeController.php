@@ -178,6 +178,7 @@ class RawatJalanResumeController extends Controller
                 'diagnosis' => 'required|json',
                 'icd_10' => 'required|json',
                 'icd_9' => 'required|json',
+                'alergi' => 'nullable|json',
                 'tindak_lanjut_code' => 'required',
                 'tindak_lanjut_name' => 'required',
                 'tgl_kontrol_ulang' => 'nullable|string',
@@ -217,11 +218,13 @@ class RawatJalanResumeController extends Controller
             $newDiagnosis = json_decode($request->diagnosis, true);
             $newIcd10 = json_decode($request->icd_10, true);
             $newIcd9 = json_decode($request->icd_9, true);
+            $newAlergi = json_decode($request->alergi, true);
 
             // Bersihkan data newline
             $newDiagnosis = $cleanArray($newDiagnosis);
             $newIcd10 = $cleanArray($newIcd10);
             $newIcd9 = $cleanArray($newIcd9);
+            $newAlergi = $cleanArray($newAlergi);
 
             $resume->update([
                 'anamnesis' => trim($request->anamnesis),
@@ -229,6 +232,7 @@ class RawatJalanResumeController extends Controller
                 'diagnosis' => $newDiagnosis,
                 'icd_10' => $newIcd10,
                 'icd_9' => $newIcd9,
+                'alergi' => $newAlergi,
                 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);

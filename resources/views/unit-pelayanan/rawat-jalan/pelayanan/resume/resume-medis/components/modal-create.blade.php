@@ -55,9 +55,7 @@
                                         </div>
                                         <hr class="text-secondary">
                                     </div>
-                                    <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
+                                    <ul class="p-2" id="list-alergi">
                                     </ul>
                                     <div class="row mt-3">
                                         <div class="col-12">
@@ -520,6 +518,14 @@
         const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
         console.log('Sending unit_rujuk_internal:', unitId);
         formData.append('unit_rujuk_internal', unitId);
+
+        // Get Alergi
+        const Alergirray = $('#list-alergi').children()
+            .map(function() {
+                return $(this).text();
+                // return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
+        formData.append('alergi', JSON.stringify(Alergirray));
 
         // Validasi tindak lanjut
         const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
