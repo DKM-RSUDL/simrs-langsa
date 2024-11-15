@@ -92,7 +92,7 @@
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
                                     type="radio" name="kd_konsulen_diharapkan" value="1" id="konsul-sewaktu"
-                                    @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 1) checked @endif>
+                                    @if (isset($dataResume) && isset($dataResume->konsultasi) && $dataResume->konsultasi->kd_konsulen_diharapkan == 1) checked @endif>
                                 <label class="form-check-label" for="konsul-sewaktu">
                                     Konsul Sewaktu
                                 </label>
@@ -100,7 +100,7 @@
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
                                     type="radio" name="kd_konsulen_diharapkan" value="2" id="rawat-bersama"
-                                    @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 2) checked @endif>
+                                    @if (isset($dataResume) && isset($dataResume->konsultasi) && $dataResume->konsultasi->kd_konsulen_diharapkan == 2) checked @endif>
                                 <label class="form-check-label" for="rawat-bersama">
                                     Rawat Bersama
                                 </label>
@@ -108,7 +108,7 @@
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
                                     type="radio" name="kd_konsulen_diharapkan" value="3" id="alih-rawat"
-                                    @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 3) checked @endif>
+                                    @if (isset($dataResume) && isset($dataResume->konsultasi) && $dataResume->konsultasi->kd_konsulen_diharapkan == 3) checked @endif>
                                 <label class="form-check-label" for="alih-rawat">
                                     Alih Rawat
                                 </label>
@@ -116,7 +116,7 @@
                             <div class="form-check">
                                 <input class="form-check-input @error('konsulen_harap') is-invalid @enderror"
                                     type="radio" name="kd_konsulen_diharapkan" value="4" id="kembali-unit-asal"
-                                    @if ($dataResume->konsultasi->kd_konsulen_diharapkan == 4) checked @endif>
+                                    @if (isset($dataResume) && isset($dataResume->konsultasi) && $dataResume->konsultasi->kd_konsulen_diharapkan == 4) checked @endif>
                                 <label class="form-check-label" for="kembali-unit-asal">
                                     kembali ke unit yang meminta untuk persetujuan tindakan & pengobatan
                                 </label>
