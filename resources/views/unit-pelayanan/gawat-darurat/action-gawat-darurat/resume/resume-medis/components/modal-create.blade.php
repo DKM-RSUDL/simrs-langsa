@@ -509,7 +509,7 @@
         // Get Alergi
         const Alergirray = $('#list-alergi').children()
             .map(function() {
-                return $(this).text().trim().split(' ')[0];
+                return $(this).text();
             }).get().filter(Boolean);
         formData.append('alergi', JSON.stringify(Alergirray));
 
