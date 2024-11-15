@@ -229,6 +229,7 @@ class ResumeController extends Controller
             'diagnosis' => 'required|json',
             'icd_10' => 'required|json',
             'icd_9' => 'required|json',
+            'alergi' => 'nullable|json',
 
             // RmeResumeDtl
             'tindak_lanjut_code' => 'required|string',
@@ -262,11 +263,13 @@ class ResumeController extends Controller
         $newDiagnosis = json_decode($request->diagnosis, true);
         $newIcd10 = json_decode($request->icd_10, true);
         $newIcd9 = json_decode($request->icd_9, true);
+        $newAlergi = json_decode($request->alergi, true);
 
         // Bersihkan data newline
         $newDiagnosis = $cleanArray($newDiagnosis);
         $newIcd10 = $cleanArray($newIcd10);
         $newIcd9 = $cleanArray($newIcd9);
+        $newAlergi = $cleanArray($newAlergi);
 
         $data->update([
             'anamnesis' => $request->anamnesis,
@@ -274,6 +277,7 @@ class ResumeController extends Controller
             'diagnosis' => $newDiagnosis,
             'icd_10' => $newIcd10,
             'icd_9' => $newIcd9,
+            'alergi' => $newAlergi,
             'status' => 1,
             'user_validasi' => Auth::id(),
         ]);

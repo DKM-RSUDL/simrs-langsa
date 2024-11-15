@@ -55,10 +55,7 @@
                                         </div>
                                         <hr class="text-secondary">
                                     </div>
-                                    <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
-                                    </ul>
+                                    <ul class="list-group" id="list-alergi"></ul>
                                     <div class="row mt-3">
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
@@ -508,6 +505,13 @@
             return;
         }
         formData.append('icd_9', JSON.stringify(icd9Array));
+
+        // Get Alergi
+        const Alergirray = $('#list-alergi').children()
+            .map(function() {
+                return $(this).text().trim().split(' ')[0];
+            }).get().filter(Boolean);
+        formData.append('alergi', JSON.stringify(Alergirray));
 
         // Get control ulang tgl
         const ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;

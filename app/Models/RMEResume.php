@@ -25,6 +25,7 @@ class RMEResume extends Model
         'diagnosis',
         'icd_10',
         'icd_9',
+        'alergi',
         'status',
         'user_validasi'
     ];
@@ -34,6 +35,7 @@ class RMEResume extends Model
         'diagnosis' => 'array',
         'icd_10' => 'array',
         'icd_9' => 'array',
+        'alergi' => 'array',
     ];
 
     public function rmeResumeDet()
