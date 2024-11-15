@@ -145,6 +145,37 @@
                 width: 24px;
                 height: 24px;
             }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu>.dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+            }
+
+            .dropdown-submenu:hover>.dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle {
+                position: relative;
+                padding-right: 30px;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle::after {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .dropdown-submenu:hover>a.dropdown-toggle::after {
+                transform: translateY(-50%) rotate(-90deg);
+            }
         </style>
     @endpush
 
@@ -259,7 +290,7 @@
                                                             <option value="">--Pilih Dokter--</option>
                                                             @foreach ($dokter as $dok)
                                                                 <option value="{{ $dok->dokter->kd_dokter }}"
-                                                                    @selected(old('dokter_triase') == $dok->dokter->kd_dokter)>
+                                                                    @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
                                                                     {{ $dok->dokter->nama_lengkap }}
                                                                 </option>
                                                             @endforeach
@@ -855,7 +886,53 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `<a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-primary btn-sm m-2"><i class="ti-pencil-alt"></i></a> <a href="#" class="btn btn-secondary btn-sm">...</a>`;
+                            return `<div class="d-flex justify-content-center">
+                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                                <i class="ti-pencil-alt"></i>
+                                        </a>
+                                        
+                                        <div class="dropdown ms-1">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu shadow-lg">
+                                                <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    `;
                         }
                     },
                     {
@@ -966,6 +1043,21 @@
         });
 
 
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+
+            dropdownSubmenus.forEach(function(submenu) {
+                submenu.addEventListener('mouseover', function() {
+                    submenu.querySelector('.dropdown-menu').classList.add('show');
+                });
+
+                submenu.addEventListener('mouseout', function() {
+                    submenu.querySelector('.dropdown-menu').classList.remove('show');
+                });
+            });
+        });
+
+
         // Foto Upload
         $('#fotoPasienlabel').click(function(e) {
             e.preventDefault();
@@ -1069,12 +1161,18 @@
 
         // Reinisialisasi Select2 ketika modal dibuka
         $('#addPatientTriage').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#dokter_triase').mousedown(function(e) {
+                e.preventDefault();
+            });
+
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
 
         function initSelect2() {
-            $('#addPatientTriage #dokter_triase').select2({
+            $('#addPatientTriage .select2').select2({
                 dropdownParent: $('#addPatientTriage'),
                 width: '100%'
             });

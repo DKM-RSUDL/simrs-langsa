@@ -49,10 +49,12 @@
                                     <p class="m-0 p-0 text-primary fw-bold">PPA</p>
                                 </label>
                                 <select name="ppa" id="ppa"
-                                    class="form-control select2 @error('ppa') is-invalid @enderror" required>
+                                    class="form-control @error('ppa') is-invalid @enderror" required
+                                    onfocus="this.blur()">
                                     <option value="">--Pilih PPA--</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->kd_dokter }}" @selected($dok->kd_karyawan == auth()->user()->kd_karyawan)>
+                                            {{ $dok->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
 
@@ -225,10 +227,11 @@
                                     <p class="m-0 p-0 text-primary fw-bold">PPA</p>
                                 </label>
                                 <select name="ppa" id="ppa"
-                                    class="form-control select2 @error('ppa') is-invalid @enderror" required>
+                                    class="form-control @error('ppa') is-invalid @enderror" required>
                                     <option value="">--Pilih PPA--</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->kd_dokter }}">
+                                            {{ $dok->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
 

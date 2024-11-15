@@ -103,6 +103,8 @@ class RadiologiController extends Controller
             })
             // end filter
             ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('kategori', 'RD')
             ->orderBy('kd_order', 'desc')
             ->get();
