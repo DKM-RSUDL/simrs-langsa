@@ -41,7 +41,7 @@
                     const [code] = icd.split(' - ');
                     const newItem = `<li class="list-group-item d-flex justify-content-between align-items-center" data-index="${index}">
                     ${code}
-                    <button type="button" class="btn btn-danger btn-sm remove-icd mt-2">X</button>
+                    <button type="button" class="btn remove-icd mt-2"><i class="fas fa-times text-danger"></i></button>
                 </li>`;
                     icdList.append(newItem);
                 });

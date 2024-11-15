@@ -58,7 +58,7 @@
                     diagnosisList += `
                     <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
                         <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                        <button type="button" class="btn btn-sm btn-danger remove-diagnosis mt-1" data-id="${uniqueId}">X</button>
+                        <button type="button" class="btn remove-diagnosis" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
                     </li>
                 `;
 
@@ -66,7 +66,7 @@
                     diagnoseDisplay += `
                     <div class="d-flex justify-content-between align-items-center" id="main-${uniqueId}">
                         <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
-                        <button type="button" class="btn btn-sm btn-danger remove-main-diagnosis" data-id="${uniqueId}">X</button>
+                        <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
                     </div><br>
                 `;
                 });

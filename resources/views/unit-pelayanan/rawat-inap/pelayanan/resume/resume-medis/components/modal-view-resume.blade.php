@@ -51,8 +51,13 @@
                                         <hr class="text-secondary">
                                     </div>
                                     <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
+                                        @if (isset($dataResume->alergi) && is_array($dataResume->alergi))
+                                            @foreach ($dataResume->alergi as $alergi)
+                                                <li>{{ $alergi }}</li>
+                                            @endforeach
+                                        @else
+                                            <li>-</li>
+                                        @endif
                                     </ul>
                                     <div class="row mt-3">
                                         <div class="col-12">

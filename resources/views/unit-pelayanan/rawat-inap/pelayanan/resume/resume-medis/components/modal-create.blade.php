@@ -56,9 +56,9 @@
                                         <hr class="text-secondary">
                                     </div>
                                     <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
+                                        <ul class="list-group" id="list-alergi"></ul>
                                     </ul>
+
                                     <div class="row mt-3">
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
@@ -474,6 +474,13 @@
             return;
         }
         formData.append('icd_9', JSON.stringify(icd9Array));
+
+        // Get Alergi
+        const Alergirray = $('#list-alergi').children()
+            .map(function() {
+                return $(this).text();
+            }).get().filter(Boolean);
+        formData.append('alergi', JSON.stringify(Alergirray));
 
         const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
         formData.append('tindak_lanjut_name', tindakLanjutElement.val());
