@@ -53,8 +53,8 @@
                                     onfocus="this.blur()">
                                     <option value="">--Pilih PPA--</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}" @selected($dok->kd_karyawan == auth()->user()->kd_karyawan)>
-                                            {{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->dokter->kd_dokter }}" @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                            {{ $dok->dokter->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
 
@@ -230,8 +230,8 @@
                                     class="form-control @error('ppa') is-invalid @enderror" required>
                                     <option value="">--Pilih PPA--</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}">
-                                            {{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->dokter->kd_dokter }}">
+                                            {{ $dok->dokter->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
 

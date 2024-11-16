@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                } */
+                        background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                    } */
     </style>
 @endpush
 
@@ -298,6 +298,14 @@
         $('#editRadiologiModal #searchInput').on('focus', function() {
             dataPemeriksaanItemEdit();
         });
+
+        $('#editRadiologiModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
+            });
+        })
 
         function searchDataPemeriksaan(keyword) {
             let dataPemeriksaan = @json($produk);

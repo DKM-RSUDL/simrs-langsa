@@ -17,10 +17,11 @@
                             <label for="dokter_pengirim" class="form-label fw-bold h5 text-dark">Dokter
                                 Pengirim:</label>
                             <select id="dokter_pengirim" name="dokter_pengirim"
-                                class="form-select select2 @error('dokter_pengirim') is-invalid @enderror" required>
+                                class="form-select @error('dokter_pengirim') is-invalid @enderror" required>
                                 <option value="">--Pilih Dokter--</option>
                                 @foreach ($dokterPengirim as $dok)
-                                    <option value="{{ $dok->dokter->kd_dokter }}">{{ $dok->dokter->nama_lengkap }}
+                                    <option value="{{ $dok->dokter->kd_dokter }}" @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                        {{ $dok->dokter->nama_lengkap }}
                                     </option>
                                 @endforeach
                             </select>
