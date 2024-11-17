@@ -44,7 +44,7 @@
                                 <select id="kd_dokter" name="kd_dokter" class="form-select">
                                     <option value="" disabled>-Pilih Dokter Pengirim-</option>
                                     @foreach ($dataDokter as $d)
-                                        <option value="{{ $d->dokter->kd_dokter }}" @selected(old('kd_dokter', $laborPK->kd_dokter))>
+                                        <option value="{{ $d->dokter->kd_dokter }}" @selected(old('kd_dokter', $laborPK->kd_dokter) == $d->dokter->kd_dokter)>
                                             {{ $d->dokter->nama_lengkap }}
                                         </option>
                                     @endforeach

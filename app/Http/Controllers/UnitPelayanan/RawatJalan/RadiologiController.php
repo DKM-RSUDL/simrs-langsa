@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Produk;
 use App\Models\RMEResume;
@@ -32,7 +33,10 @@ class RadiologiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dokter = Dokter::all();
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+                                ->where('kd_unit', $kd_unit)
+                                ->whereRelation('dokter', 'status', 1)
+                                ->get();
 
         $produk = Produk::with(['klas'])
             ->distinct()
