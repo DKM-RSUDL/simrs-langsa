@@ -16,7 +16,9 @@
 <div class="modal fade" id="addRadiologiModal" tabindex="-1" aria-labelledby="addRadiologiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-jalan.radiologi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-jalan.radiologi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
@@ -33,10 +35,13 @@
                         <div class="col-md-4">
                             <div class="patient-card">
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
-                                <select id="kd_dokter" name="kd_dokter" class="form-select @error('kd_dokter') is-invalid @enderror" aria-label="Pilih dokter pengirim" required>
+                                <select id="kd_dokter" name="kd_dokter"
+                                    class="form-select @error('kd_dokter') is-invalid @enderror"
+                                    aria-label="Pilih dokter pengirim" required>
                                     <option value="">-Pilih Dokter Pengirim-</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}" @selected(old('kd_dokter') == $dok->kd_dokter)>{{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->dokter->kd_dokter }}" @selected($dok->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                            {{ $dok->dokter->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
                                 @error('kd_dokter')
@@ -47,8 +52,11 @@
 
                                 <div class="row">
                                     <div class="col-7">
-                                        <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal Order:</label>
-                                        <input type="date" id="tgl_order" name="tgl_order" class="form-control @error('tgl_order') is-invalid @enderror" value="{{ old('tgl_order', date('Y-m-d')) }}" required>
+                                        <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal
+                                            Order:</label>
+                                        <input type="date" id="tgl_order" name="tgl_order"
+                                            class="form-control @error('tgl_order') is-invalid @enderror"
+                                            value="{{ old('tgl_order', date('Y-m-d')) }}" required>
                                         @error('tgl_order')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -58,7 +66,9 @@
 
                                     <div class="col-5">
                                         <label for="jam_order" class="form-label fw-bold h5 text-dark">Jam</label>
-                                        <input type="time" id="jam_order" name="jam_order" class="form-control @error('jam_order') is-invalid @enderror" value="{{ old('jam_order', date('H:i')) }}" required>
+                                        <input type="time" id="jam_order" name="jam_order"
+                                            class="form-control @error('jam_order') is-invalid @enderror"
+                                            value="{{ old('jam_order', date('H:i')) }}" required>
                                         @error('jam_order')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -73,11 +83,15 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('cyto') is-invalid @enderror" type="radio" name="cyto" value="1" id="cyto_yes" @checked(old('cyto') == 1) required>
+                                            <input class="form-check-input @error('cyto') is-invalid @enderror"
+                                                type="radio" name="cyto" value="1" id="cyto_yes"
+                                                @checked(old('cyto') == 1) required>
                                             <label class="form-check-label" for="cyto_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('cyto') is-invalid @enderror" type="radio" name="cyto" value="0" id="cyto_no" @checked(old('cyto') == 0) required>
+                                            <input class="form-check-input @error('cyto') is-invalid @enderror"
+                                                type="radio" name="cyto" value="0" id="cyto_no"
+                                                @checked(old('cyto') == 0) required>
                                             <label class="form-check-label" for="cyto_no">Tidak</label>
                                         </div>
                                         @error('cyto')
@@ -89,11 +103,15 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror" type="radio" name="puasa" value="1" id="puasa_yes" @checked(old('puasa') == 1) required>
+                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
+                                                type="radio" name="puasa" value="1" id="puasa_yes"
+                                                @checked(old('puasa') == 1) required>
                                             <label class="form-check-label" for="puasa_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror" type="radio" name="puasa" value="0" id="puasa_no" @checked(old('puasa') == 0) required>
+                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
+                                                type="radio" name="puasa" value="0" id="puasa_no"
+                                                @checked(old('puasa') == 0) required>
                                             <label class="form-check-label" for="puasa_no">Tidak</label>
                                         </div>
                                         @error('puasa')
@@ -113,13 +131,17 @@
                                 <div class="row">
                                     <div class="row">
                                         <div class="col-7">
-                                            <label for="tgl_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal:</label>
-                                            <input type="date" id="tgl_pemeriksaan" name="tgl_pemeriksaan" class="form-control" value="{{ old('tgl_pemeriksaan') }}">
+                                            <label for="tgl_pemeriksaan"
+                                                class="form-label fw-bold h5 text-dark">Tanggal:</label>
+                                            <input type="date" id="tgl_pemeriksaan" name="tgl_pemeriksaan"
+                                                class="form-control" value="{{ old('tgl_pemeriksaan') }}">
                                         </div>
-    
+
                                         <div class="col-5">
-                                            <label for="jam_pemeriksaan" class="form-label fw-bold h5 text-dark">Jam:</label>
-                                            <input type="time" id="jam_pemeriksaan" name="jam_pemeriksaan" class="form-control" value="{{ old('jam_pemeriksaan') }}">
+                                            <label for="jam_pemeriksaan"
+                                                class="form-label fw-bold h5 text-dark">Jam:</label>
+                                            <input type="time" id="jam_pemeriksaan" name="jam_pemeriksaan"
+                                                class="form-control" value="{{ old('jam_pemeriksaan') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -138,8 +160,10 @@
                                 </select> --}}
 
                                 <div class="dropdown mt-3">
-                                    <input type="text" class="form-control mt-3" id="searchInput" placeholder="Cari produk..." autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput" style="display: none;"></ul>
+                                    <input type="text" class="form-control mt-3" id="searchInput"
+                                        placeholder="Cari produk..." autocomplete="off">
+                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                        style="display: none;"></ul>
                                 </div>
                             </div>
                         </div>
@@ -162,10 +186,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="editRadiologiModal" tabindex="-1" aria-labelledby="editRadiologiModalLabel" aria-hidden="true">
+<div class="modal fade" id="editRadiologiModal" tabindex="-1" aria-labelledby="editRadiologiModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-jalan.radiologi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-jalan.radiologi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
                 @method('put')
 
@@ -183,11 +210,15 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="patient-card">
-                                <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
-                                <select id="kd_dokter" name="kd_dokter" class="form-select @error('kd_dokter') is-invalid @enderror" aria-label="Pilih dokter pengirim" required>
+                                <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter
+                                    Pengirim:</label>
+                                <select id="kd_dokter" name="kd_dokter"
+                                    class="form-select @error('kd_dokter') is-invalid @enderror"
+                                    aria-label="Pilih dokter pengirim" required>
                                     <option value="">-Pilih Dokter Pengirim-</option>
                                     @foreach ($dokter as $dok)
-                                        <option value="{{ $dok->kd_dokter }}" @selected(old('kd_dokter') == $dok->kd_dokter)>{{ $dok->nama_lengkap }}</option>
+                                        <option value="{{ $dok->dokter->kd_dokter }}" @selected(old('kd_dokter') == $dok->dokter->kd_dokter)>
+                                            {{ $dok->dokter->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
                                 @error('kd_dokter')
@@ -198,8 +229,11 @@
 
                                 <div class="row">
                                     <div class="col-7">
-                                        <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal Order:</label>
-                                        <input type="date" id="tgl_order" name="tgl_order" class="form-control @error('tgl_order') is-invalid @enderror" value="{{ old('tgl_order') }}" required>
+                                        <label for="tgl_order" class="form-label fw-bold h5 text-dark">Tanggal
+                                            Order:</label>
+                                        <input type="date" id="tgl_order" name="tgl_order"
+                                            class="form-control @error('tgl_order') is-invalid @enderror"
+                                            value="{{ old('tgl_order') }}" required>
                                         @error('tgl_order')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -209,7 +243,9 @@
 
                                     <div class="col-5">
                                         <label for="jam_order" class="form-label fw-bold h5 text-dark">Jam</label>
-                                        <input type="time" id="jam_order" name="jam_order" class="form-control @error('jam_order') is-invalid @enderror" value="{{ old('jam_order') }}" required>
+                                        <input type="time" id="jam_order" name="jam_order"
+                                            class="form-control @error('jam_order') is-invalid @enderror"
+                                            value="{{ old('jam_order') }}" required>
                                         @error('jam_order')
                                             <div class="invalid-feedback">
                                                 {{ $error }}
@@ -224,11 +260,15 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Cito?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('cyto') is-invalid @enderror" type="radio" name="cyto" value="1" id="cyto_yes" @checked(old('cyto') == 1) required>
+                                            <input class="form-check-input @error('cyto') is-invalid @enderror"
+                                                type="radio" name="cyto" value="1" id="cyto_yes"
+                                                @checked(old('cyto') == 1) required>
                                             <label class="form-check-label" for="cyto_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('cyto') is-invalid @enderror" type="radio" name="cyto" value="0" id="cyto_no" @checked(old('cyto') == 0) required>
+                                            <input class="form-check-input @error('cyto') is-invalid @enderror"
+                                                type="radio" name="cyto" value="0" id="cyto_no"
+                                                @checked(old('cyto') == 0) required>
                                             <label class="form-check-label" for="cyto_no">Tidak</label>
                                         </div>
                                         @error('cyto')
@@ -240,11 +280,15 @@
                                     <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror" type="radio" name="puasa" value="1" id="puasa_yes" @checked(old('puasa') == 1) required>
+                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
+                                                type="radio" name="puasa" value="1" id="puasa_yes"
+                                                @checked(old('puasa') == 1) required>
                                             <label class="form-check-label" for="puasa_yes">Ya</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror" type="radio" name="puasa" value="0" id="puasa_no" @checked(old('puasa') == 0) required>
+                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
+                                                type="radio" name="puasa" value="0" id="puasa_no"
+                                                @checked(old('puasa') == 0) required>
                                             <label class="form-check-label" for="puasa_no">Tidak</label>
                                         </div>
                                         @error('puasa')
@@ -264,13 +308,17 @@
                                 <div class="row">
                                     <div class="row">
                                         <div class="col-7">
-                                            <label for="tgl_pemeriksaan" class="form-label fw-bold h5 text-dark">Tanggal:</label>
-                                            <input type="date" id="tgl_pemeriksaan" name="tgl_pemeriksaan" class="form-control" value="{{ old('tgl_pemeriksaan') }}">
+                                            <label for="tgl_pemeriksaan"
+                                                class="form-label fw-bold h5 text-dark">Tanggal:</label>
+                                            <input type="date" id="tgl_pemeriksaan" name="tgl_pemeriksaan"
+                                                class="form-control" value="{{ old('tgl_pemeriksaan') }}">
                                         </div>
-    
+
                                         <div class="col-5">
-                                            <label for="jam_pemeriksaan" class="form-label fw-bold h5 text-dark">Jam:</label>
-                                            <input type="time" id="jam_pemeriksaan" name="jam_pemeriksaan" class="form-control" value="{{ old('jam_pemeriksaan') }}">
+                                            <label for="jam_pemeriksaan"
+                                                class="form-label fw-bold h5 text-dark">Jam:</label>
+                                            <input type="time" id="jam_pemeriksaan" name="jam_pemeriksaan"
+                                                class="form-control" value="{{ old('jam_pemeriksaan') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -289,8 +337,10 @@
                                 </select> --}}
 
                                 <div class="dropdown mt-3">
-                                    <input type="text" class="form-control mt-3" id="searchInput" placeholder="Cari produk..." autocomplete="off">
-                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput" style="display: none;"></ul>
+                                    <input type="text" class="form-control mt-3" id="searchInput"
+                                        placeholder="Cari produk..." autocomplete="off">
+                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                        style="display: none;"></ul>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +363,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="showRadiologiModal" tabindex="-1" aria-labelledby="showRadiologiModalLabel" aria-hidden="true">
+<div class="modal fade" id="showRadiologiModal" tabindex="-1" aria-labelledby="showRadiologiModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
@@ -398,13 +449,13 @@
         const $dataList = $('#addRadiologiModal #dataList');
         const $orderList = $('#addRadiologiModal #orderList');
 
-        function dataPemeriksaanItem()
-        {
+        function dataPemeriksaanItem() {
             const dataPemeriksaan = @json($produk);
             var listHtml = '';
 
             dataPemeriksaan.forEach(item => {
-                listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
+                listHtml +=
+                    `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
             });
 
             $dataList.html(listHtml);
@@ -415,6 +466,21 @@
             dataPemeriksaanItem();
         });
 
+        $('#addRadiologiModal').on('shown.bs.modal', function(e) {
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
+            });
+        });
+
+        $('#editRadiologiModal').on('shown.bs.modal', function(e) {
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
+            });
+        });
 
         $('#addRadiologiModal #searchInput').keyup(function() {
             let $this = $(this);
@@ -425,9 +491,10 @@
 
                 let dataSearch = searchDataPemeriksaan(search);
                 let listHtml = '';
-                
+
                 dataSearch.forEach(item => {
-                    listHtml += `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
+                    listHtml +=
+                        `<a class="dropdown-item" href="#" data-kd-produk="${item.kp_produk}">${item.deskripsi}</a>`;
                 });
 
                 $('#addRadiologiModal #dataList').html(listHtml);

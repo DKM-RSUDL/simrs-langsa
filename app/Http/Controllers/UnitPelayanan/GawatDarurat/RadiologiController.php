@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Produk;
 use App\Models\RMEResume;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class RadiologiController extends Controller
 {
-    public function index(Request $request, $kd_pasien, $tgl_masuk)
+    public function index($kd_pasien, $tgl_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -31,7 +32,10 @@ class RadiologiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dokter = Dokter::where('status', 1)->get();
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+                            ->where('kd_unit', 3)
+                            ->whereRelation('dokter', 'status', 1)
+                            ->get();
 
         $produk = Produk::with(['klas'])
             ->distinct()
@@ -103,6 +107,8 @@ class RadiologiController extends Controller
             })
             // end filter
             ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('kategori', 'RD')
             ->orderBy('kd_order', 'desc')
             ->get();

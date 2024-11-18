@@ -160,12 +160,17 @@
 
         // Reinisialisasi Select2 ketika modal dibuka
         $('#addKonsulModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#dokter_pengirim').mousedown(function(e) {
+                e.preventDefault();
+            });
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
 
         function initSelect2() {
-            $('#addKonsulModal select').select2({
+            $('#addKonsulModal .select2').select2({
                 dropdownParent: $('#addKonsulModal'),
                 width: '100%'
             });

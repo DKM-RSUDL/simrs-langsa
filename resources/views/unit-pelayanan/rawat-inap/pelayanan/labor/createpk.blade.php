@@ -8,15 +8,17 @@
 @endpush
 
 <div class="d-grid gap-2">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#extraLargeModal" type="button">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLaborModal" type="button">
         <i class="ti-plus"></i> Tambah
     </button>
 </div>
 
-<div class="modal fade" id="extraLargeModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addLaborModal" tabindex="-1" aria-labelledby="extraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-inap.lab-patologi-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-inap.lab-patologi-klinik.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                method="post">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
@@ -38,10 +40,9 @@
                                 <select id="kd_dokter" name="kd_dokter" class="form-select"
                                     aria-label="Pilih dokter pengirim" required>
                                     <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
-                                    @foreach ($dataDokter as $dokter)
-                                        <option value="{{ $dokter->kd_dokter }}"
-                                            {{ old('kd_dokter') == $dokter->kd_dokter ? 'selected' : '' }}>
-                                            {{ $dokter->nama_lengkap }}
+                                    @foreach ($dataDokter as $d)
+                                        <option value="{{ $d->dokter->kd_dokter }}" @selected($d->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                            {{ $d->dokter->nama_lengkap }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -180,7 +181,7 @@
                     $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                         if (!addedDescriptions.has(item.produk.deskripsi)) {
                             addedDescriptions.add(item.produk
-                            .deskripsi);
+                                .deskripsi);
                             const $li = $('<li>');
                             $li.html(
                                 `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
@@ -201,14 +202,14 @@
                 if ($jenisPemeriksaanSelect.val()) {
                     const selectedCategory = $jenisPemeriksaanSelect.val();
                     const addedDescriptions =
-                new Set();
+                        new Set();
 
                     if (dataPemeriksaan[selectedCategory]) {
                         $.each(dataPemeriksaan[selectedCategory], function(index, item) {
                             if (item.produk.deskripsi.toLowerCase().includes(inputValue) && !
                                 addedDescriptions.has(item.produk.deskripsi)) {
                                 addedDescriptions.add(item.produk
-                                .deskripsi);
+                                    .deskripsi);
                                 const $li = $('<li>');
                                 $li.html(
                                     `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
@@ -267,6 +268,14 @@
                 if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
                     $dataList.hide();
                 }
+            });
+        });
+
+        $('#addLaborModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
             });
         });
     </script>

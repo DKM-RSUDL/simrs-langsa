@@ -120,38 +120,38 @@
 @endsection
 
 @push('js')
-{{-- Filter data to anas --}}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#SelectOption').change(function() {
-            var periode = $(this).val();
-            var queryString = '?periode=' + periode;
-            window.location.href =
-                "{{ route('konsultasi.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
-                queryString;
+    {{-- Filter data to anas --}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#SelectOption').change(function() {
+                var periode = $(this).val();
+                var queryString = '?periode=' + periode;
+                window.location.href =
+                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    queryString;
+            });
         });
-    });
 
-    $(document).ready(function() {
-        $('#filterButton').click(function(e) {
-            e.preventDefault();
+        $(document).ready(function() {
+            $('#filterButton').click(function(e) {
+                e.preventDefault();
 
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
 
-            if (!startDate || !endDate) {
-                alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
-                return;
-            }
+                if (!startDate || !endDate) {
+                    alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
+                    return;
+                }
 
-            var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
+                var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
-            window.location.href =
-                "{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
-                queryString;
+                window.location.href =
+                    "{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    queryString;
+            });
         });
-    });
-</script>
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -160,12 +160,18 @@
 
         // Reinisialisasi Select2 ketika modal dibuka
         $('#addKonsulModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#dokter_pengirim').mousedown(function(e) {
+                e.preventDefault();
+            });
+
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
 
         function initSelect2() {
-            $('#addKonsulModal select').select2({
+            $('#addKonsulModal .select2').select2({
                 dropdownParent: $('#addKonsulModal'),
                 width: '100%'
             });

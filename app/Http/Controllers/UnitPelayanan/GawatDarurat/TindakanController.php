@@ -7,6 +7,7 @@ use App\Models\DetailComponent;
 use App\Models\DetailPrsh;
 use App\Models\DetailTransaksi;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\Produk;
@@ -124,7 +125,10 @@ class TindakanController extends Controller
             })
             ->get();
 
-        $dokter = Dokter::where('status', 1)->get();
+        $dokter = DokterKlinik::with(['dokter', 'unit'])
+                            ->where('kd_unit', 3)
+                            ->whereRelation('dokter', 'status', 1)
+                            ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;

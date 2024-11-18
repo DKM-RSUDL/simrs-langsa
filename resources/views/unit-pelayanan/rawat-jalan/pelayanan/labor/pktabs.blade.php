@@ -32,11 +32,11 @@
             <!-- Search Bar -->
             <div class="col-md-3">
                 <form method="GET"
-                    action="{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
+                    action="{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
 
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="dokter & no order" aria-label="Cari"
-                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <input type="text" name="search" class="form-control" placeholder="dokter & no order"
+                            aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </div>
                 </form>
@@ -108,7 +108,7 @@
                         <td>
                             @if ($laborPK->status_order == 1)
                                 <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    data-bs-target="#editLaborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
                                     <i class="ti-pencil"></i>
                                 </a>
                                 <a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
@@ -151,7 +151,7 @@
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
                 window.location.href =
-                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });
@@ -172,7 +172,7 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit,'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
+                    "{{ route('rawat-jalan.lab-patologi-klinik.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
         });

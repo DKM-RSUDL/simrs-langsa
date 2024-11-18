@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterInap;
 use App\Models\Kunjungan;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\RMEResume;
@@ -37,7 +38,12 @@ class RawatInapLabPatologiKlinikController extends Controller
             ->get()
             ->groupBy('kategori');
 
-        $dataDokter = Dokter::where('status', 1)->get();
+        // $dataDokter = Dokter::where('status', 1)->get();
+
+        $dataDokter = DokterInap::with(['dokter', 'unit'])
+                                ->where('kd_unit', '1001')
+                                ->whereRelation('dokter', 'status', 1)
+                                ->get();
 
         $search = $request->input('search');
         $periode = $request->input('periode');
