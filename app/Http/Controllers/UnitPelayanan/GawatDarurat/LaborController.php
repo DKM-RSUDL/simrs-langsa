@@ -139,6 +139,7 @@ class LaborController extends Controller
                         'so.tgl_masuk',
                         'sod.kd_produk',
                         'p.deskripsi as nama_produk',
+                        'kp.klasifikasi',
                         'lt.item_test',
                         'sod.jumlah',
                         'sod.status',
@@ -152,6 +153,7 @@ class LaborController extends Controller
                     ])
                     ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
                     ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kp_produk')
+                    ->join('KLAS_PRODUK as kp', 'p.kd_klas', '=', 'kp.kd_klas')
                     ->join('LAB_HASIL as lh', function ($join) {
                         // $join->on('sod.kd_produk', '=', 'lh.kd_produk')
                         $join->on('p.kd_produk', '=', 'lh.kd_produk')
@@ -173,7 +175,7 @@ class LaborController extends Controller
                     ->get();
 
         // Mengelompokkan hasil berdasarkan nama produk
-        $groupedResults = collect($results)->groupBy('nama_produk')->map(function ($group) {
+        $groupedResults = collect($results)->groupBy('klasifikasi')->map(function ($group) {
             return $group->map(function ($item) {
                 return [
                     'item_test' => $item->item_test ?? '-',
