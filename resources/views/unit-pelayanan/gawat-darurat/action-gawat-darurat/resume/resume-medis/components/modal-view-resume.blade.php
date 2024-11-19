@@ -140,7 +140,6 @@
                                                                 @php
                                                                     $statusOrder = $detail->status_order;
                                                                     $statusLabel = '';
-
                                                                     if ($statusOrder == 0) {
                                                                         $statusLabel = 'Diproses';
                                                                     }
@@ -151,14 +150,30 @@
                                                                         $statusLabel = 'Selesai';
                                                                     }
                                                                 @endphp
-
                                                                 {!! $statusLabel !!}
                                                             </td>
-                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                            <td>
+                                                                {{-- <button type="button"
+                                                                    class="btn btn-sm btn-info text-white btn-view-labor"
+                                                                    data-order-id="{{ $order->kd_order }}"
+                                                                    data-produk="{{ $detail->produk->deskripsi ?? '' }}"
+                                                                    data-hasil="{{ $detail->labHasil->hasil ?? '-' }}"
+                                                                    data-kd-pasien="{{ $order->kd_pasien }}"
+                                                                    data-tgl-masuk="{{ $order->tgl_masuk }}"
+                                                                    data-urut-masuk="{{ $order->urut_masuk }}"
+                                                                    data-kd-unit="{{ $order->kd_unit }}">
+                                                                    Lihat Hasil
+                                                                </button> --}}
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-info text-white btn-view-labor-create"
+                                                                    data-order-id="{{ $order->id }}"
+                                                                    data-details='@json($order->details)'>
+                                                                    Lihat Hasil
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -336,11 +351,13 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="kontrol"
-                                                class="form-check-input me-2" value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}"
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="kontrol" class="form-check-input me-2"
+                                                value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}"
                                                 data-code="1" checked>
-                                            <label for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
+                                            <label
+                                                for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
                                         </a>
                                     </div>
                                 </div>
@@ -357,6 +374,7 @@
         </div>
     </div>
 </div>
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-labor')
 
 <script>
     $('#btn-view-resume').on('click', function() {

@@ -151,7 +151,19 @@
 
                                                                 {!! $statusLabel !!}
                                                             </td>
-                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                            {{-- <td><a href="#">Lihat Hasil</a></td> --}}
+                                                            <td>
+                                                                @if($detail->hasil_laboratorium && $detail->hasil_laboratorium->hasil_lab)
+                                                                    {{ $detail->hasil_laboratorium->hasil_lab }}
+                                                                @else
+                                                                    <button type="button"
+                                                                            class="btn btn-sm btn-info text-white btn-view-labor"
+                                                                            data-order-id="{{ $order->kd_order }}"
+                                                                            data-hasil-lab='@json($order->hasilLab)'>
+                                                                        Lihat Hasil
+                                                                    </button>
+                                                                @endif
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @endforeach
@@ -408,6 +420,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kontrol-ulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-rs-rujuk-bagian')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-labor-create')
 
 
 <script type="text/javascript">
@@ -652,5 +665,4 @@
         console.log('Radio button changed:', $(this).val());
         console.log('Code:', $(this).data('code'));
     });
-
 </script>

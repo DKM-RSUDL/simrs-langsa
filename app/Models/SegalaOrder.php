@@ -11,7 +11,7 @@ class SegalaOrder extends Model
     protected $table = 'SEGALA_ORDER';
     protected $primaryKey = 'kd_order';
     public $incrementing = false;
-    protected $keyType = 'float';
+    protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
@@ -42,6 +42,11 @@ class SegalaOrder extends Model
         'puasa' => 'string',
     ];
 
+    public function labHasil()
+    {
+        return $this->hasMany(LabHasil::class, 'kd_pasien', 'kd_pasien');
+    }
+
     public function details()
     {
         return $this->hasMany(SegalaOrderDet::class, 'kd_order', 'kd_order');
@@ -63,7 +68,7 @@ class SegalaOrder extends Model
 
     public function produk()
     {
-        return $this->belongsTo(produk::class, 'kd_produk', 'kd_produk');
+        return $this->belongsTo(produk::class, 'kd_produk', 'kp_produk');
     }
 
     public function unit()
@@ -71,10 +76,10 @@ class SegalaOrder extends Model
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 
-    public function labHasil()
-    {
-        return $this->hasMany(LabHasil::class, 'kd_pasien', 'kd_pasien')
-            ->whereColumn('tgl_masuk', 'tgl_masuk')
-            ->whereColumn('kd_produk', 'kd_produk');
-    }
+    // public function labHasil()
+    // {
+    //     return $this->hasMany(LabHasil::class, 'kd_pasien', 'kd_pasien')
+    //         ->whereColumn('tgl_masuk', 'tgl_masuk')
+    //         ->whereColumn('kd_lab', 'kd_produk');
+    // }
 }

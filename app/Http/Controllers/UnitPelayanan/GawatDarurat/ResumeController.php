@@ -111,8 +111,8 @@ class ResumeController extends Controller
             ->whereRelation('dokter', 'status', 1)
             ->first();
 
-        // Mengambil data hasil pemeriksaan laboratorium
-        $dataLabor = SegalaOrder::with(['details.produk'])
+        // // Mengambil data hasil pemeriksaan laboratorium
+        $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -122,6 +122,7 @@ class ResumeController extends Controller
             })
             ->orderBy('tgl_order', 'desc')
             ->get();
+
 
         // Mengambil data hasil pemeriksaan radiologi
         $dataRagiologi = SegalaOrder::with(['details.produk'])
@@ -170,6 +171,32 @@ class ResumeController extends Controller
                 'unitKonsul'
             )
         );
+    }
+
+    public function getOrderDetails($kdOrder, $kdPasien)
+    {
+        $result = SegalaOrder::query()
+            ->select([
+                'SEGALA_ORDER.kd_order',
+                'SEGALA_ORDER.kd_pasien',
+                'SEGALA_ORDER.tgl_order',
+                'SEGALA_ORDER_DET.kd_produk',
+                'PRODUK.deskripsi as nama_produk',
+                'SEGALA_ORDER_DET.jumlah',
+                'SEGALA_ORDER_DET.status',
+                'LAB_HASIL.hasil as hasil_lab'
+            ])
+            ->join('SEGALA_ORDER_DET', 'SEGALA_ORDER.kd_order', '=', 'SEGALA_ORDER_DET.kd_order')
+            ->join('PRODUK', 'SEGALA_ORDER_DET.kd_produk', '=', 'PRODUK.kd_produk')
+            ->join('LAB_HASIL', function ($join) {
+                $join->on('SEGALA_ORDER_DET.kd_produk', '=', 'LAB_HASIL.kd_produk')
+                    ->on('SEGALA_ORDER.kd_pasien', '=', 'LAB_HASIL.kd_pasien');
+            })
+            ->whereRaw('CAST(SEGALA_ORDER.kd_order AS VARCHAR) = ?', [$kdOrder])
+            ->whereRaw('CAST(SEGALA_ORDER.kd_pasien AS VARCHAR) = ?', [$kdPasien])
+            ->get();
+
+        return $result;
     }
 
     // Controller
