@@ -608,7 +608,7 @@
                 case '2':
                     return 'pulangKontrol';
                 case '3':
-                    return 'menolakRawatInap'; // atau 'meninggalDunia' tergantung kondisi
+                    return 'menolakRawatInap';
                 case '4':
                     return 'kamarOperasi';
                 case '5':

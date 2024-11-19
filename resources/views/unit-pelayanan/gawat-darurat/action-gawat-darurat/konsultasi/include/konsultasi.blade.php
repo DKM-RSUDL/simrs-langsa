@@ -48,8 +48,8 @@
                 action="{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Dokter & Konsulen" aria-label="Cari"
-                        value="{{ request('search') }}" aria-describedby="basic-addon1">
+                    <input type="text" name="search" class="form-control" placeholder="Dokter & Konsulen"
+                        aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
             </form>

@@ -241,12 +241,18 @@
 
         // Reinisialisasi Select2 ketika modal dibuka
         $('#addTindakanModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#ppa').mousedown(function(e) {
+                e.preventDefault();
+            })
+
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
 
         function initSelect2() {
-            $('#addTindakanModal select').select2({
+            $('#addTindakanModal .select2').select2({
                 dropdownParent: $('#addTindakanModal'),
                 width: '100%'
             });
@@ -367,12 +373,17 @@
 
         // Reinisialisasi Select2 ketika modal dibuka
         $('#editTindakanModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#ppa').mousedown(function(e) {
+                e.preventDefault();
+            });
             // Destroy existing Select2 instance before reinitializing
             editInitSelect2();
         });
 
         function editInitSelect2() {
-            $('#editTindakanModal select').select2({
+            $('#editTindakanModal .select2').select2({
                 dropdownParent: $('#editTindakanModal'),
                 width: '100%'
             });

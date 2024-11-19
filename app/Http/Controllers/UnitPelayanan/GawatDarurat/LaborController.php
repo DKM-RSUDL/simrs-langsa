@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
@@ -40,7 +41,12 @@ class LaborController extends Controller
             ->groupBy('kategori');
 
 
-        $dataDokter = Dokter::where('status', 1)->get();
+        // $dataDokter = Dokter::where('status', 1)->get();
+
+        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+                                ->where('kd_unit', 3)
+                                ->whereRelation('dokter', 'status', 1)
+                                ->get();
 
         $search = $request->input('search');
         $periode = $request->input('periode');

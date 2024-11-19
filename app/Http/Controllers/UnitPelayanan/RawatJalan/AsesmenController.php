@@ -16,6 +16,8 @@ use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -100,9 +102,8 @@ class AsesmenController extends Controller
         ));
     }
 
-    public function store($kd_unit, $kd_pasien, $tgl_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
-
 
         try {
             $user = auth()->user();
@@ -261,6 +262,46 @@ class AsesmenController extends Controller
                 $tindakLanjutDtl->save();
             }
 
+            $vitalSign = json_decode($request->vital_sign, true);
+            $antropometri = json_decode($request->antropometri, true);
+            $diagnosa = json_decode($request->diagnosa_data, true);
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $diagnosa,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $vitalSign['td_sistole']
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSign['td_diastole']
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSign['resp']
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSign['suhu']
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSign['nadi']
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $antropometri['tb']
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $antropometri['bb']
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
             return response()->json(['message' => 'Berhasil']);
 
             // DB::commit();
@@ -359,6 +400,7 @@ class AsesmenController extends Controller
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
     {
         // DB::beginTransaction();
+        // dd($kd_unit);
         try {
 
             $asesmen = RmeAsesmen::where('id', $id)
@@ -505,7 +547,47 @@ class AsesmenController extends Controller
                 }
             }
 
-            // DB::commit();
+            $vitalSign = $request->vital_sign;
+            $antropometri = $request->antropometri;
+            $diagnosa = $request->diagnosis;
+
+            // create resume
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => $diagnosa,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $vitalSign['td_sistole']
+                    ],
+                    'distole'   => [
+                        'hasil' => $vitalSign['td_diastole']
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => $vitalSign['resp']
+                    ],
+                    'suhu'   => [
+                        'hasil' => $vitalSign['suhu']
+                    ],
+                    'nadi'   => [
+                        'hasil' => $vitalSign['nadi']
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $antropometri['tb']
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $antropometri['bb']
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate'
@@ -624,4 +706,69 @@ class AsesmenController extends Controller
                 return '<span class="text-secondary">Unknown</span>';
         }
     }
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+
+        // dd($kd_pasien);
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        // dd($resume);
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
+    }
+
 }

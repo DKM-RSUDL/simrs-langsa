@@ -74,29 +74,30 @@
 
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
-            let selectedDokter = null;
+            let selectedDokter = "{{ auth()->user()->kd_karyawan }}";
             let activeTab = 'Non Racikan';
+
+            const dokterSelect = document.getElementById('dokterPengirim');
+            selectedDokter = $('[selected]', dokterSelect).val();
+
+            $('#tambahResep').on('show.bs.modal', function () {
+                selectedDokter = $('[selected]', dokterSelect).val();
+            });
 
             // ------------ 2. Event Listener untuk Pengguna ------------ //
             $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).text().trim();
             });
 
-            $('#dokterPengirim').on('change', function() {
-                selectedDokter = $(this).val();
-            });
+            $('#dokterPengirim').prop('disabled', true);
+
+            $('#dokterPengirim')
+                .css('pointer-events', 'none')
+                .css('background-color', '#e9ecef')
+                .attr('tabindex', '-1');
 
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
             $('#tambahObatNonRacikan, #tambahObatRacikan').on('click', function() {
-                if (!selectedDokter) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Silakan pilih dokter terlebih dahulu.",
-                        position: 'topRight'
-                    });
-                    return;
-                }
-
                 var obatName = $('#cariObat').val();
                 var obatId = $('#selectedObatId').val();
                 var dosis = $('#dosis').val();
@@ -316,6 +317,7 @@
 
 
                 var formData = {
+                    urut_masuk: "{{ $dataMedis->urut_masuk }}",
                     kd_dokter: selectedDokter,
                     tgl_order: tglOrder,
                     cat_racikan: catRacikan,

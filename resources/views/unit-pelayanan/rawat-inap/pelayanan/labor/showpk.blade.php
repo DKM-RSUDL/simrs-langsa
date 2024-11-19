@@ -2,7 +2,9 @@
     aria-labelledby="laborModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="{{ route('rawat-inap.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}" method="post">
+            <form
+                action="{{ route('rawat-inap.lab-patologi-klinik.index', [$laborPK->kd_unit, $laborPK->kd_pasien, $laborPK->tgl_masuk, $laborPK->urut_masuk]) }}"
+                method="post">
                 @csrf
 
                 <div class="modal-header bg-primary text-white">
@@ -94,14 +96,15 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($laborPK->details as $detail)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}</td>
-                                                {{-- <td>{{ $detail->kd_produk }}</td> --}}
-                                                <td>
-                                                    {{ $detail->labHasil->hasil ?? '-' }}
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $detail->produk->deskripsi ?? 'Deskripsi tidak tersedia' }}
+                                                    </td>
+                                                    {{-- <td>{{ $detail->kd_produk }}</td> --}}
+                                                    <td>
+                                                        {{ $detail->labHasil->hasil ?? '-' }}
+                                                    </td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>

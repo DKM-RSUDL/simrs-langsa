@@ -8,8 +8,8 @@
 @endpush
 
 <!-- Modal untuk Edit -->
-<div class="modal fade" id="extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
-    aria-labelledby="extraLargeModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
+<div class="modal fade modal-edit-labor" id="editLaborModal{{ str_replace('.', '_', $laborPK->kd_order) }}" tabindex="-1"
+    aria-labelledby="editLaborModalLabel{{ str_replace('.', '_', $laborPK->kd_order) }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form
@@ -31,7 +31,7 @@
                 <input type="hidden" name="urut_masuk" value="{{ $laborPK->urut_masuk }}">
 
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-white" id="extraLargeModalLabel{{ $laborPK->kd_order }}">
+                    <h5 class="modal-title text-white" id="editLaborModalLabel{{ $laborPK->kd_order }}">
                         Edit Pemeriksaan Laboratorium Klinik
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -43,10 +43,9 @@
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter" class="form-select">
                                     <option value="" disabled>-Pilih Dokter Pengirim-</option>
-                                    @foreach ($dataDokter as $dokter)
-                                        <option value="{{ $dokter->kd_dokter }}"
-                                            {{ old('kd_dokter', $laborPK->kd_dokter) == $dokter->kd_dokter ? 'selected' : '' }}>
-                                            {{ $dokter->nama_lengkap }}
+                                    @foreach ($dataDokter as $d)
+                                        <option value="{{ $d->dokter->kd_dokter }}" @selected(old('kd_dokter', $laborPK->kd_dokter) == $d->dokter->kd_dokter)>
+                                            {{ $d->dokter->nama_lengkap }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -232,7 +231,7 @@
             <span class="remove-item" style="color: red; cursor: pointer;">
                 <i class="bi bi-x-circle"></i>
             </span>
-        `);
+            `);
                 $orderList.append($listItem);
                 urut++;
                 // console.log('Item added to order list:', deskripsi);
@@ -339,5 +338,13 @@
                 }
             });
         }
+
+        $('.modal-edit-labor').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
+            });
+        });
     </script>
 @endpush

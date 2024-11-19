@@ -71,9 +71,6 @@
 </ul>
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
-
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Get all filter elements

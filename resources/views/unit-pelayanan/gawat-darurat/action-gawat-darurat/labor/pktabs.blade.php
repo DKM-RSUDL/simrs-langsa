@@ -35,8 +35,8 @@
                     action="{{ route('labor.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
 
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="dokter & no order" aria-label="Cari"
-                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                        <input type="text" name="search" class="form-control" placeholder="dokter & no order"
+                            aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </div>
                 </form>
@@ -107,7 +107,7 @@
                         <td>
                             @if ($laborPK->status_order == 1)
                                 <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#extraLargeModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
+                                    data-bs-target="#editLaborModal{{ str_replace('.', '_', $laborPK->kd_order) }}">
                                     <i class="ti-pencil"></i>
                                 </a>
                                 <a href="#" class="mb-2" onclick="confirmDelete('{{ $laborPK->kd_order }}')">
@@ -135,7 +135,9 @@
 @foreach ($dataLabor as $laborPK)
     @if ($laborPK->status_order == 1)
         @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.editpk', ['laborPK' => $laborPK])
-        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.deletepk', ['laborPK' => $laborPK])
+        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.deletepk', [
+            'laborPK' => $laborPK,
+        ])
     @else
         @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.showpk', ['laborPK' => $laborPK])
     @endif
