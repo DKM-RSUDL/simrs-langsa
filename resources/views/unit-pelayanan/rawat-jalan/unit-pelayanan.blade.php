@@ -75,6 +75,14 @@
                 border: 2px solid #48fa07;
             }
 
+            .emergency__container a {
+                text-decoration: none;
+            }
+
+            .emergency__container a:hover {
+                text-decoration: none;
+            }
+
             .custom__icon {
                 margin-bottom: 5px;
             }
@@ -111,43 +119,48 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="emergency__container">
+            <div class="emergency__container ">
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
-                <div class="custom__card all__patients">
-                    <div class="card__content">
-                        <div class="custom__icon">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
+                    <div class="custom__card all__patients">
+                        <div class="card__content">
+                            <div class="custom__icon">
+                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            </div>
+                            <div class="text-center">Semua Pasien</div>
                         </div>
-                        <div class="text-center">Semua Pasien</div>
+                        <div class="text-center">55</div>
                     </div>
-                    <div class="text-center">55</div>
-                </div>
+                </a>
+                <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
+                    <div class="custom__card Pending">
+                        <div class="card__content">
+                            <div class="custom__icon">
+                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            </div>
+                            <div class="text-center">Belum Selesai</div>
+                        </div>
+                        <div class="text-center">
+                            <i class="warning__icon">!</i>
+                            33
+                        </div>
+                    </div>
+                </a>
 
-                <div class="custom__card Pending">
-                    <div class="card__content">
-                        <div class="custom__icon">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                <a href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
+                    <div class="custom__card Completed">
+                        <div class="card__content">
+                            <div class="custom__icon">
+                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            </div>
+                            <div class="text-center">Selesai</div>
                         </div>
-                        <div class="text-center">Belum Selesai</div>
-                    </div>
-                    <div class="text-center">
-                        <i class="warning__icon">!</i>
-                        33
-                    </div>
-                </div>
-
-                <div class="custom__card Completed">
-                    <div class="card__content">
-                        <div class="custom__icon">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <i class="check__icon">✓</i>
+                            22
                         </div>
-                        <div class="text-center">Selesai</div>
                     </div>
-                    <div class="text-center">
-                        <i class="check__icon">✓</i>
-                        22
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

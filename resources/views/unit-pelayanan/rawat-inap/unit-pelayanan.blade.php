@@ -86,6 +86,14 @@
                 font-weight: bold;
                 font-size: 14px;
             }
+
+            .emergency__container a {
+                text-decoration: none;
+            }
+
+            .emergency__container a:hover {
+                text-decoration: none;
+            }
         </style>
     @endpush
 
@@ -94,6 +102,7 @@
             <div class="emergency__container">
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
 
+                <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
                 <div class="custom__card all__patients">
                     <div class="card__content">
                         <div class="custom__icon">
@@ -103,7 +112,9 @@
                     </div>
                     <div class="text-center">3</div>
                 </div>
+                </a>
 
+                <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
                 <div class="custom__card Pending">
                     <div class="card__content">
                         <div class="custom__icon">
@@ -115,6 +126,7 @@
                         33
                     </div>
                 </div>
+                </a>
 
             </div>
         </div>
