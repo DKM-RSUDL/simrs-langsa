@@ -55,13 +55,17 @@
                                                 <div class="mb-3">
                                                     <label for="dokterPengirim" class="form-label">Dokter
                                                         Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter">
-                                                        <option value="">-Pilih dokter-</option>
+                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter"
+                                                        disabled>
                                                         @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->kd_dokter }}">{{ $dokter->nama }}
+                                                            <option value="{{ $dokter->kd_dokter }}"
+                                                                @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                                                {{ $dokter->nama }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    <input type="hidden" name="kd_dokter"
+                                                        value="{{ auth()->user()->kd_karyawan }}">
                                                 </div>
 
                                                 <div class="mb-3">

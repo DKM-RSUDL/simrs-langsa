@@ -55,24 +55,31 @@
                                                 <div class="mb-3">
                                                     <label for="dokterPengirim" class="form-label">Dokter
                                                         Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter">
-                                                        <option value="">-Pilih dokter-</option>
+                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter"
+                                                        disabled>
                                                         @foreach ($dokters as $dokter)
-                                                            <option value="{{ $dokter->kd_dokter }}">{{ $dokter->nama }}
+                                                            <option value="{{ $dokter->kd_dokter }}"
+                                                                @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                                                {{ $dokter->nama }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    <input type="hidden" name="kd_dokter"
+                                                        value="{{ auth()->user()->kd_karyawan }}">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <div class="row">
                                                         <div class="col-8">
-                                                            <label for="tanggalOrder" class="form-label">Tanggal Order</label>
-                                                            <input type="date" class="form-control" id="tanggalOrder" name="tgl_order">
+                                                            <label for="tanggalOrder" class="form-label">Tanggal
+                                                                Order</label>
+                                                            <input type="date" class="form-control" id="tanggalOrder"
+                                                                name="tgl_order">
                                                         </div>
                                                         <div class="col-4">
                                                             <label for="jamOrder" class="form-label">Jam</label>
-                                                            <input type="time" class="form-control" id="jamOrder" name="jam_order">
+                                                            <input type="time" class="form-control" id="jamOrder"
+                                                                name="jam_order">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,7 +118,8 @@
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
-                                                            <label for="dosis" class="form-label">Dosis Sekali Minum</label>
+                                                            <label for="dosis" class="form-label">Dosis Sekali
+                                                                Minum</label>
                                                             <select class="form-select" id="dosis">
                                                                 <option selected>1/2</option>
                                                                 <option>1</option>
@@ -352,7 +360,6 @@
 
 @push('js')
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             // Fungsi untuk mendapatkan tanggal saat ini dalam format YYYY-MM-DD
             function getCurrentDate() {
@@ -375,6 +382,5 @@
             document.getElementById('tanggalOrder').value = getCurrentDate();
             document.getElementById('jamOrder').value = getCurrentTime();
         });
-    
     </script>
 @endpush
