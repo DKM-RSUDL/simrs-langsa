@@ -44,9 +44,9 @@ class LaborController extends Controller
         // $dataDokter = Dokter::where('status', 1)->get();
 
         $dataDokter = DokterKlinik::with(['dokter', 'unit'])
-                                ->where('kd_unit', 3)
-                                ->whereRelation('dokter', 'status', 1)
-                                ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         $search = $request->input('search');
         $periode = $request->input('periode');

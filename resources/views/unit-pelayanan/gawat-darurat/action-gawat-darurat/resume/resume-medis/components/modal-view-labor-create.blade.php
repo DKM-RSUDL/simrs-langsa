@@ -1,19 +1,27 @@
-<!-- Modal Hasil Labor -->
 <div class="modal fade" id="modal-view-labor-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Hasil Pemeriksaan Laboratorium</h5>
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Hasil Pemeriksaan Laboratorium
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h6 class="fw-bold">Daftar Order Pemeriksaan:</h6>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">
+                        Pemeriksaan No. <span id="nomor-pemeriksaan"></span>:
+                        <span id="nama-pemeriksaan"></span>
+                    </h6>
+                </div>
                 <table class="table table-bordered table-sm table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Pemeriksaan</th>
+                            <th>Item Test</th>
                             <th>Hasil</th>
+                            <th>Satuan</th>
+                            <th>Nilai Normal</th>
                         </tr>
                     </thead>
                     <tbody id="modal-hasil-content">
@@ -29,32 +37,80 @@
 </div>
 
 <script>
+$(document).ready(function() {
     $(document).on('click', '.btn-view-labor-create', function() {
-        const details = $(this).data('details');
-        console.log(details);
+        const kdOrder = $(this).data('kd-order');
+        const namaPemeriksaan = $(this).data('nama-pemeriksaan');
+        const nomorPemeriksaan = $(this).data('nomor');
+
+        // Set nomor dan nama pemeriksaan di modal
+        $('#nomor-pemeriksaan').text(nomorPemeriksaan);
+        $('#nama-pemeriksaan').text(namaPemeriksaan);
 
         // Kosongkan tbody modal
         $('#modal-hasil-content').empty();
 
-        // Isi data ke dalam modal
-        if (details && details.length > 0) {
-            details.forEach((detail, index) => {
-                const labHasil = detail.produk ? detail.produk.lab_hasil : [];
-                labHasil.forEach((hasil, hasilIndex) => {
-                    const row = `
+        // Tampilkan loading
+        $('#modal-hasil-content').append(`
+            <tr>
+                <td colspan="5" class="text-center">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Mengambil data...
+                </td>
+            </tr>
+        `);
+
+        // Ambil data yang sudah di-transform di controller
+        const labResults = {!! json_encode($dataLabor) !!};
+        const orderData = labResults.find(order => order.kd_order === kdOrder);
+
+        if (orderData && orderData.details) {
+            const detail = orderData.details.find(d =>
+                (d.produk?.deskripsi ?? 'Pemeriksaan') === namaPemeriksaan
+            );
+
+            if (detail && detail.labResults) {
+                $('#modal-hasil-content').empty();
+                let counter = 1;
+
+                // Filter hasil lab berdasarkan nama pemeriksaan
+                Object.entries(detail.labResults)
+                    .filter(([produkName]) => produkName === namaPemeriksaan)
+                    .forEach(([_, tests]) => {
+                        tests.forEach(test => {
+                            const row = `
+                                <tr>
+                                    <td>${counter++}</td>
+                                    <td>${test.item_test || '-'}</td>
+                                    <td>${test.hasil || '-'}</td>
+                                    <td>${test.satuan || '-'}</td>
+                                    <td>${test.nilai_normal || '-'}</td>
+                                </tr>
+                            `;
+                            $('#modal-hasil-content').append(row);
+                        });
+                    });
+
+                if (counter === 1) {
+                    $('#modal-hasil-content').append(`
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>${detail.produk ? detail.produk.deskripsi : 'Tidak ada deskripsi'}</td>
-                            <td>${hasil ? hasil.hasil : '-'}</td>
+                            <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan detail untuk ${namaPemeriksaan}</td>
                         </tr>
-                    `;
-                    $('#modal-hasil-content').append(row);
-                });
-            });
+                    `);
+                }
+            } else {
+                $('#modal-hasil-content').append(`
+                    <tr>
+                        <td colspan="5" class="text-center">Tidak ada data hasil laboratorium</td>
+                    </tr>
+                `);
+            }
         } else {
             $('#modal-hasil-content').append(`
                 <tr>
-                    <td colspan="3" class="text-center">Tidak ada data hasil laboratorium</td>
+                    <td colspan="5" class="text-center">Data tidak ditemukan</td>
                 </tr>
             `);
         }
@@ -62,5 +118,5 @@
         // Tampilkan modal
         $('#modal-view-labor-create').modal('show');
     });
+});
 </script>
-

@@ -97,12 +97,29 @@
                         <td>{{ $laborPK->dokter->nama_lengkap }}</td>
                         <td>{{ $laborPK->cyto == 1 ? 'Cyto' : 'Non-Cyto' }}</td>
                         <td>
-                            @if ($laborPK->status_order == 1)
+                            {{-- @if ($laborPK->status_order == 1)
                                 <i class="bi bi-check-circle-fill text-secondary"></i> Diorder
                             @elseif ($laborPK->status_order == 0)
                                 <i class="bi bi-check-circle-fill text-success"></i>
                                 <p class="text-success">Selesai</p>
-                            @endif
+                            @endif --}}
+
+                            @php
+                                $statusOrder = $laborPK->status_order;
+                                $statusLabel = '';
+
+                                if ($statusOrder == 0) {
+                                    $statusLabel = '<span class="text-warning">Diproses</span>';
+                                }
+                                if ($statusOrder == 1) {
+                                    $statusLabel = '<span class="text-secondary">Diorder</span>';
+                                }
+                                if ($statusOrder == 2) {
+                                    $statusLabel = '<span class="text-success">Selesai</span>';
+                                }
+                            @endphp
+
+                            {!! $statusLabel !!}
                         </td>
                         <td>
                             @if ($laborPK->status_order == 1)

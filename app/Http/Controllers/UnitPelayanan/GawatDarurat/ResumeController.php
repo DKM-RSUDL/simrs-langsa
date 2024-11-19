@@ -111,7 +111,7 @@ class ResumeController extends Controller
             ->whereRelation('dokter', 'status', 1)
             ->first();
 
-        // // Mengambil data hasil pemeriksaan laboratorium
+        // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk', 'produk.labHasil'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
@@ -122,6 +122,17 @@ class ResumeController extends Controller
             })
             ->orderBy('tgl_order', 'desc')
             ->get();
+
+        // Transform each order to include its lab results
+        foreach ($dataLabor as $order) {
+            foreach ($order->details as $detail) {
+                $detail->labResults = $this->getLabData(
+                    $order->kd_order,
+                    $order->kd_pasien,
+                    $order->tgl_masuk
+                );
+            }
+        }
 
 
         // Mengambil data hasil pemeriksaan radiologi
@@ -173,30 +184,61 @@ class ResumeController extends Controller
         );
     }
 
-    public function getOrderDetails($kdOrder, $kdPasien)
+    // hasil data raboratorium
+    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk)
     {
-        $result = SegalaOrder::query()
-            ->select([
-                'SEGALA_ORDER.kd_order',
-                'SEGALA_ORDER.kd_pasien',
-                'SEGALA_ORDER.tgl_order',
-                'SEGALA_ORDER_DET.kd_produk',
-                'PRODUK.deskripsi as nama_produk',
-                'SEGALA_ORDER_DET.jumlah',
-                'SEGALA_ORDER_DET.status',
-                'LAB_HASIL.hasil as hasil_lab'
-            ])
-            ->join('SEGALA_ORDER_DET', 'SEGALA_ORDER.kd_order', '=', 'SEGALA_ORDER_DET.kd_order')
-            ->join('PRODUK', 'SEGALA_ORDER_DET.kd_produk', '=', 'PRODUK.kd_produk')
-            ->join('LAB_HASIL', function ($join) {
-                $join->on('SEGALA_ORDER_DET.kd_produk', '=', 'LAB_HASIL.kd_produk')
-                    ->on('SEGALA_ORDER.kd_pasien', '=', 'LAB_HASIL.kd_pasien');
+
+        $results = DB::table('SEGALA_ORDER as so')
+            ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+            ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kd_produk')
+            ->join('LAB_HASIL as lh', function ($join) {
+                $join->on('sod.kd_produk', '=', 'lh.kd_produk')
+                    ->on('so.kd_pasien', '=', 'lh.kd_pasien');
             })
-            ->whereRaw('CAST(SEGALA_ORDER.kd_order AS VARCHAR) = ?', [$kdOrder])
-            ->whereRaw('CAST(SEGALA_ORDER.kd_pasien AS VARCHAR) = ?', [$kdPasien])
+            ->join('LAB_TEST as lt', function ($join) {
+                $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                    ->on('lh.kd_test', '=', 'lt.kd_test');
+            })
+            ->select([
+                'so.kd_order',
+                'so.kd_pasien',
+                'so.tgl_order',
+                'so.tgl_masuk',
+                'sod.kd_produk',
+                'p.deskripsi as nama_produk',
+                'lt.item_test',
+                'sod.jumlah',
+                'sod.status',
+                'lh.hasil',
+                'lh.satuan',
+                'lh.nilai_normal',
+                'lh.tgl_masuk',
+                'lh.KD_UNIT',
+                'lh.URUT_MASUK',
+                'lt.kd_test'
+            ])
+            ->where([
+                'so.tgl_masuk' => $tgl_masuk,
+                'so.kd_order' => $kd_order,
+                'so.kd_pasien' => $kd_pasien
+            ])
+            ->orderBy('lt.kd_test')
             ->get();
 
-        return $result;
+        // Mengelompokkan hasil berdasarkan nama produk
+        $groupedResults = collect($results)->groupBy('nama_produk')->map(function ($group) {
+            return $group->map(function ($item) {
+                return [
+                    'item_test' => $item->item_test ?? '-',
+                    'hasil' => $item->hasil ?? '-',
+                    'satuan' => $item->satuan ?? '',
+                    'nilai_normal' => $item->nilai_normal ?? '-',
+                    'kd_test' => $item->kd_test
+                ];
+            });
+        });
+
+        return $groupedResults;
     }
 
     // Controller
