@@ -101,7 +101,8 @@ class LaborController extends Controller
             $labResults = $this->getLabData(
                 $item->kd_order,
                 $item->kd_pasien,
-                $item->tgl_masuk
+                $item->tgl_masuk,
+                $item->urut_masuk
             );
 
             $item->labResults = $labResults;
@@ -127,45 +128,49 @@ class LaborController extends Controller
     }
 
     // hasil data raboratorium
-    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk)
+    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
 
         $results = DB::table('SEGALA_ORDER as so')
-            ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
-            ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kd_produk')
-            ->join('LAB_HASIL as lh', function ($join) {
-                $join->on('sod.kd_produk', '=', 'lh.kd_produk')
-                    ->on('so.kd_pasien', '=', 'lh.kd_pasien');
-            })
-            ->join('LAB_TEST as lt', function ($join) {
-                $join->on('lh.kd_lab', '=', 'lt.kd_lab')
-                    ->on('lh.kd_test', '=', 'lt.kd_test');
-            })
-            ->select([
-                'so.kd_order',
-                'so.kd_pasien',
-                'so.tgl_order',
-                'so.tgl_masuk',
-                'sod.kd_produk',
-                'p.deskripsi as nama_produk',
-                'lt.item_test',
-                'sod.jumlah',
-                'sod.status',
-                'lh.hasil',
-                'lh.satuan',
-                'lh.nilai_normal',
-                'lh.tgl_masuk',
-                'lh.KD_UNIT',
-                'lh.URUT_MASUK',
-                'lt.kd_test'
-            ])
-            ->where([
-                'so.tgl_masuk' => $tgl_masuk,
-                'so.kd_order' => $kd_order,
-                'so.kd_pasien' => $kd_pasien
-            ])
-            ->orderBy('lt.kd_test')
-            ->get();
+                    ->select([
+                        'so.kd_order',
+                        'so.kd_pasien',
+                        'so.tgl_order',
+                        'so.tgl_masuk',
+                        'sod.kd_produk',
+                        'p.deskripsi as nama_produk',
+                        'lt.item_test',
+                        'sod.jumlah',
+                        'sod.status',
+                        'lh.hasil',
+                        'lh.satuan',
+                        'lh.nilai_normal',
+                        'lh.tgl_masuk',
+                        'lh.KD_UNIT',
+                        'lh.URUT_MASUK',
+                        'lt.kd_test'
+                    ])
+                    ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+                    ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kp_produk')
+                    ->join('LAB_HASIL as lh', function ($join) {
+                        // $join->on('sod.kd_produk', '=', 'lh.kd_produk')
+                        $join->on('p.kd_produk', '=', 'lh.kd_produk')
+                            ->on('so.kd_pasien', '=', 'lh.kd_pasien')
+                            ->on('so.tgl_masuk', '=', 'lh.tgl_masuk');
+                    })
+                    ->join('LAB_TEST as lt', function ($join) {
+                        $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                            ->on('lh.kd_test', '=', 'lt.kd_test');
+                    })
+                    ->where([
+                        'so.tgl_masuk' => $tgl_masuk,
+                        'so.kd_order' => $kd_order,
+                        'so.kd_pasien' => $kd_pasien,
+                        'so.kd_unit'    => 3,
+                        'so.urut_masuk' => $urut_masuk
+                    ])
+                    ->orderBy('lt.kd_test')
+                    ->get();
 
         // Mengelompokkan hasil berdasarkan nama produk
         $groupedResults = collect($results)->groupBy('nama_produk')->map(function ($group) {

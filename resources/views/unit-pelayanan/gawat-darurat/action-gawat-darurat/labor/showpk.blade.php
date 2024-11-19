@@ -86,12 +86,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if(isset($laborPK->labResults) && !$laborPK->labResults->isEmpty())
-                                                    @foreach($laborPK->labResults as $namaProduk => $tests)
+                                                @if (isset($laborPK->labResults) && !$laborPK->labResults->isEmpty())
+                                                    @foreach ($laborPK->labResults as $namaProduk => $tests)
                                                         <tr class="table-secondary">
                                                             <td colspan="5" class="fw-bold">{{ $namaProduk }}</td>
                                                         </tr>
-                                                        @foreach($tests as $index => $test)
+                                                        @foreach ($tests as $index => $test)
                                                             <tr>
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>{{ $test['item_test'] }}</td>
@@ -103,7 +103,8 @@
                                                     @endforeach
                                                 @else
                                                     <tr>
-                                                        <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan untuk order ini</td>
+                                                        <td colspan="5" class="text-center">Tidak ada hasil
+                                                            pemeriksaan untuk order ini</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -113,7 +114,7 @@
                             </div>
                         </div>
 
-                        @if(method_exists($dataLabor, 'links'))
+                        @if (method_exists($dataLabor, 'links'))
                             {{ $dataLabor->withQueryString()->links() }}
                         @endif
 
