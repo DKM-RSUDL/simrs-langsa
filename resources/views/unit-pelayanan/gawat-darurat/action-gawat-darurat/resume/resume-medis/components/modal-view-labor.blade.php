@@ -10,9 +10,9 @@
             <div class="modal-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold mb-0">
-                        Pemeriksaan No. <span id="nomor-pemeriksaan"></span>:
-                        <span id="nama-pemeriksaan"></span>
-                        <span id="nama-klasifikasi"></span>
+                        Pemeriksaan No. <span id="nomor-pemeriksaan-view"></span>:
+                        <span id="nama-pemeriksaan-view"></span>
+                        <span id="nama-klasifikasi-view"></span>
                     </h6>
                 </div>
                 <table class="table table-bordered table-sm table-hover">
@@ -45,9 +45,9 @@
             const klasifikasi = $(this).data('klasifikasi');
             const nomorPemeriksaan = $(this).data('nomor');
 
-            $('#nomor-pemeriksaan').text(nomorPemeriksaan);
-            $('#nama-pemeriksaan').text(namaPemeriksaan);
-            $('#nama-klasifikasi').text(` (${klasifikasi})`);
+            $('#nomor-pemeriksaan-view').text(nomorPemeriksaan);
+            $('#nama-pemeriksaan-view').text(namaPemeriksaan);
+            $('#nama-klasifikasi-view').text(` (${klasifikasi})`);
 
             $('#modal-hasil-labor-view').empty();
 
