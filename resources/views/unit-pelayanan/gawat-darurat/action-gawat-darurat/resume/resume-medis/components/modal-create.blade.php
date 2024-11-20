@@ -129,9 +129,9 @@
                                                             <td>
                                                                 {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
                                                             </td>
-                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}</td>
+                                                            <td>{{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
+                                                            </td>
                                                             <td>
-
                                                                 @php
                                                                     $statusOrder = $detail->status_order;
                                                                     $statusLabel = '';
@@ -154,7 +154,8 @@
                                                                     class="btn-view-labor-create"
                                                                     data-kd-order="{{ $order->kd_order }}"
                                                                     data-nomor="{{ $counter }}"
-                                                                    data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}">
+                                                                    data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}"
+                                                                    data-klasifikasi="{{ $detail->labResults[$detail->produk->deskripsi]['klasifikasi'] ?? 'Tidak ada klasifikasi' }}">
                                                                     Lihat Hasil
                                                                 </a>
                                                             </td>
