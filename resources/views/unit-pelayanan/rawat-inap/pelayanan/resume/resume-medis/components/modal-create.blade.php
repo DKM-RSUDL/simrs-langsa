@@ -112,7 +112,7 @@
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Laboratorium</strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <div style="max-height: 150px; overflow-y: auto;">
+                                    <div style="max-height: 200px; overflow-y: auto;">
                                         <table class="table table-bordered table-hover">
                                             <thead class="table-secondary">
                                                 <tr>
@@ -124,17 +124,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @php
-                                                    $counter = 1;
-                                                @endphp
+                                                @php $counter = 1; @endphp
                                                 @foreach ($dataLabor as $order)
                                                     @foreach ($order->details as $detail)
                                                         <tr>
-                                                            <td>{{ $counter++ }}</td>
+                                                            <td>{{ $counter }}</td>
                                                             <td>
                                                                 {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
                                                             </td>
-                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                            <td>{{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
                                                             </td>
                                                             <td>
                                                                 @php
@@ -154,11 +152,20 @@
 
                                                                 {!! $statusLabel !!}
                                                             </td>
-                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                            <td>
+                                                                <a href="javascript:void(0);"
+                                                                    class="btn-view-labor-create"
+                                                                    data-kd-order="{{ $order->kd_order }}"
+                                                                    data-nomor="{{ $counter }}"
+                                                                    data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}"
+                                                                    data-klasifikasi="{{ $detail->labResults[$detail->produk->deskripsi]['klasifikasi'] ?? 'Tidak ada klasifikasi' }}">
+                                                                    Lihat Hasil
+                                                                </a>
+                                                            </td>
                                                         </tr>
+                                                        @php $counter++; @endphp
                                                     @endforeach
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -394,6 +401,7 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-alergi')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-labor-create')
 
 
 <script type="text/javascript">

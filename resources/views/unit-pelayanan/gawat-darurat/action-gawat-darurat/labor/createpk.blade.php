@@ -36,7 +36,7 @@
                             <div class="patient-card">
                                 <label for="kd_dokter" class="form-label fw-bold h5 text-dark">Dokter Pengirim:</label>
                                 <select id="kd_dokter" name="kd_dokter" class="form-select"
-                                    aria-label="Pilih dokter pengirim" required>
+                                    aria-label="Pilih dokter pengirim">
                                     <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
                                     @foreach ($dataDokter as $d)
                                         <option value="{{ $d->dokter->kd_dokter }}" @selected($d->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
