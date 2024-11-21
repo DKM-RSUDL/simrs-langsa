@@ -57,7 +57,9 @@
                 padding: 8px 15px;
                 width: fit-content;
                 min-width: 150px;
-                gap: 5px;
+                display: flex;
+                align-items: center;
+                gap: 20px
             }
 
             .all__patients {
@@ -89,10 +91,7 @@
 
             .emergency__container a {
                 text-decoration: none;
-            }
-
-            .emergency__container a:hover {
-                text-decoration: none;
+                color: #000;
             }
         </style>
     @endpush
@@ -103,29 +102,23 @@
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
 
                 <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
-                <div class="custom__card all__patients">
-                    <div class="card__content">
-                        <div class="custom__icon">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                    <div class="custom__card all__patients">
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <p class="m-0 p-0">Aktif</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">3</p>
                         </div>
-                        <div class="text-center">Aktif</div>
                     </div>
-                    <div class="text-center">3</div>
-                </div>
                 </a>
 
                 <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
-                <div class="custom__card Pending">
-                    <div class="card__content">
-                        <div class="custom__icon">
-                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                    <div class="custom__card Pending">
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <p class="m-0 p-0">Pending Order Masuk</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
                         </div>
-                        <div class="text-center">Pending Order Masuk</div>
                     </div>
-                    <div class="text-center">
-                        33
-                    </div>
-                </div>
                 </a>
 
             </div>
