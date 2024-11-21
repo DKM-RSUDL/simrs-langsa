@@ -133,7 +133,7 @@
                                                             </td>
                                                             <td>
                                                                 @php
-                                                                    $statusOrder = $detail->status_order;
+                                                                    $statusOrder = $order->status_order;
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {

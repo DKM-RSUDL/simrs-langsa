@@ -134,7 +134,7 @@
                                                             </td>
                                                             <td>
                                                                 @php
-                                                                    $statusOrder = $detail->status_order;
+                                                                    $statusOrder = $order->status_order;
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
@@ -335,7 +335,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
-                                                data-code="2" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
+                                                data-code="2"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
                                             <label for="kontrol">Kontrol ulang, tgl:
                                                 <span id="selected-date">
                                                     {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
@@ -347,7 +348,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
-                                                data-code="4" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? 'checked' : '' }}>
+                                                data-code="4"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? 'checked' : '' }}>
                                             <label for="konsul">Konsul/Rujuk Internal Ke:
                                                 <span id="selected-unit-tujuan"
                                                     data-unit-id="{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}">
@@ -364,7 +366,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="selesai" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Selesai di Klinik ini"
-                                                data-code="3" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
+                                                data-code="3"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
                                             <label for="selesai">Selesai di Klinik ini</label>
                                         </a>
                                     </div>
@@ -374,7 +377,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rujuk RS lain bagian:"
-                                                data-code="5" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
+                                                data-code="5"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
                                             <label for="rujuk">Rujuk RS lain bagian:
                                                 <span id="selected-rs-info">
                                                     @if (($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5')
@@ -388,7 +392,8 @@
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rawat Inap" data-code="1" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
+                                                class="form-check-input me-2" value="Rawat Inap" data-code="1"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
                                             <label for="rawat">Rawat Inap</label>
                                         </a>
                                     </div>
