@@ -102,7 +102,7 @@
             <div class="emergency__container">
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
 
-                <a href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-inap.unit.aktif', $unit->kd_unit) }}">
                 <div class="custom__card all__patients">
                     <div class="card__content">
                         <div class="custom__icon">
@@ -110,11 +110,11 @@
                         </div>
                         <div class="text-center">Aktif</div>
                     </div>
-                    <div class="text-center">3</div>
+                    <div class="text-center"><b>3</b></div>
                 </div>
                 </a>
 
-                <a href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-inap.unit.pending', $unit->kd_unit) }}">
                 <div class="custom__card Pending">
                     <div class="card__content">
                         <div class="custom__icon">
@@ -123,7 +123,7 @@
                         <div class="text-center">Pending Order Masuk</div>
                     </div>
                     <div class="text-center">
-                        33
+                        <b>33</b>
                     </div>
                 </div>
                 </a>

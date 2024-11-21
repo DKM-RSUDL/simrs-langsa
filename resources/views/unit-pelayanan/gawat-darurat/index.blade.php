@@ -188,7 +188,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
                         <div class="text-center">Aktif</div>
                     </div>
-                    <div class="text-center">3</div>
+                    <div class="text-center"><b>3</b></div>
                 </div>
             </div>
 
