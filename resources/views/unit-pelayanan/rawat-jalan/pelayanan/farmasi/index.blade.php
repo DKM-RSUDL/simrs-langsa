@@ -159,14 +159,6 @@
 
 
             $(document).on('click', '.copy-obat', function() {
-                if (!selectedDokter) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Silakan pilih dokter terlebih dahulu.",
-                        position: 'topRight'
-                    });
-                    return;
-                }
 
                 var obatData = $(this).data('obat');
                 $('#modal-overlay').show();
