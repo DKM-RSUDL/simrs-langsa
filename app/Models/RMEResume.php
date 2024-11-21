@@ -25,6 +25,7 @@ class RMEResume extends Model
         'diagnosis',
         'icd_10',
         'icd_9',
+        'alergi',
         'status',
         'user_validasi'
     ];
@@ -34,6 +35,7 @@ class RMEResume extends Model
         'diagnosis' => 'array',
         'icd_10' => 'array',
         'icd_9' => 'array',
+        'alergi' => 'array',
     ];
 
     public function rmeResumeDet()
@@ -63,5 +65,9 @@ class RMEResume extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
+public function konsultasi()
+    {
+        return $this->belongsTo(Konsultasi::class, 'kd_pasien', 'kd_pasien');
     }
 }

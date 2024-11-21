@@ -51,8 +51,13 @@
                                         <hr class="text-secondary">
                                     </div>
                                     <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
+                                        @if (isset($dataResume->alergi) && is_array($dataResume->alergi))
+                                            @foreach ($dataResume->alergi as $alergi)
+                                                <li>{{ $alergi }}</li>
+                                            @endforeach
+                                        @else
+                                            <li>-</li>
+                                        @endif
                                     </ul>
                                     <div class="row mt-3">
                                         <div class="col-12">
@@ -107,7 +112,7 @@
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Laboratorium</strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <div style="max-height: 150px; overflow-y: auto;">
+                                    <div style="max-height: 200px; overflow-y: auto;">
                                         <table class="table table-bordered table-hover">
                                             <thead class="table-secondary">
                                                 <tr>
@@ -119,17 +124,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @php
-                                                    $counter = 1;
-                                                @endphp
+                                                @php $counter = 1; @endphp
                                                 @foreach ($dataLabor as $order)
                                                     @foreach ($order->details as $detail)
                                                         <tr>
-                                                            <td>{{ $counter++ }}</td>
+                                                            <td>{{ $counter }}</td>
                                                             <td>
                                                                 {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
                                                             </td>
-                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                            <td>{{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
                                                             </td>
                                                             <td>
                                                                 @php
@@ -149,11 +152,20 @@
 
                                                                 {!! $statusLabel !!}
                                                             </td>
-                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                            <td>
+                                                                <a href="javascript:void(0);"
+                                                                    class="btn-view-labor"
+                                                                    data-kd-order="{{ $order->kd_order }}"
+                                                                    data-nomor="{{ $counter }}"
+                                                                    data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}"
+                                                                    data-klasifikasi="{{ $detail->labResults[$detail->produk->deskripsi]['klasifikasi'] ?? 'Tidak ada klasifikasi' }}">
+                                                                    Lihat Hasil
+                                                                </a>
+                                                            </td>
                                                         </tr>
+                                                        @php $counter++; @endphp
                                                     @endforeach
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -331,11 +343,13 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="#" class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="kontrol"
-                                                class="form-check-input me-2" value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}"
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="kontrol" class="form-check-input me-2"
+                                                value="{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}"
                                                 data-code="1" checked>
-                                            <label for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
+                                            <label
+                                                for="kontrol">{{ $dataResume->rmeResumeDet->tindak_lanjut_name ?? '-' }}</label>
                                         </a>
                                     </div>
                                 </div>
@@ -352,6 +366,7 @@
         </div>
     </div>
 </div>
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-labor')
 
 <script>
     $('#btn-view-resume').on('click', function() {

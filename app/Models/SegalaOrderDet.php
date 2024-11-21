@@ -30,9 +30,7 @@ class SegalaOrderDet extends Model
 
     public function labHasil()
     {
-        return $this->belongsTo(LabHasil::class, 'kd_produk', 'kd_produk')
-            ->where('kd_pasien', $this->segalaOrder->kd_pasien)
-            ->where('tgl_masuk', $this->segalaOrder->tgl_masuk);
+        return $this->belongsTo(LabHasil::class, 'kd_produk', 'kd_produk');
     }
 
     public function segalaOrder()

@@ -56,9 +56,9 @@
                                         <hr class="text-secondary">
                                     </div>
                                     <ul class="p-2">
-                                        <li>Paracetamol</li>
-                                        <li>Ikan tongkol</li>
+                                        <ul class="list-group" id="list-alergi"></ul>
                                     </ul>
+
                                     <div class="row mt-3">
                                         <div class="col-12">
                                             <h6 class="fw-bold">GOL. DARAH</h6>
@@ -112,7 +112,7 @@
                             <div class="mt-3">
                                 <strong class="fw-bold">Hasil Pemeriksaan Laboratorium</strong>
                                 <div class="bg-light p-3 border rounded">
-                                    <div style="max-height: 150px; overflow-y: auto;">
+                                    <div style="max-height: 200px; overflow-y: auto;">
                                         <table class="table table-bordered table-hover">
                                             <thead class="table-secondary">
                                                 <tr>
@@ -124,21 +124,19 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @php
-                                                    $counter = 1;
-                                                @endphp
+                                                @php $counter = 1; @endphp
                                                 @foreach ($dataLabor as $order)
                                                     @foreach ($order->details as $detail)
                                                         <tr>
-                                                            <td>{{ $counter++ }}</td>
+                                                            <td>{{ $counter }}</td>
                                                             <td>
                                                                 {{ $detail->produk->deskripsi ?? 'Tidak ada deskripsi' }}
                                                             </td>
-                                                            <td>{{ \Carbon\Carbon::parse($detail->tgl_order)->format('d M Y H:i') }}
+                                                            <td>{{ \Carbon\Carbon::parse($order->tgl_order)->format('d M Y H:i') }}
                                                             </td>
                                                             <td>
                                                                 @php
-                                                                    $statusOrder = $detail->status_order;
+                                                                    $statusOrder = $order->status_order;
                                                                     $statusLabel = '';
 
                                                                     if ($statusOrder == 0) {
@@ -154,11 +152,20 @@
 
                                                                 {!! $statusLabel !!}
                                                             </td>
-                                                            <td><a href="#">Lihat Hasil</a></td>
+                                                            <td>
+                                                                <a href="javascript:void(0);"
+                                                                    class="btn-view-labor-create"
+                                                                    data-kd-order="{{ $order->kd_order }}"
+                                                                    data-nomor="{{ $counter }}"
+                                                                    data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}"
+                                                                    data-klasifikasi="{{ $detail->labResults[$detail->produk->deskripsi]['klasifikasi'] ?? 'Tidak ada klasifikasi' }}">
+                                                                    Lihat Hasil
+                                                                </a>
+                                                            </td>
                                                         </tr>
+                                                        @php $counter++; @endphp
                                                     @endforeach
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -330,7 +337,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
-                                                data-code="2" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
+                                                data-code="2"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
                                             <label for="kontrol">Kontrol ulang, tgl:</label>
                                         </a>
 
@@ -338,7 +346,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
-                                                data-code="4" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? 'checked' : '' }}>
+                                                data-code="4"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? 'checked' : '' }}>
                                             <label for="konsul">Konsul/Rujuk Internal Ke:</label>
                                         </a>
                                         {{-- <a href="javascript:void(0)" class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btn-konsul-rujukan">
@@ -350,7 +359,8 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="selesai" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Selesai di Klinik ini"
-                                                data-code="3" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
+                                                data-code="3"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
                                             <label for="selesai">Selesai di Klinik ini</label>
                                         </a>
                                     </div>
@@ -360,14 +370,16 @@
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rujuk RS lain bagian:"
-                                                data-code="5" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
+                                                data-code="5"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
                                             <label for="rujuk">Rujuk RS lain bagian:</label>
                                         </a>
 
                                         <a href="#"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rawat Inap" data-code="1" {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
+                                                class="form-check-input me-2" value="Rawat Inap" data-code="1"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
                                             <label for="rawat">Rawat Inap</label>
                                         </a>
                                     </div>
@@ -394,6 +406,7 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-konsul-rujukan')
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create-alergi')
+@include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-labor-create')
 
 
 <script type="text/javascript">
@@ -474,6 +487,13 @@
             return;
         }
         formData.append('icd_9', JSON.stringify(icd9Array));
+
+        // Get Alergi
+        const Alergirray = $('#list-alergi').children()
+            .map(function() {
+                return $(this).text();
+            }).get().filter(Boolean);
+        formData.append('alergi', JSON.stringify(Alergirray));
 
         const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
         formData.append('tindak_lanjut_name', tindakLanjutElement.val());
@@ -594,7 +614,7 @@
         return true;
     }
 
-     // Helper function
+    // Helper function
     function sanitizeInput(input) {
         return input ? input.trim() : '';
     }

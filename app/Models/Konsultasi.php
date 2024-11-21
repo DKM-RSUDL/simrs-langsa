@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Konsultasi extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'konsultasi';
     public $timestamps = false;
 
@@ -43,5 +43,10 @@ class Konsultasi extends Model
     public function unit_asal()
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'kd_dokter_tujuan', 'kd_dokter');
     }
 }

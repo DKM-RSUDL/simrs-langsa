@@ -12,6 +12,6 @@ class LabHasil extends Model
 
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kp_produk');
     }
 }

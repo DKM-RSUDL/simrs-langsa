@@ -4,12 +4,14 @@ namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
 use App\Models\Penyakit;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +41,7 @@ class RawatJalanResumeController extends Controller
         }
 
         // ambil data Resume
-        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan'])
+        $dataResume = RMEResume::with(['listTindakanPasien.produk', 'rmeResumeDet', 'kunjungan', 'konsultasi'])
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -92,8 +94,19 @@ class RawatJalanResumeController extends Controller
             ->orderBy('tgl_masuk', 'desc')
             ->paginate(10);
 
-        // Mengambil semua data dokter
-        $dataDokter = Dokter::all();
+        // Ambil semua dokter
+        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        // Ambil dokter yang aktif saat ini
+        $dokterPengirim = DokterKlinik::with(['konsultasi' => function ($query) {
+            $query->with('dokter');
+        }])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->first();
 
         // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
@@ -106,6 +119,20 @@ class RawatJalanResumeController extends Controller
             })
             ->orderBy('tgl_order', 'desc')
             ->get();
+        // Transform lab results
+        $dataLabor->transform(function ($item) {
+            foreach ($item->details as $detail) {
+                $labResults = $this->getLabData(
+                    $item->kd_order,
+                    $item->kd_pasien,
+                    $item->tgl_masuk,
+                    $item->kd_unit,
+                    $item->urut_masuk
+                );
+                $detail->labResults = $labResults;
+            }
+            return $item;
+        });
 
         // Mengambil data hasil pemeriksaan radiologi
         $dataRagiologi = SegalaOrder::with(['details.produk'])
@@ -126,6 +153,10 @@ class RawatJalanResumeController extends Controller
 
         // Mengambil data obat
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
+        // unit palayanan
+        $unitKonsul = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -138,13 +169,15 @@ class RawatJalanResumeController extends Controller
             compact(
                 'dataMedis',
                 'dataDokter',
+                'dokterPengirim',
                 'dataLabor',
                 'dataRagiologi',
                 'riwayatObatHariIni',
                 'kodeICD',
                 'kodeICD9',
                 'dataResume',
-                'dataGet'
+                'dataGet',
+                'unitKonsul'
             )
         );
     }
@@ -159,8 +192,14 @@ class RawatJalanResumeController extends Controller
                 'diagnosis' => 'required|json',
                 'icd_10' => 'required|json',
                 'icd_9' => 'required|json',
+                'alergi' => 'nullable|json',
                 'tindak_lanjut_code' => 'required',
-                'tindak_lanjut_name' => 'required'
+                'tindak_lanjut_name' => 'required',
+                'tgl_kontrol_ulang' => 'nullable|string',
+                'rs_rujuk' => 'nullable|string',
+                'rs_rujuk_bagian' => 'nullable|string',
+                'unit_rujuk_internal' => 'nullable|string',
+                'unit_rawat_inap' => 'nullable|string',
             ]);
 
             if ($validator->fails()) {
@@ -193,11 +232,13 @@ class RawatJalanResumeController extends Controller
             $newDiagnosis = json_decode($request->diagnosis, true);
             $newIcd10 = json_decode($request->icd_10, true);
             $newIcd9 = json_decode($request->icd_9, true);
+            $newAlergi = json_decode($request->alergi, true);
 
             // Bersihkan data newline
             $newDiagnosis = $cleanArray($newDiagnosis);
             $newIcd10 = $cleanArray($newIcd10);
             $newIcd9 = $cleanArray($newIcd9);
+            $newAlergi = $cleanArray($newAlergi);
 
             $resume->update([
                 'anamnesis' => trim($request->anamnesis),
@@ -205,6 +246,7 @@ class RawatJalanResumeController extends Controller
                 'diagnosis' => $newDiagnosis,
                 'icd_10' => $newIcd10,
                 'icd_9' => $newIcd9,
+                'alergi' => $newAlergi,
                 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);
@@ -213,7 +255,12 @@ class RawatJalanResumeController extends Controller
                 ['id_resume' => $id],
                 [
                     'tindak_lanjut_name' => trim($request->tindak_lanjut_name),
-                    'tindak_lanjut_code' => $request->tindak_lanjut_code
+                    'tindak_lanjut_code' => $request->tindak_lanjut_code,
+                    'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
+                    'rs_rujuk' => $request->rs_rujuk,
+                    'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+                    'unit_rujuk_internal' => $request->unit_rujuk_internal,
+                    'unit_rawat_inap' => $request->unit_rawat_inap
                 ]
             );
 
@@ -239,11 +286,11 @@ class RawatJalanResumeController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -260,5 +307,68 @@ class RawatJalanResumeController extends Controller
             ->distinct()
             ->orderBy('MR_RESEP.TGL_ORDER', 'desc')
             ->get();
+    }
+
+    // hasil data raboratorium
+    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk, $kd_unit, $urut_masuk)
+    {
+        $results = DB::table('SEGALA_ORDER as so')
+            ->select([
+                'so.kd_order',
+                'so.kd_pasien',
+                'so.tgl_order',
+                'so.tgl_masuk',
+                'sod.kd_produk',
+                'p.deskripsi as nama_produk',
+                'kp.klasifikasi',
+                'lt.item_test',
+                'sod.jumlah',
+                'sod.status',
+                'lh.hasil',
+                'lh.satuan',
+                'lh.nilai_normal',
+                'lh.tgl_masuk',
+                'lh.KD_UNIT',
+                'lh.URUT_MASUK',
+                'lt.kd_test'
+            ])
+            ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+            ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kd_produk')
+            ->join('KLAS_PRODUK as kp', 'p.kd_klas', '=', 'kp.kd_klas')
+            ->join('LAB_HASIL as lh', function ($join) {
+                $join->on('p.kd_produk', '=', 'lh.kd_produk')
+                    ->on('so.kd_pasien', '=', 'lh.kd_pasien')
+                    ->on('so.tgl_masuk', '=', 'lh.tgl_masuk');
+            })
+            ->join('LAB_TEST as lt', function ($join) {
+                $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                    ->on('lh.kd_test', '=', 'lt.kd_test');
+            })
+            ->where([
+                'so.tgl_masuk' => $tgl_masuk,
+                'so.kd_order' => $kd_order,
+                'so.kd_pasien' => $kd_pasien,
+                'so.kd_unit' => $kd_unit,
+                'so.urut_masuk' => $urut_masuk
+            ])
+            ->orderBy('lt.kd_test')
+            ->get();
+
+        // Group results by nama_produk and include klasifikasi
+        return collect($results)->groupBy('nama_produk')->map(function ($group) {
+            $klasifikasi = $group->first()->klasifikasi;
+            return [
+                'klasifikasi' => $klasifikasi,
+                'tests' => $group->map(function ($item) {
+                    return [
+                        'item_test' => $item->item_test ?? '-',
+                        'hasil' => $item->hasil ?? '-',
+                        'satuan' => $item->satuan ?? '',
+                        'nilai_normal' => $item->nilai_normal ?? '-',
+                        'kd_test' => $item->kd_test
+                    ];
+                })
+            ];
+        });
     }
 }

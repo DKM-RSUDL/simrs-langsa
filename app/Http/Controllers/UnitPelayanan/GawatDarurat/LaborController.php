@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
+use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
@@ -43,17 +44,17 @@ class LaborController extends Controller
         // $dataDokter = Dokter::where('status', 1)->get();
 
         $dataDokter = DokterKlinik::with(['dokter', 'unit'])
-                                ->where('kd_unit', 3)
-                                ->whereRelation('dokter', 'status', 1)
-                                ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         $search = $request->input('search');
         $periode = $request->input('periode');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        $search = $request->input('search');
-        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit', 'produk.labHasil'])
+        // Get main data
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
             ->when($periode, function ($query) use ($periode) {
                 $now = now();
                 switch ($periode) {
@@ -92,8 +93,21 @@ class LaborController extends Controller
             ->where('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->where('kd_unit', $dataMedis->kd_unit)
-            ->orderBy('tgl_order',  'desc')
+            ->orderBy('tgl_order', 'desc')
             ->paginate(10);
+
+        // Transform the data to include lab results
+        $dataLabor->getCollection()->transform(function ($item) {
+            $labResults = $this->getLabData(
+                $item->kd_order,
+                $item->kd_pasien,
+                $item->tgl_masuk,
+                $item->urut_masuk
+            );
+
+            $item->labResults = $labResults;
+            return $item;
+        });
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -111,6 +125,69 @@ class LaborController extends Controller
             'dataDokter',
             'dataLabor'
         ));
+    }
+
+    // hasil data raboratorium
+    protected function getLabData($kd_order, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+
+        $results = DB::table('SEGALA_ORDER as so')
+                    ->select([
+                        'so.kd_order',
+                        'so.kd_pasien',
+                        'so.tgl_order',
+                        'so.tgl_masuk',
+                        'sod.kd_produk',
+                        'p.deskripsi as nama_produk',
+                        'kp.klasifikasi',
+                        'lt.item_test',
+                        'sod.jumlah',
+                        'sod.status',
+                        'lh.hasil',
+                        'lh.satuan',
+                        'lh.nilai_normal',
+                        'lh.tgl_masuk',
+                        'lh.KD_UNIT',
+                        'lh.URUT_MASUK',
+                        'lt.kd_test'
+                    ])
+                    ->join('SEGALA_ORDER_DET as sod', 'so.kd_order', '=', 'sod.kd_order')
+                    ->join('PRODUK as p', 'sod.kd_produk', '=', 'p.kp_produk')
+                    ->join('KLAS_PRODUK as kp', 'p.kd_klas', '=', 'kp.kd_klas')
+                    ->join('LAB_HASIL as lh', function ($join) {
+                        // $join->on('sod.kd_produk', '=', 'lh.kd_produk')
+                        $join->on('p.kd_produk', '=', 'lh.kd_produk')
+                            ->on('so.kd_pasien', '=', 'lh.kd_pasien')
+                            ->on('so.tgl_masuk', '=', 'lh.tgl_masuk');
+                    })
+                    ->join('LAB_TEST as lt', function ($join) {
+                        $join->on('lh.kd_lab', '=', 'lt.kd_lab')
+                            ->on('lh.kd_test', '=', 'lt.kd_test');
+                    })
+                    ->where([
+                        'so.tgl_masuk' => $tgl_masuk,
+                        'so.kd_order' => $kd_order,
+                        'so.kd_pasien' => $kd_pasien,
+                        'so.kd_unit'    => 3,
+                        'so.urut_masuk' => $urut_masuk
+                    ])
+                    ->orderBy('lt.kd_test')
+                    ->get();
+
+        // Mengelompokkan hasil berdasarkan nama produk
+        $groupedResults = collect($results)->groupBy('klasifikasi')->map(function ($group) {
+            return $group->map(function ($item) {
+                return [
+                    'item_test' => $item->item_test ?? '-',
+                    'hasil' => $item->hasil ?? '-',
+                    'satuan' => $item->satuan ?? '',
+                    'nilai_normal' => $item->nilai_normal ?? '-',
+                    'kd_test' => $item->kd_test
+                ];
+            });
+        });
+
+        return $groupedResults;
     }
 
     public function create($kd_pasien, $tgl_masuk)
@@ -399,7 +476,6 @@ class LaborController extends Controller
                 return $resume;
             }
             throw new \Exception('Gagal membuat atau mendapatkan data resume');
-
         } catch (\Exception $e) {
             throw $e;
         }
