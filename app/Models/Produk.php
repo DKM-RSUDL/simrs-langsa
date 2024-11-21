@@ -19,10 +19,10 @@ class Produk extends Model
         'aktif',
     ];
 
-    // public function klas()
-    // {
-    //     return $this->belongsTo(KlasProduk::class, 'kd_klas', 'kd_klas');
-    // }
+    public function klas()
+    {
+        return $this->belongsTo(KlasProduk::class, 'kd_klas', 'kd_klas');
+    }
 
     // public function labHasil()
     // {
