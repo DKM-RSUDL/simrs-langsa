@@ -68,7 +68,6 @@
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -159,14 +158,6 @@
 
 
             $(document).on('click', '.copy-obat', function() {
-                if (!selectedDokter) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: "Silakan pilih dokter terlebih dahulu.",
-                        position: 'topRight'
-                    });
-                    return;
-                }
 
                 var obatData = $(this).data('obat');
                 $('#modal-overlay').show();

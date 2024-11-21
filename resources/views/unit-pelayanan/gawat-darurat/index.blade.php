@@ -133,17 +133,14 @@
                 padding: 8px 15px;
                 width: fit-content;
                 min-width: 150px;
-            }
-
-            .card__content {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 20px;
             }
 
             .user__icon {
-                width: 24px;
-                height: 24px;
+                width: 40px;
+                height: 40px;
             }
 
             .dropdown-submenu {
@@ -184,11 +181,11 @@
             <div class="emergency__container">
                 <h4 class="fw-bold">Gawat Darurat</h4>
                 <div class="custom__card">
-                    <div class="card__content">
-                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
-                        <div class="text-center">Aktif</div>
+                    <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
+                    <div class="text-center">
+                        <p class="m-0 p-0">Aktif</p>
+                        <p class="m-0 p-0 fs-4 fw-bold">3</p>
                     </div>
-                    <div class="text-center">3</div>
                 </div>
             </div>
 

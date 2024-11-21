@@ -57,34 +57,33 @@
                 padding: 8px 15px;
                 width: fit-content;
                 min-width: 150px;
-                gap: 5px;
+                display: flex;
+                align-items: center;
+                gap: 20px;
             }
 
             .all__patients {
-                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+                background: linear-gradient(to bottom, #a5d8ff, #e0f7ff);
                 border: 2px solid #a100c9;
             }
 
             .Pending {
-                background: linear-gradient(to bottom, #ffe499, #FFE31A);
+                background: linear-gradient(to bottom, #FFE31A, #fbedc3);
                 border: 2px solid #ffbb00;
             }
 
             .Completed {
-                background: linear-gradient(to bottom, #e6ffe6, #99ff99);
+                background: linear-gradient(to bottom, #99ff99, #e6ffe6);
                 border: 2px solid #48fa07;
             }
 
             .emergency__container a {
                 text-decoration: none;
-            }
-
-            .emergency__container a:hover {
-                text-decoration: none;
+                color: #000
             }
 
             .custom__icon {
-                margin-bottom: 5px;
+                width: 28px;
             }
 
             .card__content {
@@ -121,43 +120,45 @@
         <div class="col-md-12">
             <div class="emergency__container ">
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
-                <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
                     <div class="custom__card all__patients">
-                        <div class="card__content">
-                            <div class="custom__icon">
-                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            </div>
-                            <div class="text-center">Semua Pasien</div>
+                        <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                        <div class="text-center">
+                            <p class="m-0 p-0">Semua Pasien</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">55</p>
                         </div>
-                        <div class="text-center">55</div>
                     </div>
                 </a>
-                <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
                     <div class="custom__card Pending">
-                        <div class="card__content">
-                            <div class="custom__icon">
-                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            </div>
-                            <div class="text-center">Belum Selesai</div>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#d10404"
+                                class="bi bi-exclamation-diamond-fill custom__icon" viewBox="0 0 16 16">
+                                <path
+                                    d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
                         </div>
                         <div class="text-center">
-                            <i class="warning__icon">!</i>
-                            33
+                            <p class="m-0 p-0">Belum Selesai</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
                         </div>
                     </div>
                 </a>
 
-                <a href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
                     <div class="custom__card Completed">
-                        <div class="card__content">
-                            <div class="custom__icon">
-                                <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
-                            </div>
-                            <div class="text-center">Selesai</div>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="green" class="bi bi-check-lg custom__icon"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                            </svg>
                         </div>
                         <div class="text-center">
-                            <i class="check__icon">✓</i>
-                            22
+                            <p class="m-0 p-0">Selesai</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">22</p>
                         </div>
                     </div>
                 </a>
