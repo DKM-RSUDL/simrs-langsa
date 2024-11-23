@@ -65,6 +65,8 @@ class AuthServiceProvider extends ServiceProvider
 
             // PERAWAT
             if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1 && $kdUnitRuangan == $kd_unit) return true;
+            // BIDAN
+            if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2 && $kdUnitRuangan == $kd_unit) return true;
 
             return false;
         });

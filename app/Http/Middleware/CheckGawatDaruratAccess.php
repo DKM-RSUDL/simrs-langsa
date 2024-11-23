@@ -27,6 +27,8 @@ class CheckGawatDaruratAccess
         if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 1) return $next($request);
         // PERAWAT
         if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1 && $kdRuangan == 36) return $next($request);
+        // BIDAN
+        if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2 && $kdRuangan == 36) return $next($request);
 
         abort(403, 'Unauthorized access to this unit.');
     }

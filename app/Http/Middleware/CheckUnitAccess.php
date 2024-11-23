@@ -65,6 +65,8 @@ class CheckUnitAccess
 
         // PERAWAT
         if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1 && $kdUnitRuangan == $currentUnit) return $next($request);
+        // BIDAN
+        if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2 && $kdUnitRuangan == $currentUnit) return $next($request);
 
         abort(403, 'Unauthorized access to this unit.');
 
