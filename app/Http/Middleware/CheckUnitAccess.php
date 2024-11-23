@@ -22,9 +22,12 @@ class CheckUnitAccess
         $user = auth()->user();
         $currentUnit = $request->route('kd_unit');
 
+        if($user->hasRole('admin')) return $next($request);
+
         // jenis tenaga
         $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
         $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+        $kdUnitRuangan = $user->karyawan->ruangan->kd_unit;
 
         // DOKTER
         if($kdJenisTenaga == 1) {
@@ -56,10 +59,15 @@ class CheckUnitAccess
                     abort(403, 'Unauthorized access to this unit.');
                 }
 
+                return $next($request);
             // }
         }
 
-        return $next($request);
+        // PERAWAT
+        if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1 && $kdUnitRuangan == $currentUnit) return $next($request);
+
+        abort(403, 'Unauthorized access to this unit.');
+
     }
 
 }

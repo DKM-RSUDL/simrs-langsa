@@ -30,9 +30,12 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('access-unit', function ($user, $kd_unit) {
             
+            if($user->hasRole('admin')) return true;
+            
             // jenis tenaga
             $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
             $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+            $kdUnitRuangan = $user->karyawan->ruangan->kd_unit;
 
             // DOKTER
             if($kdJenisTenaga == 1) {
@@ -60,7 +63,10 @@ class AuthServiceProvider extends ServiceProvider
                 // }
             }
 
-            return true;
+            // PERAWAT
+            if($kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1 && $kdUnitRuangan == $kd_unit) return true;
+
+            return false;
         });
     }
 }
