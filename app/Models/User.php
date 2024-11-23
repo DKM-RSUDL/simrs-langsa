@@ -52,6 +52,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+    public function karyawan()
+    {
+        return $this->belongsTo(HrdKaryawan::class, 'kd_karyawan', 'kd_karyawan');
+    }
+
     // public function profile()
     // {
     //     return $this->hasOne(UserProfile::class);
