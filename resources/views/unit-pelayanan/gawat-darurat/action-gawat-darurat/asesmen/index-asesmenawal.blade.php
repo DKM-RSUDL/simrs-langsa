@@ -23,20 +23,25 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari" aria-describedby="basic-addon1" id="searchInput">
+                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
+                    aria-describedby="basic-addon1" id="searchInput">
             </div>
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 text-end ms-auto">
+        <div class="col-md-4 text-end ms-auto">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                 <i class="ti-plus"></i> Tambah
             </button>
+            <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'),'tgl_masuk' => request()->route('tgl_masuk'),]) }}"
+                class="btn btn-primary">
+                <i class="ti-plus"></i> Keperawatan
+            </a>
         </div>
     </div>
 </div>
@@ -50,7 +55,8 @@
                 <div class="m-2">
                     {{ $item->tanggal_triase ? \Carbon\Carbon::parse($item->tanggal_triase)->format('d M Y H:i') : 'Tidak tersedia' }}
                 </div>
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien" width="70" height="70">
+                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
+                    width="70" height="70">
                 <div>
                     <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
                     By: <span class="fw-bold">{{ $item->user->name }}</span>
@@ -76,7 +82,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Get all filter elements
         const startDateInput = document.getElementById('start_date');
         const endDateInput = document.getElementById('end_date');
@@ -98,7 +104,8 @@
                 const itemDate = item.getAttribute('data-date');
                 const itemName = item.getAttribute('data-name').toLowerCase();
 
-                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate);
+                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <=
+                    endDate);
                 const searchMatch = itemName.includes(search);
 
                 if (dateMatch && searchMatch) {
