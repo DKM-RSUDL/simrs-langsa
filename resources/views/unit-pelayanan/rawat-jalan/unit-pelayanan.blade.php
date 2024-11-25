@@ -120,7 +120,7 @@
         <div class="col-md-12">
             <div class="emergency__container ">
                 <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
-                <a href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit', $unit->kd_unit) }}">
                     <div class="custom__card all__patients">
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit.belum-selesai', $unit->kd_unit) }}">
                     <div class="custom__card Pending">
                         <div class="d-flex align-items-center">
                             <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
@@ -146,7 +146,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
+                <a class="text-black" href="{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}">
                     <div class="custom__card Completed">
                         <div class="d-flex align-items-center">
                             <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">

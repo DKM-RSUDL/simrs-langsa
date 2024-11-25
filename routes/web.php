@@ -17,6 +17,7 @@ use App\Http\Controllers\MedisGawatDaruratController;
 
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatDaruratCarePlanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EdukasiController as GawatDaruratEdukasiController;
@@ -414,6 +415,15 @@ Route::middleware('auth')->group(function () {
                             });
                         });
     
+                    Route::prefix('asesmen-keperawatan')->group(function () {
+                        Route::name('asesmen-keperawatan')->group(function () {
+                            Route::controller(AsesmenKeperawatanController::class)->group(function () {
+                                Route::get('/', 'index')->name('.index');
+                                Route::post('/', 'store')->name('.store');
+                                Route::put('/', 'update')->name('.update');
+                            });
+                        });
+                    });
     
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
