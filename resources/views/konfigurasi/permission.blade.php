@@ -72,6 +72,202 @@
                 ]
             });
 
+            // Loading spinner HTML
+            const loadingSpinner = `
+        <div class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">...</span>
+            </div>
+            <p class="mt-2">Sedang memuat data...</p>
+        </div>
+    `;
+
+            // edit
+            $('body').on('click', '.editRole', function() {
+                const button = $(this);
+                const roleId = $(this).data('id');
+
+                // Disable button and show loading
+                button.prop('disabled', true)
+                    .html('<i class="spinner-border spinner-border-sm"></i> ');
+
+                // Show modal with loading spinner
+                $('#modalAction').modal('show');
+                $('#modalAction .modal-title').html('Tambah Permission');
+                $('#modalAction .modal-body').html(loadingSpinner);
+
+                $.get("{{ route('permissions.index') }}" + '/' + roleId + '/edit', function(response) {
+                        $('#modalAction .modal-body').html(response);
+                    })
+                    .fail(function(xhr) {
+                        $('#modalAction .modal-body').html(`
+                <div class="alert alert-danger">
+                    Terjadi kesalahan saat memuat data. Silakan coba lagi.
+                </div>
+            `);
+                    })
+                    .always(function() {
+                        // Restore button state
+                        button.prop('disabled', false)
+                            .html(
+                            '<i class="ti-pencil"></i>'); // Sesuaikan dengan icon yang Anda gunakan
+                    });
+            });
+
+            // delete
+            $(document).on('click', '.delete-permission', function(e) {
+                var permissionId = $(this).data('permission-id');
+                var roleId = $(this).data('role-id');
+
+                Swal.fire({
+                    title: 'Apakah anda yakin?',
+                    text: "Data yang di hapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#82868',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ url('permissions') }}/" + permissionId,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                role_id: roleId
+                            },
+                            success: function(response) {
+                                table.draw();
+                                showToast('success', response.message);
+                            },
+                            error: function(response) {
+                                var errorMessage = response.responseJSON
+                                    .message;
+                                showToast('error',
+                                    errorMessage);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // select all
+            $(document).on('change', '#checkAll', function() {
+                var isChecked = $(this).prop('checked');
+                if (isChecked) {
+                    $('.permission-item:visible .permission-checkbox').prop('checked', true);
+                } else {
+                    $('.permission-checkbox').prop('checked', false);
+                }
+            });
+
+            // search permission
+            $(document).on('input', '#searchPermission', function() {
+                var searchValue = $(this).val().toLowerCase();
+                var permissionItems = $('.permission-item');
+                var showSelectAll = false;
+
+                permissionItems.each(function() {
+                    var label = $(this).find('.form-check-label');
+                    var permissionName = label.text().toLowerCase();
+
+                    if (permissionName.includes(searchValue)) {
+                        $(this).show();
+                        showSelectAll = true;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                var selectAllCheckbox = $('#checkAll');
+                if (selectAllCheckbox.length > 0) {
+                    selectAllCheckbox.closest('.row').css('display', showSelectAll ? 'block' : 'none');
+                }
+            });
+
+            // save
+            $('#save-modal').click(function(e) {
+                e.preventDefault();
+                const button = $(this);
+
+                // Show loading state
+                button.html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...')
+                    .addClass('disabled');
+
+                $.ajax({
+                    data: $('#form-modalAction').serialize(),
+                    url: `{{ route('permissions.store') }}`,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#modalAction').modal('hide');
+                        table.draw();
+                        if (response.status == true) {
+                            showToast('success', response.message);
+                        } else {
+                            showToast('error', response.message);
+                        }
+                    },
+                    error: function(response) {
+                        if (response.responseJSON && response.responseJSON.errors) {
+                            var errors = response.responseJSON.errors;
+                            if (errors.hasOwnProperty('permissions')) {
+                                var errorMessage = errors['permissions'][0];
+                                $('#permissions-error').removeClass('d-none');
+                                $('#permissions-error').text(errorMessage);
+                            }
+                        }
+                    },
+                    complete: function() {
+                        // Restore button state
+                        button.html('Save').removeClass('disabled');
+                    }
+                });
+            });
+        });
+
+        /* Kode Bawaan
+        $(function() {
+            // ajax table
+            var table = $('.dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('permissions.index') }}",
+                columnDefs: [{
+                    "targets": "_all",
+                    "className": "text-start"
+                }],
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        orderable: true,
+                        searchable: false,
+                        render: function(data, type, full, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'permissions',
+                        name: 'permissions',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+
             // edit
             $('body').on('click', '.editRole', function() {
                 var roleId = $(this).data('id');
@@ -196,6 +392,6 @@
                 });
             });
 
-        });
+        }); */
     </script>
 @endpush

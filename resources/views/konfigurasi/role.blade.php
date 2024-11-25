@@ -80,6 +80,177 @@
                 ]
             });
 
+            // Loading spinner HTML
+            const loadingSpinner = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Mohon tunggu...</p>
+        </div>
+    `;
+
+            // create
+            $('#createRole').click(function() {
+                const button = $(this);
+                // Disable button and show loading text
+                button.prop('disabled', true).html(
+                    '<i class="spinner-border spinner-border-sm"></i> Loading...');
+
+                // Show loading in modal
+                $('#modalAction').modal('show');
+                $('#modalAction .modal-body').html(loadingSpinner);
+                $('#modalAction .modal-title').html('Tambah Role');
+
+                $.get("{{ route('roles.create') }}", function(response) {
+                        $('#modalAction .modal-body').html(response);
+                    })
+                    .fail(function(xhr) {
+                        $('#modalAction .modal-body').html('Terjadi kesalahan saat memuat form.');
+                        showToast('error', 'Gagal memuat form');
+                    })
+                    .always(function() {
+                        // Re-enable button and restore original text
+                        button.prop('disabled', false).html('<i class="ti-plus"></i> Tambah Data');
+                    });
+            });
+
+            // edit
+            $('body').on('click', '.editRole', function() {
+                const button = $(this);
+                const roleId = button.data('id');
+
+                // Disable button and show loading
+                button.prop('disabled', true).html('<i class="spinner-border spinner-border-sm"></i>');
+
+                // Show loading in modal
+                $('#modalAction').modal('show');
+                $('#modalAction .modal-body').html(loadingSpinner);
+                $('#modalAction .modal-title').html('Edit Role');
+
+                $.get("{{ route('roles.index') }}" + '/' + roleId + '/edit', function(response) {
+                        $('#modalAction .modal-body').html(response);
+                    })
+                    .fail(function(xhr) {
+                        $('#modalAction .modal-body').html('Terjadi kesalahan saat memuat data.');
+                        showToast('error', 'Gagal memuat data');
+                    })
+                    .always(function() {
+                        // Re-enable button and restore original text
+                        button.prop('disabled', false).html('<i class="ti-pencil"></i>');
+                    });
+            });
+
+            // delete
+            $('body').on('click', '.deleteRole', function() {
+                var roleId = $(this).data('id');
+                Swal.fire({
+                    title: 'Apakah anda yakin?',
+                    text: "Data yang di hapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#82868',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ url('roles') }}/" + roleId,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                table.draw();
+                                showToast('success', response.message);
+                            },
+                            error: function(response) {
+                                var errorMessage = response.responseJSON.message;
+                                showToast('error', errorMessage);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // save
+            $('#save-modal').click(function(e) {
+                e.preventDefault();
+                const button = $(this);
+                button.html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...').addClass(
+                    'disabled');
+
+                var id = $('#roleId').val();
+
+                $.ajax({
+                    data: $('#form-modalAction').serialize(),
+                    url: `{{ url('roles/') }}/${id}`,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#modalAction').modal('hide');
+                        table.draw();
+                        showToast('success', response.message);
+                    },
+                    error: function(response) {
+                        var errors = response.responseJSON.errors;
+                        if (errors) {
+                            Object.keys(errors).forEach(function(key) {
+                                var errorMessage = errors[key][0];
+                                $('#' + key).siblings('.text-danger').text(
+                                errorMessage);
+                            });
+                        }
+                    },
+                    complete: function() {
+                        button.html('Save').removeClass('disabled');
+                    }
+                });
+            });
+        });
+
+        /* Kode Bawaan
+        $(function() {
+            // ajax table
+            var table = $('.dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('roles.index') }}",
+                columnDefs: [{
+                    "targets": "_all",
+                    "className": "text-start"
+                }],
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        orderable: true,
+                        searchable: false,
+                        render: function(data, type, full, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ]
+            });
+
             // create
             $('#createRole').click(function() {
                 $.get("{{ route('roles.create') }}", function(response) {
@@ -169,6 +340,6 @@
                     }
                 });
             });
-        });
+        }); */
     </script>
 @endpush
