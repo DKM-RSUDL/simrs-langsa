@@ -9,7 +9,7 @@
             <div class="fs-big text-center text-danger fw-bold">403</div>
             <div class="fs-3 text-center fw-bold mb-4">Forbidden</div>
             <div class="fs-6 text-center mb-3">
-                You don't have access to this page.
+                {{ $exception->getMessage() ?: "You don't have access to this page." }}
             </div>
             <div class="text-center">
                 <a href="{{ url()->previous() }}">Back</a>

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class RawatJalanController extends Controller
@@ -26,6 +29,15 @@ class RawatJalanController extends Controller
             ->where('kd_bagian', 2)
             ->where('aktif', 1)
             ->get();
+
+        // $dokter = Dokter::where('kd_karyawan', auth()->user()->kd_karyawan)->first();
+        // $unitTest = DokterKlinik::select('kd_unit')
+        //                         ->where('kd_dokter', $dokter->kd_dokter)
+        //                         ->groupBy('kd_unit')
+        //                         ->get()
+        //                         ->toArray();
+
+        // dd($unitTest);
 
         return view('unit-pelayanan.rawat-jalan.index', compact('unit'));
     }

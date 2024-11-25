@@ -11,4 +11,10 @@ class HrdKaryawan extends Model
     protected $connection = 'sqlsrv_hrd';
     protected $table = 'HRD_KARYAWAN';
     public $incrementing = false;
+
+
+    public function ruangan()
+    {
+        return $this->belongsTo(HrdRuangan::class, 'kd_ruangan', 'kd_ruangan');
+    }
 }
