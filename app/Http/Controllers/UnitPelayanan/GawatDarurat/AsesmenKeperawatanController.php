@@ -49,7 +49,7 @@ class AsesmenKeperawatanController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
         
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.asesmen-keperawatan', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.create', compact(
             'kd_pasien', 'tgl_masuk', 'dataMedis', 'user'));
     }
 
