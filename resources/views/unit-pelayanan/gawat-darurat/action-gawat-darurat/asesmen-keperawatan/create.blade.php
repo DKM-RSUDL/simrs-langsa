@@ -88,9 +88,10 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div class="form-check">
                                                             <input type="checkbox"
-                                                                class="form-check-input diagnosis-checkbox" id="jalan_nafas_tidak_efektif"
-                                                                name="diagnosis[]" value="jalan_nafas_tidak_efektif"
-                                                                data-aktual="aktual_1" data-risiko="risiko_1">
+                                                                class="form-check-input diagnosis-checkbox"
+                                                                id="jalan_nafas_tidak_efektif" name="diagnosis[]"
+                                                                value="jalan_nafas_tidak_efektif" data-aktual="aktual_1"
+                                                                data-risiko="risiko_1">
                                                             <label class="form-check-label" for="jalan_nafas_tidak_efektif">
                                                                 Jalan nafas tidak efektif
                                                             </label>
@@ -303,7 +304,8 @@
                                                                 id="pola_nafas_tidak_efektif" name="diagnosis[]"
                                                                 value="pola_nafas_tidak_efektif" data-aktual="aktual_1"
                                                                 data-risiko="risiko_1">
-                                                            <label class="form-check-label" for="pola_nafas_tidak_efektif">
+                                                            <label class="form-check-label"
+                                                                for="pola_nafas_tidak_efektif">
                                                                 Pola Nafas Tidak Efektif
                                                             </label>
                                                         </div>
@@ -363,7 +365,8 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="tambahTindakanBreathing">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                id="tambahTindakanBreathing">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
                                             <div id="tindakanBreathingList" class="d-flex flex-column gap-2">
@@ -372,52 +375,82 @@
                                     </div>
 
                                     <!-- Modal for breathing interventions -->
-                                    <div class="modal fade" id="tindakanBreathingModal" tabindex="-1" aria-labelledby="tindakanBreathingModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="tindakanBreathingModal" tabindex="-1"
+                                        aria-labelledby="tindakanBreathingModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="tindakanBreathingModalLabel">Tindakan keperawatan</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <h5 class="modal-title" id="tindakanBreathingModalLabel">Tindakan
+                                                        keperawatan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <p class="text-muted small">[ket: multiple choice]</p>
                                                     <div class="tindakan-breathing-options">
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing1" value="Observasi frekuensi, irama, kedalaman pernafasan jalan nafas">
-                                                            <label class="form-check-label" for="tindakanBreathing1">Observasi frekuensi, irama, kedalaman pernafasan jalan nafas</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing1"
+                                                                value="Observasi frekuensi, irama, kedalaman pernafasan jalan nafas">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing1">Observasi frekuensi, irama,
+                                                                kedalaman pernafasan jalan nafas</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing2" value="Observasi tanda-tanda distress pernafasan; penggunaan otot bantu; retraksi intercostae; nafas cuping hidung">
-                                                            <label class="form-check-label" for="tindakanBreathing2">Observasi tanda-tanda distress pernafasan; penggunaan otot bantu; retraksi intercostae; nafas cuping hidung</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing2"
+                                                                value="Observasi tanda-tanda distress pernafasan; penggunaan otot bantu; retraksi intercostae; nafas cuping hidung">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing2">Observasi tanda-tanda distress
+                                                                pernafasan; penggunaan otot bantu; retraksi intercostae;
+                                                                nafas cuping hidung</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing3" value="Memberikan posisi semi fowler jika tidak ada kontra indikasi">
-                                                            <label class="form-check-label" for="tindakanBreathing3">Memberikan posisi semi fowler jika tidak ada kontra indikasi</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing3"
+                                                                value="Memberikan posisi semi fowler jika tidak ada kontra indikasi">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing3">Memberikan posisi semi fowler jika
+                                                                tidak ada kontra indikasi</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing4" value="Melakukan fisioterapi dada jika tidak ada kontra indikasi">
-                                                            <label class="form-check-label" for="tindakanBreathing4">Melakukan fisioterapi dada jika tidak ada kontra indikasi</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing4"
+                                                                value="Melakukan fisioterapi dada jika tidak ada kontra indikasi">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing4">Melakukan fisioterapi dada jika
+                                                                tidak ada kontra indikasi</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing5" value="Berikan oksigen O2">
-                                                            <label class="form-check-label" for="tindakanBreathing5">Berikan oksigen O2</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing5" value="Berikan oksigen O2">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing5">Berikan oksigen O2</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing6" value="Pemeriksaan AGD">
-                                                            <label class="form-check-label" for="tindakanBreathing6">Pemeriksaan AGD</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing6" value="Pemeriksaan AGD">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing6">Pemeriksaan AGD</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing7" value="Lainnya">
-                                                            <label class="form-check-label" for="tindakanBreathing7">Lainnya</label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanBreathing7" value="Lainnya">
+                                                            <label class="form-check-label"
+                                                                for="tindakanBreathing7">Lainnya</label>
                                                         </div>
                                                         <div class="mt-3 lainnya-breathing-input" style="display: none;">
-                                                            <input type="text" class="form-control" id="tindakanBreathingLainnya" placeholder="Sebutkan tindakan lainnya">
+                                                            <input type="text" class="form-control"
+                                                                id="tindakanBreathingLainnya"
+                                                                placeholder="Sebutkan tindakan lainnya">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                    <button type="button" class="btn btn-primary" id="btnSimpanTindakanBreathing">Simpan</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Batal</button>
+                                                    <button type="button" class="btn btn-primary"
+                                                        id="btnSimpanTindakanBreathing">Simpan</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -481,7 +514,8 @@
                                         <label style="min-width: 200px;">Pengisian Kapiler</label>
                                         <select class="form-select" name="pengisian_kapiler">
                                             <option selected disabled>Pilih</option>
-                                            <option value="< 2 Detik">< 2 Detik</option>
+                                            <option value="< 2 Detik">
+                                                < 2 Detik</option>
                                             <option value="> 2 Detik">> 2 Detik</option>
                                         </select>
                                     </div>
@@ -601,10 +635,133 @@
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
                                             <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakan">
+                                                id="tambahTindakanCirculation">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanList" class="d-flex flex-column gap-2">
+                                            <div id="tindakanCirculationList" class="d-flex flex-column gap-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Modal for circulation interventions -->
+                                    <div class="modal fade" id="tindakanCirculationModal" tabindex="-1"
+                                        aria-labelledby="tindakanCirculationModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="tindakanCirculationModalLabel">Tindakan
+                                                        keperawatan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="text-muted small">[ket: multiple choice]</p>
+                                                    <div class="tindakan-circulation-options">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation1"
+                                                                value="Mengkaji nadi : frekuensi, irama dan kekuatan">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation1">Mengkaji nadi : frekuensi, irama
+                                                                dan kekuatan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation2" value="Menilai akral">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation2">Menilai akral</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation3" value="Mengukur tekanan darah">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation3">Mengukur tekanan darah</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation4"
+                                                                value="Memberikan cairan per oral">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation4">Memberikan cairan per
+                                                                oral</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation5"
+                                                                value="Memonitor perubahan turgor, membran mucosa, dan capillary refill time">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation5">Memonitor perubahan turgor,
+                                                                membran mucosa, dan capillary refill time</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation6"
+                                                                value="Mengidentifikasi sumber perdarahan">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation6">Mengidentifikasi sumber
+                                                                perdarahan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation7"
+                                                                value="Memberikan penekanan langsung ke sumber perdarahan">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation7">Memberikan penekanan langsung ke
+                                                                sumber perdarahan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation8"
+                                                                value="Memberi posisi shock (tungkai lebih tinggi dari jantung)">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation8">Memberi posisi shock (tungkai
+                                                                lebih tinggi dari jantung)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation9" value="Memasang kateter">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation9">Memasang kateter</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation10"
+                                                                value="Memonitor intake-output cairan">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation10">Memonitor intake-output
+                                                                cairan</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation11" value="Memasang infus IV">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation11">Memasang infus IV</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation12" value="Transfusi darah">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation12">Transfusi darah</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="tindakanCirculation13" value="Lainnya">
+                                                            <label class="form-check-label"
+                                                                for="tindakanCirculation13">Lainnya</label>
+                                                        </div>
+                                                        <div class="mt-3 lainnya-circulation-input"
+                                                            style="display: none;">
+                                                            <input type="text" class="form-control"
+                                                                id="tindakanCirculationLainnya"
+                                                                placeholder="Sebutkan tindakan lainnya">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Batal</button>
+                                                    <button type="button" class="btn btn-primary"
+                                                        id="btnSimpanTindakanCirculation">Simpan</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -942,8 +1099,8 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="laserasi_tidak"
-                                                        name="laserasi" value="tidak">
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="laserasi_tidak" name="laserasi" value="tidak">
                                                     <label class="form-check-label" for="laserasi_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
@@ -1002,8 +1159,8 @@
                                                             <input type="checkbox"
                                                                 class="form-check-input diagnosis-checkbox"
                                                                 id="diagnosis_1" name="diagnosis[]"
-                                                                value="perfusi_jaringan_cereberal" data-aktual="aktual_1"
-                                                                data-risiko="risiko_1">
+                                                                value="perfusi_jaringan_cereberal"
+                                                                data-aktual="aktual_1" data-risiko="risiko_1">
                                                             <label class="form-check-label" for="diagnosis_1">
                                                                 Kerusakan Mobilitas Fisik
                                                             </label>

@@ -149,6 +149,13 @@
                 const tindakanBreathingLainnya = document.getElementById('tindakanBreathingLainnya');
                 let selectedBreathingItems = new Set();
 
+                const tindakanCirculationModal = new bootstrap.Modal(document.getElementById('tindakanCirculationModal'));
+                const btnTambahTindakanCirculation = document.getElementById('tambahTindakanCirculation');
+                const btnSimpanTindakanCirculation = document.getElementById('btnSimpanTindakanCirculation');
+                const selectedTindakanCirculationList = document.getElementById('tindakanCirculationList');
+                const tindakanCirculationLainnya = document.getElementById('tindakanCirculationLainnya');
+                let selectedCirculationItems = new Set();
+
                 //=======================================================================//
 
                 tglAsesmen.addEventListener('change', function(e) {
@@ -269,6 +276,62 @@
                 window.removeTindakanBreathing = function(item) {
                     selectedBreathingItems.delete(item);
                     updateSelectedTindakanBreathing();
+                };
+
+                //=================================================================//
+
+                // Show modal when Tambah button is clicked
+                btnTambahTindakanCirculation.addEventListener('click', function() {
+                    tindakanCirculationModal.show();
+                });
+
+                // Handle "Lainnya" checkbox for circulation
+                document.getElementById('tindakanCirculation13').addEventListener('change', function() {
+                    const lainnyaInput = document.querySelector('.lainnya-circulation-input');
+                    lainnyaInput.style.display = this.checked ? 'block' : 'none';
+                    if (!this.checked) {
+                        tindakanCirculationLainnya.value = '';
+                    }
+                });
+
+                // Handle save button click for circulation
+                btnSimpanTindakanCirculation.addEventListener('click', function() {
+                    selectedCirculationItems.clear();
+                    const checkboxes = document.querySelectorAll('.tindakan-circulation-options .form-check-input:checked');
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.value === 'Lainnya' && tindakanCirculationLainnya.value) {
+                            selectedCirculationItems.add(tindakanCirculationLainnya.value);
+                        } else if (checkbox.value !== 'Lainnya') {
+                            selectedCirculationItems.add(checkbox.value);
+                        }
+                    });
+
+                    // Update the display
+                    updateSelectedTindakanCirculation();
+                    tindakanCirculationModal.hide();
+                });
+
+                function updateSelectedTindakanCirculation() {
+                    selectedTindakanCirculationList.innerHTML = '';
+                    selectedCirculationItems.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'selected-item d-flex align-items-center gap-2 bg-light p-2 rounded';
+                        itemElement.innerHTML = `
+                            <span>${item}</span>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeTindakanCirculation('${item}')">
+                                <i class="ti-close"></i>
+                            </button>
+                            <input type="hidden" name="tindakan_keperawatan_circulation[]" value="${item}">
+                        `;
+                        selectedTindakanCirculationList.appendChild(itemElement);
+                    });
+                }
+
+                // Make removeTindakanCirculation function available globally
+                window.removeTindakanCirculation = function(item) {
+                    selectedCirculationItems.delete(item);
+                    updateSelectedTindakanCirculation();
                 };
 
             });
