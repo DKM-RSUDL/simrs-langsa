@@ -135,54 +135,141 @@
                 const tglAsesmen = document.getElementById('tgl_asesmen_keperawatan');
                 const jamAsesmen = document.getElementById('jam_asesmen_keperawatan');
 
+                const tindakanModal = new bootstrap.Modal(document.getElementById('tindakanModal'));
+                const btnTambahTindakan = document.getElementById('btnTambahTindakan');
+                const btnSimpanTindakan = document.getElementById('btnSimpanTindakan');
+                const selectedTindakanList = document.getElementById('selectedTindakanList');
+                const tindakanLainnya = document.getElementById('tindakanLainnya');
+                let selectedItems = new Set();
+
+                const tindakanBreathingModal = new bootstrap.Modal(document.getElementById('tindakanBreathingModal'));
+                const btnTambahTindakanBreathing = document.getElementById('tambahTindakanBreathing');
+                const btnSimpanTindakanBreathing = document.getElementById('btnSimpanTindakanBreathing');
+                const selectedTindakanBreathingList = document.getElementById('tindakanBreathingList');
+                const tindakanBreathingLainnya = document.getElementById('tindakanBreathingLainnya');
+                let selectedBreathingItems = new Set();
+
+                //=======================================================================//
+
                 tglAsesmen.addEventListener('change', function(e) {
-                    // Handle date change
                 });
 
                 jamAsesmen.addEventListener('change', function(e) {
-                    // Handle time change
                 });
 
-                // Mengambil semua checkbox diagnosis
-                const diagnosisCheckboxes = document.querySelectorAll('.diagnosis-checkbox');
 
-                diagnosisCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        // Mengambil ID checkbox Aktual dan Risiko terkait
-                        const aktualId = this.dataset.aktual;
-                        const risikoId = this.dataset.risiko;
+                //=================================================================//
 
-                        const aktualCheckbox = document.getElementById(aktualId);
-                        const risikoCheckbox = document.getElementById(risikoId);
-
-                        if (this.checked) {
-                            // Jika diagnosis dicentang, aktifkan checkbox Aktual & Risiko
-                            aktualCheckbox.disabled = false;
-                            risikoCheckbox.disabled = false;
-                        } else {
-                            // Jika diagnosis tidak dicentang, nonaktifkan dan hapus centang Aktual & Risiko
-                            aktualCheckbox.disabled = true;
-                            risikoCheckbox.disabled = true;
-                            aktualCheckbox.checked = false;
-                            risikoCheckbox.checked = false;
-                        }
-                    });
+                // Show modal when Tambah button is clicked
+                btnTambahTindakan.addEventListener('click', function() {
+                    tindakanModal.show();
                 });
 
-                // Inisialisasi status awal checkbox Aktual & Risiko
-                diagnosisCheckboxes.forEach(checkbox => {
-                    const aktualId = checkbox.dataset.aktual;
-                    const risikoId = checkbox.dataset.risiko;
-
-                    const aktualCheckbox = document.getElementById(aktualId);
-                    const risikoCheckbox = document.getElementById(risikoId);
-
-                    // Nonaktifkan checkbox Aktual & Risiko jika diagnosis belum dipilih
-                    if (!checkbox.checked) {
-                        aktualCheckbox.disabled = true;
-                        risikoCheckbox.disabled = true;
+                // Handle "Lainnya" checkbox
+                document.getElementById('tindakan10').addEventListener('change', function() {
+                    const lainnyaInput = document.querySelector('.lainnya-input');
+                    lainnyaInput.style.display = this.checked ? 'block' : 'none';
+                    if (!this.checked) {
+                        tindakanLainnya.value = '';
                     }
                 });
+
+                // Handle save button click
+                btnSimpanTindakan.addEventListener('click', function() {
+                    selectedItems.clear();
+                    const checkboxes = document.querySelectorAll('.tindakan-options .form-check-input:checked');
+
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.value === 'Lainnya' && tindakanLainnya.value) {
+                            selectedItems.add(tindakanLainnya.value);
+                        } else if (checkbox.value !== 'Lainnya') {
+                            selectedItems.add(checkbox.value);
+                        }
+                    });
+
+                    // Update the display
+                    updateSelectedTindakan();
+                    tindakanModal.hide();
+                });
+
+                function updateSelectedTindakan() {
+                    selectedTindakanList.innerHTML = '';
+                    selectedItems.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className =
+                            'selected-item d-flex align-items-center gap-2 bg-light p-2 rounded';
+                        itemElement.innerHTML = `
+                            <span>${item}</span>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeTindakan('${item}')">
+                                <i class="ti-close"></i>
+                            </button>
+                            <input type="hidden" name="tindakan_keperawatan[]" value="${item}">
+                        `;
+                        selectedTindakanList.appendChild(itemElement);
+                    });
+                }
+
+                // Make removeTindakan function available globally
+                window.removeTindakan = function(item) {
+                    selectedItems.delete(item);
+                    updateSelectedTindakan();
+                };
+
+                //=================================================================//
+
+                // Show modal when Tambah button is clicked
+                btnTambahTindakanBreathing.addEventListener('click', function() {
+                    tindakanBreathingModal.show();
+                });
+
+                // Handle "Lainnya" checkbox for breathing
+                document.getElementById('tindakanBreathing7').addEventListener('change', function() {
+                    const lainnyaInput = document.querySelector('.lainnya-breathing-input');
+                    lainnyaInput.style.display = this.checked ? 'block' : 'none';
+                    if (!this.checked) {
+                        tindakanBreathingLainnya.value = '';
+                    }
+                });
+
+                // Handle save button click for breathing
+                btnSimpanTindakanBreathing.addEventListener('click', function() {
+                    selectedBreathingItems.clear();
+                    const checkboxes = document.querySelectorAll('.tindakan-breathing-options .form-check-input:checked');
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.value === 'Lainnya' && tindakanBreathingLainnya.value) {
+                            selectedBreathingItems.add(tindakanBreathingLainnya.value);
+                        } else if (checkbox.value !== 'Lainnya') {
+                            selectedBreathingItems.add(checkbox.value);
+                        }
+                    });
+
+                    // Update the display
+                    updateSelectedTindakanBreathing();
+                    tindakanBreathingModal.hide();
+                });
+
+                function updateSelectedTindakanBreathing() {
+                    selectedTindakanBreathingList.innerHTML = '';
+                    selectedBreathingItems.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'selected-item d-flex align-items-center gap-2 bg-light p-2 rounded';
+                        itemElement.innerHTML = `
+                            <span>${item}</span>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeTindakanBreathing('${item}')">
+                                <i class="ti-close"></i>
+                            </button>
+                            <input type="hidden" name="tindakan_keperawatan_breathing[]" value="${item}">
+                        `;
+                        selectedTindakanBreathingList.appendChild(itemElement);
+                    });
+                }
+
+                // Make removeTindakanBreathing function available globally
+                window.removeTindakanBreathing = function(item) {
+                    selectedBreathingItems.delete(item);
+                    updateSelectedTindakanBreathing();
+                };
 
             });
         </script>

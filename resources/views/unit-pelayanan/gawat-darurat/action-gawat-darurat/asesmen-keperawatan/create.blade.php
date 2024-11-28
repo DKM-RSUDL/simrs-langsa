@@ -59,7 +59,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Status Airway</label>
                                         <select class="form-select" name="status_airway">
-                                            <option selected disabled>Pilih</option>
+                                            <option value="bebas">Bebas</option>
                                             <option value="pangkal_lidah_jatuh">Tidak Bebas (Pangkal Lidah Jatuh)</option>
                                             <option value="sputum">Tidak Bebas (Sputum)</option>
                                             <option value="darah">Tidak Bebas (darah)</option>
@@ -88,10 +88,10 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div class="form-check">
                                                             <input type="checkbox"
-                                                                class="form-check-input diagnosis-checkbox" id="diagnosis_1"
-                                                                name="diagnosis[]" value="perfusi_jaringan_cereberal"
+                                                                class="form-check-input diagnosis-checkbox" id="jalan_nafas_tidak_efektif"
+                                                                name="diagnosis[]" value="jalan_nafas_tidak_efektif"
                                                                 data-aktual="aktual_1" data-risiko="risiko_1">
-                                                            <label class="form-check-label" for="diagnosis_1">
+                                                            <label class="form-check-label" for="jalan_nafas_tidak_efektif">
                                                                 Jalan nafas tidak efektif
                                                             </label>
                                                         </div>
@@ -119,10 +119,109 @@
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
                                             <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakan">
+                                                id="btnTambahTindakan">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList" class="d-flex flex-column gap-2">
+                                            </div>
+
+                                            <!-- Modal for intervention selection -->
+                                            <div class="modal fade" id="tindakanModal" tabindex="-1"
+                                                aria-labelledby="tindakanModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="tindakanModalLabel">Tindakan
+                                                                keperawatan</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="text-muted small">[ket: multiple choice]</p>
+                                                            <div class="tindakan-options">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan1" value="Bersihkan jalan nafas">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan1">Bersihkan jalan nafas</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan2" value="Memasang collar neck">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan2">Memasang collar neck</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan3" value="Suction/ penghisapan">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan3">Suction/ penghisapan</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan4"
+                                                                        value="Melakukan head tilt- chin lift">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan4">Melakukan head tilt- chin
+                                                                        lift</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan5" value="Melakukan jaw thrust">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan5">Melakukan jaw thrust</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan6"
+                                                                        value="Melakukan oro/ nasofaringeal airway">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan6">Melakukan oro/ nasofaringeal
+                                                                        airway</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan7" value="Melakukan Heimlick manuver">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan7">Melakukan Heimlick manuver</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan8"
+                                                                        value="Melakukan posisi nyaman fowler/semi fowler">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan8">Melakukan posisi nyaman fowler/semi
+                                                                        fowler</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan9"
+                                                                        value="Mengajarkan tekhnik batuk efektif">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan9">Mengajarkan tekhnik batuk
+                                                                        efektif</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        id="tindakan10" value="Lainnya">
+                                                                    <label class="form-check-label"
+                                                                        for="tindakan10">Lainnya</label>
+                                                                </div>
+                                                                <div class="mt-3 lainnya-input" style="display: none;">
+                                                                    <input type="text" class="form-control"
+                                                                        id="tindakanLainnya"
+                                                                        placeholder="Sebutkan tindakan lainnya">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="btnSimpanTindakan">Simpan</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -141,6 +240,12 @@
                                         <label style="min-width: 200px;">Pola nafas</label>
                                         <select class="form-select" name="pola_nafas">
                                             <option selected disabled>pilih</option>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Apnea">Apnea</option>
+                                            <option value="Sesak">Sesak</option>
+                                            <option value="Bradipnea">Bradipnea</option>
+                                            <option value="Takipnea">Takipnea</option>
+                                            <option value="Othopnea">Othopnea</option>
                                         </select>
                                     </div>
 
@@ -148,24 +253,37 @@
                                         <label style="min-width: 200px;">Bunyi nafas</label>
                                         <select class="form-select" name="bunyi_nafas">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Veskuler">Veskuler</option>
+                                            <option value="Wheezing">Whezing</option>
+                                            <option value="Stridor">Stridor</option>
+                                            <option value="Ronchi">Ronchi</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Irama Nafas</label>
                                         <select class="form-select" name="irama_nafas">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Teratur">Teratur</option>
+                                            <option value="Tidak Teratur">Tidak Teratur</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tanda Distress Nafas</label>
                                         <select class="form-select" name="tanda_distress_nafas">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Tidak Ada Tanda Distress">Tidak Ada Tanda Distress</option>
+                                            <option value="Penggunaan Otot Bantu">Penggunaan Otot Bantu</option>
+                                            <option value="Retraksi Dada/Intercosta">Retraksi Dada/Intercosta</option>
+                                            <option value="Cupling Hidung">Cupling Hidung</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Jalan Pernafasan</label>
                                         <select class="form-select" name="jalan_pernafasan">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Pernafasan Dada">Pernafasan Dada</option>
+                                            <option value="Pernafasan Perut">Pernafasan Perut</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -182,10 +300,10 @@
                                                         <div class="form-check">
                                                             <input type="checkbox"
                                                                 class="form-check-input diagnosis-checkbox"
-                                                                id="diagnosis_1" name="diagnosis[]"
-                                                                value="perfusi_jaringan_cereberal" data-aktual="aktual_1"
+                                                                id="pola_nafas_tidak_efektif" name="diagnosis[]"
+                                                                value="pola_nafas_tidak_efektif" data-aktual="aktual_1"
                                                                 data-risiko="risiko_1">
-                                                            <label class="form-check-label" for="diagnosis_1">
+                                                            <label class="form-check-label" for="pola_nafas_tidak_efektif">
                                                                 Pola Nafas Tidak Efektif
                                                             </label>
                                                         </div>
@@ -214,10 +332,10 @@
                                                         <div class="form-check">
                                                             <input type="checkbox"
                                                                 class="form-check-input diagnosis-checkbox"
-                                                                id="diagnosis_2" name="diagnosis[]"
-                                                                value="intoleransi_aktivitas" data-aktual="aktual_2"
+                                                                id="gangguan_pertukaran_gas" name="diagnosis[]"
+                                                                value="gangguan_pertukaran_gas" data-aktual="aktual_2"
                                                                 data-risiko="risiko_2">
-                                                            <label class="form-check-label" for="diagnosis_2">
+                                                            <label class="form-check-label" for="gangguan_pertukaran_gas">
                                                                 Gangguan Pertukaran Gas
                                                             </label>
                                                         </div>
@@ -245,11 +363,62 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakan">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="tambahTindakanBreathing">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanList" class="d-flex flex-column gap-2">
+                                            <div id="tindakanBreathingList" class="d-flex flex-column gap-2">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal for breathing interventions -->
+                                    <div class="modal fade" id="tindakanBreathingModal" tabindex="-1" aria-labelledby="tindakanBreathingModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="tindakanBreathingModalLabel">Tindakan keperawatan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="text-muted small">[ket: multiple choice]</p>
+                                                    <div class="tindakan-breathing-options">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing1" value="Observasi frekuensi, irama, kedalaman pernafasan jalan nafas">
+                                                            <label class="form-check-label" for="tindakanBreathing1">Observasi frekuensi, irama, kedalaman pernafasan jalan nafas</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing2" value="Observasi tanda-tanda distress pernafasan; penggunaan otot bantu; retraksi intercostae; nafas cuping hidung">
+                                                            <label class="form-check-label" for="tindakanBreathing2">Observasi tanda-tanda distress pernafasan; penggunaan otot bantu; retraksi intercostae; nafas cuping hidung</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing3" value="Memberikan posisi semi fowler jika tidak ada kontra indikasi">
+                                                            <label class="form-check-label" for="tindakanBreathing3">Memberikan posisi semi fowler jika tidak ada kontra indikasi</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing4" value="Melakukan fisioterapi dada jika tidak ada kontra indikasi">
+                                                            <label class="form-check-label" for="tindakanBreathing4">Melakukan fisioterapi dada jika tidak ada kontra indikasi</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing5" value="Berikan oksigen O2">
+                                                            <label class="form-check-label" for="tindakanBreathing5">Berikan oksigen O2</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing6" value="Pemeriksaan AGD">
+                                                            <label class="form-check-label" for="tindakanBreathing6">Pemeriksaan AGD</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" id="tindakanBreathing7" value="Lainnya">
+                                                            <label class="form-check-label" for="tindakanBreathing7">Lainnya</label>
+                                                        </div>
+                                                        <div class="mt-3 lainnya-breathing-input" style="display: none;">
+                                                            <input type="text" class="form-control" id="tindakanBreathingLainnya" placeholder="Sebutkan tindakan lainnya">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="button" class="btn btn-primary" id="btnSimpanTindakanBreathing">Simpan</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -288,36 +457,48 @@
                                         <label style="min-width: 200px;">Akral</label>
                                         <select class="form-select" name="akral">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Hangat">Hangat</option>
+                                            <option value="Dingin">Dingin</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pucat</label>
                                         <select class="form-select" name="pucat">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Ya">Ya</option>
+                                            <option value="Tidak">Tidak</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Cianoisis</label>
                                         <select class="form-select" name="cianoisis">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Ya">Ya</option>
+                                            <option value="Tidak">Tidak</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pengisian Kapiler</label>
                                         <select class="form-select" name="pengisian_kapiler">
                                             <option selected disabled>Pilih</option>
+                                            <option value="< 2 Detik">< 2 Detik</option>
+                                            <option value="> 2 Detik">> 2 Detik</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kelembapan Kulit</label>
                                         <select class="form-select" name="kelembapan_kulit">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Lembab">Lembab</option>
+                                            <option value="Kering">Kering</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tugor</label>
                                         <select class="form-select" name="tugor">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Kurang">Kurang</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -327,7 +508,11 @@
                                                 <div class="mb-1">
                                                     <small class="text-muted">Diberikan?</small>
                                                 </div>
-                                                <input class="form-control" type="text" name="sistole">
+                                                <select class="form-select" name="Transfursi_darah">
+                                                    <option selected disabled>Pilih</option>
+                                                    <option value="Ya">Ya</option>
+                                                    <option value="Tidak">Tidak</option>
+                                                </select>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <div class="mb-1">
@@ -1198,7 +1383,8 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Ketergantungan dengan orang lain dalam aktivitas
                                             harian</label>
-                                        <select style="min-width: 50%;" class="form-select" name="ketergantungan_aktivitas">
+                                        <select style="min-width: 50%;" class="form-select"
+                                            name="ketergantungan_aktivitas">
                                             <option value="" selected disabled>pilih</option>
                                         </select>
                                     </div>
@@ -1213,6 +1399,15 @@
                                                 Tidak membutuhkan rencana pulang khusus
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h5 class="section-title">17. Evaluasi</h5>
+
+                                    <div class="form-group">
+                                        <label>Evaluasi</label>
+                                        <textarea class="form-control" name="evaluasi" rows="3"></textarea>
                                     </div>
                                 </div>
 
