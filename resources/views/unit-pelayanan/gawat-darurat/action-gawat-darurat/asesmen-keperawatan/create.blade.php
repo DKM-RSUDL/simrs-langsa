@@ -119,9 +119,8 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                data-bs-target="#tindakanKeperawatanAirway">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                                id="btnTambahTindakan">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
                                             <div id="selectedTindakanList" class="d-flex flex-column gap-2">
@@ -1149,6 +1148,35 @@
                                 </div>
 
                                 <div class="section-separator">
+                                    <h5 class="section-title">11. Status Gizi</h5>
+                                    <div class="form-group">
+                                        <select class="form-select" name="status_gizi">
+                                            <option value="" selected disabled>Pilih Skala</option>
+                                            <option value="1">Malnutrition Screening Tool (MST)</option>
+                                            <option value="2">The Mini Nutritional Assessment (MNA)</option>
+                                            <option value="3">Strong Kids (1 bln - 18 Tahun)</option>
+                                            <option value="4">Nutrtition Risk Screening 2002 (NRS 2002)</option>
+                                            <option value="5">Tidak Dapat Dinilai</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h5 class="section-title">12. Status Fungsional</h5>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Status Fungsional</label>
+                                        <select class="form-select" name="status_fungsional">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="Mnadiri">Mnadiri</option>
+                                            <option value="Ketergantungan Ringan">Ketergantungan Ringan</option>
+                                            <option value="Ketergantungan Sedang">Ketergantungan Sedang</option>
+                                            <option value="Ketergantungan Berat">Ketergantungan Berat</option>
+                                            <option value="Ketergantungan Total">Ketergantungan Total</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
                                     <h5 class="section-title">13. Kebutuhan Edukasi, Pendidikan dan Pengajaran</h5>
 
                                     <div class="form-group">
@@ -1252,6 +1280,44 @@
                                             </div>
                                             <div class="alert alert-success">
                                                 Tidak membutuhkan rencana pulang khusus
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h5 class="section-title">15. Masalah Keperawatan</h5>
+
+                                    <div class="form-group">
+                                        <div class="w-100">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="searchMasalah"
+                                                    placeholder="Cari dan tambah masalah keperawatan">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="btnTambahMasalah">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                            </div>
+                                            <div id="selectedMasalahList" class="d-flex flex-column gap-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h5 class="section-title">16. Implementasi</h5>
+
+                                    <div class="form-group">
+                                        <div class="w-100">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="searchImplementasi"
+                                                    placeholder="Cari dan tambah Implementasi">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="btnTambahImplementasi">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                            </div>
+                                            <div id="selectedImplementasiList" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
