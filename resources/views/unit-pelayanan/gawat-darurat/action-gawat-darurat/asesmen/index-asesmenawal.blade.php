@@ -35,12 +35,17 @@
 
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-4 text-end ms-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
-                <i class="ti-plus"></i> Tambah
-            </button>
-            <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'),'tgl_masuk' => request()->route('tgl_masuk'),]) }}"
-                class="btn btn-primary">
-                <i class="ti-plus"></i> Keperawatan
+            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
+                    <i class="ti-plus"></i> Tambah
+                </button>
+            @endcanany
+
+            @canany(['is-admin', 'is-perawat', 'is-bidan'])
+                <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk')]) }}"
+                    class="btn btn-primary">
+                    <i class="ti-plus"></i> Keperawatan
+                @endcanany
             </a>
         </div>
     </div>

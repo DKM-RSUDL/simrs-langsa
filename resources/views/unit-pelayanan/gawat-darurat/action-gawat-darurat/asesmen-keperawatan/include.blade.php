@@ -151,12 +151,6 @@
 
                 //=======================================================================//
 
-                tglAsesmen.addEventListener('change', function(e) {
-                });
-
-                jamAsesmen.addEventListener('change', function(e) {
-                });
-
 
                 //=================================================================//
 
@@ -234,8 +228,9 @@
                 // Handle save button click for breathing
                 btnSimpanTindakanBreathing.addEventListener('click', function() {
                     selectedBreathingItems.clear();
-                    const checkboxes = document.querySelectorAll('.tindakan-breathing-options .form-check-input:checked');
-                    
+                    const checkboxes = document.querySelectorAll(
+                        '.tindakan-breathing-options .form-check-input:checked');
+
                     checkboxes.forEach(checkbox => {
                         if (checkbox.value === 'Lainnya' && tindakanBreathingLainnya.value) {
                             selectedBreathingItems.add(tindakanBreathingLainnya.value);
@@ -253,7 +248,8 @@
                     selectedTindakanBreathingList.innerHTML = '';
                     selectedBreathingItems.forEach(item => {
                         const itemElement = document.createElement('div');
-                        itemElement.className = 'selected-item d-flex align-items-center gap-2 bg-light p-2 rounded';
+                        itemElement.className =
+                            'selected-item d-flex align-items-center gap-2 bg-light p-2 rounded';
                         itemElement.innerHTML = `
                             <span>${item}</span>
                             <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeTindakanBreathing('${item}')">
@@ -273,4 +269,6 @@
 
             });
         </script>
+
+        <script></script>
     @endpush
