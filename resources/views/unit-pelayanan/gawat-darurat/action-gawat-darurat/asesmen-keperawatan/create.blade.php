@@ -734,12 +734,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="deformitas_tidak"
+                                                    <input type="radio" class="form-check-input" id="deformitas_tidak"
                                                         name="deformitas" value="tidak">
                                                     <label class="form-check-label" for="deformitas_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="deformitas_ya"
+                                                    <input type="radio" class="form-check-input" id="deformitas_ya"
                                                         name="deformitas" value="ya">
                                                     <label class="form-check-label" for="deformitas_ya">Ya</label>
                                                 </div>
@@ -756,12 +756,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="kontusion_tidak"
+                                                    <input type="radio" class="form-check-input" id="kontusion_tidak"
                                                         name="kontusion" value="tidak">
                                                     <label class="form-check-label" for="kontusion_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="kontusion_ya"
+                                                    <input type="radio" class="form-check-input" id="kontusion_ya"
                                                         name="kontusion" value="ya">
                                                     <label class="form-check-label" for="kontusion_ya">Ya</label>
                                                 </div>
@@ -778,12 +778,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="abrasi_tidak"
+                                                    <input type="radio" class="form-check-input" id="abrasi_tidak"
                                                         name="abrasi" value="tidak">
                                                     <label class="form-check-label" for="abrasi_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="abrasi_ya"
+                                                    <input type="radio" class="form-check-input" id="abrasi_ya"
                                                         name="abrasi" value="ya">
                                                     <label class="form-check-label" for="abrasi_ya">Ya</label>
                                                 </div>
@@ -800,12 +800,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="penetrasi_tidak"
+                                                    <input type="radio" class="form-check-input" id="penetrasi_tidak"
                                                         name="penetrasi" value="tidak">
                                                     <label class="form-check-label" for="penetrasi_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="penetrasi_ya"
+                                                    <input type="radio" class="form-check-input" id="penetrasi_ya"
                                                         name="penetrasi" value="ya">
                                                     <label class="form-check-label" for="penetrasi_ya">Ya</label>
                                                 </div>
@@ -822,12 +822,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="laserasi_tidak"
+                                                    <input type="radio" class="form-check-input" id="laserasi_tidak"
                                                         name="laserasi" value="tidak">
                                                     <label class="form-check-label" for="laserasi_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="laserasi_ya"
+                                                    <input type="radio" class="form-check-input" id="laserasi_ya"
                                                         name="laserasi" value="ya">
                                                     <label class="form-check-label" for="laserasi_ya">Ya</label>
                                                 </div>
@@ -844,12 +844,12 @@
                                         <div class="d-flex align-items-center gap-4" style="width: 100%;">
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="edema_tidak"
+                                                    <input type="radio" class="form-check-input" id="edema_tidak"
                                                         name="edema" value="tidak">
                                                     <label class="form-check-label" for="edema_tidak">Tidak</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="edema_ya"
+                                                    <input type="radio" class="form-check-input" id="edema_ya"
                                                         name="edema" value="ya">
                                                     <label class="form-check-label" for="edema_ya">Ya</label>
                                                 </div>
