@@ -88,7 +88,7 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div class="form-check">
                                                             <input type="checkbox"
-                                                                class="form-check-input diagnosis-checkbox"
+                                                                class="form-check-input diagnosis-radio"
                                                                 id="jalan_nafas_tidak_efektif" name="diagnosis[]"
                                                                 value="jalan_nafas_tidak_efektif" data-aktual="aktual_1"
                                                                 data-risiko="risiko_1">
@@ -98,13 +98,13 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_1" name="diagnosis_type[]" value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_1">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_1" name="diagnosis_type[]" value="risiko">
                                                                 <label class="form-check-label"
                                                                     for="risiko_1">Risiko</label>
@@ -212,14 +212,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_1" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_1">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_1" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -244,14 +244,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_2" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_2">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_2" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -399,14 +399,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_1" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_1">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_1" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -431,14 +431,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_2" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_2">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_2" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -470,6 +470,11 @@
                                         <label style="min-width: 200px;">Kesadaran</label>
                                         <select class="form-select" name="kesadaran">
                                             <option selected disabled>Pilih</option>
+                                            <option value="Compos Mentis">Compos Mentis</option>
+                                            <option value="Apatis">Apatis</option>
+                                            <option value="Somnolen">Somnolen</option>
+                                            <option value="Sopor">Sopor</option>
+                                            <option value="Coma">Coma</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -477,15 +482,23 @@
                                         <div class="d-flex gap-3" style="width: 100%;">
                                             <div class="flex-grow-1">
                                                 <div class="mb-1">
-                                                    <small class="text-muted">Isokor</small>
+                                                    <small class="text-muted">Isokor/Anisokor</small>
                                                 </div>
-                                                <input class="form-control" type="text" name="isokor">
+                                                <select class="form-select" name="isokor">
+                                                    <option selected disabled>Pilih</option>
+                                                    <option value="Isokor">Isokor</option>
+                                                    <option value="Anisokor">Anisokor</option>
+                                                </select>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <div class="mb-1">
                                                     <small class="text-muted">Respon Cahaya</small>
                                                 </div>
-                                                <input class="form-control" type="text" name="respon_cahaya">
+                                                <select class="form-select" name="respon_cahaya">
+                                                    <option selected disabled>Pilih</option>
+                                                    <option value="Ya">Ya</option>
+                                                    <option value="Tidak">Tidak</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -500,13 +513,21 @@
                                                 <div class="mb-1">
                                                     <small class="text-muted">Motorik</small>
                                                 </div>
-                                                <input class="form-control" type="text" name="motorik">
+                                                <select class="form-select" name="motorik">
+                                                    <option selected disabled>Pilih</option>
+                                                    <option value="Ya">Ya</option>
+                                                    <option value="Tidak">Tidak</option>
+                                                </select>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <div class="mb-1">
                                                     <small class="text-muted">Sensorik</small>
                                                 </div>
-                                                <input class="form-control" type="text" name="sensorik">
+                                                <select class="form-select" name="sensorik">
+                                                    <option selected disabled>Pilih</option>
+                                                    <option value="Ya">Ya</option>
+                                                    <option value="Tidak">Tidak</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -533,14 +554,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_1" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_1">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_1" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -565,14 +586,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_2" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_2">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_2" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -597,14 +618,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_3" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_3">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_3" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -628,14 +649,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_4" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_4">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_4" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -660,14 +681,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_5" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_5">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_5" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -863,14 +884,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_1" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_1">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_1" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -895,14 +916,14 @@
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="aktual_2" name="diagnosis_type[]"
                                                                     value="aktual">
                                                                 <label class="form-check-label"
                                                                     for="aktual_2">Aktual</label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input"
+                                                                <input type="radio" class="form-check-input"
                                                                     id="risiko_2" name="diagnosis_type[]"
                                                                     value="risiko">
                                                                 <label class="form-check-label"
@@ -1057,6 +1078,16 @@
                                         <label style="min-width: 300px;">Kondisi psikologis</label>
                                         <select class="form-select" name="kondisi_psikologis">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Tidak Ada Kelainan">Tidak Ada Kelainan</option>
+                                            <option value="Cemas">Cemas</option>
+                                            <option value="Takut">Takut</option>
+                                            <option value="Marah">Marah</option>
+                                            <option value="Sedih">Sedih</option>
+                                            <option value="Tenang">Tenang</option>
+                                            <option value="Tidak Semangat">Tidak Semangat</option>
+                                            <option value="Tertekan">Tertekan</option>
+                                            <option value="Depresi">Depresi</option>
+                                            <option value="Sulit Tidur">Sulit Tidur</option>
                                         </select>
                                     </div>
 
@@ -1064,6 +1095,8 @@
                                         <label style="min-width: 300px;">Potensi menyakiti diri sendiri/orang lain</label>
                                         <select class="form-select" name="potensi_menyakiti">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Tidak">Tidak</option>
+                                            <option value="Ya">Ya</option>
                                         </select>
                                     </div>
 
@@ -1080,6 +1113,12 @@
                                         <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                         <select class="form-select" name="agama_kepercayaan">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Islam">Islam</option>
+                                            <option value="Kristen">Kristen</option>
+                                            <option value="Katolik">Katolik</option>
+                                            <option value="Hindu">Hindu</option>
+                                            <option value="Budha">Budha</option>
+                                            <option value="Konghucu">Konghucu</option>
                                         </select>
                                     </div>
 
@@ -1095,7 +1134,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pekerjaan</label>
                                         <select class="form-select" name="pekerjaan">
-                                            <option value="" selected disabled>pilih</option>
+                                            <option value="" selected disabled>Nanti Sesuai Database</option>
                                         </select>
                                     </div>
 
@@ -1103,6 +1142,10 @@
                                         <label style="min-width: 200px;">Tingkat penghasilan</label>
                                         <select class="form-select" name="tingkat_penghasilan">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Penghasilan Tinggi">Penghasilan Tinggi</option>
+                                            <option value="Penghasilan Sedang">Penghasilan Sedang</option>
+                                            <option value="Penghasilan Rendah">Penghasilan Rendah</option>
+                                            <option value="Tidak Ada Penghasilan">Tidak Ada Penghasilan</option>
                                         </select>
                                     </div>
 
@@ -1110,13 +1153,17 @@
                                         <label style="min-width: 200px;">Status pernikahan</label>
                                         <select class="form-select" name="status_pernikahan">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Menikah">Menikah</option>
+                                            <option value="Belum Menikah">Belum Menikah</option>
+                                            <option value="Tidak Menikah">Tidak Menikah</option>
+                                            <option value="Cerai">Cerai</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Status pendidikan</label>
                                         <select class="form-select" name="status_pendidikan">
-                                            <option value="" selected disabled>pilih</option>
+                                            <option value="" selected disabled>Sesuai Database</option>
                                         </select>
                                     </div>
 
@@ -1124,6 +1171,10 @@
                                         <label style="min-width: 200px;">Tempat tinggal</label>
                                         <select class="form-select" name="tempat_tinggal">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Rumah Sendiri">Rumah Sendiri</option>
+                                            <option value="Rumah Orang Tua">Rumah Orang Tua</option>
+                                            <option value="Tempat Lain">Tempat Lain</option>
+                                            <option value="Tidak Ada Tempat Tinggal">Tidak Ada Tempat Tinggal</option>
                                         </select>
                                     </div>
 
@@ -1131,6 +1182,8 @@
                                         <label style="min-width: 200px;">Status tinggal dengan keluarga</label>
                                         <select class="form-select" name="status_tinggal_keluarga">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Dengan Keluarga">Dengan Keluarga</option>
+                                            <option value="Tidak Dengan Keluarga">Tidak Dengan Keluarga</option>
                                         </select>
                                     </div>
 
@@ -1138,6 +1191,8 @@
                                         <label style="min-width: 200px;">Curiga penganiayaan</label>
                                         <select class="form-select" name="curiga_penganiayaan">
                                             <option value="" selected disabled>pilih</option>
+                                            <option value="Ada">Ada</option>
+                                            <option value="Tidak Ada">Tidak Ada</option>
                                         </select>
                                     </div>
 
