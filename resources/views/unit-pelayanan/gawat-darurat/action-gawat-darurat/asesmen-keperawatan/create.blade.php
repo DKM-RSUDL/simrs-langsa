@@ -2,6 +2,8 @@
 
 
 @section('content')
+    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.include')
+
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card-keperawatan')
@@ -119,11 +121,12 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="btnTambahTindakan">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                data-bs-target="#tindakanKeperawatanAirwayModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="selectedTindakanList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList-airway" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
@@ -266,11 +269,12 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakanBreathing">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                data-bs-target="#tindakanKeperawatanBreathingModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanBreathingList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList-breathing" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
@@ -453,18 +457,19 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakanCirculation">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                data-bs-target="#tindakanKeperawatanCirculationModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanCirculationList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList-circulation" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="section-separator">
-                                    <h5 class="section-title">4. Status Disablity</h5>
+                                    <h5 class="section-title">4. Status Disability</h5>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesadaran</label>
@@ -710,11 +715,12 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakanDisability">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                data-bs-target="#tindakanKeperawatanDisabilityModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanDisabilityList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList-disability" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
@@ -945,11 +951,12 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                         <div class="w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                                id="tambahTindakan">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                data-bs-target="#tindakanKeperawatanExposureModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
-                                            <div id="tindakanList" class="d-flex flex-column gap-2">
+                                            <div id="selectedTindakanList-exposure" class="d-flex flex-column gap-2">
                                             </div>
                                         </div>
                                     </div>
@@ -1051,22 +1058,12 @@
                                         <h6 class="mb-3">Intervensi Risiko Jatuh</h6>
                                         <p class="mb-2">Tambah tindakan intervensi risiko jatuh:</p>
 
-                                        <div class="tindakan-list mb-3">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <span class="me-2">1.</span>
-                                                <span>Edukasi pasien dan keluarga</span>
-                                            </div>
-                                            <div class="d-flex align-items-center mb-2">
-                                                <span class="me-2">2.</span>
-                                                <span>Pasang pita kuning</span>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="tambahIntervensiRisikoJatuh">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                            data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-                                        <div id="selectedIntervensiRisikoJatuhList" class="d-flex flex-column gap-2">
+                                        <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
                                         </div>
                                     </div>
                                 </div>
@@ -1397,4 +1394,3 @@
 @endsection
 
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.include')
