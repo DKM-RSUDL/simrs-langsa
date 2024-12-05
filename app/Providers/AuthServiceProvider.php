@@ -70,5 +70,43 @@ class AuthServiceProvider extends ServiceProvider
 
             return false;
         });
+
+        Gate::define('is-admin', function($user) {
+            return $user->hasRole('admin');
+        });
+
+        Gate::define('is-dokter-umum', function($user) {
+            // jenis tenaga
+            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
+            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+
+            return $kdJenisTenaga == 1 && $kdDetailJenisTenaga == 1;
+        });
+
+        Gate::define('is-dokter-spesialis', function($user) {
+            // jenis tenaga
+            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
+            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+
+            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 1) return true;
+            if($kdJenisTenaga == 1 && $kdDetailJenisTenaga == 2) return true;
+            return false;
+        });
+
+        Gate::define('is-perawat', function($user) {
+            // jenis tenaga
+            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
+            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+
+            return $kdJenisTenaga == 2 && $kdDetailJenisTenaga == 1;
+        });
+
+        Gate::define('is-bidan', function($user) {
+            // jenis tenaga
+            $kdJenisTenaga = $user->karyawan->kd_jenis_tenaga;
+            $kdDetailJenisTenaga = $user->karyawan->kd_detail_jenis_tenaga;
+
+            return $kdJenisTenaga == 2 && $kdDetailJenisTenaga == 2;
+        });
     }
 }

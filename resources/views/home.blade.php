@@ -39,8 +39,10 @@
                                 </p>
                             @endif
                             <div class="mt-2">
-                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
-                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i class="fab fa-whatsapp fa-lg"></i></a>
+                                <a href="https://www.instagram.com" target="_blank" class="me-2"><i
+                                        class="fab fa-instagram fa-lg"></i></a>
+                                <a href="https://wa.me/085277678789" target="_blank" class="me-2"><i
+                                        class="fab fa-whatsapp fa-lg"></i></a>
                                 <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
                             </div>
                         </div>
@@ -67,7 +69,8 @@
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>
                         <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod recusandae molestiae quam a vitae dolorum
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod recusandae molestiae quam
+                            a vitae dolorum
                         </p>
                         <a href="#" class="btn btn-primary">Selengkap</a>
                     </div>
@@ -81,32 +84,23 @@
             <div class="col-md-8">
                 <div class="card mb-3 p-4">
                     <div class="row">
-                        @foreach ([
-                            ['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23],
-                            ['route' => route('rawat-inap.index'), 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11],
-                            ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23],
-                            ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4],
-                            ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23],
-                            ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31],
-                            ['route' => '#', 'icon' => 'magnifying-glass', 'title' => 'Forensik', 'patients' => 31],
-                            ['route' => '#', 'icon' => 'notes-medical', 'title' => 'Rehab Medis', 'patients' => 31],
-                            ['route' => '#', 'icon' => 'mortar-pestle', 'title' => 'Gizi Klinis', 'patients' => 31]
-                        ] as $card)
-                        <div class="col-md-4 p-2">
-                            <a href="{{ $card['route'] }}" class="text-decoration-none card-hover">
-                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
-                                    <div class="card-body d-flex align-items-center">
-                                        <div class="me-2">
-                                            <i class="fa fa-{{ $card['icon'] }} fa-2x"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fs-6 fw-bold text-primary">{{ $card['title'] }}</div>
-                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">{{ $card['patients'] }}</span></div>
+                        @foreach ([['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23], ['route' => route('rawat-inap.index'), 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11], ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23], ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4], ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23], ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31], ['route' => '#', 'icon' => 'magnifying-glass', 'title' => 'Forensik', 'patients' => 31], ['route' => '#', 'icon' => 'notes-medical', 'title' => 'Rehab Medis', 'patients' => 31], ['route' => '#', 'icon' => 'mortar-pestle', 'title' => 'Gizi Klinis', 'patients' => 31]] as $card)
+                            <div class="col-md-4 p-2">
+                                <a href="{{ $card['route'] }}" class="text-decoration-none card-hover">
+                                    <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="me-2">
+                                                <i class="fa fa-{{ $card['icon'] }} fa-2x"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fs-6 fw-bold text-primary">{{ $card['title'] }}</div>
+                                                <div class="fs-6 text-muted">Pasien: <span
+                                                        class="fw-bold text-black">{{ $card['patients'] }}</span></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>

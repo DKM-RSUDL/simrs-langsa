@@ -17,6 +17,7 @@ use App\Http\Controllers\MedisGawatDaruratController;
 
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatDaruratCarePlanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EdukasiController as GawatDaruratEdukasiController;
