@@ -28,15 +28,30 @@
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari" aria-describedby="basic-addon1" id="searchInput">
+                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
+                    aria-describedby="basic-addon1" id="searchInput">
             </div>
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 text-end ms-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
-                <i class="ti-plus"></i> Tambah
-            </button>
+        <div class="col-md-4 text-end ms-auto">
+            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
+                    <i class="ti-plus"></i> Tambah
+                </button>
+            @endcanany
+
+            @canany(['is-admin', 'is-perawat', 'is-bidan'])
+                <a href="{{ route('rawat-inap.asesmen-anak.index', [
+                    'kd_unit' => request()->route('kd_unit'),
+                    'kd_pasien' => request()->route('kd_pasien'),
+                    'tgl_masuk' => request()->route('tgl_masuk'),
+                    'urut_masuk' => request()->route('urut_masuk'),
+                ]) }}"
+                    class="btn btn-primary">
+                    <i class="ti-plus"></i> Asesmen Anak
+                </a>
+            @endcanany
         </div>
     </div>
 </div>
@@ -46,7 +61,8 @@
         <li class="list-group-item d-flex justify-content-between align-items-center"
             data-name="{{ $item->user->name }}">
             <div class="d-flex align-items-center">
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien" width="70" height="70">
+                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
+                    width="70" height="70">
                 <div>
                     <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
                     By: <span class="fw-bold">{{ $item->user->name }}</span>
@@ -72,7 +88,7 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Get all filter elements
         const startDateInput = document.getElementById('start_date');
         const endDateInput = document.getElementById('end_date');
@@ -94,7 +110,8 @@
                 const itemDate = item.getAttribute('data-date');
                 const itemName = item.getAttribute('data-name').toLowerCase();
 
-                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate);
+                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <=
+                    endDate);
                 const searchMatch = itemName.includes(search);
 
                 if (dateMatch && searchMatch) {
