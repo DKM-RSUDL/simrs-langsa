@@ -14,7 +14,8 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
-
+use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
+use App\Http\Controllers\UnitPelayanan\ForensikController;
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenKeperawatanController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
@@ -320,6 +322,16 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            Route::prefix('asesmen-anak')->group(function () {
+                                Route::name('.asesmen-anak')->group(function () {
+                                    Route::controller(AsesmenAnakController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/', 'update')->name('.update');
+                                    });
+                                });
+                            });
                         });
                     });
 
@@ -329,7 +341,6 @@ Route::middleware('auth')->group(function () {
                 Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');
             });
         });
-
 
         // Rute untuk Gawat Darurat
         Route::middleware(['check.igd'])->group(function() {
@@ -439,6 +450,19 @@ Route::middleware('auth')->group(function () {
                 });
             });
 
+        });
+
+        // Rute Untuk Forensik
+        Route::prefix('forensik')->group(function () {
+            Route::name('forensik')->group(function () {
+                Route::get('/', [ForensikController::class, 'index'])->name('.index');
+
+                Route::prefix('unit/{kd_unit}')->group(function () {
+                    Route::name('.unit')->group(function () {
+                        Route::get('/', [ForensikController::class, 'unitPelayanan']);
+                    });
+                });
+            });
         });
 
     });
