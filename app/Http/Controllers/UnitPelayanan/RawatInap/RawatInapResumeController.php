@@ -4,12 +4,14 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\DokterKlinik;
 use App\Models\ICD9Baru;
 use App\Models\Kunjungan;
 use App\Models\Penyakit;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,8 +94,19 @@ class RawatInapResumeController extends Controller
             ->orderBy('tgl_masuk', 'desc')
             ->paginate(10);
 
-        // Mengambil semua data dokter
-        $dataDokter = Dokter::all();
+         // Ambil semua dokter
+         $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+         ->where('kd_unit', 3)
+         ->whereRelation('dokter', 'status', 1)
+         ->get();
+
+     // Ambil dokter yang aktif saat ini
+     $dokterPengirim = DokterKlinik::with(['konsultasi' => function ($query) {
+         $query->with('dokter');
+     }])
+         ->where('kd_unit', 3)
+         ->whereRelation('dokter', 'status', 1)
+         ->first();
 
         // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
@@ -141,6 +154,11 @@ class RawatInapResumeController extends Controller
         // Mengambil data obat
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien, $tgl_masuk);
 
+        // unit palayanan
+        $unitKonsul = Unit::where('kd_bagian', 2)
+            ->where('aktif', 1)
+            ->get();
+
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
@@ -152,13 +170,15 @@ class RawatInapResumeController extends Controller
             compact(
                 'dataMedis',
                 'dataDokter',
+                'dokterPengirim',
                 'dataLabor',
                 'dataRagiologi',
                 'riwayatObatHariIni',
                 'kodeICD',
                 'kodeICD9',
                 'dataResume',
-                'dataGet'
+                'dataGet',
+                'unitKonsul'
             )
         );
     }

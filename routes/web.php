@@ -324,6 +324,7 @@ Route::middleware('auth')->group(function () {
                     });
 
                 });
+
                 // sementara dari anas
                 Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');
             });
@@ -418,6 +419,15 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
+                        Route::prefix('asesmen-keperawatan')->group(function () {
+                            Route::name('asesmen-keperawatan')->group(function () {
+                                Route::controller(AsesmenKeperawatanController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                });
+                            });
+                        });
 
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
