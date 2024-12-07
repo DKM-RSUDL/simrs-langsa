@@ -119,6 +119,11 @@
             'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
         [
+            'icon' => 'verified_badge.png',
+            'label' => 'Asesmen',
+            'link' => route('layanan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+        ],
+        [
             'icon' => 'positive_dynamic.png',
             'label' => 'CPPT',
             'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
