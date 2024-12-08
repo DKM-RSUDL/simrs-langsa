@@ -26,6 +26,11 @@ class ForensikController extends Controller
             ->where('kd_unit', $kd_unit)
             ->first();
 
+        $nama_unit = '';
+        if ($unit->kd_unit == 228) $nama_unit = 'Klinik';
+        if ($unit->kd_unit == 76) $nama_unit = 'Patologi';
+
+
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit);
@@ -78,13 +83,13 @@ class ForensikController extends Controller
                 ->make(true);
         }
 
-        return view('unit-pelayanan.forensik.unit-pelayanan', compact('unit'));
+        return view('unit-pelayanan.forensik.unit-pelayanan', compact('unit', 'nama_unit'));
     }
 
     public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_unit', $kd_unit)
+        ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
@@ -101,6 +106,22 @@ class ForensikController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.forensik.pelayanan.index', compact('dataMedis'));
+        if ($kd_unit == '228') {
+            return view('unit-pelayanan.forensik.pelayanan.index-klinik', compact(
+                'dataMedis',
+                'kd_unit',
+                'kd_pasien',
+                'tgl_masuk',
+                'urut_masuk'
+            ));
+        } else if ($kd_unit == '76') {
+            return view('unit-pelayanan.forensik.pelayanan.index-patologi', compact(
+                'dataMedis',
+                'kd_unit',
+                'kd_pasien',
+                'tgl_masuk',
+                'urut_masuk'
+            ));
+        }
     }
 }

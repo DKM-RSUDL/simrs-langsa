@@ -7,9 +7,8 @@ use App\Models\Kunjungan;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
 
-class ForensikKlinikController extends Controller
+class ForensikPatologiController extends Controller
 {
     public function index()
     {
@@ -21,7 +20,7 @@ class ForensikKlinikController extends Controller
     }
 
 
-    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function createpatologi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
         ->where('kd_unit', $kd_unit)
@@ -42,7 +41,7 @@ class ForensikKlinikController extends Controller
         }
 
         return view(
-            'unit-pelayanan.forensik.pelayanan.create',
+            'unit-pelayanan.forensik.pelayanan.create-patologi',
             compact(
                 'dataMedis',
                 'kd_unit',

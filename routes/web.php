@@ -15,6 +15,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
+use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
@@ -460,8 +461,19 @@ Route::middleware('auth')->group(function () {
                 Route::prefix('unit/{kd_unit}')->group(function () {
                     Route::name('.unit')->group(function () {
                         Route::get('/', [ForensikController::class, 'unitPelayanan']);
+
+                        //Pelayanan
+                        Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                            Route::name('.pelayanan')->group(function () {
+                                Route::get('/', [ForensikController::class, 'pelayanan']);
+                                Route::get('/create', [ForensikKlinikController::class, 'create'])->name('.create');
+                                Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
+                            });
+                        });
+
                     });
                 });
+                
             });
         });
         
