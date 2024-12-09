@@ -30,8 +30,7 @@
 
             <!-- Search Bar -->
             <div class="col-md-3">
-                <form method="GET"
-                    action="#">
+                <form method="GET" action="#">
 
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">
@@ -58,18 +57,26 @@
         <table class="table table-bordered table-sm table-hover">
             <thead class="table-primary">
                 <tr>
-                    <th width="100px"># order</th>
-                    <th>Nama Pemeriksaan</th>
-                    <th>Waktu Permintaan</th>
-                    <th>Waktu Hasil</th>
-                    <th>Dokter Pengirim</th>
-                    <th>Cito/Non Cito</th>
-                    <th>Status</th>
+                    <th width="100px">No</th>
+                    <th>Tanggal</th>
+                    <th>Dokter</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-
+                <tr>
+                    <td>0782</td>
+                    <td>09 Desember 2024</td>
+                    <td>Dr. Siti</td>
+                    <td>
+                        <a href="javascript:void(0)" id="btn-asuhan-edit" class="mb-2 btn btn-sm btn-warning">
+                            <i class="ti-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -77,7 +84,5 @@
 
 @include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create')
 @push('js')
-    <script type="text/javascript">
-
-    </script>
+    <script type="text/javascript"></script>
 @endpush
