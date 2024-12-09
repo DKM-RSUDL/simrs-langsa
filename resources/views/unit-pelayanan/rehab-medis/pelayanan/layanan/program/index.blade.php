@@ -48,7 +48,7 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                <button class="btn btn-primary">Tambah</button>
+                <a href="javascript:void(0)" id="btn-create-program" class="btn btn-primary">Tambah</a>
             </div>
 
         </div>
@@ -58,23 +58,32 @@
         <table class="table table-bordered table-sm table-hover">
             <thead class="table-primary">
                 <tr>
-                    <th width="100px">#</th>
-                    <th>Nama Pemeriksaan</th>
-                    <th>Waktu Permintaan</th>
-                    <th>Waktu Hasil</th>
-                    <th>Dokter Pengirim</th>
-                    <th>Cito/Non Cito</th>
-                    <th>Status</th>
+                    <th width="100px">No</th>
+                    <th>Tanggal</th>
+                    <th>Program</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-
+                <tr>
+                    <td>098</td>
+                    <td>08 Desember 2024</td>
+                    <td>Program 1</td>
+                    <td>
+                        <a href="javascript:void(0)" id="btn-asuhan-edit" class="mb-2 btn btn-sm btn-warning">
+                            <i class="ti-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+@include("unit-pelayanan.rehab-medis.pelayanan.layanan.program.modal-create-program")
 @push('js')
     <script type="text/javascript">
 
