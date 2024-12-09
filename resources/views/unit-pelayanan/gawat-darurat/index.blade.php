@@ -906,7 +906,7 @@
                                                         <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs'}">Rujuk Keluar RS</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
                                                     </ul>
