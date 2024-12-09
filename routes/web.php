@@ -86,6 +86,15 @@ Route::middleware('auth')->group(function () {
                                 Route::get('/', [RawatJalanController::class, 'pelayanan']);
                             });
 
+                            // rujuk route
+                            Route::prefix('rujuk-antar-rs')->group(function () {
+                                Route::name('.rujuk-antar-rs')->group(function () {
+                                    Route::controller(RawatJalanController::class)->group(function () {
+                                        Route::get('/', 'rujukAntarRs');
+                                    });
+                                });
+                            });
+
                             // CPPT
                             Route::prefix('cppt')->group(function () {
                                 Route::name('.cppt')->group(function () {
@@ -369,6 +378,15 @@ Route::middleware('auth')->group(function () {
                             Route::name('general-consent')->group(function() {
                                 Route::controller(GawatDaruratController::class)->group(function() {
                                     Route::get('/', 'generalConsent');
+                                });
+                            });
+                        });
+
+                        // rujuk route
+                        Route::prefix('{urut_masuk}/rujuk-antar-rs')->group(function () {
+                            Route::name('rujuk-antar-rs')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
+                                    Route::get('/', 'rujukAntarRs');
                                 });
                             });
                         });
