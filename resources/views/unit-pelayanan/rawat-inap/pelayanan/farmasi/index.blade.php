@@ -42,9 +42,14 @@
                                     BMHP</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
+                                <button class="nav-link" id="catatan-tab" data-bs-toggle="tab" data-bs-target="#riwayat"
                                     type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat
                                     Penggunaan Obat</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="catatan-tab" data-bs-toggle="tab" data-bs-target="#catatanTab"
+                                    type="button" role="tab" aria-controls="catatanTab" aria-selected="false">
+                                    Catatan Pemberian Obat</button>
                             </li>
                         </ul>
 
@@ -54,9 +59,13 @@
                                 {{-- TAB 1. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsresep')
                             </div>
-                            <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
+                            <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="catatan-tab">
                                 {{-- TAB 2. buatlah list disini --}}
                                 @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabsriwayat')
+                            </div>
+                            <div class="tab-pane fade" id="catatanTab" role="tabpanel" aria-labelledby="catatan-tab">
+                                {{-- TAB 2. buatlah list disini --}}
+                                @include('unit-pelayanan.rawat-inap.pelayanan.farmasi.tabcatatan')
                             </div>
                         </div>
                     </div>
