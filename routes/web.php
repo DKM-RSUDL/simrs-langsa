@@ -50,6 +50,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
+use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
 use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -514,9 +515,25 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
 
                 Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}')->group(function () {
-                    Route::get('/', [RehabMedisController::class, 'pelayanan'])->name('.pelayanan');
+                    Route::name('.pelayanan')->group(function () {
+                        Route::get('/', [RehabMedisController::class, 'pelayanan']);
 
-                    Route::get('layanan', [LayananController::class, 'index'])->name('.pelayanan.layanan');
+                        // Pelayanan
+                        Route::get('layanan', [LayananController::class, 'index'])->name('.layanan');
+
+                        // Tindakan
+                        Route::prefix('tindakan')->group(function () {
+                            Route::name('.tindakan')->group(function () {
+                                Route::controller(RehamMedisTindakanController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'storeTindakan')->name('.store');
+                                    Route::put('/', 'updateTindakan')->name('.update');
+                                    Route::delete('/', 'deleteTindakan')->name('.delete');
+                                    Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });

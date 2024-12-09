@@ -50,6 +50,14 @@
                 'tgl_masuk' => $tglMasukData,
             ]),
         ],
+        [
+            'icon' => 'tools.png',
+            'label' => 'Tindakan',
+            'link' => route('rehab-medis.pelayanan.tindakan.index', [
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'tgl_masuk' => $tglMasukData,
+            ]),
+        ],
     ];
 @endphp
 
