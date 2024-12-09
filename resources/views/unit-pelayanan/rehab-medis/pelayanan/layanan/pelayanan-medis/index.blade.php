@@ -48,7 +48,7 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                <button class="btn btn-primary">Tambah</button>
+                <a href="javascript:void(0)" class="btn btn-primary" id="btn-create-pelayanan">Tambah</a>
             </div>
 
         </div>
@@ -75,6 +75,7 @@
     </div>
 </div>
 
+@include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-create')
 @push('js')
     <script type="text/javascript">
 
