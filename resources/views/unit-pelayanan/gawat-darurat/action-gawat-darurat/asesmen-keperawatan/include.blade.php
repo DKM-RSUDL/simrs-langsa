@@ -131,6 +131,11 @@
 
     @push('js')
         <script>
+            $(document).ready(function() {
+                $('.diagnosis-row input[type="radio"]').prop('disabled', true);
+            });
+
+            // Tindakan Keperawatan
             $('.btn-tindakan-keperawatan').click(function(e) {
                 let $this = $(this);
                 let target = $this.attr('data-bs-target');
@@ -177,5 +182,21 @@
                 let elList = $this.closest('.selected-item');
                 $(elList).remove();
             })
+
+            // Diagnosis Keperawatan
+            $('.diagnose-prwt-checkbox').change(function(e) {
+                let $this = $(this);
+                let hasil = $this.is(':checked');
+                let diagnosisWrap = $this.closest('.diagnosis-row');
+
+                if (hasil) {
+                    $(diagnosisWrap).find('input[type="radio"]').prop('disabled', false);
+                    $(diagnosisWrap).find('input[type="radio"]').prop('required', false);
+                } else {
+                    $(diagnosisWrap).find('input[type="radio"]').prop('disabled', true);
+                    $(diagnosisWrap).find('input[type="radio"]').prop('required', false);
+                }
+
+            });
         </script>
     @endpush

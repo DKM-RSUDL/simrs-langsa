@@ -227,6 +227,16 @@ Route::middleware('auth')->group(function () {
                                 Route::get('/', [RawatInapController::class, 'pelayanan']);
                             });
 
+                            // Informed Consent
+                            Route::prefix('informed-consent')->group(function() {
+                                Route::name('.informed-consent')->group(function() {
+                                    Route::controller(RawatInapController::class)->group(function() {
+                                        Route::get('/', 'informedConsent');
+                                    });
+                                });
+                            });
+    
+
                             // CPPT
                             Route::prefix('cppt')->group(function () {
                                 Route::name('.cppt')->group(function () {
@@ -353,6 +363,16 @@ Route::middleware('auth')->group(function () {
 
                 Route::prefix('pelayanan')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
+
+                        // general consent
+                        Route::prefix('{urut_masuk}/general-consent')->group(function() {
+                            Route::name('general-consent')->group(function() {
+                                Route::controller(GawatDaruratController::class)->group(function() {
+                                    Route::get('/', 'generalConsent');
+                                });
+                            });
+                        });
+
                         // CPPT
                         Route::prefix('cppt')->group(function () {
                             Route::name('cppt')->group(function () {
