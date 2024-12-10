@@ -34,6 +34,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
@@ -334,12 +335,15 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            // neurologi
+                            Route::get('neurologi', [NeurologiController::class, 'index'])->name('neurologi.index');
+
+                             // asuran keperawatan
+                            Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');
                         });
                     });
                 });
-
-                // sementara dari anas
-                Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');
             });
         });
 
@@ -464,19 +468,6 @@ Route::middleware('auth')->group(function () {
                 });
             });
         });
-
-        // Rute Untuk Rehab Medis
-        // Route::prefix('rehab-medis')->group(function () {
-        //     Route::name('rehab-medis')->group(function () {
-        //         Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
-
-        //         // Pelayanan - Updated route pattern
-        //         Route::get('/pelayanan/{kd_pasien}/{tgl_masuk}', [RehabMedisController::class, 'pelayanan'])
-        //             ->name('.pelayanan');
-
-        //         Route::get('layanan', [LayananController::class, 'index']);
-        //     });
-        // });
 
         Route::prefix('rehab-medis')->group(function () {
             Route::name('rehab-medis')->group(function () {
