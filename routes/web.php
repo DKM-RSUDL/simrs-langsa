@@ -337,7 +337,15 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // neurologi
-                            Route::get('neurologi', [NeurologiController::class, 'index'])->name('neurologi.index');
+                            Route::prefix('neurologi')->group(function () {
+                                Route::name('.neurologi')->group(function () {
+                                    Route::controller(NeurologiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/', 'update')->name('.update');
+                                    });
+                                });
+                            });
 
                              // asuran keperawatan
                             Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');

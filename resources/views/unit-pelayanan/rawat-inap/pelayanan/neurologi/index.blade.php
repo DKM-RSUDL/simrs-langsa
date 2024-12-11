@@ -13,11 +13,15 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            {{-- @include('components.navigation-ranap') --}}
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
                     <div class="card-body">
+
+                        <a href="{{ url()->previous() }}" class="btn">
+                            <i class="ti-arrow-left"></i> Kembali
+                        </a>
 
                         <p class="text-muted mb-4">
                             <i class="bi bi-info-circle me-2"></i>
