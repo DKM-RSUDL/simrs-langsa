@@ -15,6 +15,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
+use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
 // action gawat darurat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\AsesmenController as GawatDaruratAsesmenController;
@@ -88,6 +89,15 @@ Route::middleware('auth')->group(function () {
                         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                             Route::name('.pelayanan')->group(function () {
                                 Route::get('/', [RawatJalanController::class, 'pelayanan']);
+                            });
+
+                            // rujuk route
+                            Route::prefix('rujuk-antar-rs')->group(function () {
+                                Route::name('.rujuk-antar-rs')->group(function () {
+                                    Route::controller(RawatJalanController::class)->group(function () {
+                                        Route::get('/', 'rujukAntarRs');
+                                    });
+                                });
                             });
 
                             // CPPT
@@ -229,6 +239,16 @@ Route::middleware('auth')->group(function () {
                                 Route::get('/', [RawatInapController::class, 'pelayanan']);
                             });
 
+                            // Informed Consent
+                            Route::prefix('informed-consent')->group(function() {
+                                Route::name('.informed-consent')->group(function() {
+                                    Route::controller(RawatInapController::class)->group(function() {
+                                        Route::get('/', 'informedConsent');
+                                    });
+                                });
+                            });
+    
+
                             // CPPT
                             Route::prefix('cppt')->group(function () {
                                 Route::name('.cppt')->group(function () {
@@ -365,6 +385,25 @@ Route::middleware('auth')->group(function () {
 
                 Route::prefix('pelayanan')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
+
+                        // general consent
+                        Route::prefix('{urut_masuk}/general-consent')->group(function() {
+                            Route::name('general-consent')->group(function() {
+                                Route::controller(GawatDaruratController::class)->group(function() {
+                                    Route::get('/', 'generalConsent');
+                                });
+                            });
+                        });
+
+                        // rujuk route
+                        Route::prefix('{urut_masuk}/rujuk-antar-rs')->group(function () {
+                            Route::name('rujuk-antar-rs')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
+                                    Route::get('/', 'rujukAntarRs');
+                                });
+                            });
+                        });
+
                         // CPPT
                         Route::prefix('cppt')->group(function () {
                             Route::name('cppt')->group(function () {
@@ -472,8 +511,19 @@ Route::middleware('auth')->group(function () {
                 Route::prefix('unit/{kd_unit}')->group(function () {
                     Route::name('.unit')->group(function () {
                         Route::get('/', [ForensikController::class, 'unitPelayanan']);
+
+                        //Pelayanan
+                        Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                            Route::name('.pelayanan')->group(function () {
+                                Route::get('/', [ForensikController::class, 'pelayanan']);
+                                Route::get('/create', [ForensikKlinikController::class, 'create'])->name('.create');
+                                Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
+                            });
+                        });
+
                     });
                 });
+                
             });
         });
 
@@ -504,5 +554,7 @@ Route::middleware('auth')->group(function () {
                 });
             });
         });
+
+        
     });
 });

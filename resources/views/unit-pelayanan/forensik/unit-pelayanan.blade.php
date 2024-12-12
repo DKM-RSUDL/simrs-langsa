@@ -99,7 +99,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
-                <h4 class="fw-bold">{{ $unit->nama_unit }}</h4>
+                <h4 class="fw-bold">{{ $nama_unit }}</h4>
 
             </div>
         </div>
@@ -111,7 +111,7 @@
                 <table class="table table-bordered dataTable" id="patientUnitDatatable">
                     <thead>
                         <tr>
-                            <th width="100px">dasdasdas</th>
+                            <th width="100px">No</th>
                             <th width="100px">Aksi</th>
                             <th>Pasien</th>
                             <th>No RM / Reg</th>

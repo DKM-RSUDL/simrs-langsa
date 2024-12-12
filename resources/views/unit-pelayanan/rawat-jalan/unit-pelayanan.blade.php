@@ -113,6 +113,37 @@
                 font-weight: bold;
                 font-size: 14px;
             }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu>.dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+            }
+
+            .dropdown-submenu:hover>.dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle {
+                position: relative;
+                padding-right: 30px;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle::after {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .dropdown-submenu:hover>a.dropdown-toggle::after {
+                transform: translateY(-50%) rotate(-90deg);
+            }
         </style>
     @endpush
 
@@ -195,6 +226,20 @@
 @push('js')
     <script>
         let pelayananUrl = "{{ url('unit-pelayanan/rawat-jalan/unit') }}/";
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+
+            dropdownSubmenus.forEach(function(submenu) {
+                submenu.addEventListener('mouseover', function() {
+                    submenu.querySelector('.dropdown-menu').classList.add('show');
+                });
+
+                submenu.addEventListener('mouseout', function() {
+                    submenu.querySelector('.dropdown-menu').classList.remove('show');
+                });
+            });
+        });
 
         $(document).ready(function() {
             $('#patientUnitDatatable').DataTable({
@@ -222,7 +267,49 @@
                                     </a>
                                     <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
                                         <i class="ti-pencil-alt"></i>
-                                    </a>`;
+                                    </a>
+                                    
+                                    <div class="dropdown ms-2">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu shadow-lg">
+                                                <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs' }">Rujuk Keluar RS</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
+                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
+                                                <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                            </ul>
+                                        </div>
+                                    `;
                         }
                     },
                     {
