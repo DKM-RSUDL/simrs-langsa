@@ -39,6 +39,7 @@ class AsuhanKeperawatanRawatInapController extends Controller
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
+
         return view('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.index', compact(
             'dataMedis',
             'dataDokter'

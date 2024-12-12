@@ -240,14 +240,14 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // Informed Consent
-                            Route::prefix('informed-consent')->group(function() {
-                                Route::name('.informed-consent')->group(function() {
-                                    Route::controller(RawatInapController::class)->group(function() {
+                            Route::prefix('informed-consent')->group(function () {
+                                Route::name('.informed-consent')->group(function () {
+                                    Route::controller(RawatInapController::class)->group(function () {
                                         Route::get('/', 'informedConsent');
                                     });
                                 });
                             });
-    
+
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
@@ -367,8 +367,16 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
 
-                             // asuran keperawatan
-                            Route::get('asuran-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuran-keperawatan.index');
+                            // asuran keperawatan
+                            Route::prefix('asuran-keperawatan')->group(function () {
+                                Route::name('.asuran-keperawatan')->group(function () {
+                                    Route::controller(AsuhanKeperawatanRawatInapController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/', 'update')->name('.update');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -387,9 +395,9 @@ Route::middleware('auth')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
 
                         // general consent
-                        Route::prefix('{urut_masuk}/general-consent')->group(function() {
-                            Route::name('general-consent')->group(function() {
-                                Route::controller(GawatDaruratController::class)->group(function() {
+                        Route::prefix('{urut_masuk}/general-consent')->group(function () {
+                            Route::name('general-consent')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
                                     Route::get('/', 'generalConsent');
                                 });
                             });
@@ -520,10 +528,8 @@ Route::middleware('auth')->group(function () {
                                 Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
                             });
                         });
-
                     });
                 });
-                
             });
         });
 
@@ -554,7 +560,5 @@ Route::middleware('auth')->group(function () {
                 });
             });
         });
-
-        
     });
 });
