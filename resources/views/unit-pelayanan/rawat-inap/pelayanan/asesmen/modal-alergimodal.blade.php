@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${a.reaksi}</td>
                 <td>${a.keparahan}</td>
                 <td>
-                    <button class="btn btn-sm btn-link delete-main-alergi" data-index="${index}"><i class="bi bi-trash-fill text-danger"></i></button>
+                    <button type="button" class="btn btn-sm btn-link delete-main-alergi" data-index="${index}"><i class="bi bi-trash-fill text-danger"></i></button>
                 </td>
             </tr>
         `).join('');
