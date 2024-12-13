@@ -215,7 +215,8 @@
                                                         @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.modal-alergimodal')
                                                     </div>
                                                     <div class="table-responsive">
-                                                        <table class="table table-bordered" id="createAlergiTableRanap">
+                                                        <table class="table table-bordered"
+                                                            id="createAlergiTableRanap">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Jenis</th>
