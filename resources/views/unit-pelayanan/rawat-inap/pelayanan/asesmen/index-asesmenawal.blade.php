@@ -43,19 +43,17 @@
                     Tambah
                 </button>
                 <ul class="custom__dropdown__menu">
+                    <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
+                            data-bs-target="#detailPasienModal">Umum Dewasa</a></li>
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                    <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal" data-bs-target="#detailPasienModal"><i class="ti-plus"></i> Tambah</a></li>
-                    @endcanany
-                    <li><a class="custom__dropdown__item" href="#">Umum Dewasa</a></li>
-                    @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen-anak.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Anak</a>
-                    </li>
+                        <li><a class="custom__dropdown__item"
+                                href="{{ route('rawat-inap.asesmen-anak.index', [
+                                    'kd_unit' => request()->route('kd_unit'),
+                                    'kd_pasien' => request()->route('kd_pasien'),
+                                    'tgl_masuk' => request()->route('tgl_masuk'),
+                                    'urut_masuk' => request()->route('urut_masuk'),
+                                ]) }}">Anak</a>
+                        </li>
                     @endcanany
                     <li><a class="custom__dropdown__item" href="#">Perinatology</a></li>
                     <li><a class="custom__dropdown__item" href="#">Obstetri/Maternitas</a></li>
@@ -63,7 +61,8 @@
                     <li><a class="custom__dropdown__item" href="#">THT</a></li>
                     <li><a class="custom__dropdown__item" href="#">Mata/Opthamologi</a></li>
                     <li><a class="custom__dropdown__item" href="#">Paru</a></li>
-                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.neurologi.index', [
+                    <li><a class="custom__dropdown__item"
+                            href="{{ route('rawat-inap.neurologi.index', [
                                 'kd_unit' => request()->route('kd_unit'),
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),

@@ -42,11 +42,6 @@
     {{-- vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- toast --}}
-    @include('components.toast')
-
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-
 </head>
 
 <body>
@@ -82,6 +77,19 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+
+    <script>
+        function showToast(type, message) {
+            iziToast[type]({
+                title: type,
+                message: message,
+                position: 'topRight',
+                timeout: 3000,
+                progressBar: true,
+                displayMode: 'once',
+            });
+        }
+    </script>
 
     <!-- js for this page only -->
     @stack('js')

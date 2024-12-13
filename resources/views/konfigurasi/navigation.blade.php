@@ -102,13 +102,13 @@
 
             // Loading spinner HTML
             const loadingSpinner = `
-        <div class="text-center my-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2">Sedang memuat data...</p>
-        </div>
-    `;
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Sedang memuat data...</p>
+                </div>
+            `;
 
             // create
             $('#createMenu').click(function() {
@@ -244,7 +244,7 @@
                             Object.keys(errors).forEach(function(key) {
                                 var errorMessage = errors[key][0];
                                 $('#' + key).siblings('.text-danger').text(
-                                errorMessage);
+                                    errorMessage);
                             });
                         }
                     },
