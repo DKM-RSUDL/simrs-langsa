@@ -169,7 +169,7 @@
                                         <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
                                             <i class="ti-pencil-alt"></i>
                                         </a>
-                                        
+
                                         <div class="dropdown ms-1">
                                                 <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
                                                     <i class="bi bi-three-dots"></i>
@@ -208,6 +208,7 @@
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuran-keperawatan'}">Asuhan Keperawatan</a></li>
                                                 </ul>
                                             </div>
                                         </div>

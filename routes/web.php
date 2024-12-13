@@ -35,6 +35,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
@@ -239,14 +240,14 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // Informed Consent
-                            Route::prefix('informed-consent')->group(function() {
-                                Route::name('.informed-consent')->group(function() {
-                                    Route::controller(RawatInapController::class)->group(function() {
+                            Route::prefix('informed-consent')->group(function () {
+                                Route::name('.informed-consent')->group(function () {
+                                    Route::controller(RawatInapController::class)->group(function () {
                                         Route::get('/', 'informedConsent');
                                     });
                                 });
                             });
-    
+
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
@@ -354,6 +355,28 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            // neurologi
+                            Route::prefix('neurologi')->group(function () {
+                                Route::name('.neurologi')->group(function () {
+                                    Route::controller(NeurologiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/', 'update')->name('.update');
+                                    });
+                                });
+                            });
+
+                            // asuran keperawatan
+                            Route::prefix('asuran-keperawatan')->group(function () {
+                                Route::name('.asuran-keperawatan')->group(function () {
+                                    Route::controller(AsuhanKeperawatanRawatInapController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/', 'update')->name('.update');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -375,9 +398,9 @@ Route::middleware('auth')->group(function () {
                     Route::prefix('/{kd_pasien}/{tgl_masuk}')->group(function () {
 
                         // general consent
-                        Route::prefix('{urut_masuk}/general-consent')->group(function() {
-                            Route::name('general-consent')->group(function() {
-                                Route::controller(GawatDaruratController::class)->group(function() {
+                        Route::prefix('{urut_masuk}/general-consent')->group(function () {
+                            Route::name('general-consent')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
                                     Route::get('/', 'generalConsent');
                                 });
                             });
@@ -508,25 +531,10 @@ Route::middleware('auth')->group(function () {
                                 Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
                             });
                         });
-
                     });
                 });
-                
             });
         });
-
-        // Rute Untuk Rehab Medis
-        // Route::prefix('rehab-medis')->group(function () {
-        //     Route::name('rehab-medis')->group(function () {
-        //         Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
-
-        //         // Pelayanan - Updated route pattern
-        //         Route::get('/pelayanan/{kd_pasien}/{tgl_masuk}', [RehabMedisController::class, 'pelayanan'])
-        //             ->name('.pelayanan');
-
-        //         Route::get('layanan', [LayananController::class, 'index']);
-        //     });
-        // });
 
         Route::prefix('rehab-medis')->group(function () {
             Route::name('rehab-medis')->group(function () {
@@ -555,7 +563,5 @@ Route::middleware('auth')->group(function () {
                 });
             });
         });
-
-        
     });
 });

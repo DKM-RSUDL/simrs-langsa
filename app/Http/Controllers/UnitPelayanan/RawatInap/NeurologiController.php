@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
-use App\Models\DokterInap;
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class AsuhanKeperawatanRawatInapController extends Controller
+class NeurologiController extends Controller
 {
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -25,11 +24,6 @@ class AsuhanKeperawatanRawatInapController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dataDokter = DokterInap::with(['dokter', 'unit'])
-            ->where('kd_unit', '1001')
-            ->whereRelation('dokter', 'status', 1)
-            ->get();
-
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
@@ -40,9 +34,8 @@ class AsuhanKeperawatanRawatInapController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.index', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.neurologi.index', compact(
             'dataMedis',
-            'dataDokter'
         ));
     }
 }
