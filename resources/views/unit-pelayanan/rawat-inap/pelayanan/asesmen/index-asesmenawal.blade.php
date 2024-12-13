@@ -34,8 +34,46 @@
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-4 text-end ms-auto">
-            @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
+        <div class="col-md-3 text-end ms-auto">
+            @php
+                $tglMasukData = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
+            @endphp
+            <div class="custom__dropdown">
+                <button class="custom__dropdown__btn" onclick="toggleDropdown(this)">
+                    Tambah
+                </button>
+                <ul class="custom__dropdown__menu">
+                    <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
+                            data-bs-target="#detailPasienModal">Umum Dewasa</a></li>
+                    @canany(['is-admin', 'is-perawat', 'is-bidan'])
+                        <li><a class="custom__dropdown__item"
+                                href="{{ route('rawat-inap.asesmen-anak.index', [
+                                    'kd_unit' => request()->route('kd_unit'),
+                                    'kd_pasien' => request()->route('kd_pasien'),
+                                    'tgl_masuk' => request()->route('tgl_masuk'),
+                                    'urut_masuk' => request()->route('urut_masuk'),
+                                ]) }}">Anak</a>
+                        </li>
+                    @endcanany
+                    <li><a class="custom__dropdown__item" href="#">Perinatology</a></li>
+                    <li><a class="custom__dropdown__item" href="#">Obstetri/Maternitas</a></li>
+                    <li><a class="custom__dropdown__item" href="#">Geriatri</a></li>
+                    <li><a class="custom__dropdown__item" href="#">THT</a></li>
+                    <li><a class="custom__dropdown__item" href="#">Mata/Opthamologi</a></li>
+                    <li><a class="custom__dropdown__item" href="#">Paru</a></li>
+                    <li><a class="custom__dropdown__item"
+                            href="{{ route('rawat-inap.neurologi.index', [
+                                'kd_unit' => request()->route('kd_unit'),
+                                'kd_pasien' => request()->route('kd_pasien'),
+                                'tgl_masuk' => request()->route('tgl_masuk'),
+                                'urut_masuk' => request()->route('urut_masuk'),
+                            ]) }}">Neurologi</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="#">Kulit dan Kelamin</a></li>
+                </ul>
+            </div>
+
+            {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                     <i class="ti-plus"></i> Tambah
                 </button>
@@ -51,7 +89,7 @@
                     class="btn btn-primary">
                     <i class="ti-plus"></i> Asesmen Anak
                 </a>
-            @endcanany
+            @endcanany --}}
         </div>
     </div>
 </div>
@@ -122,4 +160,20 @@
             });
         }
     });
+
+    // untuk dropdown:
+    function toggleDropdown(button) {
+        const menu = button.nextElementSibling;
+        button.classList.toggle('active');
+        menu.classList.toggle('show');
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function closeDropdown(e) {
+            if (!button.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('show');
+                button.classList.remove('active');
+                document.removeEventListener('click', closeDropdown);
+            }
+        });
+    }
 </script>
