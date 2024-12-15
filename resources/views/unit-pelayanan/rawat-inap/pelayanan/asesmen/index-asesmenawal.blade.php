@@ -23,7 +23,7 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
