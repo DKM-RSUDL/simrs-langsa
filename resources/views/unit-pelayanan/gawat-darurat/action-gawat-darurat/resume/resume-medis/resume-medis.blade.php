@@ -90,6 +90,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-resume')
 
+
 <script type="text/javascript">
     $(document).ready(function() {
         // Filter by period
