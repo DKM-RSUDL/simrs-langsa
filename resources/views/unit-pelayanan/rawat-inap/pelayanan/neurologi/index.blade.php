@@ -25,7 +25,7 @@
 
                         <p class="text-muted mb-4">
                             <i class="bi bi-info-circle me-2"></i>
-                            Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
+                            Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayananc
                         </p>
 
                         <div class="card-body">
@@ -107,96 +107,28 @@
                                         </div>
 
                                         <!-- Riwayat Alergi -->
-                                        <h6 class="text-dark">Riwayat Alergi</h6>
-                                        <div class="card-body">
-                                            <!-- Radio Buttons Alergi -->
-                                            <div class="mb-3 border-bottom pb-3">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="riwayat_alergi"
-                                                        id="alergi_tidak_ada" value="tidak_ada" checked>
-                                                    <label class="form-check-label" for="alergi_tidak_ada">Tidak
-                                                        ada</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="riwayat_alergi"
-                                                        id="alergi_ada" value="ada">
-                                                    <label class="form-check-label" for="alergi_ada">Ada</label>
-                                                </div>
-                                            </div>
-
-                                            <!-- Detail Alergi -->
-                                            <div id="detail-alergi" style="display: none;">
-                                                <!-- Obat-obatan -->
-                                                <div class="mb-3">
-                                                    <div class="d-flex align-items-start">
-                                                        <div class="form-check" style="width: 200px;">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="obat" name="obat">
-                                                            <label class="form-check-label fw-bold"
-                                                                for="obat">Obat-obatan:</label>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="text" class="form-control form-control-sm"
-                                                                id="obat_keterangan" name="obat_keterangan"
-                                                                placeholder="Sebutkan nama obat yang menyebabkan alergi..."
-                                                                disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Makanan/minuman -->
-                                                <div class="mb-3">
-                                                    <div class="d-flex align-items-start">
-                                                        <div class="form-check" style="width: 200px;">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="makanan" name="makanan">
-                                                            <label class="form-check-label fw-bold"
-                                                                for="makanan">Makanan/minuman:</label>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="text" class="form-control form-control-sm"
-                                                                id="makanan_keterangan" name="makanan_keterangan"
-                                                                placeholder="Sebutkan makanan/minuman yang menyebabkan alergi..."
-                                                                disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Lain-lain -->
-                                                <div class="mb-3">
-                                                    <div class="d-flex align-items-start">
-                                                        <div class="form-check" style="width: 200px;">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="lainlain" name="lainlain">
-                                                            <label class="form-check-label fw-bold"
-                                                                for="lainlain">Lain-lain:</label>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="text" class="form-control form-control-sm"
-                                                                id="lainlain_keterangan" name="lainlain_keterangan"
-                                                                placeholder="Sebutkan penyebab alergi lainnya..." disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Reaksi -->
-                                                <div class="mb-3">
-                                                    <div class="d-flex align-items-start">
-                                                        <div class="form-check" style="width: 200px;">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="reaksi" name="reaksi">
-                                                            <label class="form-check-label fw-bold"
-                                                                for="reaksi">Reaksi:</label>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="text" class="form-control form-control-sm"
-                                                                id="reaksi_keterangan" name="reaksi_keterangan"
-                                                                placeholder="Jelaskan reaksi alergi yang timbul..."
-                                                                disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="mb-3">
+                                            <h6 class="text-dark">Riwayat Alergi</h6>
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-primary"
+                                                id="btn-add-elergi-neurologi">
+                                                <i class="fas fa-plus"></i> Tambah Alergi
+                                            </a>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Jenis</th>
+                                                        <th>Alergen</th>
+                                                        <th>Reaksi</th>
+                                                        <th>Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="list-alergi">
+                                                    <!-- Data will be populated here -->
+                                                </tbody>
+                                            </table>
                                         </div>
 
                                         <!-- Status Present -->
@@ -903,23 +835,30 @@
                                         <div class="card-body">
                                             <h5 class="fw-bold mb-4">m. Intensitas Nyeri</h5>
 
-                                            <div class="row mb-4">
-                                                <div class="col-md-12">
-                                                    <div class="d-flex align-items-start gap-4">
-                                                        <div class="d-flex align-items-center gap-3"
-                                                            style="min-width: 350px;">
-                                                            <input type="number" class="form-control flex-grow-1"
-                                                                style="width: 100px;" value="4" min="0"
-                                                                max="10">
-                                                            <button class="btn btn-warning btn-sm">
-                                                                Nyeri Hebat
-                                                            </button>
-                                                        </div>
-                                                        <div class="pain-scale-image flex-grow-1">
-                                                            <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                                alt="Pain Scale" style="width: 450px; height: auto;">
-                                                        </div>
+                                            <div class="row mt-4">
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        <p class="fw-bold">
+                                                            Skala Nyeri
+                                                        </p>
+                                                        <input type="number" name="skala_nyeri"
+                                                            class="form-control @error('skala_nyeri') is-invalid @enderror"
+                                                            min="0" max="10" style="width: 200px;"
+                                                            value="{{ old('skala_nyeri', 0) }}">
+                                                        @error('skala_nyeri')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                        <button type="button" class="btn btn-sm btn-success mt-2"
+                                                            id="skalaNyeriBtn">
+                                                            Tidak Nyeri
+                                                        </button>
                                                     </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <img src="{{ asset('assets/img/cppt/cppt.jpeg') }}" alt="Skala Nyeri"
+                                                        class="img-fluid">
                                                 </div>
                                             </div>
 
@@ -977,86 +916,120 @@
                                                 <div class="row g-4">
                                                     <!-- Usia Lanjut -->
                                                     <div class="col-lg-6">
-                                                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between border-bottom pb-2">
                                                             <label class="form-check-label">Usia lanjut (> 60 th)</label>
                                                             <div class="btn-group btn-group-sm" role="group">
-                                                                <input type="radio" class="btn-check" name="usia_lanjut" id="usia_ya" value="ya">
-                                                                <label class="btn btn-outline-primary px-4" for="usia_ya">Ya</label>
-                                                                <input type="radio" class="btn-check" name="usia_lanjut" id="usia_tidak" value="tidak">
-                                                                <label class="btn btn-outline-primary px-4" for="usia_tidak">Tidak</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="usia_lanjut" id="usia_ya" value="ya">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="usia_ya">Ya</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="usia_lanjut" id="usia_tidak" value="tidak">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="usia_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Hambatan Mobilisasi -->
                                                     <div class="col-lg-6">
-                                                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between border-bottom pb-2">
                                                             <label class="form-check-label">Hambatan mobilisasi</label>
                                                             <div class="btn-group btn-group-sm" role="group">
-                                                                <input type="radio" class="btn-check" name="hambatan_mobilisasi" id="hambatan_ya" value="ya">
-                                                                <label class="btn btn-outline-primary px-4" for="hambatan_ya">Ya</label>
-                                                                <input type="radio" class="btn-check" name="hambatan_mobilisasi" id="hambatan_tidak" value="tidak">
-                                                                <label class="btn btn-outline-primary px-4" for="hambatan_tidak">Tidak</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="hambatan_mobilisasi" id="hambatan_ya"
+                                                                    value="ya">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="hambatan_ya">Ya</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="hambatan_mobilisasi" id="hambatan_tidak"
+                                                                    value="tidak">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="hambatan_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Membutuhkan pelayanan -->
                                                     <div class="col-lg-6">
-                                                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
-                                                            <label class="form-check-label">Membutuhkan pelayanan medis berkelanjutan</label>
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                                            <label class="form-check-label">Membutuhkan pelayanan medis
+                                                                berkelanjutan</label>
                                                             <div class="btn-group btn-group-sm" role="group">
-                                                                <input type="radio" class="btn-check" name="pelayanan_medis" id="pelayanan_ya" value="ya">
-                                                                <label class="btn btn-outline-primary px-4" for="pelayanan_ya">Ya</label>
-                                                                <input type="radio" class="btn-check" name="pelayanan_medis" id="pelayanan_tidak" value="tidak">
-                                                                <label class="btn btn-outline-primary px-4" for="pelayanan_tidak">Tidak</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="pelayanan_medis" id="pelayanan_ya"
+                                                                    value="ya">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="pelayanan_ya">Ya</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="pelayanan_medis" id="pelayanan_tidak"
+                                                                    value="tidak">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="pelayanan_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Ketergantungan -->
                                                     <div class="col-lg-6">
-                                                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
-                                                            <label class="form-check-label">Ketergantungan dengan orang lain dalam aktivitas harian</label>
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                                            <label class="form-check-label">Ketergantungan dengan orang
+                                                                lain dalam aktivitas harian</label>
                                                             <div class="btn-group btn-group-sm" role="group">
-                                                                <input type="radio" class="btn-check" name="ketergantungan" id="ketergantungan_ya" value="ya">
-                                                                <label class="btn btn-outline-primary px-4" for="ketergantungan_ya">Ya</label>
-                                                                <input type="radio" class="btn-check" name="ketergantungan" id="ketergantungan_tidak" value="tidak">
-                                                                <label class="btn btn-outline-primary px-4" for="ketergantungan_tidak">Tidak</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="ketergantungan" id="ketergantungan_ya"
+                                                                    value="ya">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="ketergantungan_ya">Ya</label>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="ketergantungan" id="ketergantungan_tidak"
+                                                                    value="tidak">
+                                                                <label class="btn btn-outline-primary px-4"
+                                                                    for="ketergantungan_tidak">Tidak</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Info Alert -->
-                                                <div class="alert alert-info bg-info bg-opacity-10 border border-info border-opacity-25 mt-4 mb-4">
+                                                <div
+                                                    class="alert alert-info bg-info bg-opacity-10 border border-info border-opacity-25 mt-4 mb-4">
                                                     <small class="d-flex align-items-center">
                                                         <i class="bi bi-info-circle-fill text-info me-2"></i>
-                                                        Jika salah satu jawaban "Ya", maka pasien membutuhkan rencana pulang khusus
+                                                        Jika salah satu jawaban "Ya", maka pasien membutuhkan rencana pulang
+                                                        khusus
                                                     </small>
                                                 </div>
 
-                                                <!-- Rencana Pulang Khusus -->
+                                                <!-- Tambahkan id dan name yang spesifik untuk form fields -->
                                                 <div class="mb-4">
-                                                    <label class="form-label fw-semibold mb-2">Rencana Pulang Khusus:</label>
-                                                    <textarea class="form-control bg-light" rows="3"
-                                                        placeholder="Tuliskan rencana pulang khusus jika diperlukan..."
-                                                        style="resize: none;"></textarea>
+                                                    <label class="form-label fw-semibold mb-2">Rencana Pulang
+                                                        Khusus:</label>
+                                                    <textarea class="form-control bg-light" id="rencana_pulang_khusus" name="rencana_pulang_khusus" rows="3"
+                                                        placeholder="Tuliskan rencana pulang khusus jika diperlukan..." style="resize: none;" disabled></textarea>
                                                 </div>
 
-                                                <!-- Bottom Section -->
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label fw-semibold mb-2">Rencana Lama Perawatan:</label>
+                                                            <label class="form-label fw-semibold mb-2">Rencana Lama
+                                                                Perawatan:</label>
                                                             <input type="text" class="form-control bg-light"
-                                                                placeholder="Contoh: 7 hari">
+                                                                id="rencana_lama_perawatan" name="rencana_lama_perawatan"
+                                                                placeholder="Contoh: 7 hari" disabled>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label fw-semibold mb-2">Rencana Tanggal Pulang:</label>
-                                                            <input type="date" class="form-control bg-light">
+                                                            <label class="form-label fw-semibold mb-2">Rencana Tanggal
+                                                                Pulang:</label>
+                                                            <input type="date" class="form-control bg-light"
+                                                                id="rencana_tanggal_pulang" name="rencana_tanggal_pulang"
+                                                                disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1076,16 +1049,15 @@
     </div>
 @endsection
 
+@include('unit-pelayanan.rawat-inap.pelayanan.neurologi.modal-create-elergi')
 @push('js')
     <script>
         $(document).ready(function() {
             // Fungsi untuk Status Present - validasi input numerik
             function initStatusPresent() {
                 const statusInputs = ['#tekanan_darah', '#respirasi', '#suhu', '#nadi'];
-
                 statusInputs.forEach(input => {
                     $(input).on('input', function(e) {
-                        // Hanya memperbolehkan angka dan titik
                         this.value = this.value.replace(/[^0-9.]/g, '');
                     });
 
@@ -1143,45 +1115,114 @@
                 });
             }
 
-            // Fungsi untuk Riwayat Alergi
-            function initRiwayatAlergi() {
-                $('input[name="riwayat_alergi"]').change(function() {
-                    const detailAlergi = $('#detail-alergi');
-                    const inputs = detailAlergi.find('input[type="checkbox"], input[type="text"]');
-
-                    if ($(this).val() === 'ada') {
-                        detailAlergi.slideDown();
+            // Fungsi Pemeriksaan Fisik
+            function initPemeriksaanFisik() {
+                $('input[type="radio"]').on('change', function() {
+                    const name = $(this).attr('name');
+                    const keteranganDiv = $('#' + name + '_keterangan');
+                    if ($(this).val() === 'tidak_normal') {
+                        keteranganDiv.addClass('show');
                     } else {
-                        detailAlergi.slideUp();
-                        inputs.prop('checked', false).prop('disabled', true).val('');
-                    }
-                });
-
-                $('#detail-alergi input[type="checkbox"]').change(function() {
-                    const keteranganInput = $(`#${this.id}_keterangan`);
-                    keteranganInput.prop('disabled', !this.checked);
-
-                    if (!this.checked) {
-                        keteranganInput.val('');
-                    } else {
-                        keteranganInput.prop('disabled', false).focus();
+                        keteranganDiv.removeClass('show');
                     }
                 });
             }
 
-            // Fungsi Pemeriksaan Fisik
-            function initPemeriksaanFisik() {
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.addEventListener('change', function() {
-                        const name = this.name;
-                        const keteranganDiv = document.querySelector(`#${name}_keterangan`);
-                        if (this.value === 'tidak_normal') {
-                            keteranganDiv.classList.add('show');
-                        } else {
-                            keteranganDiv.classList.remove('show');
+            // Fungsi Skala Nyeri
+            function initSkalaNyeri() {
+                $('input[name="skala_nyeri"]').on('input change', function() {
+                    let nilai = parseInt($(this).val()) || 0;
+
+                    // Batasi nilai antara 0-10
+                    if (nilai > 10) {
+                        nilai = 10;
+                        $(this).val(10);
+                    }
+                    if (nilai < 0) {
+                        nilai = 0;
+                        $(this).val(0);
+                    }
+
+                    // Tentukan class dan text berdasarkan nilai
+                    let buttonClass, textNyeri;
+
+                    if (nilai === 0) {
+                        buttonClass = 'btn-success';
+                        textNyeri = 'Tidak Nyeri';
+                    } else if (nilai >= 1 && nilai <= 3) {
+                        buttonClass = 'btn-success';
+                        textNyeri = 'Nyeri Ringan';
+                    } else if (nilai >= 4 && nilai <= 5) {
+                        buttonClass = 'btn-warning';
+                        textNyeri = 'Nyeri Sedang';
+                    } else if (nilai >= 6 && nilai <= 7) {
+                        buttonClass = 'btn-warning';
+                        textNyeri = 'Nyeri Berat';
+                    } else if (nilai >= 8 && nilai <= 9) {
+                        buttonClass = 'btn-danger';
+                        textNyeri = 'Nyeri Sangat Berat';
+                    } else if (nilai >= 10) {
+                        buttonClass = 'btn-danger';
+                        textNyeri = 'Nyeri Tak Tertahankan';
+                    }
+
+                    // Update button
+                    $('#skalaNyeriBtn')
+                        .removeClass('btn-success btn-warning btn-danger')
+                        .addClass(buttonClass)
+                        .text(textNyeri);
+                });
+            }
+
+            // DISCHARGE PLANNING
+            function initDischargePlanning() {
+                // Ambil semua radio button dan form fields yang terkait
+                const radioButtons = $(
+                    'input[type="radio"][name^="usia_lanjut"], input[type="radio"][name^="hambatan_mobilisasi"], input[type="radio"][name^="pelayanan_medis"], input[type="radio"][name^="ketergantungan"]'
+                    );
+                const rencanaPulangField = $('textarea.form-control.bg-light');
+                const rencanaLamaField = $('input.form-control.bg-light[type="text"]');
+                const rencanaTanggalField = $('input.form-control.bg-light[type="date"]');
+
+                // Fungsi untuk mengecek apakah ada jawaban "ya"
+                function checkYesAnswers() {
+                    let hasYes = false;
+                    radioButtons.filter(':checked').each(function() {
+                        if ($(this).val() === 'ya') {
+                            hasYes = true;
+                            return false; // Break loop
                         }
                     });
-                });
+                    return hasYes;
+                }
+
+                // Fungsi untuk mengatur status form fields
+                function updateFormFields() {
+                    const needsSpecialPlan = checkYesAnswers();
+                    const fields = [rencanaPulangField, rencanaLamaField, rencanaTanggalField];
+
+                    fields.forEach(field => {
+                        if (needsSpecialPlan) {
+                            field.prop('disabled', false)
+                                .removeClass('bg-light')
+                                .addClass('bg-white')
+                                .prop('required', true);
+                        } else {
+                            field.prop('disabled', true)
+                                .removeClass('bg-white')
+                                .addClass('bg-light')
+                                .prop('required', false)
+                                .val(''); // Clear values when disabled
+                        }
+                    });
+                }
+
+                // Event listener untuk radio buttons
+                radioButtons.on('change', updateFormFields);
+
+                // Set default state untuk form fields (semua disabled)
+                radioButtons.filter('[value="tidak"]').prop('checked', true);
+                updateFormFields();
             }
 
             // Initialize all functions
@@ -1190,12 +1231,16 @@
                 initTextareaAutoResize();
                 initAutosave();
                 initRiwayatPengobatan();
-                initRiwayatAlergi();
                 initPemeriksaanFisik();
+                initSkalaNyeri();
+                initDischargePlanning();
             }
 
             // Run initialization
             init();
+
+            // Trigger initial value untuk skala nyeri
+            $('input[name="skala_nyeri"]').trigger('input');
         });
     </script>
 @endpush
