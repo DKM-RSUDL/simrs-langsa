@@ -40,6 +40,101 @@
     </div>
 
     <x-modal id="modalAction" title="Modal title" size="lg"></x-modal>
+
+    {{-- <div class="modal fade" id="createNavigationModal" tabindex="-1" aria-labelledby="createNavigationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createNavigationModalLabel">Tambah Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="form" action="{{ route('navigation.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="type_menu" class="form-label">Type Menu</label>
+                                    <select class="form-select select2" id="type_menu" name="type_menu" required>
+                                        <option value="single">
+                                            Single Menu
+                                        </option>
+                                        <option value="child">
+                                            Child Menu
+                                        </option>
+                                        <option value="parent">
+                                            Parent Menu
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-none" id="main_menu">
+                                <div class="mb-3">
+                                    <label for="main_menu" class="form-label">Parent Menu</label>
+                                    <select class="form-select select2" name="main_menu" id="main_menu"
+                                        aria-label="Default select example">
+                                        <option value="">Open this select menu</option>
+                                        @foreach ($parent as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nama Menu</label>
+                                    <input type="text" placeholder="Input Here" name="name" class="form-control" id="name" required>
+                                    <small class="text-danger" id="name-error"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="url" class="form-label">URL</label>
+                                    <input type="text" placeholder="Input Here" name="url" class="form-control" id="url" value="#" required>
+                                    <small class="text-danger" id="url-error"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="icon" class="form-label">Icon</label>
+                                    <input type="text" placeholder="Input Here" name="icon" class="form-control" id="icon">
+                                    <small class="text-muted">Font awesome 6.5.2</small>
+                                    <small class="text-danger" id="icon-error"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="sort" class="form-label">Position</label>
+                                    <input type="text" placeholder="Input Here" name="sort" class="form-control" id="sort" value="0">
+                                    <small class="text-danger" id="sort-error"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select class="form-select select2" name="role[]" id="role"
+                                        aria-label="Default select example" multiple>
+                                        @foreach ($role as $item)
+                                            <option value="{{ $item->id }}">
+                                                {{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-danger" id="role-error"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" id="save-modal" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> --}}
 @endsection
 
 @push('js')
@@ -127,10 +222,10 @@
                     })
                     .fail(function(xhr) {
                         $('#modalAction .modal-body').html(`
-                <div class="alert alert-danger">
-                    Terjadi kesalahan saat memuat form. Silakan coba lagi.
-                </div>
-            `);
+                            <div class="alert alert-danger">
+                                Terjadi kesalahan saat memuat form. Silakan coba lagi.
+                            </div>
+                        `);
                     })
                     .always(function() {
                         // Restore button state
@@ -220,6 +315,7 @@
                 const button = $(this);
                 const id = $('#navigationId').val();
 
+
                 // Show loading state
                 button.html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...')
                     .addClass('disabled');
@@ -232,11 +328,7 @@
                     success: function(response) {
                         $('#modalAction').modal('hide');
                         table.draw();
-                        if (response.status == true) {
-                            showToast('success', response.message);
-                        } else {
-                            showToast('error', response.message);
-                        }
+                        showToast(response.status, response.message);
                     },
                     error: function(response) {
                         var errors = response.responseJSON.errors;
@@ -288,188 +380,5 @@
                 }
             });
         });
-        /* kode lama
-        $(function() {
-            // ajax table
-            var table = $('.dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('navigation.index') }}",
-                columnDefs: [{
-                    "targets": "_all",
-                    "className": "text-start"
-                }],
-                columns: [{
-                        data: 'id',
-                        name: 'id',
-                        orderable: true,
-                        searchable: false,
-                        render: function(data, type, full, meta) {
-                            return meta.row + 1;
-                        }
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'url',
-                        name: 'url'
-                    },
-                    {
-                        data: 'icon',
-                        name: 'icon'
-                    },
-                    {
-                        data: 'main_menu',
-                        name: 'main_menu'
-                    },
-                    {
-                        data: 'sort',
-                        name: 'sort'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
-                    {
-                        data: 'updated_at',
-                        name: 'updated_at'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ]
-            });
-
-            // create
-            $('#createMenu').click(function() {
-                $.get("{{ route('navigation.create') }}", function(response) {
-                    $('#modalAction .modal-title').html('Tambah Menu');
-                    $('#modalAction .modal-body').html(response);
-
-                    $('#modalAction').modal('show');
-                })
-            })
-
-            // edit
-            $('body').on('click', '.editRole', function() {
-                var roleId = $(this).data('id');
-                $.get("{{ route('navigation.index') }}" + '/' + roleId + '/edit', function(response) {
-                    $('#modalAction .modal-title').html('Edit Menu');
-                    $('#modalAction .modal-body').html(response);
-
-                    $('#modalAction').modal('show');
-                })
-            });
-
-            // delete
-            $('body').on('click', '.deleteRole', function() {
-                var roleId = $(this).data('id');
-                Swal.fire({
-                    title: 'Apakah anda yakin?',
-                    text: "Data yang di hapus tidak dapat dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#82868',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "DELETE",
-                            url: "{{ url('navigation') }}/" + roleId,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-                                table.draw();
-                                showToast('success', response.message);
-                            },
-                            error: function(response) {
-                                var errorMessage = response.responseJSON
-                                    .message;
-                                showToast('error',
-                                    errorMessage);
-                            }
-                        });
-                    }
-                });
-            });
-
-            // save
-            $('#save-modal').click(function(e) {
-                e.preventDefault();
-                $(this).html('Sending..');
-                $(this).addClass('disabled');
-                var id = $('#navigationId').val();
-
-                $.ajax({
-                    data: $('#form-modalAction').serialize(),
-                    url: `{{ url('navigation/') }}/${id}`,
-                    type: "POST",
-                    dataType: 'json',
-                    success: function(response) {
-                        $('#modalAction').modal('hide');
-                        table.draw();
-                        if (response.status == true) {
-                            showToast('success', response.message);
-                        } else {
-                            showToast('error', response.message);
-                        }
-                        $('#save-modal').html('Save');
-                        $('#save-modal').removeClass('disabled');
-                    },
-                    error: function(response) {
-                        var errors = response.responseJSON.errors;
-                        if (errors) {
-                            Object.keys(errors).forEach(function(key) {
-                                var errorMessage = errors[key][0];
-                                $('#' + key).siblings('.text-danger').text(
-                                    errorMessage);
-                            });
-                        }
-                        $('#save-modal').html('Save');
-                        $('#save-modal').removeClass('disabled');
-                    }
-                });
-            });
-
-
-            $(document).on('change', '#type_menu', function() {
-                let value = $(this).val()
-
-                if (value == 'child') {
-                    $('#main_menu').removeClass('d-none')
-                    $('#icon').prop('readonly', true);
-                    $('#url').prop('readonly', false)
-                    $('#url').val('');
-                    $('#icon').val('');
-                } else if (value == 'parent') {
-                    $('#icon').prop('readonly', false)
-                    $('#url').prop('readonly', true)
-                    $('#url').val('#');
-                    $('#main_menu').addClass('d-none')
-                } else {
-                    $('#icon').prop('readonly', false)
-                    $('#url').prop('readonly', false)
-                    $('#url').val('');
-                    $('#main_menu').addClass('d-none')
-                }
-            })
-
-            $(document).on('input', '#name', function() {
-                let value = $(this).val()
-                let type_menu = $('#type_menu').val()
-
-                if (type_menu == 'parent') {
-                    $('#url').val('#');
-                }
-            })
-        }); */
     </script>
 @endpush

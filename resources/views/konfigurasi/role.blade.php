@@ -82,13 +82,13 @@
 
             // Loading spinner HTML
             const loadingSpinner = `
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2">Mohon tunggu...</p>
-        </div>
-    `;
+                                    <div class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2">Mohon tunggu...</p>
+                                    </div>
+                                `;
 
             // create
             $('#createRole').click(function() {
@@ -191,7 +191,7 @@
                     success: function(response) {
                         $('#modalAction').modal('hide');
                         table.draw();
-                        showToast('success', response.message);
+                        showToast(response.status, response.message);
                     },
                     error: function(response) {
                         var errors = response.responseJSON.errors;
@@ -199,7 +199,7 @@
                             Object.keys(errors).forEach(function(key) {
                                 var errorMessage = errors[key][0];
                                 $('#' + key).siblings('.text-danger').text(
-                                errorMessage);
+                                    errorMessage);
                             });
                         }
                     },
