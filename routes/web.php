@@ -380,6 +380,9 @@ Route::middleware('auth')->group(function () {
                         });
                     });
                 });
+
+                // sementara dari anas
+                Route::get('asuhan-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuhan-keperawatan.index');
             });
         });
 
