@@ -99,7 +99,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-6">
+                                    {{-- <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
                                             <input class="form-check-input @error('puasa') is-invalid @enderror"
@@ -118,14 +118,14 @@
                                                 {{ $error }}
                                             </div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
-                                    Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
+                                    Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
                                 </p>
                                 <div class="row">
                                     <div class="row">
@@ -275,7 +275,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-6">
+                                    {{-- <div class="col-6">
                                         <label class="form-label fw-bold h5 text-dark">Puasa?</label>
                                         <div class="form-check">
                                             <input class="form-check-input @error('puasa') is-invalid @enderror"
@@ -294,14 +294,14 @@
                                                 {{ $error }}
                                             </div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
-                                    Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
+                                    Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
                                 </p>
                                 <div class="row">
                                     <div class="row">
@@ -397,9 +397,9 @@
                                 <div class="col-6">
                                     <p class="p-0 m-0"><strong>Cito :</strong> <span id="cyto"></span></p>
                                 </div>
-                                <div class="col-6">
+                                {{-- <div class="col-6">
                                     <p class="p-0 m-0"><strong>Puasa :</strong> <span id="puasa"></span></p>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 

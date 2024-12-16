@@ -996,11 +996,10 @@
                                                 </div>
 
                                                 <!-- Info Alert -->
-                                                <div
-                                                    class="alert alert-info bg-info bg-opacity-10 border border-info border-opacity-25 mt-4 mb-4">
+                                                <div class="alert alert-warning bg-opacity-10 border border-warning border-opacity-25 mt-4 mb-4"
+                                                    id="discharge-planning-label">
                                                     <small class="d-flex align-items-center">
-                                                        <i class="bi bi-info-circle-fill text-info me-2"></i>
-                                                        Jika salah satu jawaban "Ya", maka pasien membutuhkan rencana pulang
+                                                        Tidak membutuhkan rencana pulang
                                                         khusus
                                                     </small>
                                                 </div>
@@ -1179,7 +1178,7 @@
                 // Ambil semua radio button dan form fields yang terkait
                 const radioButtons = $(
                     'input[type="radio"][name^="usia_lanjut"], input[type="radio"][name^="hambatan_mobilisasi"], input[type="radio"][name^="pelayanan_medis"], input[type="radio"][name^="ketergantungan"]'
-                    );
+                );
                 const rencanaPulangField = $('textarea.form-control.bg-light');
                 const rencanaLamaField = $('input.form-control.bg-light[type="text"]');
                 const rencanaTanggalField = $('input.form-control.bg-light[type="date"]');
@@ -1200,6 +1199,7 @@
                 function updateFormFields() {
                     const needsSpecialPlan = checkYesAnswers();
                     const fields = [rencanaPulangField, rencanaLamaField, rencanaTanggalField];
+                    let dclabel = $('#discharge-planning-label');
 
                     fields.forEach(field => {
                         if (needsSpecialPlan) {
@@ -1207,12 +1207,30 @@
                                 .removeClass('bg-light')
                                 .addClass('bg-white')
                                 .prop('required', true);
+
+                            // remove and add class label
+                            $(dclabel).removeClass('alert-warning');
+                            $(dclabel).addClass('alert-success');
+
+                            $(dclabel).removeClass('border-warning');
+                            $(dclabel).addClass('border-success');
+
+                            $(dclabel).find('small').text('Membutuhkan rencana pulang khusus')
                         } else {
                             field.prop('disabled', true)
                                 .removeClass('bg-white')
                                 .addClass('bg-light')
                                 .prop('required', false)
                                 .val(''); // Clear values when disabled
+
+                            // remove and add class label
+                            $(dclabel).removeClass('alert-success');
+                            $(dclabel).addClass('alert-warning');
+
+                            $(dclabel).removeClass('border-success');
+                            $(dclabel).addClass('border-warning');
+
+                            $(dclabel).find('small').text('Tidak membutuhkan rencana pulang khusus')
                         }
                     });
                 }
