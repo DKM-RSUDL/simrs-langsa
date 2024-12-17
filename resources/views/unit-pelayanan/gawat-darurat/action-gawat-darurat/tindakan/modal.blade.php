@@ -102,7 +102,7 @@
                                         <p class="m-0 p-0 text-primary fw-bold">laporan Hasil Tindakan</p>
                                     </label>
                                     <textarea name="laporan" id="laporan" cols="30" rows="7"
-                                        class="form-control @error('laporan') is-invalid @enderror" required></textarea>
+                                        class="form-control @error('laporan') is-invalid @enderror"></textarea>
                                 </div>
                                 @error('laporan')
                                     <div class="invalid-feedback">
@@ -119,7 +119,7 @@
                                         <p class="m-0 p-0 text-primary fw-bold">Kesimpulan</p>
                                     </label>
                                     <textarea name="kesimpulan" id="kesimpulan" cols="30" rows="5"
-                                        class="form-control @error('kesimpulan') is-invalid @enderror" required></textarea>
+                                        class="form-control @error('kesimpulan') is-invalid @enderror"></textarea>
                                 </div>
                                 @error('kesimpulan')
                                     <div class="invalid-feedback">

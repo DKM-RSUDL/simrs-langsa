@@ -156,8 +156,8 @@ class TindakanController extends Controller
             'ppa.required'              => 'PPA harus dipilih!',
             'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
             'jam_tindakan.required'     => 'Jam harus dipilih!',
-            'laporan.required'          => 'Laporan tindakan harus diisi!',
-            'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
+            // 'laporan.required'          => 'Laporan tindakan harus diisi!',
+            // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
             'gambar_tindakan.required'  => 'Gambar harus dipilih!',
             'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
             'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
@@ -168,8 +168,8 @@ class TindakanController extends Controller
             'ppa'               => 'required',
             'tgl_tindakan'      => 'required',
             'jam_tindakan'      => 'required',
-            'laporan'           => 'required',
-            'kesimpulan'        => 'required',
+            // 'laporan'           => 'required',
+            // 'kesimpulan'        => 'required',
             'gambar_tindakan'   => 'required|image|file|max:5120',
         ], $messageErr);
 
@@ -315,8 +315,8 @@ class TindakanController extends Controller
             'ppa.required'              => 'PPA harus dipilih!',
             'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
             'jam_tindakan.required'     => 'Jam harus dipilih!',
-            'laporan.required'          => 'Laporan tindakan harus diisi!',
-            'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
+            // 'laporan.required'          => 'Laporan tindakan harus diisi!',
+            // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
         ];
 
         $rules = [
@@ -324,8 +324,8 @@ class TindakanController extends Controller
             'ppa'               => 'required',
             'tgl_tindakan'      => 'required',
             'jam_tindakan'      => 'required',
-            'laporan'           => 'required',
-            'kesimpulan'        => 'required',
+            // 'laporan'           => 'required',
+            // 'kesimpulan'        => 'required',
         ];
 
         if ($request->hasFile('gambar_tindakan')) {

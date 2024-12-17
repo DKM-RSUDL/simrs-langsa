@@ -78,16 +78,16 @@ class NavigationService
 
 
             return [
-                'status' => true,
+                'status' => 'success',
                 'message' => 'Data berhasil disimpan.',
                 'role' => $navigation
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             DB::rollBack();
 
             return [
-                'status' => false,
+                'status' => 'error',
                 'message' => 'Gagal menyimpan data: ' . $e->getMessage()
             ];
         }
@@ -119,7 +119,7 @@ class NavigationService
             DB::commit();
 
             return [
-                'status' => true,
+                'status' => 'success',
                 'message' => 'Data berhasil diperbarui.'
             ];
         } catch (Exception $e) {
@@ -127,7 +127,7 @@ class NavigationService
             DB::rollBack();
 
             return [
-                'status' => false,
+                'status' => 'error',
                 'message' => $e->getMessage(),
             ];
         }
