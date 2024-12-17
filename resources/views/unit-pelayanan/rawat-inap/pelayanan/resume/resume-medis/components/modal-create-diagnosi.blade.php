@@ -56,29 +56,27 @@
 
                     // Untuk modal diagnosis
                     diagnosisList += `
-                    <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                        <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                        <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}">
-                            <i class="fas fa-times text-danger"></i>
-                        </button>
-                    </li>
-                `;
+            <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
+                <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}">
+                    <i class="fas fa-times text-danger"></i>
+                </button>
+            </li>`;
 
                     // Untuk tampilan utama dengan handle untuk drag
                     diagnoseDisplay += `
-                    <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2"
-                         id="main-${uniqueId}" data-id="${uniqueId}">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="drag-handle" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
-                        </div>
-                        <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}">
-                            <i class="fas fa-times text-danger"></i>
-                        </button>
-                    </div>
-                `;
+            <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2"
+                 id="main-${uniqueId}" data-diagnosis="${diagnosis}">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="drag-handle" style="cursor: move;">
+                        <i class="bi bi-grip-vertical"></i>
+                    </span>
+                    <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
+                </div>
+                <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}">
+                    <i class="fas fa-times text-danger"></i>
+                </button>
+            </div>`;
                 });
             }
 
@@ -95,15 +93,14 @@
                 new Sortable(diagnosisList, {
                     animation: 150,
                     handle: '.drag-handle',
-                    onEnd: function(evt) {
-                        // Update dataDiagnosis array after drag
-                        let newOrder = [];
+                    onEnd: function() {
+                        // Update dataDiagnosis array setelah drag
+                        dataDiagnosis = [];
                         $('.diagnosis-item').each(function() {
-                            let id = $(this).data('id');
-                            let index = parseInt(id.split('-')[1]);
-                            newOrder.push(dataDiagnosis[index]);
+                            let diagnosis = $(this).data('diagnosis');
+                            dataDiagnosis.push(diagnosis);
                         });
-                        dataDiagnosis = newOrder;
+                        console.log('Urutan diagnosis setelah drag:', dataDiagnosis);
                     }
                 });
             }

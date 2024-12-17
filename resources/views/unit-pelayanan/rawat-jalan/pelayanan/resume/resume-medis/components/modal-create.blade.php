@@ -506,6 +506,7 @@
             });
             return;
         }
+        console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
         formData.append('diagnosis', JSON.stringify(dataDiagnosis));
 
         // Ambil data ICD

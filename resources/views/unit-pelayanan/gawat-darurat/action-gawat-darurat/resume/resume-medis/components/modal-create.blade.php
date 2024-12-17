@@ -515,7 +515,9 @@
             });
             return;
         }
+        console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
         formData.append('diagnosis', JSON.stringify(dataDiagnosis));
+        // return false;
 
 
         // Get ICD-10 data

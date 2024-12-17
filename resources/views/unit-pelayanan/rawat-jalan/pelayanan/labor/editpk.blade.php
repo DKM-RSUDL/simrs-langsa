@@ -113,7 +113,20 @@
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
-                                <textarea class="form-control" id="diagnosis" name="diagnosis" readonly>{{ $diagnosisText ?: '-' }}</textarea>
+                                <div class="diagnosis-list">
+                                    @if(count($diagnosisList) > 0)
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach($diagnosisList as $diagnosis)
+                                                <li class="mb-2">
+                                                    <i class="fas fa-circle-notch me-2 text-primary"></i>
+                                                    {{ $diagnosis }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p class="mb-0">-</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
 
