@@ -232,7 +232,7 @@
                                 <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
-                            <div class="mt-3">
+                            {{-- <div class="mt-3">
                                 <strong class="fw-bold">
                                     Diagnosis
                                     <a href="javascript:void(0)"
@@ -243,6 +243,24 @@
                                 <div class="bg-light p-3 border rounded">
                                     <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
 
+                                    </div>
+                                </div>
+                            </div> --}}
+
+                            <div class="mt-3">
+                                <strong class="fw-bold">
+                                    Diagnosis
+                                    <a href="javascript:void(0)"
+                                        class="text-secondary text-decoration-none fw-bold ms-3" id="btn-diagnosis">
+                                        <i class="bi bi-plus-square"></i> Tambah
+                                    </a>
+                                </strong>
+
+                                <div class="bg-light p-3 border rounded">
+                                    <div style="max-height: 150px; overflow-y: auto;" id="diagnoseDisplay">
+                                        <div class="diagnosis-list">
+                                            <!-- Items will be inserted here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -340,8 +358,8 @@
                                                 data-code="2"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? 'checked' : '' }}>
                                             <label for="kontrol">Kontrol ulang, tgl:<span id="selected-date">
-                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
-                                            </span></label>
+                                                    {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
+                                                </span></label>
                                         </a>
 
                                         <a href="javascript:void(0)" id="btn-konsul-rujukan"
@@ -445,6 +463,12 @@
         // Ambil resume_id, biarkan null jika tidak ada
         const resume_id = '{{ $dataResume->id ?? null }}';
 
+        // Deklarasi di awal script
+        const previousTglKontrolUlang = '{{ $dataResume->rmeResumeDet->tgl_kontrol_ulang ?? '' }}';
+        const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
+        const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
+        const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+
         if (!resume_id) {
             Swal.fire({
                 icon: 'warning',
@@ -460,12 +484,22 @@
         formData.append('anamnesis', $('#anamnesis').val().trim());
         formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
 
-        const diagnosisArray = $('#diagnoseDisplay').children()
-            .map(function() {
-                return $(this).find('.fw-bold').text().trim();
-            }).get().filter(Boolean);
+        // const diagnosisArray = $('#diagnoseDisplay').children()
+        //     .map(function() {
+        //         return $(this).find('.fw-bold').text().trim();
+        //     }).get().filter(Boolean);
 
-        if (diagnosisArray.length === 0) {
+        // if (diagnosisArray.length === 0) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Error',
+        //         text: 'Minimal satu diagnosis harus diisi'
+        //     });
+        //     return;
+        // }
+        // formData.append('diagnosis', JSON.stringify(diagnosisArray));
+        // kode baru
+        if (dataDiagnosis.length === 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -473,7 +507,8 @@
             });
             return;
         }
-        formData.append('diagnosis', JSON.stringify(diagnosisArray));
+        console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
+        formData.append('diagnosis', JSON.stringify(dataDiagnosis));
 
         // Ambil data ICD
         const icd10Array = $('#icdList').children()

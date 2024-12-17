@@ -37,7 +37,7 @@ class RoleService
     }
 
     // store
-    public function store(array $data)
+    public function store($data)
     {
         try {
 
