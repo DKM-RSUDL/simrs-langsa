@@ -52,16 +52,16 @@ class LabPatologiKlinikController extends Controller
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->orderBy('tgl_masuk', 'desc')
             ->first();
 
-        // Jika data ada, ambil nilai array dan gabungkan
-        $diagnosisText = '';
+        // Jika data ada, ambil nilai array diagnosis
+        $diagnosisList = [];
         if ($dataDiagnosis && is_array($dataDiagnosis->diagnosis)) {
-            $diagnosisText = implode(', ', array_map(function ($item) {
-                return trim($item, '"[]'); // Menghilangkan tanda kutip dan kurung siku
-            }, $dataDiagnosis->diagnosis));
+            $diagnosisList = array_map(function ($item) {
+                return trim($item, '"[]');
+            }, $dataDiagnosis->diagnosis);
         }
 
         $search = $request->input('search');
@@ -142,7 +142,7 @@ class LabPatologiKlinikController extends Controller
             'dataDokter',
             'dataLabor',
             'dataDiagnosis',
-            'diagnosisText'
+            'diagnosisList'
         ));
     }
 

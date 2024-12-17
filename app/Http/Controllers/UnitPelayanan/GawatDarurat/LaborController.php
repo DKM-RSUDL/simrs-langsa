@@ -57,12 +57,12 @@ class LaborController extends Controller
             ->orderBy('tgl_masuk', 'desc')
             ->first();
 
-        // Jika data ada, ambil nilai array dan gabungkan
-        $diagnosisText = '';
+        // Jika data ada, ambil nilai array diagnosis
+        $diagnosisList = [];
         if ($dataDiagnosis && is_array($dataDiagnosis->diagnosis)) {
-            $diagnosisText = implode(', ', array_map(function ($item) {
-                return trim($item, '"[]'); // Menghilangkan tanda kutip dan kurung siku
-            }, $dataDiagnosis->diagnosis));
+            $diagnosisList = array_map(function ($item) {
+                return trim($item, '"[]');
+            }, $dataDiagnosis->diagnosis);
         }
 
         $search = $request->input('search');
@@ -142,7 +142,7 @@ class LaborController extends Controller
             'dataDokter',
             'dataLabor',
             'dataDiagnosis',
-            'diagnosisText'
+            'diagnosisList'
         ));
     }
 
