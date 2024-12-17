@@ -105,14 +105,19 @@
                                     value="{{ old('jadwal_pemeriksaan', $laborPK->jadwal_pemeriksaan) }}">
                             </div>
 
-                            <div class="patient-card mt-4">
+                            {{-- <div class="patient-card mt-4">
                                 <label for="diagnosis" class="form-label fw-bold h5 text-dark">Catatan
                                     Klinis/Diagnosis</label>
                                 <textarea class="form-control" id="diagnosis{{ $laborPK->kd_order }}" name="diagnosis">{{ old('diagnosis', $laborPK->diagnosis) }}</textarea>
+                            </div> --}}
+
+                            <div class="patient-card mt-4">
+                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
+                                <textarea class="form-control" id="diagnosis" name="diagnosis" readonly>{{ $diagnosisText ?: '-' }}</textarea>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="patient-card">
                                 <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                 <select id="jenis__pemeriksaan" name="jenis_pemeriksaan" class="form-select"
@@ -159,7 +164,47 @@
                                     @endif
                                 </ul>
                             </div>
+                        </div> --}}
+
+                        <div class="col-md-4">
+                            <div class="patient-card">
+                                <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                <div class="dropdown">
+                                    <input type="text" class="form-control" id="search__input"
+                                        name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
+                                        autocomplete="off">
+                                    <ul class="dropdown-menu w-100" id="data__list" aria-labelledby="searchInput"
+                                        style="display: none;"></ul>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="patient-card">
+                                <h6 class="fw-bold">Daftar Order Pemeriksaan</h6>
+                                <ul id="order__list" class="list-group">
+                                    @if (isset($laborPK->details) && $laborPK->details->count() > 0)
+                                        @foreach ($laborPK->details as $orderDetail)
+                                            <li class="list-group-item">
+                                                {{ $orderDetail->produk->deskripsi ?? 'Produk tidak ditemukan' }}
+                                                <input type="hidden" name="kd_produk[]"
+                                                    value="{{ $orderDetail->kd_produk }}" required>
+                                                <input type="hidden" name="jumlah[]"
+                                                    value="{{ (int) $orderDetail->jumlah }}">
+                                                <input type="hidden" name="status[]"
+                                                    value="{{ $orderDetail->status }}">
+                                                <input type="hidden" name="urut[]" value="{{ $loop->iteration }}"
+                                                    required>
+                                                <span class="remove-item" style="color: red; cursor: pointer;">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </span>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -173,43 +218,48 @@
 
 @push('js')
     <script>
+        // code baru
         $(document).ready(function() {
             const $searchInput = $('#search__input');
             const $dataList = $('#data__list');
             const $orderList = $('#order__list');
-            const $jenisPemeriksaanSelect = $('#jenis__pemeriksaan');
             const dataPemeriksaan = @json($DataLapPemeriksaan);
             const existingOrders = @json($laborPK->details);
-            // console.log('Data Pemeriksaan:', dataPemeriksaan);
-            // console.log('Existing Orders:', existingOrders);
 
             let urut = 1;
+            let allProducts = [];
 
-            function updateDataList(selectedCategory, inputValue = '') {
+            // Flatten the nested data structure to get all products
+            Object.values(dataPemeriksaan).forEach(category => {
+                category.forEach(item => {
+                    if (!allProducts.some(p => p.produk.kd_produk === item.produk.kd_produk)) {
+                        allProducts.push(item);
+                    }
+                });
+            });
+
+            function updateDataList(searchTerm = '') {
                 $dataList.empty();
                 const addedDescriptions = new Set();
 
-                if (dataPemeriksaan[selectedCategory]) {
-                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
-                        if ((inputValue === '' || item.produk.deskripsi.toLowerCase().includes(inputValue
-                                .toLowerCase())) &&
-                            !addedDescriptions.has(item.produk.deskripsi)) {
-                            addedDescriptions.add(item.produk.deskripsi);
-                            const $li = $('<li>');
-                            $li.html(
-                                `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
-                            );
-                            $dataList.append($li);
-                        }
-                    });
-                }
+                allProducts.forEach(item => {
+                    if ((searchTerm === '' || item.produk.deskripsi.toLowerCase().includes(searchTerm
+                            .toLowerCase())) &&
+                        !addedDescriptions.has(item.produk.deskripsi)) {
+                        addedDescriptions.add(item.produk.deskripsi);
+                        const $li = $('<li>');
+                        $li.html(
+                            `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
+                        );
+                        $dataList.append($li);
+                    }
+                });
 
                 if ($dataList.children().length > 0) {
                     $dataList.show();
                 } else {
                     $dataList.hide();
                 }
-                // console.log('Data list updated:', $dataList.children().length, 'items');
             }
 
             function addItemToOrderList(kdProduk, deskripsi, jumlah = 1, status = 1) {
@@ -217,24 +267,26 @@
                 const existingItem = $orderList.find(`input[name="kd_produk[]"][value="${kdProduk}"]`).closest(
                     'li');
                 if (existingItem.length) {
-                    // console.log('Item already exists in order list:', deskripsi);
-                    return; // If item exists, don't add it again
+                    return;
                 }
+
+                // Ensure jumlah and status are integers
+                const parsedJumlah = parseInt(jumlah) || 1;
+                const parsedStatus = parseInt(status) || 1;
 
                 const $listItem = $('<li>').addClass('list-group-item');
                 $listItem.html(`
             ${deskripsi}
             <input type="hidden" name="kd_produk[]" value="${kdProduk}" required>
-            <input type="hidden" name="jumlah[]" value="${jumlah}">
-            <input type="hidden" name="status[]" value="${status}">
+            <input type="hidden" name="jumlah[]" value="${parsedJumlah}">
+            <input type="hidden" name="status[]" value="${parsedStatus}">
             <input type="hidden" name="urut[]" value="${urut}" required>
             <span class="remove-item" style="color: red; cursor: pointer;">
                 <i class="bi bi-x-circle"></i>
             </span>
-            `);
+        `);
                 $orderList.append($listItem);
                 urut++;
-                // console.log('Item added to order list:', deskripsi);
             }
 
             function populateOrderList() {
@@ -242,35 +294,35 @@
                 urut = 1;
                 if (existingOrders && existingOrders.length > 0) {
                     existingOrders.forEach(function(order) {
-                        addItemToOrderList(order.kd_produk, order.produk.deskripsi, order.jumlah, order
-                            .status);
+                        // Ensure jumlah and status are properly parsed
+                        const jumlah = parseInt(order.jumlah) || 1;
+                        const status = parseInt(order.status) || 1;
+                        addItemToOrderList(
+                            order.kd_produk,
+                            order.produk.deskripsi,
+                            jumlah,
+                            status
+                        );
                     });
                 }
-                // console.log('Order list populated with', existingOrders.length, 'items');
             }
 
-            $jenisPemeriksaanSelect.off('change').on('change', function() {
-                const selectedCategory = $(this).val();
-                // console.log('Selected category:', selectedCategory);
-                updateDataList(selectedCategory);
+            $searchInput.on('input', function() {
+                const inputValue = $(this).val();
+                updateDataList(inputValue);
             });
 
-            $searchInput.off('input').on('input', function() {
-                const inputValue = $(this).val().toLowerCase();
-                const selectedCategory = $jenisPemeriksaanSelect.val();
-                if (selectedCategory) {
-                    updateDataList(selectedCategory, inputValue);
-                }
+            $searchInput.on('focus', function() {
+                updateDataList();
             });
 
-            $dataList.off('click', '.dropdown-item').on('click', '.dropdown-item', function(e) {
+            $dataList.on('click', '.dropdown-item', function(e) {
                 e.preventDefault();
                 const selectedItemText = $(this).text();
                 const kdProduk = $(this).attr('data-kd-produk');
-                // console.log('Selected product:', kdProduk, selectedItemText);
 
                 if (kdProduk) {
-                    addItemToOrderList(kdProduk, selectedItemText);
+                    addItemToOrderList(kdProduk, selectedItemText, 1, 1);
                     $searchInput.val('');
                     $dataList.hide();
                 } else {
@@ -278,10 +330,9 @@
                 }
             });
 
-            $orderList.off('click', '.remove-item').on('click', '.remove-item', function() {
+            $orderList.on('click', '.remove-item', function() {
                 $(this).closest('li').remove();
                 updateUrut();
-                console.log('Item removed from order list');
             });
 
             function updateUrut() {
@@ -290,54 +341,17 @@
                     $(this).find('input[name="urut[]"]').val(urut);
                     urut++;
                 });
-                console.log('Urut updated');
             }
 
-            $(document).off('click.hideDataList').on('click.hideDataList', function(event) {
+            $(document).on('click', function(event) {
                 if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
                     $dataList.hide();
                 }
             });
 
-            // Set initial jenis pemeriksaan if available
-            if (existingOrders && existingOrders.length > 0) {
-                const firstOrder = existingOrders[0];
-                const kategori = Object.keys(dataPemeriksaan).find(key =>
-                    dataPemeriksaan[key].some(item => item.produk.kd_produk === firstOrder.kd_produk)
-                );
-                if (kategori) {
-                    $jenisPemeriksaanSelect.val(kategori).trigger('change');
-                    // console.log('Initial category set:', kategori);
-                }
-            }
-
-            // Show data list when search input is focused
-            $searchInput.off('focus').on('focus', function() {
-                const selectedCategory = $jenisPemeriksaanSelect.val();
-                if (selectedCategory) {
-                    updateDataList(selectedCategory);
-                }
-            });
+            // Initialize the list with existing orders
+            populateOrderList();
         });
-
-        // sweetalert hapus data
-        function confirmDelete(orderId) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Data ini tidak bisa dikembalikan setelah dihapus!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit form jika pengguna mengonfirmasi penghapusan
-                    document.getElementById('delete-form-' + orderId).submit();
-                }
-            });
-        }
 
         $('.modal-edit-labor').on('shown.bs.modal', function() {
             let $this = $(this);
@@ -346,5 +360,179 @@
                 e.preventDefault();
             });
         });
+        // code lama
+        // $(document).ready(function() {
+        //     const $searchInput = $('#search__input');
+        //     const $dataList = $('#data__list');
+        //     const $orderList = $('#order__list');
+        //     const $jenisPemeriksaanSelect = $('#jenis__pemeriksaan');
+        //     const dataPemeriksaan = @json($DataLapPemeriksaan);
+        //     const existingOrders = @json($laborPK->details);
+        //     // console.log('Data Pemeriksaan:', dataPemeriksaan);
+        //     // console.log('Existing Orders:', existingOrders);
+
+        //     let urut = 1;
+
+        //     function updateDataList(selectedCategory, inputValue = '') {
+        //         $dataList.empty();
+        //         const addedDescriptions = new Set();
+
+        //         if (dataPemeriksaan[selectedCategory]) {
+        //             $.each(dataPemeriksaan[selectedCategory], function(index, item) {
+        //                 if ((inputValue === '' || item.produk.deskripsi.toLowerCase().includes(inputValue
+        //                         .toLowerCase())) &&
+        //                     !addedDescriptions.has(item.produk.deskripsi)) {
+        //                     addedDescriptions.add(item.produk.deskripsi);
+        //                     const $li = $('<li>');
+        //                     $li.html(
+        //                         `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
+        //                     );
+        //                     $dataList.append($li);
+        //                 }
+        //             });
+        //         }
+
+        //         if ($dataList.children().length > 0) {
+        //             $dataList.show();
+        //         } else {
+        //             $dataList.hide();
+        //         }
+        //         // console.log('Data list updated:', $dataList.children().length, 'items');
+        //     }
+
+        //     function addItemToOrderList(kdProduk, deskripsi, jumlah = 1, status = 1) {
+        //         // Check if item already exists in the list
+        //         const existingItem = $orderList.find(`input[name="kd_produk[]"][value="${kdProduk}"]`).closest(
+        //             'li');
+        //         if (existingItem.length) {
+        //             // console.log('Item already exists in order list:', deskripsi);
+        //             return; // If item exists, don't add it again
+        //         }
+
+        //         const $listItem = $('<li>').addClass('list-group-item');
+        //         $listItem.html(`
+    //     ${deskripsi}
+    //     <input type="hidden" name="kd_produk[]" value="${kdProduk}" required>
+    //     <input type="hidden" name="jumlah[]" value="${jumlah}">
+    //     <input type="hidden" name="status[]" value="${status}">
+    //     <input type="hidden" name="urut[]" value="${urut}" required>
+    //     <span class="remove-item" style="color: red; cursor: pointer;">
+    //         <i class="bi bi-x-circle"></i>
+    //     </span>
+    //     `);
+        //         $orderList.append($listItem);
+        //         urut++;
+        //         // console.log('Item added to order list:', deskripsi);
+        //     }
+
+        //     function populateOrderList() {
+        //         $orderList.empty();
+        //         urut = 1;
+        //         if (existingOrders && existingOrders.length > 0) {
+        //             existingOrders.forEach(function(order) {
+        //                 addItemToOrderList(order.kd_produk, order.produk.deskripsi, order.jumlah, order
+        //                     .status);
+        //             });
+        //         }
+        //         // console.log('Order list populated with', existingOrders.length, 'items');
+        //     }
+
+        //     $jenisPemeriksaanSelect.off('change').on('change', function() {
+        //         const selectedCategory = $(this).val();
+        //         // console.log('Selected category:', selectedCategory);
+        //         updateDataList(selectedCategory);
+        //     });
+
+        //     $searchInput.off('input').on('input', function() {
+        //         const inputValue = $(this).val().toLowerCase();
+        //         const selectedCategory = $jenisPemeriksaanSelect.val();
+        //         if (selectedCategory) {
+        //             updateDataList(selectedCategory, inputValue);
+        //         }
+        //     });
+
+        //     $dataList.off('click', '.dropdown-item').on('click', '.dropdown-item', function(e) {
+        //         e.preventDefault();
+        //         const selectedItemText = $(this).text();
+        //         const kdProduk = $(this).attr('data-kd-produk');
+        //         // console.log('Selected product:', kdProduk, selectedItemText);
+
+        //         if (kdProduk) {
+        //             addItemToOrderList(kdProduk, selectedItemText);
+        //             $searchInput.val('');
+        //             $dataList.hide();
+        //         } else {
+        //             console.error('Error: kd_produk is undefined');
+        //         }
+        //     });
+
+        //     $orderList.off('click', '.remove-item').on('click', '.remove-item', function() {
+        //         $(this).closest('li').remove();
+        //         updateUrut();
+        //         console.log('Item removed from order list');
+        //     });
+
+        //     function updateUrut() {
+        //         urut = 1;
+        //         $orderList.find('li').each(function() {
+        //             $(this).find('input[name="urut[]"]').val(urut);
+        //             urut++;
+        //         });
+        //         console.log('Urut updated');
+        //     }
+
+        //     $(document).off('click.hideDataList').on('click.hideDataList', function(event) {
+        //         if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
+        //             $dataList.hide();
+        //         }
+        //     });
+
+        //     // Set initial jenis pemeriksaan if available
+        //     if (existingOrders && existingOrders.length > 0) {
+        //         const firstOrder = existingOrders[0];
+        //         const kategori = Object.keys(dataPemeriksaan).find(key =>
+        //             dataPemeriksaan[key].some(item => item.produk.kd_produk === firstOrder.kd_produk)
+        //         );
+        //         if (kategori) {
+        //             $jenisPemeriksaanSelect.val(kategori).trigger('change');
+        //             // console.log('Initial category set:', kategori);
+        //         }
+        //     }
+
+        //     // Show data list when search input is focused
+        //     $searchInput.off('focus').on('focus', function() {
+        //         const selectedCategory = $jenisPemeriksaanSelect.val();
+        //         if (selectedCategory) {
+        //             updateDataList(selectedCategory);
+        //         }
+        //     });
+        // });
+
+        // // sweetalert hapus data
+        // function confirmDelete(orderId) {
+        //     Swal.fire({
+        //         title: 'Apakah Anda yakin?',
+        //         text: 'Data ini tidak bisa dikembalikan setelah dihapus!',
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Ya, hapus!',
+        //         cancelButtonText: 'Batal'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             // Submit form jika pengguna mengonfirmasi penghapusan
+        //             document.getElementById('delete-form-' + orderId).submit();
+        //         }
+        //     });
+        // }
+
+        // $('.modal-edit-labor').on('shown.bs.modal', function() {
+        //     let $this = $(this);
+
+        //     $this.find('#kd_dokter').mousedown(function(e) {
+        //         e.preventDefault();
+        //     });
+        // });
     </script>
 @endpush
