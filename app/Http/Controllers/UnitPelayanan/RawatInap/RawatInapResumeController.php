@@ -195,7 +195,12 @@ class RawatInapResumeController extends Controller
                 'icd_9' => 'required|json',
                 'alergi' => 'nullable|json',
                 'tindak_lanjut_code' => 'required',
-                'tindak_lanjut_name' => 'required'
+                'tindak_lanjut_name' => 'required',
+                'tgl_kontrol_ulang' => 'nullable|string',
+                'rs_rujuk' => 'nullable|string',
+                'rs_rujuk_bagian' => 'nullable|string',
+                'unit_rujuk_internal' => 'nullable|string',
+                'unit_rawat_inap' => 'nullable|string',
             ]);
 
             if ($validator->fails()) {
@@ -251,7 +256,12 @@ class RawatInapResumeController extends Controller
                 ['id_resume' => $id],
                 [
                     'tindak_lanjut_name' => trim($request->tindak_lanjut_name),
-                    'tindak_lanjut_code' => $request->tindak_lanjut_code
+                    'tindak_lanjut_code' => $request->tindak_lanjut_code,
+                    'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
+                    'rs_rujuk' => $request->rs_rujuk,
+                    'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+                    'unit_rujuk_internal' => $request->unit_rujuk_internal,
+                    'unit_rawat_inap' => $request->unit_rawat_inap
                 ]
             );
 
