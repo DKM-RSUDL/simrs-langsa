@@ -270,8 +270,12 @@
                                                     <div class="row mb-3">
                                                         <div class="col-2 position-relative">
                                                             <label>GCS</label>
-                                                            <input type="text" class="form-control" id="gcsValue" name="vital_sign[gcs_display]" value="15" readonly onclick="openGCSModal()">
-                                                            <i class="bi bi-pencil position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);" onclick="openGCSModal()"></i>
+                                                            <input type="text" class="form-control" id="gcsValue"
+                                                                name="vital_sign[gcs_display]" value="15" readonly
+                                                                onclick="openGCSModal()">
+                                                            <i class="bi bi-pencil position-absolute"
+                                                                style="top: 50%; right: 10px; transform: translateY(-50%);"
+                                                                onclick="openGCSModal()"></i>
                                                             @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-gcs')
                                                         </div>
 
@@ -361,74 +365,122 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <label for="manjalar">Manjalar</label>
-                                                        <select id="manjalar" class="form-select" name="menjalar">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($menjalar as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col mt-3">
-                                                        <label for="frekuensi">Frekuensi</label>
-                                                        <select id="frekuensi" class="form-select" name="frekuensi">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($frekuensinyeri as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col mt-3">
-                                                        <label for="kualitas">Kualitas</label>
-                                                        <select id="kualitas" class="form-select" name="kualitas">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($kualitasnyeri as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col mt-3">
-                                                        <label for="faktor-pemberat">Faktor Pemberat</label>
-                                                        <select id="faktor-pemberat" class="form-select"
-                                                            name="faktor_pemberat">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($faktorpemberat as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col mt-3">
-                                                        <label for="faktor-peringanan">Faktor Peringanan</label>
-                                                        <select id="faktor-peringanan" class="form-select"
-                                                            name="faktor_peringan">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($faktorperingan as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col mt-3">
-                                                        <label for="efek-nyeri">Efek Nyeri</label>
-                                                        <select id="efek-nyeri" class="form-select"
-                                                            name="efek_nyeri">
-                                                            <option selected disabled>Pilih</option>
-                                                            @foreach ($efeknyeri as $option)
-                                                                <option value="{{ $option->id }}">
-                                                                    {{ $option->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                    <div class="row mt-3">
+                                                        <!-- Manjalar -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Manjalar</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($menjalar as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="menjalar"
+                                                                            id="manjalar-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="manjalar-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Frekuensi -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Frekuensi</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($frekuensinyeri as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="frekuensi"
+                                                                            id="frekuensi-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="frekuensi-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Kualitas -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Kualitas</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($kualitasnyeri as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="kualitas"
+                                                                            id="kualitas-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="kualitas-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Faktor Pemberat -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Faktor
+                                                                Pemberat</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($faktorpemberat as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="faktor_pemberat"
+                                                                            id="pemberat-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="pemberat-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Faktor Peringanan -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Faktor
+                                                                Peringanan</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($faktorperingan as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="faktor_peringan"
+                                                                            id="peringan-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="peringan-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Efek Nyeri -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label fw-bold mb-2">Efek Nyeri</label>
+                                                            <div class="karakteristik-nyeri">
+                                                                @foreach ($efeknyeri as $option)
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="efek_nyeri"
+                                                                            id="efek-{{ $option->id }}"
+                                                                            value="{{ $option->id }}">
+                                                                        <label class="form-check-label"
+                                                                            for="efek-{{ $option->id }}">
+                                                                            {{ $option->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -454,7 +506,8 @@
                                                                                 <div class="form-check me-2">
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input"
-                                                                                        id="{{ $item->id }}-normal-index" checked>
+                                                                                        id="{{ $item->id }}-normal-index"
+                                                                                        checked>
                                                                                     <label class="form-check-label"
                                                                                         for="{{ $item->id }}-normal-index">Normal</label>
                                                                                 </div>
