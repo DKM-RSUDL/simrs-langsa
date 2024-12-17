@@ -41,10 +41,11 @@
         $('#modal-create-diagnosis').modal('show');
     });
 
+    // kode baru :
     let dataDiagnosis = @json($dataResume->diagnosis ?? []);
-    // console.log(dataDiagnosis);
 
     $(document).ready(function() {
+        // Fungsi untuk menampilkan diagnosis
         function displayDiagnosis() {
             let diagnosisList = '';
             let diagnoseDisplay = '';
@@ -53,33 +54,71 @@
                 dataDiagnosis.forEach((diagnosis, index) => {
                     let uniqueId = 'diagnosis-' + index;
 
+                    // Untuk modal diagnosis
                     diagnosisList += `
                     <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
                         <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                        <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
+                        <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}">
+                            <i class="fas fa-times text-danger"></i>
+                        </button>
                     </li>
                 `;
 
+                    // Untuk tampilan utama dengan handle untuk drag
                     diagnoseDisplay += `
-                    <div class="d-flex justify-content-between align-items-center" id="main-${uniqueId}">
-                        <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
-                        <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
-                    </div><br>
+                    <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2"
+                         id="main-${uniqueId}" data-id="${uniqueId}">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="drag-handle" style="cursor: move;">
+                                <i class="bi bi-grip-vertical"></i>
+                            </span>
+                            <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
+                        </div>
+                        <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}">
+                            <i class="fas fa-times text-danger"></i>
+                        </button>
+                    </div>
                 `;
                 });
             }
 
             $('#diagnosisList').html(diagnosisList);
-            $('#diagnoseDisplay').html(diagnoseDisplay);
+            $('.diagnosis-list').html(diagnoseDisplay);
+
+            // Initialize Sortable
+            initializeSortable();
         }
 
+        function initializeSortable() {
+            let diagnosisList = document.querySelector('.diagnosis-list');
+            if (diagnosisList) {
+                new Sortable(diagnosisList, {
+                    animation: 150,
+                    handle: '.drag-handle',
+                    onEnd: function(evt) {
+                        // Update dataDiagnosis array after drag
+                        let newOrder = [];
+                        $('.diagnosis-item').each(function() {
+                            let id = $(this).data('id');
+                            let index = parseInt(id.split('-')[1]);
+                            newOrder.push(dataDiagnosis[index]);
+                        });
+                        dataDiagnosis = newOrder;
+                    }
+                });
+            }
+        }
+
+        // Panggil fungsi saat dokumen siap
         displayDiagnosis();
 
+        // Tampilkan diagnosis saat modal dibuka
         $('#btn-diagnosis').on('click', function() {
             displayDiagnosis();
             $('#modal-create-diagnosis').modal('show');
         });
 
+        // Add diagnosis ke modal
         $('#btnAddDiagnosis').click(function() {
             var diagnosis = $('#searchDiagnosisInput').val();
 
@@ -90,6 +129,15 @@
             }
         });
 
+        // Enter key pada input diagnosis
+        $('#searchDiagnosisInput').keypress(function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#btnAddDiagnosis').click();
+            }
+        });
+
+        // Open edit modal
         $(document).on('click', '.edit-diagnosis', function() {
             var diagnosisId = $(this).data('id');
             var index = diagnosisId.split('-')[1];
@@ -101,6 +149,7 @@
             $('#modal-daftar-input-diagnosis').modal('show');
         });
 
+        // Save edit diagnosis
         $('#btnUpdateDiagnosis').click(function() {
             var updatedDiagnosis = $('#editDiagnosisTextarea').val();
             var index = $('#editDiagnosisId').val();
@@ -111,6 +160,7 @@
             $('#modal-daftar-input-diagnosis').modal('hide');
         });
 
+        // Remove diagnosis
         $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
             var diagnosisId = $(this).data('id');
             var index = diagnosisId.split('-')[1];
@@ -119,9 +169,95 @@
             displayDiagnosis();
         });
 
+        // Save diagnosis
         $('#btnSaveDiagnose').click(function() {
             displayDiagnosis();
             $('#modal-create-diagnosis').modal('hide');
         });
     });
+
+    // code lama
+    // let dataDiagnosis = @json($dataResume->diagnosis ?? []);
+    // // console.log(dataDiagnosis);
+
+    // $(document).ready(function() {
+    //     function displayDiagnosis() {
+    //         let diagnosisList = '';
+    //         let diagnoseDisplay = '';
+
+    //         if (dataDiagnosis && Array.isArray(dataDiagnosis)) {
+    //             dataDiagnosis.forEach((diagnosis, index) => {
+    //                 let uniqueId = 'diagnosis-' + index;
+
+    //                 diagnosisList += `
+    //                 <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+    //                     <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
+    //                     <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
+    //                 </li>
+    //             `;
+
+    //                 diagnoseDisplay += `
+    //                 <div class="d-flex justify-content-between align-items-center" id="main-${uniqueId}">
+    //                     <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
+    //                     <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}"><i class="fas fa-times text-danger"></i></button>
+    //                 </div><br>
+    //             `;
+    //             });
+    //         }
+
+    //         $('#diagnosisList').html(diagnosisList);
+    //         $('#diagnoseDisplay').html(diagnoseDisplay);
+    //     }
+
+    //     displayDiagnosis();
+
+    //     $('#btn-diagnosis').on('click', function() {
+    //         displayDiagnosis();
+    //         $('#modal-create-diagnosis').modal('show');
+    //     });
+
+    //     $('#btnAddDiagnosis').click(function() {
+    //         var diagnosis = $('#searchDiagnosisInput').val();
+
+    //         if (diagnosis !== '') {
+    //             dataDiagnosis.push(diagnosis);
+    //             displayDiagnosis();
+    //             $('#searchDiagnosisInput').val('');
+    //         }
+    //     });
+
+    //     $(document).on('click', '.edit-diagnosis', function() {
+    //         var diagnosisId = $(this).data('id');
+    //         var index = diagnosisId.split('-')[1];
+    //         var diagnosisText = dataDiagnosis[index];
+
+    //         $('#editDiagnosisTextarea').val(diagnosisText);
+    //         $('#editDiagnosisId').val(index);
+
+    //         $('#modal-daftar-input-diagnosis').modal('show');
+    //     });
+
+    //     $('#btnUpdateDiagnosis').click(function() {
+    //         var updatedDiagnosis = $('#editDiagnosisTextarea').val();
+    //         var index = $('#editDiagnosisId').val();
+
+    //         dataDiagnosis[index] = updatedDiagnosis;
+    //         displayDiagnosis();
+
+    //         $('#modal-daftar-input-diagnosis').modal('hide');
+    //     });
+
+    //     $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
+    //         var diagnosisId = $(this).data('id');
+    //         var index = diagnosisId.split('-')[1];
+
+    //         dataDiagnosis.splice(index, 1);
+    //         displayDiagnosis();
+    //     });
+
+    //     $('#btnSaveDiagnose').click(function() {
+    //         displayDiagnosis();
+    //         $('#modal-create-diagnosis').modal('hide');
+    //     });
+    // });
 </script>
