@@ -160,6 +160,7 @@ class AsesmenController extends Controller
                         'tindakan_resusitasi' => $tindakanResusitasi,
                         'anamnesis' => $asesmen->anamnesis,
                         'riwayat_penyakit' => $asesmen->riwayat_penyakit,
+                        'riwayat_penyakit_keluarga' => $asesmen->riwayat_penyakit_keluarga,
                         'riwayat_pengobatan' => $asesmen->riwayat_pengobatan,
                         'riwayat_alergi' => $riwayatAlergi,
                         'vital_sign' => json_decode($asesmen->vital_sign, true),
@@ -213,6 +214,7 @@ class AsesmenController extends Controller
                 'lokasi' => $request->lokasi,
                 'durasi' => $request->durasi,
                 'riwayat_penyakit' => $request->riwayat_penyakit,
+                'riwayat_penyakit_keluarga' => $request->riwayat_penyakit_keluarga,
                 'riwayat_pengobatan' => $request->riwayat_pengobatan,
                 'vital_sign' => json_encode($request->vital_sign),
                 'antropometri' => json_encode($request->antropometri),
@@ -542,6 +544,7 @@ class AsesmenController extends Controller
             $asesmen->tindakan_resusitasi = $request->tindakan_resusitasi;
             $asesmen->anamnesis = $request->anamnesis;
             $asesmen->riwayat_penyakit = $request->riwayat_penyakit;
+            $asesmen->riwayat_penyakit_keluarga = $request->riwayat_penyakit_keluarga;
             $asesmen->riwayat_pengobatan = $request->riwayat_pengobatan;
             $asesmen->riwayat_alergi = $request->riwayat_alergi;
             $asesmen->vital_sign = $request->vital_sign;

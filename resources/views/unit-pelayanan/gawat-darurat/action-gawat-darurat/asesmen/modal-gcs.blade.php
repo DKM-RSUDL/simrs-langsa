@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label>E: Eye</label><br>
-                    <input type="radio" name="gcs_eye" value="4" data-text="Spontan"> Spontan<br>
+                    <input type="radio" name="gcs_eye" value="4" data-text="Spontan" checked> Spontan<br>
                     <input type="radio" name="gcs_eye" value="3" data-text="Reaksi thd suara"> Reaksi thd
                     suara<br>
                     <input type="radio" name="gcs_eye" value="2" data-text="Reaksi thd tekanan"> Reaksi thd
@@ -19,7 +19,7 @@
 
                 <div class="mb-3 mt-3">
                     <label>V: Verbal</label><br>
-                    <input type="radio" name="gcs_verbal" value="5" data-text="Normal/berceloteh">
+                    <input type="radio" name="gcs_verbal" value="5" data-text="Normal/berceloteh" checked>
                     Normal/berceloteh<br>
                     <input type="radio" name="gcs_verbal" value="4" data-text="Bingung/menangis iritasi">
                     Bingung/menangis iritasi<br>
@@ -33,7 +33,7 @@
                 <div class="mb-3 mt-3">
                     <label>M: Motoric</label><br>
                     <input type="radio" name="gcs_motoric" value="6"
-                        data-text="Mematuhi perintah/gerakan spontan"> Mematuhi perintah/gerakan spontan<br>
+                        data-text="Mematuhi perintah/gerakan spontan" checked> Mematuhi perintah/gerakan spontan<br>
                     <input type="radio" name="gcs_motoric" value="5"
                         data-text="Melokalisasi nyeri/menghindari sentuhan"> Melokalisasi nyeri/menghindari sentuhan<br>
                     <input type="radio" name="gcs_motoric" value="4" data-text="Fleksi"> Fleksi<br>

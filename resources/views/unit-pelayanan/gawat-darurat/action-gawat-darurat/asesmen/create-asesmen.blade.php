@@ -199,8 +199,14 @@
 
                                                 <div class="form-line">
                                                     <h6>Riwayat Penyakit Pasien</h6>
-                                                    <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit"
+                                                    <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit"
                                                         placeholder="Isikan riwayat penyakit pasien"></textarea>
+                                                </div>
+
+                                                <div class="form-line">
+                                                    <h6>Riwayat Penyakit Keluarga Pasien</h6>
+                                                    <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit_keluarga"
+                                                        placeholder="Isikan riwayat penyakit keluarga pasien"></textarea>
                                                 </div>
 
                                                 <div class="form-line">
@@ -264,12 +270,8 @@
                                                     <div class="row mb-3">
                                                         <div class="col-2 position-relative">
                                                             <label>GCS</label>
-                                                            <input type="text" class="form-control" id="gcsValue"
-                                                                name="vital_sign[gcs_display]" readonly
-                                                                onclick="openGCSModal()">
-                                                            <i class="bi bi-pencil position-absolute"
-                                                                style="top: 50%; right: 10px; transform: translateY(-50%);"
-                                                                onclick="openGCSModal()"></i>
+                                                            <input type="text" class="form-control" id="gcsValue" name="vital_sign[gcs_display]" value="15" readonly onclick="openGCSModal()">
+                                                            <i class="bi bi-pencil position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);" onclick="openGCSModal()"></i>
                                                             @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-gcs')
                                                         </div>
 
@@ -452,7 +454,7 @@
                                                                                 <div class="form-check me-2">
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input"
-                                                                                        id="{{ $item->id }}-normal-index">
+                                                                                        id="{{ $item->id }}-normal-index" checked>
                                                                                     <label class="form-check-label"
                                                                                         for="{{ $item->id }}-normal-index">Normal</label>
                                                                                 </div>
