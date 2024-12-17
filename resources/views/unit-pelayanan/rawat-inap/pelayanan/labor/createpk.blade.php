@@ -106,13 +106,30 @@
                                 </div>
                             </div>
 
-                            <div class="patient-card mt-4">
+                            {{-- <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
                                 <textarea class="form-control" id="diagnosis" name="diagnosis">{{ old('diagnosis') }}</textarea>
+                            </div> --}}
+                            <div class="patient-card mt-4">
+                                <h6 class="fw-bold">Catatan Klinis/Diagnosis</h6>
+                                <div class="diagnosis-list">
+                                    @if(count($diagnosisList) > 0)
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach($diagnosisList as $diagnosis)
+                                                <li class="mb-2">
+                                                    <i class="fas fa-circle-notch me-2 text-primary"></i>
+                                                    {{ $diagnosis }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p class="mb-0">-</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="patient-card">
                                 <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
                                 <select id="jenis_pemeriksaan" name="jenis_pemeriksaan" class="form-select"
@@ -129,6 +146,19 @@
                                 <div class="dropdown mt-3">
                                     <input type="text" class="form-control mt-3" id="searchInput"
                                         placeholder="Cari produk..." autocomplete="off">
+                                    <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
+                                        style="display: none;"></ul>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="col-md-4">
+                            <div class="patient-card">
+                                <p class="fw-bold">Pilih Jenis Pemeriksaan</p>
+                                <div class="dropdown mt-3">
+                                    <input type="text" class="form-control" id="searchInput"
+                                        name="jenis_pemeriksaan" placeholder="Cari pemeriksaan..."
+                                        autocomplete="off">
                                     <ul class="dropdown-menu w-100" id="dataList" aria-labelledby="searchInput"
                                         style="display: none;"></ul>
                                 </div>
@@ -154,99 +184,77 @@
 
 @push('js')
     <script>
+        // code baru
         $(document).ready(function() {
             const $searchInput = $('#searchInput');
             const $dataList = $('#dataList');
             const $orderList = $('#orderList');
-            const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
             const dataPemeriksaan = @json($DataLapPemeriksaan);
-            // console.log(dataPemeriksaan);
 
             let urut = 1;
+            let allProducts = [];
 
-            $searchInput.on('focus', function() {
-                if ($jenisPemeriksaanSelect.val()) {
-                    $dataList.show();
-                }
+            // Flatten the nested data structure to get all products
+            Object.values(dataPemeriksaan).forEach(category => {
+                category.forEach(item => {
+                    if (!allProducts.some(p => p.produk.kd_produk === item.produk.kd_produk)) {
+                        allProducts.push(item);
+                    }
+                });
             });
 
-            $jenisPemeriksaanSelect.on('change', function() {
-                const selectedCategory = $(this).val();
-                // console.log(selectedCategory);
-
-                $dataList.empty();
-                const addedDescriptions = new Set();
-
-                if (dataPemeriksaan[selectedCategory]) {
-                    $.each(dataPemeriksaan[selectedCategory], function(index, item) {
-                        if (!addedDescriptions.has(item.produk.deskripsi)) {
-                            addedDescriptions.add(item.produk
-                                .deskripsi);
-                            const $li = $('<li>');
-                            $li.html(
-                                `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
-                            );
-                            $dataList.append($li);
-                        }
-                    });
-                }
-
-                $searchInput.val('');
-                $dataList.show();
+            $searchInput.on('focus', function() {
+                showFilteredProducts('');
             });
 
             $searchInput.on('input', function() {
                 const inputValue = $(this).val().toLowerCase();
-                $dataList.empty();
-
-                if ($jenisPemeriksaanSelect.val()) {
-                    const selectedCategory = $jenisPemeriksaanSelect.val();
-                    const addedDescriptions =
-                        new Set();
-
-                    if (dataPemeriksaan[selectedCategory]) {
-                        $.each(dataPemeriksaan[selectedCategory], function(index, item) {
-                            if (item.produk.deskripsi.toLowerCase().includes(inputValue) && !
-                                addedDescriptions.has(item.produk.deskripsi)) {
-                                addedDescriptions.add(item.produk
-                                    .deskripsi);
-                                const $li = $('<li>');
-                                $li.html(
-                                    `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
-                                );
-                                $dataList.append($li);
-                            }
-                        });
-                    }
-
-                    if ($dataList.children().length > 0) {
-                        $dataList.show();
-                    } else {
-                        $dataList.hide();
-                    }
-                }
+                showFilteredProducts(inputValue);
             });
+
+            function showFilteredProducts(searchTerm) {
+                $dataList.empty();
+                const addedDescriptions = new Set();
+
+                allProducts.forEach(item => {
+                    if (item.produk.deskripsi.toLowerCase().includes(searchTerm) &&
+                        !addedDescriptions.has(item.produk.deskripsi)) {
+
+                        addedDescriptions.add(item.produk.deskripsi);
+                        const $li = $('<li>');
+                        $li.html(
+                            `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
+                        );
+                        $dataList.append($li);
+                    }
+                });
+
+                if ($dataList.children().length > 0) {
+                    $dataList.show();
+                } else {
+                    $dataList.hide();
+                }
+            }
 
             $dataList.on('click', '.dropdown-item', function(e) {
                 e.preventDefault();
 
                 const selectedItemText = $(this).text();
                 const kdProduk = $(this).attr('data-kd-produk');
-                // console.log(kdProduk);
 
                 if (kdProduk) {
                     const $listItem = $('<li>').addClass('list-group-item');
 
                     $listItem.html(`
-                    ${selectedItemText}
-                    <input type="hidden" name="kd_produk[]" value="${kdProduk}">
-                    <input type="hidden" name="jumlah[]" value="1">
-                    <input type="hidden" name="status[]" value="1">
-                    <input type="hidden" name="urut[]" value="${urut}">
-                    <span class="remove-item" style="color: red; cursor: pointer;">
-                        <i class="bi bi-x-circle"></i>
-                    </span>
-                `);
+                ${selectedItemText}
+                <input type="hidden" name="kd_produk[]" value="${kdProduk}">
+                <input type="hidden" name="jumlah[]" value="1">
+                <input type="hidden" name="status[]" value="1">
+                <input type="hidden" name="urut[]" value="${urut}">
+                <span class="remove-item" style="color: red; cursor: pointer;">
+                    <i class="bi bi-x-circle"></i>
+                </span>
+            `);
 
                     $orderList.append($listItem);
                     urut++;
@@ -254,7 +262,6 @@
                     $listItem.find('.remove-item').on('click', function() {
                         $(this).closest('li').remove();
                         urut--;
-                        // console.log(urut);
                     });
 
                     $searchInput.val('');
@@ -271,12 +278,138 @@
             });
         });
 
-        $('#addLaborModal').on('shown.bs.modal', function() {
+        $('#addLaborModal').on('shown.bs.modal', function(e) {
             let $this = $(this);
 
             $this.find('#kd_dokter').mousedown(function(e) {
                 e.preventDefault();
             });
         });
+
+        // code lama
+        // $(document).ready(function() {
+        //     const $searchInput = $('#searchInput');
+        //     const $dataList = $('#dataList');
+        //     const $orderList = $('#orderList');
+        //     const $jenisPemeriksaanSelect = $('#jenis_pemeriksaan');
+        //     const dataPemeriksaan = @json($DataLapPemeriksaan);
+        //     // console.log(dataPemeriksaan);
+
+        //     let urut = 1;
+
+        //     $searchInput.on('focus', function() {
+        //         if ($jenisPemeriksaanSelect.val()) {
+        //             $dataList.show();
+        //         }
+        //     });
+
+        //     $jenisPemeriksaanSelect.on('change', function() {
+        //         const selectedCategory = $(this).val();
+        //         // console.log(selectedCategory);
+
+        //         $dataList.empty();
+        //         const addedDescriptions = new Set();
+
+        //         if (dataPemeriksaan[selectedCategory]) {
+        //             $.each(dataPemeriksaan[selectedCategory], function(index, item) {
+        //                 if (!addedDescriptions.has(item.produk.deskripsi)) {
+        //                     addedDescriptions.add(item.produk
+        //                         .deskripsi);
+        //                     const $li = $('<li>');
+        //                     $li.html(
+        //                         `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
+        //                     );
+        //                     $dataList.append($li);
+        //                 }
+        //             });
+        //         }
+
+        //         $searchInput.val('');
+        //         $dataList.show();
+        //     });
+
+        //     $searchInput.on('input', function() {
+        //         const inputValue = $(this).val().toLowerCase();
+        //         $dataList.empty();
+
+        //         if ($jenisPemeriksaanSelect.val()) {
+        //             const selectedCategory = $jenisPemeriksaanSelect.val();
+        //             const addedDescriptions =
+        //                 new Set();
+
+        //             if (dataPemeriksaan[selectedCategory]) {
+        //                 $.each(dataPemeriksaan[selectedCategory], function(index, item) {
+        //                     if (item.produk.deskripsi.toLowerCase().includes(inputValue) && !
+        //                         addedDescriptions.has(item.produk.deskripsi)) {
+        //                         addedDescriptions.add(item.produk
+        //                             .deskripsi);
+        //                         const $li = $('<li>');
+        //                         $li.html(
+        //                             `<a class="dropdown-item" href="#" data-kd-produk="${item.produk.kd_produk}">${item.produk.deskripsi}</a>`
+        //                         );
+        //                         $dataList.append($li);
+        //                     }
+        //                 });
+        //             }
+
+        //             if ($dataList.children().length > 0) {
+        //                 $dataList.show();
+        //             } else {
+        //                 $dataList.hide();
+        //             }
+        //         }
+        //     });
+
+        //     $dataList.on('click', '.dropdown-item', function(e) {
+        //         e.preventDefault();
+
+        //         const selectedItemText = $(this).text();
+        //         const kdProduk = $(this).attr('data-kd-produk');
+        //         // console.log(kdProduk);
+
+        //         if (kdProduk) {
+        //             const $listItem = $('<li>').addClass('list-group-item');
+
+        //             $listItem.html(`
+        //             ${selectedItemText}
+        //             <input type="hidden" name="kd_produk[]" value="${kdProduk}">
+        //             <input type="hidden" name="jumlah[]" value="1">
+        //             <input type="hidden" name="status[]" value="1">
+        //             <input type="hidden" name="urut[]" value="${urut}">
+        //             <span class="remove-item" style="color: red; cursor: pointer;">
+        //                 <i class="bi bi-x-circle"></i>
+        //             </span>
+        //         `);
+
+        //             $orderList.append($listItem);
+        //             urut++;
+
+        //             $listItem.find('.remove-item').on('click', function() {
+        //                 $(this).closest('li').remove();
+        //                 urut--;
+        //                 // console.log(urut);
+        //             });
+
+        //             $searchInput.val('');
+        //             $dataList.hide();
+        //         } else {
+        //             console.error('Error: kd_produk is undefined');
+        //         }
+        //     });
+
+        //     $(document).on('click', function(event) {
+        //         if (!$(event.target).closest('.dropdown').length && event.target !== $searchInput[0]) {
+        //             $dataList.hide();
+        //         }
+        //     });
+        // });
+
+        // $('#addLaborModal').on('shown.bs.modal', function() {
+        //     let $this = $(this);
+
+        //     $this.find('#kd_dokter').mousedown(function(e) {
+        //         e.preventDefault();
+        //     });
+        // });
     </script>
 @endpush

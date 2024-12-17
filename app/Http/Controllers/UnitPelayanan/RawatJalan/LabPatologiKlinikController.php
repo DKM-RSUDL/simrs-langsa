@@ -47,6 +47,23 @@ class LabPatologiKlinikController extends Controller
             ->whereRelation('dokter', 'status', 1)
             ->get();
 
+        // ambil Diagnosis dari emr_resume
+        $dataDiagnosis = RMEResume::with(['kunjungan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
+        // Jika data ada, ambil nilai array diagnosis
+        $diagnosisList = [];
+        if ($dataDiagnosis && is_array($dataDiagnosis->diagnosis)) {
+            $diagnosisList = array_map(function ($item) {
+                return trim($item, '"[]');
+            }, $dataDiagnosis->diagnosis);
+        }
+
         $search = $request->input('search');
         $periode = $request->input('periode');
         $startDate = $request->input('start_date');
@@ -123,7 +140,9 @@ class LabPatologiKlinikController extends Controller
             'dataMedis',
             'DataLapPemeriksaan',
             'dataDokter',
-            'dataLabor'
+            'dataLabor',
+            'dataDiagnosis',
+            'diagnosisList'
         ));
     }
 

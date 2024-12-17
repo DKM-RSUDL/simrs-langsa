@@ -53,7 +53,7 @@ class NavigationService
             ->make(true);
     }
 
-    public function store(array $requestData)
+    public function store($requestData)
     {
         if ($requestData['type_menu'] != 'child') {
             $requestData['main_menu'] = NULL;

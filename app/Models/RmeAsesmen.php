@@ -36,6 +36,7 @@ class RmeAsesmen extends Model
         'alat_terpasang',
         'kondisi_pasien',
         'lokasi',
+        'waktu_asesmen',
         'durasi'];
 
     public function user()
