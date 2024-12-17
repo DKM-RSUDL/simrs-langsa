@@ -100,6 +100,11 @@
                         </div>
 
                         <div class="form-line">
+                            <h6>Riwayat Penyakit Keluarga Pasien</h6>
+                            <textarea class="form-control mb-2" rows="3" name="edit_riwayat_penyakit_keluarga"></textarea>
+                        </div>
+
+                        <div class="form-line">
                             <h6>Riwayat Pengobatan</h6>
                             <textarea class="form-control mb-2" rows="3" name="edit_riwayat_pengobatan"></textarea>
                         </div>
@@ -476,6 +481,7 @@
             // Fill textarea data
             $('textarea[name="edit_anamnesis"]').val(data.anamnesis || '');
             $('textarea[name="edit_riwayat_penyakit"]').val(data.riwayat_penyakit || '');
+            $('textarea[name="edit_riwayat_penyakit_keluarga"]').val(data.riwayat_penyakit_keluarga || '');
             $('textarea[name="edit_riwayat_pengobatan"]').val(data.riwayat_pengobatan || '');
             $('textarea[name="edit_kondisi_pasien"]').val(data.show_kondisi_pasien || '');
             $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
@@ -1131,6 +1137,7 @@
                 pemeriksaan_fisik: collectEditPemeriksaanFisik(),
                 anamnesis: $('textarea[name="edit_anamnesis"]').val(),
                 riwayat_penyakit: $('textarea[name="edit_riwayat_penyakit"]').val(),
+                riwayat_penyakit_keluarga: $('textarea[name="edit_riwayat_penyakit_keluarga"]').val(),
                 riwayat_pengobatan: $('textarea[name="edit_riwayat_pengobatan"]').val(),
                 kondisi_pasien: $('textarea[name="edit_kondisi_pasien"]').val(),
                 vital_sign: {

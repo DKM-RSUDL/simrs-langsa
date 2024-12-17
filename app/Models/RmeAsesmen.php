@@ -20,6 +20,7 @@ class RmeAsesmen extends Model
         'tindakan_resusitasi',
         'anamnesis',
         'riwayat_penyakit',
+        'riwayat_penyakit_keluarga',
         'riwayat_pengobatan',
         'riwayat_alergi',
         'vital_sign',
