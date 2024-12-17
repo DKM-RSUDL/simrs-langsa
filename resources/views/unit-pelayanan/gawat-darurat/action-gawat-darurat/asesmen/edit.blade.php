@@ -241,67 +241,114 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <label for="manjalar">Manjalar</label>
-                                <select class="form-select" name="edit_menjalar">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($menjalar as $option)
-                                        <option value="{{ $option->id }}">{{ $option->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col mt-3">
-                                <label for="frekuensi">Frekuensi</label>
-                                <select class="form-select" name="edit_frekuensi">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($frekuensinyeri as $option)
-                                        <option value="{{ $option->id }}">{{ $option->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col mt-3">
-                                <label for="kualitas">Kualitas</label>
-                                <select class="form-select" name="edit_kualitas">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($kualitasnyeri as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col mt-3">
-                                <label for="faktor-pemberat">Faktor Pemberat</label>
-                                <select class="form-select" name="edit_faktor_pemberat">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($faktorpemberat as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col mt-3">
-                                <label for="faktor-peringanan">Faktor Peringanan</label>
-                                <select class="form-select" name="edit_faktor_peringan">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($faktorperingan as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col mt-3">
-                                <label for="efek-nyeri">Efek Nyeri</label>
-                                <select class="form-select" name="edit_efek_nyeri">
-                                    <option selected disabled>Pilih</option>
-                                    @foreach ($efeknyeri as $option)
-                                        <option value="{{ $option->id }}">
-                                            {{ $option->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="row mt-3">
+                                <!-- Manjalar -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Manjalar</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($menjalar as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_menjalar"
+                                                    id="edit_manjalar_{{ $option->id }}"
+                                                    value="{{ $option->id }}">
+                                                <label class="form-check-label"
+                                                    for="edit_manjalar_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Frekuensi -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Frekuensi</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($frekuensinyeri as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_frekuensi"
+                                                    id="edit_frekuensi_{{ $option->id }}"
+                                                    value="{{ $option->id }}">
+                                                <label class="form-check-label"
+                                                    for="edit_frekuensi_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Kualitas -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Kualitas</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($kualitasnyeri as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_kualitas"
+                                                    id="edit_kualitas_{{ $option->id }}"
+                                                    value="{{ $option->id }}">
+                                                <label class="form-check-label"
+                                                    for="edit_kualitas_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Faktor Pemberat -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Faktor Pemberat</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($faktorpemberat as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="edit_faktor_pemberat"
+                                                    id="edit_pemberat_{{ $option->id }}"
+                                                    value="{{ $option->id }}">
+                                                <label class="form-check-label"
+                                                    for="edit_pemberat_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Faktor Peringanan -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Faktor Peringanan</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($faktorperingan as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="edit_faktor_peringan"
+                                                    id="edit_peringan_{{ $option->id }}"
+                                                    value="{{ $option->id }}">
+                                                <label class="form-check-label"
+                                                    for="edit_peringan_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Efek Nyeri -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-2">Efek Nyeri</label>
+                                    <div class="karakteristik-nyeri">
+                                        @foreach ($efeknyeri as $option)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="edit_efek_nyeri"
+                                                    id="edit_efek_{{ $option->id }}" value="{{ $option->id }}">
+                                                <label class="form-check-label" for="edit_efek_{{ $option->id }}">
+                                                    {{ $option->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -487,12 +534,24 @@
             $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
             $('input[name="edit_lokasi"]').val(data.show_lokasi || '');
             $('input[name="edit_durasi"]').val(data.show_durasi || '');
-            $('select[name="edit_menjalar"]').val(data.asesmen.menjalar_id);
-            $('select[name="edit_frekuensi"]').val(data.asesmen.frekuensi_nyeri_id);
-            $('select[name="edit_kualitas"]').val(data.asesmen.kualitas_nyeri_id);
-            $('select[name="edit_faktor_pemberat"]').val(data.asesmen.faktor_pemberat_id);
-            $('select[name="edit_faktor_peringan"]').val(data.asesmen.faktor_peringan_id);
-            $('select[name="edit_efek_nyeri"]').val(data.asesmen.efek_nyeri.id);
+            if (data.asesmen.menjalar_id) {
+                $(`input[name="edit_menjalar"][value="${data.asesmen.menjalar_id}"]`).prop('checked', true);
+            }
+            if (data.asesmen.frekuensi_nyeri_id) {
+                $(`input[name="edit_frekuensi"][value="${data.asesmen.frekuensi_nyeri_id}"]`).prop('checked', true);
+            }
+            if (data.asesmen.kualitas_nyeri_id) {
+                $(`input[name="edit_kualitas"][value="${data.asesmen.kualitas_nyeri_id}"]`).prop('checked', true);
+            }
+            if (data.asesmen.faktor_pemberat_id) {
+                $(`input[name="edit_faktor_pemberat"][value="${data.asesmen.faktor_pemberat_id}"]`).prop('checked', true);
+            }
+            if (data.asesmen.faktor_peringan_id) {
+                $(`input[name="edit_faktor_peringan"][value="${data.asesmen.faktor_peringan_id}"]`).prop('checked', true);
+            }
+            if (data.asesmen.efek_nyeri && data.asesmen.efek_nyeri.id) {
+                $(`input[name="edit_efek_nyeri"][value="${data.asesmen.efek_nyeri.id}"]`).prop('checked', true);
+            }
 
             originalResusitasiData = data.tindakan_resusitasi;
 
