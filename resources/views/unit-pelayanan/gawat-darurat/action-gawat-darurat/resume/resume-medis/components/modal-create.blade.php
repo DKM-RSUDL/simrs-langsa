@@ -517,6 +517,7 @@
         }
         formData.append('diagnosis', JSON.stringify(dataDiagnosis));
 
+
         // Get ICD-10 data
         const icd10Array = $('#icdList').children()
             .map(function() {

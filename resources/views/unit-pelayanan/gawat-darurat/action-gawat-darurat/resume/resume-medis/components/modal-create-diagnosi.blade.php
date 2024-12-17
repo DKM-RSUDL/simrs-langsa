@@ -37,7 +37,6 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-daftar-input-diagnosis')
 
 <script>
-
     $('#btn-diagnosis').on('click', function() {
         $('#modal-create-diagnosis').modal('show');
     });
@@ -175,5 +174,4 @@
             $('#modal-create-diagnosis').modal('hide');
         });
     });
-
-    </script>
+</script>
