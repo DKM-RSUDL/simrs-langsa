@@ -3,7 +3,7 @@
         <div class="row">
             <!-- Select PPA Option -->
             <div class="col-md-2">
-                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                <select class="form-select" aria-label="Pilih...">
                     <option value="semua" selected>Semua PPA</option>
                     <option value="option1">PPA Sekarang</option>
                     <option value="option2">1 PPA</option>
@@ -15,7 +15,7 @@
 
             <!-- Select Episode Option -->
             <div class="col-md-2">
-                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                <select class="form-select" aria-label="Pilih...">
                     <option value="semua" selected>Semua Episode</option>
                     <option value="option1">Episode Sekarang</option>
                     <option value="option2">1 Bulan/option>
@@ -27,12 +27,12 @@
 
             <!-- Start Date -->
             <div class="col-md-2">
-                <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
+                <input type="date" name="start_date" class="form-control" placeholder="Dari Tanggal">
             </div>
 
             <!-- End Date -->
             <div class="col-md-2">
-                <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
+                <input type="date" name="end_date" class="form-control" placeholder="S.d Tanggal">
             </div>
             <div class="col-md-1">
                 <a href="#" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></a>
@@ -41,7 +41,7 @@
             <!-- Search Bar -->
             <div class="col-md-3">
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
+                    <span class="input-group-text" >
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
