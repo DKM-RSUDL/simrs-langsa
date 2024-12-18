@@ -139,7 +139,7 @@ class RadiologiController extends Controller
             'tgl_order.required'    => 'Tanggal order harus dipilih!',
             'jam_order.required'    => 'Jam order harus dipilih!',
             'cyto.required'         => 'Cito harus dipilih!',
-            'puasa.required'        => 'Puasa harus dipilih!',
+            // 'puasa.required'        => 'Puasa harus dipilih!',
         ];
 
         $request->validate([
@@ -147,7 +147,7 @@ class RadiologiController extends Controller
             'tgl_order'     => 'required',
             'jam_order'     => 'required',
             'cyto'          => 'required',
-            'puasa'         => 'required',
+            // 'puasa'         => 'required',
         ], $valMessage);
 
         // check produk
@@ -197,7 +197,7 @@ class RadiologiController extends Controller
             'status_order'          => 1,
             'transaksi_penunjang'   => null,
             'cyto'                  => $request->cyto,
-            'puasa'                 => $request->puasa,
+            'puasa'                 => 0,
             'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
             'diagnosis'             => $request->diagnosis
         ];
@@ -272,7 +272,7 @@ class RadiologiController extends Controller
             'tgl_order.required'    => 'Tanggal order harus dipilih!',
             'jam_order.required'    => 'Jam order harus dipilih!',
             'cyto.required'         => 'Cito harus dipilih!',
-            'puasa.required'        => 'Puasa harus dipilih!',
+            // 'puasa.required'        => 'Puasa harus dipilih!',
         ];
 
         $request->validate([
@@ -280,7 +280,7 @@ class RadiologiController extends Controller
             'tgl_order'     => 'required',
             'jam_order'     => 'required',
             'cyto'          => 'required',
-            'puasa'         => 'required',
+            // 'puasa'         => 'required',
         ], $valMessage);
 
         // check produk
@@ -312,7 +312,7 @@ class RadiologiController extends Controller
         $order->kd_dokter = $request->kd_dokter;
         $order->tgl_order = "$request->tgl_order $request->jam_order";
         $order->cyto = $request->cyto;
-        $order->puasa = $request->puasa;
+        // $order->puasa = $request->puasa;
         $order->diagnosis = $request->diagnosis;
         $order->jadwal_pemeriksaan = $jadwalPemeriksaan;
         $order->save();

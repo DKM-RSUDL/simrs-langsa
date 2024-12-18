@@ -100,33 +100,13 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label fw-bold h5 text-dark">Puasa?</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="1" id="puasa_yes"
-                                                @checked(old('puasa') == 1) required>
-                                            <label class="form-check-label" for="puasa_yes">Ya</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="0" id="puasa_no"
-                                                @checked(old('puasa') == 0) required>
-                                            <label class="form-check-label" for="puasa_no">Tidak</label>
-                                        </div>
-                                        @error('puasa')
-                                            <div class="invalid-feedback">
-                                                {{ $error }}
-                                            </div>
-                                        @enderror
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
-                                    Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
+                                    Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
                                 </p>
                                 <div class="row">
                                     <div class="row">
@@ -277,33 +257,13 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label fw-bold h5 text-dark">Puasa?</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="1" id="puasa_yes"
-                                                @checked(old('puasa') == 1) required>
-                                            <label class="form-check-label" for="puasa_yes">Ya</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input @error('puasa') is-invalid @enderror"
-                                                type="radio" name="puasa" value="0" id="puasa_no"
-                                                @checked(old('puasa') == 0) required>
-                                            <label class="form-check-label" for="puasa_no">Tidak</label>
-                                        </div>
-                                        @error('puasa')
-                                            <div class="invalid-feedback">
-                                                {{ $error }}
-                                            </div>
-                                        @enderror
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="patient-card mt-4">
                                 <h6 class="fw-bold">Jadwal Pemeriksaan</h6>
                                 <p class="text-muted">
-                                    Tanggal ini diisi jika pemeriksaan laboratorium dijadwalkan bukan pada hari ini.
+                                    Tanggal ini diisi jika pemeriksaan radiologi dijadwalkan bukan pada hari ini.
                                 </p>
                                 <div class="row">
                                     <div class="row">
@@ -398,9 +358,6 @@
                             <div class="row">
                                 <div class="col-6">
                                     <p class="p-0 m-0"><strong>Cito :</strong> <span id="cyto"></span></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="p-0 m-0"><strong>Puasa :</strong> <span id="puasa"></span></p>
                                 </div>
                             </div>
                         </div>

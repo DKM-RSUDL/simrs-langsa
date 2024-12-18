@@ -77,7 +77,8 @@
                                     <option value="{{ $dok->dokter->kd_dokter }}"
                                         {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
                                         {{ $dok->dokter->nama_lengkap }}
-                                        {{ $dokterPengirim->konsultasi->first()->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }}
+                                        {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }}
+                                        {{-- {{ $dokterPengirim->konsultasi->first()->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }} --}}
                                     </option>
                                 @endforeach
                             </select>
