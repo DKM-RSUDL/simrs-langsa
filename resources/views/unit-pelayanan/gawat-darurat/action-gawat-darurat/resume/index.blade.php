@@ -38,11 +38,19 @@
                             <div class="tab-pane fade show active" id="resep" role="tabpanel"
                                 aria-labelledby="resep-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.resume-medis')
+                                @if (!empty($dataGet) && count($dataGet) > 0)
+                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.resume-medis')
+                                @else
+                                    <div>Tidak ada data yang ditampilkan.</div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-profil-ringkas-medis.profil_ringkas_medis')
+                                @if (!empty($dataProfileRingkas) && count($dataProfileRingkas) > 0)
+                                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-profil-ringkas-medis.profil_ringkas_medis')
+                                @else
+                                    <div>Tidak ada data yang ditampilkan.</div>
+                                @endif
                             </div>
                         </div>
                     </div>
