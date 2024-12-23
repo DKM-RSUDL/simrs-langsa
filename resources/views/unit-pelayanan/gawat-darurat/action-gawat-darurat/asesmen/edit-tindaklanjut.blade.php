@@ -1,4 +1,5 @@
 <button class="btn btn-sm" type="button" id="openEditTindakLanjut">
+    <i class="bi bi-plus-square"></i> Tambah Tindak Lanjut
 </button>
 
 <div class="modal fade" id="editTindakLanjutModal" tabindex="-1" aria-labelledby="editTindakLanjutModalLabel" aria-hidden="true">

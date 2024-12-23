@@ -7,6 +7,7 @@ use App\Models\AptObat;
 use App\Models\DataTriase;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
+use App\Models\ListTindakanPasien;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenDtl;
@@ -32,12 +33,12 @@ class AsesmenController extends Controller
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', 3)
@@ -70,6 +71,7 @@ class AsesmenController extends Controller
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $laborData = $this->getLabor($kd_pasien);
         $radiologiData = $this->getRadiologi($kd_pasien);
+        $tindakanData = $this->getTindakan($kd_pasien);
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $menjalar = RmeMenjalar::all();
         $frekuensinyeri = RmeFrekuensiNyeri::all();
@@ -79,12 +81,16 @@ class AsesmenController extends Controller
         $efeknyeri = RmeEfekNyeri::all();
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
-        $asesmen = RmeAsesmen::with(['user']) // Pastikan relasi user tersedia
-        ->join('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+        $asesmen = RmeAsesmen::with(['user'])
+        ->leftJoin('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
         ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
-            ->select('RME_ASESMEN.*', 'data_triase.tanggal_triase') // Pilih kolom yang dibutuhkan, termasuk tanggal_triase
-            ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
-            ->get();
+        ->select(
+            'RME_ASESMEN.*',
+            'data_triase.tanggal_triase',
+            'data_triase.id as id_triase'
+        )
+        ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc') 
+        ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
             'dataMedis',
@@ -100,7 +106,8 @@ class AsesmenController extends Controller
             'faktorpemberat',
             'faktorperingan',
             'efeknyeri',
-            'asesmen'
+            'asesmen',
+            'tindakanData'
         ));
     }
 
@@ -279,7 +286,7 @@ class AsesmenController extends Controller
             if ($request->has('tindak_lanjut')) {
                 $tindakLanjutData = $request->tindak_lanjut;
 
-                $tindakLanjutDtl = RmeAsesmenDtl::firstOrNew(['id_asesmen' => $id]);
+                $tindakLanjutDtl = RmeAsesmenDtl::firstOrCreate(['id_asesmen' => $id]);
 
                 switch ($tindakLanjutData['option']) {
                     case 'rawatInap':
@@ -416,13 +423,61 @@ class AsesmenController extends Controller
         }
     }
 
+    private function getTindakan($kd_pasien)
+    {
+        return ListTindakanPasien::with(['produk', 'ppa', 'unit'])
+            ->where('kd_pasien', $kd_pasien)
+            ->orderBy('tgl_tindakan', 'desc')
+            ->get()
+            ->map(function ($tindakan) {
+                $tanggal = Carbon::parse($tindakan->tgl_tindakan)->format('Y-m-d');
+                $jam = Carbon::parse($tindakan->jam_tindakan)->format('H:i');
+
+                return [
+                    'Tanggal-Jam' => Carbon::parse($tanggal . ' ' . $jam)->format('d M Y H:i'),
+                    'Nama Tindakan' => $tindakan->produk->deskripsi ?? 'Tidak ada deskripsi',
+                    'Dokter' => $tindakan->ppa->nama ?? 'Tidak diketahui',
+                    'Unit' => $tindakan->unit->nama_unit ?? 'Tidak diketahui',
+                    'Status' => $this->getStatusTindakan($tindakan->status),
+                    'Keterangan' => $tindakan->keterangan ?? '-',
+                    'Kesimpulan' => $tindakan->kesimpulan ?? '-'
+                ];
+            });
+    }
+
+    private function getStatusTindakan($status)
+    {
+        switch ($status) {
+            case 0:
+                return '<span class="text-warning">Menunggu</span>';
+            case 1:
+                return '<span class="text-primary">Dalam Proses</span>';
+            case 2:
+                return '<span class="text-success">Selesai</span>';
+            default:
+                return '<span class="text-secondary">Tidak Diketahui</span>';
+        }
+    }
+
     private function getRiwayatObat($kd_pasien)
     {
+        // Get the latest order
+        $latestOrder = DB::table('MR_RESEP')
+            ->where('KD_PASIEN', $kd_pasien)
+            ->select('TGL_ORDER')
+            ->orderBy('TGL_ORDER', 'desc')
+            ->first();
+
+        if (!$latestOrder) {
+            return collect();
+        }
+
         return DB::table('MR_RESEP')
             ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
             ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
             ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
             ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.TGL_ORDER', $latestOrder->tgl_order)  // Changed to lowercase
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
@@ -431,7 +486,7 @@ class AsesmenController extends Controller
                 'MR_RESEPDTL.CARA_PAKAI',
                 'MR_RESEPDTL.JUMLAH_TAKARAN',
                 'MR_RESEPDTL.SATUAN_TAKARAN',
-                'APT_OBAT.NAMA_OBAT',
+                'APT_OBAT.NAMA_OBAT'
             )
             ->orderBy('MR_RESEP.TGL_MASUK', 'desc')
             ->get();
@@ -562,6 +617,7 @@ class AsesmenController extends Controller
             $asesmen->alat_terpasang = $request->alat_terpasang_data;
             $asesmen->kondisi_pasien = $request->kondisi_pasien;
             $asesmen->user_id = $user->id;
+            $asesmen->waktu_asesmen = date("Y-m-d H:i:s");
             $asesmen->save();
 
             // dd($asesmen->all());
@@ -625,8 +681,8 @@ class AsesmenController extends Controller
             }
 
             //simpan tindak lanjut
-            $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
-            if ($tindakLanjutData) {
+            // Handle tindak lanjut if exists (now optional)
+            if ($request->has('tindak_lanjut_data') && $tindakLanjutData = json_decode($request->tindak_lanjut_data, true)) {
                 $tindakLanjutDtl = new RmeAsesmenDtl();
                 $tindakLanjutDtl->id_asesmen = $asesmen->id;
 
@@ -661,7 +717,7 @@ class AsesmenController extends Controller
                     $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
                 }
 
-                if (isset($tindakLanjutData['tanggalMeninggal']) && isset($tindakLanjutData['jamMeninggal'])) {
+                if (isset($tindakLanjutData['tanggalMeninggal'], $tindakLanjutData['jamMeninggal'])) {
                     $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
                     $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
                 }
@@ -674,13 +730,13 @@ class AsesmenController extends Controller
             $vitalSign = json_decode($request->vital_sign, true);
             $antropometri = json_decode($request->antropometri, true);
             $diagnosa = json_decode($request->diagnosa_data, true);
-            
+
             // create resume
             $resumeData = [
                 'anamnesis'             => $request->anamnesis,
                 'diagnosis'             => $diagnosa,
-                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
-                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
                 'tgl_kontrol_ulang'     => null,
                 'unit_rujuk_internal'   => null,
                 'rs_rujuk'              => null,
@@ -780,7 +836,4 @@ class AsesmenController extends Controller
             }
         }
     }
-
-
-
 }

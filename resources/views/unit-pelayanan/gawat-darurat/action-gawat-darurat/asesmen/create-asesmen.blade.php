@@ -612,6 +612,41 @@
 
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
+                                                        <img
+                                                            src="{{ asset('assets/img/icons/tools.png') }}">
+                                                        <h6 class="mb-0 me-3">Tindakan</h6>
+                                                    </div>
+                                                    <div class="table-responsive mb-3">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal dan Jam</th>
+                                                                    <th>Nama Tindakan</th>
+                                                                    <th>Dokter</th>
+                                                                    <th>Unit</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse($tindakanData as $tindakan)
+                                                                    <tr>
+                                                                        <td>{{ $tindakan['Tanggal-Jam'] }}</td>
+                                                                        <td>{{ $tindakan['Nama Tindakan'] }}</td>
+                                                                        <td>{{ $tindakan['Dokter'] }}</td>
+                                                                        <td>{{ $tindakan['Unit'] }}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="6" class="text-center">Tidak
+                                                                            ada data tindakan</td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-line">
+                                                    <div class="d-flex align-items-center mb-3">
                                                         <img src="{{ asset('assets/img/icons/pill.png') }}">
                                                         <h6 class="mb-0 me-3">E-Resep</h6>
                                                     </div>

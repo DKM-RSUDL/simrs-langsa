@@ -54,11 +54,11 @@
 <ul class="list-group" id="asesmenList">
     @foreach ($asesmen as $item)
         <li class="list-group-item d-flex justify-content-between align-items-center"
-            data-date="{{ \Carbon\Carbon::parse($item->tanggal_triase)->format('Y-m-d') }}"
+            data-date="{{ \Carbon\Carbon::parse($item->waktu_masuk)->format('Y-m-d') }}"
             data-name="{{ $item->user->name }}">
             <div class="d-flex align-items-center">
                 <div class="m-2">
-                    {{ $item->tanggal_triase ? \Carbon\Carbon::parse($item->tanggal_triase)->format('d M Y H:i') : 'Tidak tersedia' }}
+                    {{ \Carbon\Carbon::parse($item->waktu_masuk)->format('d M Y H:i') }}
                 </div>
                 <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
                     width="70" height="70">
