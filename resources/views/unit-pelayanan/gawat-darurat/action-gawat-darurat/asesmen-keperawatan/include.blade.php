@@ -126,6 +126,36 @@
                 border-radius: 8px;
                 overflow: hidden;
             }
+
+            /* 7. resiko jatuh */
+            .risk-form {
+            display: none;
+        }
+
+        .conclusion {
+            background-color: #198754;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .conclusion.warning {
+            background-color: #ffc107;
+        }
+
+        .conclusion.danger {
+            background-color: #dc3545;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h6 {
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
         </style>
     @endpush
 
@@ -198,5 +228,126 @@
                 }
 
             });
+
+            // 7. Resiko Jantung
+            // Konfigurasi form dan threshold
+        const forms = {
+            umum: { threshold: 1, type: 'boolean' },
+            morse: { low: 0, medium: 25, high: 45, type: 'score' },
+            ontario: { low: 0, medium: 4, high: 9, type: 'score' },
+            humpty: { low: 0, high: 12, type: 'score' }
+        };
+
+        // Fungsi untuk menampilkan form yang dipilih
+        function showForm(formType) {
+            document.querySelectorAll('.risk-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            if (formType === 'lainnya') {
+                alert('Silahkan hubungi petugas untuk penilaian risiko jatuh lainnya');
+                document.getElementById('risikoJatuhSkala').value = ''; // Reset pilihan ke default
+                return;
+            }
+
+            if (formType) {
+                const selectedForm = document.getElementById(formType + 'Form');
+                if (selectedForm) {
+                    selectedForm.style.display = 'block';
+                    resetForm(selectedForm);
+                }
+            }
+        }
+
+        // Reset form saat berganti
+        function resetForm(form) {
+            form.querySelectorAll('select').forEach(select => select.value = '');
+            const formType = form.id.replace('skala_', '').replace('Form', '');
+            const conclusionDiv = form.querySelector('.conclusion');
+
+            // Reset kesimpulan ke default
+            if (conclusionDiv) {
+                conclusionDiv.className = 'conclusion bg-success';
+                conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' +
+                    (formType === 'umum' ? 'Tidak berisiko jatuh' : 'Risiko Rendah');
+            }
+        }
+
+        // Update kesimpulan berdasarkan pilihan
+        function updateConclusion(formType) {
+            const form = document.getElementById('skala_' + formType + 'Form');
+            const selects = form.querySelectorAll('select');
+            let score = 0;
+            let hasYes = false;
+
+            // Hitung skor
+            selects.forEach(select => {
+                if (select.value === 'ya') {
+                    hasYes = true;
+                }
+                score += parseInt(select.value) || 0;
+            });
+
+            // Dapatkan div kesimpulan dari form yang aktif
+            const conclusionDiv = form.querySelector('.conclusion');
+            let conclusion = '';
+            let bgClass = '';
+
+            // Tentukan kesimpulan berdasarkan tipe form
+            switch (formType) {
+                case 'umum':
+                    if (hasYes) {
+                        conclusion = 'Berisiko jatuh';
+                        bgClass = 'bg-danger';
+                    } else {
+                        conclusion = 'Tidak berisiko jatuh';
+                        bgClass = 'bg-success';
+                    }
+                    break;
+
+                case 'morse':
+                    if (score >= 45) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else if (score >= 25) {
+                        conclusion = 'Risiko Sedang';
+                        bgClass = 'bg-warning';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    conclusion += ' (Skor: ' + score + ')';
+                    break;
+
+                case 'humpty':
+                    if (score >= 12) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    break;
+
+                case 'ontario':
+                    if (score >= 9) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else if (score >= 4) {
+                        conclusion = 'Risiko Sedang';
+                        bgClass = 'bg-warning';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    break;
+            }
+
+            // Update tampilan kesimpulan
+            if (conclusionDiv) {
+                conclusionDiv.className = 'conclusion ' + bgClass;
+                conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' + conclusion;
+            }
+        }
         </script>
     @endpush
