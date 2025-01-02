@@ -506,6 +506,7 @@ Route::middleware('auth')->group(function () {
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
                         Route::resource('labor', GawatDaruratLaborController::class);
+                        Route::get('cetak', [GawatDaruratLaborController::class, 'cetak']);
                         Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);

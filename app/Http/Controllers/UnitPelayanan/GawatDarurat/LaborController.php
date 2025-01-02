@@ -499,4 +499,129 @@ class LaborController extends Controller
             throw $e;
         }
     }
+
+    public function cetak(Request $request, $kd_pasien, $tgl_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
+            ->select('kategori', 'kd_produk')
+            ->get()
+            ->groupBy('kategori');
+
+
+        // $dataDokter = Dokter::where('status', 1)->get();
+
+        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
+
+        // ambil Diagnosis dari emr_resume
+        $dataDiagnosis = RMEResume::with(['kunjungan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', 3)
+            ->orderBy('tgl_masuk', 'desc')
+            ->first();
+
+        // Jika data ada, ambil nilai array diagnosis
+        $diagnosisList = [];
+        if ($dataDiagnosis && is_array($dataDiagnosis->diagnosis)) {
+            $diagnosisList = array_map(function ($item) {
+                return trim($item, '"[]');
+            }, $dataDiagnosis->diagnosis);
+        }
+
+        $search = $request->input('search');
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Get main data
+        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
+            ->when($periode, function ($query) use ($periode) {
+                $now = now();
+                switch ($periode) {
+                    case 'option1':
+                        return $query->whereYear('tgl_order', $now->year)
+                            ->whereMonth('tgl_order', $now->month);
+                    case 'option2':
+                        return $query->where('tgl_order', '>=', $now->subMonth(1));
+                    case 'option3':
+                        return $query->where('tgl_order', '>=', $now->subMonths(3));
+                    case 'option4':
+                        return $query->where('tgl_order', '>=', $now->subMonths(6));
+                    case 'option5':
+                        return $query->where('tgl_order', '>=', $now->subMonths(9));
+                    default:
+                        return $query;
+                }
+            })
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->whereDate('tgl_order', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->whereDate('tgl_order', '<=', $endDate);
+            })
+            ->when($search, function ($query, $search) {
+                $search = strtolower($search);
+                if (is_numeric($search) && strlen($search) > 3) {
+                    return $query->where('kd_order', $search);
+                }
+                return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
+                    ->orWhereHas('dokter', function ($q) use ($search) {
+                        $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+                    });
+            })
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->orderBy('tgl_order', 'desc')
+            ->paginate(10);
+
+        // Transform the data to include lab results
+        $dataLabor->getCollection()->transform(function ($item) {
+            $labResults = $this->getLabData(
+                $item->kd_order,
+                $item->kd_pasien,
+                $item->tgl_masuk,
+                $item->urut_masuk
+            );
+
+            $item->labResults = $labResults;
+            return $item;
+        });
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.cetak', compact(
+            'dataMedis',
+            'DataLapPemeriksaan',
+            'dataDokter',
+            'dataLabor',
+            'dataDiagnosis',
+            'diagnosisList'
+        ));
+    }
 }

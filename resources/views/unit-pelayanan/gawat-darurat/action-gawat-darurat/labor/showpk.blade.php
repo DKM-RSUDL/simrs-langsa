@@ -123,13 +123,21 @@
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
+                    {{-- <a href="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $laborPK->kd_pasien . '/' . $laborPK->tgl_masuk . '/cetak') }}"
+                        class="btn btn-info" target="_blank">Print</a> --}}
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    @if ($laborPK->status == 1)
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    @endif
                 </div>
 
             </form>
         </div>
     </div>
 </div>
+{{--
+@push('js')
+    <script>
+        $('#showLabor{{ $laborPK->id_labor_pk }}').on('shown.bs.modal', function() {
+            window.open(
+                "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $laborPK->kd_pasien . '/' . $laborPK->tgl_masuk . '/cetak') }}",
+                '_blank');
+        });
+@endpush  --}}
