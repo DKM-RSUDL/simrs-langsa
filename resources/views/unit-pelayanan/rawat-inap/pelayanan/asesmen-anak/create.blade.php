@@ -919,10 +919,375 @@
                                     </div>
 
                                     <div class="mb-4">
+                                        <label class="form-label">Anggota Keluarga Gangguan Jiwa</label>
+                                        <select class="form-select" name="anggota_keluarga_gangguan_jiwa">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
                                         <label class="form-label">Lainnya</label>
                                         <input type="text" class="form-control" name="psikologis_lainnya">
                                     </div>
                                 </div>
+
+                                <div class="section-separator" id="status_spiritual">
+                                    <h5 class="section-title">10. Status Spiritual</h5>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Keyakinan Agama</label>
+                                        <select class="form-select bg-light" name="keyakinan_agama">
+                                            <option value="" selected disabled>Pilih</option>
+                                            <option value="Islam">Islam</option>
+                                            <option value="Kristen">Kristen</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Pandangan Pasien Terhadap Penyakit Nya</label>
+                                        <select class="form-select bg-light" name="riwayat_kecelakaan">
+                                            <option value="" selected disabled>Pilih</option>
+                                            <option value="Ya">Ya</option>
+                                            <option value="Tidak">Tidak</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="status_sosial_ekonomi">
+                                    <h5 class="section-title">12. Status Sosial Ekonomi</h5>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Pekerjaan</label>
+                                        <select class="form-select bg-light" name="pekerjaan_pasien">
+                                            <option value="" selected disabled>Pilih</option>
+                                            <option value="Purnawaktu">Purnawaktu</option>
+                                            <option value="Paruh Waktu">Paruh Waktu</option>
+                                            <option value="Pensiunan">Pensiunan</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Status Pernikahan</label>
+                                        <div class="d-flex gap-3" style="width: 100%;">
+                                            <select class="form-select bg-light flex-grow-1" name="status_pernikahan">
+                                                <option value="" selected disabled>pilih</option>
+                                                <option value="Menikah">Menikah</option>
+                                                <option value="Belum Menikah">Belum Menikah</option>
+                                                <option value="Cerai">Cerai</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Tempat Tinggal</label>
+                                        <select class="form-select bg-light" name="tempat_tinggal">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="Rumah">Rumah</option>
+                                            <option value="Asrama">Asrama</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Curiga Penganiayaan</label>
+                                        <select class="form-select bg-light" name="curiga_penganiayaan">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="Ya">Ya</option>
+                                            <option value="Tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Status Tinggal Dengan Keluarga</label>
+                                        <select class="form-select bg-light" name="status_tinggal">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="Orang Tua">Orang Tua</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-separator" id="status-gizi">
+                                    <h5 class="section-title">13. Status Gizi</h5>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Pilih jenis Skala Risiko Dekubitus sesuai kondisi
+                                            pasien</label>
+                                        <select class="form-select" name="jenis_skala_gizi">
+                                            <option value="" selected disabled>Pilih skala</option>
+                                            <option value="malnutrisi">Malnutrisi</option>
+                                            <option value="normal">Normal</option>
+                                            <option value="obesitas">Obesitas</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="status-fungsional">
+                                    <h5 class="section-title">14. Status Fungsional</h5>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Pilih jenis Skala Pengkajian Aktivitas Harian
+                                            (ADL) sesuai kondisi pasien</label>
+                                        <select class="form-select" name="skala_fungsional">
+                                            <option value="" selected disabled>Pilih Skala Fungsional</option>
+                                            <option value="barthel">Barthel Index</option>
+                                            <option value="katz">Katz Index</option>
+                                            <option value="lawton">Lawton-Brody Scale</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Nilai Skala ADL</label>
+                                        <select class="form-select" name="nilai_adl">
+                                            <option value="" selected disabled>Pilih nilai</option>
+                                            <option value="mandiri">Mandiri</option>
+                                            <option value="bantuan_ringan">Bantuan Ringan</option>
+                                            <option value="bantuan_sedang">Bantuan Sedang</option>
+                                            <option value="bantuan_berat">Bantuan Berat</option>
+                                            <option value="ketergantungan_total">Ketergantungan Total</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Kesimpulan Fungsional</label>
+                                        <div class="alert alert-success">
+                                            BANTUAN SEDANG
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="kebutuhan-edukasi">
+                                    <h5 class="section-title">15. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran</h5>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Gaya Bicara</label>
+                                        <select class="form-select" name="gaya_bicara">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="normal">Normal</option>
+                                            <option value="lambat">Lambat</option>
+                                            <option value="cepat">Cepat</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
+                                        <select class="form-select" name="bahasa_sehari_hari">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="indonesia">Bahasa Indonesia</option>
+                                            <option value="daerah">Bahasa Daerah</option>
+                                            <option value="asing">Bahasa Asing</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Perlu Penerjemah</label>
+                                        <select class="form-select" name="perlu_penerjemah">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Hambatan Komunikasi</label>
+                                        <select class="form-select" name="hambatan_komunikasi">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="tidak_ada">Tidak Ada</option>
+                                            <option value="pendengaran">Gangguan Pendengaran</option>
+                                            <option value="bicara">Gangguan Bicara</option>
+                                            <option value="bahasa">Perbedaan Bahasa</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Media Disukai</label>
+                                        <select class="form-select" name="media_disukai">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="cetak">Media Cetak</option>
+                                            <option value="video">Video</option>
+                                            <option value="diskusi">Diskusi Langsung</option>
+                                            <option value="demonstrasi">Demonstrasi</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="min-width: 200px;">Tingkat Pendidikan</label>
+                                        <select class="form-select" name="tingkat_pendidikan">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="sd">SD</option>
+                                            <option value="smp">SMP</option>
+                                            <option value="sma">SMA</option>
+                                            <option value="diploma">Diploma</option>
+                                            <option value="sarjana">Sarjana</option>
+                                            <option value="tidak_sekolah">Tidak Sekolah</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="discharge-planning">
+                                    <h5 class="section-title">16. Disharge Planning</h5>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Diagnosis medis</label>
+                                        <input type="text" class="form-control" name="diagnosis_medis"
+                                            placeholder="Lokasi nyeri">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Usia lanjut</label>
+                                        <select class="form-select" name="usia_lanjut">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Hambatan mobilisasi</label>
+                                        <select class="form-select" name="hambatan_mobilisasi">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
+                                        <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas
+                                            harian</label>
+                                        <select class="form-select" name="ketergantungan_aktivitas">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah
+                                            Pulang</label>
+                                        <select class="form-select" name="keterampilan_khusus">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah
+                                            Sakit</label>
+                                        <select class="form-select" name="alat_bantu">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah
+                                            Pulang</label>
+                                        <select class="form-select" name="nyeri_kronis">
+                                            <option value="" selected disabled>pilih</option>
+                                            <option value="ya">Ya</option>
+                                            <option value="tidak">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Perkiraan lama hari dirawat</label>
+                                        <input type="text" class="form-control" name="perkiraan_hari"
+                                            placeholder="hari">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Rencana Tanggal Pulang</label>
+                                        <input type="date" class="form-control" name="tanggal_pulang">
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label class="form-label">KESIMPULAN</label>
+                                        <div class="d-flex flex-column gap-2">
+                                            <div class="alert alert-warning">
+                                                Mebutuhkan rencana pulang khusus
+                                            </div>
+                                            <div class="alert alert-success">
+                                                Tidak mebutuhkan rencana pulang khusus
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="diagnosis">
+                                    <h5 class="section-title">17. Diagnosis</h5>
+
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                placeholder="Cari dan tambah Diagnosis">
+                                            <button class="btn btn-outline-primary" type="button">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="list-group">
+                                        <div class="list-group-item list-group-item-light">
+                                            1. Defisit Perawatan Diri (Self-Care Deficit)
+                                        </div>
+                                        <div class="list-group-item list-group-item-light">
+                                            2. Risiko Infeksi (Risk for Infection)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="implementasi">
+                                    <h5 class="section-title">18. Implementasi</h5>
+
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                placeholder="Cari dan tambah Implemtasi">
+                                            <button class="btn btn-outline-primary" type="button">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="list-group">
+                                        <div class="list-group-item list-group-item-light">
+                                            1. Memberikan antibiotik intravena sesuai jadwal.
+                                        </div>
+                                        <div class="list-group-item list-group-item-light">
+                                            2. Mengajarkan pasien cara menggunakan inhaler untuk asma
+                                        </div>
+                                        <div class="list-group-item list-group-item-light">
+                                            3. Membersihkan luka dengan cairan NaCl dan mengganti balutan setiap hari
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator" id="implementasi-evaluasi">
+                                    <h5 class="section-title">19. Implementasi</h5>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Tambah Evaluasi Keperawatan</label>
+                                        <textarea class="form-control" rows="4" name="evaluasi_keperawatan"
+                                            placeholder="Tambah evaluasi keperawatan..."></textarea>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
