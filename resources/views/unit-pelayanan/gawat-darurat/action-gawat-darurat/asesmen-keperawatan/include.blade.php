@@ -129,33 +129,33 @@
 
             /* 7. resiko jatuh */
             .risk-form {
-            display: none;
-        }
+                display: none;
+            }
 
-        .conclusion {
-            background-color: #198754;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 20px;
-        }
+            .conclusion {
+                background-color: #198754;
+                color: white;
+                padding: 10px;
+                border-radius: 4px;
+                margin-top: 20px;
+            }
 
-        .conclusion.warning {
-            background-color: #ffc107;
-        }
+            .conclusion.warning {
+                background-color: #ffc107;
+            }
 
-        .conclusion.danger {
-            background-color: #dc3545;
-        }
+            .conclusion.danger {
+                background-color: #dc3545;
+            }
 
-        .form-section {
-            margin-bottom: 2rem;
-        }
+            .form-section {
+                margin-bottom: 2rem;
+            }
 
-        .form-section h6 {
-            color: #0d6efd;
-            margin-bottom: 1rem;
-        }
+            .form-section h6 {
+                color: #0d6efd;
+                margin-bottom: 1rem;
+            }
         </style>
     @endpush
 
@@ -231,123 +231,325 @@
 
             // 7. Resiko Jantung
             // Konfigurasi form dan threshold
-        const forms = {
-            umum: { threshold: 1, type: 'boolean' },
-            morse: { low: 0, medium: 25, high: 45, type: 'score' },
-            ontario: { low: 0, medium: 4, high: 9, type: 'score' },
-            humpty: { low: 0, high: 12, type: 'score' }
-        };
+            const forms = {
+                umum: {
+                    threshold: 1,
+                    type: 'boolean'
+                },
+                morse: {
+                    low: 0,
+                    medium: 25,
+                    high: 45,
+                    type: 'score'
+                },
+                ontario: {
+                    low: 0,
+                    medium: 4,
+                    high: 9,
+                    type: 'score'
+                },
+                humpty: {
+                    low: 0,
+                    high: 12,
+                    type: 'score'
+                }
+            };
 
-        // Fungsi untuk menampilkan form yang dipilih
-        function showForm(formType) {
-            document.querySelectorAll('.risk-form').forEach(form => {
-                form.style.display = 'none';
-            });
+            // Fungsi untuk menampilkan form yang dipilih
+            function showForm(formType) {
+                document.querySelectorAll('.risk-form').forEach(form => {
+                    form.style.display = 'none';
+                });
 
-            if (formType === 'lainnya') {
-                alert('Silahkan hubungi petugas untuk penilaian risiko jatuh lainnya');
-                document.getElementById('risikoJatuhSkala').value = ''; // Reset pilihan ke default
-                return;
-            }
+                if (formType === 'lainnya') {
+                    alert('Silahkan hubungi petugas untuk penilaian risiko jatuh lainnya');
+                    document.getElementById('risikoJatuhSkala').value = ''; // Reset pilihan ke default
+                    return;
+                }
 
-            if (formType) {
-                const selectedForm = document.getElementById(formType + 'Form');
-                if (selectedForm) {
-                    selectedForm.style.display = 'block';
-                    resetForm(selectedForm);
+                if (formType) {
+                    const selectedForm = document.getElementById(formType + 'Form');
+                    if (selectedForm) {
+                        selectedForm.style.display = 'block';
+                        resetForm(selectedForm);
+                    }
                 }
             }
-        }
 
-        // Reset form saat berganti
-        function resetForm(form) {
-            form.querySelectorAll('select').forEach(select => select.value = '');
-            const formType = form.id.replace('skala_', '').replace('Form', '');
-            const conclusionDiv = form.querySelector('.conclusion');
+            // Reset form saat berganti
+            function resetForm(form) {
+                form.querySelectorAll('select').forEach(select => select.value = '');
+                const formType = form.id.replace('skala_', '').replace('Form', '');
+                const conclusionDiv = form.querySelector('.conclusion');
 
-            // Reset kesimpulan ke default
-            if (conclusionDiv) {
-                conclusionDiv.className = 'conclusion bg-success';
-                conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' +
-                    (formType === 'umum' ? 'Tidak berisiko jatuh' : 'Risiko Rendah');
-            }
-        }
-
-        // Update kesimpulan berdasarkan pilihan
-        function updateConclusion(formType) {
-            const form = document.getElementById('skala_' + formType + 'Form');
-            const selects = form.querySelectorAll('select');
-            let score = 0;
-            let hasYes = false;
-
-            // Hitung skor
-            selects.forEach(select => {
-                if (select.value === 'ya') {
-                    hasYes = true;
+                // Reset kesimpulan ke default
+                if (conclusionDiv) {
+                    conclusionDiv.className = 'conclusion bg-success';
+                    conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' +
+                        (formType === 'umum' ? 'Tidak berisiko jatuh' : 'Risiko Rendah');
                 }
-                score += parseInt(select.value) || 0;
+            }
+
+            // Update kesimpulan berdasarkan pilihan
+            function updateConclusion(formType) {
+                const form = document.getElementById('skala_' + formType + 'Form');
+                const selects = form.querySelectorAll('select');
+                let score = 0;
+                let hasYes = false;
+
+                // Hitung skor
+                selects.forEach(select => {
+                    if (select.value === 'ya') {
+                        hasYes = true;
+                    }
+                    score += parseInt(select.value) || 0;
+                });
+
+                // Dapatkan div kesimpulan dari form yang aktif
+                const conclusionDiv = form.querySelector('.conclusion');
+                let conclusion = '';
+                let bgClass = '';
+
+                // Tentukan kesimpulan berdasarkan tipe form
+                switch (formType) {
+                    case 'umum':
+                        if (hasYes) {
+                            conclusion = 'Berisiko jatuh';
+                            bgClass = 'bg-danger';
+                        } else {
+                            conclusion = 'Tidak berisiko jatuh';
+                            bgClass = 'bg-success';
+                        }
+                        break;
+
+                    case 'morse':
+                        if (score >= 45) {
+                            conclusion = 'Risiko Tinggi';
+                            bgClass = 'bg-danger';
+                        } else if (score >= 25) {
+                            conclusion = 'Risiko Sedang';
+                            bgClass = 'bg-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgClass = 'bg-success';
+                        }
+                        conclusion += ' (Skor: ' + score + ')';
+                        break;
+
+                    case 'humpty':
+                        if (score >= 12) {
+                            conclusion = 'Risiko Tinggi';
+                            bgClass = 'bg-danger';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgClass = 'bg-success';
+                        }
+                        break;
+
+                    case 'ontario':
+                        if (score >= 9) {
+                            conclusion = 'Risiko Tinggi';
+                            bgClass = 'bg-danger';
+                        } else if (score >= 4) {
+                            conclusion = 'Risiko Sedang';
+                            bgClass = 'bg-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgClass = 'bg-success';
+                        }
+                        break;
+                }
+
+                // Update tampilan kesimpulan
+                if (conclusionDiv) {
+                    conclusionDiv.className = 'conclusion ' + bgClass;
+                    conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' + conclusion;
+                }
+            }
+
+            // 11. Status Gizi
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inisialisasi elemen
+                const nutritionSelect = document.getElementById('nutritionAssessment');
+                const allForms = document.querySelectorAll('.assessment-form, .risk-form');
+
+                // Fungsi untuk menghitung BMI
+                function calculateBMI() {
+                    const weight = parseFloat(document.getElementById('mnaWeight').value || 0);
+                    const height = parseFloat(document.getElementById('mnaHeight').value || 0);
+                    const bmiInput = document.getElementById('mnaBMI');
+
+                    if (weight && height) {
+                        const bmi = weight / ((height / 100) * (height / 100));
+                        bmiInput.value = bmi.toFixed(2);
+                    }
+                }
+
+                // Event listeners untuk perhitungan BMI
+                const weightInput = document.getElementById('mnaWeight');
+                const heightInput = document.getElementById('mnaHeight');
+                if (weightInput && heightInput) {
+                    weightInput.addEventListener('input', calculateBMI);
+                    heightInput.addEventListener('input', calculateBMI);
+                }
+
+                // Fungsi untuk menghitung skor MST
+                function calculateMSTScore() {
+                    const form = document.getElementById('mst');
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    const conclusions = form.querySelectorAll('.alert');
+                    conclusions.forEach(alert => {
+                        if ((total <= 1 && alert.classList.contains('alert-success')) ||
+                            (total >= 2 && alert.classList.contains('alert-warning'))) {
+                            alert.style.display = 'block';
+                        } else {
+                            alert.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Fungsi untuk menghitung skor MNA
+                function calculateMNAScore() {
+                    const form = document.getElementById('mna');
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    const conclusions = form.querySelectorAll('.alert');
+                    conclusions.forEach(alert => {
+                        if ((total >= 12 && alert.classList.contains('alert-success')) ||
+                            (total <= 11 && alert.classList.contains('alert-warning'))) {
+                            alert.style.display = 'block';
+                        } else {
+                            alert.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Fungsi untuk menghitung skor Strong Kids
+                function calculateStrongKidsScore() {
+                    const form = document.getElementById('strong-kids');
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    const conclusions = form.querySelectorAll('.alert');
+                    conclusions.forEach(alert => {
+                        if ((total === 0 && alert.textContent.includes('rendah')) ||
+                            (total >= 1 && total <= 3 && alert.textContent.includes('sedang')) ||
+                            (total >= 4 && alert.textContent.includes('Tinggi'))) {
+                            alert.style.display = 'block';
+                        } else {
+                            alert.style.display = 'none';
+                        }
+                    });
+                }
+
+                function calculateNRSScore() {
+                    const form = document.getElementById('nrs');
+                    const selects = form.querySelectorAll('select');
+                    let total = 0;
+
+                    selects.forEach(select => {
+                        total += parseInt(select.value || 0);
+                    });
+
+                    const conclusions = form.querySelectorAll('.alert');
+                    conclusions.forEach(alert => {
+                        if ((total <= 5 && alert.textContent.includes('rendah')) ||
+                            (total > 5 && total <= 10 && alert.textContent.includes('sedang')) ||
+                            (total > 10 && alert.textContent.includes('Tinggi'))) {
+                            alert.style.display = 'block';
+                        } else {
+                            alert.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Modifikasi event listener untuk perubahan form
+                nutritionSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
+
+                    // Sembunyikan semua form
+                    allForms.forEach(form => form.style.display = 'none');
+
+                    // Tampilkan form yang dipilih
+                    if (selectedValue) {
+                        const selectedForm = document.getElementById(selectedValue);
+                        if (selectedForm) {
+                            selectedForm.style.display = 'block';
+
+                            // Tambahkan event listeners sesuai form
+                            const selects = selectedForm.querySelectorAll('select');
+                            switch (selectedValue) {
+                                case 'mst':
+                                    selects.forEach(select => select.addEventListener('change',
+                                        calculateMSTScore));
+                                    break;
+                                case 'mna':
+                                    selects.forEach(select => select.addEventListener('change',
+                                        calculateMNAScore));
+                                    break;
+                                case 'strong-kids':
+                                    selects.forEach(select => select.addEventListener('change',
+                                        calculateStrongKidsScore));
+                                    break;
+                                case 'nrs':
+                                    selects.forEach(select => {
+                                        select.removeAttribute('onchange'); // Hapus handler lama
+                                        select.addEventListener('change', calculateNRSScore);
+                                    });
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+                // Event listener untuk perubahan pilihan form
+                nutritionSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
+
+                    // Sembunyikan semua form
+                    allForms.forEach(form => form.style.display = 'none');
+
+                    // Tampilkan form yang dipilih
+                    if (selectedValue) {
+                        const selectedForm = document.getElementById(selectedValue);
+                        if (selectedForm) {
+                            selectedForm.style.display = 'block';
+
+                            // Tambahkan event listeners untuk form yang aktif
+                            if (selectedValue === 'mst') {
+                                const selects = selectedForm.querySelectorAll('select');
+                                selects.forEach(select => {
+                                    select.addEventListener('change', calculateMSTScore);
+                                });
+                            } else if (selectedValue === 'mna') {
+                                const selects = selectedForm.querySelectorAll('select');
+                                selects.forEach(select => {
+                                    select.addEventListener('change', calculateMNAScore);
+                                });
+                            } else if (selectedValue === 'strong-kids') {
+                                const selects = selectedForm.querySelectorAll('select');
+                                selects.forEach(select => {
+                                    select.addEventListener('change', calculateStrongKidsScore);
+                                });
+                            }
+                        }
+                    }
+                });
             });
-
-            // Dapatkan div kesimpulan dari form yang aktif
-            const conclusionDiv = form.querySelector('.conclusion');
-            let conclusion = '';
-            let bgClass = '';
-
-            // Tentukan kesimpulan berdasarkan tipe form
-            switch (formType) {
-                case 'umum':
-                    if (hasYes) {
-                        conclusion = 'Berisiko jatuh';
-                        bgClass = 'bg-danger';
-                    } else {
-                        conclusion = 'Tidak berisiko jatuh';
-                        bgClass = 'bg-success';
-                    }
-                    break;
-
-                case 'morse':
-                    if (score >= 45) {
-                        conclusion = 'Risiko Tinggi';
-                        bgClass = 'bg-danger';
-                    } else if (score >= 25) {
-                        conclusion = 'Risiko Sedang';
-                        bgClass = 'bg-warning';
-                    } else {
-                        conclusion = 'Risiko Rendah';
-                        bgClass = 'bg-success';
-                    }
-                    conclusion += ' (Skor: ' + score + ')';
-                    break;
-
-                case 'humpty':
-                    if (score >= 12) {
-                        conclusion = 'Risiko Tinggi';
-                        bgClass = 'bg-danger';
-                    } else {
-                        conclusion = 'Risiko Rendah';
-                        bgClass = 'bg-success';
-                    }
-                    break;
-
-                case 'ontario':
-                    if (score >= 9) {
-                        conclusion = 'Risiko Tinggi';
-                        bgClass = 'bg-danger';
-                    } else if (score >= 4) {
-                        conclusion = 'Risiko Sedang';
-                        bgClass = 'bg-warning';
-                    } else {
-                        conclusion = 'Risiko Rendah';
-                        bgClass = 'bg-success';
-                    }
-                    break;
-            }
-
-            // Update tampilan kesimpulan
-            if (conclusionDiv) {
-                conclusionDiv.className = 'conclusion ' + bgClass;
-                conclusionDiv.querySelector('p').textContent = 'Kesimpulan : ' + conclusion;
-            }
-        }
         </script>
     @endpush
