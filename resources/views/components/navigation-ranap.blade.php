@@ -46,7 +46,7 @@
         [
             'icon' => 'verified_badge.png',
             'label' => 'Asesmen',
-            'link' => route('rawat-inap.asesmen.index', [
+            'link' => route('rawat-inap.asesmen.medis.umum.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,

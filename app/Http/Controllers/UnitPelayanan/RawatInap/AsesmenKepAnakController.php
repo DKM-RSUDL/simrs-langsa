@@ -7,7 +7,7 @@ use App\Models\Kunjungan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AsesmenAnakController extends Controller
+class AsesmenKepAnakController extends Controller
 {
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -56,4 +56,10 @@ class AsesmenAnakController extends Controller
             'user'
         ));
     }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
 }

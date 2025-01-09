@@ -47,7 +47,7 @@
                             data-bs-target="#detailPasienModal">Umum Dewasa</a></li>
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
                         <li><a class="custom__dropdown__item"
-                                href="{{ route('rawat-inap.asesmen-anak.index', [
+                                href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
                                     'kd_unit' => request()->route('kd_unit'),
                                     'kd_pasien' => request()->route('kd_pasien'),
                                     'tgl_masuk' => request()->route('tgl_masuk'),
@@ -108,13 +108,13 @@
             </div>
             <div>
                 <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/medis/umum/' . $item->id) }}"
                     class="btn btn-info btn-sm">
                     <i class="fas fa-eye"></i> Lihat
                 </button>
                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.show')
                 <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
+                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/medis/umum/' . $item->id) }}"
                     class="btn btn-secondary btn-sm">
                     <i class="fas fa-edit"></i> Edit
                 </button>
