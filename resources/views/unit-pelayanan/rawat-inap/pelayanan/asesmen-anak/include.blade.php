@@ -184,6 +184,17 @@
                     }
                 });
             });
+
+            // Inisialisasi semua checkbox sebagai checked dan sembunyikan keterangan
+            document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                checkbox.checked = true;
+                const keteranganDiv = checkbox.closest('.pemeriksaan-item').querySelector('.keterangan');
+                if (keteranganDiv) {
+                    keteranganDiv.style.display = 'none';
+                    const input = keteranganDiv.querySelector('input');
+                    if (input) input.value = '';
+                }
+            });
             //------------------------------------------------------------//
 
             //------------------------------------------------------------//
@@ -350,18 +361,20 @@
                 const selectedKondisiPsikologis = document.getElementById('selectedKondisiPsikologis');
                 let selectedItems = new Set();
 
-                if (!btnKondisiPsikologis || !dropdownKondisiPsikologis || !selectedKondisiPsikologis) {
-                    console.error('Some elements for psikologis dropdown not found');
-                    return;
-                }
-
-                function updateSelectedItems() {
+                function SelectedItems() {
                     selectedKondisiPsikologis.innerHTML = '';
                     selectedItems.forEach(item => {
                         const badge = document.createElement('span');
-                        badge.className = 'selected-item';
+                        badge.style.display = 'inline-flex';
+                        badge.style.alignItems = 'center';
+                        badge.style.padding = '2px 8px';
+                        badge.style.backgroundColor = '#e9ecef';
+                        badge.style.borderRadius = '4px';
+                        badge.style.marginRight = '4px';
+                        badge.style.marginBottom = '4px';
+                        badge.style.fontSize = '14px';
                         badge.innerHTML =
-                            `${item}<i class="ti-close remove-item" data-value="${item}"></i>`;
+                            `${item}<i class="ti-close remove-item" data-value="${item}" style="margin-left: 4px; cursor: pointer;"></i>`;
                         selectedKondisiPsikologis.appendChild(badge);
                     });
                 }
@@ -370,29 +383,12 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    const rect = this.getBoundingClientRect();
-                    const buttonHeight = this.offsetHeight;
-
                     dropdownKondisiPsikologis.style.position = 'absolute';
-                    dropdownKondisiPsikologis.style.top = `${buttonHeight + 5}px`; // 5px offset
+                    dropdownKondisiPsikologis.style.top = '100%'; // Posisi tepat di bawah parent
                     dropdownKondisiPsikologis.style.left = '0';
+                    dropdownKondisiPsikologis.style.marginTop = '5px'; // Jarak 5px dari tombol
                     dropdownKondisiPsikologis.style.display = dropdownKondisiPsikologis.style.display ===
                         'none' ? 'block' : 'none';
-
-                    // Memastikan dropdown tidak keluar dari viewport
-                    const dropdownRect = dropdownKondisiPsikologis.getBoundingClientRect();
-                    const viewportHeight = window.innerHeight;
-                    const viewportWidth = window.innerWidth;
-
-                    if (dropdownRect.bottom > viewportHeight) {
-                        dropdownKondisiPsikologis.style.top = 'auto';
-                        dropdownKondisiPsikologis.style.bottom = `${buttonHeight + 5}px`;
-                    }
-
-                    if (dropdownRect.right > viewportWidth) {
-                        dropdownKondisiPsikologis.style.left = 'auto';
-                        dropdownKondisiPsikologis.style.right = '0';
-                    }
                 });
 
                 document.querySelectorAll('.kondisi-options .form-check-input').forEach(checkbox => {
@@ -402,7 +398,7 @@
                         } else {
                             selectedItems.delete(this.value);
                         }
-                        updateSelectedItems();
+                        SelectedItems();
                     });
                 });
 
@@ -412,7 +408,7 @@
                         selectedItems.delete(value);
                         const checkbox = document.querySelector(`.form-check-input[value="${value}"]`);
                         if (checkbox) checkbox.checked = false;
-                        updateSelectedItems();
+                        SelectedItems();
                     }
                 });
 
@@ -424,8 +420,73 @@
                 });
             }
 
-            // Initialize psikologis dropdown
             handlePsikologisDropdown();
+
+            function handleGangguanPerilaku() {
+                const btnGangguanPerilaku = document.getElementById('btnGangguanPerilaku');
+                const dropdownGangguanPerilaku = document.getElementById('dropdownGangguanPerilaku');
+                const selectedGangguanPerilaku = document.getElementById('selectedGangguanPerilaku');
+                let selectedItems = new Set();
+
+                function SelectedItems() {
+                    selectedGangguanPerilaku.innerHTML = '';
+                    selectedItems.forEach(item => {
+                        const badge = document.createElement('span');
+                        badge.style.display = 'inline-flex';
+                        badge.style.alignItems = 'center';
+                        badge.style.padding = '2px 8px';
+                        badge.style.backgroundColor = '#e9ecef';
+                        badge.style.borderRadius = '4px';
+                        badge.style.marginRight = '4px';
+                        badge.style.marginBottom = '4px';
+                        badge.style.fontSize = '14px';
+                        badge.innerHTML =
+                            `${item}<i class="ti-close remove-item" data-value="${item}" style="margin-left: 4px; cursor: pointer;"></i>`;
+                        selectedGangguanPerilaku.appendChild(badge);
+                    });
+                }
+
+                btnGangguanPerilaku.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    dropdownGangguanPerilaku.style.position = 'absolute';
+                    dropdownGangguanPerilaku.style.top = '100%';
+                    dropdownGangguanPerilaku.style.left = '0';
+                    dropdownGangguanPerilaku.style.marginTop = '5px';
+                    dropdownGangguanPerilaku.style.display = dropdownGangguanPerilaku.style.display ===
+                        'none' ? 'block' : 'none';
+                });
+
+                document.querySelectorAll('.perilaku-options .form-check-input').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            selectedItems.add(this.value);
+                        } else {
+                            selectedItems.delete(this.value);
+                        }
+                        SelectedItems();
+                    });
+                });
+
+                selectedGangguanPerilaku.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('remove-item')) {
+                        const value = e.target.dataset.value;
+                        selectedItems.delete(value);
+                        const checkbox = document.querySelector(`.form-check-input[value="${value}"]`);
+                        if (checkbox) checkbox.checked = false;
+                        SelectedItems();
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!dropdownGangguanPerilaku.contains(e.target) && e.target !== btnGangguanPerilaku) {
+                        dropdownGangguanPerilaku.style.display = 'none';
+                    }
+                });
+            }
+
+            handleGangguanPerilaku();
             //------------------------------------------------------------//
 
 

@@ -105,11 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Initialize with example data shown in the image
-    alergis = [
-        { alergen: 'Cefotaxim', reaksi: 'Gatal-gatal', severe: '-' },
-        { alergen: 'Ikan tongkol', reaksi: 'Gatal-gatal', severe: '-' }
-    ];
+    alergis = [];
     updateMainView();
 });
 </script>
