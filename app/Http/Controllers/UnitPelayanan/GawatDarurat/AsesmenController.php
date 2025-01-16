@@ -284,50 +284,66 @@ class AsesmenController extends Controller
             }
 
             if ($request->has('tindak_lanjut')) {
-                $tindakLanjutData = $request->tindak_lanjut;
+                try {
+                    $tindakLanjutData = is_string($request->tindak_lanjut) ?
+                    json_decode($request->tindak_lanjut, true) :
+                    $request->tindak_lanjut;
 
-                $tindakLanjutDtl = RmeAsesmenDtl::firstOrCreate(['id_asesmen' => $id]);
+                    if (!$tindakLanjutData) {
+                        throw new \Exception("Invalid tindak lanjut data format");
+                    }
 
-                switch ($tindakLanjutData['option']) {
-                    case 'rawatInap':
-                        $tindakLanjutDtl->tindak_lanjut_code = 1;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-                        break;
-                    case 'pulangKontrol':
-                        $tindakLanjutDtl->tindak_lanjut_code = 2;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
-                        break;
-                    case 'rujukKeluar':
-                        $tindakLanjutDtl->tindak_lanjut_code = 5;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
-                        break;
-                    case 'kamarOperasi':
-                        $tindakLanjutDtl->tindak_lanjut_code = 4;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
-                        break;
-                    case 'menolakRawatInap':
-                    case 'meninggalDunia':
-                        $tindakLanjutDtl->tindak_lanjut_code = 3;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
-                        break;
-                    default:
-                        $tindakLanjutDtl->tindak_lanjut_code = null;
-                        $tindakLanjutDtl->tindak_lanjut_name = $tindakLanjutData['option'];
+                    $tindakLanjutDtl = RmeAsesmenDtl::firstOrCreate(['id_asesmen' => $id]);
+
+                    // Set default values
+                    $tindakLanjutDtl->tindak_lanjut_code = null;
+                    $tindakLanjutDtl->tindak_lanjut_name = null;
+                    $tindakLanjutDtl->keterangan = null;
+                    $tindakLanjutDtl->tanggal_meninggal = null;
+                    $tindakLanjutDtl->jam_meninggal = null;
+
+                    if (!empty($tindakLanjutData['option'])) {
+                        switch ($tindakLanjutData['option']) {
+                            case 'rawatInap':
+                                $tindakLanjutDtl->tindak_lanjut_code = 1;
+                                $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+                                break;
+                            case 'pulangKontrol':
+                                $tindakLanjutDtl->tindak_lanjut_code = 2;
+                                $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
+                                break;
+                            case 'rujukKeluar':
+                                $tindakLanjutDtl->tindak_lanjut_code = 5;
+                                $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                                break;
+                            case 'kamarOperasi':
+                                $tindakLanjutDtl->tindak_lanjut_code = 4;
+                                $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
+                                break;
+                            case 'menolakRawatInap':
+                            case 'meninggalDunia':
+                                $tindakLanjutDtl->tindak_lanjut_code = 3;
+                                $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
+                                break;
+                        }
+
+                        if (!empty($tindakLanjutData['keterangan'])) {
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
+                        }
+
+                        if (!empty($tindakLanjutData['tanggalMeninggal'])) {
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
+                        }
+
+                        if (!empty($tindakLanjutData['jamMeninggal'])) {
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
+                        }
+                    }
+
+                    $tindakLanjutDtl->save();
+                } catch (\Exception $e) {
+                    //
                 }
-
-                // Update keterangan jika ada
-                if (isset($tindakLanjutData['keterangan'])) {
-                    $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
-                }
-
-                if (isset($tindakLanjutData['tanggalMeninggal'])) {
-                    $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
-                }
-                if (isset($tindakLanjutData['jamMeninggal'])) {
-                    $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
-                }
-
-                $tindakLanjutDtl->save();
             }
 
             if ($request->has('pemeriksaan_fisik')) {
@@ -682,44 +698,56 @@ class AsesmenController extends Controller
 
             //simpan tindak lanjut
             // Handle tindak lanjut if exists (now optional)
-            if ($request->has('tindak_lanjut_data') && $tindakLanjutData = json_decode($request->tindak_lanjut_data, true)) {
+            if ($request->has('tindak_lanjut_data')) {
+                $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
+
+                // Create RmeAsesmenDtl record even if tindakLanjutData is empty/null
                 $tindakLanjutDtl = new RmeAsesmenDtl();
                 $tindakLanjutDtl->id_asesmen = $asesmen->id;
 
-                switch ($tindakLanjutData['option']) {
-                    case 'rawatInap':
-                        $tindakLanjutDtl->tindak_lanjut_code = 1;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-                        break;
-                    case 'pulangKontrol':
-                        $tindakLanjutDtl->tindak_lanjut_code = 2;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
-                        break;
-                    case 'rujukKeluar':
-                        $tindakLanjutDtl->tindak_lanjut_code = 5;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
-                        break;
-                    case 'kamarOperasi':
-                        $tindakLanjutDtl->tindak_lanjut_code = 4;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
-                        break;
-                    case 'menolakRawatInap':
-                    case 'meninggalDunia':
-                        $tindakLanjutDtl->tindak_lanjut_code = 3;
-                        $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
-                        break;
-                    default:
-                        $tindakLanjutDtl->tindak_lanjut_code = null;
-                        $tindakLanjutDtl->tindak_lanjut_name = $tindakLanjutData['option'];
-                }
+                if ($tindakLanjutData && isset($tindakLanjutData['option'])) {
+                    switch ($tindakLanjutData['option']) {
+                        case 'rawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 1;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+                            break;
+                        case 'pulangKontrol':
+                            $tindakLanjutDtl->tindak_lanjut_code = 2;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
+                            break;
+                        case 'rujukKeluar':
+                            $tindakLanjutDtl->tindak_lanjut_code = 5;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                            break;
+                        case 'kamarOperasi':
+                            $tindakLanjutDtl->tindak_lanjut_code = 4;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
+                            break;
+                        case 'menolakRawatInap':
+                        case 'meninggalDunia':
+                            $tindakLanjutDtl->tindak_lanjut_code = 3;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
+                            break;
+                        default:
+                            $tindakLanjutDtl->tindak_lanjut_code = null;
+                            $tindakLanjutDtl->tindak_lanjut_name = null;
+                    }
 
-                if (isset($tindakLanjutData['keterangan'])) {
-                    $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
-                }
+                    if (isset($tindakLanjutData['keterangan'])) {
+                        $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
+                    }
 
-                if (isset($tindakLanjutData['tanggalMeninggal'], $tindakLanjutData['jamMeninggal'])) {
-                    $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
-                    $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
+                    if (isset($tindakLanjutData['tanggalMeninggal'], $tindakLanjutData['jamMeninggal'])) {
+                        $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
+                        $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
+                    }
+                } else {
+                    // Set null values when tindakLanjutData is empty
+                    $tindakLanjutDtl->tindak_lanjut_code = null;
+                    $tindakLanjutDtl->tindak_lanjut_name = null;
+                    $tindakLanjutDtl->keterangan = null;
+                    $tindakLanjutDtl->tanggal_meninggal = null;
+                    $tindakLanjutDtl->jam_meninggal = null;
                 }
 
                 $tindakLanjutDtl->save();
@@ -743,25 +771,25 @@ class AsesmenController extends Controller
                 'rs_rujuk_bagian'       => null,
                 'konpas'                => [
                     'sistole'   => [
-                        'hasil' => $vitalSign['td_sistole']
+                        'hasil' => $vitalSign['td_sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $vitalSign['td_diastole']
+                        'hasil' => $vitalSign['td_diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $vitalSign['resp']
+                        'hasil' => $vitalSign['resp'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $vitalSign['suhu']
+                        'hasil' => $vitalSign['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $vitalSign['nadi']
+                        'hasil' => $vitalSign['nadi'] ?? null 
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $antropometri['tb']
+                        'hasil' => $antropometri['tb'] ?? null 
                     ],
                     'berat_badan'   => [
-                        'hasil' => $antropometri['bb']
+                        'hasil' => $antropometri['bb'] ?? null
                     ]
                 ]
             ];

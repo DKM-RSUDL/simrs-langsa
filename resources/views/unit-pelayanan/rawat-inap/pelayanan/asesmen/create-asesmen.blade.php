@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form id="asesmenForm" method="POST"
-                action="{{ route('rawat-inap.asesmen.store', [$dataMedis->kd_unit, $dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-inap.asesmen.medis.umum.store', [$dataMedis->kd_unit, $dataMedis->pasien->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                 @csrf
                 <input type="hidden" name="kd_pasien" value="{{ $dataMedis->pasien->kd_pasien }}">
                 <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
