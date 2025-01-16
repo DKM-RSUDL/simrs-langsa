@@ -24,16 +24,19 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\CarePlanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\CpptController as GawatDaruratCpptController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\EdukasiController as GawatDaruratEdukasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDaruratFarmasiController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
@@ -242,8 +245,11 @@ Route::middleware('auth')->group(function () {
                             // Informed Consent
                             Route::prefix('informed-consent')->group(function () {
                                 Route::name('.informed-consent')->group(function () {
-                                    Route::controller(RawatInapController::class)->group(function () {
-                                        Route::get('/', 'informedConsent');
+                                    Route::controller(InformedConsentController::class)->group(function () {
+                                        Route::get('/', 'index');
+                                        Route::post('/show', 'show')->name('.show');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::delete('/{data}', 'delete')->name('.delete');
                                     });
                                 });
                             });
@@ -400,8 +406,11 @@ Route::middleware('auth')->group(function () {
                         // general consent
                         Route::prefix('{urut_masuk}/general-consent')->group(function () {
                             Route::name('general-consent')->group(function () {
-                                Route::controller(GawatDaruratController::class)->group(function () {
-                                    Route::get('/', 'generalConsent');
+                                Route::controller(GeneralConsentController::class)->group(function () {
+                                    Route::get('/', 'index');
+                                    Route::post('/show', 'show')->name('.show');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::delete('/{data}', 'delete')->name('.delete');
                                 });
                             });
                         });
@@ -560,6 +569,19 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+                    });
+                });
+            });
+        });
+
+        Route::prefix('operasi')->group(function() {
+            Route::name('operasi')->group(function() {
+                Route::get('/', [OperasiController::class, 'index'])->name('.index');
+                
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
+                    Route::name('.pelayanan')->group(function() {
+                        Route::get('/', [OperasiController::class, 'pelayanan']);
+                        Route::get('/asesmen-pra-anestesi', [OperasiController::class, 'asesmenPraAnestesi'])->name('.asesmen-pra-anestesi');
                     });
                 });
             });

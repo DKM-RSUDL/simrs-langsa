@@ -3,33 +3,20 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\DokterKlinik;
+use App\Models\DokterPenunjang;
 use App\Models\Kunjungan;
-use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class RawatInapController extends Controller
+class OperasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $unit = Unit::with(['bagian'])
-            ->where('kd_bagian', 1)
-            ->where('aktif', 1)
-            ->get();
-
-        return view('unit-pelayanan.rawat-inap.index', compact('unit'));
-    }
-
-    public function unitPelayanan($kd_unit, Request $request)
-    {
-        $unit = Unit::with(['bagian'])
-            ->where('kd_unit', $kd_unit)
-            ->first();
-
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', $kd_unit);
+                ->where('kd_unit', 71);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
@@ -79,17 +66,22 @@ class RawatInapController extends Controller
                 ->make(true);
         }
 
-        return view('unit-pelayanan.rawat-inap.unit-pelayanan', compact('unit'));
+        $dokter = DokterPenunjang::with(['dokter', 'unit'])
+                            ->where('kd_unit', 71)
+                            ->whereRelation('dokter', 'status', 1)
+                            ->get();
+
+        return view('unit-pelayanan.operasi.index', compact('dokter'));
     }
 
-    public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_unit', $kd_unit)
-            ->where('kd_pasien', $kd_pasien)
-            ->where('urut_masuk', $urut_masuk)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->first();
+                            ->where('kd_unit', 71)
+                            ->where('kd_pasien', $kd_pasien)
+                            ->where('urut_masuk', $urut_masuk)
+                            ->whereDate('tgl_masuk', $tgl_masuk)
+                            ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -102,6 +94,29 @@ class RawatInapController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.index', compact('dataMedis'));
+        return view('unit-pelayanan.operasi.pelayanan.index', compact('dataMedis'));
+    }
+
+    public function asesmenPraAnestesi($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                            ->where('kd_unit', 71)
+                            ->where('kd_pasien', $kd_pasien)
+                            ->where('urut_masuk', $urut_masuk)
+                            ->whereDate('tgl_masuk', $tgl_masuk)
+                            ->first();
+
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        return view('unit-pelayanan.operasi.pelayanan.asesmen-pra-anestesi', compact('dataMedis'));
     }
 }

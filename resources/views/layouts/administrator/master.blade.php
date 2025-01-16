@@ -39,7 +39,7 @@
     @stack('css')
     <!-- End CSS  -->
 
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
     {{-- vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
