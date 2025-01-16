@@ -1018,7 +1018,7 @@
                                                         style="min-width: 350px;">
                                                         <input type="number" class="form-control flex-grow-1"
                                                             name="skala_nyeri_nilai" style="width: 100px;" value="0"
-                                                            min="0" max="10" required>
+                                                            min="0" max="10" >
                                                         <button class="btn btn-warning btn-sm">
                                                             Nyeri Hebat
                                                         </button>
@@ -1577,7 +1577,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
-                                            <select class="form-select" name="spiritual_agama" required>
+                                            <select class="form-select" name="spiritual_agama" >
                                                 <option value="">--Pilih--</option>
                                                 <option value="islam">Islam</option>
                                                 <option value="kristen">Kristen</option>
@@ -2185,12 +2185,12 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Diagnosis medis</label>
-                                            <input type="text" class="form-control" name="discharge_planning_diagnosis_medis" id="diagnosis_medis" required>
+                                            <input type="text" class="form-control" name="discharge_planning_diagnosis_medis" id="diagnosis_medis" >
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Usia lanjut</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_usia_lanjut" id="usia_lanjut" required>
+                                            <select class="form-select discharge-select" name="discharge_planning_usia_lanjut" id="usia_lanjut" >
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2199,7 +2199,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hambatan mobilisasi</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi" required>
+                                            <select class="form-select discharge-select" name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi" >
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2208,7 +2208,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Membutuhkan pelayanan medis berkelanjutan</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_pelayanan_medis" id="pelayanan_medis_berkelanjutan" required>
+                                            <select class="form-select discharge-select" name="discharge_planning_pelayanan_medis" id="pelayanan_medis_berkelanjutan" >
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2217,7 +2217,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Ketergantungan dengan orang lain dalam aktivitas harian</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_ketergantungan_aktivitas" id="ketergantungan_aktivitas" required>
+                                            <select class="form-select discharge-select" name="discharge_planning_ketergantungan_aktivitas" id="ketergantungan_aktivitas" >
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
