@@ -37,7 +37,7 @@ class RoleService
     }
 
     // store
-    public function store(array $data)
+    public function store($data)
     {
         try {
 
@@ -45,13 +45,13 @@ class RoleService
             $role = Role::create($data);
 
             return [
-                'success' => true,
+                'status' => 'success',
                 'message' => 'Data berhasil disimpan.',
                 'role' => $role
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [
-                'success' => false,
+                'status' => 'error',
                 'message' => 'Gagal menyimpan data: ' . $e->getMessage()
             ];
         }
@@ -72,12 +72,12 @@ class RoleService
             ]);
 
             return [
-                'success' => true,
+                'status' => 'success',
                 'message' => 'Data berhasil diperbarui.'
             ];
         } catch (Exception $e) {
             return [
-                'success' => false,
+                'status' => 'error',
                 'message' => $e->getMessage(),
             ];
         }

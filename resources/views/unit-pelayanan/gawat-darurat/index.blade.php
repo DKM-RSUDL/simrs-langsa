@@ -725,11 +725,11 @@
                                                             </div>
                                                             <div class="form-check">
                                                                 <input class="form-check-input resusitasi-check"
-                                                                    type="checkbox" name="circulation[]" value="Cianosis"
+                                                                    type="checkbox" name="circulation[]" value="Sianosis"
                                                                     id="circulation_cianosis">
                                                                 <label class="form-check-label"
                                                                     for="circulation_cianosis">
-                                                                    Cianosis
+                                                                    Sianosis
                                                                 </label>
                                                             </div>
                                                         </div>

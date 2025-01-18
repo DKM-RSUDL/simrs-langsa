@@ -2,6 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <!-- Tambahkan ini ke tag <style> atau file CSS -->
+        
     <style>
         /* Sticky untuk side kiri khusus di dalam modal #detailPasienModal */
         #detailPasienModal .patient-card {

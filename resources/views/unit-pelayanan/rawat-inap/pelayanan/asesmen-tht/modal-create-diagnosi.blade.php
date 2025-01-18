@@ -2,11 +2,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="verticalCenterLabel">Input Diagnosis</h5>
+                <h5 class="modal-title" id="verticalCenterLabel">Input Riwayat Penyakit Pasien</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <strong class="fw-bold">Tambah Diagnosis</strong>
+                <strong class="fw-bold">Tambah Penyakit</strong>
                 <p>
                     (Isi diagnosis pada kolom dibawah dan <span class="fw-bold">Tekan Enter</span> untuk menambah ke
                     daftar diagnosis. Satu baris untuk satu diagnosis )
@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="mt-3">
-                    <strong class="fw-bold">Daftar Diagnosis</strong>
+                    <strong class="fw-bold">Daftar Penyakit</strong>
                     <div class="bg-light p-3 border rounded">
                         <ol type="1" id="diagnosisList">
                             <!-- List of Diagnoses -->
@@ -34,12 +34,13 @@
         </div>
     </div>
 </div>
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-daftar-input-diagnosis')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.modal-daftar-input-diagnosis')
 
 <script>
     $('#btn-diagnosis').on('click', function() {
         $('#modal-create-diagnosis').modal('show');
     });
+
     // kode baru :
     let dataDiagnosis = @json($dataResume->diagnosis ?? []);
 
@@ -171,4 +172,5 @@
             $('#modal-create-diagnosis').modal('hide');
         });
     });
+
 </script>

@@ -31,6 +31,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -337,21 +340,58 @@ Route::middleware('auth')->group(function () {
 
                             Route::prefix('asesmen')->group(function () {
                                 Route::name('.asesmen')->group(function () {
-                                    Route::controller(AsesmenController::class)->group(function () {
-                                        Route::get('/', 'index')->name('.index');
-                                        Route::post('/', 'store')->name('.store');
-                                        Route::get('/{id}', 'show')->name('.show');
-                                        Route::put('/{id}', 'update')->name('.update');
-                                    });
-                                });
-                            });
 
-                            Route::prefix('asesmen-anak')->group(function () {
-                                Route::name('.asesmen-anak')->group(function () {
-                                    Route::controller(AsesmenAnakController::class)->group(function () {
-                                        Route::get('/', 'index')->name('.index');
-                                        Route::post('/', 'store')->name('.store');
-                                        Route::put('/', 'update')->name('.update');
+                                    Route::prefix('medis')->group(function () {
+                                        Route::name('.medis')->group(function () {
+
+                                            Route::prefix('umum')->group(function () {
+                                                Route::name('.umum')->group(function () {
+                                                    Route::controller(AsesmenController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                        });
+                                    });
+
+                                    Route::prefix('keperawatan')->group(function () {
+                                        Route::name('.keperawatan')->group(function () {
+
+                                            Route::prefix('anak')->group(function () {
+                                                Route::name('.anak')->group(function () {
+                                                    Route::controller(AsesmenKepAnakController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('opthamology')->group(function () {
+                                                Route::name('.opthamology')->group(function () {
+                                                    Route::controller(AsesmenKepOpthamologyController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('tht')->group(function () {
+                                                Route::name('.tht')->group(function () {
+                                                    Route::controller(AsesmenKepThtController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                        });
                                     });
                                 });
                             });

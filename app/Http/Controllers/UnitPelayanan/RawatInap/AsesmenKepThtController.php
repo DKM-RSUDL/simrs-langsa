@@ -4,14 +4,16 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\MrItemFisik;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AsesmenAnakController extends Controller
+class AsesmenKepThtController extends Controller
 {
-    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
+        $itemFisik = MrItemFisik::orderby('urut')->get();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -23,7 +25,7 @@ class AsesmenAnakController extends Controller
         })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -49,10 +51,13 @@ class AsesmenAnakController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.create', compact(
+            'kd_unit',
             'kd_pasien',
             'tgl_masuk',
+            'urut_masuk',
             'dataMedis',
+            'itemFisik',
             'user'
         ));
     }

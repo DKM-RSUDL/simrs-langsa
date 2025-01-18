@@ -19,7 +19,7 @@
                         <div class="px-3">
                             <div class="row g-3">
                                 <div class="col-md-8">
-                                    <h4 class="header-asesmen">Asesmen Awal Keperawatan Anak</h4>
+                                    <h4 class="header-asesmen">Asesmen Awal Keperawatan Opthamology</h4>
                                     <p>
                                         Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                                     </p>
@@ -1312,5 +1312,3 @@
         </div>
     </div>
 @endsection
-
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan')

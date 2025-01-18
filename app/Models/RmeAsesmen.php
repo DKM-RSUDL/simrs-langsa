@@ -20,6 +20,7 @@ class RmeAsesmen extends Model
         'tindakan_resusitasi',
         'anamnesis',
         'riwayat_penyakit',
+        'riwayat_penyakit_keluarga',
         'riwayat_pengobatan',
         'riwayat_alergi',
         'vital_sign',
@@ -35,6 +36,7 @@ class RmeAsesmen extends Model
         'alat_terpasang',
         'kondisi_pasien',
         'lokasi',
+        'waktu_asesmen',
         'durasi'];
 
     public function user()

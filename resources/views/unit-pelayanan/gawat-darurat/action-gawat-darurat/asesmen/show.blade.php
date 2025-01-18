@@ -68,6 +68,11 @@
                                             </div>
 
                                             <div class="form-line">
+                                                <h6>Riwayat Penyakit Keluarga Pasien</h6>
+                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit_keluarga" readonly></textarea>
+                                            </div>
+
+                                            <div class="form-line">
                                                 <h6>Riwayat Pengobatan</h6>
                                                 <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan" readonly></textarea>
                                             </div>
@@ -534,6 +539,7 @@
         function handleTextareaData(asesmen) {
             $('textarea[name="anamnesis"]').val(asesmen.anamnesis || '-');
             $('textarea[name="riwayat_penyakit"]').val(asesmen.riwayat_penyakit || '-');
+            $('textarea[name="riwayat_penyakit_keluarga"]').val(asesmen.riwayat_penyakit_keluarga || '-');
             $('textarea[name="riwayat_pengobatan"]').val(asesmen.riwayat_pengobatan || '-');
             $('input[name="show_skala_nyeri"]').val(asesmen.show_skala_nyeri || '-');
             $('input[name="show_lokasi"]').val(asesmen.show_lokasi || '-');
