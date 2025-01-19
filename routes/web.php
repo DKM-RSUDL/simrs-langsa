@@ -30,6 +30,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
@@ -442,6 +443,20 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
+                        // transfer ke RWI
+                        Route::prefix('{urut_masuk}/transfer-rwi')->group(function() {
+                            Route::name('transfer-rwi')->group(function() {
+                                Route::controller(TransferPasienController::class)->group(function() {
+                                    Route::get('/', 'index');
+                                    Route::post('/', 'storeTransferInap')->name('.store');
+                                    Route::post('/get-dokter-spesial-ajax', 'getDokterBySpesial')->name('.get-dokter-spesial-ajax');
+                                    Route::post('/get-ruang-kelas-ajax', 'getRuanganByKelas')->name('.get-ruang-kelas-ajax');
+                                    Route::post('/get-kamar-ruang-ajax', 'getKamarByRuang')->name('.get-kamar-ruang-ajax');
+                                    Route::post('/get-sisa-bed-ajax', 'getSisaBedByKamar')->name('.get-sisa-bed-ajax');
+                                });
+                            });
+                        });
+
                         // CPPT
                         Route::prefix('cppt')->group(function () {
                             Route::name('cppt')->group(function () {
@@ -600,6 +615,10 @@ Route::middleware('auth')->group(function () {
                     Route::name('.pelayanan')->group(function() {
                         Route::get('/', [OperasiController::class, 'pelayanan']);
                         Route::get('/asesmen-pra-anestesi', [OperasiController::class, 'asesmenPraAnestesi'])->name('.asesmen-pra-anestesi');
+                        Route::get('/asesmen-pra-operasi', [OperasiController::class, 'asesmenPraOperasiPerawat'])->name('.asesmen-pra-operasi');
+                        Route::get('/ceklist-keselamatan-operasi', [OperasiController::class, 'ceklistKeselamatanOperasi'])->name('.ceklist-keselamatan-operasi');
+                        Route::get('/laporan-operasi', [OperasiController::class, 'laporanOperasi'])->name('.laporan-operasi');
+                        Route::get('/catatan-intra-operasi', [OperasiController::class, 'catatanIntraPascaOperasi'])->name('.catatan-intra-operasi');
                     });
                 });
             });

@@ -199,10 +199,13 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#addPatientTriage">
-                    <i class="ti-plus"></i> Tambah Data
-                </button>
+
+                @canany(['is-admin', 'is-dokter-umum'])
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#addPatientTriage">
+                        <i class="ti-plus"></i> Tambah Data
+                    </button>
+                @endcanany
             </div>
         </div>
     </div>
@@ -888,7 +891,7 @@
                                                 <i class="ti-pencil-alt"></i>
                                         </a>
                                         
-                                        <div class="dropdown ms-1">
+                                        <div class="dropdown mx-1">
                                             <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
@@ -928,6 +931,10 @@
                                                 <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
                                             </ul>
                                         </div>
+
+                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/transfer-rwi" class="btn btn-outline-warning btn-sm">
+                                            <i class="fa-solid fa-arrow-right-arrow-left"></i>    
+                                        </a>
                                     </div>
                                     `;
                         }
@@ -1037,22 +1044,31 @@
 
             let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
             if (rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
+
+            $('.dropdown-submenu').hover(
+                function() {
+                    $(this).find('.dropdown-menu').addClass('show');
+                },
+                function() {
+                    $(this).find('.dropdown-menu').removeClass('show');
+                }
+            );
         });
 
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
 
-            dropdownSubmenus.forEach(function(submenu) {
-                submenu.addEventListener('mouseover', function() {
-                    submenu.querySelector('.dropdown-menu').classList.add('show');
-                });
+        //     dropdownSubmenus.forEach(function(submenu) {
+        //         submenu.addEventListener('mouseover', function() {
+        //             submenu.querySelector('.dropdown-menu').classList.add('show');
+        //         });
 
-                submenu.addEventListener('mouseout', function() {
-                    submenu.querySelector('.dropdown-menu').classList.remove('show');
-                });
-            });
-        });
+        //         submenu.addEventListener('mouseout', function() {
+        //             submenu.querySelector('.dropdown-menu').classList.remove('show');
+        //         });
+        //     });
+        // });
 
 
         // Foto Upload

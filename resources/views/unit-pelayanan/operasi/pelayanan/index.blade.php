@@ -17,45 +17,8 @@
         </div>
 
         <div class="col-md-9">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Persetujuan Tindakan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-bold active"
-                        href="{{ route('operasi.pelayanan', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">Asesmen
-                        Pra Operasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark"
-                        href="{{ route('operasi.pelayanan.asesmen-pra-anestesi', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">Asesmen
-                        Pra Anestesi dan Sedasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Catatan Sedasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Ceklist Kesiapan Anastesia</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Edukasi Anastesi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Asesmen Pra Operasi (Perawat)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Penandaan Daerah Operasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Ceklist Keselamatan Pasien Operasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Laporan Operasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Catatan Intra dan Pasca Operasi</a>
-                </li>
-            </ul>
+            @include('unit-pelayanan.operasi.pelayanan.include.nav')
+
 
             <div class="container-fluid py-3">
                 <!-- Form Header -->
@@ -128,6 +91,10 @@
                     <div class="mb-3">
                         <label class="form-label">Pemantauan Khusus Pasca Tindakan</label>
                         <textarea class="form-control form-control-sm" rows="2"></textarea>
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary btn-sm">Simpan</button>
                     </div>
                 </div>
             </div>
