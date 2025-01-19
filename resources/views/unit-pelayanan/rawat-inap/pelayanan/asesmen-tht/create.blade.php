@@ -19,7 +19,7 @@
                         <div class="px-3">
                             <div class="row g-3">
                                 <div class="col-md-8">
-                                    <h4 class="header-asesmen">AAsesmen Awal Medis THT</h4>
+                                    <h4 class="header-asesmen">Asesmen Awal Medis THT</h4>
                                     <p>
                                         Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                                     </p>
