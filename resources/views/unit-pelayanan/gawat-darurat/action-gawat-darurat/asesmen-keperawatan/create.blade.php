@@ -67,7 +67,8 @@
                                             <select class="form-select" name="airway_status">
                                                 <option value="">--Pilih--</option>
                                                 <option value="bebas">Bebas</option>
-                                                <option value="pangkal lidah jatuh">Tidak Bebas (Pangkal Lidah Jatuh)</option>
+                                                <option value="pangkal lidah jatuh">Tidak Bebas (Pangkal Lidah Jatuh)
+                                                </option>
                                                 <option value="sputum">Tidak Bebas (Sputum)</option>
                                                 <option value="darah">Tidak Bebas (darah)</option>
                                                 <option value="spasm">Tidak Bebas (Spasm)</option>
@@ -296,7 +297,7 @@
 
                                         <div class="form-group" id="status-disability">
                                             <label style="min-width: 200px;">Nadi Frekuensi/menit</label>
-                                            <input type="text" class="form-control" name="circulation_nadi_frekuensi">
+                                            <input type="text" class="form-control" name="circulation_nadi">
                                         </div>
 
                                         <div class="form-group">
@@ -323,49 +324,49 @@
                                             <label style="min-width: 200px;">Akral</label>
                                             <select class="form-select" name="circulation_akral">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Hangat">Hangat</option>
-                                                <option value="Dingin">Dingin</option>
+                                                <option value="1">Hangat</option>
+                                                <option value="2">Dingin</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pucat</label>
                                             <select class="form-select" name="circulation_pucat">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Ya">Ya</option>
-                                                <option value="Tidak">Tidak</option>
+                                                <option value="1">Ya</option>
+                                                <option value="0">Tidak</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Cianoisis</label>
-                                            <select class="form-select" name="circulation_cianoisis">
+                                            <select class="form-select" name="circulation_cianosis">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Ya">Ya</option>
-                                                <option value="Tidak">Tidak</option>
+                                                <option value="1">Ya</option>
+                                                <option value="0">Tidak</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pengisian Kapiler</label>
-                                            <select class="form-select" name="circulation_pengisian_kapiler">
+                                            <select class="form-select" name="circulation_kapiler">
                                                 <option value="">--Pilih--</option>
-                                                <option value="< 2 Detik">
+                                                <option value="1">
                                                     < 2 Detik</option>
-                                                <option value="> 2 Detik">> 2 Detik</option>
+                                                <option value="2">> 2 Detik</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kelembapan Kulit</label>
                                             <select class="form-select" name="circulation_kelembapan_kulit">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Lembab">Lembab</option>
-                                                <option value="Kering">Kering</option>
+                                                <option value="1">Lembab</option>
+                                                <option value="2">Kering</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tugor</label>
-                                            <select class="form-select" name="circulation_tugor">
+                                            <select class="form-select" name="circulation_turgor">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Kurang">Kurang</option>
+                                                <option value="1">Normal</option>
+                                                <option value="0">Kurang</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -375,10 +376,10 @@
                                                     <div class="mb-1">
                                                         <small class="text-muted">Diberikan?</small>
                                                     </div>
-                                                    <select class="form-select" name="circulation_transfursi_darah">
+                                                    <select class="form-select" name="circulation_transfusi">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="Ya">Ya</option>
-                                                        <option value="Tidak">Tidak</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
                                                     </select>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -386,7 +387,7 @@
                                                         <small class="text-muted">Jumlah Transfursi (cc)</small>
                                                     </div>
                                                     <input class="form-control" type="text"
-                                                        name="circulation_jumlah_transfusi">
+                                                        name="circulation_transfusi_jumlah">
                                                 </div>
                                             </div>
                                         </div>
@@ -394,7 +395,7 @@
                                             <label style="min-width: 200px;">Lainnya</label>
                                             <input class="form-control" type="text"
                                                 placeholder="isikan jika ada keluhan nafas lainnya"
-                                                name="circulation_lainnya">
+                                                name="circulation_lain">
                                         </div>
                                         <div class="form-group diagnosis-section">
                                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
@@ -407,7 +408,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="perfusi_jaringan_perifer_tidak_efektif"
-                                                                    name="diagnosis_circulation[]"
+                                                                    name="circulation_diagnosis_perfusi[]"
                                                                     value="perfusi_jaringan_perifer_tidak_efektif">
                                                                 <label class="form-check-label"
                                                                     for="perfusi_jaringan_perifer_tidak_efektif">
@@ -418,7 +419,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="circulation_aktual"
-                                                                        name="circulation_diagnosis_type[perfusi_jaringan_perifer_tidak_efektif]"
+                                                                        name="circulation_diagnosis_perfusi_type"
                                                                         value="aktual">
                                                                     <label class="form-check-label"
                                                                         for="circulation_aktual">Aktual</label>
@@ -426,7 +427,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="circulation_risiko"
-                                                                        name="circulation_diagnosis_type[perfusi_jaringan_perifer_tidak_efektif]"
+                                                                        name="circulation_diagnosis_perfusi_type"
                                                                         value="risiko">
                                                                     <label class="form-check-label"
                                                                         for="circulation_risiko">Risiko</label>
@@ -442,7 +443,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="defisit_volume_cairan"
-                                                                    name="diagnosis_circulation[]"
+                                                                    name="circulation_diagnosis_defisit[]"
                                                                     value="defisit_volume_cairan">
                                                                 <label class="form-check-label"
                                                                     for="defisit_volume_cairan">
@@ -453,7 +454,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="circulation_aktual_1"
-                                                                        name="circulation_diagnosis_type[defisit_volume_cairan]"
+                                                                        name="circulation_diagnosis_defisit_type"
                                                                         value="aktual">
                                                                     <label class="form-check-label"
                                                                         for="circulation_aktual_1">Aktual</label>
@@ -461,7 +462,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="circulation_risiko_1"
-                                                                        name="circulation_diagnosis_type[defisit_volume_cairan]"
+                                                                        name="circulation_diagnosis_defisit_type"
                                                                         value="risiko">
                                                                     <label class="form-check-label"
                                                                         for="circulation_risiko_1">Risiko</label>
@@ -510,8 +511,8 @@
                                                     </div>
                                                     <select class="form-select" name="disability_isokor">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="Isokor">Isokor</option>
-                                                        <option value="Anisokor">Anisokor</option>
+                                                        <option value="1">Isokor</option>
+                                                        <option value="2">Anisokor</option>
                                                     </select>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -520,15 +521,15 @@
                                                     </div>
                                                     <select class="form-select" name="disability_respon_cahaya">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="Ya">Ya</option>
-                                                        <option value="Tidak">Tidak</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Diameter Pupil (mm)</label>
-                                            <input type="text" class="form-control" name="disability_diameter_Pupil">
+                                            <input type="text" class="form-control" name="disability_diameter_pupil">
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Ekstremitas</label>
@@ -539,8 +540,8 @@
                                                     </div>
                                                     <select class="form-select" name="disability_motorik">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="Ya">Ya</option>
-                                                        <option value="Tidak">Tidak</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
                                                     </select>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -549,15 +550,15 @@
                                                     </div>
                                                     <select class="form-select" name="disability_sensorik">
                                                         <option value="">--Pilih--</option>
-                                                        <option value="Ya">Ya</option>
-                                                        <option value="Tidak">Tidak</option>
+                                                        <option value="1">Ya</option>
+                                                        <option value="0">Tidak</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kekuatan Otot</label>
-                                            <input class="form-control" type="text" name="disability_kekutan_otot">
+                                            <input class="form-control" type="text" name="disability_kekuatan_otot">
                                         </div>
                                         <div class="form-group diagnosis-section">
                                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
@@ -570,7 +571,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="perfusi_jaringan_cereberal_tidak_efektif"
-                                                                    name="diagnosis_disability[]"
+                                                                    name="disability_diagnosis_perfusi[]"
                                                                     value="perfusi_jaringan_cereberal_tidak_efektif">
                                                                 <label class="form-check-label"
                                                                     for="perfusi_jaringan_cereberal_tidak_efektif">
@@ -581,16 +582,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual"
-                                                                        name="disability_diagnosis_type[perfusi_jaringan_cereberal_tidak_efektif]"
-                                                                        value="aktual">
+                                                                        name="disability_diagnosis_perfusi_type"
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko"
-                                                                        name="disability_diagnosis_type[perfusi_jaringan_cereberal_tidak_efektif]"
-                                                                        value="risiko">
+                                                                        name="disability_diagnosis_perfusi_type"
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko">Risiko</label>
                                                                 </div>
@@ -605,7 +606,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="intoleransi_aktivitas"
-                                                                    name="diagnosis_disability[]"
+                                                                    name="disability_diagnosis_intoleransi[]"
                                                                     value="intoleransi_aktivitas">
                                                                 <label class="form-check-label"
                                                                     for="intoleransi_aktivitas">
@@ -616,16 +617,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_1"
-                                                                        name="disability_diagnosis_type[intoleransi_aktivitas]"
-                                                                        value="aktual">
+                                                                        name="disability_diagnosis_intoleransi_type"
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_1">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_1"
-                                                                        name="disability_diagnosis_type[intoleransi_aktivitas]"
-                                                                        value="risiko">
+                                                                        name="disability_diagnosis_intoleransi_type"
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_1">Risiko</label>
                                                                 </div>
@@ -640,7 +641,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kendala_komunikasi_verbal"
-                                                                    name="diagnosis_disability[]"
+                                                                    name="disability_diagnosis_komunikasi[]"
                                                                     value="kendala_komunikasi_verbal">
                                                                 <label class="form-check-label"
                                                                     for="kendala_komunikasi_verbal">
@@ -651,16 +652,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_2"
-                                                                        name="disability_diagnosis_type[kendala_komunikasi_verbal]"
-                                                                        value="aktual">
+                                                                        name="disability_diagnosis_komunikasi_type"
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_2">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_2"
-                                                                        name="disability_diagnosis_type[kendala_komunikasi_verbal]"
-                                                                        value="risiko">
+                                                                        name="disability_diagnosis_komunikasi_type"
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_2">Risiko</label>
                                                                 </div>
@@ -674,7 +675,7 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                                    id="kejang_ulang" name="diagnosis_disability[]"
+                                                                    id="kejang_ulang" name="disability_diagnosis_kejang[]"
                                                                     value="kejang_ulang">
                                                                 <label class="form-check-label" for="kejang_ulang">
                                                                     Kejang ulang
@@ -684,16 +685,16 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_3"
-                                                                        name="disability_diagnosis_type[kejang_ulang]"
-                                                                        value="aktual">
+                                                                        name="disability_diagnosis_kejang_type"
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_3">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_3"
-                                                                        name="disability_diagnosis_type[kejang_ulang]"
-                                                                        value="risiko">
+                                                                        name="disability_diagnosis_kejang_type"
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_3">Risiko</label>
                                                                 </div>
@@ -707,7 +708,8 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                                    id="penurunan_kesadaran" name="diagnosis_disability[]"
+                                                                    id="penurunan_kesadaran"
+                                                                    name="disability_diagnosis_kesadaran[]"
                                                                     value="penurunan_kesadaran">
                                                                 <label class="form-check-label" for="penurunan_kesadaran">
                                                                     Penurunan kesadaran
@@ -717,7 +719,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_4"
-                                                                        name="disability_diagnosis_type[penurunan_kesadaran]"
+                                                                        name="disability_diagnosis_kesadaran_type"
                                                                         value="aktual">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_4">Aktual</label>
@@ -725,7 +727,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_4"
-                                                                        name="disability_diagnosis_type[penurunan_kesadaran]"
+                                                                        name="disability_diagnosis_kesadaran_type"
                                                                         value="risiko">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_4">Risiko</label>
@@ -780,8 +782,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="deformitas_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_deformitas_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -804,8 +806,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="kontusion_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_kontusion_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -826,8 +828,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="abrasi_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_abrasi_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -850,8 +852,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="penetrasi_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_penetrasi_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -872,8 +874,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="laserasi_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_laserasi_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -894,8 +896,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="text" class="form-control" name="edema_daerah"
-                                                        placeholder="Daerah">
+                                                    <input type="text" class="form-control"
+                                                        name="exposure_edema_daerah" placeholder="Daerah">
                                                 </div>
                                             </div>
                                         </div>
@@ -921,7 +923,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kerusakan_mobilitas_fisik"
-                                                                    name="diagnosis_exposure[]"
+                                                                    name="exposure_diagnosis_mobilitasi[]"
                                                                     value="kerusakan_mobilitas_fisik">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_mobilitas_fisik">
@@ -932,7 +934,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_aktual"
-                                                                        name="exposure_diagnosis_type[kerusakan_mobilitas_fisik]"
+                                                                        name="exposure_diagnosis_mobilitasi_type"
                                                                         value="aktual">
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual">Aktual</label>
@@ -940,7 +942,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_risiko"
-                                                                        name="exposure_diagnosis_type[kerusakan_mobilitas_fisik]"
+                                                                        name="exposure_diagnosis_mobilitasi_type"
                                                                         value="risiko">
                                                                     <label class="form-check-label"
                                                                         for="exposure_risiko">Risiko</label>
@@ -956,7 +958,7 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="kerusakan_integritas_jaringan"
-                                                                    name="diagnosis_exposure[]"
+                                                                    name="exposure_diagosis_integritas[]"
                                                                     value="kerusakan_integritas_jaringan">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_integritas_jaringan">
@@ -967,7 +969,7 @@
                                                                 <div class="form-check">
                                                                     <input type="radio" class="form-check-input"
                                                                         id="exposure_aktual_1"
-                                                                        name="exposure_diagnosis_type[kerusakan_integritas_jaringan]"
+                                                                        name="exposure_diagosis_integritas_type"
                                                                         value="aktual">
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual_1">Aktual</label>
@@ -1018,7 +1020,7 @@
                                                         style="min-width: 350px;">
                                                         <input type="number" class="form-control flex-grow-1"
                                                             name="skala_nyeri_nilai" style="width: 100px;" value="0"
-                                                            min="0" max="10" >
+                                                            min="0" max="10">
                                                         <button class="btn btn-warning btn-sm">
                                                             Nyeri Hebat
                                                         </button>
@@ -1577,7 +1579,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
-                                            <select class="form-select" name="spiritual_agama" >
+                                            <select class="form-select" name="spiritual_agama">
                                                 <option value="">--Pilih--</option>
                                                 <option value="islam">Islam</option>
                                                 <option value="kristen">Kristen</option>
@@ -1602,11 +1604,16 @@
                                             <select class="form-select" name="sosial_pekerjaan">
                                                 <option value="">--Pilih--</option>
                                             </select>
+                                            @error('sosial_pekerjaan')
+                                                <div class="invalid-feedback d-block">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tingkat penghasilan</label>
-                                            <select class="form-select" name="sosial_tingkat_penghasilan">
+                                            <select class="form-select" name="sosial_ekonomi_tingkat_penghasilan">
                                                 <option value="">--Pilih--</option>
                                                 <option value="Penghasilan Tinggi">Penghasilan Tinggi</option>
                                                 <option value="Penghasilan Sedang">Penghasilan Sedang</option>
@@ -1617,21 +1624,39 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Status pernikahan</label>
-                                            <select class="form-select" name="sosial_status_pernikahan">
+                                            <select class="form-select" name="sosial_ekonomi_status_pernikahan">
                                                 <option value="">--Pilih--</option>
+                                                <option value="0">Belum Kawin</option>
+                                                <option value="1">Kawin</option>
+                                                <option value="2">Janda</option>
+                                                <option value="3">Duda</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Status pendidikan</label>
-                                            <select class="form-select" name="sosial_status_pendidikan">
+                                            <select class="form-select" name="sosial_ekonomi_status_pendidikan">
                                                 <option value="">--Pilih--</option>
+                                                <option value="1">TK</option>
+                                                <option value="2">SD/MIN</option>
+                                                <option value="3">SLTP/SMP/MTSN/SLP</option>
+                                                <option value="4">SLTA/SMA/SMU/SMK/MAN/SLA</option>
+                                                <option value="5">D2</option>
+                                                <option value="6">D3</option>
+                                                <option value="7">S1</option>
+                                                <option value="8">S2</option>
+                                                <option value="9">S3</option>
+                                                <option value="10">TIDAK SEKOLAH</option>
+                                                <option value="13">BELUM SEKOLAH</option>
+                                                <option value="14">PAUD</option>
+                                                <option value="15">D4</option>
+                                                <option value="16">D1</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tempat tinggal</label>
-                                            <select class="form-select" name="sosial_tempat_tinggal">
+                                            <select class="form-select" name="sosial_ekonomi_tempat_tinggal">
                                                 <option value="">--Pilih--</option>
                                                 <option value="Rumah Sendiri">Rumah Sendiri</option>
                                                 <option value="Rumah Orang Tua">Rumah Orang Tua</option>
@@ -1642,7 +1667,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Status tinggal dengan keluarga</label>
-                                            <select class="form-select" name="sosial_status_tinggal_keluarga">
+                                            <select class="form-select" name="sosial_ekonomi_tinggal_dengan_keluarga">
                                                 <option value="">--Pilih--</option>
                                                 <option value="Dengan Keluarga">Dengan Keluarga</option>
                                                 <option value="Tidak Dengan Keluarga">Tidak Dengan Keluarga</option>
@@ -1651,7 +1676,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Curiga penganiayaan</label>
-                                            <select class="form-select" name="sosial_curiga_penganiayaan">
+                                            <select class="form-select" name="sosial_ekonomi_curiga_penganiayaan">
                                                 <option value="">--Pilih--</option>
                                                 <option value="1">Ada</option>
                                                 <option value="0">Tidak Ada</option>
@@ -1660,7 +1685,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Lainnya</label>
-                                            <textarea class="form-control" name="sosial_ekonomi_lainnya" rows="3"></textarea>
+                                            <textarea class="form-control" name="sosial_ekonomi_keterangan_lain" rows="3"></textarea>
                                         </div>
                                     </div>
 
@@ -2185,12 +2210,14 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Diagnosis medis</label>
-                                            <input type="text" class="form-control" name="discharge_planning_diagnosis_medis" id="diagnosis_medis" >
+                                            <input type="text" class="form-control"
+                                                name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Usia lanjut</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_usia_lanjut" id="usia_lanjut" >
+                                            <select class="form-select discharge-select"
+                                                name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2199,7 +2226,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hambatan mobilisasi</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi" >
+                                            <select class="form-select discharge-select"
+                                                name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2207,8 +2235,11 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Membutuhkan pelayanan medis berkelanjutan</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_pelayanan_medis" id="pelayanan_medis_berkelanjutan" >
+                                            <label style="min-width: 200px;">Membutuhkan pelayanan medis
+                                                berkelanjutan</label>
+                                            <select class="form-select discharge-select"
+                                                name="discharge_planning_pelayanan_medis"
+                                                id="pelayanan_medis_berkelanjutan">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2216,8 +2247,11 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Ketergantungan dengan orang lain dalam aktivitas harian</label>
-                                            <select class="form-select discharge-select" name="discharge_planning_ketergantungan_aktivitas" id="ketergantungan_aktivitas" >
+                                            <label style="min-width: 200px;">Ketergantungan dengan orang lain dalam
+                                                aktivitas harian</label>
+                                            <select class="form-select discharge-select"
+                                                name="discharge_planning_ketergantungan_aktivitas"
+                                                id="ketergantungan_aktivitas">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2227,14 +2261,17 @@
                                         <div class="form-group mt-4">
                                             <label style="min-width: 200px;">KESIMPULAN</label>
                                             <div class="d-flex flex-column gap-2">
-                                                <div class="alert alert-warning" id="kesimpulan_khusus" style="display: none;">
+                                                <div class="alert alert-warning" id="kesimpulan_khusus"
+                                                    style="display: none;">
                                                     Membutuhkan rencana pulang khusus
                                                 </div>
-                                                <div class="alert alert-success" id="kesimpulan_tidak_khusus" style="display: none;">
+                                                <div class="alert alert-success" id="kesimpulan_tidak_khusus"
+                                                    style="display: none;">
                                                     Tidak membutuhkan rencana pulang khusus
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="discharge_planning_kesimpulan" id="kesimpulan_value">
+                                            <input type="hidden" name="discharge_planning_kesimpulan"
+                                                id="kesimpulan_value">
                                         </div>
                                     </div>
 
@@ -2276,18 +2313,21 @@
                                         <h5 class="section-title">15. Masalah Keperawatan</h5>
                                         <div class="form-group">
                                             <div class="w-100">
-                                                <select class="form-control select2" id="selectMasalah" style="width: 100%;">
+                                                <select class="form-control select2" id="selectMasalah"
+                                                    style="width: 100%;">
                                                     <option value="">Pilih Masalah Keperawatan</option>
                                                     <optgroup label="Masalah Keperawatan">
                                                         <option value="nyeri_akut">Nyeri akut</option>
-                                                        <option value="gangguan_mobilitas">Gangguan mobilitas fisik</option>
+                                                        <option value="gangguan_mobilitas">Gangguan mobilitas fisik
+                                                        </option>
                                                         <option value="risiko_infeksi">Risiko infeksi</option>
                                                         <option value="gangguan_tidur">Gangguan pola tidur</option>
                                                         <option value="kecemasan">Kecemasan</option>
                                                         <option value="defisit_perawatan">Defisit perawatan diri</option>
                                                         <option value="gangguan_eliminasi">Gangguan eliminasi</option>
                                                         <option value="risiko_jatuh">Risiko jatuh</option>
-                                                        <option value="ketidakseimbangan_nutrisi">Ketidakseimbangan nutrisi</option>
+                                                        <option value="ketidakseimbangan_nutrisi">Ketidakseimbangan
+                                                            nutrisi</option>
                                                         <option value="gangguan_kulit">Gangguan integritas kulit</option>
                                                     </optgroup>
                                                 </select>
@@ -2295,7 +2335,8 @@
                                                 <div id="selectedMasalahList" class="selected-items mt-3">
                                                     <!-- Selected items will appear here -->
                                                 </div>
-                                                <input type="hidden" name="masalah_keperawatan" id="masalahKeperawatanValue">
+                                                <input type="hidden" name="masalah_keperawatan"
+                                                    id="masalahKeperawatanValue">
                                             </div>
                                         </div>
                                     </div>
@@ -2304,7 +2345,8 @@
                                         <h5 class="section-title">16. Implementasi</h5>
                                         <div class="form-group">
                                             <div class="w-100">
-                                                <select class="form-control select2" id="selectImplementasi" style="width: 100%;">
+                                                <select class="form-control select2" id="selectImplementasi"
+                                                    style="width: 100%;">
                                                     <option value="">Pilih Implementasi</option>
                                                     <optgroup label="Implementasi">
                                                         <option value="monitoring_vital">Monitoring tanda vital</option>
