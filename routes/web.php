@@ -34,6 +34,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -384,6 +385,16 @@ Route::middleware('auth')->group(function () {
                                             Route::prefix('tht')->group(function () {
                                                 Route::name('.tht')->group(function () {
                                                     Route::controller(AsesmenKepThtController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('obstetri-maternitas')->group(function () {
+                                                Route::name('.obstetri-maternitas')->group(function () {
+                                                    Route::controller(AsesmenObstetriMaternitas::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::put('/', 'update')->name('.update');
