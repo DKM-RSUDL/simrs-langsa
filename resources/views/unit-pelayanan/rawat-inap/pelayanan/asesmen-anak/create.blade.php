@@ -317,23 +317,23 @@
                                         <div class="mt-4">
                                             <h6>Antropometri</h6>
                                             <div class="form-group">
-                                                <label style="min-width: 200px;">Tinggi Badan (Kg)</label>
-                                                <input type="text" class="form-control" name="tinggi_badan">
+                                                <label style="min-width: 200px;">Tinggi Badan (Cm)</label>
+                                                <input type="number" id="tinggi_badan" name="tinggi_badan" class="form-control">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Berat Badan (Kg)</label>
-                                                <input type="text" class="form-control" name="berat_badan">
+                                                <input type="number" id="berat_badan" name="berat_badan" class="form-control">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">IMT</label>
-                                                <input type="text" class="form-control" name="imt">
+                                                <input type="text" class="form-control bg-light" id="imt" name="imt" readonly>
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">LPT</label>
-                                                <input type="text" class="form-control" name="lpt">
+                                                <input type="text" class="form-control bg-light" id="lpt" name="lpt" readonly>
                                             </div>
 
                                             <div class="form-group">
@@ -409,8 +409,8 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesimpulan Nyeri</label>
-                                            <div class="alert alert-success">
-                                                Nyeri Ringan
+                                            <div class="alert alert-success" id="kesimpulan_nyeri_alert">
+                                                Pilih skala nyeri terlebih dahulu
                                             </div>
                                         </div>
 
@@ -420,12 +420,12 @@
                                             <div class="mb-3 row">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Lokasi</label>
-                                                    <input type="text" class="form-control bg-light"
+                                                    <input type="text" class="form-control"
                                                         name="lokasi_nyeri">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Durasi</label>
-                                                    <input type="text" class="form-control bg-light"
+                                                    <input type="text" class="form-control"
                                                         name="durasi_nyeri">
                                                 </div>
                                             </div>
@@ -433,14 +433,17 @@
                                             <div class="mb-3 row">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Jenis nyeri</label>
-                                                    <select class="form-select bg-light" name="jenis_nyeri">
+                                                    <select class="form-select" name="jenis_nyeri">
                                                         <option value="" selected disabled>Pilih</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Frekuensi</label>
-                                                    <select class="form-select bg-light" name="frekuensi_nyeri">
+                                                    <select class="form-select" name="frekuensi_nyeri">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($frekuensinyeri as $frekuensi)
+                                                            <option value="{{ $frekuensi->id }}">{{ $frekuensi->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
@@ -448,14 +451,20 @@
                                             <div class="mb-3 row">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Menjalar?</label>
-                                                    <select class="form-select bg-light" name="nyeri_menjalar">
+                                                    <select class="form-select" name="nyeri_menjalar">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($menjalar as $menjalar)
+                                                            <option value="{{ $menjalar->id }}">{{ $menjalar->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Kualitas</label>
-                                                    <select class="form-select bg-light" name="kualitas_nyeri">
+                                                    <select class="form-select" name="kualitas_nyeri">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($kualitasnyeri as $kualitas)
+                                                            <option value="{{ $kualitas->id }}">{{ $kualitas->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
@@ -463,14 +472,20 @@
                                             <div class="mb-3 row">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Faktor pemberat</label>
-                                                    <select class="form-select bg-light" name="faktor_pemberat">
+                                                    <select class="form-select" name="faktor_pemberat">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($faktorpemberat as $pemberat)
+                                                            <option value="{{ $pemberat->id }}">{{ $pemberat->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Faktor peringan</label>
-                                                    <select class="form-select bg-light" name="faktor_peringan">
+                                                    <select class="form-select" name="faktor_peringan">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($faktorperingan as $peringan)
+                                                            <option value="{{ $peringan->id }}">{{ $peringan->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
@@ -478,8 +493,11 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <label class="form-label">Efek Nyeri</label>
-                                                    <select class="form-select bg-light" name="efek_nyeri">
+                                                    <select class="form-select" name="efek_nyeri">
                                                         <option value="" selected disabled>Pilih</option>
+                                                        @foreach($efeknyeri as $efek)
+                                                            <option value="{{ $efek->id }}">{{ $efek->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
@@ -488,30 +506,35 @@
 
                                     <div class="section-separator" id="riwayat-kesehatan">
                                         <h5 class="section-title">5. Riwayat Kesehatan</h5>
-
+                                        
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
-                                            <input type="text" class="form-control bg-light" name="penyakit_diderita">
-                                        </div>
+                                            <div class="w-100">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#penyakitModal">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                                <div id="selectedPenyakitList" class="d-flex flex-column gap-2">
+                                                    <!-- Empty state message -->
+                                                    <div id="emptyState" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada penyakit yang ditambahkan</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input to store the JSON data -->
+                                                <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput">
+                                            </div>
+</div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Riwayat Kecelakaan</label>
                                             <select class="form-select bg-light" name="riwayat_kecelakaan">
-                                                <option value="" selected disabled>Pilih</option>
-                                                <option value="Ya">Ya</option>
-                                                <option value="Tidak">Tidak</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Jika Ya, Apa Jenis Kecelakaanya</label>
-                                            <select class="form-select bg-light" name="jenis_kecelakaan">
                                                 <option value="" selected disabled>Pilih</option>
                                                 <option value="Kecelakaan Lalu Lintas">Kecelakaan Lalu Lintas</option>
                                                 <option value="Kecelakaan Kerja">Kecelakaan Kerja</option>
                                                 <option value="Kecelakaan Rumah Tangga">Kecelakaan Rumah Tangga</option>
                                                 <option value="Kecelakaan Olahraga">Kecelakaan Olahraga</option>
                                                 <option value="Kecelakaan Lainnya">Kecelakaan Lainnya</option>
+                                                <option value="Tidak Ada"> Tidak Ada </option>
                                             </select>
                                         </div>
 
@@ -540,9 +563,41 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Jenis/Nama Operasi</label>
-                                            <input type="text" class="form-control bg-light" name="jenis_operasi">
+                                            <div class="w-100">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#operasiModal">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                                <div id="selectedOperasiList" class="d-flex flex-column gap-2">
+                                                    <!-- Empty state message -->
+                                                    <div id="emptyStateOperasi" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada operasi yang ditambahkan.</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input to store the JSON data -->
+                                                <input type="hidden" name="jenis_operasi" id="jenisOperasiInput">
+                                            </div>
                                         </div>
 
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
+                                            <div class="w-100">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                                <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
+                                                    <!-- Empty state message -->
+                                                    <div id="emptyStateRiwayat" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang ditambahkan.</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input to store the JSON data -->
+                                                <input type="hidden" name="riwayat_kesehatan_keluarga" id="riwayatKesehatanInput">
+                                            </div>
+                                        </div>
+                                        
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Konsumsi Obat-Obatan (Jika Ada)</label>
                                             <input type="text" class="form-control bg-light" name="konsumsi_obat">
@@ -557,11 +612,6 @@
                                                 <option value="Cepat">Cepat</option>
                                                 <option value="Lambat">Lambat</option>
                                             </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
-                                            <textarea class="form-control bg-light" name="riwayat_kesehatan_keluarga" rows="3"></textarea>
                                         </div>
                                     </div>
 
@@ -1306,7 +1356,10 @@
         </div>
     </div>
     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-    {{-- @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-tindakankeperawatan') --}}
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
+
 @endsection
 
 

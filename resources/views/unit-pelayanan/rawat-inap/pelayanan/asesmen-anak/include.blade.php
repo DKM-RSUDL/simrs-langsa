@@ -154,6 +154,26 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            function hitungIMT_LPT() {
+                let tinggi = parseFloat(document.getElementById("tinggi_badan").value) / 100; // Konversi ke meter
+                let berat = parseFloat(document.getElementById("berat_badan").value);
+
+                if (!isNaN(tinggi) && !isNaN(berat) && tinggi > 0) {
+                    let imt = berat / (tinggi * tinggi);
+                    let lpt = (tinggi * 100 * berat) / 3600; // Tinggi dikonversi ke cm
+                    
+                    document.getElementById("imt").value = imt.toFixed(2); // Menampilkan 2 desimal
+                    document.getElementById("lpt").value = lpt.toFixed(2);
+                } else {
+                    document.getElementById("imt").value = "";
+                    document.getElementById("lpt").value = "";
+                }
+            }
+
+            document.getElementById("tinggi_badan").addEventListener("input", hitungIMT_LPT);
+            document.getElementById("berat_badan").addEventListener("input", hitungIMT_LPT);
+
             //------------------------------------------------------------//
             // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
             document.querySelectorAll('.tambah-keterangan').forEach(button => {
@@ -220,6 +240,7 @@
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
+            //JENIS SKALA//
 
             const skalaSelect = document.getElementById('jenis_skala_nyeri');
             const nrsModal = document.getElementById('modalNRS');
@@ -298,6 +319,8 @@
             // Save NRS value
             if (simpanNRS) {
                 simpanNRS.addEventListener('click', function() {
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                     if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeriAlert) {
                         nilaiSkalaNyeri.value = nrsValue.value;
                         kesimpulanNyeriAlert.innerHTML = nrsKesimpulan.innerHTML;
@@ -322,6 +345,255 @@
                     }
                 });
             }
+
+            // FLACC Handler
+            const updateFLACCTotal = () => {
+                const flaccChecks = document.querySelectorAll('.flacc-check:checked');
+                const flaccTotal = document.getElementById('flaccTotal');
+                const flaccKesimpulan = document.getElementById('flaccKesimpulan');
+                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
+                
+                let total = 0;
+                flaccChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                flaccTotal.value = total;
+                nilaiSkalaNyeri.value = total;
+
+                // Update kesimpulan
+                let kesimpulan = '';
+                let alertClass = '';
+                let emoji = '';
+                
+                if (total >= 0 && total <= 3) {
+                    kesimpulan = 'Nyeri Ringan';
+                    alertClass = 'alert-success';
+                    emoji = 'bi-emoji-smile';
+                } else if (total >= 4 && total <= 6) {
+                    kesimpulan = 'Nyeri Sedang';
+                    alertClass = 'alert-warning';
+                    emoji = 'bi-emoji-neutral';
+                } else {
+                    kesimpulan = 'Nyeri Berat';
+                    alertClass = 'alert-danger';
+                    emoji = 'bi-emoji-frown';
+                }
+
+                // Update kesimpulan di modal FLACC
+                if (flaccKesimpulan) {
+                    flaccKesimpulan.textContent = kesimpulan.toUpperCase(); // FLACC tetap pakai uppercase
+                    flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
+                }
+
+                // Update kesimpulan di form utama dengan format yang sama seperti NRS
+                if (kesimpulanNyeriAlert) {
+                    kesimpulanNyeriAlert.innerHTML = `
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi ${emoji} fs-4"></i>
+                            <span>${kesimpulan}</span>
+                        </div>
+                    `;
+                    kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                }
+            };
+
+            // Add event listeners to FLACC checkboxes
+            document.querySelectorAll('.flacc-check').forEach(check => {
+                check.addEventListener('change', updateFLACCTotal);
+            });
+
+            // Handle FLACC save button
+            const simpanFLACC = document.getElementById('simpanFLACC');
+            if (simpanFLACC) {
+                simpanFLACC.addEventListener('click', function() {
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    
+                    if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
+                        let total = parseInt(flaccTotal.value);
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (total >= 0 && total <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (total >= 4 && total <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        // Update nilai
+                        nilaiSkalaNyeri.value = total;
+
+                        // Update kesimpulan
+                        if (kesimpulanNyeriAlert) {
+                            kesimpulanNyeriAlert.innerHTML = `
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi ${emoji} fs-4"></i>
+                                    <span>${kesimpulan}</span>
+                                </div>
+                            `;
+                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        }
+
+                        // Tutup modal
+                        bootstrap.Modal.getInstance(document.getElementById('modalFLACC')).hide();
+                    }
+                });
+            }
+
+            // Reset FLACC form when modal is closed
+            const modalFLACC = document.getElementById('modalFLACC');
+            if (modalFLACC) {
+                modalFLACC.addEventListener('hidden.bs.modal', function() {
+                    document.querySelectorAll('.flacc-check').forEach(check => {
+                        check.checked = false;
+                    });
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    if (flaccTotal) {
+                        flaccTotal.value = '';
+                    }
+                    const flaccKesimpulan = document.getElementById('flaccKesimpulan');
+                    if (flaccKesimpulan) {
+                        flaccKesimpulan.textContent = 'Pilih kategori untuk melihat kesimpulan';
+                        flaccKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                    }
+                });
+            }
+
+            // CRIES Handler
+            const updateCRIESTotal = () => {
+                const criesChecks = document.querySelectorAll('.cries-check:checked');
+                const criesTotal = document.getElementById('criesTotal');
+                const criesKesimpulan = document.getElementById('criesKesimpulan');
+                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+                
+                let total = 0;
+                criesChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                criesTotal.value = total;
+                nilaiSkalaNyeri.value = total;
+
+                // Update kesimpulan
+                let kesimpulan = '';
+                let alertClass = '';
+                let emoji = '';
+                
+                if (total >= 0 && total <= 3) {
+                    kesimpulan = 'Nyeri Ringan';
+                    alertClass = 'alert-success';
+                    emoji = 'bi-emoji-smile';
+                } else if (total >= 4 && total <= 6) {
+                    kesimpulan = 'Nyeri Sedang';
+                    alertClass = 'alert-warning';
+                    emoji = 'bi-emoji-neutral';
+                } else {
+                    kesimpulan = 'Nyeri Berat';
+                    alertClass = 'alert-danger';
+                    emoji = 'bi-emoji-frown';
+                }
+
+                // Update kesimpulan di modal CRIES
+                if (criesKesimpulan) {
+                    criesKesimpulan.textContent = kesimpulan.toUpperCase();
+                    criesKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
+                }
+            };
+
+            // Add event listeners to CRIES checkboxes
+            document.querySelectorAll('.cries-check').forEach(check => {
+                check.addEventListener('change', updateCRIESTotal);
+            });
+
+            // Handle CRIES save button
+            const simpanCRIES = document.getElementById('simpanCRIES');
+            if (simpanCRIES) {
+                simpanCRIES.addEventListener('click', function() {
+                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
+                    const criesTotal = document.getElementById('criesTotal');
+                    
+                    if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
+                        let total = parseInt(criesTotal.value);
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (total >= 0 && total <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (total >= 4 && total <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        // Update nilai
+                        nilaiSkalaNyeri.value = total;
+
+                        // Update kesimpulan
+                        if (kesimpulanNyeriAlert) {
+                            kesimpulanNyeriAlert.innerHTML = `
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi ${emoji} fs-4"></i>
+                                    <span>${kesimpulan}</span>
+                                </div>
+                            `;
+                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        }
+
+                        // Tutup modal
+                        const modalCRIES = document.getElementById('modalCRIES');
+                        if (modalCRIES) {
+                            const modalInstance = bootstrap.Modal.getInstance(modalCRIES);
+                            if (modalInstance) {
+                                modalInstance.hide();
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Reset CRIES form when modal is closed
+            const modalCRIES = document.getElementById('modalCRIES');
+            if (modalCRIES) {
+                modalCRIES.addEventListener('hidden.bs.modal', function() {
+                    document.querySelectorAll('.cries-check').forEach(check => {
+                        check.checked = false;
+                    });
+                    const criesTotal = document.getElementById('criesTotal');
+                    if (criesTotal) {
+                        criesTotal.value = '';
+                    }
+                    const criesKesimpulan = document.getElementById('criesKesimpulan');
+                    if (criesKesimpulan) {
+                        criesKesimpulan.textContent = 'Pilih semua kategori untuk melihat kesimpulan';
+                        criesKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                    }
+                });
+            }
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+            // Event handler untuk Modal penyakit di derita
 
 
             //------------------------------------------------------------//
