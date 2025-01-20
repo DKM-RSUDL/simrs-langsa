@@ -30,10 +30,15 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -374,7 +379,48 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            Route::prefix('opthamology')->group(function () {
+                                                Route::name('.opthamology')->group(function () {
+                                                    Route::controller(AsesmenKepOpthamologyController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('perinatology')->group(function () {
+                                                Route::name('.perinatology')->group(function () {
+                                                    Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
                                             
+
+                                            Route::prefix('tht')->group(function () {
+                                                Route::name('.tht')->group(function () {
+                                                    Route::controller(AsesmenKepThtController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('obstetri-maternitas')->group(function () {
+                                                Route::name('.obstetri-maternitas')->group(function () {
+                                                    Route::controller(AsesmenObstetriMaternitas::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
                                 });
@@ -438,6 +484,20 @@ Route::middleware('auth')->group(function () {
                             Route::name('rujuk-antar-rs')->group(function () {
                                 Route::controller(GawatDaruratController::class)->group(function () {
                                     Route::get('/', 'rujukAntarRs');
+                                });
+                            });
+                        });
+
+                        // transfer ke RWI
+                        Route::prefix('{urut_masuk}/transfer-rwi')->group(function() {
+                            Route::name('transfer-rwi')->group(function() {
+                                Route::controller(TransferPasienController::class)->group(function() {
+                                    Route::get('/', 'index');
+                                    Route::post('/', 'storeTransferInap')->name('.store');
+                                    Route::post('/get-dokter-spesial-ajax', 'getDokterBySpesial')->name('.get-dokter-spesial-ajax');
+                                    Route::post('/get-ruang-kelas-ajax', 'getRuanganByKelas')->name('.get-ruang-kelas-ajax');
+                                    Route::post('/get-kamar-ruang-ajax', 'getKamarByRuang')->name('.get-kamar-ruang-ajax');
+                                    Route::post('/get-sisa-bed-ajax', 'getSisaBedByKamar')->name('.get-sisa-bed-ajax');
                                 });
                             });
                         });
@@ -600,6 +660,10 @@ Route::middleware('auth')->group(function () {
                     Route::name('.pelayanan')->group(function() {
                         Route::get('/', [OperasiController::class, 'pelayanan']);
                         Route::get('/asesmen-pra-anestesi', [OperasiController::class, 'asesmenPraAnestesi'])->name('.asesmen-pra-anestesi');
+                        Route::get('/asesmen-pra-operasi', [OperasiController::class, 'asesmenPraOperasiPerawat'])->name('.asesmen-pra-operasi');
+                        Route::get('/ceklist-keselamatan-operasi', [OperasiController::class, 'ceklistKeselamatanOperasi'])->name('.ceklist-keselamatan-operasi');
+                        Route::get('/laporan-operasi', [OperasiController::class, 'laporanOperasi'])->name('.laporan-operasi');
+                        Route::get('/catatan-intra-operasi', [OperasiController::class, 'catatanIntraPascaOperasi'])->name('.catatan-intra-operasi');
                     });
                 });
             });

@@ -12,6 +12,7 @@ use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RujukanKunjungan;
+use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use Exception;
 use Illuminate\Http\Request;
@@ -388,7 +389,19 @@ class GawatDaruratController extends Controller
 
         DetailComponent::create($dataDetailComponent);
 
-        // jangan lupa tambahkan insert into sjp_kunjungan
+        // insert sjp_kunjungan
+        $sjpKunjunganData = [
+            'kd_pasien'     => $lastIgdNumber,
+            'kd_unit'       => 3,
+            'tgl_masuk'     => $tgl_masuk,
+            'urut_masuk'    => $urut_masuk,
+            'penjamin_laka' => 0,
+            'katarak'       => 0,
+            'dpjp'          => $dokter_triase,
+            'cob'           => 0
+        ];
+
+        SjpKunjungan::create($sjpKunjunganData);
 
         return back()->with('success', 'Data triase berhasil ditambah');
     }

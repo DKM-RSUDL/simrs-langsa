@@ -8,7 +8,7 @@ use App\Models\MrItemFisik;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AsesmenKepAnakController extends Controller
+class AsesmenKepPerinatologyController extends Controller
 {
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -51,7 +51,7 @@ class AsesmenKepAnakController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.create', compact(
             'kd_unit',
             'kd_pasien',
             'tgl_masuk',
@@ -61,40 +61,4 @@ class AsesmenKepAnakController extends Controller
             'user'
         ));
     }
-
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        try {
-            // Ambil tanggal dan jam dari form
-            $tanggal = $request->tanggal_masuk;
-            $jam = $request->jam_masuk;
-            $waktu_asesmen = $tanggal . ' ' . $jam;
-
-            // Data untuk table RmeAsesmen
-            $dataAsesmen = [
-                'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk,
-                'waktu_asesmen' => $waktu_asesmen,
-            ];
-
-            // Data untuk table RmeAsesmenKepAnak
-            $dataAsesmenAnak = [
-                'cara_masuk' => $request->cara_masuk,
-                'kasus_trauma' => $request->kasus_trauma,
-                'jenis_trauma' => $request->jenis_trauma,
-            ];
-
-            // Debug untuk melihat data yang akan disimpan
-            dd([
-                'Data Asesmen' => $dataAsesmen,
-                'Data Asesmen Anak' => $dataAsesmenAnak,
-                'Request All' => $request->all()
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
 }
