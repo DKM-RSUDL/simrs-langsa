@@ -176,317 +176,165 @@
             // Event handler untuk checkbox normal
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
-                        '.keterangan');
-                    if (this.checked) {
-                        keteranganDiv.style.display = 'none';
-                        keteranganDiv.querySelector('input').value = ''; // Reset input value
+                    const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                    if (pemeriksaanItem) {
+                        const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                        if (keteranganDiv) {
+                            if (this.checked) {
+                                keteranganDiv.style.display = 'none';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) input.value = '';
+                            }
+                        }
                     }
                 });
             });
 
             // Inisialisasi semua checkbox sebagai checked dan sembunyikan keterangan
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                checkbox.checked = true;
-                const keteranganDiv = checkbox.closest('.pemeriksaan-item').querySelector('.keterangan');
-                if (keteranganDiv) {
-                    keteranganDiv.style.display = 'none';
-                    const input = keteranganDiv.querySelector('input');
-                    if (input) input.value = '';
+                const pemeriksaanItem = checkbox.closest('.pemeriksaan-item');
+                if (pemeriksaanItem) {
+                    checkbox.checked = true;
+                    const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                    if (keteranganDiv) {
+                        keteranganDiv.style.display = 'none';
+                        const input = keteranganDiv.querySelector('input');
+                        if (input) input.value = '';
+                    }
                 }
             });
             //------------------------------------------------------------//
 
             //------------------------------------------------------------//
+
+            // Event handler waktu default sesuai sekarang
+            const currentDate = new Date();
+    
+            // Format date as YYYY-MM-DD
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            document.getElementById('tanggal_masuk').value = formattedDate;
+            
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            document.getElementById('jam_masuk').value = `${hours}:${minutes}`;
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+
+            const skalaSelect = document.getElementById('jenis_skala_nyeri');
+            const nrsModal = document.getElementById('modalNRS');
+            const flaccModal = document.getElementById('modalFLACC');
+            const criesModal = document.getElementById('modalCRIES');
+            const nrsValue = document.getElementById('nrs_value');
+            const nrsKesimpulan = document.getElementById('nrs_kesimpulan');
+            const simpanNRS = document.getElementById('simpanNRS');
+            const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+            const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
+
+            if (skalaSelect) {
+                skalaSelect.addEventListener('change', function() {
+                    // Close any open modals first
+                    const openModals = document.querySelectorAll('.modal.show');
+                    openModals.forEach(modal => {
+                        const modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (modalInstance) modalInstance.hide();
+                    });
+
+                    // Show the selected modal
+                    if (this.value === 'NRS') {
+                        const modal = new bootstrap.Modal(nrsModal);
+                        modal.show();
+                    } else if (this.value === 'FLACC') {
+                        const modal = new bootstrap.Modal(flaccModal);
+                        modal.show();
+                    } else if (this.value === 'CRIES') {
+                        const modal = new bootstrap.Modal(criesModal);
+                        modal.show();
+                    }
+                });
+            }
+
+            // NRS value handler
+            if (nrsValue) {
+                nrsValue.addEventListener('input', function() {
+                    let value = parseInt(this.value);
+                    
+                    // Validate range
+                    if (value < 0) this.value = 0;
+                    if (value > 10) this.value = 10;
+                    value = parseInt(this.value);
+
+                    // Set kesimpulan
+                    let kesimpulan = '';
+                    let alertClass = '';
+                    let emoji = '';
+                    
+                    if (value >= 0 && value <= 3) {
+                        kesimpulan = 'Nyeri Ringan';
+                        alertClass = 'alert-success';
+                        emoji = 'bi-emoji-smile';
+                    } else if (value >= 4 && value <= 6) {
+                        kesimpulan = 'Nyeri Sedang';
+                        alertClass = 'alert-warning';
+                        emoji = 'bi-emoji-neutral';
+                    } else if (value >= 7 && value <= 10) {
+                        kesimpulan = 'Nyeri Berat';
+                        alertClass = 'alert-danger';
+                        emoji = 'bi-emoji-frown';
+                    }
+
+                    if (nrsKesimpulan) {
+                        nrsKesimpulan.className = 'alert ' + alertClass;
+                        nrsKesimpulan.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Save NRS value
+            if (simpanNRS) {
+                simpanNRS.addEventListener('click', function() {
+                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeriAlert) {
+                        nilaiSkalaNyeri.value = nrsValue.value;
+                        kesimpulanNyeriAlert.innerHTML = nrsKesimpulan.innerHTML;
+                        kesimpulanNyeriAlert.className = nrsKesimpulan.className;
+                        bootstrap.Modal.getInstance(nrsModal).hide();
+                    }
+                });
+            }
+
+            // Reset form when modal is closed
+            if (nrsModal) {
+                nrsModal.addEventListener('hidden.bs.modal', function() {
+                    if (nrsValue && nrsKesimpulan) {
+                        nrsValue.value = '';
+                        nrsKesimpulan.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-emoji-smile fs-4"></i>
+                                <span>Pilih nilai nyeri terlebih dahulu</span>
+                            </div>
+                        `;
+                        nrsKesimpulan.className = 'alert alert-info';
+                    }
+                });
+            }
+
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
             // Event handler untuk skala risiko jatuh
-            function handleSkalaRisikoJatuh() {
-                const skalaSelect = document.getElementById('skalaRisikoJatuh');
-                const allForms = document.querySelectorAll('.risk-form');
-
-                if (!skalaSelect) {
-                    console.error('Skala select not found');
-                    return;
-                }
-
-                // Hide all forms initially
-                allForms.forEach(form => {
-                    form.style.display = 'none';
-                });
-
-                skalaSelect.addEventListener('change', function() {
-                    const selectedValue = this.value;
-                    console.log('Selected value:', selectedValue); // Debug log
-
-                    // Hide all forms first
-                    allForms.forEach(form => {
-                        form.style.display = 'none';
-                    });
-
-                    // Show selected form
-                    const formId = `form${selectedValue.charAt(0).toUpperCase()}${selectedValue.slice(1)}`;
-                    const selectedForm = document.getElementById(formId);
-                    console.log('Looking for form:', formId); // Debug log
-
-                    if (selectedForm) {
-                        selectedForm.style.display = 'block';
-                        console.log('Form displayed:', formId); // Debug log
-                    } else {
-                        console.error('Form not found:', formId);
-                    }
-                });
-
-                // Handle risk calculation
-                allForms.forEach(form => {
-                    const selects = form.querySelectorAll('select');
-                    selects.forEach(select => {
-                        select.addEventListener('change', () => {
-                            calculateRisk(form);
-                        });
-                    });
-                });
-            }
-
-            function calculateRisk(form) {
-                const selects = form.querySelectorAll('select[name]'); // Only select elements with name attribute
-                let riskCount = 0;
-
-                selects.forEach(select => {
-                    if (select.value === 'ya') {
-                        riskCount++;
-                    }
-                });
-
-                const kesimpulanEl = form.querySelector('.alert');
-                if (kesimpulanEl) {
-                    if (riskCount > 0) {
-                        kesimpulanEl.textContent = 'Berisiko jatuh';
-                        kesimpulanEl.className = 'alert alert-warning mb-0 flex-grow-1';
-                    } else {
-                        kesimpulanEl.textContent = 'Tidak berisiko jatuh';
-                        kesimpulanEl.className = 'alert alert-success mb-0 flex-grow-1';
-                    }
-                }
-            }
-
-            // Initialize the risk assessment functionality
-            handleSkalaRisikoJatuh();
-            //------------------------------------------------------------//
+            
 
             //------------------------------------------------------------//
-            function handleRisikoDekubitus() {
-                const skalaSelect = document.getElementById('skalaRisikoDekubitus');
-                const allForms = document.querySelectorAll('.decubitus-form');
-
-                if (!skalaSelect) {
-                    console.error('Skala dekubitus select not found');
-                    return;
-                }
-
-                // Hide all forms initially
-                allForms.forEach(form => {
-                    form.style.display = 'none';
-                });
-
-                skalaSelect.addEventListener('change', function() {
-                    const selectedValue = this.value;
-
-                    // Hide all forms
-                    allForms.forEach(form => {
-                        form.style.display = 'none';
-                    });
-
-                    // Show selected form
-                    const formId = `form${selectedValue.charAt(0).toUpperCase()}${selectedValue.slice(1)}`;
-                    const selectedForm = document.getElementById(formId);
-
-                    if (selectedForm) {
-                        selectedForm.style.display = 'block';
-                        // Reset form values
-                        selectedForm.querySelectorAll('select').forEach(select => {
-                            select.selectedIndex = 0;
-                        });
-                    }
-                });
-
-                // Calculate Norton score
-                function calculateNortonScore(form) {
-                    const selects = form.querySelectorAll('select[name]');
-                    let totalScore = 0;
-
-                    selects.forEach(select => {
-                        if (select.value) {
-                            totalScore += parseInt(select.value);
-                        }
-                    });
-
-                    const kesimpulanEl = form.querySelector('#kesimpulanNorton');
-                    if (kesimpulanEl) {
-                        let riskLevel = '';
-                        let alertClass = '';
-
-                        if (totalScore <= 12) {
-                            riskLevel = 'Risiko Tinggi';
-                            alertClass = 'alert-danger';
-                        } else if (totalScore <= 14) {
-                            riskLevel = 'Risiko Sedang';
-                            alertClass = 'alert-warning';
-                        } else {
-                            riskLevel = 'Risiko Rendah';
-                            alertClass = 'alert-success';
-                        }
-
-                        kesimpulanEl.textContent = riskLevel;
-                        kesimpulanEl.className = `alert ${alertClass} mb-0 flex-grow-1`;
-                    }
-                }
-
-                // Add event listeners for Norton scale inputs
-                const nortonForm = document.getElementById('formNorton');
-                if (nortonForm) {
-                    nortonForm.querySelectorAll('select').forEach(select => {
-                        select.addEventListener('change', () => calculateNortonScore(nortonForm));
-                    });
-                }
-            }
-
-            // Initialize the decubitus risk assessment
-            handleRisikoDekubitus();
-            //------------------------------------------------------------//
-
             //------------------------------------------------------------//
             // Handler untuk Status Psikologis dropdown
-            function handlePsikologisDropdown() {
-                const btnKondisiPsikologis = document.getElementById('btnKondisiPsikologis');
-                const dropdownKondisiPsikologis = document.getElementById('dropdownKondisiPsikologis');
-                const selectedKondisiPsikologis = document.getElementById('selectedKondisiPsikologis');
-                let selectedItems = new Set();
+            
 
-                function SelectedItems() {
-                    selectedKondisiPsikologis.innerHTML = '';
-                    selectedItems.forEach(item => {
-                        const badge = document.createElement('span');
-                        badge.style.display = 'inline-flex';
-                        badge.style.alignItems = 'center';
-                        badge.style.padding = '2px 8px';
-                        badge.style.backgroundColor = '#e9ecef';
-                        badge.style.borderRadius = '4px';
-                        badge.style.marginRight = '4px';
-                        badge.style.marginBottom = '4px';
-                        badge.style.fontSize = '14px';
-                        badge.innerHTML =
-                            `${item}<i class="ti-close remove-item" data-value="${item}" style="margin-left: 4px; cursor: pointer;"></i>`;
-                        selectedKondisiPsikologis.appendChild(badge);
-                    });
-                }
-
-                btnKondisiPsikologis.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    dropdownKondisiPsikologis.style.position = 'absolute';
-                    dropdownKondisiPsikologis.style.top = '100%'; // Posisi tepat di bawah parent
-                    dropdownKondisiPsikologis.style.left = '0';
-                    dropdownKondisiPsikologis.style.marginTop = '5px'; // Jarak 5px dari tombol
-                    dropdownKondisiPsikologis.style.display = dropdownKondisiPsikologis.style.display ===
-                        'none' ? 'block' : 'none';
-                });
-
-                document.querySelectorAll('.kondisi-options .form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            selectedItems.add(this.value);
-                        } else {
-                            selectedItems.delete(this.value);
-                        }
-                        SelectedItems();
-                    });
-                });
-
-                selectedKondisiPsikologis.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('remove-item')) {
-                        const value = e.target.dataset.value;
-                        selectedItems.delete(value);
-                        const checkbox = document.querySelector(`.form-check-input[value="${value}"]`);
-                        if (checkbox) checkbox.checked = false;
-                        SelectedItems();
-                    }
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!dropdownKondisiPsikologis.contains(e.target) && e.target !==
-                        btnKondisiPsikologis) {
-                        dropdownKondisiPsikologis.style.display = 'none';
-                    }
-                });
-            }
-
-            handlePsikologisDropdown();
-
-            function handleGangguanPerilaku() {
-                const btnGangguanPerilaku = document.getElementById('btnGangguanPerilaku');
-                const dropdownGangguanPerilaku = document.getElementById('dropdownGangguanPerilaku');
-                const selectedGangguanPerilaku = document.getElementById('selectedGangguanPerilaku');
-                let selectedItems = new Set();
-
-                function SelectedItems() {
-                    selectedGangguanPerilaku.innerHTML = '';
-                    selectedItems.forEach(item => {
-                        const badge = document.createElement('span');
-                        badge.style.display = 'inline-flex';
-                        badge.style.alignItems = 'center';
-                        badge.style.padding = '2px 8px';
-                        badge.style.backgroundColor = '#e9ecef';
-                        badge.style.borderRadius = '4px';
-                        badge.style.marginRight = '4px';
-                        badge.style.marginBottom = '4px';
-                        badge.style.fontSize = '14px';
-                        badge.innerHTML =
-                            `${item}<i class="ti-close remove-item" data-value="${item}" style="margin-left: 4px; cursor: pointer;"></i>`;
-                        selectedGangguanPerilaku.appendChild(badge);
-                    });
-                }
-
-                btnGangguanPerilaku.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    dropdownGangguanPerilaku.style.position = 'absolute';
-                    dropdownGangguanPerilaku.style.top = '100%';
-                    dropdownGangguanPerilaku.style.left = '0';
-                    dropdownGangguanPerilaku.style.marginTop = '5px';
-                    dropdownGangguanPerilaku.style.display = dropdownGangguanPerilaku.style.display ===
-                        'none' ? 'block' : 'none';
-                });
-
-                document.querySelectorAll('.perilaku-options .form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            selectedItems.add(this.value);
-                        } else {
-                            selectedItems.delete(this.value);
-                        }
-                        SelectedItems();
-                    });
-                });
-
-                selectedGangguanPerilaku.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('remove-item')) {
-                        const value = e.target.dataset.value;
-                        selectedItems.delete(value);
-                        const checkbox = document.querySelector(`.form-check-input[value="${value}"]`);
-                        if (checkbox) checkbox.checked = false;
-                        SelectedItems();
-                    }
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!dropdownGangguanPerilaku.contains(e.target) && e.target !== btnGangguanPerilaku) {
-                        dropdownGangguanPerilaku.style.display = 'none';
-                    }
-                });
-            }
-
-            handleGangguanPerilaku();
+            //------------------------------------------------------------//
             //------------------------------------------------------------//
 
 

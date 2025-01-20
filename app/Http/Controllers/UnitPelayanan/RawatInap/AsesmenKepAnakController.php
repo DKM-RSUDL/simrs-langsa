@@ -83,7 +83,6 @@ class AsesmenKepAnakController extends Controller
             $dataAsesmenAnak = [
                 'cara_masuk' => $request->cara_masuk,
                 'kasus_trauma' => $request->kasus_trauma,
-                'jenis_trauma' => $request->jenis_trauma,
             ];
 
             // Debug untuk melihat data yang akan disimpan

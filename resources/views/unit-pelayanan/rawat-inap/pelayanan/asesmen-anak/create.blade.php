@@ -58,8 +58,8 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal_masuk">
-                                                <input type="time" class="form-control" name="jam_masuk">
+                                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
                                             </div>
                                         </div>
 
@@ -81,16 +81,6 @@
                                                 <option value="Tidak">Tidak</option>
                                             </select>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Jenis Trauma</label>
-                                            <select class="form-select" name="jenis_trauma">
-                                                <option selected disabled>Pilih</option>
-                                                <option value="Kecelakaan">Kecelakaan</option>
-                                                <option value="Terjatuh">Terjatuh</option>
-                                                <option value="Lainnya">Lainnya</option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <div class="section-separator" id="anamnesis">
@@ -109,11 +99,15 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
+                                                
                                                 <div class="flex-grow-1">
+                                                    <label class="form-label">Sistole</label>
                                                     <input type="text" class="form-control" name="sistole"
                                                         placeholder="Sistole">
                                                 </div>
+                                                
                                                 <div class="flex-grow-1">
+                                                    <label class="form-label">Diastole</label>
                                                     <input type="text" class="form-control" name="diastole"
                                                         placeholder="Diastole">
                                                 </div>
@@ -142,10 +136,12 @@
                                             <label style="min-width: 200px;">Saturasi Oksigen (%)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
+                                                    <label class="form-label">Tanpa Bantuan O2</label>
                                                     <input type="text" class="form-control" name="saturasi_o2_tanpa"
                                                         placeholder="Tanpa bantuan O2">
                                                 </div>
                                                 <div class="flex-grow-1">
+                                                    <label class="form-label">Dengan Bantuan O2</label>
                                                     <input type="text" class="form-control" name="saturasi_o2_dengan"
                                                         placeholder="Dengan bantuan O2">
                                                 </div>
@@ -398,19 +394,17 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Jenis Skala NYERI</label>
-                                            <select class="form-select" name="jenis_skala_nyeri">
+                                            <select class="form-select" name="jenis_skala_nyeri" id="jenis_skala_nyeri">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="NRS">Numeric Rating Scale (NRS)</option>
-                                                <option value="FLACC">FLACC Scale</option>
-                                                <option value="Wong-Baker">Wong-Baker FACES Scale</option>
+                                                <option value="FLACC">Face, Legs, Activity, Cry, Consolability (FLACC)</option>
+                                                <option value="CRIES">Crying, Requires, Increased, Expression, Sleepless (CRIES)</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                            <select class="form-select" name="nilai_skala_nyeri">
-                                                <option value="" selected disabled>pilih</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="nilai_skala_nyeri" name="nilai_skala_nyeri" readonly>
                                         </div>
 
                                         <div class="form-group">
@@ -1311,6 +1305,8 @@
             </div>
         </div>
     </div>
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+    {{-- @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-tindakankeperawatan') --}}
 @endsection
 
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan')
+
