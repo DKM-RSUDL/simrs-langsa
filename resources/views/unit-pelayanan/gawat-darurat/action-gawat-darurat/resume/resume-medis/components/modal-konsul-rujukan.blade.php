@@ -255,7 +255,7 @@
                                 // Close modal
                                 $('#modal-konsul-rujukan').modal('hide');
                                 // Reload page to refresh data
-                                location.reload();
+                                // location.reload();
                             }
                         });
                     } else {
