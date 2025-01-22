@@ -1028,9 +1028,6 @@
                                                         <input type="number" class="form-control flex-grow-1"
                                                             name="skala_nyeri_nilai" style="width: 100px;" value="0"
                                                             min="0" max="10">
-                                                        <button class="btn btn-warning btn-sm">
-                                                            Nyeri Hebat
-                                                        </button>
                                                     </div>
                                                     <div class="pain-scale-image flex-grow-1">
                                                         <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
@@ -1640,7 +1637,6 @@
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                             <select class="form-select" name="spiritual_agama">
-                                            <select class="form-select" name="spiritual_agama">
                                                 <option value="">--Pilih--</option>
                                                 <option value="islam">Islam</option>
                                                 <option value="kristen">Kristen</option>
@@ -1671,16 +1667,7 @@
                                                         {{ $kerjaan->pekerjaan }}
                                                     </option>
                                                 @endforeach
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Pekerjaan</label>
-                                            <select class="form-select" name="sosial_pekerjaan">
-                                                <option value="">--Pilih--</option>
-                                            </select>
-                                            @error('sosial_ekonomi_pekerjaan')
-                                                <div class="invalid-feedback d-block">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
+                                                </select>
                                         </div>
 
                                         <div class="form-group">
@@ -2299,13 +2286,11 @@
                                             <label style="min-width: 200px;">Diagnosis medis</label>
                                             <input type="text" class="form-control"
                                                 name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
-                                                name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Usia lanjut</label>
                                             <select class="form-select discharge-select"
-                                                name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                                 name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
@@ -2316,7 +2301,6 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hambatan mobilisasi</label>
                                             <select class="form-select discharge-select"
-                                                name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                                 name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
@@ -2366,41 +2350,6 @@
                                                 id="kesimpulan_value">
                                         </div>
                                     </div>
-
-                                    {{-- <div class="section-separator">
-                                        <h5 class="section-title">15. Masalah Keperawatan</h5>
-                                        <div class="form-group">
-                                            <div class="w-100">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" id="searchMasalah" placeholder="Cari dan tambah masalah keperawatan">
-                                                    <div class="search-results" id="masalahResults" style="display: none;"></div>
-                                                    <button class="btn btn-outline-secondary" type="button" id="btnTambahMasalah">
-                                                        <i class="ti-plus"></i> Tambah
-                                                    </button>
-                                                </div>
-                                                <div id="selectedMasalahList" class="d-flex flex-column gap-2"></div>
-                                                <input type="hidden" name="masalah_keperawatan" id="masalahKeperawatanValue">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator">
-                                        <h5 class="section-title">16. Implementasi</h5>
-                                        <div class="form-group">
-                                            <div class="w-100">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" id="searchImplementasi" placeholder="Cari dan tambah Implementasi">
-                                                    <div class="search-results" id="implementasiResults" style="display: none;"></div>
-                                                    <button class="btn btn-outline-secondary" type="button" id="btnTambahImplementasi">
-                                                        <i class="ti-plus"></i> Tambah
-                                                    </button>
-                                                </div>
-                                                <div id="selectedImplementasiList" class="d-flex flex-column gap-2"></div>
-                                                <input type="hidden" name="implementasi" id="implementasiValue">
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
                                     <div class="section-separator">
                                         <h5 class="section-title">15. Masalah Keperawatan</h5>
                                         <div class="form-group">
