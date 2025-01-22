@@ -309,29 +309,24 @@
                                                     <h6>Antropometri</h6>
                                                     <div class="row mb-3">
                                                         <div class="col">
-                                                            <label>TB (meter)</label>
-                                                            <input type="number" class="form-control"
-                                                                name="antropometri[tb]">
+                                                            <label>TB (cm)</label>
+                                                            <input type="number" class="form-control" name="antropometri[tb]" step="1" min="0" max="300" placeholder="Misal: 170">
                                                         </div>
                                                         <div class="col">
                                                             <label>BB (kg)</label>
-                                                            <input type="number" class="form-control"
-                                                                name="antropometri[bb]">
+                                                            <input type="number" class="form-control" name="antropometri[bb]" step="0.1" min="0" max="500" placeholder="Misal: 70.5">
                                                         </div>
                                                         <div class="col">
                                                             <label>Ling. Kepala</label>
-                                                            <input type="number" class="form-control"
-                                                                name="antropometri[ling_kepala]">
+                                                            <input type="number" class="form-control" name="antropometri[ling_kepala]">
                                                         </div>
                                                         <div class="col">
                                                             <label>LPT</label>
-                                                            <input type="number" class="form-control"
-                                                                name="antropometri[lpt]">
+                                                            <input type="number" class="form-control" name="antropometri[lpt]" readonly>
                                                         </div>
                                                         <div class="col">
                                                             <label>IMT</label>
-                                                            <input type="number" class="form-control"
-                                                                name="antropometri[imt]">
+                                                            <input type="number" class="form-control" name="antropometri[imt]" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
