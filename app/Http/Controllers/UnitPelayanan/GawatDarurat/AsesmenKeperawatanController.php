@@ -80,6 +80,7 @@ class AsesmenKeperawatanController extends Controller
 
     public function store(Request $request, $kd_pasien, $tgl_masuk)
     {
+        // dd($request);
         $asesmen = new RmeAsesmen();
         $asesmen->kd_pasien = $kd_pasien;
         $asesmen->kd_unit = 3;
@@ -117,6 +118,9 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmum->discharge_planning_pelayanan_medis = $request->discharge_planning_pelayanan_medis;
         $asesmenKepUmum->discharge_planning_ketergantungan_aktivitas = $request->discharge_planning_ketergantungan_aktivitas;
         $asesmenKepUmum->discharge_planning_kesimpulan = $request->discharge_planning_kesimpulan;
+        $asesmenKepUmum->evaluasi = $request->evaluasi;
+        $asesmenKepUmum->masalah_keperawatan = $request->masalah_keperawatan;
+        $asesmenKepUmum->implementasi = $request->implementasi;
         $asesmenKepUmum->save();
 
         $asesmenKepUmumBreathing = new RmeAsesmenKepUmumBreathing();
@@ -130,19 +134,21 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmumBreathing->breathing_lainnya = $request->breathing_lainnya;
         $asesmenKepUmumBreathing->breathing_tindakan = json_encode($request->breathing_tindakan_keperawatan);
 
-        $nafasValue = 1;
-        $diagnosisNafas = $request->input('breathing_diagnosis_nafas', []);
-        if (is_array($diagnosisNafas) && !empty($diagnosisNafas)) {
-            $nafasValue = max(array_values($diagnosisNafas));
-        }
-        $asesmenKepUmumBreathing->breathing_diagnosis_nafas = (int)$nafasValue;
+        // Handle diagnosis nafas
+        if ($request->has('breathing_diagnosis_nafas')) {
+            $nafas_type = $request->breathing_diagnosis_type;
 
-        $gangguanValue = 1;
-        $breathing_gangguan = $request->input('breathing_gangguan', []);
-        if (is_array($breathing_gangguan) && !empty($breathing_gangguan)) {
-            $gangguanValue = max(array_values($breathing_gangguan));
+            // Simpan nilai berdasarkan radio button yang dipilih
+            $asesmenKepUmumBreathing->breathing_diagnosis_nafas = $nafas_type ? (int)$nafas_type : null;
         }
-        $asesmenKepUmumBreathing->breathing_gangguan = (int)$gangguanValue;
+
+        // Handle gangguan
+        if ($request->has('breathing_gangguan')) {
+            $gangguan_type = $request->breathing_gangguan_type;
+
+            // Simpan nilai berdasarkan radio button yang dipilih
+            $asesmenKepUmumBreathing->breathing_gangguan = $gangguan_type ? (int)$gangguan_type : null;
+        }
         $asesmenKepUmumBreathing->save();
 
         $asesmenKepUmumCirculation = new RmeAsesmenKepUmumCirculation();
@@ -188,6 +194,7 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmumDisability->disability_diameter_pupil = $request->disability_diameter_pupil;
         $asesmenKepUmumDisability->disability_motorik = $request->disability_motorik;
         $asesmenKepUmumDisability->disability_sensorik = $request->disability_sensorik;
+        $asesmenKepUmumDisability->disability_kekuatan_otot = $request->disability_kekuatan_otot;
 
         // Diagnosis Perfusi
         if ($request->has('disability_diagnosis_perfusi')) {
@@ -271,29 +278,27 @@ class AsesmenKeperawatanController extends Controller
 
         // Diagnosis
         if ($request->has('exposure_diagnosis_mobilitasi')) {
-            $mobilitasiSelected = $request->exposure_diagnosis_mobilitasi;
-            $mobilitasiType = $request->exposure_diagnosis_mobilitasi_type ?? null;
+            $mobilitasi_type = $request->exposure_diagnosis_mobilitasi_type;
 
-            $asesmenKepUmumExposure->exposure_diagnosis_mobilitasi = in_array('mobilitasi', $mobilitasiSelected)
-                ? ($mobilitasiType === '1' ? 1 : ($mobilitasiType === '2' ? 2 : 0))
-                : 0;
+            // Simpan nilai berdasarkan radio button yang dipilih
+            $asesmenKepUmumExposure->exposure_diagnosis_mobilitasi = $mobilitasi_type ? (int)$mobilitasi_type : null;
         }
+        // exposure_diagosis_integritas
         if ($request->has('exposure_diagosis_integritas')) {
-            $jaringanSelected = $request->exposure_diagnosis_mobilitasi;
-            $jaringanType = $request->exposure_diagosis_integritas_type ?? null;
+            $integritas_type = $request->exposure_diagosis_integritas_type;
 
-            $asesmenKepUmumExposure->exposure_diagnosis_mobilitasi = in_array('jaringan', $jaringanSelected)
-                ? ($jaringanType === '1' ? 1 : ($jaringanType === '2' ? 2 : 0))
-                : 0;
+            // Simpan nilai berdasarkan radio button yang dipilih
+            $asesmenKepUmumExposure->exposure_diagosis_integritas = $integritas_type ? (int)$integritas_type : null;
         }
+
         // Diagnosis Lainnya dan Tindakan
         $asesmenKepUmumExposure->exposure_diagnosis_lainnya = $request->exposure_diagnosis_lainnya;
-        $asesmenKepUmumExposure->exposure_tindakan = json_encode($request->exposure_tindakan);
+        $asesmenKepUmumExposure->exposure_tindakan = json_encode($request->exposure_tindakan_keperawatan);
         $asesmenKepUmumExposure->save();
 
         $asesmenKepUmumExposure = new RmeAsesmenKepUmumSosialEkonomi();
         $asesmenKepUmumExposure->id_asesmen = $asesmen->id;
-        $asesmenKepUmumExposure->sosial_ekonomi_pekerjaan = $request->sosial_ekonomi_pekerjaan;
+        $asesmenKepUmumExposure->sosial_ekonomi_pekerjaan = $request->sosial_ekonomi_pekerjaan ? (int)$request->sosial_ekonomi_pekerjaan : null;
         $asesmenKepUmumExposure->sosial_ekonomi_tingkat_penghasilan = $request->sosial_ekonomi_tingkat_penghasilan;
         $asesmenKepUmumExposure->sosial_ekonomi_status_pernikahan = $request->sosial_ekonomi_status_pernikahan;
         $asesmenKepUmumExposure->sosial_ekonomi_status_pendidikan = $request->sosial_ekonomi_status_pendidikan;
@@ -302,6 +307,151 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmumExposure->sosial_ekonomi_curiga_penganiayaan = $request->sosial_ekonomi_curiga_penganiayaan;
         $asesmenKepUmumExposure->sosial_ekonomi_keterangan_lain = $request->sosial_ekonomi_keterangan_lain;
         $asesmenKepUmumExposure->save();
+
+        $asesmenKepUmumStatusNyeri = new RmeAsesmenKepUmumSkalaNyeri();
+        $asesmenKepUmumStatusNyeri->id_asesmen = $asesmen->id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri = $request->skala_nyeri;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_lokasi = $request->skala_nyeri_lokasi;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_durasi = $request->skala_nyeri_durasi;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_pemberat_id = $request->skala_nyeri_pemberat_id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_peringan_id = $request->skala_nyeri_peringan_id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_kualitas_id = $request->skala_nyeri_kualitas_id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_frekuensi_id = $request->skala_nyeri_frekuensi_id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_menjalar_id = $request->skala_nyeri_menjalar_id;
+        $asesmenKepUmumStatusNyeri->skala_nyeri_jenis_id = $request->skala_nyeri_jenis_id;
+        $asesmenKepUmumStatusNyeri->save();
+
+        $asesmenKepUmumRisikoJatuh = new RmeAsesmenKepUmumRisikoJatuh();
+        $asesmenKepUmumRisikoJatuh->id_asesmen = $asesmen->id;
+        $asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis = (int)$request->resiko_jatuh_jenis;
+        $asesmenKepUmumRisikoJatuh->risik_jatuh_tindakan = json_encode($request->risikojatuh_tindakan_keperawatan);
+
+        // Handle Skala Umum
+        if ($request->resiko_jatuh_jenis == 1) {
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia = $request->risiko_jatuh_umum_usia ? 1 : 0;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus = $request->risiko_jatuh_umum_kondisi_khusus ? 1 : 0;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson = $request->risiko_jatuh_umum_diagnosis_parkinson ? 1 : 0;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko = $request->risiko_jatuh_umum_pengobatan_berisiko ? 1 : 0;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko = $request->risiko_jatuh_umum_lokasi_berisiko ? 1 : 0;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kesimpulan = $request->input('risiko_jatuh_umum_kesimpulan', 'Tidak berisiko jatuh');
+        }
+
+        // Handle Skala Morse
+        if ($request->resiko_jatuh_jenis == 2) {
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh = array_search($request->risiko_jatuh_morse_riwayat_jatuh, ['25' => 25, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder = array_search($request->risiko_jatuh_morse_diagnosis_sekunder, ['15' => 15, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi = array_search($request->risiko_jatuh_morse_bantuan_ambulasi, ['30' => 30, '15' => 15, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus = array_search($request->risiko_jatuh_morse_terpasang_infus, ['20' => 20, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan = array_search($request->risiko_jatuh_morse_cara_berjalan, ['0' => 0, '20' => 20, 10 => 10]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental = array_search($request->risiko_jatuh_morse_status_mental, ['0' => 0, '15' => 15]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_kesimpulan = $request->risiko_jatuh_morse_kesimpulan;
+            $asesmenKepUmumRisikoJatuh->save();
+        }
+
+        // Handle Skala Pediatrik/Humpty
+        else if ($request->resiko_jatuh_jenis == 3) {
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak = array_search((int)$request->risiko_jatuh_pediatrik_usia_anak, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin = array_search($request->risiko_jatuh_pediatrik_jenis_kelamin, ['2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis = array_search($request->risiko_jatuh_pediatrik_diagnosis, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif = array_search($request->risiko_jatuh_pediatrik_gangguan_kognitif, ['3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan = array_search($request->risiko_jatuh_pediatrik_faktor_lingkungan, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan = array_search($request->risiko_jatuh_pediatrik_pembedahan, ['3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa = array_search($request->risiko_jatuh_pediatrik_penggunaan_mentosa, ['3' => 3, '2' => 2, '1' => 1]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_kesimpulan = $request->risiko_jatuh_pediatrik_kesimpulan;
+        }
+
+        // Handle Skala Lansia/Ontario
+        else if ($request->resiko_jatuh_jenis == 4) {
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs = array_search($request->risiko_jatuh_lansia_jatuh_saat_masuk_rs, ['6' => 6, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan = array_search($request->risiko_jatuh_lansia_riwayat_jatuh_2_bulan, ['6' => 6, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung = array_search($request->risiko_jatuh_lansia_status_bingung, ['14' => 14, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi = array_search($request->risiko_jatuh_lansia_status_disorientasi, ['14' => 14, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi = array_search($request->risiko_jatuh_lansia_status_agitasi, ['14' => 14, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata = $request->risiko_jatuh_lansia_kacamata;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan = $request->risiko_jatuh_lansia_kelainan_penglihatan;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma = $request->risiko_jatuh_lansia_glukoma;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih = array_search($request->risiko_jatuh_lansia_perubahan_berkemih, ['2' => 2, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri = $request->risiko_jatuh_lansia_transfer_mandiri;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit = $request->risiko_jatuh_lansia_transfer_bantuan_sedikit;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata = array_search($request->risiko_jatuh_lansia_transfer_bantuan_nyata, ['2' => 2, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total = array_search($request->risiko_jatuh_lansia_transfer_bantuan_total, ['3' => 2, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri = $request->risiko_jatuh_lansia_mobilitas_mandiri;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang = $request->risiko_jatuh_lansia_mobilitas_bantuan_1_orang;
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda = array_search($request->risiko_jatuh_lansia_mobilitas_kursi_roda, ['2' => 2, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi = array_search($request->risiko_jatuh_lansia_mobilitas_imobilisasi, ['3' => 2, '0' => 0]);
+            $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kesimpulan = $request->risiko_jatuh_lansia_kesimpulan;
+        } else if ($request->resiko_jatuh_jenis == 5) {
+            $asesmenKepUmumRisikoJatuh->resiko_jatuh_lainnya = 'resiko jatuh lainnya';
+        }
+        $asesmenKepUmumRisikoJatuh->save();
+
+        $asesmenKepUmumStatusGizi = new RmeAsesmenKepUmumGizi();
+        $asesmenKepUmumStatusGizi->id_asesmen = $asesmen->id;
+        $asesmenKepUmumStatusGizi->gizi_jenis = (int)$request->gizi_jenis;
+
+        // Handle MST Form
+        if ($request->gizi_jenis == 1) {
+            $asesmenKepUmumStatusGizi->gizi_mst_penurunan_bb = $request->gizi_mst_penurunan_bb;
+            $asesmenKepUmumStatusGizi->gizi_mst_jumlah_penurunan_bb = $request->gizi_mst_jumlah_penurunan_bb;
+            $asesmenKepUmumStatusGizi->gizi_mst_nafsu_makan_berkurang = $request->gizi_mst_nafsu_makan_berkurang;
+            $asesmenKepUmumStatusGizi->gizi_mst_diagnosis_khusus = $request->gizi_mst_diagnosis_khusus;
+            $asesmenKepUmumStatusGizi->gizi_mst_kesimpulan = $request->gizi_mst_kesimpulan;
+        }
+
+        // Handle MNA Form
+        else if ($request->gizi_jenis == 2) {
+            $asesmenKepUmumStatusGizi->gizi_mna_penurunan_asupan_3_bulan = (int)$request->gizi_mna_penurunan_asupan_3_bulan;
+            $asesmenKepUmumStatusGizi->gizi_mna_kehilangan_bb_3_bulan = (int)$request->gizi_mna_kehilangan_bb_3_bulan;
+            $asesmenKepUmumStatusGizi->gizi_mna_mobilisasi = (int)$request->gizi_mna_mobilisasi;
+            $asesmenKepUmumStatusGizi->gizi_mna_stress_penyakit_akut = (int)$request->gizi_mna_stress_penyakit_akut;
+            $asesmenKepUmumStatusGizi->gizi_mna_status_neuropsikologi = (int)$request->gizi_mna_status_neuropsikologi;
+            $asesmenKepUmumStatusGizi->gizi_mna_berat_badan = (int)$request->gizi_mna_berat_badan;
+            $asesmenKepUmumStatusGizi->gizi_mna_tinggi_badan = (int)$request->gizi_mna_tinggi_badan;
+
+            // Hitung dan simpan IMT
+            $heightInMeters = $request->gizi_mna_tinggi_badan / 100;
+            $imt = $request->gizi_mna_berat_badan / ($heightInMeters * $heightInMeters);
+            $asesmenKepUmumStatusGizi->gizi_mna_imt = number_format($imt, 2, '.', '');
+
+            $asesmenKepUmumStatusGizi->gizi_mna_kesimpulan = $request->gizi_mna_kesimpulan;
+        }
+
+        // Handle Strong Kids Form
+        else if ($request->gizi_jenis == 3) {
+            $asesmenKepUmumStatusGizi->gizi_strong_status_kurus = $request->gizi_strong_status_kurus;
+            $asesmenKepUmumStatusGizi->gizi_strong_penurunan_bb = $request->gizi_strong_penurunan_bb;
+            $asesmenKepUmumStatusGizi->gizi_strong_gangguan_pencernaan = $request->gizi_strong_gangguan_pencernaan;
+            $asesmenKepUmumStatusGizi->gizi_strong_penyakit_berisiko = $request->gizi_strong_penyakit_berisiko;
+            $asesmenKepUmumStatusGizi->gizi_strong_kesimpulan = $request->gizi_strong_kesimpulan;
+        }
+
+        // Handle NRS Form
+        else if ($request->gizi_jenis == 4) {
+            $asesmenKepUmumStatusGizi->gizi_nrs_jatuh_saat_masuk_rs = $request->gizi_nrs_jatuh_saat_masuk_rs;
+            $asesmenKepUmumStatusGizi->gizi_nrs_jatuh_2_bulan_terakhir = $request->gizi_nrs_jatuh_2_bulan_terakhir;
+            $asesmenKepUmumStatusGizi->gizi_nrs_status_delirium = $request->gizi_nrs_status_delirium;
+            $asesmenKepUmumStatusGizi->gizi_nrs_status_disorientasi = $request->gizi_nrs_status_disorientasi;
+            $asesmenKepUmumStatusGizi->gizi_nrs_status_agitasi = $request->gizi_nrs_status_agitasi;
+            $asesmenKepUmumStatusGizi->gizi_nrs_menggunakan_kacamata = $request->gizi_nrs_menggunakan_kacamata;
+            $asesmenKepUmumStatusGizi->gizi_nrs_keluhan_penglihatan_buram = $request->gizi_nrs_keluhan_penglihatan_buram;
+            $asesmenKepUmumStatusGizi->gizi_nrs_degenerasi_makula = $request->gizi_nrs_degenerasi_makula;
+            $asesmenKepUmumStatusGizi->gizi_nrs_perubahan_berkemih = $request->gizi_nrs_perubahan_berkemih;
+            $asesmenKepUmumStatusGizi->gizi_nrs_transfer_mandiri = $request->gizi_nrs_transfer_mandiri;
+            $asesmenKepUmumStatusGizi->gizi_nrs_transfer_bantuan_1_orang = $request->gizi_nrs_transfer_bantuan_1_orang;
+            $asesmenKepUmumStatusGizi->gizi_nrs_transfer_bantuan_2_orang = $request->gizi_nrs_transfer_bantuan_2_orang;
+            $asesmenKepUmumStatusGizi->gizi_nrs_transfer_bantuan_total = $request->gizi_nrs_transfer_bantuan_total;
+            $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_mandiri = $request->gizi_nrs_mobilitas_mandiri;
+            $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_bantuan_1_orang = $request->gizi_nrs_mobilitas_bantuan_1_orang;
+            $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_kursi_roda = $request->gizi_nrs_mobilitas_kursi_roda;
+            $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_imobilisasi = $request->gizi_nrs_mobilitas_imobilisasi;
+            $asesmenKepUmumStatusGizi->gizi_nrs_kesimpulan = $request->gizi_nrs_kesimpulan;
+
+        }
+        else if ($request->gizi_jenis == 5) {
+            $asesmenKepUmumStatusGizi->status_gizi_tidakada = 'tidak ada status gizi';
+        }
+
+        $asesmenKepUmumStatusGizi->save();
 
         return redirect()->route('asesmen-keperawatan.index', [
             'kd_pasien' => $kd_pasien,
