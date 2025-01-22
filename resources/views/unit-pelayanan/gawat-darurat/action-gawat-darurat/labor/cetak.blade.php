@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cetak Perjanjian Kerja</title>
+    <title>Cetak Hasil Pemeriksaan Laboratorium</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         @page {
@@ -59,18 +58,18 @@
 
         .contract-title {
             text-align: center;
-            margin: 30px 0;
+            margin: 15px 0;
         }
 
         .contract-title h5 {
             font-weight: bold;
             font-size: 14pt;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-decoration: underline;
         }
 
         .contract-title p {
-            margin: 8px 0;
+            margin: 5px 0;
             font-size: 12pt;
         }
 
@@ -155,22 +154,20 @@
                         <!-- Hospital Header -->
                         <div class="hospital-header">
                             <div class="header-content">
-                                <img src="{{ asset('https://rsud.langsakota.go.id/wp-content/uploads/2020/03/Logo-RSUD-Langsa-1.png') }}"
-                                    alt="Logo RSUD" class="hospital-logo logo-left">
+                                <img src="{{ asset('https://rsud.langsakota.go.id/wp-content/uploads/2020/03/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="hospital-logo logo-left">
                                 <div>
-                                    <div class="hospital-title">INSTALASI LABORATORIUM</div>
-                                    <div class="hospital-title">RUMAH SAKIT UMUM DAERAH LANGSA</div>
+                                    <div class="fw-bold">INSTALASI LABORATORIUM</div>
+                                    <div class="fw-bold">RUMAH SAKIT UMUM DAERAH LANGSA</div>
                                     <p>Alamat : Jln. Jend. A. Yani No.1 Kota Langsa, Telp. (0641) 22051 - 22800 (IGD), Fax. (0641) 22051</p>
                                     <p>Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id</p>
                                 </div>
-                                <img src="{{ asset('https://sippn.menpan.go.id/images/article/large/logo-kota-langsa1.png') }}"
-                                    alt="Logo Kota" class="hospital-logo logo-right">
+                                <img src="{{ asset('https://sippn.menpan.go.id/images/article/large/logo-kota-langsa1.png') }}" alt="Logo Kota" class="hospital-logo logo-right">
                             </div>
                         </div>
 
                         <!-- Contract Title -->
                         <div class="contract-title">
-                            <h6>HASIL PEMERIKSAAN LABORATORIUM KLINIK</h6>
+                            <h6 class="fw-bold">HASIL PEMERIKSAAN LABORATORIUM KLINIK</h6>
                             <i>Clinical Laboratory Examination Result</i>
                         </div>
 
@@ -184,21 +181,16 @@
                             <div class="col-md-6">
                                 <table class="table table-sm table-borderless" border="0">
                                     <tr>
-                                        <td>No. Rekam Medis
-                                            <i>Medical Record Number</i>
-                                        </td>
+                                        <td>No. Rekam Medis<i>Medical Record Number</i></td>
                                         <td>: {{ $dataMedis->kd_pasien }}</td>
                                     </tr>
                                     <tr>
-                                        <td width="150">Pasien
-                                            <i>Patient</i></td>
+                                        <td width="150">Pasien<i>Patient</i></td>
                                         <td>: {{ $dataMedis->pasien->nama }}</td>
                                     </tr>
                                     <tr>
                                         <td>Tanggal Lahir</td>
-                                        <td>:
-                                            {{ \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') }}
-                                        </td>
+                                        <td>: {{ \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -222,7 +214,6 @@
                             </div>
                         </div>
 
-                        <!-- Di dalam file cetak.blade.php -->
                         <table class="table table-bordered table-sm">
                             <thead>
                                 <tr>
@@ -258,12 +249,10 @@
                                 @endforeach
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>
