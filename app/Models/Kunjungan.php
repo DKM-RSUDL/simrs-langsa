@@ -58,6 +58,8 @@ class Kunjungan extends Model
         'kd_user_cbg',
         'is_rujukan',
         'rujukan_ket',
+        'status_inap',
+        'status_kunjungan',
     ];
 
     public function pasien()

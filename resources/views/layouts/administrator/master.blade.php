@@ -39,7 +39,7 @@
     @stack('css')
     <!-- End CSS  -->
 
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
     {{-- vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -83,6 +83,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script>
+        Main.init();
+    </script>
+
+    <script>
         function showToast(type, message) {
             iziToast[type]({
                 title: type,
@@ -98,9 +102,6 @@
     <!-- js for this page only -->
     @stack('js')
     <!-- ======= -->
-    <script>
-        Main.init();
-    </script>
 </body>
 
 </html>

@@ -1025,6 +1025,11 @@
                                                         <button type="button" class="btn btn-sm btn-success"
                                                             id="skalaNyeriBtn">
                                                             Tidak Nyeri
+                                                        <input type="number" class="form-control flex-grow-1"
+                                                            name="skala_nyeri_nilai" style="width: 100px;" value="0"
+                                                            min="0" max="10">
+                                                        <button class="btn btn-warning btn-sm">
+                                                            Nyeri Hebat
                                                         </button>
                                                     </div>
                                                     <div class="pain-scale-image flex-grow-1">
@@ -1635,6 +1640,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                             <select class="form-select" name="spiritual_agama">
+                                            <select class="form-select" name="spiritual_agama">
                                                 <option value="">--Pilih--</option>
                                                 <option value="islam">Islam</option>
                                                 <option value="kristen">Kristen</option>
@@ -1665,6 +1671,10 @@
                                                         {{ $kerjaan->pekerjaan }}
                                                     </option>
                                                 @endforeach
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Pekerjaan</label>
+                                            <select class="form-select" name="sosial_pekerjaan">
+                                                <option value="">--Pilih--</option>
                                             </select>
                                             @error('sosial_ekonomi_pekerjaan')
                                                 <div class="invalid-feedback d-block">
@@ -2289,11 +2299,13 @@
                                             <label style="min-width: 200px;">Diagnosis medis</label>
                                             <input type="text" class="form-control"
                                                 name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
+                                                name="discharge_planning_diagnosis_medis" id="diagnosis_medis">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Usia lanjut</label>
                                             <select class="form-select discharge-select"
+                                                name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                                 name="discharge_planning_usia_lanjut" id="usia_lanjut">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
@@ -2304,6 +2316,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hambatan mobilisasi</label>
                                             <select class="form-select discharge-select"
+                                                name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                                 name="discharge_planning_hambatan_mobilisasi" id="hambatan_mobilisasi">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
@@ -2317,6 +2330,7 @@
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_pelayanan_medis"
                                                 id="pelayanan_medis_berkelanjutan">
+                                                id="pelayanan_medis_berkelanjutan">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2328,6 +2342,7 @@
                                                 aktivitas harian</label>
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_ketergantungan_aktivitas"
+                                                id="ketergantungan_aktivitas">
                                                 id="ketergantungan_aktivitas">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>

@@ -12,6 +12,7 @@ use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RujukanKunjungan;
+use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use Exception;
 use Illuminate\Http\Request;
@@ -388,7 +389,19 @@ class GawatDaruratController extends Controller
 
         DetailComponent::create($dataDetailComponent);
 
-        // jangan lupa tambahkan insert into sjp_kunjungan
+        // insert sjp_kunjungan
+        $sjpKunjunganData = [
+            'kd_pasien'     => $lastIgdNumber,
+            'kd_unit'       => 3,
+            'tgl_masuk'     => $tgl_masuk,
+            'urut_masuk'    => $urut_masuk,
+            'penjamin_laka' => 0,
+            'katarak'       => 0,
+            'dpjp'          => $dokter_triase,
+            'cob'           => 0
+        ];
+
+        SjpKunjungan::create($sjpKunjunganData);
 
         return back()->with('success', 'Data triase berhasil ditambah');
     }
@@ -419,25 +432,6 @@ class GawatDaruratController extends Controller
                 'data'      => []
             ] . 500);
         }
-    }
-
-    // General Consent
-    public function generalConsent($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->join('transaksi as t', function($join) {
-                                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-                            })
-                            ->where('kunjungan.kd_pasien', $kd_pasien)
-                            ->where('kunjungan.kd_unit', 3)
-                            ->where('kunjungan.urut_masuk', $urut_masuk)
-                            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.general-consent.index', compact('dataMedis'));
     }
 
     public function rujukAntarRs($kd_pasien, $tgl_masuk, $urut_masuk)
