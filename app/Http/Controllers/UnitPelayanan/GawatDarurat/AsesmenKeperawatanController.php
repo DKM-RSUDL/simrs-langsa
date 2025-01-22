@@ -48,6 +48,8 @@ class AsesmenKeperawatanController extends Controller
 
         $pekerjaan = Pekerjaan::all();
 
+        $rmeAsesmenKepUmum = RmeAsesmenKepUmum::select('masalah_keperawatan', 'implementasi')->get();
+
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
@@ -74,7 +76,8 @@ class AsesmenKeperawatanController extends Controller
             'tgl_masuk',
             'dataMedis',
             'user',
-            'pekerjaan'
+            'pekerjaan',
+            'rmeAsesmenKepUmum'
         ));
     }
 
@@ -445,9 +448,7 @@ class AsesmenKeperawatanController extends Controller
             $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_kursi_roda = $request->gizi_nrs_mobilitas_kursi_roda;
             $asesmenKepUmumStatusGizi->gizi_nrs_mobilitas_imobilisasi = $request->gizi_nrs_mobilitas_imobilisasi;
             $asesmenKepUmumStatusGizi->gizi_nrs_kesimpulan = $request->gizi_nrs_kesimpulan;
-
-        }
-        else if ($request->gizi_jenis == 5) {
+        } else if ($request->gizi_jenis == 5) {
             $asesmenKepUmumStatusGizi->status_gizi_tidakada = 'tidak ada status gizi';
         }
 

@@ -158,51 +158,51 @@
         }
 
         .suggestions-list {
-    position: absolute;
-    z-index: 1000;
-    width: calc(100% - 2rem);
-    max-height: 200px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    display: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+            position: absolute;
+            z-index: 1000;
+            width: calc(100% - 2rem);
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-.suggestion-item {
-    padding: 8px 12px;
-    cursor: pointer;
-}
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
 
-.suggestion-item:hover {
-    background-color: #f8f9fa;
-}
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
 
-.selected-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
+        .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
 
-.selected-item {
-    display: inline-flex;
-    align-items: center;
-    background: #e9ecef;
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
+        .selected-item {
+            display: inline-flex;
+            align-items: center;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
 
-.selected-item .delete-btn {
-    margin-left: 8px;
-    color: #dc3545;
-    cursor: pointer;
-    border: none;
-    background: none;
-    padding: 0 4px;
-}
+        .selected-item .delete-btn {
+            margin-left: 8px;
+            color: #dc3545;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0 4px;
+        }
     </style>
 @endpush
 
@@ -785,135 +785,196 @@
 
         // 15.Masalah Keperawatan
         document.addEventListener('DOMContentLoaded', function() {
-    // Data untuk autocomplete
-    const masalahOptions = [
-        { id: 'nyeri_akut', text: 'Nyeri akut' },
-        { id: 'gangguan_mobilitas', text: 'Gangguan mobilitas fisik' },
-        { id: 'risiko_infeksi', text: 'Risiko infeksi' },
-        { id: 'gangguan_tidur', text: 'Gangguan pola tidur' },
-        { id: 'kecemasan', text: 'Kecemasan' },
-        { id: 'defisit_perawatan', text: 'Defisit perawatan diri' },
-        { id: 'gangguan_eliminasi', text: 'Gangguan eliminasi' },
-        { id: 'risiko_jatuh', text: 'Risiko jatuh' },
-        { id: 'ketidakseimbangan_nutrisi', text: 'Ketidakseimbangan nutrisi' },
-        { id: 'gangguan_kulit', text: 'Gangguan integritas kulit' }
-    ];
+            // Mendapatkan data dari database dan membuat array options yang siap digunakan
+            const dbData = {!! json_encode($rmeAsesmenKepUmum) !!};
 
-    const implementasiOptions = [
-        { id: 'monitoring_vital', text: 'Monitoring tanda vital' },
-        { id: 'manajemen_nyeri', text: 'Manajemen nyeri' },
-        { id: 'bantuan_mobilisasi', text: 'Bantuan mobilisasi' },
-        { id: 'pencegahan_infeksi', text: 'Pencegahan infeksi' },
-        { id: 'perawatan_luka', text: 'Perawatan luka' },
-        { id: 'pemberian_obat', text: 'Pemberian obat' },
-        { id: 'edukasi_pasien', text: 'Edukasi pasien' },
-        { id: 'bantuan_eliminasi', text: 'Bantuan eliminasi' },
-        { id: 'manajemen_nutrisi', text: 'Manajemen nutrisi' },
-        { id: 'pencegahan_jatuh', text: 'Pencegahan jatuh' }
-    ];
+            // Set untuk menyimpan unique values
+            const masalahSet = new Set();
+            const implementasiSet = new Set();
 
-    function initializeAutocomplete(inputId, suggestionsId, listId, valueId, options) {
-        const input = document.getElementById(inputId);
-        const suggestionsList = document.getElementById(suggestionsId);
-        const selectedList = document.getElementById(listId);
-        const valueInput = document.getElementById(valueId);
-        const selectedItems = new Map();
+            // Mengumpulkan semua nilai unik
+            dbData.forEach(item => {
+                try {
+                    // Parse masalah_keperawatan
+                    if (item.masalah_keperawatan) {
+                        const masalahArray = JSON.parse(item.masalah_keperawatan);
+                        masalahArray.forEach(text => masalahSet.add(text));
+                    }
 
-        function updateHiddenInput() {
-        // Ubah format menjadi array JSON
-        const items = Array.from(selectedItems.values())
-            .map(item => item.text)
-            // Filter untuk menghapus kata "Tambah" dari nilai yang disimpan
-            .map(text => text.replace('Tambah "', '').replace('"', ''));
-        valueInput.value = JSON.stringify(items);
-    }
-
-        function showSuggestions(suggestions) {
-            suggestionsList.innerHTML = '';
-            suggestions.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.textContent = item.text;
-                div.onclick = () => addItem(item.id, item.text);
-                suggestionsList.appendChild(div);
+                    // Parse implementasi
+                    if (item.implementasi) {
+                        const implementasiArray = JSON.parse(item.implementasi);
+                        implementasiArray.forEach(text => implementasiSet.add(text));
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                }
             });
-            suggestionsList.style.display = suggestions.length ? 'block' : 'none';
-        }
 
-        function addItem(id, text) {
-        if (!selectedItems.has(id)) {
-            // Hilangkan prefix "Tambah" jika ada
-            const cleanText = text.startsWith('Tambah "') ?
-                text.replace('Tambah "', '').replace('"', '') : text;
+            // Konversi Set ke array options
+            const masalahOptions = Array.from(masalahSet).map(text => ({
+                id: text.toLowerCase().replace(/\s+/g, '_'),
+                text: text
+            }));
 
-            selectedItems.set(id, { id, text: cleanText });
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'selected-item';
-            itemDiv.innerHTML = `
-                ${cleanText}
-                <button type="button" class="delete-btn" data-id="${id}">×</button>
-            `;
-            selectedList.appendChild(itemDiv);
-            updateHiddenInput();
-        }
-        input.value = '';
-        suggestionsList.style.display = 'none';
-    }
+            const implementasiOptions = Array.from(implementasiSet).map(text => ({
+                id: text.toLowerCase().replace(/\s+/g, '_'),
+                text: text
+            }));
 
-    input.addEventListener('input', function() {
-        const value = this.value.toLowerCase();
-        if (value) {
-            const filtered = options.filter(item =>
-                item.text.toLowerCase().includes(value)
-            );
+            console.log('Masalah Options:', masalahOptions); // Debug
+            console.log('Implementasi Options:', implementasiOptions); // Debug
 
-            // Jika tidak ada yang cocok, tambahkan opsi untuk membuat baru
-            if (filtered.length === 0) {
-                // Tampilkan opsi untuk menambah baru tanpa kata "Tambah" di nilai yang disimpan
-                showSuggestions([{ id: value, text: value }]);
-            } else {
-                showSuggestions(filtered);
+            function initializeAutocomplete(inputId, suggestionsId, listId, valueId, options) {
+                const input = document.getElementById(inputId);
+                const suggestionsList = document.getElementById(suggestionsId);
+                const selectedList = document.getElementById(listId);
+                const valueInput = document.getElementById(valueId);
+                const selectedItems = new Map();
+
+                // Tambahkan CSS untuk memastikan suggestions list terlihat
+                suggestionsList.style.position = 'absolute';
+                suggestionsList.style.backgroundColor = 'white';
+                suggestionsList.style.border = '1px solid #ddd';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = '100%';
+                suggestionsList.style.zIndex = '1000';
+
+                function updateHiddenInput() {
+                    const items = Array.from(selectedItems.values())
+                        .map(item => item.text)
+                        .map(text => text.replace('Tambah "', '').replace('"', ''));
+                    valueInput.value = JSON.stringify(items);
+                }
+
+                // Modifikasi fungsi showSuggestions untuk menangani item baru
+                function showSuggestions(suggestions) {
+                    suggestionsList.innerHTML = '';
+                    if (suggestions.length > 0) {
+                        suggestions.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'suggestion-item';
+                            div.style.padding = '8px 12px';
+                            div.style.cursor = 'pointer';
+                            div.style.borderBottom = '1px solid #eee';
+
+                            // Jika item baru, tambahkan style khusus
+                            if (item.isNew) {
+                                div.style.color = '#0066cc';
+                                div.innerHTML =
+                                `<i class="fas fa-plus"></i> ${item.text}`; // Jika menggunakan Font Awesome
+                                // Atau tanpa icon:
+                                // div.textContent = `+ ${item.text}`;
+                            } else {
+                                div.textContent = item.text;
+                            }
+
+                            div.onmouseover = () => div.style.backgroundColor = '#f0f0f0';
+                            div.onmouseout = () => div.style.backgroundColor = 'white';
+                            div.onclick = () => {
+                                // Jika item baru, hapus prefix "Tambah"
+                                if (item.isNew) {
+                                    const newText = item.text.replace('Tambah "', '').replace('"', '');
+                                    addItem(item.id, newText);
+                                } else {
+                                    addItem(item.id, item.text);
+                                }
+                            };
+                            suggestionsList.appendChild(div);
+                        });
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        suggestionsList.style.display = 'none';
+                    }
+                }
+
+                function addItem(id, text) {
+                    if (!selectedItems.has(id)) {
+                        const cleanText = text.startsWith('Tambah "') ?
+                            text.replace('Tambah "', '').replace('"', '') : text;
+
+                        selectedItems.set(id, {
+                            id,
+                            text: cleanText
+                        });
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'selected-item';
+                        itemDiv.style.backgroundColor = '#e9ecef';
+                        itemDiv.style.padding = '4px 8px';
+                        itemDiv.style.borderRadius = '4px';
+                        itemDiv.style.marginRight = '8px';
+                        itemDiv.style.marginBottom = '8px';
+                        itemDiv.style.display = 'inline-block';
+                        itemDiv.innerHTML = `
+                    ${cleanText}
+                    <button type="button" class="delete-btn" style="margin-left: 8px; color: #red; border: none; background: none; cursor: pointer;" data-id="${id}">×</button>
+                `;
+                        selectedList.appendChild(itemDiv);
+                        updateHiddenInput();
+                    }
+                    input.value = '';
+                    suggestionsList.style.display = 'none';
+                }
+
+                input.addEventListener('input', function() {
+                    const value = this.value.toLowerCase();
+                    console.log('Input value:', value); // Debug
+                    if (value) {
+                        const filtered = options.filter(item =>
+                            item.text.toLowerCase().includes(value)
+                        );
+
+                        // Menambahkan opsi "Tambah baru" jika input tidak cocok dengan data yang ada
+                        if (filtered.length === 0 && value.trim() !== '') {
+                            filtered.push({
+                                id: value.replace(/\s+/g, '_'),
+                                text: `Tambah "${value.trim()}"`,
+                                isNew: true
+                            });
+                        }
+
+                        console.log('Filtered suggestions:', filtered); // Debug
+                        showSuggestions(filtered);
+                    } else {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                // Sisa kode event listener tetap sama...
+                selectedList.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('delete-btn')) {
+                        const id = e.target.dataset.id;
+                        selectedItems.delete(id);
+                        e.target.parentElement.remove();
+                        updateHiddenInput();
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                input.removeEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (this.value) {
+                            const id = this.value.toLowerCase().replace(/\s+/g, '_');
+                            addItem(id, this.value);
+                        }
+                    }
+                });
             }
-        } else {
-            suggestionsList.style.display = 'none';
-        }
-    });
 
-        // Event untuk menghapus item
-        selectedList.addEventListener('click', function(e) {
-            if (e.target.classList.contains('delete-btn')) {
-                const id = e.target.dataset.id;
-                selectedItems.delete(id);
-                e.target.parentElement.remove();
-                updateHiddenInput();
-            }
+            // Inisialisasi autocomplete
+            initializeAutocomplete('inputMasalah', 'masalahSuggestions', 'selectedMasalahList',
+                'masalahKeperawatanValue', masalahOptions);
+            initializeAutocomplete('inputImplementasi', 'implementasiSuggestions', 'selectedImplementasiList',
+                'implementasiValue', implementasiOptions);
         });
 
-        // Sembunyikan saran saat klik di luar
-        document.addEventListener('click', function(e) {
-            if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
-                suggestionsList.style.display = 'none';
-            }
-        });
-
-            // Handle enter key untuk input langsung
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (this.value) {
-                // Langsung tambahkan nilai tanpa prefix "Tambah"
-                addItem(this.value, this.value);
-            }
-        }
-    });
-    }
-
-    // Inisialisasi kedua input
-    initializeAutocomplete('inputMasalah', 'masalahSuggestions', 'selectedMasalahList',
-                          'masalahKeperawatanValue', masalahOptions);
-    initializeAutocomplete('inputImplementasi', 'implementasiSuggestions', 'selectedImplementasiList',
-                          'implementasiValue', implementasiOptions);
-});
         // 6. Fungsi Skala Nyeri
         $(document).ready(function() {
             initSkalaNyeri();
