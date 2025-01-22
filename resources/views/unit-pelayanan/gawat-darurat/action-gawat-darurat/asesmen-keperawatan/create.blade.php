@@ -1756,7 +1756,7 @@
                                                 <option value="1">Malnutrition Screening Tool (MST)</option>
                                                 <option value="2">The Mini Nutritional Assessment (MNA)</option>
                                                 <option value="3">Strong Kids (1 bln - 18 Tahun)</option>
-                                                <option value="4">Nutrtition Risk Screening 2002 (NRS 2002)</option>
+                                                {{-- <option value="4">Nutrtition Risk Screening 2002 (NRS 2002)</option> --}}
                                                 <option value="5">Tidak Dapat Dinilai</option>
                                             </select>
                                         </div>
@@ -1770,7 +1770,7 @@
                                                     terakhir?</label>
                                                 <select class="form-select" name="gizi_mst_penurunan_bb">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Tidak ada penurunan Berat Badan (BB)</option>
+                                                    <option value="0">Tidak ada penurunan Berat Badan (BB)</option>
                                                     <option value="2">Tidak yakin/ tidak tahu/ terasa baju lebi
                                                         longgar</option>
                                                     <option value="3">Ya ada penurunan BB</option>
@@ -1831,9 +1831,10 @@
                                                 </label>
                                                 <select class="form-select" name="gizi_mna_penurunan_asupan_3_bulan"
                                                     >
-                                                    <option value="">-- Pilih --</option>
-                                                    <option value="0">Tidak</option>
-                                                    <option value="1">Ya</option>
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="0">Mengalami penurunan asupan makanan yang parah</option>
+                                                    <option value="1">Mengalami penurunan asupan makanan sedang</option>
+                                                    <option value="2">Tidak mengalami penurunan asupan makanan</option>
                                                 </select>
                                             </div>
 
@@ -1846,9 +1847,9 @@
                                                     >
                                                     <option value="">-- Pilih --</option>
                                                     <option value="0">Kehilangan BB lebih dari 3 Kg</option>
-                                                    <option value="2">Tidak tahu</option>
-                                                    <option value="3">Kehilangan BB antara 1 s.d 3 Kg</option>
-                                                    <option value="4">Tidak ada kehilangan BB</option>
+                                                    <option value="1">Tidak tahu</option>
+                                                    <option value="2">Kehilangan BB antara 1 s.d 3 Kg</option>
+                                                    <option value="3">Tidak ada kehilangan BB</option>
                                                 </select>
                                             </div>
 
@@ -1872,8 +1873,8 @@
                                                 <select class="form-select" name="gizi_mna_stress_penyakit_akut"
                                                     >
                                                     <option value="">-- Pilih --</option>
-                                                    <option value="0">Tidak</option>
-                                                    <option value="1">Ya</option>
+                                                    <option value="1">Tidak</option>
+                                                    <option value="0">Ya</option>
                                                 </select>
                                             </div>
 
@@ -1883,8 +1884,8 @@
                                                 <select class="form-select" name="gizi_mna_status_neuropsikologi"
                                                     >
                                                     <option value="">-- Pilih --</option>
-                                                    <option value="0">Dementia atau depresi berat</option>
-                                                    <option value="1">Dementia ringan</option>
+                                                    <option value="0">Demensia atau depresi berat</option>
+                                                    <option value="1">Demensia ringan</option>
                                                     <option value="2">Tidak mengalami masalah neuropsikologi</option>
                                                 </select>
                                             </div>
@@ -1980,7 +1981,7 @@
                                                             malnutrisi</i></a></label>
                                                 <select class="form-select" name="gizi_strong_penyakit_berisiko">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
+                                                    <option value="2">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -1993,7 +1994,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Form Skala Humpty Dumpty -->
+                                        <!-- Form NRS -->
                                         <div id="nrs" class="risk-form">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Ontario Modified Stratify
                                                 Sydney/
@@ -2350,6 +2351,7 @@
                                                 id="kesimpulan_value">
                                         </div>
                                     </div>
+
                                     <div class="section-separator">
                                         <h5 class="section-title">15. Masalah Keperawatan</h5>
                                         <div class="form-group">

@@ -76,7 +76,7 @@
 
         .contract-number {
             text-align: center;
-            margin: 25px 0;
+            margin: 10px 0;
             font-size: 12pt;
         }
 
@@ -158,8 +158,10 @@
                                 <img src="{{ asset('https://rsud.langsakota.go.id/wp-content/uploads/2020/03/Logo-RSUD-Langsa-1.png') }}"
                                     alt="Logo RSUD" class="hospital-logo logo-left">
                                 <div>
-                                    <div class="hospital-title">PEMERINTAH KOTA LANGSA</div>
+                                    <div class="hospital-title">INSTALASI LABORATORIUM</div>
                                     <div class="hospital-title">RUMAH SAKIT UMUM DAERAH LANGSA</div>
+                                    <p>Alamat : Jln. Jend. A. Yani No.1 Kota Langsa, Telp. (0641) 22051 - 22800 (IGD), Fax. (0641) 22051</p>
+                                    <p>Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id</p>
                                 </div>
                                 <img src="{{ asset('https://sippn.menpan.go.id/images/article/large/logo-kota-langsa1.png') }}"
                                     alt="Logo Kota" class="hospital-logo logo-right">
@@ -168,24 +170,29 @@
 
                         <!-- Contract Title -->
                         <div class="contract-title">
+                            <h6>HASIL PEMERIKSAAN LABORATORIUM KLINIK</h6>
+                            <i>Clinical Laboratory Examination Result</i>
                         </div>
 
                         <!-- Contract Number -->
                         <div class="contract-number">
-                            <p>Nomor: 00/00/AAA/2025</p>
+                            <p>NOMOR / NUMBER: 0249689/LAB-RSUDL/2024</p>
                         </div>
 
                         <!-- Informasi Pasien -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <table class="table table-sm table-borderless">
+                                <table class="table table-sm table-borderless" border="0">
                                     <tr>
-                                        <td width="150">Nama Pasien</td>
-                                        <td>: {{ $dataMedis->pasien->nama }}</td>
+                                        <td>No. Rekam Medis
+                                            <i>Medical Record Number</i>
+                                        </td>
+                                        <td>: {{ $dataMedis->kd_pasien }}</td>
                                     </tr>
                                     <tr>
-                                        <td>No. RM</td>
-                                        <td>: {{ $dataMedis->kd_pasien }}</td>
+                                        <td width="150">Pasien
+                                            <i>Patient</i></td>
+                                        <td>: {{ $dataMedis->pasien->nama }}</td>
                                     </tr>
                                     <tr>
                                         <td>Tanggal Lahir</td>
