@@ -415,8 +415,7 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="bg-secondary-subtle rounded-2 p-3">
-                                                            <input name="show_diagnosis" class="form-control"
-                                                                readonly>
+                                                            <textarea name="show_diagnosis" class="form-control" readonly></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -553,8 +552,19 @@
             $('input[name="show_faktor_pemberat"]').val(asesmen.show_faktor_pemberat || '-');
             $('input[name="show_faktor_peringan"]').val(asesmen.show_faktor_peringan || '-');
             $('input[name="show_efek_nyeri"]').val(asesmen.show_efek_nyeri || '-');
-            $('input[name="show_diagnosis"]').val(asesmen.show_diagnosis || '-');
             $('textarea[name="show_kondisi_pasien"]').val(asesmen.show_kondisi_pasien || '-');
+
+            // Handle diagnosis format for array data
+            let formattedDiagnosis = '-';
+            if (Array.isArray(asesmen.show_diagnosis) && asesmen.show_diagnosis.length > 0) {
+                formattedDiagnosis = asesmen.show_diagnosis
+                    .map((diag, index) => `${index + 1}. ${diag.trim()}`)
+                    .join('\n');
+            }
+
+            $('.bg-secondary-subtle .form-control').replaceWith(`
+                <textarea class="form-control" name="show_diagnosis" readonly rows="${Math.max(formattedDiagnosis.split('\n').length, 1)}">${formattedDiagnosis}</textarea>
+            `);
         }
 
         function handleTindakanResusitasi(tindakanData) {
