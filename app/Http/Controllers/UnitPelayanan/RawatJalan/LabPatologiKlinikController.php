@@ -327,7 +327,7 @@ class LabPatologiKlinikController extends Controller
                 'kd_produk' => $kd_produk,
                 'jumlah' => 1,
                 'status' => 0,
-                'kd_dokter' => $validatedData['kd_dokter'],
+                'kd_dokter' => 381,
             ]);
         }
 
@@ -438,7 +438,7 @@ class LabPatologiKlinikController extends Controller
                 'kd_produk' => $kd_produk,
                 'jumlah' => 1,
                 'status' => 0,
-                'kd_dokter' => $validatedData['kd_dokter'],
+                'kd_dokter' => 381,
             ]);
         }
 

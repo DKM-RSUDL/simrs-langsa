@@ -379,6 +379,7 @@ class TransferPasienController extends Controller
             'kd_unit'       => $kdUnit,
             'tgl_masuk'     => $tgl_masuk,
             'urut_masuk'    => $newUrutMasuk,
+            'no_sjp'        => '',
             'penjamin_laka' => 0,
             'katarak'       => 0,
             'dpjp'          => $kdDokter,

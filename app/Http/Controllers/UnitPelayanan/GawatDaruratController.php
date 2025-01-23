@@ -395,6 +395,7 @@ class GawatDaruratController extends Controller
             'kd_unit'       => 3,
             'tgl_masuk'     => $tgl_masuk,
             'urut_masuk'    => $urut_masuk,
+            'no_sjp'        => '',
             'penjamin_laka' => 0,
             'katarak'       => 0,
             'dpjp'          => $dokter_triase,

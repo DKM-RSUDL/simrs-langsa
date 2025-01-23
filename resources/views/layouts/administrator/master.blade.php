@@ -34,6 +34,7 @@
     <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
+    <link href="{{ asset('resources/css/app.css') }}" rel="stylesheet" />
 
     <!-- CSS for this page only -->
     @stack('css')
@@ -42,7 +43,7 @@
     {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
     {{-- vite --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 
 </head>
@@ -63,6 +64,8 @@
     </div>
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('resources/js/app.js') }}"></script>
+
     {{-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> --}}
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('vendor/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
