@@ -23,7 +23,7 @@ class LaborController extends Controller
 {
     public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'registrasiHasil'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');

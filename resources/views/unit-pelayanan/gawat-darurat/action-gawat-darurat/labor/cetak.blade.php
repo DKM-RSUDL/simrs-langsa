@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,245 +15,309 @@
 
         body {
             margin: 2cm;
-            padding: 0;
-            font-family: "Times New Roman", Times, serif;
+            font-family: Arial, sans-serif;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        .hospital-header {
-            text-align: center;
+        .header {
+            display: flex;
+            align-items: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 20px;
         }
 
-        .hospital-logo {
-            width: 70px;
-            height: 70px;
+        .logo {
+            width: 50px;
+            height: 50px;
             object-fit: contain;
         }
 
-        .logo-left {
-            margin-right: 20px;
-        }
-
         .logo-right {
-            margin-left: 20px;
+            width: 100px;
         }
 
-        .hospital-title {
+        .header-text {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .hospital-name {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            font-size: 7pt;
+            line-height: 1.2;
+        }
+
+        .divider {
+            border-bottom: 2px solid #000;
+            margin: 10px 0 20px;
+        }
+
+        .report-title {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .report-title h2 {
             font-size: 14pt;
             font-weight: bold;
             margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .header-content {
+        .report-number {
+            text-align: center;
+            font-size: 12pt;
+            margin-bottom: 20px;
+        }
+
+        .patient-info {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
 
-        .contract-title {
-            text-align: center;
-            margin: 15px 0;
+        .patient-info-column {
+            width: 48%;
         }
 
-        .contract-title h5 {
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            width: 150px;
             font-weight: bold;
-            font-size: 14pt;
-            margin-bottom: 5px;
-            text-decoration: underline;
         }
 
-        .contract-title p {
-            margin: 5px 0;
-            font-size: 12pt;
-        }
-
-        .contract-number {
-            text-align: center;
-            margin: 10px 0;
-            font-size: 12pt;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table th {
-            background-color: #ffffff !important;
-            color: black;
-            font-weight: bold;
-            border: 1px solid #000;
-        }
-
-        table th,
-        table td {
-            padding: 8px;
-            border: 1px solid #000;
-            font-size: 11pt;
+        .info-value {
+            flex-grow: 1;
         }
 
         @media print {
-            @page {
-                margin: 0;
-            }
-
             body {
                 margin: 2cm;
             }
 
             .container {
                 max-width: 100% !important;
-                width: 100% !important;
                 padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-            }
-
-            .card-body {
-                padding: 0 !important;
-            }
-
-            table {
-                width: 100% !important;
-            }
-
-            /* Hide browser's header and footer */
-            head,
-            header,
-            footer,
-            title {
-                display: none !important;
-            }
-
-            /* Force background colors to print */
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
             }
         }
+
+        .info-container {
+    display: flex;
+    margin: 20px 0;
+}
+
+.info-left, .info-right {
+    flex: 1;
+}
+
+.info-row {
+    display: flex;
+    margin: 8px 0;
+    line-height: 1.2;
+}
+
+.info-label {
+    width: 140px;
+    margin-right: 5px;
+}
+
+.info-colon {
+    width: 20px;
+    text-align: center;
+}
+
+.info-value {
+    flex: 1;
+}
+
+.info-text {
+    margin: 0;
+}
+
+.info-italic {
+    font-style: italic;
+    color: #666;
+    font-size: 11px;
+    margin-top: 2px;
+}
     </style>
 </head>
 
 <body onload="window.print()">
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0">
-                    <div class="card-body">
-                        <!-- Hospital Header -->
-                        <div class="hospital-header">
-                            <div class="header-content">
-                                <img src="{{ asset('https://rsud.langsakota.go.id/wp-content/uploads/2020/03/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="hospital-logo logo-left">
-                                <div>
-                                    <div class="fw-bold">INSTALASI LABORATORIUM</div>
-                                    <div class="fw-bold">RUMAH SAKIT UMUM DAERAH LANGSA</div>
-                                    <p>Alamat : Jln. Jend. A. Yani No.1 Kota Langsa, Telp. (0641) 22051 - 22800 (IGD), Fax. (0641) 22051</p>
-                                    <p>Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id</p>
-                                </div>
-                                <img src="{{ asset('https://sippn.menpan.go.id/images/article/large/logo-kota-langsa1.png') }}" alt="Logo Kota" class="hospital-logo logo-right">
-                            </div>
-                        </div>
+        <header class="header">
+            <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="logo">
+            <div class="header-text">
+                <div class="hospital-name">
+                    INSTALASI LABORATORIUM<br>
+                    RUMAH SAKIT UMUM DAERAH LANGSA
+                </div>
+                <div class="contact-info">
+                    Alamat : Jln. Jend. A. Yani No.1 Kota Langsa, Telp. (0641) 22051 - 22800 (IGD), Fax. (0641)
+                    22051<br>
+                    Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id
+                </div>
+            </div>
+            <img src="{{ asset('assets/img/microscope.png') }}" alt="Logo Lab" class="logo logo-right">
+        </header>
 
-                        <!-- Contract Title -->
-                        <div class="contract-title">
-                            <h6 class="fw-bold">HASIL PEMERIKSAAN LABORATORIUM KLINIK</h6>
-                            <i>Clinical Laboratory Examination Result</i>
-                        </div>
+        <div class="divider"></div>
 
-                        <!-- Contract Number -->
-                        <div class="contract-number">
-                            <p>NOMOR / NUMBER: 0249689/LAB-RSUDL/2024</p>
-                        </div>
+        <div class="report-title">
+            <h2>HASIL PEMERIKSAAN LABORATORIUM KLINIK</h2>
+            <p><i>Clinical Laboratory Examination Result</i></p>
+        </div>
 
-                        <!-- Informasi Pasien -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <table class="table table-sm table-borderless" border="0">
-                                    <tr>
-                                        <td>No. Rekam Medis<i>Medical Record Number</i></td>
-                                        <td>: {{ $dataMedis->kd_pasien }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="150">Pasien<i>Patient</i></td>
-                                        <td>: {{ $dataMedis->pasien->nama }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tanggal Lahir</td>
-                                        <td>: {{ \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-md-6">
-                                <table class="table table-sm table-borderless">
-                                    <tr>
-                                        <td width="150">Dokter</td>
-                                        <td>: {{ $dataMedis->dokter->nama_lengkap }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tanggal Periksa</td>
-                                        <td>: {{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('d/m/Y') }}</td>
-                                    </tr>
-                                    @if ($dataDiagnosis)
-                                        <tr>
-                                            <td>Diagnosis</td>
-                                            <td>: {{ implode(', ', $diagnosisList) }}</td>
-                                        </tr>
-                                    @endif
-                                </table>
-                            </div>
-                        </div>
+        <div class="report-number">
+            NOMOR / NUMBER: {{ $dataMedis->registrasiHasil->no_lab ?? '0249689/LAB-RSUDL/2024' }}
+        </div>
 
-                        <table class="table table-bordered table-sm">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Item Test</th>
-                                    <th>Hasil</th>
-                                    <th>Satuan</th>
-                                    <th>Nilai Normal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($dataLabor as $labor)
-                                    @if (isset($labor->labResults) && !empty($labor->labResults))
-                                        @foreach ($labor->labResults as $namaProduk => $tests)
-                                            <tr class="table-secondary">
-                                                <td colspan="5" class="fw-bold">{{ $namaProduk }}</td>
-                                            </tr>
-                                            @foreach ($tests as $test)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $test['item_test'] }}</td>
-                                                    <td>{!! $test['hasil'] !!}</td>
-                                                    <td>{{ $test['satuan'] }}</td>
-                                                    <td>{{ $test['nilai_normal'] }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
+        <!-- Informasi Pasien -->
+        <div class="info-container">
+            <div class="info-left">
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">No. Rekam Medis</div>
+                        <div class="info-italic">Medical Record Number</div>
                     </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->kd_pasien }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Pasien</div>
+                        <div class="info-italic">Patient</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->pasien->nama }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">NIK</div>
+                        <div class="info-italic">Identity Number</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->pasien->no_pengenal }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Jenis Kelamin</div>
+                        <div class="info-italic">Sex</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->pasien->jenis_kelamin }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Tgl. Lahir/Umur</div>
+                        <div class="info-italic">Date Of Birth/Age</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->pasien->tgl_lahir }} / {{ $dataMedis->pasien->umur }}</div>
+                </div>
+            </div>
+
+            <div class="info-right">
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">No. Lab</div>
+                        <div class="info-italic">Lab. Number</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->registrasiHasil->no_lab }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Tgl. Reg</div>
+                        <div class="info-italic">Registration Date</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_reg }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Tgl. Periksa</div>
+                        <div class="info-italic">Check Date</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_periksa }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Tgl. Selesai</div>
+                        <div class="info-italic">Date Of Completion</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_selesai }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Ruangan</div>
+                        <div class="info-italic">Room</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->unit->nama_unit }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <div class="info-text">Dokter Lab</div>
+                        <div class="info-italic">Lab Doctor</div>
+                    </div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">{{ $dataMedis->dokter->nama_lengkap }}</div>
                 </div>
             </div>
         </div>
+
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Item Test</th>
+                    <th>Hasil</th>
+                    <th>Satuan</th>
+                    <th>Nilai Normal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($dataLabor as $labor)
+                    @if (isset($labor->labResults) && !empty($labor->labResults))
+                        @foreach ($labor->labResults as $namaProduk => $tests)
+                            <tr class="table-secondary">
+                                <td colspan="5" class="fw-bold">{{ $namaProduk }}</td>
+                            </tr>
+                            @foreach ($tests as $test)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $test['item_test'] }}</td>
+                                    <td>{!! $test['hasil'] !!}</td>
+                                    <td>{{ $test['satuan'] }}</td>
+                                    <td>{{ $test['nilai_normal'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan</td>
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
 </body>
+
 </html>
