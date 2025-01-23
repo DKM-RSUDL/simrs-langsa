@@ -34,16 +34,15 @@
     <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
-    <link href="{{ asset('resources/css/app.css') }}" rel="stylesheet" />
-
     <!-- CSS for this page only -->
     @stack('css')
     <!-- End CSS  -->
 
     {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
+
     {{-- vite --}}
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 
 </head>
@@ -64,10 +63,9 @@
     </div>
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('resources/js/app.js') }}"></script>
 
-    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> --}}
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
+
     <script src="{{ asset('vendor/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -84,7 +82,6 @@
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-
     <script>
         Main.init();
     </script>
