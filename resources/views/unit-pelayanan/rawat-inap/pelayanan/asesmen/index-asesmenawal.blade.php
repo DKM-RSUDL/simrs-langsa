@@ -55,7 +55,6 @@
                                 ]) }}">Anak</a>
                         </li>
                     @endcanany
-                    <li><a class="custom__dropdown__item" href="#">Perinatology</a></li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.keperawatan.obstetri-maternitas.index', [
                                 'kd_unit' => request()->route('kd_unit'),
@@ -72,7 +71,6 @@
                                 'urut_masuk' => request()->route('urut_masuk'),
                             ]) }}">Perinatology</a>
                     </li>
-                    <li><a class="custom__dropdown__item" href="">Obstetri/Maternitas</a></li>
                     <li><a class="custom__dropdown__item" href="#">Geriatri</a></li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.keperawatan.tht.index', [

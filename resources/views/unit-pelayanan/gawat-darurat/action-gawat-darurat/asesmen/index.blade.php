@@ -224,8 +224,14 @@
             button.addEventListener('click', function() {
                 const targetId = this.getAttribute('data-target');
                 const targetElement = document.getElementById(targetId);
+                const parentItem = this.closest('.pemeriksaan-item');
+                const normalCheckbox = parentItem.querySelector('.form-check-input');
+                
                 if (targetElement.style.display === 'none') {
                     targetElement.style.display = 'block';
+                    if (normalCheckbox) {
+                        normalCheckbox.checked = false;
+                    }
                 } else {
                     targetElement.style.display = 'none';
                 }
@@ -304,6 +310,36 @@
             return JSON.stringify(antropometri);
         }
 
+        function calculateIMT_LPT() {
+            const tbInput = document.querySelector('input[name="antropometri[tb]"]');
+            const bbInput = document.querySelector('input[name="antropometri[bb]"]');
+            const imtInput = document.querySelector('input[name="antropometri[imt]"]');
+            const lptInput = document.querySelector('input[name="antropometri[lpt]"]');
+
+            if (!tbInput || !bbInput || !imtInput || !lptInput) return;
+
+            // Get values
+            const tinggiCm = parseFloat(tbInput.value); // dalam cm
+            const berat = parseFloat(bbInput.value); // dalam kg
+
+            if (!isNaN(tinggiCm) && !isNaN(berat) && tinggiCm > 0) {
+                // Convert cm to meter for IMT calculation
+                const tinggiMeter = tinggiCm / 100;
+                
+                // Calculate IMT and LPT
+                const imt = berat / (tinggiMeter * tinggiMeter);
+                const lpt = (tinggiCm * berat) / 3600;
+
+                // Set values with 2 decimal places
+                imtInput.value = imt.toFixed(2);
+                lptInput.value = lpt.toFixed(2);
+            } else {
+                // Clear IMT and LPT if inputs are invalid
+                imtInput.value = '';
+                lptInput.value = '';
+            }
+        }
+
         document.getElementById('asesmenForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -352,6 +388,22 @@
             const form = document.getElementById('asesmenForm');
             const submitButton = document.getElementById('saveForm');
             const modalId = '#detailPasienModal'
+
+            const tbInput = document.querySelector('input[name="antropometri[tb]"]');
+            const bbInput = document.querySelector('input[name="antropometri[bb]"]');
+            const imtInput = document.querySelector('input[name="antropometri[imt]"]');
+            const lptInput = document.querySelector('input[name="antropometri[lpt]"]');
+
+            // Pastikan semua elemen ada
+            if (tbInput && bbInput && imtInput && lptInput) {
+                // Set readonly untuk IMT dan LPT
+                imtInput.readOnly = true;
+                lptInput.readOnly = true;
+
+                // Add event listeners untuk TB dan BB
+                tbInput.addEventListener('input', calculateIMT_LPT);
+                bbInput.addEventListener('input', calculateIMT_LPT);
+            }
 
             submitButton.addEventListener('click', function(e) {
                 e.preventDefault();
