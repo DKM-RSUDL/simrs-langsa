@@ -309,7 +309,8 @@
                 var formData = {
                     urut_masuk: "{{ $dataMedis->urut_masuk }}",
                     kd_dokter: selectedDokter,
-                    tgl_order: tglOrder,
+                    tgl_order: tanggal,
+                    jam_order: waktu,
                     cat_racikan: catRacikan,
                     obat: daftarObat.map(obat => ({
                         id: obat.id,

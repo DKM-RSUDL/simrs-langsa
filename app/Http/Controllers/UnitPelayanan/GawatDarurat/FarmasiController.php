@@ -61,7 +61,8 @@ class FarmasiController extends Controller
             // Validasi input
             $validatedData = $request->validate([
                 'kd_dokter' => 'required',
-                'tgl_order' => 'required|date_format:Y-m-d H:i:s',
+                'tgl_order' => 'required|date_format:Y-m-d',
+                'jam_order' => 'required',
                 'cat_racikan' => 'nullable|string',
                 'obat' => 'required|array|min:1',
                 'obat.*.id' => 'required',
@@ -114,8 +115,9 @@ class FarmasiController extends Controller
             $mrResep->URUT_MASUK = $kunjungan->urut_masuk;
             $mrResep->KD_DOKTER = $validatedData['kd_dokter'];
             $mrResep->ID_MRRESEP = $ID_MRRESEP;
-            $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? null;
+            $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? '';
             $mrResep->TGL_ORDER = $validatedData['tgl_order'];
+            $mrResep->JAM_ORDER = $validatedData['jam_order'];
             $mrResep->STATUS = 0;
             $mrResep->DILAYANI = 0;
             $mrResep->STTS_TERIMA = 0;
