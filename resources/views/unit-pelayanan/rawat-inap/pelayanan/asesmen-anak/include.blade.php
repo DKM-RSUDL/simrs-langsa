@@ -155,6 +155,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            //Fngsi Hitung IMT dan LPT
             function hitungIMT_LPT() {
                 let tinggi = parseFloat(document.getElementById("tinggi_badan").value) / 100; // Konversi ke meter
                 let berat = parseFloat(document.getElementById("berat_badan").value);
@@ -599,17 +600,472 @@
             //------------------------------------------------------------//
             //------------------------------------------------------------//
             // Event handler untuk skala risiko jatuh
+             // Fungsi untuk menampilkan form risiko jatuh
+            function showForm(selectedValue) {
+                // Sembunyikan semua form terlebih dahulu
+                document.querySelectorAll('.risk-form').forEach(form => {
+                    form.style.display = 'none';
+                });
+
+                // Tampilkan form yang dipilih
+                if (selectedValue) {
+                    const selectedForm = document.getElementById(selectedValue + 'Form');
+                    if (selectedForm) {
+                        selectedForm.style.display = 'block';
+                    }
+                }
+            }
+
+            // Event listener untuk perubahan select skala
+            const risikoJatuhSelect = document.getElementById('risikoJatuhSkala');
+            if (risikoJatuhSelect) {
+                risikoJatuhSelect.addEventListener('change', function() {
+                    showForm(this.value);
+                });
+
+                // Sembunyikan semua form saat halaman dimuat
+                showForm('');
+            }
+
+            // Fungsi untuk update kesimpulan berdasarkan jenis skala
+            function updateConclusion(type) {
+                let total = 0;
+                let conclusion = '';
+                let bgColor = '';
+
+                const form = document.getElementById('skala_' + type + 'Form');
+                if (!form) return;
+
+                switch(type) {
+                    case 'umum':
+                        const umumSelects = form.querySelectorAll('select');
+                        let yaCount = 0;
+                        umumSelects.forEach(select => {
+                            if (select.value === 'ya') yaCount++;
+                        });
+                        conclusion = yaCount > 0 ? 'Risiko Jatuh' : 'Tidak Berisiko Jatuh';
+                        bgColor = yaCount > 0 ? 'bg-warning' : 'bg-success';
+                        break;
+
+                    case 'morse':
+                        const morseSelects = form.querySelectorAll('select');
+                        morseSelects.forEach(select => {
+                            total += parseInt(select.value) || 0;
+                        });
+                        if (total >= 45) {
+                            conclusion = 'Risiko Tinggi';
+                            bgColor = 'bg-danger';
+                        } else if (total >= 25) {
+                            conclusion = 'Risiko Sedang';
+                            bgColor = 'bg-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgColor = 'bg-success';
+                        }
+                        break;
+
+                    case 'humpty':
+                        const humptySelects = form.querySelectorAll('select');
+                        humptySelects.forEach(select => {
+                            total += parseInt(select.value) || 0;
+                        });
+                        if (total >= 13) {
+                            conclusion = 'Risiko Tinggi';
+                            bgColor = 'bg-danger';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgColor = 'bg-success';
+                        }
+                        break;
+
+                    case 'ontario':
+                        const ontarioSelects = form.querySelectorAll('select');
+                        ontarioSelects.forEach(select => {
+                            total += parseInt(select.value) || 0;
+                        });
+                        if (total >= 9) {
+                            conclusion = 'Risiko Tinggi';
+                            bgColor = 'bg-danger';
+                        } else if (total >= 5) {
+                            conclusion = 'Risiko Sedang';
+                            bgColor = 'bg-warning';
+                        } else {
+                            conclusion = 'Risiko Rendah';
+                            bgColor = 'bg-success';
+                        }
+                        break;
+                }
+
+                // Update tampilan kesimpulan
+                const conclusionDiv = form.querySelector('.conclusion');
+                if (conclusionDiv) {
+                    conclusionDiv.className = `conclusion ${bgColor}`;
+                    const conclusionSpan = conclusionDiv.querySelector('#kesimpulanTextForm');
+                    if (conclusionSpan) {
+                        conclusionSpan.textContent = conclusion;
+                    }
+                }
+            }
+
+            // Tambahkan event listeners untuk semua select di setiap form risiko jatuh
+            document.querySelectorAll('.risk-form select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const formId = this.closest('.risk-form').id;
+                    const type = formId.replace('Form', '').replace('skala_', '');
+                    updateConclusion(type);
+                });
+            });
+
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+            // Handler untuk Risko Decubitus
+            function showDecubitusForm(selectedValue) {
+                // Sembunyikan semua form terlebih dahulu
+                document.querySelectorAll('.decubitus-form').forEach(form => {
+                    form.style.display = 'none';
+                });
+
+                // Tampilkan form yang dipilih
+                if (selectedValue) {
+                    const selectedForm = document.getElementById('form' + selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1));
+                    if (selectedForm) {
+                        selectedForm.style.display = 'block';
+                    }
+                }
+            }
+
+            // Event listener untuk perubahan select skala decubitus
+            const skalaRisikoDekubitus = document.getElementById('skalaRisikoDekubitus');
+            if (skalaRisikoDekubitus) {
+                skalaRisikoDekubitus.addEventListener('change', function() {
+                    showDecubitusForm(this.value);
+                    resetKesimpulanDecubitus(this.value);
+                });
+            }
+
+            // Fungsi untuk menghitung total skor Norton
+            function calculateNortonScore() {
+                let total = 0;
+                const nortonFields = ['kondisi_fisik', 'kondisi_mental', 'aktivitas', 'mobilitas', 'inkontinensia'];
+                
+                nortonFields.forEach(field => {
+                    const select = document.querySelector(`select[name="${field}"]`);
+                    if (select && select.value) {
+                        total += parseInt(select.value);
+                    }
+                });
+
+                // Update kesimpulan berdasarkan total skor
+                const kesimpulanNorton = document.getElementById('kesimpulanNorton');
+                if (kesimpulanNorton) {
+                    let conclusion = '';
+                    let alertClass = '';
+
+                    if (total <= 12) {
+                        conclusion = 'Risiko Tinggi';
+                        alertClass = 'alert-danger';
+                    } else if (total <= 14) {
+                        conclusion = 'Risiko Sedang';
+                        alertClass = 'alert-warning';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        alertClass = 'alert-success';
+                    }
+
+                    kesimpulanNorton.className = `alert mb-0 flex-grow-1 ${alertClass}`;
+                    kesimpulanNorton.textContent = conclusion;
+                }
+            }
+
+            // Reset kesimpulan saat berganti skala
+            function resetKesimpulanDecubitus(scale) {
+                if (scale === 'norton') {
+                    const kesimpulanNorton = document.getElementById('kesimpulanNorton');
+                    if (kesimpulanNorton) {
+                        kesimpulanNorton.className = 'alert alert-info mb-0 flex-grow-1';
+                        kesimpulanNorton.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    }
+                }
+                // Tambahkan reset untuk skala lain jika diperlukan
+            }
+
+            // Event listener untuk setiap select di form Norton
+            document.querySelectorAll('#formNorton select').forEach(select => {
+                select.addEventListener('change', calculateNortonScore);
+            });
+
+            // Sembunyikan semua form saat halaman dimuat
+            showDecubitusForm('');
             
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+
+
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
             // Handler untuk Status Psikologis dropdown
-            
+            function toggleDropdown(dropdownId) {
+                const dropdown = document.getElementById(dropdownId);
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            }
+
+            // Fungsi untuk memperbarui tampilan item yang dipilih
+            function updateSelectedItems(containerId, items, type) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = items.map(item => `
+                    <div class="alert alert-light border d-flex justify-content-between align-items-center py-1 px-2 mb-1">
+                        <span>${item}</span>
+                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2" 
+                                onclick="removeItem('${containerId}', '${item}')">
+                            <i class="bi bi-x" style="font-size: 1.2rem;"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Fungsi untuk menangani checkbox Kondisi Psikologis
+            function handleKondisiPsikologis() {
+                const kondisiCheckboxes = document.querySelectorAll('.kondisi-options input[type="checkbox"]');
+                const selectedItems = [];
+
+                kondisiCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedItems.push(checkbox.value);
+                    }
+                });
+
+                updateSelectedItems('selectedKondisiPsikologis', selectedItems, 'kondisi');
+
+                // Handle "Tidak ada kelainan" logic
+                const noKelainanCheckbox = document.getElementById('kondisi1');
+                if (noKelainanCheckbox && noKelainanCheckbox.checked) {
+                    kondisiCheckboxes.forEach(cb => {
+                        if (cb !== noKelainanCheckbox) {
+                            cb.checked = false;
+                            cb.disabled = true;
+                        }
+                    });
+                } else {
+                    kondisiCheckboxes.forEach(cb => {
+                        if (cb) cb.disabled = false;
+                    });
+                }
+            }
+
+            // Fungsi untuk menangani checkbox Gangguan Perilaku
+            function handleGangguanPerilaku() {
+                const perilakuCheckboxes = document.querySelectorAll('.perilaku-options input[type="checkbox"]');
+                const selectedItems = [];
+
+                perilakuCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedItems.push(checkbox.value);
+                    }
+                });
+
+                updateSelectedItems('selectedGangguanPerilaku', selectedItems, 'perilaku');
+
+                // Handle "Tidak Ada Gangguan" logic
+                const noGangguanCheckbox = document.getElementById('perilaku1');
+                if (noGangguanCheckbox && noGangguanCheckbox.checked) {
+                    perilakuCheckboxes.forEach(cb => {
+                        if (cb !== noGangguanCheckbox) {
+                            cb.checked = false;
+                            cb.disabled = true;
+                        }
+                    });
+                } else {
+                    perilakuCheckboxes.forEach(cb => {
+                        if (cb) cb.disabled = false;
+                    });
+                }
+            }
+
+            // Event listeners
+            const btnKondisiPsikologis = document.getElementById('btnKondisiPsikologis');
+            const btnGangguanPerilaku = document.getElementById('btnGangguanPerilaku');
+
+            if (btnKondisiPsikologis) {
+                btnKondisiPsikologis.addEventListener('click', () => toggleDropdown('dropdownKondisiPsikologis'));
+            }
+
+            if (btnGangguanPerilaku) {
+                btnGangguanPerilaku.addEventListener('click', () => toggleDropdown('dropdownGangguanPerilaku'));
+            }
+
+            // Event listeners untuk checkbox
+            document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', handleKondisiPsikologis);
+            });
+
+            document.querySelectorAll('.perilaku-options input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', handleGangguanPerilaku);
+            });
+
+            // Click outside to close dropdowns
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown-wrapper')) {
+                    document.getElementById('dropdownKondisiPsikologis').style.display = 'none';
+                    document.getElementById('dropdownGangguanPerilaku').style.display = 'none';
+                }
+            });
+
+            // Inisialisasi pertama kali
+            handleKondisiPsikologis();
+            handleGangguanPerilaku();
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
 
+            // Event listeners untuk status gizi
+
+            const nutritionSelect = document.getElementById('nutritionAssessment');
+            if (nutritionSelect) {
+                nutritionSelect.addEventListener('change', function() {
+                    showNutritionForm(this.value);
+                });
+            }
+
+            // Event listeners untuk form MST
+            document.querySelectorAll('#mst select').forEach(select => {
+                select.addEventListener('change', updateMSTConclusion);
+            });
+
+            // Event listeners untuk form MNA
+            document.querySelectorAll('#mna select').forEach(select => {
+                select.addEventListener('change', updateMNAConclusion);
+            });
+
+            // Event listeners untuk BMI calculation di MNA
+            const mnaWeight = document.getElementById('mnaWeight');
+            const mnaHeight = document.getElementById('mnaHeight');
+            if (mnaWeight && mnaHeight) {
+                mnaWeight.addEventListener('input', calculateMNABMI);
+                mnaHeight.addEventListener('input', calculateMNABMI);
+            }
+
+            // Event listeners untuk form Strong Kids
+            document.querySelectorAll('#strong-kids select').forEach(select => {
+                select.addEventListener('change', updateStrongKidsConclusion);
+            });
+
+            // Event listeners untuk form NRS 2002 (bisa ditambahkan jika diperlukan)
+
+            // Sembunyikan semua form saat halaman dimuat
+            showNutritionForm('');
 
         });
+
+        // Fungsi untuk menampilkan form penilaian gizi yang dipilih
+        function showNutritionForm(selectedValue) {
+            // Sembunyikan semua form terlebih dahulu
+            document.querySelectorAll('.assessment-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            // Tampilkan form yang dipilih
+            if (selectedValue) {
+                const selectedForm = document.getElementById(selectedValue);
+                if (selectedForm) {
+                    selectedForm.style.display = 'block';
+                }
+            }
+        }
+
+        // Fungsi untuk menghitung skor MST dan update kesimpulan
+        function updateMSTConclusion() {
+            let total = 0;
+            const mstSelects = document.querySelectorAll('#mst select');
+            
+            mstSelects.forEach(select => {
+                if (select.value) {
+                    total += parseInt(select.value);
+                }
+            });
+
+            const conclusion = document.getElementById('mstConclusion');
+            if (conclusion) {
+                conclusion.querySelector('.alert-success').style.display = total < 2 ? 'block' : 'none';
+                conclusion.querySelector('.alert-warning').style.display = total >= 2 ? 'block' : 'none';
+            }
+        }
+
+        // Fungsi untuk menghitung skor MNA dan update kesimpulan
+        function updateMNAConclusion() {
+            let total = 0;
+            const mnaSelects = document.querySelectorAll('#mna select');
+            
+            mnaSelects.forEach(select => {
+                if (select.value) {
+                    total += parseInt(select.value);
+                }
+            });
+
+            const conclusion = document.getElementById('mnaConclusion');
+            if (conclusion) {
+                conclusion.querySelector('.alert-success').style.display = total >= 12 ? 'block' : 'none';
+                conclusion.querySelector('.alert-warning').style.display = total <= 11 ? 'block' : 'none';
+            }
+        }
+
+        // Fungsi untuk menghitung BMI di form MNA
+        function calculateMNABMI() {
+            const weight = parseFloat(document.getElementById('mnaWeight').value);
+            const height = parseFloat(document.getElementById('mnaHeight').value) / 100; // Convert cm to meters
+
+            if (!isNaN(weight) && !isNaN(height) && height > 0) {
+                const bmi = weight / (height * height);
+                document.getElementById('mnaBMI').value = bmi.toFixed(2);
+            } else {
+                document.getElementById('mnaBMI').value = '';
+            }
+        }
+
+        // Fungsi untuk menghitung skor Strong Kids dan update kesimpulan
+        function updateStrongKidsConclusion() {
+            let total = 0;
+            const strongKidsSelects = document.querySelectorAll('#strong-kids select');
+            
+            strongKidsSelects.forEach(select => {
+                if (select.value) {
+                    total += parseInt(select.value);
+                }
+            });
+
+            const conclusion = document.getElementById('strongKidsConclusion');
+            if (conclusion) {
+                conclusion.querySelector('.alert-success:first-child').style.display = total === 0 ? 'block' : 'none';
+                conclusion.querySelector('.alert-warning').style.display = total >= 1 && total <= 3 ? 'block' : 'none';
+                conclusion.querySelector('.alert-success:last-child').style.display = total >= 4 ? 'block' : 'none';
+            }
+        }
+
+        // Fungsi global untuk menghapus item yang dipilih
+        function removeItem(containerId, item) {
+            const container = document.getElementById(containerId);
+            
+            // Uncheck checkbox yang sesuai
+            if (containerId === 'selectedKondisiPsikologis') {
+                document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {
+                    if (checkbox.value === item) {
+                        checkbox.checked = false;
+                        const event = new Event('change');
+                        checkbox.dispatchEvent(event);
+                    }
+                });
+            } else if (containerId === 'selectedGangguanPerilaku') {
+                document.querySelectorAll('.perilaku-options input[type="checkbox"]').forEach(checkbox => {
+                    if (checkbox.value === item) {
+                        checkbox.checked = false;
+                        const event = new Event('change');
+                        checkbox.dispatchEvent(event);
+                    }
+                });
+            }
+        }
+
     </script>
 @endpush

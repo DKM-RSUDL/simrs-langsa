@@ -1,24 +1,3 @@
-<!-- Modified Form Group for Penyakit Yang Pernah Diderita -->
-<div class="form-group">
-    <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
-    <div class="w-100">
-        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal"
-            data-bs-target="#penyakitModal">
-            <i class="ti-plus"></i> Tambah
-        </button>
-        <div id="selectedPenyakitList" class="d-flex flex-column gap-2">
-            <!-- Empty state message -->
-            <div id="emptyState" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
-                <i class="ti-info-circle mb-2"></i>
-                <p class="mb-0">Belum ada penyakit yang ditambahkan. Klik tombol tambah untuk menambahkan penyakit.
-                </p>
-            </div>
-        </div>
-        <!-- Hidden input to store the JSON data -->
-        <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput">
-    </div>
-</div>
-
 <!-- Modal for adding diseases -->
 <div class="modal fade" id="penyakitModal" tabindex="-1" aria-labelledby="penyakitModalLabel" aria-hidden="true">
     <div class="modal-dialog">
