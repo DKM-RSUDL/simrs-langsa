@@ -136,8 +136,10 @@ class FarmasiController extends Controller
                 $mrResepDtl->JUMLAH_TAKARAN = $obat['dosis'];
                 $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
                 $mrResepDtl->KD_DOKTER = $validatedData['kd_dokter'];
-                $mrResepDtl->KET = $obat['aturanTambahan'];
-                $mrResep->STATUS = 0;
+                $mrResepDtl->KET = $obat['aturanTambahan'] ?? '';
+                $mrResepDtl->RACIKAN = 0;
+                $mrResepDtl->VERIFIED = 1;
+                $mrResepDtl->STATUS = 0;
                 $mrResepDtl->save();
             }
 
