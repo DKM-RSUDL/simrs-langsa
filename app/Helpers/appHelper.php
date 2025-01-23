@@ -30,4 +30,47 @@ if (!function_exists('getRoles')) {
     }
 }
 
+if (!function_exists('getKategoriAsesmen')) {
+    function getKategoriAsesmen($kategori, $subKategori)
+    {
+        $kategoriLabel = '';
+        $subKategoriLabel = '';
+
+        switch ($kategori) {
+            case 1:
+                $kategoriLabel = 'Medis';
+                break;
+            case 2:
+                $kategoriLabel = 'Keperawatan';
+                break;
+        }
+
+        switch ($subKategori) {
+            case 1:
+                $subKategoriLabel = 'Umum/Dewasa';
+                break;
+            case 2:
+                $subKategoriLabel = 'Perinatologi';
+                break;
+            case 3:
+                $subKategoriLabel = 'Neurologi';
+                break;
+            case 4:
+                $subKategoriLabel = 'Obstetrik';
+                break;
+            case 5:
+                $subKategoriLabel = 'THT';
+                break;
+            case 6:
+                $subKategoriLabel = 'Opthamologi';
+                break;
+            case 7:
+                $subKategoriLabel = 'Anak';
+                break;
+        }
+
+        return "$kategoriLabel $subKategoriLabel";
+    }
+}
+
 
