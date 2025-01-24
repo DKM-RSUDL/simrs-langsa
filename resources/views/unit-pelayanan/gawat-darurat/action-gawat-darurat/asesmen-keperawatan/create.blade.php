@@ -2226,6 +2226,7 @@
                                                 <option value="">--Pilih--</option>
                                                 <option value="0">Normal</option>
                                                 <option value="1">Tidak Normal</option>
+                                                <option value="2">Belum Bisa Bicara</option>
                                             </select>
                                         </div>
 
@@ -2254,6 +2255,7 @@
                                                 <option value="">--Pilih--</option>
                                                 <option value="bahasa">Bahasa</option>
                                                 <option value="menulis">Menulis</option>
+                                                <option value="cemas">Cemas</option>
                                                 <option value="cemas">Cemas</option>
                                                 <option value="lainnya">Lainnya</option>
                                             </select>
