@@ -21,6 +21,12 @@ use App\Models\RmeAsesmenKepUmumGizi;
 use App\Models\RmeAsesmenKepUmumRisikoJatuh;
 use App\Models\RmeAsesmenKepUmumSkalaNyeri;
 use App\Models\RmeAsesmenKepUmumSosialEkonomi;
+use App\Models\RmeFaktorPemberat;
+use App\Models\RmeFaktorPeringan;
+use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
+use App\Models\RmeKualitasNyeri;
+use App\Models\RmeMenjalar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -47,6 +53,12 @@ class AsesmenKeperawatanController extends Controller
             ->first();
 
         $pekerjaan = Pekerjaan::all();
+        $faktorPemberat = RmeFaktorPemberat::all();
+        $faktorPeringan = RmeFaktorPeringan::all();
+        $kualitasNyeri = RmeKualitasNyeri::all();
+        $frekuensiNyeri = RmeFrekuensiNyeri::all();
+        $menjalar = RmeMenjalar::all();
+        $jenisNyeri = RmeJenisNyeri::all();
 
         $rmeAsesmenKepUmum = RmeAsesmenKepUmum::select('masalah_keperawatan', 'implementasi')->get();
 
@@ -77,7 +89,13 @@ class AsesmenKeperawatanController extends Controller
             'dataMedis',
             'user',
             'pekerjaan',
-            'rmeAsesmenKepUmum'
+            'rmeAsesmenKepUmum',
+            'faktorPemberat',
+            'faktorPeringan',
+            'kualitasNyeri',
+            'frekuensiNyeri',
+            'menjalar',
+            'jenisNyeri'
         ));
     }
 
@@ -454,9 +472,9 @@ class AsesmenKeperawatanController extends Controller
 
         $asesmenKepUmumStatusGizi->save();
 
-        return redirect()->route('asesmen-keperawatan.index', [
+        return redirect()->route('asesmen.index', [
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk
-        ])->with(['success' => 'created successfully']);
+        ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
     }
 }

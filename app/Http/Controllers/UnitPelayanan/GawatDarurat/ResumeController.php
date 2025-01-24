@@ -16,6 +16,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\RujukanKunjungan;
 use App\Models\SegalaOrder;
+use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
 use Illuminate\Support\Carbon;
@@ -571,8 +572,20 @@ class ResumeController extends Controller
 
         DetailComponent::create($dataDetailComponent);
 
-        // jangan lupa tambahkan insert into sjp_kunjungan
+        // insert sjp_kunjungan
+        $sjpKunjunganData = [
+            'kd_pasien'     => $kd_pasien,
+            'kd_unit'       => $unit_tujuan,
+            'tgl_masuk'     => $tgl_konsul,
+            'urut_masuk'    => $urut_masuk,
+            'no_sjp'        => '',
+            'penjamin_laka' => 0,
+            'katarak'       => 0,
+            'dpjp'          => $dokter_unit_tujuan,
+            'cob'           => 0
+        ];
 
+        SjpKunjungan::create($sjpKunjunganData);
 
         // Insert konsultasi
         $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])

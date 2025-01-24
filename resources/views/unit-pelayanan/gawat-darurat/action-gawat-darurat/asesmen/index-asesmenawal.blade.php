@@ -63,23 +63,26 @@
                 <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
                     width="70" height="70">
                 <div>
-                    <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
+                    <span class="text-primary fw-bold">Asesmen
+                        {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}</span> <br>
                     By: <span class="fw-bold">{{ $item->user->name }}</span>
                 </div>
             </div>
             <div>
-                <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
-                    class="btn btn-info btn-sm">
-                    <i class="fas fa-eye"></i> Lihat
-                </button>
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
-                <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
-                    class="btn btn-secondary btn-sm">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
+                @if ($item->kategori == 1)
+                    <button type="button" onclick="showAsesmen('{{ $item->id }}')"
+                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                        class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Lihat
+                    </button>
+                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
+                    <button type="button" onclick="editAsesmen('{{ $item->id }}')"
+                        data-url="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/asesmen/' . $item->id) }}"
+                        class="btn btn-secondary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
+                @endif
             </div>
         </li>
     @endforeach

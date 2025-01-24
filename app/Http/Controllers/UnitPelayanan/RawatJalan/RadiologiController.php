@@ -215,7 +215,7 @@ class RadiologiController extends Controller
                 'kd_produk'     => $prd,
                 'jumlah'        => 1,
                 'status'        => 0,
-                'kd_dokter'     => $request->kd_dokter
+                'kd_dokter'     => 466
             ];
 
             SegalaOrderDet::create($detailData);
@@ -329,7 +329,7 @@ class RadiologiController extends Controller
                 'kd_produk'     => $prd,
                 'jumlah'        => 1,
                 'status'        => 0,
-                'kd_dokter'     => $request->kd_dokter
+                'kd_dokter'     => 466
             ];
 
             SegalaOrderDet::create($detailData);

@@ -634,6 +634,8 @@ class AsesmenController extends Controller
             $asesmen->kondisi_pasien = $request->kondisi_pasien;
             $asesmen->user_id = $user->id;
             $asesmen->waktu_asesmen = date("Y-m-d H:i:s");
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 1;
             $asesmen->save();
 
             // dd($asesmen->all());
