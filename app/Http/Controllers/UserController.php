@@ -37,7 +37,9 @@ class UserController extends Controller
     public function create()
     {
         $title = 'Tambah User';
-        $karyawan = HrdKaryawan::where('status_peg', 1)->get();
+        $karyawan = HrdKaryawan::where('status_peg', 1)
+                                ->orderBy('kd_karyawan')
+                                ->get();
 
         return view('users.create', compact(
             'title',
