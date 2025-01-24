@@ -36,9 +36,15 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
+<<<<<<< HEAD
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
+=======
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+>>>>>>> origin/harisdev
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -390,15 +396,22 @@ Route::middleware('auth')->group(function () {
                                                 });
                                             });
 
+<<<<<<< HEAD
                                             Route::prefix('perinatology')->group(function () {
                                                 Route::name('.perinatology')->group(function () {
                                                     Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
+=======
+                                            Route::prefix('tht')->group(function () {
+                                                Route::name('.tht')->group(function () {
+                                                    Route::controller(AsesmenKepThtController::class)->group(function () {
+>>>>>>> origin/harisdev
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::put('/', 'update')->name('.update');
                                                     });
                                                 });
                                             });
+<<<<<<< HEAD
                                             
 
                                             Route::prefix('tht')->group(function () {
@@ -410,6 +423,8 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
+=======
+>>>>>>> origin/harisdev
 
                                             Route::prefix('obstetri-maternitas')->group(function () {
                                                 Route::name('.obstetri-maternitas')->group(function () {
@@ -421,6 +436,20 @@ Route::middleware('auth')->group(function () {
                                                 });
                                             });
 
+<<<<<<< HEAD
+=======
+
+                                            Route::prefix('perinatology')->group(function () {
+                                                Route::name('.perinatology')->group(function () {
+                                                    Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+                                            
+>>>>>>> origin/harisdev
                                         });
                                     });
                                 });

@@ -27,7 +27,9 @@
                 <button type="button" id="btnAddAlergi" class="btn btn-sm btn-primary mt-2 float-end">Tambah</button>
 
                 <h6 class="fw-bold mt-5">Daftar Alergi</h6>
-                <ul id="listAlergi"></ul>
+                <ul id="listAlergi">
+                    <li class="text-muted" id="emptyListMessage">Tidak ada alergi</li>
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -42,25 +44,40 @@ document.addEventListener('DOMContentLoaded', function() {
     var alergiModal = new bootstrap.Modal(document.getElementById('alergiModal'));
     var alergiTable = document.querySelector('#createAlergiTable tbody');
     var listAlergi = document.getElementById('listAlergi');
+    var emptyListMessage = document.getElementById('emptyListMessage');
     var alergis = []; // Array untuk menyimpan daftar alergi
 
     function updateMainView() {
-        alergiTable.innerHTML = alergis.map((a, index) => `
-            <tr>
-                <td>${a.alergen}</td>
-                <td>${a.reaksi}</td>
-                <td>${a.severe}</td>
-                <td>
-                    <button class="btn btn-sm btn-link delete-alergi" data-index="${index}">
-                        <i class="ti-trash text-danger"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
+        if (alergis.length === 0) {
+            alergiTable.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Tidak ada alergi, silahkan tambah</td>
+                </tr>
+            `;
+        } else {
+            alergiTable.innerHTML = alergis.map((a, index) => `
+                <tr>
+                    <td>${a.alergen}</td>
+                    <td>${a.reaksi}</td>
+                    <td>${a.severe}</td>
+                    <td>
+                        <button class="btn btn-sm btn-link delete-alergi" data-index="${index}">
+                            <i class="ti-trash text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
     }
 
     function updateModalView() {
-        listAlergi.innerHTML = alergis.map(a => `<li>${a.alergen} - ${a.reaksi} (${a.severe})</li>`).join('');
+        if (alergis.length === 0) {
+            emptyListMessage.style.display = 'block';
+            listAlergi.innerHTML = '<li class="text-muted">Tidak ada alergi</li>';
+        } else {
+            emptyListMessage.style.display = 'none';
+            listAlergi.innerHTML = alergis.map(a => `<li>${a.alergen} - ${a.reaksi} (${a.severe})</li>`).join('');
+        }
     }
 
     document.getElementById('openAlergiModal').addEventListener('click', function() {
@@ -107,5 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     alergis = [];
     updateMainView();
+    updateModalView();
 });
 </script>

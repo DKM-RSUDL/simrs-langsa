@@ -5,6 +5,12 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeEfekNyeri;
+use App\Models\RmeFaktorPemberat;
+use App\Models\RmeFaktorPeringan;
+use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeKualitasNyeri;
+use App\Models\RmeMenjalar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,6 +20,12 @@ class AsesmenKepAnakController extends Controller
     {
         $user = auth()->user();
         $itemFisik = MrItemFisik::orderby('urut')->get();
+        $menjalar = RmeMenjalar::all();
+        $frekuensinyeri = RmeFrekuensiNyeri::all();
+        $kualitasnyeri = RmeKualitasNyeri::all();
+        $faktorpemberat = RmeFaktorPemberat::all();
+        $faktorperingan = RmeFaktorPeringan::all();
+        $efeknyeri = RmeEfekNyeri::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -58,6 +70,12 @@ class AsesmenKepAnakController extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
+            'menjalar',
+            'frekuensinyeri',
+            'kualitasnyeri',
+            'faktorpemberat',
+            'faktorperingan',
+            'efeknyeri',
             'user'
         ));
     }
@@ -83,7 +101,6 @@ class AsesmenKepAnakController extends Controller
             $dataAsesmenAnak = [
                 'cara_masuk' => $request->cara_masuk,
                 'kasus_trauma' => $request->kasus_trauma,
-                'jenis_trauma' => $request->jenis_trauma,
             ];
 
             // Debug untuk melihat data yang akan disimpan
