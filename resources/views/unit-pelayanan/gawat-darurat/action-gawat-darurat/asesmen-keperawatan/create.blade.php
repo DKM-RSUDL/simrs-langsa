@@ -143,10 +143,10 @@
                                     <div class="section-separator" id="status-breathing">
                                         <h5 class="section-title">2. Status Breathing</h5>
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label style="min-width: 200px;">Frekuensi nafas/menit</label>
                                             <input type="text" class="form-control" name="breathing_frekuensi_nafas">
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pola nafas</label>
@@ -289,12 +289,12 @@
                                     <div class="section-separator">
                                         <h5 class="section-title">3. Status Circulation</h5>
 
-                                        <div class="form-group" id="status-disability">
+                                        {{-- <div class="form-group" id="status-disability">
                                             <label style="min-width: 200px;">Nadi Frekuensi/menit</label>
                                             <input type="text" class="form-control" name="circulation_nadi">
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label style="min-width: 200px;">Tekanan Darah (mmHg)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
@@ -312,7 +312,7 @@
                                                         name="circulation_diastole">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Akral</label>
@@ -2372,7 +2372,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator">
+                                    {{-- <div class="section-separator">
                                         <h5 class="section-title">15. Masalah Keperawatan</h5>
                                         <div class="form-group">
                                             <div class="w-100">
@@ -2386,9 +2386,9 @@
                                                     id="masalahKeperawatanValue">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="section-separator">
+                                    {{-- <div class="section-separator">
                                         <h5 class="section-title">16. Implementasi</h5>
                                         <div class="form-group">
                                             <div class="w-100">
@@ -2401,10 +2401,10 @@
                                                 <input type="hidden" name="implementasi" id="implementasiValue">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="section-separator">
-                                        <h5 class="section-title">17. Evaluasi</h5>
+                                        <h5 class="section-title">15. Evaluasi</h5>
 
                                         <div class="form-group">
                                             <label>Evaluasi</label>
