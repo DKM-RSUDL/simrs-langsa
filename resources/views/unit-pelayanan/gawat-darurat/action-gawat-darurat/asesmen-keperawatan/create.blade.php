@@ -1008,7 +1008,7 @@
                                         <h5 class="section-title">6. Skala Nyeri</h5>
 
                                         <div class="row mb-4">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="d-flex align-items-start gap-4">
                                                     <div class="d-flex align-items-center gap-3"
                                                         style="min-width: 350px;">
@@ -1029,10 +1029,32 @@
                                                                 name="skala_nyeri_nilai" style="width: 100px;"
                                                                 value="0" min="0" max="10">
                                                     </div>
-                                                    <div class="pain-scale-image flex-grow-1">
-                                                        <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                            alt="Pain Scale" style="width: 450px; height: auto;">
-                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <!-- Button Controls -->
+                                                <div class="btn-group mb-3">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        data-scale="numeric">
+                                                        A. Numeric Rating Pain Scale
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        data-scale="wong-baker">
+                                                        B. Wong Baker Faces Pain Scale
+                                                    </button>
+                                                </div>
+
+                                                <!-- Pain Scale Images -->
+                                                <div id="wongBakerScale" class="pain-scale-image flex-grow-1"
+                                                    style="display: none;">
+                                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                                        alt="Wong Baker Pain Scale" style="width: 450px; height: auto;">
+                                                </div>
+
+                                                <div id="numericScale" class="pain-scale-image flex-grow-1"
+                                                    style="display: none;">
+                                                    <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
+                                                        alt="Numeric Pain Scale" style="width: 450px; height: auto;">
                                                 </div>
                                             </div>
                                         </div>
