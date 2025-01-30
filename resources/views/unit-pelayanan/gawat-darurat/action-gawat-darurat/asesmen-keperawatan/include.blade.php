@@ -1036,5 +1036,40 @@
                     .text(textNyeri);
             }
         }
+        document.addEventListener('DOMContentLoaded', function() {
+    // Get the buttons and images
+    const buttons = document.querySelectorAll('[data-scale]');
+    const numericScale = document.getElementById('numericScale');
+    const wongBakerScale = document.getElementById('wongBakerScale');
+
+    // Add click event to buttons
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            buttons.forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+
+            // Add active class to clicked button
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-primary');
+
+            // Hide both images first
+            numericScale.style.display = 'none';
+            wongBakerScale.style.display = 'none';
+
+            // Show the selected image
+            if (this.dataset.scale === 'numeric') {
+                numericScale.style.display = 'block';
+            } else {
+                wongBakerScale.style.display = 'block';
+            }
+        });
+    });
+
+    // Show numeric scale by default
+    buttons[0].click();
+});
     </script>
 @endpush

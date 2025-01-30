@@ -82,6 +82,11 @@ class Kunjungan extends Model
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
 
+    public function registrasiHasil()
+    {
+        return $this->belongsTo(RegistrasrHasil::class, 'kd_pasien', 'kd_pasien');
+    }
+
 
     // public function resep()
     // {

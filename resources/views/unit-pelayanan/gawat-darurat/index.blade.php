@@ -890,7 +890,7 @@
                                         <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-outline-primary btn-sm">
                                                 <i class="ti-pencil-alt"></i>
                                         </a>
-                                        
+
                                         <div class="dropdown mx-1">
                                             <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
                                                 <i class="bi bi-three-dots"></i>
@@ -933,7 +933,7 @@
                                         </div>
 
                                         <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}/transfer-rwi" class="btn btn-outline-warning btn-sm">
-                                            <i class="fa-solid fa-arrow-right-arrow-left"></i>    
+                                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
                                         </a>
                                     </div>
                                     `;
