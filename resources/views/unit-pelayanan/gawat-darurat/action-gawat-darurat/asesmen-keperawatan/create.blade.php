@@ -143,10 +143,10 @@
                                     <div class="section-separator" id="status-breathing">
                                         <h5 class="section-title">2. Status Breathing</h5>
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label style="min-width: 200px;">Frekuensi nafas/menit</label>
                                             <input type="text" class="form-control" name="breathing_frekuensi_nafas">
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pola nafas</label>
@@ -289,12 +289,12 @@
                                     <div class="section-separator">
                                         <h5 class="section-title">3. Status Circulation</h5>
 
-                                        <div class="form-group" id="status-disability">
+                                        {{-- <div class="form-group" id="status-disability">
                                             <label style="min-width: 200px;">Nadi Frekuensi/menit</label>
                                             <input type="text" class="form-control" name="circulation_nadi">
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label style="min-width: 200px;">Tekanan Darah (mmHg)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
@@ -312,7 +312,7 @@
                                                         name="circulation_diastole">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Akral</label>
@@ -1008,7 +1008,7 @@
                                         <h5 class="section-title">6. Skala Nyeri</h5>
 
                                         <div class="row mb-4">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="d-flex align-items-start gap-4">
                                                     <div class="d-flex align-items-center gap-3"
                                                         style="min-width: 350px;">
@@ -1029,10 +1029,32 @@
                                                                 name="skala_nyeri_nilai" style="width: 100px;"
                                                                 value="0" min="0" max="10">
                                                     </div>
-                                                    <div class="pain-scale-image flex-grow-1">
-                                                        <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
-                                                            alt="Pain Scale" style="width: 450px; height: auto;">
-                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <!-- Button Controls -->
+                                                <div class="btn-group mb-3">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        data-scale="numeric">
+                                                        A. Numeric Rating Pain Scale
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        data-scale="wong-baker">
+                                                        B. Wong Baker Faces Pain Scale
+                                                    </button>
+                                                </div>
+
+                                                <!-- Pain Scale Images -->
+                                                <div id="wongBakerScale" class="pain-scale-image flex-grow-1"
+                                                    style="display: none;">
+                                                    <img src="{{ asset('assets/img/asesmen/asesmen.jpeg') }}"
+                                                        alt="Wong Baker Pain Scale" style="width: 450px; height: auto;">
+                                                </div>
+
+                                                <div id="numericScale" class="pain-scale-image flex-grow-1"
+                                                    style="display: none;">
+                                                    <img src="{{ asset('assets/img/asesmen/numerik.png') }}"
+                                                        alt="Numeric Pain Scale" style="width: 450px; height: auto;">
                                                 </div>
                                             </div>
                                         </div>
@@ -2226,6 +2248,7 @@
                                                 <option value="">--Pilih--</option>
                                                 <option value="0">Normal</option>
                                                 <option value="1">Tidak Normal</option>
+                                                <option value="2">Belum Bisa Bicara</option>
                                             </select>
                                         </div>
 
@@ -2254,6 +2277,7 @@
                                                 <option value="">--Pilih--</option>
                                                 <option value="bahasa">Bahasa</option>
                                                 <option value="menulis">Menulis</option>
+                                                <option value="cemas">Cemas</option>
                                                 <option value="cemas">Cemas</option>
                                                 <option value="lainnya">Lainnya</option>
                                             </select>
@@ -2372,7 +2396,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator">
+                                    {{-- <div class="section-separator">
                                         <h5 class="section-title">15. Masalah Keperawatan</h5>
                                         <div class="form-group">
                                             <div class="w-100">
@@ -2386,9 +2410,9 @@
                                                     id="masalahKeperawatanValue">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="section-separator">
+                                    {{-- <div class="section-separator">
                                         <h5 class="section-title">16. Implementasi</h5>
                                         <div class="form-group">
                                             <div class="w-100">
@@ -2401,10 +2425,10 @@
                                                 <input type="hidden" name="implementasi" id="implementasiValue">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="section-separator">
-                                        <h5 class="section-title">17. Evaluasi</h5>
+                                        <h5 class="section-title">15. Evaluasi</h5>
 
                                         <div class="form-group">
                                             <label>Evaluasi</label>

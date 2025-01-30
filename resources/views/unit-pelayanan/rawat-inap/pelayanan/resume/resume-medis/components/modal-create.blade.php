@@ -529,14 +529,14 @@
             .map(function() {
                 return $(this).text().trim().split(' ')[0];
             }).get().filter(Boolean);
-        if (icd9Array.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Minimal satu ICD 9 harus diisi'
-            });
-            return;
-        }
+        // if (icd9Array.length === 0) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Error',
+        //         text: 'Minimal satu ICD 9 harus diisi'
+        //     });
+        //     return;
+        // }
         formData.append('icd_9', JSON.stringify(icd9Array));
 
         // Get control ulang tgl
