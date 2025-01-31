@@ -525,14 +525,14 @@
             .map(function() {
                 return $(this).text().trim().split(' ')[0];
             }).get().filter(Boolean);
-        if (icd10Array.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Minimal satu ICD 10 harus diisi'
-            });
-            return;
-        }
+        // if (icd10Array.length === 0) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Error',
+        //         text: 'Minimal satu ICD 10 harus diisi'
+        //     });
+        //     return;
+        // }
         formData.append('icd_10', JSON.stringify(icd10Array));
 
         // Get ICD-9 data
