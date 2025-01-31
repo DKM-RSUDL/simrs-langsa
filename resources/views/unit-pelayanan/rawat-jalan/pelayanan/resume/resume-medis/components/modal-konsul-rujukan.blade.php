@@ -10,13 +10,12 @@
                 <div class="row">
                     <div class="col-5">
                         <label for="dokter_pengirim" class="form-label fw-bold">Dokter Pengirim:</label>
-                        <select name="kd_dokter" id="dokter_pengirim" class="form-select">
-                            <option value="">-Pilih Dokter Pengirim-</option>
-                            @foreach ($dataDokter as $dok)
-                                <option value="{{ $dok->dokter->kd_dokter }}"
-                                    {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                    {{ $dok->dokter->nama_lengkap }}
-                                    {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }}
+                        <select id="kd_dokter" name="kd_dokter" class="form-select" aria-label="Pilih dokter pengirim"
+                            required>
+                            <option value="" disabled selected>-Pilih Dokter Pengirim-</option>
+                            @foreach ($dataDokter as $d)
+                                <option value="{{ $d->dokter->kd_dokter }}" @selected($d->dokter->kd_karyawan == auth()->user()->kd_karyawan)>
+                                    {{ $d->dokter->nama_lengkap }}
                                 </option>
                             @endforeach
                         </select>
@@ -164,6 +163,12 @@
             e.preventDefault();
             $('#konsul').prop('checked', true);
             $('#modal-konsul-rujukan').modal('show');
+
+            let $this = $(this);
+
+            $this.find('#kd_dokter').mousedown(function(e) {
+                e.preventDefault();
+            });
         });
 
         // simpan pilihan unit
