@@ -126,9 +126,9 @@ class TindakanController extends Controller
             ->get();
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 3)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -158,7 +158,7 @@ class TindakanController extends Controller
             'jam_tindakan.required'     => 'Jam harus dipilih!',
             // 'laporan.required'          => 'Laporan tindakan harus diisi!',
             // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
-            'gambar_tindakan.required'  => 'Gambar harus dipilih!',
+            // 'gambar_tindakan.required'  => 'Gambar harus dipilih!',
             'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
             'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
         ];
@@ -170,7 +170,8 @@ class TindakanController extends Controller
             'jam_tindakan'      => 'required',
             // 'laporan'           => 'required',
             // 'kesimpulan'        => 'required',
-            'gambar_tindakan'   => 'required|image|file|max:5120',
+            // 'gambar_tindakan'   => 'required|image|file|max:5120',
+            'gambar_tindakan'   => 'image|file|max:5120',
         ], $messageErr);
 
 
@@ -437,12 +438,12 @@ class TindakanController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', 3)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => 3,
@@ -460,7 +461,6 @@ class TindakanController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -468,7 +468,7 @@ class TindakanController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }
