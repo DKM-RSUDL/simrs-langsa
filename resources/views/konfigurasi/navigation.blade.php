@@ -138,247 +138,249 @@
 @endsection
 
 @push('js')
-    <script type="text/javascript">
-        $(function() {
-            // ajax table
-            var table = $('.dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('navigation.index') }}",
-                columnDefs: [{
-                    "targets": "_all",
-                    "className": "text-start"
-                }],
-                columns: [{
-                        data: 'id',
-                        name: 'id',
-                        orderable: true,
-                        searchable: false,
-                        render: function(data, type, full, meta) {
-                            return meta.row + 1;
+    <script>
+        // ajax table
+        var table = $('.dataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('navigation.index') }}",
+            columnDefs: [{
+                "targets": "_all",
+                "className": "text-start"
+            }],
+            columns: [{
+                    data: 'id',
+                    name: 'id',
+                    orderable: true,
+                    searchable: false,
+                    render: function(data, type, full, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'url',
+                    name: 'url'
+                },
+                {
+                    data: 'icon',
+                    name: 'icon'
+                },
+                {
+                    data: 'main_menu',
+                    name: 'main_menu'
+                },
+                {
+                    data: 'sort',
+                    name: 'sort'
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+                {
+                    data: 'updated_at',
+                    name: 'updated_at'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ]
+        });
+
+        // Loading spinner HTML
+        const loadingSpinner = `
+            <div class="text-center my-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Sedang memuat data...</p>
+            </div>
+        `;
+
+        // create
+        $('#createMenu').click(function() {
+            const button = $(this);
+            // Disable button and show loading
+            button.prop('disabled', true)
+                .html('<i class="spinner-border spinner-border-sm"></i> Loading...');
+
+            // Show modal with loading spinner
+            $('#modalAction').modal('show');
+            $('#modalAction .modal-title').html('Tambah Menu');
+            $('#modalAction .modal-body').html(loadingSpinner);
+
+            $.get("{{ route('navigation.create') }}", function(response) {
+                    $('#modalAction .modal-body').html(response);
+                })
+                .fail(function(xhr) {
+                    $('#modalAction .modal-body').html(`
+                        <div class="alert alert-danger">
+                            Terjadi kesalahan saat memuat form. Silakan coba lagi.
+                        </div>
+                    `);
+                })
+                .always(function() {
+                    // Restore button state
+                    button.prop('disabled', false)
+                        .html('<i class="ti-plus"></i> Tambah Data');
+                });
+        });
+
+        // edit
+        $('body').on('click', '.editRole', function() {
+            const button = $(this);
+            const roleId = $(this).data('id');
+
+            // Disable button and show loading
+            button.prop('disabled', true)
+                .html('<i class="spinner-border spinner-border-sm"></i>');
+
+            // Show modal with loading spinner
+            $('#modalAction').modal('show');
+            $('#modalAction .modal-title').html('Edit Menu');
+            $('#modalAction .modal-body').html(loadingSpinner);
+
+            $.get("{{ route('navigation.index') }}" + '/' + roleId + '/edit', function(response) {
+                    $('#modalAction .modal-body').html(response);
+                })
+                .fail(function(xhr) {
+                    $('#modalAction .modal-body').html(`
+            <div class="alert alert-danger">
+                Terjadi kesalahan saat memuat data. Silakan coba lagi.
+            </div>
+        `);
+                })
+                .always(function() {
+                    // Restore button state
+                    button.prop('disabled', false)
+                        .html('<i class="ti-pencil"></i>');
+                });
+        });
+
+        // delete
+        $('body').on('click', '.deleteRole', function() {
+            const button = $(this);
+            const roleId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "Data yang di hapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#82868',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Disable button and show loading
+                    button.prop('disabled', true)
+                        .html('<i class="spinner-border spinner-border-sm"></i>');
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ url('navigation') }}/" + roleId,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            table.draw();
+                            showToast('success', response.message);
+                        },
+                        error: function(response) {
+                            var errorMessage = response.responseJSON.message;
+                            showToast('error', errorMessage);
+                        },
+                        complete: function() {
+                            // Restore button state
+                            button.prop('disabled', false)
+                                .html('<i class="ti-trash"></i>');
                         }
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'url',
-                        name: 'url'
-                    },
-                    {
-                        data: 'icon',
-                        name: 'icon'
-                    },
-                    {
-                        data: 'main_menu',
-                        name: 'main_menu'
-                    },
-                    {
-                        data: 'sort',
-                        name: 'sort'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
-                    {
-                        data: 'updated_at',
-                        name: 'updated_at'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ]
-            });
-
-            // Loading spinner HTML
-            const loadingSpinner = `
-                <div class="text-center my-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Sedang memuat data...</p>
-                </div>
-            `;
-
-            // create
-            $('#createMenu').click(function() {
-                const button = $(this);
-                // Disable button and show loading
-                button.prop('disabled', true)
-                    .html('<i class="spinner-border spinner-border-sm"></i> Loading...');
-
-                // Show modal with loading spinner
-                $('#modalAction').modal('show');
-                $('#modalAction .modal-title').html('Tambah Menu');
-                $('#modalAction .modal-body').html(loadingSpinner);
-
-                $.get("{{ route('navigation.create') }}", function(response) {
-                        $('#modalAction .modal-body').html(response);
-                    })
-                    .fail(function(xhr) {
-                        $('#modalAction .modal-body').html(`
-                            <div class="alert alert-danger">
-                                Terjadi kesalahan saat memuat form. Silakan coba lagi.
-                            </div>
-                        `);
-                    })
-                    .always(function() {
-                        // Restore button state
-                        button.prop('disabled', false)
-                            .html('<i class="ti-plus"></i> Tambah Data');
                     });
+                }
             });
+        });
 
-            // edit
-            $('body').on('click', '.editRole', function() {
-                const button = $(this);
-                const roleId = $(this).data('id');
+        // save
+        $('#save-modal').click(function(e) {
+            e.preventDefault();
+            const button = $(this);
+            const id = $('#navigationId').val();
 
-                // Disable button and show loading
-                button.prop('disabled', true)
-                    .html('<i class="spinner-border spinner-border-sm"></i>');
 
-                // Show modal with loading spinner
-                $('#modalAction').modal('show');
-                $('#modalAction .modal-title').html('Edit Menu');
-                $('#modalAction .modal-body').html(loadingSpinner);
 
-                $.get("{{ route('navigation.index') }}" + '/' + roleId + '/edit', function(response) {
-                        $('#modalAction .modal-body').html(response);
-                    })
-                    .fail(function(xhr) {
-                        $('#modalAction .modal-body').html(`
-                <div class="alert alert-danger">
-                    Terjadi kesalahan saat memuat data. Silakan coba lagi.
-                </div>
-            `);
-                    })
-                    .always(function() {
-                        // Restore button state
-                        button.prop('disabled', false)
-                            .html('<i class="ti-pencil"></i>');
-                    });
-            });
+            // Show loading state
+            button.html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...')
+                .addClass('disabled');
 
-            // delete
-            $('body').on('click', '.deleteRole', function() {
-                const button = $(this);
-                const roleId = $(this).data('id');
+            let formUrl = (!id) ? `{{ url('navigation') }}` : `{{ url('navigation') }}/${id}`;
+            console.log(formUrl);
 
-                Swal.fire({
-                    title: 'Apakah anda yakin?',
-                    text: "Data yang di hapus tidak dapat dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#82868',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Disable button and show loading
-                        button.prop('disabled', true)
-                            .html('<i class="spinner-border spinner-border-sm"></i>');
-
-                        $.ajax({
-                            type: "DELETE",
-                            url: "{{ url('navigation') }}/" + roleId,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-                                table.draw();
-                                showToast('success', response.message);
-                            },
-                            error: function(response) {
-                                var errorMessage = response.responseJSON.message;
-                                showToast('error', errorMessage);
-                            },
-                            complete: function() {
-                                // Restore button state
-                                button.prop('disabled', false)
-                                    .html('<i class="ti-trash"></i>');
-                            }
+            $.ajax({
+                data: $('#form-modalAction').serialize(),
+                url: formUrl,
+                type: "POST",
+                dataType: 'json',
+                success: function(response) {
+                    $('#modalAction').modal('hide');
+                    table.draw();
+                    showToast(response.status, response.message);
+                },
+                error: function(response) {
+                    var errors = response.responseJSON.errors;
+                    if (errors) {
+                        Object.keys(errors).forEach(function(key) {
+                            var errorMessage = errors[key][0];
+                            $('#' + key).siblings('.text-danger').text(
+                                errorMessage);
                         });
                     }
-                });
-            });
-
-            // save
-            $('#save-modal').click(function(e) {
-                e.preventDefault();
-                const button = $(this);
-                const id = $('#navigationId').val();
-
-
-                // Show loading state
-                button.html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...')
-                    .addClass('disabled');
-
-                $.ajax({
-                    data: $('#form-modalAction').serialize(),
-                    url: `{{ url('navigation/') }}/${id}`,
-                    type: "POST",
-                    dataType: 'json',
-                    success: function(response) {
-                        $('#modalAction').modal('hide');
-                        table.draw();
-                        showToast(response.status, response.message);
-                    },
-                    error: function(response) {
-                        var errors = response.responseJSON.errors;
-                        if (errors) {
-                            Object.keys(errors).forEach(function(key) {
-                                var errorMessage = errors[key][0];
-                                $('#' + key).siblings('.text-danger').text(
-                                    errorMessage);
-                            });
-                        }
-                    },
-                    complete: function() {
-                        // Restore button state
-                        button.html('Save').removeClass('disabled');
-                    }
-                });
-            });
-
-            // Handle type menu change
-            $(document).on('change', '#type_menu', function() {
-                let value = $(this).val()
-
-                if (value == 'child') {
-                    $('#main_menu').removeClass('d-none')
-                    $('#icon').prop('readonly', true);
-                    $('#url').prop('readonly', false)
-                    $('#url').val('');
-                    $('#icon').val('');
-                } else if (value == 'parent') {
-                    $('#icon').prop('readonly', false)
-                    $('#url').prop('readonly', true)
-                    $('#url').val('#');
-                    $('#main_menu').addClass('d-none')
-                } else {
-                    $('#icon').prop('readonly', false)
-                    $('#url').prop('readonly', false)
-                    $('#url').val('');
-                    $('#main_menu').addClass('d-none')
+                },
+                complete: function() {
+                    // Restore button state
+                    button.html('Save').removeClass('disabled');
                 }
             });
+        });
 
-            // Handle name input
-            $(document).on('input', '#name', function() {
-                let value = $(this).val()
-                let type_menu = $('#type_menu').val()
+        // Handle type menu change
+        $(document).on('change', '#type_menu', function() {
+            let value = $(this).val()
 
-                if (type_menu == 'parent') {
-                    $('#url').val('#');
-                }
-            });
+            if (value == 'child') {
+                $('#main_menu').removeClass('d-none')
+                $('#icon').prop('readonly', true);
+                $('#url').prop('readonly', false)
+                $('#url').val('');
+                $('#icon').val('');
+            } else if (value == 'parent') {
+                $('#icon').prop('readonly', false)
+                $('#url').prop('readonly', true)
+                $('#url').val('#');
+                $('#main_menu').addClass('d-none')
+            } else {
+                $('#icon').prop('readonly', false)
+                $('#url').prop('readonly', false)
+                $('#url').val('');
+                $('#main_menu').addClass('d-none')
+            }
+        });
+
+        // Handle name input
+        $(document).on('input', '#name', function() {
+            let value = $(this).val()
+            let type_menu = $('#type_menu').val()
+
+            if (type_menu == 'parent') {
+                $('#url').val('#');
+            }
         });
     </script>
 @endpush

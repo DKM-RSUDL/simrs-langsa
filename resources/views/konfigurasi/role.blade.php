@@ -182,10 +182,11 @@
                     'disabled');
 
                 var id = $('#roleId').val();
+                let formUrl = (!id) ? `{{ url('roles') }}` : `{{ url('roles/') }}/${id}`;
 
                 $.ajax({
                     data: $('#form-modalAction').serialize(),
-                    url: `{{ url('roles/') }}/${id}`,
+                    url: formUrl,
                     type: "POST",
                     dataType: 'json',
                     success: function(response) {
