@@ -11,10 +11,10 @@ use Illuminate\Http\Request;
 class NavigationController extends Controller
 {
     protected $navigationService;
-    public function __construct(NavigationService $navigationService)
+    public function __construct()
     {
         $this->middleware('can:read konfigurasi');
-        $this->navigationService = $navigationService;
+        $this->navigationService = new NavigationService();
     }
     /**
      * Display a listing of the resource.
@@ -45,7 +45,7 @@ class NavigationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(NavigationRequest $request)
+    public function store(Request $request)
     {
         $result = $this->navigationService->store($request->all());
 

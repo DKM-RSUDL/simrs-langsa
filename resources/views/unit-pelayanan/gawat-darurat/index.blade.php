@@ -892,7 +892,7 @@
                                         </a>
 
                                         <div class="dropdown mx-1">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                            <button class="btn btn-outline-secondary btn-sm btn-dropdown" type="button" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
 
@@ -1045,6 +1045,7 @@
             let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
             if (rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
 
+
             $('.dropdown-submenu').hover(
                 function() {
                     $(this).find('.dropdown-menu').addClass('show');
@@ -1054,21 +1055,6 @@
                 }
             );
         });
-
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
-
-        //     dropdownSubmenus.forEach(function(submenu) {
-        //         submenu.addEventListener('mouseover', function() {
-        //             submenu.querySelector('.dropdown-menu').classList.add('show');
-        //         });
-
-        //         submenu.addEventListener('mouseout', function() {
-        //             submenu.querySelector('.dropdown-menu').classList.remove('show');
-        //         });
-        //     });
-        // });
 
 
         // Foto Upload

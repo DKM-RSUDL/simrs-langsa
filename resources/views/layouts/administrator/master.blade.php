@@ -24,8 +24,9 @@
 
 
     {{-- local --}}
-    <link rel="stylesheet" href="{{ asset('vendor/izitoast/css/iziToast.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/izitoast/css/iziToast.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/themify-icons/themify-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/perfect-scrollbar/css/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}">
@@ -42,7 +43,7 @@
 
 
     {{-- vite --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 
 </head>
@@ -63,8 +64,8 @@
     </div>
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
-
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 
     <script src="{{ asset('vendor/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.min.js') }}"></script>
