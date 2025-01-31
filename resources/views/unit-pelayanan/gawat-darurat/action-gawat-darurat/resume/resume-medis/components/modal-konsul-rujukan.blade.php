@@ -10,16 +10,16 @@
                 <div class="row">
                     <div class="col-5">
                         <label for="dokter_pengirim" class="form-label fw-bold">Dokter Pengirim:</label>
-                        <select name="kd_dokter" id="dokter_pengirim" class="form-select">
-                            <option value="">-Pilih Dokter Pengirim-</option>
-                            @foreach ($dataDokter as $dok)
-                                <option value="{{ $dok->dokter->kd_dokter }}"
-                                    {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                    {{ $dok->dokter->nama_lengkap }}
-                                    {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }}
-                                </option>
+                        <select id="kd_dokter" name="kd_dokter" class="form-select" disabled>
+                            @foreach ($dataDokter as $d)
+                                @if($d->dokter->kd_karyawan == auth()->user()->kd_karyawan)
+                                    <option value="{{ $d->dokter->kd_dokter }}" selected>
+                                        {{ $d->dokter->nama_lengkap }}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
+                        <input type="hidden" name="kd_dokter" value="{{ $dataDokter->where('dokter.kd_karyawan', auth()->user()->kd_karyawan)->first()->dokter->kd_dokter }}">
 
                         @error('dokter_pengirim')
                             <div class="text-danger">{{ $message }}</div>
@@ -54,36 +54,33 @@
                         </div>
 
                         <div class="mt-3">
-                            <label for="unit_tujuan">Kepada Unit Pelayanan:</label>
-                            <select name="kd_unit_tujuan" id="unit_tujuan" class="form-select" required>
+                            <label for="unit_tujuan" class="form-label fw-bold h5 text-dark">Kepada Unit Pelayanan
+                                :</label>
+                            <select id="unit_tujuan" name="unit_tujuan"
+                                class="form-select select2 @error('unit_tujuan') is-invalid @enderror">
                                 <option value="">-Pilih Unit Pelayanan-</option>
                                 @foreach ($unitKonsul as $unt)
-                                    <option value="{{ $unt->kd_unit }}" data-id="{{ $unt->kd_unit }}"
-                                        {{ ($dataResume->rmeResumeDet->unit_rujuk_internal ?? '') == $unt->id ? 'selected' : '' }}>
-                                        {{ $unt->nama_unit }}
-                                    </option>
+                                    <option value="{{ $unt->kd_unit }}">{{ $unt->nama_unit }}</option>
                                 @endforeach
                             </select>
                             @error('unit_tujuan')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
 
                         <div class="mt-3">
-                            <label for="kd_dokter_tujuan" class="form-label fw-bold">Yth Dokter :</label>
-                            <select name="kd_dokter_tujuan" id="kd_dokter_tujuan" class="form-select">
-                                <option value="">-Pilih Dokter Pengirim-</option>
-                                @foreach ($dataDokter as $dok)
-                                    <option value="{{ $dok->dokter->kd_dokter }}"
-                                        {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                        {{ $dok->dokter->nama_lengkap }}
-                                        {{ $dokterPengirim->dokter->kd_dokter == $dok->dokter->kd_dokter ? '(Dokter Saat Ini)' : '' }}
-                                    </option>
-                                @endforeach
+                            <label for="dokter_unit_tujuan" class="form-label fw-bold h5 text-dark">Yth Dokter
+                                :</label>
+                            <select id="dokter_unit_tujuan" name="dokter_unit_tujuan"
+                                class="form-select select2 @error('dokter_unit_tujuan') is-invalid @enderror">
+                                <option value="">--Pilih Dokter--</option>
                             </select>
-
-                            @error('kd_dokter_tujuan')
-                                <div class="text-danger">{{ $message }}</div>
+                            @error('dokter_unit_tujuan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
 
@@ -147,144 +144,202 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Inisialisasi
-        const previousUnitId = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
 
-        // nilai awal jika ada
-        if (previousUnitId) {
-            $('#unit_tujuan').val(previousUnitId);
+$(document).ready(function() {
+    // Inisialisasi Select2 untuk semua select
+    $('.select2').select2({
+        width: '100%'
+    });
+
+    // Inisialisasi
+    const previousUnitId = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+    const dokterContainer = $('#dokter_container');
+
+    // Sembunyikan container dokter saat awal
+    dokterContainer.hide();
+
+    // Nilai awal jika ada
+    if (previousUnitId) {
+        $('#unit_tujuan').val(previousUnitId).trigger('change');
+    }
+
+    // Event saat modal dibuka
+    $('#btn-konsul-rujukan').on('click', function(e) {
+        e.preventDefault();
+        $('#konsul').prop('checked', true);
+        $('#modal-konsul-rujukan').modal('show');
+    });
+
+    // Event saat unit dipilih/diubah
+    $('#unit_tujuan').on('change', function() {
+        const unitId = $(this).val();
+        const dokterSelect = $('#dokter_unit_tujuan');
+        const selectedUnitText = $(this).find("option:selected").text();
+
+        // Reset dan sembunyikan dokter jika tidak ada unit dipilih
+        if (!unitId) {
+            dokterSelect.empty().append('<option value="">--Pilih Dokter--</option>');
+            // Reset text di radio button
+            $('#selected-unit-tujuan').text('').attr('data-unit-id', '');
+            updateKonsulText();
+            return;
         }
 
-        $('#btn-konsul-rujukan').on('click', function(e) {
-            e.preventDefault();
-            $('#konsul').prop('checked', true);
-            $('#modal-konsul-rujukan').modal('show');
-        });
+        // Update text unit di radio button
+        $('#selected-unit-tujuan')
+            .text(selectedUnitText)
+            .attr('data-unit-id', unitId);
+        updateKonsulText();
 
-        // simpan pilihan unit
-        $('#btn-simpan-konsul-rujukan').on('click', function() {
-            const selectedUnit = $('#unit_tujuan');
-            const unitId = selectedUnit.val();
-            const unitName = selectedUnit.find('option:selected').text().trim();
+        // Ajax request untuk mendapatkan dokter
+        $.ajax({
+            type: "POST",
+            url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "kd_unit": unitId
+            },
+            dataType: "json",
+            beforeSend: function() {
+                dokterSelect.prop('disabled', true);
+                dokterSelect.empty().append('<option value="">Loading...</option>');
+            },
+            success: function(response) {
+                dokterSelect.empty().append('<option value="">--Pilih Dokter--</option>');
 
-            // Validasi
-            if (!unitId || unitId === "" || unitId === "-Pilih Unit Pelayanan-") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Silahkan pilih unit pelayanan terlebih dahulu!'
-                });
-                return;
-            }
-
-            // Update
-            $('#selected-unit-tujuan')
-                .text(unitName)
-                .attr('data-unit-id', unitId);
-
-            // Update radio
-            $('#konsul')
-                .prop('checked', true)
-                .val('Konsul/Rujuk Internal Ke: ' + unitName);
-
-            $('#modal-konsul-rujukan').modal('hide');
-        });
-
-        $('#modal-konsul-rujukan').on('hidden.bs.modal', function() {
-            if (!$('#selected-unit-tujuan').text().trim()) {
-                $('#konsul').prop('checked', false);
-            }
-        });
-    });
-
-    // tambah konsultasi untuk store ke databases.
-    const kd_pasien = '{{ $dataMedis->kd_pasien }}';
-    const tgl_masuk = '{{ $dataMedis->tgl_masuk }}';
-    const urut_masuk = '{{ $dataMedis->urut_masuk }}';
-
-    $(document).ready(function() {
-        // Updated AJAX submission
-        $('#btn-simpan-konsul-rujukan').on('click', function() {
-            // Get all form values
-            const formData = {
-                dokter_pengirim: $('#dokter_pengirim').val(), // kd_dokter
-                dokter_unit_tujuan: $('#kd_dokter_tujuan').val(), // kd_dokter_tujuan
-                tgl_konsul: $('#tgl_konsul').val(), // tgl_masuk_tujuan
-                jam_konsul: $('#jam_konsul').val(), // jam_masuk_tujuan
-                unit_tujuan: $('#unit_tujuan').val(), // kd_unit_tujuan
-                konsulen_harap: $('input[name="kd_konsulen_diharapkan"]:checked')
-            .val(), // kd_konsulen_diharapkan
-                catatan: $('textarea[name="catatan"]').val(), // catatan
-                konsul: $('textarea[name="konsul"]').val(), // konsul
-                _token: $('meta[name="csrf-token"]').attr('content')
-            };
-
-            // Basic validation
-            if (!formData.unit_tujuan || !formData.tgl_konsul || !formData.jam_konsul ||
-                !formData.dokter_pengirim || !formData.dokter_unit_tujuan || !formData.konsulen_harap) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Mohon lengkapi semua field yang diperlukan!'
-                });
-                return;
-            }
-
-            // Add loading state
-            const btnSimpan = $(this);
-            btnSimpan.prop('disabled', true).html(
-                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...'
-            );
-
-            // Send Ajax request
-            $.ajax({
-                url: `/unit-pelayanan/gawat-darurat/pelayanan/${kd_pasien}/${tgl_masuk}/resume`,
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    console.log('Success:', response);
-                    if (response.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            allowOutsideClick: false
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Close modal
-                                $('#modal-konsul-rujukan').modal('hide');
-                                // Reload page to refresh data
-                                // location.reload();
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                    let errorMessage = 'Terjadi kesalahan dalam menyimpan data';
-
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessage
+                if (response.status === 'success' && response.data && response.data.length > 0) {
+                    response.data.forEach(function(item) {
+                        dokterSelect.append(
+                            `<option value="${item.dokter.kd_dokter}">${item.dokter.nama_lengkap}</option>`
+                        );
                     });
-                },
-                complete: function() {
-                    // Reset button state
-                    btnSimpan.prop('disabled', false).html('Simpan');
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Informasi',
+                        text: 'Tidak ada dokter yang tersedia di unit ini'
+                    });
                 }
-            });
+            },
+            error: function(xhr) {
+                dokterSelect.empty().append('<option value="">--Pilih Dokter--</option>');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal memuat data dokter'
+                });
+            },
+            complete: function() {
+                dokterSelect.prop('disabled', false);
+                dokterSelect.trigger('change');
+            }
         });
     });
+
+    // Event saat dokter dipilih
+    $('#dokter_unit_tujuan').on('change', function() {
+        updateKonsulText();
+    });
+
+    // Fungsi untuk update text konsul
+    function updateKonsulText() {
+        const selectedUnit = $('#unit_tujuan option:selected').text().trim();
+        const selectedDokter = $('#dokter_unit_tujuan option:selected').text().trim();
+        let konsulText = 'Konsul/Rujuk Internal Ke: ' + selectedUnit;
+
+        if (selectedDokter && selectedDokter !== '--Pilih Dokter--') {
+            konsulText += ' - Dr. ' + selectedDokter;
+        }
+
+        $('#konsul').val(konsulText);
+
+        // Tampilkan unit yang dipilih
+        if (selectedUnit && selectedUnit !== '-Pilih Unit Pelayanan-') {
+            $('#selected-unit-tujuan').text(selectedUnit);
+        } else {
+            $('#selected-unit-tujuan').text('');
+        }
+    }
+
+    // Set tanggal dan jam otomatis saat modal dibuka
+    $('#btn-konsul-rujukan').on('click', function(e) {
+        e.preventDefault();
+        $('#konsul').prop('checked', true);
+
+        // Set tanggal hari ini
+        const today = new Date();
+        const date = today.toISOString().split('T')[0];
+        $('#tgl_konsul').val(date);
+
+        // Set jam saat ini
+        const hours = String(today.getHours()).padStart(2, '0');
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        $('#jam_konsul').val(`${hours}:${minutes}`);
+
+        $('#modal-konsul-rujukan').modal('show');
+    });
+
+    // Handler simpan data
+    $('#btn-simpan-konsul-rujukan').on('click', function() {
+        // Ambil nilai form
+        const formData = {
+            unit_tujuan: $('#unit_tujuan').val(),
+            dokter_unit_tujuan: $('#dokter_unit_tujuan').val(),
+            tgl_konsul: $('#tgl_konsul').val(),
+            jam_konsul: $('#jam_konsul').val(),
+            konsulen_harap: $('input[name="kd_konsulen_diharapkan"]:checked').val(),
+            catatan: $('textarea[name="catatan"]').val(),
+            konsul: $('textarea[name="konsul"]').val(),
+            _token: $('meta[name="csrf-token"]').attr('content')
+        };
+
+        // Validasi
+        if (!formData.unit_tujuan || formData.unit_tujuan === "") {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Silahkan pilih unit pelayanan terlebih dahulu!'
+            });
+            return;
+        }
+
+        if ($('#dokter_container').is(':visible') && (!formData.dokter_unit_tujuan || formData.dokter_unit_tujuan === "")) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Silahkan pilih dokter terlebih dahulu!'
+            });
+            return;
+        }
+
+        if (!formData.tgl_konsul || !formData.jam_konsul || !formData.konsulen_harap) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Mohon lengkapi semua field yang diperlukan!'
+            });
+            return;
+        }
+
+        // Update UI
+        const selectedUnit = $('#unit_tujuan option:selected').text().trim();
+        const selectedDokter = $('#dokter_unit_tujuan option:selected').text().trim();
+
+        let konsulText = 'Konsul/Rujuk Internal Ke: ' + selectedUnit;
+        if (selectedDokter) {
+            konsulText += ' - Dr. ' + selectedDokter;
+        }
+
+        $('#konsul').prop('checked', true).val(konsulText);
+        $('#modal-konsul-rujukan').modal('hide');
+    });
+
+    // Reset form saat modal ditutup
+    $('#modal-konsul-rujukan').on('hidden.bs.modal', function() {
+        if (!$('#selected-unit-tujuan').text().trim()) {
+            $('#konsul').prop('checked', false);
+        }
+    });
+});
+
 </script>
