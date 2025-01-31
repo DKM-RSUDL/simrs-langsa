@@ -47,11 +47,11 @@
             'label' => 'Asesmen',
             'link' => route('asesmen.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
-        [
-            'icon' => 'positive_dynamic.png',
-            'label' => 'CPPT',
-            'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-        ],
+        // [
+        //     'icon' => 'positive_dynamic.png',
+        //     'label' => 'CPPT',
+        //     'link' => route('cppt.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+        // ],
         [
             'icon' => 'tools.png',
             'label' => 'Tindakan',
@@ -77,16 +77,16 @@
             'label' => 'Farmasi',
             'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
-        [
-            'icon' => 'info.png',
-            'label' => 'Edukasi',
-            'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-        ],
-        [
-            'icon' => 'goal.png',
-            'label' => 'Care Plan',
-            'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-        ],
+        // [
+        //     'icon' => 'info.png',
+        //     'label' => 'Edukasi',
+        //     'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+        // ],
+        // [
+        //     'icon' => 'goal.png',
+        //     'label' => 'Care Plan',
+        //     'link' => route('careplan.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+        // ],
         [
             'icon' => 'cv.png',
             'label' => 'Resume',
