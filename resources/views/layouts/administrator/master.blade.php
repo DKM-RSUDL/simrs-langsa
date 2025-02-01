@@ -44,7 +44,7 @@
 
     {{-- vite --}}
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
 </head>
 

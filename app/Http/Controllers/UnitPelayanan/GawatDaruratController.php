@@ -24,12 +24,14 @@ class GawatDaruratController extends Controller
     protected $roleService;
     public function index(Request $request)
     {
+        $tglBatasData = date('Y-m-d', strtotime('-2 days', strtotime(date('Y-m-d'))));
 
         if ($request->ajax()) {
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', 3);
+                ->where('kd_unit', 3)
+                ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
             // Filte dokter
             if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);
@@ -94,9 +96,9 @@ class GawatDaruratController extends Controller
         }
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 3)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         return view('unit-pelayanan.gawat-darurat.index', compact('dokter',));
     }
@@ -438,12 +440,12 @@ class GawatDaruratController extends Controller
     public function rujukAntarRs($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.urut_masuk', $urut_masuk)
