@@ -89,8 +89,6 @@
                                 @endif
                             @endforeach
                         </select>
-                        <input type="hidden" name="kd_dokter"
-                            value="{{ optional($dataDokter->where('dokter.kd_karyawan', auth()->user()->kd_karyawan)->first())->dokter->kd_dokter ?? '' }}">
 
                         @error('dokter_pengirim')
                             <div class="text-danger">{{ $message }}</div>
