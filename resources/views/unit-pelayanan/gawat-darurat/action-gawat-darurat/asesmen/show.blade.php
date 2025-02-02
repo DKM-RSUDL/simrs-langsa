@@ -483,7 +483,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printAsesmenReport()">
+                <button type="button" class="btn btn-primary">
                     <i class="fas fa-print"></i> Print Laporan
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
