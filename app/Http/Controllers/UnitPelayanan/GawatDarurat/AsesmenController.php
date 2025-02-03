@@ -21,6 +21,7 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -866,4 +867,33 @@ class AsesmenController extends Controller
             }
         }
     }
+
+    public function print($kd_pasien, $tgl_masuk, $id)
+    {
+        // Ambil data asesmen
+        $asesmen = RmeAsesmen::with([
+            'pasien',
+            'menjalar',
+            'frekuensiNyeri',
+            'kualitasNyeri',
+            'faktorPemberat',
+            'faktorPeringan',
+            'efekNyeri',
+            'tindaklanjut',
+            'pemeriksaanFisik',
+            'pemeriksaanFisik.itemFisik',
+            'user'
+        ])
+        ->where('id', $id)
+        ->first();
+
+        $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
+            'asesmen' => $asesmen
+        ]);
+
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->stream("Asesmen-Keperawatan-Medis-{$id}.pdf");
+    }
+
 }

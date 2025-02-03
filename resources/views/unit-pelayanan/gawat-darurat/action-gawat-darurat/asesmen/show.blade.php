@@ -483,9 +483,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">
-                    <i class="fas fa-print"></i> Print Laporan
-                </button>
+                <a id="btnPrintAsesmen" href="#" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-print"></i> Print
+                </a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -497,7 +497,6 @@
         function showAsesmen(id) {
             const button = event.target.closest('button');
             const url = button.dataset.url;
-
             const modal = new bootstrap.Modal(document.getElementById('showasesmenModal'));
 
             Swal.fire({
@@ -524,6 +523,11 @@
                         handleAlatTerpasang(response.data.asesmen.alat_terpasang);
                         handleTindakLanjut(response.data.asesmen.tindaklanjut);
                         handlePemeriksaanFisik(response.data.asesmen.pemeriksaan_fisik);
+
+                        // **Perbaikan: Pastikan tombol print mengambil ID asesmen yang benar**
+                        let btnPrint = document.getElementById('btnPrintAsesmen');
+                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.asesmen.kd_pasien}/${response.data.asesmen.tgl_masuk}/asesmen/${id}/print`;
+
                         modal.show();
                     } else {
                         Swal.fire('Error', 'Data tidak ditemukan', 'error');
@@ -532,11 +536,11 @@
                 error: function(xhr, status, error) {
                     console.log('Error Response:', xhr.responseJSON);
                     Swal.close();
-                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data',
-                        'error');
+                    Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data', 'error');
                 }
             });
         }
+
 
         function handleTextareaData(asesmen) {
             $('textarea[name="anamnesis"]').val(asesmen.anamnesis || '-');

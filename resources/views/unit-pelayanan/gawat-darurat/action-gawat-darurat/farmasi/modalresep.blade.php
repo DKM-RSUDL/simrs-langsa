@@ -53,10 +53,8 @@
                                             <div class="tab-pane fade show active" id="nonracikan" role="tabpanel"
                                                 aria-labelledby="nonracikan-tab">
                                                 <div class="mb-3">
-                                                    <label for="dokterPengirim" class="form-label">Dokter
-                                                        Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter"
-                                                        disabled>
+                                                    <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
+                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter" @cannot('is-admin') disabled @endcannot>
                                                         @foreach ($dokters as $dokter)
                                                             <option value="{{ $dokter->kd_dokter }}"
                                                                 @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
@@ -64,8 +62,9 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <input type="hidden" name="kd_dokter"
-                                                        value="{{ auth()->user()->kd_karyawan }}">
+                                                    @cannot('is-admin')
+                                                        <input type="hidden" name="kd_dokter" value="{{ auth()->user()->kd_karyawan }}">
+                                                    @endcannot
                                                 </div>
 
                                                 <div class="mb-3">

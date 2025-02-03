@@ -73,27 +73,49 @@
 
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
-            let selectedDokter = "{{ auth()->user()->kd_karyawan }}";
             let activeTab = 'Non Racikan';
+            let selectedDokter;
 
-            const dokterSelect = document.getElementById('dokterPengirim');
-            selectedDokter = $('[selected]', dokterSelect).val();
+            const dokterSelect = $('#dokterPengirim');
+
+            @can('is-admin')
+                // Enable the select field for admins
+                dokterSelect
+                    .prop('disabled', false)
+                    .css({
+                        'pointer-events': 'auto',
+                        'background-color': '#ffffff',
+                        'cursor': 'pointer'
+                    })
+                    .removeAttr('tabindex');
+                
+                // Update selectedDokter when admin changes the selection
+                dokterSelect.on('change', function() {
+                    selectedDokter = $(this).val();
+                });
+            @else
+                // Keep disabled state for non-admin users
+                dokterSelect
+                    .prop('disabled', true)
+                    .css({
+                        'pointer-events': 'none',
+                        'background-color': '#e9ecef',
+                        'cursor': 'not-allowed'
+                    })
+                    .attr('tabindex', '-1');
+            @endcan
+
+            // Initialize selectedDokter with the current value
+            selectedDokter = dokterSelect.val();
 
             $('#tambahResep').on('show.bs.modal', function () {
-                selectedDokter = $('[selected]', dokterSelect).val();
+                selectedDokter = dokterSelect.val();
             });
 
             // ------------ 2. Event Listener untuk Pengguna ------------ //
             $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).text().trim();
             });
-
-            $('#dokterPengirim').prop('disabled', true);
-
-            $('#dokterPengirim')
-                .css('pointer-events', 'none')
-                .css('background-color', '#e9ecef')
-                .attr('tabindex', '-1');
 
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
             $('#tambahObatNonRacikan, #tambahObatRacikan').on('click', function() {
