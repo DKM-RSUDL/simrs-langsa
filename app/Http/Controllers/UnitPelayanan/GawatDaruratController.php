@@ -30,8 +30,8 @@ class GawatDaruratController extends Controller
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', 3)
-                ->whereDate('tgl_masuk', '>=', $tglBatasData);
+                ->where('kd_unit', 3);
+                // ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
             // Filte dokter
             if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);

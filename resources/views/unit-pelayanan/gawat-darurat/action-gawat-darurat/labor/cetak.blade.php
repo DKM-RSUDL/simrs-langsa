@@ -186,94 +186,94 @@
             <div class="info-left">
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">No. Rekam Medis</div>
-                        <div class="info-italic">Medical Record Number</div>
+                        <p class="info-text">No. Rekam Medis</p>
+                        <i class="info-italic">Medical Record Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->kd_pasien }}</div>
+                    <p class="info-value">{{ $dataMedis->kd_pasien }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Pasien</div>
-                        <div class="info-italic">Patient</div>
+                        <p class="info-text">Pasien</p>
+                        <i class="info-italic">Patient</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->nama }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->nama }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">NIK</div>
-                        <div class="info-italic">Identity Number</div>
+                        <p class="info-text">NIK</p>
+                        <i class="info-italic">Identity Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->no_pengenal }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->no_pengenal }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Jenis Kelamin</div>
-                        <div class="info-italic">Sex</div>
+                        <p class="info-text">Jenis Kelamin</p>
+                        <i class="info-italic">Sex</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->jenis_kelamin }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Laki-laki' }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Lahir/Umur</div>
-                        <div class="info-italic">Date Of Birth/Age</div>
+                        <p class="info-text">Tgl. Lahir/Umur</p>
+                        <i class="info-italic">Date Of Birth/Age</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->tgl_lahir }} / {{ $dataMedis->pasien->umur }}</div>
+                    <p class="info-value">{{ \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d-m-Y') }} / {{ $dataMedis->pasien->umur }}</p>
                 </div>
             </div>
 
             <div class="info-right">
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">No. Lab</div>
-                        <div class="info-italic">Lab. Number</div>
+                        <p class="info-text">No. Lab</p>
+                        <i class="info-italic">Lab. Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->no_lab }}</div>
+                    <p class="info-value">{{ $dataMedis->registrasiHasil->no_lab }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Reg</div>
-                        <div class="info-italic">Registration Date</div>
+                        <p class="info-text">Tgl. Reg</p>
+                        <i class="info-italic">Registration Date</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_reg }}</div>
+                    <p class="info-value">{{ $dataMedis->registrasiHasil->tgl_reg }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Periksa</div>
-                        <div class="info-italic">Check Date</div>
+                        <p class="info-text">Tgl. Periksa</p>
+                        <i class="info-italic">Check Date</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_periksa }}</div>
+                    <p class="info-value">{{ date('d-m-Y H:i', strtotime($dataMedis->registrasiHasil->tgl_periksa)) }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Selesai</div>
-                        <div class="info-italic">Date Of Completion</div>
+                        <p class="info-text">Tgl. Selesai</p>
+                        <i class="info-italic">Date Of Completion</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_selesai }}</div>
+                    <p class="info-value">{{ date('d-m-Y H:i', strtotime($dataMedis->registrasiHasil->tgl_selesai)) }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Ruangan</div>
-                        <div class="info-italic">Room</div>
+                        <p class="info-text">Ruangan</p>
+                        <i class="info-italic">Room</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->unit->nama_unit }}</div>
+                    <p class="info-value">{{ $dataMedis->unit->nama_unit }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Dokter Lab</div>
-                        <div class="info-italic">Lab Doctor</div>
+                        <p class="info-text">Dokter Lab</p>
+                        <i class="info-italic">Lab Doctor</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->dokter->nama_lengkap }}</div>
+                    <p class="info-value">{{ $dataMedis->dokter->nama_lengkap }}</p>
                 </div>
             </div>
         </div>
