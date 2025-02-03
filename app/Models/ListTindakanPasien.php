@@ -27,7 +27,9 @@ class ListTindakanPasien extends Model
         'kd_produk',
         'kesimpulan',
         'gambar',
-        'laporan_hasil'
+        'laporan_hasil',
+        'user_create',
+        'user_edit'
     ];
 
     public function produk()

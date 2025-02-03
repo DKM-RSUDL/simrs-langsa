@@ -89,7 +89,6 @@
 
             <div class="row">
                 <div class="d-flex justify-content-between align-items-center m-3">
-
                     <div class="row">
                         <!-- Select Option -->
                         <div class="col-md-2">
@@ -245,9 +244,16 @@
         $('#addTindakanModal').on('shown.bs.modal', function() {
             let $this = $(this);
 
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            });
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#ppa').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
+
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
         });
@@ -377,9 +383,11 @@
         $('#editTindakanModal').on('shown.bs.modal', function() {
             let $this = $(this);
 
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            });
+            @cannot('is-admin')
+                $this.find('#ppa').mousedown(function(e) {
+                    e.preventDefault();
+                });
+            @endcannot
 
             // Destroy existing Select2 instance before reinitializing
             editInitSelect2();

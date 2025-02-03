@@ -16,6 +16,7 @@ use App\Models\RmeResumeDtl;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TindakanController extends Controller
@@ -214,6 +215,7 @@ class TindakanController extends Controller
             'kesimpulan'        => $request->kesimpulan,
             'gambar'            => $pathGambarTindakan,
             'laporan_hasil'     => $request->laporan,
+            'user_create'       => Auth::id()
         ];
 
         ListTindakanPasien::create($tindakanData);
@@ -356,6 +358,7 @@ class TindakanController extends Controller
             'kd_produk'         => $request->tindakan,
             'kesimpulan'        => $request->kesimpulan,
             'laporan_hasil'     => $request->laporan,
+            'user_edit'         => Auth::id()
         ];
 
         if ($request->hasFile('gambar_tindakan')) {

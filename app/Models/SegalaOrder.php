@@ -31,7 +31,9 @@ class SegalaOrder extends Model
         'no_transaksi',
         'kd_kasir',
         'status_order',
-        'transaksi_penunjang'
+        'transaksi_penunjang',
+        'user_create',
+        'user_edit'
     ];
 
     protected $casts = [

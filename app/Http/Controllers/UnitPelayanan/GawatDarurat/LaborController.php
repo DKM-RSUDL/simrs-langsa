@@ -226,6 +226,7 @@ class LaborController extends Controller
 
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
             // Field untuk SegalaOrder
             'kd_pasien' => 'required|string|max:12',
@@ -315,6 +316,7 @@ class LaborController extends Controller
             'kd_kasir' => $validatedData['kd_kasir'] ?? null,
             'status_order' => 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
+            'user_create' => Auth::id()
         ]);
 
         foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
@@ -359,7 +361,7 @@ class LaborController extends Controller
             'transaksi_penunjang' => 'nullable|string|max:255',
             'cyto' => 'required|string|max:2',
             'puasa' => 'required|string|max:2',
-            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:tgl_order',
+            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:tgl_order',
             'diagnosis' => 'nullable|string|max:255',
 
             // Field untuk SegalaOrderDet (ubah menjadi array)
@@ -413,6 +415,7 @@ class LaborController extends Controller
             'status_order' => 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
             'kd_dokter' => $validatedData['kd_dokter'],
+            'user_edit' => Auth::id()
         ]);
 
         // Delete existing order details
