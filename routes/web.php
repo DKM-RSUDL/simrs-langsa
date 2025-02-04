@@ -599,6 +599,7 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
                                 });
                             });
                         });
