@@ -1,3 +1,4 @@
+<!-- create -->
 @extends('layouts.administrator.master')
 
 @section('content')

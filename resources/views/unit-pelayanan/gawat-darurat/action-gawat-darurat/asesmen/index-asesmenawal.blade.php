@@ -82,6 +82,15 @@
                         <i class="fas fa-edit"></i> Edit
                     </button>
                     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
+                @elseif($item->kategori == 2)                  
+                    <button type="button" onclick="showAsesmenKeperawatan('{{ $item->id }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}')" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Lihat
+                    </button>
+                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
+                    <button type="button" onclick="editAsesmenKeperawatan('{{ $item->id }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}')" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit')
                 @endif
             </div>
         </li>

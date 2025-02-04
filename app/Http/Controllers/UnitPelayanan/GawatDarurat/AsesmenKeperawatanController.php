@@ -27,6 +27,7 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -476,5 +477,57 @@ class AsesmenKeperawatanController extends Controller
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk
         ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
+    }
+
+    public function show($kd_pasien, $tgl_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'asesmenKepUmum',
+                'asesmenKepUmumBreathing',
+                'asesmenKepUmumCirculation',
+                'asesmenKepUmumDisability',
+                'asesmenKepUmumExposure',
+                'asesmenKepUmumSkalaNyeri',
+                'asesmenKepUmumRisikoJatuh',
+                'asesmenKepUmumSosialEkonomi',
+                'asesmenKepUmumGizi'
+            ])
+            ->findOrFail($id);
+
+            // Ambil data medis pasien
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data medis tidak ditemukan untuk pasien ini.'
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'asesmen' => $asesmen,
+                    'pasien' => $dataMedis->pasien ?? null,
+                    'medis' => $dataMedis ?? null
+                ]
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data asesmen tidak ditemukan.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

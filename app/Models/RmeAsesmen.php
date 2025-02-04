@@ -89,9 +89,48 @@ class RmeAsesmen extends Model
         return $this->hasMany(RmeAsesmenDtl::class, 'id_asesmen', 'id');
     }
 
-    //
-    public function rmeAsesmenKepUmum()
+    // aesmen keperawatan
+    public function asesmenKepUmum()
     {
-        return $this->hasOne(RmeAsesmenKepUmum::class, 'id_asesmen');
+        return $this->hasOne(RmeAsesmenKepUmum::class, 'id_asesmen', 'id');
+    }
+    public function asesmenKepUmumBreathing()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumBreathing::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumCirculation()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumCirculation::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumDisability()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumDisability::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumExposure()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumExposure::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumSosialEkonomi()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumSosialEkonomi::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumSkalaNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumSkalaNyeri::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumRisikoJatuh()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumRisikoJatuh::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumGizi()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumGizi::class, 'id_asesmen', 'id');
     }
 }
