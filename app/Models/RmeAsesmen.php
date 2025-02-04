@@ -37,7 +37,10 @@ class RmeAsesmen extends Model
         'kondisi_pasien',
         'lokasi',
         'waktu_asesmen',
-        'durasi'];
+        'durasi',
+        'kategori',
+        'sub_kategori'
+    ];
 
     public function user()
     {
@@ -104,5 +107,4 @@ class RmeAsesmen extends Model
     {
         return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
     }
-    
 }

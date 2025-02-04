@@ -13,11 +13,14 @@ use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class LaborController extends Controller
 {
@@ -618,13 +621,16 @@ class LaborController extends Controller
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.cetak', compact(
-            'dataMedis',
-            'DataLapPemeriksaan',
-            'dataDokter',
-            'dataLabor',
-            'dataDiagnosis',
-            'diagnosisList'
-        ));
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.cetak', [
+            'dataMedis' => $dataMedis,
+            'DataLapPemeriksaan' => $DataLapPemeriksaan,
+            'dataDokter' => $dataDokter,
+            'dataLabor' => $dataLabor,
+            'dataDiagnosis' => $dataDiagnosis,
+            'diagnosisList' => $diagnosisList
+        ]);
+
+        $pdf->setPaper('a4', 'portrait');
+        return $pdf->stream("Hasil_Labor_{$dataMedis->pasien->nama}_" . date('Y-m-d', strtotime($tgl_masuk)) . '.pdf');
     }
 }

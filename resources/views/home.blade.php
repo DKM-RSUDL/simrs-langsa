@@ -68,10 +68,10 @@
                 <div class="card mb-4 p-3">
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>
-                        <p class="card-text">
+                        {{-- <p class="card-text">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod recusandae molestiae quam
                             a vitae dolorum
-                        </p>
+                        </p> --}}
                         <a href="#" class="btn btn-primary">Selengkap</a>
                     </div>
                 </div>
@@ -110,9 +110,9 @@
                 <div class="card mb-4 p-4">
                     <div class="card-body">
                         <h5 class="card-title">Informasi</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod
+                        {{-- <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod
                             recusandae molestiae quam a vitae dolorum, nihil quidem accusamus ratione? Hic beatae, eius
-                            voluptatem nobis dolore necessitatibus blanditiis ipsam ea.</p>
+                            voluptatem nobis dolore necessitatibus blanditiis ipsam ea.</p> --}}
                     </div>
                 </div>
             </div>

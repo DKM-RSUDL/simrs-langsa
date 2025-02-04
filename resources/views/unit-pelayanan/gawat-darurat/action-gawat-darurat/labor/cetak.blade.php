@@ -6,18 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cetak Hasil Pemeriksaan Laboratorium</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ public_path('assets/bootstrap/css/bootstrap.min.css') }}">
     <style>
-        @page {
-            size: A4;
-            margin: 0;
-        }
 
         body {
             margin: 2cm;
             font-family: Arial, sans-serif;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
         }
 
         .header {
@@ -99,63 +93,52 @@
             flex-grow: 1;
         }
 
-        @media print {
-            body {
-                margin: 2cm;
-            }
-
-            .container {
-                max-width: 100% !important;
-                padding: 0 !important;
-            }
+        .info-container {
+            display: flex;
+            margin: 20px 0;
         }
 
-        .info-container {
-    display: flex;
-    margin: 20px 0;
-}
+        .info-left, .info-right {
+            flex: 1;
+        }
 
-.info-left, .info-right {
-    flex: 1;
-}
+        .info-row {
+            display: flex;
+            margin: 8px 0;
+            line-height: 1.2;
+        }
 
-.info-row {
-    display: flex;
-    margin: 8px 0;
-    line-height: 1.2;
-}
+        .info-label {
+            width: 140px;
+            margin-right: 5px;
+        }
 
-.info-label {
-    width: 140px;
-    margin-right: 5px;
-}
+        .info-colon {
+            width: 20px;
+            text-align: center;
+        }
 
-.info-colon {
-    width: 20px;
-    text-align: center;
-}
+        .info-value {
+            flex: 1;
+        }
 
-.info-value {
-    flex: 1;
-}
+        .info-text {
+            margin: 0;
+        }
 
-.info-text {
-    margin: 0;
-}
-
-.info-italic {
-    font-style: italic;
-    color: #666;
-    font-size: 11px;
-    margin-top: 2px;
-}
+        .info-italic {
+            font-style: italic;
+            color: #666;
+            font-size: 11px;
+            margin-top: 2px;
+        }
     </style>
 </head>
 
-<body onload="window.print()">
+<body>
     <div class="container">
         <header class="header">
-            <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="logo">
+            <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="logo">
             <div class="header-text">
                 <div class="hospital-name">
                     INSTALASI LABORATORIUM<br>
@@ -167,7 +150,7 @@
                     Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id
                 </div>
             </div>
-            <img src="{{ asset('assets/img/microscope.png') }}" alt="Logo Lab" class="logo logo-right">
+            <img src="{{ public_path('assets/img/microscope.png') }}" alt="Logo Lab" class="logo logo-right">
         </header>
 
         <div class="divider"></div>
