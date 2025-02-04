@@ -360,6 +360,7 @@ Route::middleware('auth')->group(function () {
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print', 'print')->name('.print');
                                                     });
                                                 });
                                             });
@@ -587,6 +588,7 @@ Route::middleware('auth')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/{id}', 'show')->name('.show');
                                     Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}/print', 'print')->name('.print');
                                 });
                             });
                         });

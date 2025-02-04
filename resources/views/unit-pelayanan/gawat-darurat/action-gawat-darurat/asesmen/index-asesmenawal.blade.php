@@ -54,6 +54,7 @@
 <ul class="list-group" id="asesmenList">
     @foreach ($asesmen as $item)
         <li class="list-group-item d-flex justify-content-between align-items-center"
+            data-id="{{ $item->id }}"
             data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
             data-name="{{ $item->user->name }}">
             <div class="d-flex align-items-center">
