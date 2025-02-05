@@ -97,7 +97,7 @@
                     </td>
                     <td>
                         <div class="d-flex">
-                            <a href="#" class="btn btn-sm btn-info btn-print-konsultasi" >
+                            <a href="{{ route('konsultasi.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($konsul->id)]) }}" class="btn btn-sm btn-info btn-print-konsultasi" target="_blank">
                                 <i class="fas fa-print"></i>
                             </a>
                             <button class="btn btn-sm btn-warning btn-edit-konsultasi mx-2" data-bs-target="#editKonsulModal"

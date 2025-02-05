@@ -19,6 +19,7 @@ use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -296,5 +297,16 @@ class KonsultasiController extends Controller
                 'data'      => []
             ], 500);
         }
+    }
+
+    public function pdf($kd_pasien, $tgl_masuk, $urut_amsuk, $konsul)
+    {
+        $idKonsul = decrypt($konsul);
+        $konsultasi = KonsultasiIGD::with(['pasien', 'dokterAsal', 'dokterTujuan'])->find($idKonsul);
+
+        if (empty($konsultasi)) return back()->with('error', 'Gagal menemukan data konsultasi !');
+
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.print', compact('konsultasi'));
+        return $pdf->stream('konsultasi.pdf');
     }
 }

@@ -192,6 +192,13 @@
 
         });
 
+        // mencegah menekan enter agar tidak mengirim data form
+        $('#addKonsulModal form').keypress(function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
+        });
+
 
         // edit
         function formatTime(dateString) {
@@ -285,6 +292,13 @@
             $(btnSubmit).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
             $(btnSubmit).prop('disabled', true);
 
+        });
+
+        // mencegah menekan enter agar tidak mengirim data form
+        $('#editKonsulModal form').keypress(function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
         });
 
 

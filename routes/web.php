@@ -558,11 +558,11 @@ Route::middleware('auth')->group(function () {
                             Route::name('konsultasi')->group(function () {
                                 Route::controller(GawatDaruratKonsultasiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
-                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                                     Route::post('/', 'storeKonsultasi')->name('.store');
                                     Route::put('/', 'updateKonsultasi')->name('.update');
                                     Route::delete('/', 'deleteKonsultasi')->name('.delete');
                                     Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                 });
                             });
                         });

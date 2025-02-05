@@ -39,4 +39,9 @@ class KonsultasiIGD extends Model
     {
         return $this->belongsTo(Dokter::class, 'kd_dokter_tujuan', 'kd_dokter');
     }
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
+    }
 }

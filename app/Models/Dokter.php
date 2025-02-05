@@ -11,4 +11,9 @@ class Dokter extends Model
 
     protected $table = 'dokter';
     public $timestamps = false;
+
+    public function detail()
+    {
+        return $this->belongsTo(HrdKaryawan::class, 'kd_karyawan', 'kd_karyawan');
+    }
 }
