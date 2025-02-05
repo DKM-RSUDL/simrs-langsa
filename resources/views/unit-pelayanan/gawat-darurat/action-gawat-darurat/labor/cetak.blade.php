@@ -6,13 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cetak Hasil Pemeriksaan Laboratorium</title>
-    <link rel="stylesheet" href="{{ public_path('assets/bootstrap/css/bootstrap.min.css') }}">
+    <link href="{{ public_path('assets/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <style>
-
-        body {
-            margin: 2cm;
-            font-family: Arial, sans-serif;
-        }
 
         .header {
             display: flex;
@@ -91,6 +86,17 @@
 
         .info-value {
             flex-grow: 1;
+        }
+
+        @media print {
+            body {
+                margin: 2cm;
+            }
+
+            .container {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
         }
 
         .info-container {
