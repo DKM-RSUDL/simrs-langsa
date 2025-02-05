@@ -44,6 +44,11 @@ class RmeAsesmen extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
+    }
+
     public function dataTriage()
     {
         return $this->hasOne(DataTriase::class, 'asesmen_id', 'id');
@@ -133,4 +138,10 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenKepUmumGizi::class, 'id_asesmen', 'id');
     }
+
+    public function pemeriksaanFisik()
+    {
+        return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    
 }

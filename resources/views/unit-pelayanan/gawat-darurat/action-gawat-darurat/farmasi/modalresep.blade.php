@@ -53,10 +53,8 @@
                                             <div class="tab-pane fade show active" id="nonracikan" role="tabpanel"
                                                 aria-labelledby="nonracikan-tab">
                                                 <div class="mb-3">
-                                                    <label for="dokterPengirim" class="form-label">Dokter
-                                                        Pengirim</label>
-                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter"
-                                                        disabled>
+                                                    <label for="dokterPengirim" class="form-label">Dokter Pengirim</label>
+                                                    <select class="form-select" id="dokterPengirim" name="kd_dokter" @cannot('is-admin') disabled @endcannot>
                                                         @foreach ($dokters as $dokter)
                                                             <option value="{{ $dokter->kd_dokter }}"
                                                                 @selected($dokter->kd_karyawan == auth()->user()->kd_karyawan)>
@@ -64,8 +62,9 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <input type="hidden" name="kd_dokter"
-                                                        value="{{ auth()->user()->kd_karyawan }}">
+                                                    @cannot('is-admin')
+                                                        <input type="hidden" name="kd_dokter" value="{{ auth()->user()->kd_karyawan }}">
+                                                    @endcannot
                                                 </div>
 
                                                 <div class="mb-3">
@@ -110,8 +109,15 @@
                                                             <label for="frekuensi"
                                                                 class="form-label">Frekuensi/interval</label>
                                                             <select class="form-select" id="frekuensi">
-                                                                <option selected>3 x 1 hari</option>
+                                                                <option>1 x 1 hari</option>
                                                                 <option>2 x 1 hari</option>
+                                                                <option selected>3 x 1 hari</option>
+                                                                <option>4 x 1 hari</option>
+                                                                <option>5 x 1 hari</option>
+                                                                <option>6 x 1 hari</option>
+                                                                <option>Per 24 Jam</option>
+                                                                <option>Per 12 Jam</option>
+                                                                <option>Per 6 Jam</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -121,6 +127,8 @@
                                                             <label for="dosis" class="form-label">Dosis Sekali
                                                                 Minum</label>
                                                             <select class="form-select" id="dosis">
+                                                                <option>1/6</option>
+                                                                <option>1/4</option>
                                                                 <option selected>1/2</option>
                                                                 <option>1</option>
                                                                 <option>2</option>

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${alat.lokasi}</td>
                 <td>${alat.keterangan}</td>
                 <td>
-                    <button class="btn btn-sm btn-link edit-alat" data-index="${index}">
+                    <button type="button" class="btn btn-sm btn-link edit-alat" data-index="${index}">
                     <i class="bi bi-pencil-fill text-primary"></i>
                     </button>
                     <button class="btn btn-sm btn-link hapus-alat" data-index="${index}">
@@ -115,7 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Tambahkan event listener untuk tombol edit dan hapus
             document.querySelectorAll('.edit-alat').forEach(function(button) {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // Tambahkan ini untuk mencegah reload
                     var index = this.getAttribute('data-index');
                     editAlat(index);
                 });
