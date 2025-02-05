@@ -30,6 +30,7 @@ use App\Models\RmeMenjalar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class AsesmenKeperawatanController extends Controller
@@ -320,7 +321,7 @@ class AsesmenKeperawatanController extends Controller
 
         $asesmenKepUmumExposure = new RmeAsesmenKepUmumSosialEkonomi();
         $asesmenKepUmumExposure->id_asesmen = $asesmen->id;
-        $asesmenKepUmumExposure->sosial_ekonomi_pekerjaan = $request->sosial_ekonomi_pekerjaan ? (int)$request->sosial_ekonomi_pekerjaan : null;
+        $asesmenKepUmumExposure->sosial_ekonomi_pekerjaan = $request->sosial_ekonomi_pekerjaan;
         $asesmenKepUmumExposure->sosial_ekonomi_tingkat_penghasilan = $request->sosial_ekonomi_tingkat_penghasilan;
         $asesmenKepUmumExposure->sosial_ekonomi_status_pernikahan = $request->sosial_ekonomi_status_pernikahan;
         $asesmenKepUmumExposure->sosial_ekonomi_status_pendidikan = $request->sosial_ekonomi_status_pendidikan;
@@ -502,6 +503,7 @@ class AsesmenKeperawatanController extends Controller
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->first();
+            $pekerjaan = Pekerjaan::all();
 
             if (!$dataMedis) {
                 return response()->json([
@@ -515,7 +517,8 @@ class AsesmenKeperawatanController extends Controller
                 'data' => [
                     'asesmen' => $asesmen,
                     'pasien' => $dataMedis->pasien ?? null,
-                    'medis' => $dataMedis ?? null
+                    'medis' => $dataMedis ?? null,
+                    'pekerjaan' => $pekerjaan ?? null
                 ]
             ]);
         } catch (ModelNotFoundException $e) {
@@ -530,4 +533,59 @@ class AsesmenKeperawatanController extends Controller
             ], 500);
         }
     }
+
+    public function edit($kd_pasien, $tgl_masuk, $id)
+    {
+        // Fetch the existing asesmen record
+        $asesmen = RmeAsesmen::find($id);
+        $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
+                            ->where('tgl_masuk', $tgl_masuk)
+                            ->first();
+        
+        // Get additional data needed for dropdowns/forms
+        $pekerjaan = Pekerjaan::all();
+        $faktorPemberat = RmeFaktorPemberat::all();
+        $faktorPeringan = RmeFaktorPeringan::all();
+        $kualitasNyeri = RmeKualitasNyeri::all();
+        $frekuensiNyeri = RmeFrekuensiNyeri::all();
+        $menjalar = RmeMenjalar::all();
+        $jenisNyeri = RmeJenisNyeri::all();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit', compact(
+            'asesmen',
+            'dataMedis',
+            'faktorPemberat',
+            'kualitasNyeri', 
+            'menjalar',
+            'faktorPeringan',
+            'frekuensiNyeri',
+            'jenisNyeri',
+            'pekerjaan'
+        ));
+    }
+
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
+    {
+        // Find existing record
+        $asesmen = RmeAsesmen::find($id);
+
+        // Update the record
+        $asesmen->kd_pasien = $kd_pasien;
+        $asesmen->kd_unit = 3;
+        $asesmen->tgl_masuk = $tgl_masuk;
+        $asesmen->urut_masuk = $request->urut_masuk;
+        $asesmen->user_id = Auth::id();
+        $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+        $asesmen->kategori = 2;
+        $asesmen->sub_kategori = 1;
+
+        // Add all other fields that need to be updated
+        $asesmen->update($request->except(['_token', '_method']));
+
+        return redirect()->route('unit-pelayanan.gawat-darurat.pelayanan.asesmen-keperawatan.index', [
+            'kdPasien' => $kd_pasien,
+            'tglMasuk' => $tgl_masuk
+        ])->with('success', 'Asesmen updated successfully');
+    }
+
 }

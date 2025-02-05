@@ -899,7 +899,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kedalaman luka (cm)</label>
-                                            <input type="text" class="form-control" name="exposure_kedalaman_luka">
+                                            <input type="number" class="form-control" name="exposure_kedalaman_luka">
                                         </div>
 
                                         <div class="form-group">
@@ -1528,7 +1528,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam
                                                     pengawasan</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_sedikit" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
@@ -1689,7 +1689,7 @@
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
                                                 @foreach ($pekerjaan as $kerjaan)
-                                                    <option value="{{ $kerjaan->id }}">
+                                                    <option value="{{ $kerjaan->kd_pekerjaan }}">
                                                         {{ $kerjaan->pekerjaan }}
                                                     </option>
                                                 @endforeach
@@ -2360,7 +2360,6 @@
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_pelayanan_medis"
                                                 id="pelayanan_medis_berkelanjutan">
-                                                id="pelayanan_medis_berkelanjutan">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2372,7 +2371,6 @@
                                                 aktivitas harian</label>
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_ketergantungan_aktivitas"
-                                                id="ketergantungan_aktivitas">
                                                 id="ketergantungan_aktivitas">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
