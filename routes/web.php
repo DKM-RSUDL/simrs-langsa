@@ -364,7 +364,6 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
@@ -432,7 +431,6 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
                                 });
@@ -501,9 +499,9 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // transfer ke RWI
-                        Route::prefix('{urut_masuk}/transfer-rwi')->group(function() {
-                            Route::name('transfer-rwi')->group(function() {
-                                Route::controller(TransferPasienController::class)->group(function() {
+                        Route::prefix('{urut_masuk}/transfer-rwi')->group(function () {
+                            Route::name('transfer-rwi')->group(function () {
+                                Route::controller(TransferPasienController::class)->group(function () {
                                     Route::get('/', 'index');
                                     Route::post('/', 'storeTransferInap')->name('.store');
                                     Route::post('/get-dokter-spesial-ajax', 'getDokterBySpesial')->name('.get-dokter-spesial-ajax');
@@ -608,7 +606,7 @@ Route::middleware('auth')->group(function () {
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
                         Route::resource('labor', GawatDaruratLaborController::class);
-                        Route::get('cetak', [GawatDaruratLaborController::class, 'cetak']);
+                        Route::post('cetak', [GawatDaruratLaborController::class, 'cetak']);
                         Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);
@@ -667,12 +665,12 @@ Route::middleware('auth')->group(function () {
             });
         });
 
-        Route::prefix('operasi')->group(function() {
-            Route::name('operasi')->group(function() {
+        Route::prefix('operasi')->group(function () {
+            Route::name('operasi')->group(function () {
                 Route::get('/', [OperasiController::class, 'index'])->name('.index');
 
-                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function() {
-                    Route::name('.pelayanan')->group(function() {
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                    Route::name('.pelayanan')->group(function () {
                         Route::get('/', [OperasiController::class, 'pelayanan']);
                         Route::get('/asesmen-pra-anestesi', [OperasiController::class, 'asesmenPraAnestesi'])->name('.asesmen-pra-anestesi');
                         Route::get('/asesmen-pra-operasi', [OperasiController::class, 'asesmenPraOperasiPerawat'])->name('.asesmen-pra-operasi');
