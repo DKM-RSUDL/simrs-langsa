@@ -433,19 +433,34 @@
                 document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {
                     var checkbox = item.querySelector('.form-check-input');
                     if (checkbox) {
-                        var id = checkbox.id.replace('-normal-index', '');
+                        // Ambil ID yang benar, hapus 'show_' dan '_normal' dari ID
+                        var fullId = checkbox.id;
+                        var id = fullId.replace('show_', '').replace('_normal', '');
+                        
                         var isNormal = checkbox.checked;
-                        var keteranganInput = item.querySelector('.keterangan-index input');
+                        var keteranganDiv = item.querySelector('.keterangan');
+                        var keteranganInput = keteranganDiv ? keteranganDiv.querySelector('input') : null;
                         var keterangan = keteranganInput ? keteranganInput.value : '';
 
-                        pemeriksaanFisik.push({
-                            id: id,
-                            is_normal: isNormal,
-                            keterangan: keterangan
-                        });
+                        if (!isNormal && keterangan) {
+                            pemeriksaanFisik.push({
+                                id: parseInt(id), // Pastikan ID berupa angka
+                                is_normal: 0,
+                                keterangan: keterangan
+                            });
+                        } else if (isNormal) {
+                            pemeriksaanFisik.push({
+                                id: parseInt(id), // Pastikan ID berupa angka
+                                is_normal: 1,
+                                keterangan: ''
+                            });
+                        }
                     }
                 });
 
+
+                // Add console.log to debug
+                // console.log('Pemeriksaan Fisik Data:', pemeriksaanFisik);
                 formData.append('pemeriksaan_fisik', JSON.stringify(pemeriksaanFisik));
                 // console.log(formData);
                 // return false;

@@ -641,25 +641,19 @@ class AsesmenController extends Controller
 
             // dd($asesmen->all());
 
+            // Di dalam method store
             $pemeriksaanFisik = json_decode($request->pemeriksaan_fisik, true);
+
             if (is_array($pemeriksaanFisik)) {
                 foreach ($pemeriksaanFisik as $itemFisik) {
-                    $id_item_fisik = filter_var($itemFisik['id'], FILTER_VALIDATE_INT);
-                    $is_normal = filter_var($itemFisik['is_normal'], FILTER_VALIDATE_INT);
-
-                    if ($id_item_fisik === false || $is_normal === false) {
-                        continue;
-                    }
-
+                    // Simpan semua data tanpa kondisi
                     RmeAsesmenPemeriksaanFisik::create([
                         'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $id_item_fisik,
-                        'is_normal' => $is_normal,
-                        'keterangan' => $itemFisik['keterangan'] ?? null,
+                        'id_item_fisik' => $itemFisik['id'],
+                        'is_normal' => $itemFisik['is_normal'],
+                        'keterangan' => $itemFisik['keterangan'] ?? '',
                     ]);
                 }
-            } else {
-                return response()->json(['message' => 'Pemeriksaan Fisik harus berupa array'], 400);
             }
 
             // Simpan data triase

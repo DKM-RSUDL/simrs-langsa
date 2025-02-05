@@ -718,7 +718,11 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <!-- Data re-triase akan ditampilkan di sini -->
+                                                                <tr>
+                                                                    <td colspan="4" class="text-center text-muted">
+                                                                        Pasien perlu di observasi atau di re-triase jika kondisi dan kesadaran pasien berubah
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>

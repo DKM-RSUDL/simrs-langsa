@@ -245,6 +245,90 @@
         </table>
     </div>
 
+    <!-- Antropometri Section -->
+    {{-- <div class="section">
+        <div class="section-title">ANTROPOMETRI</div>
+        @php
+            $antropometri = is_string($asesmen->antropometri)
+                ? json_decode($asesmen->antropometri, true)
+                : $asesmen->antropometri;
+        @endphp
+        <table class="bordered">
+            <tr>
+                <td width="25%">Tinggi Badan</td>
+                <td width="25%">: {{ $antropometri['tb'] ?? '-' }} meter</td>
+                <td width="25%">Berat Badan</td>
+                <td width="25%">: {{ $antropometri['bb'] ?? '-' }} kg</td>
+            </tr>
+            <tr>
+                <td>Lingkar Kepala</td>
+                <td>: {{ $antropometri['ling_kepala'] ?? '-' }} cm</td>
+                <td>LPT</td>
+                <td>: {{ $antropometri['lpt'] ?? '-' }} cm</td>
+            </tr>
+            <tr>
+                <td>IMT</td>
+                <td colspan="3">: {{ $antropometri['imt'] ?? '-' }}</td>
+            </tr>
+        </table>
+    </div> --}}
+
+    <!-- Skala Nyeri Section -->
+    <div class="section">
+        <div class="section-title">SKALA NYERI</div>
+        <table class="bordered" style="margin-bottom: 10px;">
+            <tr>
+                <!-- Kolom kiri untuk gambar -->
+                <td width="40%" style="vertical-align: top; padding: 10px;">
+                    <!-- Gunakan placeholder image atau base64 encoded image -->
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/asesmen/asesmen.jpeg'))) }}"
+                        style="width: 100%; max-width: 300px;">
+                </td>
+                <!-- Kolom kanan untuk informasi nyeri -->
+                <td width="60%" style="vertical-align: top; padding: 10px;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td width="40%" style="padding: 3px; border: none;">Skala Nyeri</td>
+                            <td width="60%" style="padding: 3px; border: none;">: {{ $asesmen->skala_nyeri ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Lokasi</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->lokasi ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Durasi</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->durasi ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Menjalar</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->menjalar->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Frekuensi</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->frekuensiNyeri->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Kualitas</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->kualitasNyeri->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Faktor Pemberat</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->faktorPemberat->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Faktor Peringan</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->faktorPeringan->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px; border: none;">Efek Nyeri</td>
+                            <td style="padding: 3px; border: none;">: {{ $asesmen->efekNyeri->name ?? '-' }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <div class="section">
         <div class="section-title">PEMERIKSAAN FISIK</div>
         <table style="border-collapse: separate; border-spacing: 0 2px;">
@@ -341,14 +425,15 @@
     <div class="section">
         <div class="section-title">ALAT TERPASANG</div>
         <div style="padding: 5px;">
-            @if (!empty($asesmen->alat_terpasang))
-                @php
-                    $alatTerpasang = is_string($asesmen->alat_terpasang)
-                        ? json_decode($asesmen->alat_terpasang, true)
-                        : (is_array($asesmen->alat_terpasang)
-                            ? $asesmen->alat_terpasang
-                            : []);
-                @endphp
+            @php
+                $alatTerpasang = is_string($asesmen->alat_terpasang)
+                    ? json_decode($asesmen->alat_terpasang, true)
+                    : (is_array($asesmen->alat_terpasang)
+                        ? $asesmen->alat_terpasang
+                        : []);
+            @endphp
+
+            @if (!empty($alatTerpasang))
                 <table class="bordered">
                     <tr>
                         <th>No</th>
@@ -366,15 +451,17 @@
                     @endforeach
                 </table>
             @else
-                -
+                <p>Tidak ada alat yang diberikan.</p>
             @endif
         </div>
     </div>
 
+
+
     <!-- Diagnosa -->
     <div class="section">
         <div class="section-title">DIAGNOSIS</div>
-        <div style="padding: 5px;">
+        <div style="padding: 5px; text-transform: capitalize;">
             @php
                 $diagnosis = is_string($asesmen->diagnosis)
                     ? json_decode($asesmen->diagnosis, true)

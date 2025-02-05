@@ -525,6 +525,10 @@
         let originalResusitasiData = null;
         // Fungsi mengisi form
         function fillEditForm(data) {
+            // console.log('Raw data:', data);
+
+            const asesmenData = data.asesmen;
+
             // Fill textarea data
             $('textarea[name="edit_anamnesis"]').val(data.anamnesis || '');
             $('textarea[name="edit_riwayat_penyakit"]').val(data.riwayat_penyakit || '');
@@ -534,24 +538,32 @@
             $('input[name="edit_skala_nyeri"]').val(data.show_skala_nyeri || '');
             $('input[name="edit_lokasi"]').val(data.show_lokasi || '');
             $('input[name="edit_durasi"]').val(data.show_durasi || '');
-            if (data.asesmen.menjalar_id) {
-                $(`input[name="edit_menjalar"][value="${data.asesmen.menjalar_id}"]`).prop('checked', true);
+
+            // Tandai radio button yang sesuai
+            if (asesmenData.menjalar_id) {
+                $(`input[name="edit_menjalar"][value="${asesmenData.menjalar_id}"]`).prop('checked', true);
             }
-            if (data.asesmen.frekuensi_nyeri_id) {
-                $(`input[name="edit_frekuensi"][value="${data.asesmen.frekuensi_nyeri_id}"]`).prop('checked', true);
+            
+            if (asesmenData.frekuensi_nyeri_id) {
+                $(`input[name="edit_frekuensi"][value="${asesmenData.frekuensi_nyeri_id}"]`).prop('checked', true);
             }
-            if (data.asesmen.kualitas_nyeri_id) {
-                $(`input[name="edit_kualitas"][value="${data.asesmen.kualitas_nyeri_id}"]`).prop('checked', true);
+            
+            if (asesmenData.kualitas_nyeri_id) {
+                $(`input[name="edit_kualitas"][value="${asesmenData.kualitas_nyeri_id}"]`).prop('checked', true);
             }
-            if (data.asesmen.faktor_pemberat_id) {
-                $(`input[name="edit_faktor_pemberat"][value="${data.asesmen.faktor_pemberat_id}"]`).prop('checked', true);
+            
+            if (asesmenData.faktor_pemberat_id) {
+                $(`input[name="edit_faktor_pemberat"][value="${asesmenData.faktor_pemberat_id}"]`).prop('checked', true);
             }
-            if (data.asesmen.faktor_peringan_id) {
-                $(`input[name="edit_faktor_peringan"][value="${data.asesmen.faktor_peringan_id}"]`).prop('checked', true);
+            
+            if (asesmenData.faktor_peringan_id) {
+                $(`input[name="edit_faktor_peringan"][value="${asesmenData.faktor_peringan_id}"]`).prop('checked', true);
             }
-            if (data.asesmen.efek_nyeri && data.asesmen.efek_nyeri.id) {
-                $(`input[name="edit_efek_nyeri"][value="${data.asesmen.efek_nyeri.id}"]`).prop('checked', true);
+            
+            if (asesmenData.efek_nyeri && asesmenData.efek_nyeri.id) {
+                $(`input[name="edit_efek_nyeri"][value="${asesmenData.efek_nyeri.id}"]`).prop('checked', true);
             }
+
 
             originalResusitasiData = data.tindakan_resusitasi;
 
@@ -665,6 +677,10 @@
             }
 
         }
+
+        $('input[type="radio"]').change(function() {
+            console.log(`Radio ${this.name} changed to:`, this.value);
+        });
 
         function getTindakLanjutOption(code) {
             switch (code) {
@@ -1182,12 +1198,6 @@
 
             // if ($(this).prop('disabled')) return;
             $(this).prop('disabled', true);
-            const menjalarId = $('select[name="edit_menjalar"]').val();
-            const frekuensiId = $('select[name="edit_frekuensi"]').val();
-            const kualitasId = $('select[name="edit_kualitas"]').val();
-            const faktorPemberatId = $('select[name="edit_faktor_pemberat"]').val();
-            const faktorPeringanId = $('select[name="edit_faktor_peringan"]').val();
-            const efekNyeriId = $('select[name="edit_efek_nyeri"]').val();
 
             const formData = {
                 _method: 'PUT',
@@ -1218,16 +1228,18 @@
                     imt: $('input[name="edit_antropometri_imt"]').val() || null
 
                 },
+                menjalar_id: $('input[name="edit_menjalar"]:checked').val() || null,
+                frekuensi_nyeri_id: $('input[name="edit_frekuensi"]:checked').val() || null,
+                kualitas_nyeri_id: $('input[name="edit_kualitas"]:checked').val() || null,
+                faktor_pemberat_id: $('input[name="edit_faktor_pemberat"]:checked').val() || null,
+                faktor_peringan_id: $('input[name="edit_faktor_peringan"]:checked').val() || null,
+                efek_nyeri: $('input[name="edit_efek_nyeri"]:checked').val() || null,
+                
                 riwayat_alergi: collectEditAlergi(),
                 skala_nyeri: $('input[name="edit_skala_nyeri"]').val(),
                 lokasi: $('input[name="edit_lokasi"]').val(),
                 durasi: $('input[name="edit_durasi"]').val(),
-                menjalar_id: menjalarId,
-                frekuensi_nyeri_id: frekuensiId,
-                kualitas_nyeri_id: kualitasId,
-                faktor_pemberat_id: faktorPemberatId,
-                faktor_peringan_id: faktorPeringanId,
-                efek_nyeri: efekNyeriId,
+                
                 diagnosis: window.originalDiagnosisData,
                 retriase_data: window.originalReTriaseData,
                 alat_terpasang: collectEditAlat(),
