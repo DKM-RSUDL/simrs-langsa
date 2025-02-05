@@ -60,7 +60,7 @@
         [
             'icon' => 'agree.png',
             'label' => 'Konsultasi',
-            'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('konsultasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'test_tube.png',

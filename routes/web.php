@@ -554,7 +554,7 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Konsultasi
-                        Route::prefix('konsultasi')->group(function () {
+                        Route::prefix('{urut_masuk}/konsultasi')->group(function () {
                             Route::name('konsultasi')->group(function () {
                                 Route::controller(GawatDaruratKonsultasiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
