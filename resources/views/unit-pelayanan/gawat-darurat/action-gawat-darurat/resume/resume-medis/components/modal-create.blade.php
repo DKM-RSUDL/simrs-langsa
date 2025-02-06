@@ -374,12 +374,12 @@
                                         </a>
 
                                         <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="selesai" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Selesai di Klinik ini"
-                                                data-code="3"
-                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
-                                            <label for="selesai">Selesai di Klinik ini</label>
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btnPulang">
+                                            <input type="radio" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Pulang"
+                                                data-code="6"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '6' ? 'checked' : '' }}>
+                                            <label for="selesai">Pulang <span></span></label>
                                         </a>
                                     </div>
 
@@ -434,6 +434,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-pulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kontrol-ulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-rs-rujuk-bagian')
@@ -544,6 +545,10 @@
             const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
             const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
             const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+            const previousTglPulang = '{{ $dataResume->rmeResumeDet->tgl_pulang ?? '' }}';
+            const previousJamPulang = '{{ $dataResume->rmeResumeDet->jam_pulang ?? '' }}';
+            const previousAlasanPulang = '{{ $dataResume->rmeResumeDet->alasan_pulang ?? '' }}';
+
 
             // Ambil resume_id, biarkan null jika tidak ada
             if (!resume_id || resume_id === 'null') {
@@ -653,6 +658,15 @@
             const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
             console.log('Sending unit_rujuk_internal:', unitId);
             formData.append('unit_rujuk_internal', unitId);
+
+            // tindak lanjut pulang
+            let tglPulangTL = $('#selesaiKlinikModal #tgl_pulang').val() || previousTglPulang;
+            let jamPulangTL = $('#selesaiKlinikModal #jam_pulang').val()  || previousJamPulang;
+            let alasanPulangTL = $('#selesaiKlinikModal #alasan_pulang').val()  || previousAlasanPulang;
+
+            formData.append('tgl_pulang', tglPulangTL);
+            formData.append('jam_pulang', jamPulangTL);
+            formData.append('alasan_pulang', alasanPulangTL);
 
             formData.append('tindak_lanjut_name', tindakLanjutElement.val());
             formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));

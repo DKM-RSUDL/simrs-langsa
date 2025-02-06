@@ -310,7 +310,10 @@ class ResumeController extends Controller
                 'rs_rujuk' => $request->rs_rujuk,
                 'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
                 'unit_rujuk_internal' => $request->unit_rujuk_internal,
-                'unit_rawat_inap' => $request->unit_rawat_inap
+                'unit_rawat_inap' => $request->unit_rawat_inap,
+                'tgl_pulang'    => $request->tgl_pulang,
+                'jam_pulang'    => $request->jam_pulang,
+                'alasan_pulang'    => $request->alasan_pulang,
             ]
         );
 
