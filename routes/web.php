@@ -563,6 +563,7 @@ Route::middleware('auth')->group(function () {
                                     Route::delete('/', 'deleteKonsultasi')->name('.delete');
                                     Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                                     Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                                 });
                             });
                         });

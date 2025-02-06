@@ -170,19 +170,19 @@
             </tr>
             <tr>
                 <th>Subjective</th>
-                <td>{{ $konsultasi->subjective }}</td>
+                <td>{{ $konsultasi->subjective ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Backgroud</th>
-                <td>{{ $konsultasi->background }}</td>
+                <td>{{ $konsultasi->background ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Assesment</th>
-                <td>{{ $konsultasi->assesment }}</td>
+                <td>{{ $konsultasi->assesment ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Recomendation</th>
-                <td>{{ $konsultasi->recomendation }}</td>
+                <td>{{ $konsultasi->recomendation ?? '-' }}</td>
             </tr>
             <tr class="table-section-title">
                 <th colspan="2">KONSULTASI</th>
@@ -201,7 +201,7 @@
             </tr>
             <tr>
                 <th>Instruksi Konsulen</th>
-                <td>{{ $konsultasi->instruksi }}</td>
+                <td>{{ $konsultasi->instruksi ?? '-' }}</td>
             </tr>
         </table>
     </main>

@@ -306,7 +306,38 @@ class KonsultasiController extends Controller
 
         if (empty($konsultasi)) return back()->with('error', 'Gagal menemukan data konsultasi !');
 
-        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.print', compact('konsultasi'));
-        return $pdf->stream('konsultasi.pdf');
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.konsultasi.print', compact('konsultasi'))
+            ->setPaper('a4', 'potrait');
+        return $pdf->stream('konsultasi_' . $konsultasi->kd_pasien . '_' . $konsultasi->tgl_konsul . '.pdf');
+    }
+
+    public function getDokterbyUnit(Request $request)
+    {
+        try {
+            $dokter = DokterKlinik::with(['dokter', 'unit'])
+                ->where('kd_unit', $request->kd_unit)
+                ->whereRelation('dokter', 'status', 1)
+                ->get();
+
+            if (count($dokter) > 0) {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Data ditemukan',
+                    'data'      => $dokter
+                ]);
+            } else {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => []
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => $e->getMessage(),
+                'data'      => []
+            ], 500);
+        }
     }
 }
