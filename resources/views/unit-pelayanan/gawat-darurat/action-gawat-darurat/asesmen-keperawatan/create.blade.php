@@ -715,7 +715,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_4"
                                                                         name="disability_diagnosis_kesadaran_type"
-                                                                        value="aktual">
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_4">Aktual</label>
                                                                 </div>
@@ -723,7 +723,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_4"
                                                                         name="disability_diagnosis_kesadaran_type"
-                                                                        value="risiko">
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_4">Risiko</label>
                                                                 </div>
@@ -2257,9 +2257,27 @@
                                             <label style="min-width: 200px;">Bahasa sehari-hari</label>
                                             <select class="form-select" name="kebutuhan_edukasi_bahasa_sehari_hari">
                                                 <option value="">--Pilih--</option>
+                                                <option value="">--Pilih--</option>
                                                 <option value="aceh">Aceh</option>
+                                                <option value="batak">Batak</option>
+                                                <option value="minangkabau">Minangkabau</option>
                                                 <option value="melayu">Melayu</option>
+                                                <option value="sunda">Sunda</option>
                                                 <option value="jawa">Jawa</option>
+                                                <option value="madura">Madura</option>
+                                                <option value="bali">Bali</option>
+                                                <option value="sasak">Sasak</option>
+                                                <option value="banjar">Banjar</option>
+                                                <option value="bugis">Bugis</option>
+                                                <option value="toraja">Toraja</option>
+                                                <option value="makassar">Makassar</option>
+                                                <option value="dayak">Dayak</option>
+                                                <option value="tidung">Tidung</option>
+                                                <option value="ambon">Ambon</option>
+                                                <option value="ternate">Ternate</option>
+                                                <option value="tidore">Tidore</option>
+                                                <option value="papua">Papua</option>
+                                                <option value="asmat">Asmat</option>
                                             </select>
                                         </div>
 
