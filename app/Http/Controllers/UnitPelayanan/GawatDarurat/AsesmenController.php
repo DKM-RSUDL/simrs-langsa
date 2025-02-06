@@ -864,6 +864,7 @@ class AsesmenController extends Controller
 
     public function print($kd_pasien, $tgl_masuk, $id)
     {
+
         // Ambil data asesmen
         $asesmen = RmeAsesmen::with([
             'pasien',
@@ -878,11 +879,12 @@ class AsesmenController extends Controller
             'pemeriksaanFisik.itemFisik',
             'user'
         ])
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
 
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
-            'asesmen' => $asesmen
+            'asesmen' => $asesmen,
+
         ]);
 
         $pdf->setPaper('a4', 'portrait');
