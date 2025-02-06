@@ -419,7 +419,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
                     Print</button>
-                <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
+                <button type="button" class="btn btn-sm btn-primary" id="update">Ubah</button>
+                <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -450,6 +451,78 @@
             $(this).find('input[type="radio"]').prop('checked', true);
         });
 
+        // validasi
+        $('#btnValidate').click(function(e) {
+            let $this = $(this);
+            let resumeId = "{{ encrypt($dataResume->id) }}";
+
+            Swal.fire({
+                title: "Konfirmasi",
+                text: "Apakah anda yakin ingin validasi resume ? Resume yang telah divalidasi tidak dapat dirubah kembali",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('resume.validasi', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            resume_id: resumeId
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                            $this.prop('disabled', true);
+                        },
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false
+                                });
+
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: "Success",
+                                text: 'Resume berhasil di validasi !',
+                                icon: "success",
+                                allowOutsideClick: false
+                            });
+
+                            window.location.reload();
+                        },
+                        complete: function() {
+                            $this.html('Validasi');
+                            $this.prop('disabled', false);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Internal Server Error !",
+                                icon: "error"
+                            });
+                        }
+                    });
+
+                }
+            });
+
+        });
+
+        // simpan data
         $('#update').click(function(e) {
             e.preventDefault();
 
@@ -589,7 +662,7 @@
             // Show konfirmasi
             Swal.fire({
                 title: 'Konfirmasi',
-                text: 'Apakah Anda yakin ingin validasi data resume ini?',
+                text: 'Apakah Anda yakin ingin mengubah data resume ini?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Validasi',
@@ -625,7 +698,7 @@
                             timer: 3000
                         }).then(() => {
                             $('#modal-edit-resume').modal('hide');
-                            window.location.reload();
+                            // window.location.reload();
                         });
                     } else {
                         Swal.fire({

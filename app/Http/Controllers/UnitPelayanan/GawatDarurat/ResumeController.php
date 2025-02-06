@@ -19,6 +19,7 @@ use App\Models\SegalaOrder;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -294,7 +295,7 @@ class ResumeController extends Controller
             'icd_10' => $newIcd10,
             'icd_9' => $newIcd9,
             'alergi' => $newAlergi,
-            'status' => 1,
+            // 'status' => 1,
             'user_validasi' => Auth::id(),
         ]);
 
@@ -323,6 +324,39 @@ class ResumeController extends Controller
                 'resume_detail' => $resumeDtl
             ]
         ]);
+    }
+
+
+    public function validasiResume($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        try {
+            $resumeId = decrypt($request->resume_id);
+
+            $resume = RMEResume::find($resumeId);
+
+            if (empty($resume)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data resume gagal di cari !',
+                    'data'      => []
+                ]);
+            }
+
+            $resume->status = 1;
+            $resume->save();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'OK',
+                'data'      => []
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Internal server error !',
+                'data'      => []
+            ]);
+        }
     }
 
 

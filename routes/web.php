@@ -611,6 +611,14 @@ Route::middleware('auth')->group(function () {
                         Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);
+
+                        Route::controller(GawatDaruratResumeController::class)->group(function () {
+                            Route::name('resume')->group(function () {
+                                Route::prefix('/{urut_masuk}/resume')->group(function () {
+                                    Route::post('/validasi', 'validasiResume')->name('.validasi');
+                                });
+                            });
+                        });
                     });
                 });
             });
