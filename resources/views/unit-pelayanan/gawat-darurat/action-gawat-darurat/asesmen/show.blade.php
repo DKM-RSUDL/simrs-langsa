@@ -64,17 +64,17 @@
 
                                             <div class="form-line">
                                                 <h6>Riwayat Penyakit Pasien</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Penyakit Keluarga Pasien</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit_keluarga" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit_keluarga" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Pengobatan</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_pengobatan" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">

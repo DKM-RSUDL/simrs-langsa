@@ -53,7 +53,7 @@
                                             </ul>
 
                                             <p style="margin-bottom: 5px;"><strong>Golongan Darah</strong></p>
-                                            <p style="margin-bottom: 5px;">A+</p>
+                                            <p style="margin-bottom: 5px;">-</p>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@
 
                                                 <div class="form-line">
                                                     <h6>Riwayat Pengobatan</h6>
-                                                    <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan"
+                                                    <textarea class="form-control mb-2" rows="2" name="riwayat_pengobatan"
                                                         placeholder="Isikan riwayat pengobatan pasien"></textarea>
                                                 </div>
 
