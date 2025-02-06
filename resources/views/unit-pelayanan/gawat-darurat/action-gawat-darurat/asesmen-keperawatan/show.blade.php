@@ -48,8 +48,8 @@
                                         </p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>                                        
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="showBreathingTandaDistress"></ul>                                        
+                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>
+                                        <ul class="list-unstyled border-start border-primary ps-2" id="showBreathingTandaDistress"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                                 id="breathing_gangguan"></span></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>                                        
+                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>
                                         <ul class="list-unstyled border-start border-primary ps-2" id="breathing_tindakan"></ul>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="circulation_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2" id="circulation_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -241,7 +241,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="disability_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2" id="disability_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +315,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="exposure_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2" id="exposure_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -589,7 +589,7 @@
                                 </div>
 
                                 <label class="form-label fw-bold">Resiko Jatuh Tindakan :</label>
-                                <ul class="list-unstyled border-start border-primary ps-2" id="risik_jatuh_tindakan"></ul>                                
+                                <ul class="list-unstyled border-start border-primary ps-2" id="risik_jatuh_tindakan"></ul>
 
                         </div>
                     </div>
@@ -945,6 +945,13 @@
                     </div>
                 </div>
 
+                <div class="modal-footer">
+                    <button onclick="printPDF('{{ $item->id }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}')" class="btn btn-info">
+                        <i class="fas fa-print"></i> Print PDF
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -952,6 +959,30 @@
 
 @push('js')
     <script>
+        function printPDF(id, kdPasien, tglMasuk) {
+            Swal.fire({
+                title: 'Generating PDF...',
+                html: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Generate URL PDF sesuai dengan route yang ada
+                    const url = `/unit-pelayanan/gawat-darurat/pelayanan/${kdPasien}/${tglMasuk}/asesmen-keperawatan/${id}/print-pdf`;
+
+                    // Trigger download
+                    // window.location.href = url;
+                    window.open(url, '_blank');
+
+                    // Close loading after 2 seconds
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 2000);
+                }
+            });
+        }
+
+
         function showAsesmenKeperawatan(id, kdPasien, tglMasuk) {
             const url = `/unit-pelayanan/gawat-darurat/pelayanan/${kdPasien}/${tglMasuk}/asesmen-keperawatan/${id}`;
 
@@ -975,7 +1006,7 @@
 
                         // Data pasien
                         $('#patientName').text(pasien.nama || '-');
-                        $('#patientGender').text(pasien.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan');                        
+                        $('#patientGender').text(pasien.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan');
                         $('#patientAge').text(`${formatDate(pasien.tgl_lahir)} (${calculateAge(pasien.tgl_lahir)} Tahun)`);
                         $('#assessmentDate').text(pasien.kd_pasien || '-');
 
@@ -984,7 +1015,7 @@
                         const today = new Date();
                         let age = today.getFullYear() - dob.getFullYear();
                         const monthDiff = today.getMonth() - dob.getMonth();
-                        
+
                         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
                             age--;
                         }
@@ -992,9 +1023,9 @@
                         }
 
                         function formatDate(dateString) {
-                        const options = { 
+                        const options = {
                             day: '2-digit',
-                            month: 'long', 
+                            month: 'long',
                             year: 'numeric'
                         };
                         return new Date(dateString).toLocaleDateString('id-ID', options);
@@ -1055,7 +1086,7 @@
                         $.each(breathingTindakanArray, function(i,e){
                             breathingTindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#breathing_tindakan').html(breathingTindakanHtml);                        
+                        $('#breathing_tindakan').html(breathingTindakanHtml);
 
                         // Data Circulation
                         $('#circulation_akral').text(
@@ -1102,7 +1133,7 @@
                             $.each(circulation_tindakanArray, function(i,e){
                             circulation_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#circulation_tindakan').html(circulation_tindakanHtml);                         
+                        $('#circulation_tindakan').html(circulation_tindakanHtml);
 
                         // Data Disability
                         $('#disability_kesadaran').text(asesmenDisability.disability_kesadaran || '-');
@@ -1152,7 +1183,7 @@
                             $.each(disability_tindakanArray, function(i,e){
                             disability_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#disability_tindakan').html(disability_tindakanHtml);                                                 
+                        $('#disability_tindakan').html(disability_tindakanHtml);
 
                         // Data Exposure
                         $('#exposure_deformitas').text(
@@ -1204,7 +1235,7 @@
                             $.each(exposure_tindakanArray, function(i,e){
                             exposure_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#exposure_tindakan').html(exposure_tindakanHtml);                         
+                        $('#exposure_tindakan').html(exposure_tindakanHtml);
 
                         // Data Skala Nyeri
                         $('#skala_nyeri').text(asesmenSkalaNyeri.skala_nyeri || '-');
@@ -1291,14 +1322,14 @@
                         // Data Risiko Jatuh
                         showRisikoJatuhForm(asesmenRisikoJatuh.resiko_jatuh_jenis, asesmenRisikoJatuh);
                         // Set tindakan
-                        
+
                         let risik_jatuh_tindakanArray = JSON.parse(asesmenRisikoJatuh.risik_jatuh_tindakan);
 			            let risik_jatuh_tindakanHtml = '';
                             $.each(risik_jatuh_tindakanArray, function(i,e){
                             risik_jatuh_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#risik_jatuh_tindakan').html(risik_jatuh_tindakanHtml);    
-                                                
+                        $('#risik_jatuh_tindakan').html(risik_jatuh_tindakanHtml);
+
                         // 8. Status Psikologis
                         $('#psikologis_kondisi').text(asesmenKepUmum.psikologis_kondisi || '-');
                         $('#psikologis_potensi_menyakiti').text(
