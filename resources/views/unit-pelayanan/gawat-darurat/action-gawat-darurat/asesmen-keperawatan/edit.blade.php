@@ -1296,494 +1296,442 @@
                                         <h5 class="section-title">7. Risiko Jatuh</h5>
 
                                         <div class="mb-4">
-                                            <label class="form-label">Pilih jenis penilaian risiko jatuh sesuai dengan
-                                                kondisi
-                                                pasien:</label>
-                                            <select class="form-select" id="risikoJatuhSkala" name="resiko_jatuh_jenis"
-                                                onchange="showForm(this.value)">
+                                            <label class="form-label">Pilih jenis penilaian risiko jatuh sesuai dengan kondisi pasien:</label>
+                                            <select class="form-select" id="risikoJatuhSkala" name="resiko_jatuh_jenis" onchange="showForm(this.value)">
                                                 <option value="">--Pilih Skala--</option>
-                                                <option value="1">Skala Umum</option>
-                                                <option value="2">Skala Morse</option>
-                                                <option value="3">Skala Humpty-Dumpty / Pediatrik</option>
-                                                <option value="4">Skala Ontario Modified Stratify Sydney / Lansia
-                                                </option>
-                                                <option value="5">Lainnya</option>
+                                                <option value="1" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '1' ? 'selected' : '' }}>Skala Umum</option>
+                                                <option value="2" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '2' ? 'selected' : '' }}>Skala Morse</option>
+                                                <option value="3" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '3' ? 'selected' : '' }}>Skala Humpty-Dumpty / Pediatrik</option>
+                                                <option value="4" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '4' ? 'selected' : '' }}>Skala Ontario Modified Stratify Sydney / Lansia</option>
+                                                <option value="5" {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '5' ? 'selected' : '' }}>Lainnya</option>
                                             </select>
                                         </div>
 
                                         <!-- Form Skala Umum 1 -->
-                                        <div id="skala_umumForm" class="risk-form">
+                                        <div id="skala_umumForm" class="risk-form" style="display: {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '1' ? 'block' : 'none' }}">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Umum</h5>
+
+                                            <!-- Usia -->
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien berusia < dari 2 tahun?</label>
-                                                        <select class="form-select" name="risiko_jatuh_umum_usia"
-                                                            onchange="updateConclusion('umum')">
-                                                            <option value="">pilih</option>
-                                                            <option value="1">Ya</option>
-                                                            <option value="0">Tidak</option>
-                                                        </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Apakah pasien dalam kondisi sebagai geriatri,
-                                                    dizzines, vertigo,
-                                                    gangguan keseimbangan, gangguan penglihatan, penggunaan obat sedasi,
-                                                    status
-                                                    kesadaran dan
-                                                    atau kejiwaan, konsumsi alkohol?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')"
-                                                    name="risiko_jatuh_umum_kondisi_khusus">
+                                                <select class="form-select" name="risiko_jatuh_umum_usia" onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_usia', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_usia ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Kondisi Khusus -->
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien didiagnosis sebagai pasien
-                                                    dengan
-                                                    penyakit
-                                                    parkinson?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')"
-                                                    name="risiko_jatuh_umum_diagnosis_parkinson">
+                                                <label class="form-label">Apakah pasien dalam kondisi sebagai geriatri, dizzines, vertigo, gangguan keseimbangan, gangguan penglihatan, penggunaan obat sedasi, status kesadaran dan atau kejiwaan, konsumsi alkohol?</label>
+                                                <select class="form-select" name="risiko_jatuh_umum_kondisi_khusus" onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_kondisi_khusus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kondisi_khusus ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Diagnosis Parkinson -->
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien sedang mendapatkan obat sedasi,
-                                                    riwayat
-                                                    tirah baring
-                                                    lama, perubahan posisi yang akan meningkatkan risiko jatuh?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')"
-                                                    name="risiko_jatuh_umum_pengobatan_berisiko">
+                                                <label class="form-label">Apakah pasien didiagnosis sebagai pasien dengan penyakit parkinson?</label>
+                                                <select class="form-select" name="risiko_jatuh_umum_diagnosis_parkinson" onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_diagnosis_parkinson', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Pengobatan Berisiko -->
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien saat ini sedang berada pada
-                                                    salah
-                                                    satu
-                                                    lokasi ini: rehab
-                                                    medik, ruangan dengan penerangan kurang dan bertangga?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')"
-                                                    name="risiko_jatuh_umum_lokasi_berisiko">
+                                                <label class="form-label">Apakah pasien sedang mendapatkan obat sedasi, riwayat tirah baring lama, perubahan posisi yang akan meningkatkan risiko jatuh?</label>
+                                                <select class="form-select" name="risiko_jatuh_umum_pengobatan_berisiko" onchange="updateConclusion('umum')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_pengobatan_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Lokasi Berisiko -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Apakah pasien saat ini sedang berada pada salah satu lokasi ini: rehab medik, ruangan dengan penerangan kurang dan bertangga?</label>
+                                                <select class="form-select" name="risiko_jatuh_umum_lokasi_berisiko" onchange="updateConclusion('umum')">
+                                                    <option value="">pilih</option>
+                                                    <option value="1" {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_umum_lokasi_berisiko', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Kesimpulan -->
                                             <div class="conclusion bg-success">
-                                                <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm"></span></p>
-                                                <input type="hidden" name="risiko_jatuh_umum_kesimpulan"
-                                                    id="risiko_jatuh_umum_kesimpulan">
+                                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm">{{ old('risiko_jatuh_umum_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kesimpulan ?? 'Tidak berisiko jatuh') }}</span></p>
+                                                <input type="hidden" name="risiko_jatuh_umum_kesimpulan" id="risiko_jatuh_umum_kesimpulan"
+                                                    value="{{ old('risiko_jatuh_umum_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_umum_kesimpulan ?? '') }}">
                                             </div>
                                         </div>
 
-                                        <!-- Memperbaiki bagian Form Skala Morse 2 -->
-                                        <div id="skala_morseForm" class="risk-form">
+                                        <!-- Form Skala Morse 2 -->
+                                        <div id="skala_morseForm" class="risk-form" style="display: {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '2' ? 'block' : 'none' }}">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Morse</h5>
+
+                                            <!-- Riwayat Jatuh -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien pernah mengalami Jatuh?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_riwayat_jatuh"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_riwayat_jatuh" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="25">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="25" {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '25' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_riwayat_jatuh', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_riwayat_jatuh ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Diagnosis Sekunder -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien memiliki diagnosis skunder?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_diagnosis_sekunder"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_diagnosis_sekunder" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="15">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '15' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_diagnosis_sekunder', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_diagnosis_sekunder ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Bantuan Ambulasi -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien membutuhkan bantuan ambulasi?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_bantuan_ambulasi"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_bantuan_ambulasi" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="30">Meja/ kursi</option>
-                                                    <option value="15">Kruk/ tongkat/ alat bantu berjalan</option>
-                                                    <option value="0">Tidak ada/ bed rest/ bantuan perawat
-                                                    </option>
+                                                    <option value="30" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '30' ? 'selected' : '' }}>Meja/ kursi</option>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '15' ? 'selected' : '' }}>Kruk/ tongkat/ alat bantu berjalan</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_bantuan_ambulasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_bantuan_ambulasi ?? '') == '0' ? 'selected' : '' }}>Tidak ada/ bed rest/ bantuan perawat</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Terpasang Infus -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien terpasang infus?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_terpasang_infus"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_terpasang_infus" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="20">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="20" {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '20' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_terpasang_infus', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_terpasang_infus ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Cara Berjalan -->
                                             <div class="mb-3">
                                                 <label class="form-label">Bagaimana cara berjalan pasien?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_cara_berjalan"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_cara_berjalan" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="0">Normal/ bed rest/ kursi roda</option>
-                                                    <option value="20">Terganggu</option>
-                                                    <option value="10">Lemah</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '0' ? 'selected' : '' }}>Normal/ bed rest/ kursi roda</option>
+                                                    <option value="20" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '20' ? 'selected' : '' }}>Terganggu</option>
+                                                    <option value="10" {{ old('risiko_jatuh_morse_cara_berjalan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_cara_berjalan ?? '') == '10' ? 'selected' : '' }}>Lemah</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Status Mental -->
                                             <div class="mb-3">
                                                 <label class="form-label">Bagaimana status mental pasien?</label>
-                                                <select class="form-select" name="risiko_jatuh_morse_status_mental"
-                                                    onchange="updateConclusion('morse')">
+                                                <select class="form-select" name="risiko_jatuh_morse_status_mental" onchange="updateConclusion('morse')">
                                                     <option value="">pilih</option>
-                                                    <option value="0">Beroroentasi pada kemampuannya</option>
-                                                    <option value="15">Lupa akan keterbatasannya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '0' ? 'selected' : '' }}>Beroroentasi pada kemampuannya</option>
+                                                    <option value="15" {{ old('risiko_jatuh_morse_status_mental', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental ?? '') == '15' ? 'selected' : '' }}>Lupa akan keterbatasannya</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Kesimpulan -->
                                             <div class="conclusion bg-success">
-                                                <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm"></span></p>
-                                                <input type="hidden" name="risiko_jatuh_morse_kesimpulan"
-                                                    id="risiko_jatuh_morse_kesimpulan">
+                                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm">{{ old('risiko_jatuh_morse_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_kesimpulan ?? 'Risiko Rendah') }}</span></p>
+                                                <input type="hidden" name="risiko_jatuh_morse_kesimpulan" id="risiko_jatuh_morse_kesimpulan"
+                                                    value="{{ old('risiko_jatuh_morse_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_kesimpulan ?? '') }}">
                                             </div>
                                         </div>
 
                                         <!-- Form Risiko Skala Humpty Dumpty 3 -->
-                                        <div id="skala_humptyForm" class="risk-form">
+                                        <div id="skala_humptyForm" class="risk-form" style="display: {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '3' ? 'block' : 'none' }}">
                                             <h5 class="mb-4">Penilaian Risiko Skala Humpty Dumpty/ Pediatrik</h5>
+
+                                            <!-- Usia Anak -->
                                             <div class="mb-3">
                                                 <label class="form-label">Usia Anak?</label>
-                                                <select class="form-select" name="risiko_jatuh_pediatrik_usia_anak"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_usia_anak" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4">Dibawah 3 tahun</option>
-                                                    <option value="3">3-7 tahun</option>
-                                                    <option value="2">7-13 tahun</option>
-                                                    <option value="1">Diatas 13 tahun</option>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '4' ? 'selected' : '' }}>Dibawah 3 tahun</option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '3' ? 'selected' : '' }}>3-7 tahun</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '2' ? 'selected' : '' }}>7-13 tahun</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_usia_anak', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak ?? '') == '1' ? 'selected' : '' }}>Diatas 13 tahun</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Jenis Kelamin -->
                                             <div class="mb-3">
                                                 <label class="form-label">Jenis kelamin</label>
-                                                <select class="form-select" name="risiko_jatuh_pediatrik_jenis_kelamin"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_jenis_kelamin" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="2">Laki-laki</option>
-                                                    <option value="1">Perempuan</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '2' ? 'selected' : '' }}>Laki-laki</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_jenis_kelamin', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin ?? '') == '1' ? 'selected' : '' }}>Perempuan</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Diagnosis -->
                                             <div class="mb-3">
                                                 <label class="form-label">Diagnosis</label>
-                                                <select class="form-select" name="risiko_jatuh_pediatrik_diagnosis"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_diagnosis" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4">Diagnosis Neurologis</option>
-                                                    <option value="3">Perubahan oksigennasi (diangnosis
-                                                        respiratorik,
-                                                        dehidrasi, anemia,
-                                                        syncope, pusing, dsb)</option>
-                                                    <option value="2">Gangguan perilaku /psikiatri</option>
-                                                    <option value="1">Diagnosis lainnya</option>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '4' ? 'selected' : '' }}>Diagnosis Neurologis</option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '3' ? 'selected' : '' }}>Perubahan oksigennasi (diangnosis respiratorik, dehidrasi, anemia, syncope, pusing, dsb)</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '2' ? 'selected' : '' }}>Gangguan perilaku /psikiatri</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_diagnosis', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis ?? '') == '1' ? 'selected' : '' }}>Diagnosis lainnya</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Gangguan Kognitif -->
                                             <div class="mb-3">
                                                 <label class="form-label">Gangguan Kognitif</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_gangguan_kognitif"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_gangguan_kognitif" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3">Tidak menyadari keterbatasan dirinya
-                                                    </option>
-                                                    <option value="2">Lupa akan adanya keterbatasan</option>
-                                                    <option value="1">Orientasi baik terhadap dari sendiri
-                                                    </option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '3' ? 'selected' : '' }}>Tidak menyadari keterbatasan dirinya</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '2' ? 'selected' : '' }}>Lupa akan adanya keterbatasan</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_gangguan_kognitif', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_gangguan_kognitif ?? '') == '1' ? 'selected' : '' }}>Orientasi baik terhadap dari sendiri</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Faktor Lingkungan -->
                                             <div class="mb-3">
                                                 <label class="form-label">Faktor Lingkungan</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_faktor_lingkungan"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_faktor_lingkungan" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="4">Riwayat jatuh /bayi diletakkan di tempat
-                                                        tidur
-                                                        dewasa</option>
-                                                    <option value="3">Pasien menggunakan alat bantu /bayi
-                                                        diletakkan
-                                                        di
-                                                        tempat tidur bayi /
-                                                        perabot rumah</option>
-                                                    <option value="2">Pasien diletakkan di tempat tidur</option>
-                                                    <option value="1">Area di luar rumah sakit</option>
+                                                    <option value="4" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '4' ? 'selected' : '' }}>Riwayat jatuh /bayi diletakkan di tempat tidur dewasa</option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '3' ? 'selected' : '' }}>Pasien menggunakan alat bantu /bayi diletakkan di tempat tidur bayi / perabot rumah</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '2' ? 'selected' : '' }}>Pasien diletakkan di tempat tidur</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_faktor_lingkungan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan ?? '') == '1' ? 'selected' : '' }}>Area di luar rumah sakit</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Pembedahan -->
                                             <div class="mb-3">
                                                 <label class="form-label">Pembedahan/ sedasi/ Anestesi</label>
-                                                <select class="form-select" name="risiko_jatuh_pediatrik_pembedahan"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_pembedahan" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3">Dalam 24 jam</option>
-                                                    <option value="2">Dalam 48 jam</option>
-                                                    <option value="1">> 48 jam atau tidak menjalani
-                                                        pembedahan/sedasi/anestesi</option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '3' ? 'selected' : '' }}>Dalam 24 jam</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '2' ? 'selected' : '' }}>Dalam 48 jam</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_pembedahan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan ?? '') == '1' ? 'selected' : '' }}>> 48 jam atau tidak menjalani pembedahan/sedasi/anestesi</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Penggunaan Medika Mentosa -->
                                             <div class="mb-3">
                                                 <label class="form-label">Penggunaan Medika mentosa</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_pediatrik_penggunaan_mentosa"
-                                                    onchange="updateConclusion('humpty')">
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_penggunaan_mentosa" onchange="updateConclusion('humpty')">
                                                     <option value="">pilih</option>
-                                                    <option value="3">Penggunaan multiple: sedative, obat
-                                                        hipnosis,
-                                                        barbiturate, fenotiazi,
-                                                        antidepresan, pencahar, diuretik, narkose</option>
-                                                    <option value="2">Penggunaan salah satu obat diatas</option>
-                                                    <option value="1">Penggunaan medikasi lainnya/tidak ada
-                                                        mediksi
-                                                    </option>
+                                                    <option value="3" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '3' ? 'selected' : '' }}>Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi, antidepresan, pencahar, diuretik, narkose</option>
+                                                    <option value="2" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '2' ? 'selected' : '' }}>Penggunaan salah satu obat diatas</option>
+                                                    <option value="1" {{ old('risiko_jatuh_pediatrik_penggunaan_mentosa', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '') == '1' ? 'selected' : '' }}>Penggunaan medikasi lainnya/tidak ada mediksi</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Kesimpulan -->
                                             <div class="conclusion bg-success">
-                                                <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm"></span></p>
-                                                <input type="hidden" name="risiko_jatuh_pediatrik_kesimpulan"
-                                                    id="risiko_jatuh_pediatrik_kesimpulan">
+                                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm">{{ old('risiko_jatuh_pediatrik_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_kesimpulan ?? 'Risiko Rendah') }}</span></p>
+                                                <input type="hidden" name="risiko_jatuh_pediatrik_kesimpulan" id="risiko_jatuh_pediatrik_kesimpulan"
+                                                    value="{{ old('risiko_jatuh_pediatrik_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_kesimpulan ?? '') }}">
                                             </div>
                                         </div>
 
-                                        <!-- Form Skala Humpty Dumpty 4 -->
-                                        <div id="skala_ontarioForm" class="risk-form">
-                                            <h5 class="mb-4">Penilaian Risiko Jatuh Skala Ontario Modified Stratify
-                                                Sydney/
-                                                Lansia</h5>
+                                        <div id="skala_ontarioForm" class="risk-form" style="display: {{ old('resiko_jatuh_jenis', $asesmen->asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis ?? '') == '4' ? 'block' : 'none' }}">
+                                            <h5 class="mb-4">Penilaian Risiko Jatuh Skala Ontario Modified Stratify Sydney/ Lansia</h5>
 
                                             <!-- 1. Riwayat Jatuh -->
                                             <h6 class="mb-3">1. Riwayat Jatuh</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien datang kerumah sakit karena
-                                                    jatuh?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien datang kerumah sakit karena jatuh?</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_jatuh_saat_masuk_rs" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="6">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="6" {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '6' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_jatuh_saat_masuk_rs', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Pasien memiliki 2 kali atau apakah pasien
-                                                    mengalami
-                                                    jatuh dalam 2
-                                                    bulan terakhir ini/ diagnosis multiple?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Pasien memiliki 2 kali atau apakah pasien mengalami jatuh dalam 2 bulan terakhir ini/ diagnosis multiple?</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="6">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="6" {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '6' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_riwayat_jatuh_2_bulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
                                             <!-- 2. Status Mental -->
                                             <h6 class="mb-3">2. Status Mental</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien bingung? (Tidak dapat membuat
-                                                    keputusan, jaga jarak
-                                                    tempatnya, gangguan daya ingat)</label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_status_bingung"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien bingung? (Tidak dapat membuat keputusan, jaga jarak tempatnya, gangguan daya ingat)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_bingung" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '14' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_bingung', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien disorientasi? (tidak
-                                                    menyadarkan
-                                                    waktu, tempat atau
-                                                    orang)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_status_disorientasi"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien disorientasi? (tidak menyadarkan waktu, tempat atau orang)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_disorientasi" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '14' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_disorientasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_disorientasi ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien mengalami agitasi? (keresahan,
-                                                    gelisah, dan
-                                                    cemas)</label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_status_agitasi"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien mengalami agitasi? (keresahan, gelisah, dan cemas)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_agitasi" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="14">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="14" {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '14' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_status_agitasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_agitasi ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
                                             <!-- 3. Penglihatan -->
                                             <h6 class="mb-3">3. Penglihatan</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien memakai Kacamata? </label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_kacamata"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien memakai Kacamata?</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_kacamata" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_kacamata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kacamata ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien mengalami kelainya
-                                                    penglihatan/buram?</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_kelainan_penglihatan"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien mengalami kelainan penglihatan/buram?</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_kelainan_penglihatan" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_kelainan_penglihatan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kelainan_penglihatan ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien mempunyai glukoma/ katarak/
-                                                    degenerasi
-                                                    makula?</label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_glukoma"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah pasien mempunyai glukoma/ katarak/ degenerasi makula?</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_glukoma" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_glukoma', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_glukoma ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
                                             <!-- 4. Kebiasaan Berkemih -->
                                             <h6 class="mb-3">4. Kebiasaan Berkemih</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah terdapat perubahan perilaku berkemih?
-                                                    (frekuensi, urgensi,
-                                                    inkontinensia, noktura)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_perubahan_berkemih"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Apakah terdapat perubahan perilaku berkemih? (frekuensi, urgensi, inkontinensia, noktura)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_perubahan_berkemih" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '2' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_perubahan_berkemih', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_perubahan_berkemih ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
-                                            <!-- 5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke tempat tidur) -->
-                                            <h6 class="mb-3">5. Transfer (dari tempat tidur ke kursi dan kembali
-                                                lagi ke
-                                                tempat tidur)</h6>
+                                            <!-- 5. Transfer -->
+                                            <h6 class="mb-3">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke tempat tidur)</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Mandiri (boleh menolak saat bantu
-                                                    jatuh)</label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_mandiri"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Mandiri (boleh menolak saat bantu jatuh)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_mandiri" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="0">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_mandiri ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam
-                                                    pengawasan</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_transfer_bantuan_sedikit"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam pengawasan</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_sedikit" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_sedikit', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_sedikit ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Memerlukan bantuan yang nyata (2
-                                                    orang)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_transfer_bantuan_nyata"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Memerlukan bantuan yang nyata (2 orang)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_nyata" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '2' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_nyata', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_nyata ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Tidak dapat duduk dengan seimbang, perlu
-                                                    bantuan
-                                                    total</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_transfer_bantuan_total"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Tidak dapat duduk dengan seimbang, perlu bantuan total</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_total" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="3">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="3" {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '3' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_transfer_bantuan_total', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_transfer_bantuan_total ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
                                             <!-- 6. Mobilitas Pasien -->
                                             <h6 class="mb-3">6. Mobilitas Pasien</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Mandiri (dapat menggunakan alat bantu
-                                                    jalan)</label>
-                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_mandiri"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Mandiri (dapat menggunakan alat bantu jalan)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_mandiri" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="0">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_mandiri', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_mandiri ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">berjalan dengan bantuan 1 orang (verbal/
-                                                    fisik)</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Berjalan dengan bantuan 1 orang (verbal/fisik)</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="1">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="1" {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '1' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_bantuan_1_orang', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Menggunakan kusi roda</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_mobilitas_kursi_roda"
-                                                    onchange="updateConclusion('ontario')">
+                                                <label class="form-label">Menggunakan kursi roda</label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_kursi_roda" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="2">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="2" {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '2' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_kursi_roda', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Imobilisasi</label>
-                                                <select class="form-select"
-                                                    name="risiko_jatuh_lansia_mobilitas_imobilisasi"
-                                                    onchange="updateConclusion('ontario')">
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_imobilisasi" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
-                                                    <option value="3">Ya</option>
-                                                    <option value="0">Tidak</option>
+                                                    <option value="3" {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '3' ? 'selected' : '' }}>Ya</option>
+                                                    <option value="0" {{ old('risiko_jatuh_lansia_mobilitas_imobilisasi', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '') == '0' ? 'selected' : '' }}>Tidak</option>
                                                 </select>
                                             </div>
 
+                                            <!-- Kesimpulan -->
                                             <div class="conclusion bg-success">
-                                                <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm"></span></p>
-                                                <input type="hidden" name="risiko_jatuh_lansia_kesimpulan"
-                                                    id="risiko_jatuh_lansia_kesimpulan">
+                                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm">{{ old('risiko_jatuh_lansia_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kesimpulan ?? 'Risiko Rendah') }}</span></p>
+                                                <input type="hidden" name="risiko_jatuh_lansia_kesimpulan" id="risiko_jatuh_lansia_kesimpulan"
+                                                    value="{{ old('risiko_jatuh_lansia_kesimpulan', $asesmen->asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_kesimpulan ?? '') }}">
                                             </div>
+                                        </div>
                                         </div>
 
                                         <div class="mb-4">
                                             <h6 class="mb-3">Intervensi Risiko Jatuh</h6>
                                             <p class="mb-2">Tambah tindakan intervensi risiko jatuh:</p>
 
+                                            <input type="hidden"
+                                                   id="existingTindakan-risikojatuh"
+                                                   value='{{ optional($asesmen->asesmenKepUmumRisikoJatuh)->risik_jatuh_tindakan ?? '[]' }}'>
+
+
+
                                             <button type="button"
-                                                class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
+                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
+                                                    data-bs-target="#tindakanKeperawatanRisikoJatuhModal">
                                                 <i class="ti-plus"></i> Tambah
                                             </button>
                                             <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
+                                                <!-- Will be populated by JavaScript -->
+                                                {{-- @php
+                                                    $rjtindakan = json_decode($asesmen->asesmenKepUmumRisikoJatuh);
+
+                                                    $rjTindakanEl = '';
+
+                                                    foreach($rjTindakan as $rjt) {
+                                                        $rjTindakanEl .= "<div class='selected-tindakan d-flex align-items-center justify-content-between p-2 border rounded'>
+                                                                            <span>${tindakan}</span>
+                                                                            <input type='hidden' name='risik_jatuh_tindakan[]' value='${id}'>
+                                                                            <button type='button' class='btn btn-sm btn-danger remove-tindakan'>
+                                                                                <i class='ti-trash'></i>
+                                                                            </button>
+                                                                        </div>";
+                                                    }
+                                                @endphp --}}
                                             </div>
                                         </div>
                                     </div>

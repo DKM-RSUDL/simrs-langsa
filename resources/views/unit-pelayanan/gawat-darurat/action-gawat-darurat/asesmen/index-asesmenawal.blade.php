@@ -105,7 +105,6 @@
                         class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </button>
-                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
                     <a href="{{ route('asesmen-keperawatan.edit', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -127,6 +126,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
 <style>
     #asesmenList .list-group-item:nth-child(even) {
