@@ -617,6 +617,7 @@ Route::middleware('auth')->group(function () {
                             Route::name('resume')->group(function () {
                                 Route::prefix('/{urut_masuk}/resume')->group(function () {
                                     Route::post('/validasi', 'validasiResume')->name('.validasi');
+                                    Route::get('/{data}/pdf', 'pdf')->name('.pdf');
                                 });
                             });
                         });

@@ -498,7 +498,7 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
             ])
-            ->findOrFail($id);
+                ->findOrFail($id);
 
             // Ambil data medis pasien
             $dataMedis = Kunjungan::with('pasien')
@@ -551,19 +551,19 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
             ])
-            ->where('id', $id)
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->firstOrFail();
+                ->where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
 
-            // dd($asesmen);
 
             $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
-                                ->where('tgl_masuk', $tgl_masuk)
-                                ->firstOrFail();
+                ->where('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
 
-            // Load required data for dropdowns
-            $formData = [
+            $data = [
+                'asesmen'   => $asesmen,
+                'dataMedis' => $dataMedis,
                 'pekerjaan' => Pekerjaan::all(),
                 'faktorPemberat' => RmeFaktorPemberat::all(),
                 'faktorPeringan' => RmeFaktorPeringan::all(),
@@ -573,9 +573,7 @@ class AsesmenKeperawatanController extends Controller
                 'jenisNyeri' => RmeJenisNyeri::all()
             ];
 
-            return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit',
-                array_merge(compact('asesmen', 'dataMedis'), $formData));
-
+            return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit', $data);
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data asesmen tidak ditemukan');
         } catch (\Exception $e) {
@@ -802,7 +800,6 @@ class AsesmenKeperawatanController extends Controller
             ]);
 
             return $pdf->stream("asesmen-keperawatan-{$id}-print-pdf.pdf");
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -810,5 +807,4 @@ class AsesmenKeperawatanController extends Controller
             ], 500);
         }
     }
-
 }

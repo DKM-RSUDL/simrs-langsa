@@ -344,6 +344,20 @@
                         </div>
 
                         <div class="mt-3">
+                            <strong class="fw-bold">Anjuran/Follow up</strong>
+
+                            <div class="form-group">
+                                <label for="anjuran_diet" class="form-label">Diet</label>
+                                <textarea class="form-control" id="anjuran_diet" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="anjuran_edukasi" class="form-label">Edukasi</label>
+                                <textarea class="form-control" id="anjuran_edukasi" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
                             <strong class="fw-bold">Tindak Lanjut</strong>
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
@@ -417,8 +431,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
-                    Print</button>
+                <a href="{{ route('resume.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($dataResume->id)]) }}" target="_blank" class="btn btn-sm btn-info">
+                    <i class="bi bi-printer"></i>
+                    Print
+                </a>
                 <button type="button" class="btn btn-sm btn-primary" id="update">Ubah</button>
                 <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -667,6 +683,9 @@
             formData.append('tgl_pulang', tglPulangTL);
             formData.append('jam_pulang', jamPulangTL);
             formData.append('alasan_pulang', alasanPulangTL);
+
+            formData.append('anjuran_diet', $('#anjuran_diet').val().trim());
+            formData.append('anjuran_edukasi', $('#anjuran_edukasi').val().trim());
 
             formData.append('tindak_lanjut_name', tindakLanjutElement.val());
             formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));

@@ -26,9 +26,9 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Tanggal Asesmen</label>
-                                            <input type="date" name="tgl_masuk" id="tgl_asesmen_keperawatan"
+                                            <input type="date" name="waktu_asesmen" id="tgl_asesmen_keperawatan"
                                                 class="form-control"
-                                                value="{{ old('tgl_masuk', date('Y-m-d', strtotime($asesmen->tgl_masuk))) }}">
+                                                value="{{ old('waktu_asesmen', date('Y-m-d', strtotime($asesmen->waktu_asesmen))) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">

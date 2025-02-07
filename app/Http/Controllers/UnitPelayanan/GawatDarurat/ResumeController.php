@@ -19,6 +19,7 @@ use App\Models\SegalaOrder;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -295,6 +296,8 @@ class ResumeController extends Controller
             'icd_10' => $newIcd10,
             'icd_9' => $newIcd9,
             'alergi' => $newAlergi,
+            'anjuran_diet' => $request->anjuran_diet,
+            'anjuran_edukasi' => $request->anjuran_edukasi,
             // 'status' => 1,
             'user_validasi' => Auth::id(),
         ]);
@@ -360,6 +363,33 @@ class ResumeController extends Controller
                 'data'      => []
             ]);
         }
+    }
+
+    public function pdf($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
+    {
+        $resumeId = decrypt($idEncrypt);
+        $resume = RMEResume::with(['pasien', 'rmeResumeDet', 'unit'])
+            ->where('id', $resumeId)
+            ->first();
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 3)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (empty($resume)) return back()->with('error', 'Gagal menemukan data resume !');
+
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact('resume', 'dataMedis'))
+            ->setPaper('a4', 'potrait');
+        return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
     }
 
 

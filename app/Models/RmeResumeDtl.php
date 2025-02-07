@@ -23,7 +23,7 @@ class RmeResumeDtl extends Model
         'unit_rawat_inap',
         'rs_rujuk',
         'rs_rujuk_bagian',
-        'tanggal_pulang',
+        'tgl_pulang',
         'jam_pulang',
         'alasan_pulang'
     ];

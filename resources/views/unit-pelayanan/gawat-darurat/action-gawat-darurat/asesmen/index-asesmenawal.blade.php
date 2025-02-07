@@ -113,7 +113,6 @@
                     ]) }}" class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit') --}}
                 @endif
             </div>
         </li>
@@ -124,9 +123,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.show')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
-@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
 <style>
     #asesmenList .list-group-item:nth-child(even) {
