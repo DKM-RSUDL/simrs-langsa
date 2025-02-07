@@ -91,10 +91,14 @@
                     </button>
                     @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
-                    <a href="#" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('asesmen-keperawatan.edit', [
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'id' => $item->id
+                    ]) }}" class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit')
+                    {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit') --}}
                 @endif
             </div>
         </li>
