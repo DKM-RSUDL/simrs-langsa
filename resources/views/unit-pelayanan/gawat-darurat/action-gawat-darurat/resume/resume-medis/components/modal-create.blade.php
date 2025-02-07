@@ -225,7 +225,7 @@
                             </div>
 
                             <div class="mt-3">
-                                <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
+                                <strong class="fw-bold">Hasil Pemeriksaan Penunjang</strong>
                                 <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
