@@ -119,6 +119,25 @@ class AsesmenController extends Controller
             // Parse tanggal tanpa waktu
             $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
 
+            // Mengambil data kunjungan dan tanggal triase terkait
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=',
+                    't.kd_pasien'
+                );
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=',
+                    't.tgl_transaksi'
+                );
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
             $asesmen = RmeAsesmen::with([
                 'menjalar',
                 'frekuensiNyeri',
@@ -189,7 +208,8 @@ class AsesmenController extends Controller
                         'tindaklanjut' => $asesmen->tindaklanjut,
                         'pemeriksaan_fisik' => $pemeriksaanFisik
 
-                    ]
+                    ],
+                    'dataMedis' => $dataMedis
                 ]
             ]);
         } catch (\Exception $e) {
@@ -865,6 +885,22 @@ class AsesmenController extends Controller
     public function print($kd_pasien, $tgl_masuk, $id)
     {
 
+        // dd($tgl_masuk);
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
         // Ambil data asesmen
         $asesmen = RmeAsesmen::with([
             'pasien',
@@ -882,8 +918,38 @@ class AsesmenController extends Controller
             ->where('id', $id)
             ->first();
 
+        $triaselabel ='-';
+        $triasename = '-';
+        
+        switch ($dataMedis->kd_triase) {
+            case '1':
+                $triaselabel = 'FALSE EMERGENCY';
+                $triasename = 'HIJAU';
+                break;
+            case '2':
+                $triaselabel = 'URGNET';
+                $triasename = 'KUNING';
+                break;
+            case '3':
+                $triaselabel = 'EMERGENCY';
+                $triasename = 'MERAH';
+                break;
+            case '4':
+                $triaselabel = 'RESUSITASI';
+                $triasename = 'MERAH';
+                break;
+            case '5':
+                $triaselabel = 'DOA';
+                $triasename = 'HITAM';
+                break;
+        }
+
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
             'asesmen' => $asesmen,
+            'triase' => [
+                'label' => $triaselabel,
+                'warna' => $triasename,
+            ]
 
         ]);
 
