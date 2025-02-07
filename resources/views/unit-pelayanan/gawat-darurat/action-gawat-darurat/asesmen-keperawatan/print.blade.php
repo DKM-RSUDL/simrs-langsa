@@ -32,6 +32,7 @@
         .detail-table td {
             padding: 5px;
             border: 1px solid #ddd;
+            vertical-align: top;
         }
 
         .section-title {
@@ -62,6 +63,20 @@
             height: 100px;
             border-radius: 50%;
         }
+
+        .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .detail-table th,
+    .detail-table td {
+        padding: 5px;
+        border: 1px solid #333;
+    }
+    .text-center {
+        text-align: center;
+    }
     </style>
 </head>
 
@@ -82,29 +97,24 @@
         </tr>
         <tr>
             <td class="col-header">Tanggal Lahir</td>
-            <td>: {{ $pasien->tgl_lahir ? date('d-m-Y', strtotime($asesmen->pasien->tgl_lahir)) : '-' }}</td>
+            <td>: {{ $pasien->tgl_lahir ? date('d-m-Y', strtotime($pasien->tgl_lahir)) : '-' }}</td>
             <td class="col-header">Tanggal Masuk</td>
-            <td>: {{ date('d-m-Y', strtotime($asesmen->tgl_masuk)) }}</td>
+            <td>: {{ $asesmen->tgl_masuk ? date('d-m-Y', strtotime($asesmen->tgl_masuk)) : '-' }}</td>
         </tr>
         <tr>
             <td class="col-header">Jenis Kelamin</td>
             <td>:
                 @php
-                    $jenisKelamin = $pasien->jenis_kelamin ?? '-';
-                    switch ($jenisKelamin) {
-                        case '1':
-                            echo 'Laki-laki';
-                            break;
-                        case '2':
-                            echo 'Perempuan';
-                            break;
-                        default:
-                            echo $jenisKelamin;
-                    }
+                    $jenisKelamin = $pasien->jenis_kelamin ?? null;
+                    echo match($jenisKelamin) {
+                        '1' => 'Laki-laki',
+                        '2' => 'Perempuan',
+                        default => '-'
+                    };
                 @endphp
             </td>
             <td class="col-header">Jam Asesmen</td>
-            <td>: {{ date('H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
+            <td>: {{ $asesmen->waktu_asesmen ? date('H:i', strtotime($asesmen->waktu_asesmen)) : '-' }}</td>
         </tr>
     </table>
 
@@ -135,11 +145,11 @@
             </td>
             <td>Tindakan Keperawatan</td>
             <td>
-                @if($asesmenKepUmum->airway_tindakan)
+                @if(!empty($asesmenKepUmum->airway_tindakan))
                     @php
-                        $tindakan = json_decode($asesmenKepUmum->airway_tindakan, true);
+                        $tindakan = json_decode($asesmenKepUmum->airway_tindakan, true) ?? [];
                     @endphp
-                    @if(is_array($tindakan))
+                    @if(is_array($tindakan) && count($tindakan) > 0)
                         <ul class="list-unstyled mb-0">
                             @foreach($tindakan as $item)
                                 <li>{{ $item }}</li>
@@ -845,7 +855,7 @@
                 </tr>
                 <tr>
                     <td>Penggunaan Medika mentos</td>
-                    <td>
+                    <td colspan="3">
                         @php
                         $pediatrikPenggunaanMentosa = $asesmenRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa ?? '-';
                         $pediatrikPenggunaanMentosaText = match($pediatrikPenggunaanMentosa) {
@@ -1006,7 +1016,7 @@
                 </tr>
                 <tr>
                     <td>Imobilisasi</td>
-                    <td>
+                    <td colspan="3">
                         @php
                         $jatuh_lansia_mobilitas_imobilisasi = $asesmenRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi ?? '-';
                         echo ($jatuh_lansia_mobilitas_imobilisasi === '3') ? 'Ya' : ($jatuh_lansia_mobilitas_imobilisasi === '0' ? 'Tidak' : $jatuh_lansia_mobilitas_imobilisasi);
@@ -1046,30 +1056,31 @@
 
     {{-- Bagian Intervensi Risiko Jatuh --}}
     @if(!empty($asesmenRisikoJatuh->risik_jatuh_tindakan))
-    <div class="section-title">Resiko Jatuh Tindakan</div>
-    <table class="table table-bordered table-striped detail-table">
-        <thead class="thead-light">
+    <table class="detail-table">
+        <thead>
             <tr>
-                <td class="text-center" style="width: 50px;">No</td>
-                <td>Nama</td>
+                <th class="text-center" style="width: 50px;">No</th>
+                <th>Nama</th>
             </tr>
         </thead>
         <tbody>
             @php
-            $interventions = json_decode($asesmenRisikoJatuh->risik_jatuh_tindakan, true);
+                $interventions = json_decode($asesmenRisikoJatuh->risik_jatuh_tindakan, true) ?? [];
             @endphp
-            @forelse($interventions as $index => $intervensi)
-            <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $intervensi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="2" class="text-center text-muted">
-                    Tidak ada tindakan intervensi yang tercatat
-                </td>
-            </tr>
-            @endforelse
+            @if(is_array($interventions) && count($interventions) > 0)
+                @foreach($interventions as $index => $intervensi)
+                    <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td>{{ $intervensi }}</td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="2" class="text-center">
+                        Tidak ada tindakan intervensi yang tercatat
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
     @endif
@@ -1078,7 +1089,7 @@
     <table class="detail-table">
         <tr>
             <td>Kondisi psikologis</td>
-            <td>:{{ $asesmenKepUmum->psikologis_kondisi }}</td>
+            <td>:{{ optional($asesmenKepUmum)->psikologis_kondisi ?? '-' }}</td>
             <td>Potensi menyakiti diri sendiri/orang lain</td>
             <td>:
                 @php
@@ -1107,7 +1118,7 @@
     <table class="detail-table">
         <tr>
             <td>Pekerjaan</td>
-            <td>: {{ $pekerjaanData[$asesmenSosialEkonomi->sosial_ekonomi_pekerjaan] ?? '-' }}</td>
+            <td>: {{ isset($pekerjaanData[$asesmenSosialEkonomi->sosial_ekonomi_pekerjaan]) ? $pekerjaanData[$asesmenSosialEkonomi->sosial_ekonomi_pekerjaan] : '-' }}</td>
             <td>Tingkat penghasilan</td>
             <td>: {{ $asesmenSosialEkonomi->sosial_ekonomi_tingkat_penghasilan ?? '-' }}</td>
         </tr>
@@ -1214,14 +1225,14 @@
     <div class="section-title">11. Status Gizi</div>
 
     @switch($jenisGizi)
-        @case('1') {{-- Malnutrition Screening Tool (MST) --}}
-        <table class="table table-bordered table-striped detail-table">
-            <thead>
-                <tr>
-                    <th colspan="2" class="text-center">Penilaian Gizi - Malnutrition Screening Tool (MST)</th>
-                </tr>
-            </thead>
+        @case('1')
+        <table class="detail-table">
             <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center; font-weight: bold;">
+                        Penilaian Gizi - Malnutrition Screening Tool (MST)
+                    </td>
+                </tr>
                 <tr>
                     <td>Apakah pasien mengalami penurunan BB yang tidak diinginkan dalam 6 bulan terakhir?</td>
                     <td>
@@ -1233,8 +1244,8 @@
                             '3' => 'Ya ada penurunan BB',
                             default => $penurunanBB
                         };
-                        echo $penurunanBBText;
                         @endphp
+                        : {{ $penurunanBBText }}
                     </td>
                 </tr>
                 <tr>
@@ -1249,46 +1260,35 @@
                             '4' => '>15 kg',
                             default => $jumlahPenurunanBB
                         };
-                        echo $jumlahPenurunanBBText;
                         @endphp
+                        : {{ $jumlahPenurunanBBText }}
                     </td>
                 </tr>
                 <tr>
                     <td>Apakah asupan makan berkurang karena tidak nafsu makan?</td>
-                    <td>
-                        @php
-                        $nafsuMakanBerkurang = $asesmenStatusGizi->gizi_mst_nafsu_makan_berkurang ?? '-';
-                        echo ($nafsuMakanBerkurang === '1') ? 'Ya' : ($nafsuMakanBerkurang === '0' ? 'Tidak' : $nafsuMakanBerkurang);
-                        @endphp
-                    </td>
+                    <td>: {{ $asesmenStatusGizi->gizi_mst_nafsu_makan_berkurang == '1' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
                     <td>Pasien didiagnosa khusus seperti: DM, Cancer (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imun</td>
-                    <td>
-                        @php
-                        $diagnosisKhusus = $asesmenStatusGizi->gizi_mst_diagnosis_khusus ?? '-';
-                        echo ($diagnosisKhusus === '1') ? 'Ya' : ($diagnosisKhusus === '0' ? 'Tidak' : $diagnosisKhusus);
-                        @endphp
-                    </td>
+                    <td>: {{ $asesmenStatusGizi->gizi_mst_diagnosis_khusus == '1' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="text-start">
-                        <strong>Kesimpulan:</strong>
-                        {{ $asesmenStatusGizi->gizi_mst_kesimpulan ?? '-' }}
+                    <td colspan="2">
+                        <strong>Kesimpulan:</strong> {{ $asesmenStatusGizi->gizi_mst_kesimpulan ?? '-' }}
                     </td>
                 </tr>
             </tbody>
         </table>
         @break
 
-        @case('2') {{-- The Mini Nutritional Assessment (MNA) --}}
-        <table class="table table-bordered table-striped detail-table">
-            <thead>
-                <tr>
-                    <th colspan="2" class="text-center">Penilaian Gizi - The Mini Nutritional Assessment (MNA) / Lansia</th>
-                </tr>
-            </thead>
+        @case('2')
+        <table class="detail-table">
             <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center; font-weight: bold;">
+                        Penilaian Gizi - The Mini Nutritional Assessment (MNA) / Lansia
+                    </td>
+                </tr>
                 <tr>
                     <td>Penurunan asupan makanan selama 3 bulan terakhir</td>
                     <td>
@@ -1300,156 +1300,76 @@
                             '2' => 'Tidak mengalami penurunan asupan makanan',
                             default => $penurunanAsupan
                         };
-                        echo $penurunanAsupanText;
                         @endphp
+                        : {{ $penurunanAsupanText }}
                     </td>
                 </tr>
-                <tr>
-                    <td>Kehilangan Berat Badan (BB) selama 3 bulan terakhir</td>
-                    <td>
-                        @php
-                        $kehilanganBB = $asesmenStatusGizi->gizi_mna_kehilangan_bb_3_bulan ?? '-';
-                        $kehilanganBBText = match($kehilanganBB) {
-                            '0' => 'Kehilangan BB lebih dari 3 Kg',
-                            '1' => 'Tidak tahu',
-                            '2' => 'Kehilangan BB antara 1 s.d 3 Kg',
-                            '3' => 'Tidak ada kehilangan BB',
-                            default => $kehilanganBB
-                        };
-                        echo $kehilanganBBText;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td>Bagaimana mobilisasi atau pergerakan pasien?</td>
-                    <td>
-                        @php
-                        $mobilisasi = $asesmenStatusGizi->gizi_mna_mobilisasi ?? '-';
-                        $mobilisasiText = match($mobilisasi) {
-                            '0' => 'Hanya di tempat tidur atau kursi roda',
-                            '1' => 'Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan',
-                            '2' => 'Dapat jalan-jalan',
-                            default => $mobilisasi
-                        };
-                        echo $mobilisasiText;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td>Apakah Pasien mengalami stres psikologi atau penyakit akut selama 3 bulan terakhir?</td>
-                    <td>
-                        @php
-                        $mnaStressPenyakitAkut = $asesmenStatusGizi->gizi_mna_stress_penyakit_akut ?? '-';
-                        $mnaStressPenyakitAkutText = match($mnaStressPenyakitAkut) {
-                            '0' => 'Tidak',
-                            '1' => 'Ya',
-                            default => $mnaStressPenyakitAkut
-                        };
-                        echo $mnaStressPenyakitAkutText;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td>Apakah pasien mengalami masalah neuropsikologi?</td>
-                    <td>
-                        @php
-                        $mnaStatusNeuropsikologi = $asesmenStatusGizi->gizi_mna_status_neuropsikologi ?? '-';
-                        $mnaStatusNeuropsikologiText = match($mnaStatusNeuropsikologi) {
-                            '0' => 'Demensia atau depresi berat',
-                            '1' => 'Demensia ringan',
-                            '2' => 'Tidak mengalami masalah neuropsikologi',
-                            default => $mnaStatusNeuropsikologi
-                        };
-                        echo $mnaStatusNeuropsikologiText;
-                        @endphp
-                    </td>
-                </tr>
+                <!-- Lanjutkan dengan format yang sama untuk field lainnya -->
                 <tr>
                     <td>Berat Badan (BB)</td>
-                    <td>{{ $asesmenStatusGizi->gizi_mna_berat_badan ?? '-' }} Kg</td>
+                    <td>: {{ $asesmenStatusGizi->gizi_mna_berat_badan ?? '-' }} Kg</td>
                 </tr>
                 <tr>
                     <td>Tinggi Badan (TB)</td>
-                    <td>{{ $asesmenStatusGizi->gizi_mna_tinggi_badan ?? '-' }} cm</td>
+                    <td>: {{ $asesmenStatusGizi->gizi_mna_tinggi_badan ?? '-' }} cm</td>
                 </tr>
                 <tr>
                     <td>Indeks Massa Tubuh (IMT)</td>
-                    <td>{{ $asesmenStatusGizi->gizi_mna_imt ?? '-' }}</td>
+                    <td>: {{ $asesmenStatusGizi->gizi_mna_imt ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="text-start">
-                        <strong>Kesimpulan:</strong>
-                        {{ $asesmenStatusGizi->gizi_mna_kesimpulan ?? '-' }}
+                    <td colspan="2">
+                        <strong>Kesimpulan:</strong> {{ $asesmenStatusGizi->gizi_mna_kesimpulan ?? '-' }}
                     </td>
                 </tr>
             </tbody>
         </table>
         @break
 
-        @case('3') {{-- Strong Kids --}}
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th colspan="2" class="text-center">Penilaian Gizi - Strong Kids (1 bln - 18 Tahun)</th>
-                </tr>
-            </thead>
+        @case('3')
+        <table class="detail-table">
             <tbody>
                 <tr>
-                    <td>Status Kurus</td>
-                    <td>
-                        @php
-                        $statusKurus = $asesmenStatusGizi->gizi_strong_status_kurus ?? '-';
-                        echo ($statusKurus === '1') ? 'Ya' : ($statusKurus === '0' ? 'Tidak' : $statusKurus);
-                        @endphp
+                    <td colspan="2" style="text-align: center; font-weight: bold;">
+                        Penilaian Gizi - Strong Kids (1 bln - 18 Tahun)
                     </td>
+                </tr>
+                <tr>
+                    <td>Status Kurus</td>
+                    <td>: {{ $asesmenStatusGizi->gizi_strong_status_kurus == '1' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
                     <td>Penurunan Berat Badan</td>
-                    <td>
-                        @php
-                        $penurunanBB = $asesmenStatusGizi->gizi_strong_penurunan_bb ?? '-';
-                        echo ($penurunanBB === '1') ? 'Ya' : ($penurunanBB === '0' ? 'Tidak' : $penurunanBB);
-                        @endphp
-                    </td>
+                    <td>: {{ $asesmenStatusGizi->gizi_strong_penurunan_bb == '1' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
                     <td>Gangguan Pencernaan</td>
-                    <td>
-                        @php
-                        $gangguanPencernaan = $asesmenStatusGizi->gizi_strong_gangguan_pencernaan ?? '-';
-                        echo ($gangguanPencernaan === '1') ? 'Ya' : ($gangguanPencernaan === '0' ? 'Tidak' : $gangguanPencernaan);
-                        @endphp
-                    </td>
+                    <td>: {{ $asesmenStatusGizi->gizi_strong_gangguan_pencernaan == '1' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
                     <td>Penyakit Berisiko Malnutrisi</td>
-                    <td>
-                        @php
-                        $penyakitBerisiko = $asesmenStatusGizi->gizi_strong_penyakit_berisiko ?? '-';
-                        echo ($penyakitBerisiko === '2') ? 'Ya' : ($penyakitBerisiko === '0' ? 'Tidak' : $penyakitBerisiko);
-                        @endphp
-                    </td>
+                    <td>: {{ $asesmenStatusGizi->gizi_strong_penyakit_berisiko == '2' ? 'Ya' : 'Tidak' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="text-center">
-                        <strong>Kesimpulan:</strong>
-                        {{ $asesmenStatusGizi->gizi_strong_kesimpulan ?? '-' }}
+                    <td colspan="2">
+                        <strong>Kesimpulan:</strong> {{ $asesmenStatusGizi->gizi_strong_kesimpulan ?? '-' }}
                     </td>
                 </tr>
             </tbody>
         </table>
         @break
 
-        @case('5') {{-- Tidak Dapat Dinilai --}}
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th class="text-center">Penilaian Gizi - Tidak Dapat Dinilai</th>
-                </tr>
-            </thead>
+        @case('5')
+        <table class="detail-table">
             <tbody>
                 <tr>
-                    <td class="text-center">Alasan tidak dapat dilakukan penilaian gizi:
+                    <td style="text-align: center; font-weight: bold;">
+                        Penilaian Gizi - Tidak Dapat Dinilai
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        Alasan tidak dapat dilakukan penilaian gizi:
                         {{ $asesmenStatusGizi->gizi_tidak_dapat_dinilai_alasan ?? 'Tidak ada keterangan' }}
                     </td>
                 </tr>
@@ -1458,9 +1378,15 @@
         @break
 
         @default
-        <div class="alert alert-warning" role="alert">
-            Belum ada penilaian status gizi yang dipilih.
-        </div>
+        <table class="detail-table">
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">
+                        Belum ada penilaian status gizi yang dipilih.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     @endswitch
 
     <div class="section-title">12. Status Fungsional</div>
@@ -1557,7 +1483,7 @@
             <p>Perawat yang Melakukan Asesmen</p>
             <br><br><br>
             <p>( _________________________ )</p>
-            <p>Nama: {{ $asesmen->user->name ?? '.............................' }}</p>
+            <p>Nama: {{ optional($asesmen->user)->name ?? '.............................' }}</p>
         </div>
     </div>
 

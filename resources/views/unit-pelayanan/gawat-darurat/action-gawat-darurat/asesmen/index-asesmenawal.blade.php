@@ -105,9 +105,16 @@
                         class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </button>
-                    <a href="#" class="btn btn-secondary btn-sm px-3">
-                        <i class="fas fa-edit me-1"></i> Edit
+                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
+
+                    <a href="{{ route('asesmen-keperawatan.edit', [
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'id' => $item->id
+                    ]) }}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
                     </a>
+                    {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit') --}}
                 @endif
             </div>
         </li>

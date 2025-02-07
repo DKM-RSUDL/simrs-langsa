@@ -538,62 +538,7 @@ class AsesmenKeperawatanController extends Controller
 
     public function edit($kd_pasien, $tgl_masuk, $id)
     {
-        // Fetch the existing asesmen record
-        $asesmen = RmeAsesmen::find($id);
-        $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
-                            ->where('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Get additional data needed for dropdowns/forms
-        $pekerjaan = Pekerjaan::all();
-        $faktorPemberat = RmeFaktorPemberat::all();
-        $faktorPeringan = RmeFaktorPeringan::all();
-        $kualitasNyeri = RmeKualitasNyeri::all();
-        $frekuensiNyeri = RmeFrekuensiNyeri::all();
-        $menjalar = RmeMenjalar::all();
-        $jenisNyeri = RmeJenisNyeri::all();
-
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit', compact(
-            'asesmen',
-            'dataMedis',
-            'faktorPemberat',
-            'kualitasNyeri',
-            'menjalar',
-            'faktorPeringan',
-            'frekuensiNyeri',
-            'jenisNyeri',
-            'pekerjaan'
-        ));
-    }
-
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
-    {
-        // Find existing record
-        $asesmen = RmeAsesmen::find($id);
-
-        // Update the record
-        $asesmen->kd_pasien = $kd_pasien;
-        $asesmen->kd_unit = 3;
-        $asesmen->tgl_masuk = $tgl_masuk;
-        $asesmen->urut_masuk = $request->urut_masuk;
-        $asesmen->user_id = Auth::id();
-        $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
-        $asesmen->kategori = 2;
-        $asesmen->sub_kategori = 1;
-
-        // Add all other fields that need to be updated
-        $asesmen->update($request->except(['_token', '_method']));
-
-        return redirect()->route('unit-pelayanan.gawat-darurat.pelayanan.asesmen-keperawatan.index', [
-            'kdPasien' => $kd_pasien,
-            'tglMasuk' => $tgl_masuk
-        ])->with('success', 'Asesmen updated successfully');
-    }
-
-    public function generatePDF($kd_pasien, $tgl_masuk, $id)
-    {
         try {
-            // Ambil data asesmen
             $asesmen = RmeAsesmen::with([
                 'user',
                 'asesmenKepUmum',
@@ -605,7 +550,201 @@ class AsesmenKeperawatanController extends Controller
                 'asesmenKepUmumRisikoJatuh',
                 'asesmenKepUmumSosialEkonomi',
                 'asesmenKepUmumGizi'
-            ])->findOrFail($id);
+            ])
+            ->where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->firstOrFail();
+
+            $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
+                                ->where('tgl_masuk', $tgl_masuk)
+                                ->firstOrFail();
+
+            // Load required data for dropdowns
+            $formData = [
+                'pekerjaan' => Pekerjaan::all(),
+                'faktorPemberat' => RmeFaktorPemberat::all(),
+                'faktorPeringan' => RmeFaktorPeringan::all(),
+                'kualitasNyeri' => RmeKualitasNyeri::all(),
+                'frekuensiNyeri' => RmeFrekuensiNyeri::all(),
+                'menjalar' => RmeMenjalar::all(),
+                'jenisNyeri' => RmeJenisNyeri::all()
+            ];
+
+            return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit',
+                array_merge(compact('asesmen', 'dataMedis'), $formData));
+
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data asesmen tidak ditemukan');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat memuat data');
+        }
+    }
+
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
+    {
+        // Find the existing asesmen
+        $asesmen = RmeAsesmen::findOrFail($id);
+
+        // Update RmeAsesmen
+        $asesmen->user_id = Auth::id();
+        $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+        $asesmen->save();
+
+        // Update RmeAsesmenKepUmumCirculation
+        $asesmenKepUmumCirculation = RmeAsesmenKepUmumCirculation::where('id_asesmen', $asesmen->id)->first();
+        if (!$asesmenKepUmumCirculation) {
+            $asesmenKepUmumCirculation = new RmeAsesmenKepUmumCirculation();
+            $asesmenKepUmumCirculation->id_asesmen = $asesmen->id;
+        }
+
+        $asesmenKepUmumCirculation->circulation_akral = $request->circulation_akral;
+        $asesmenKepUmumCirculation->circulation_pucat = $request->circulation_pucat;
+        $asesmenKepUmumCirculation->circulation_cianosis = $request->circulation_cianosis;
+        $asesmenKepUmumCirculation->circulation_kapiler = $request->circulation_kapiler;
+        $asesmenKepUmumCirculation->circulation_kelembapan_kulit = $request->circulation_kelembapan_kulit;
+        $asesmenKepUmumCirculation->circulation_turgor = $request->circulation_turgor;
+        $asesmenKepUmumCirculation->circulation_transfusi = $request->circulation_transfusi;
+        $asesmenKepUmumCirculation->circulation_transfusi_jumlah = $request->circulation_transfusi_jumlah;
+        $asesmenKepUmumCirculation->circulation_lain = $request->circulation_lain;
+
+        // Handle Diagnosis Perfusi
+        if ($request->has('circulation_diagnosis_perfusi')) {
+            $perfusi_selected = $request->circulation_diagnosis_perfusi;
+            $perfusi_type = $request->circulation_diagnosis_perfusi_type;
+
+            $asesmenKepUmumCirculation->circulation_diagnosis_perfusi = in_array('perfusi_jaringan_perifer_tidak_efektif', $perfusi_selected) ?
+                ($perfusi_type == 'aktual' ? 1 : ($perfusi_type == 'risiko' ? 2 : null)) : null;
+        }
+
+        // Handle Diagnosis Defisit
+        if ($request->has('circulation_diagnosis_defisit')) {
+            $defisit_selected = $request->circulation_diagnosis_defisit;
+            $defisit_type = $request->circulation_diagnosis_defisit_type;
+
+            $asesmenKepUmumCirculation->circulation_diagnosis_defisit = in_array('defisit_volume_cairan', $defisit_selected) ?
+                ($defisit_type == 'aktual' ? 1 : ($defisit_type == 'risiko' ? 2 : null)) : null;
+        }
+
+        // Handle Tindakan Keperawatan
+        $asesmenKepUmumCirculation->circulation_tindakan = !empty($request->circulation_tindakan_keperawatan)
+            ? json_encode($request->circulation_tindakan_keperawatan)
+            : null;
+
+        $asesmenKepUmumCirculation->save();
+
+        return redirect()->route('asesmen.index', [
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk
+        ])->with(['success' => 'Berhasil mengupdate asesmen keperawatan umum !']);
+    }
+
+    // public function generatePDF($kd_pasien, $tgl_masuk, $id)
+    // {
+    //     try {
+    //         // Ambil data asesmen
+    //         $asesmen = RmeAsesmen::with([
+    //             'user',
+    //             'asesmenKepUmum',
+    //             'asesmenKepUmumBreathing',
+    //             'asesmenKepUmumCirculation',
+    //             'asesmenKepUmumDisability',
+    //             'asesmenKepUmumExposure',
+    //             'asesmenKepUmumSkalaNyeri',
+    //             'asesmenKepUmumRisikoJatuh',
+    //             'asesmenKepUmumSosialEkonomi',
+    //             'asesmenKepUmumGizi'
+    //         ])->findOrFail($id);
+
+    //         // Ambil data pasien dan kunjungan
+    //         $dataMedis = Kunjungan::with('pasien')
+    //             ->where('kd_pasien', $kd_pasien)
+    //             ->where('tgl_masuk', $tgl_masuk)
+    //             ->first();
+
+    //         if (!$dataMedis) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Data kunjungan tidak ditemukan untuk pasien ini.'
+    //             ], 404);
+    //         }
+
+    //         // Pastikan tanggal tidak null
+    //         $asesmenTanggal = $asesmen->created_at ?? now(); // Jika null, gunakan tanggal saat ini
+    //         $tglMasukFormatted = $dataMedis->tgl_masuk ?? now(); // Jika null, gunakan tanggal saat ini
+
+    //         $faktorPemberatData = RmeFaktorPemberat::all()->pluck('name', 'id');
+    //         $kualitasNyeriData = RmeKualitasNyeri::all()->pluck('name', 'id');
+    //         $menjalarData = RmeMenjalar::all()->pluck('name', 'id');
+    //         $faktorPeringanData = RmeFaktorPeringan::all()->pluck('name', 'id');
+    //         $frekuensiNyeriData = RmeFrekuensiNyeri::all()->pluck('name', 'id');
+    //         $jenisNyeriData = RmeJenisNyeri::all()->pluck('name', 'id');
+    //         $pekerjaanData = Pekerjaan::all()->pluck('pekerjaan', 'kd_pekerjaan');
+
+    //         // Generate PDF
+    //         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print', [
+    //             'asesmen' => $asesmen,
+    //             'pasien' => $dataMedis->pasien,
+    //             'dataMedis' => $dataMedis,
+    //             'asesmenKepUmum' => $asesmen->asesmenKepUmum,
+    //             'asesmenBreathing' => $asesmen->asesmenKepUmumBreathing,
+    //             'asesmenCirculation' => $asesmen->asesmenKepUmumCirculation,
+    //             'asesmenDisability' => $asesmen->asesmenKepUmumDisability,
+    //             'asesmenExposure' => $asesmen->asesmenKepUmumExposure,
+    //             'asesmenSkalaNyeri' => $asesmen->asesmenKepUmumSkalaNyeri,
+    //             'asesmenRisikoJatuh' => $asesmen->asesmenKepUmumRisikoJatuh,
+    //             'asesmenSosialEkonomi' => $asesmen->asesmenKepUmumSosialEkonomi,
+    //             'asesmenStatusGizi' => $asesmen->asesmenKepUmumGizi,
+    //             'asesmenTanggal' => $asesmenTanggal,
+    //             'tglMasukFormatted' => $tglMasukFormatted,
+    //             // All Item
+    //             'faktorPemberatData' => $faktorPemberatData,
+    //             'kualitasNyeriData' => $kualitasNyeriData,
+    //             'menjalarData' => $menjalarData,
+    //             'faktorPeringanData' => $faktorPeringanData,
+    //             'frekuensiNyeriData' => $frekuensiNyeriData,
+    //             'jenisNyeriData' => $jenisNyeriData,
+    //             'pekerjaanData' => $pekerjaanData,
+    //         ]);
+
+    //         // Set konfigurasi PDF
+    //         $pdf->setPaper('a4', 'portrait');
+    //         $pdf->setOptions([
+    //             'isHtml5ParserEnabled' => true,
+    //             'isRemoteEnabled' => true,
+    //             'defaultFont' => 'sans-serif'
+    //         ]);
+
+    //         // Generate nama file
+    //         // $filename = "asesmen_keperawatan_{$kd_pasien}_" . now()->format('Ymd_His') . ".pdf";
+
+    //         // return $pdf->download($filename);
+    //         return $pdf->stream("asesmen-keperawatan-{$id}-print-pdf.pdf");
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Gagal generate PDF: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+    public function generatePDF($kd_pasien, $tgl_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen dengan eager loading
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'asesmenKepUmum',
+                'asesmenKepUmumBreathing',
+                'asesmenKepUmumCirculation',
+                'asesmenKepUmumDisability',
+                'asesmenKepUmumExposure',
+                'asesmenKepUmumSkalaNyeri',
+                'asesmenKepUmumRisikoJatuh',
+                'asesmenKepUmumSosialEkonomi',
+                'asesmenKepUmumGizi'
+            ])->where('id', $id)->first();
 
             // Ambil data pasien dan kunjungan
             $dataMedis = Kunjungan::with('pasien')
@@ -613,42 +752,36 @@ class AsesmenKeperawatanController extends Controller
                 ->where('tgl_masuk', $tgl_masuk)
                 ->first();
 
-            if (!$dataMedis) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data kunjungan tidak ditemukan untuk pasien ini.'
-                ], 404);
-            }
+            // Initialize collections with empty arrays if data is null
+            $faktorPemberatData = RmeFaktorPemberat::all()->pluck('name', 'id') ?? collect();
+            $kualitasNyeriData = RmeKualitasNyeri::all()->pluck('name', 'id') ?? collect();
+            $menjalarData = RmeMenjalar::all()->pluck('name', 'id') ?? collect();
+            $faktorPeringanData = RmeFaktorPeringan::all()->pluck('name', 'id') ?? collect();
+            $frekuensiNyeriData = RmeFrekuensiNyeri::all()->pluck('name', 'id') ?? collect();
+            $jenisNyeriData = RmeJenisNyeri::all()->pluck('name', 'id') ?? collect();
+            $pekerjaanData = Pekerjaan::all()->pluck('pekerjaan', 'kd_pekerjaan') ?? collect();
 
-            // Pastikan tanggal tidak null
-            $asesmenTanggal = $asesmen->created_at ?? now(); // Jika null, gunakan tanggal saat ini
-            $tglMasukFormatted = $dataMedis->tgl_masuk ?? now(); // Jika null, gunakan tanggal saat ini
+            // Set default values for dates
+            $asesmenTanggal = optional($asesmen)->created_at ?? now();
+            $tglMasukFormatted = optional($dataMedis)->tgl_masuk ?? now();
 
-            $faktorPemberatData = RmeFaktorPemberat::all()->pluck('name', 'id');
-            $kualitasNyeriData = RmeKualitasNyeri::all()->pluck('name', 'id');
-            $menjalarData = RmeMenjalar::all()->pluck('name', 'id');
-            $faktorPeringanData = RmeFaktorPeringan::all()->pluck('name', 'id');
-            $frekuensiNyeriData = RmeFrekuensiNyeri::all()->pluck('name', 'id');
-            $jenisNyeriData = RmeJenisNyeri::all()->pluck('name', 'id');
-            $pekerjaanData = Pekerjaan::all()->pluck('pekerjaan', 'kd_pekerjaan');
-
-            // Generate PDF
+            // Generate PDF with null checks
             $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print', [
-                'asesmen' => $asesmen,
-                'pasien' => $dataMedis->pasien,
-                'dataMedis' => $dataMedis,
-                'asesmenKepUmum' => $asesmen->asesmenKepUmum,
-                'asesmenBreathing' => $asesmen->asesmenKepUmumBreathing,
-                'asesmenCirculation' => $asesmen->asesmenKepUmumCirculation,
-                'asesmenDisability' => $asesmen->asesmenKepUmumDisability,
-                'asesmenExposure' => $asesmen->asesmenKepUmumExposure,
-                'asesmenSkalaNyeri' => $asesmen->asesmenKepUmumSkalaNyeri,
-                'asesmenRisikoJatuh' => $asesmen->asesmenKepUmumRisikoJatuh,
-                'asesmenSosialEkonomi' => $asesmen->asesmenKepUmumSosialEkonomi,
-                'asesmenStatusGizi' => $asesmen->asesmenKepUmumGizi,
+                'asesmen' => $asesmen ?? null,
+                'pasien' => optional($dataMedis)->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
+                'asesmenKepUmum' => optional($asesmen)->asesmenKepUmum ?? null,
+                'asesmenBreathing' => optional($asesmen)->asesmenKepUmumBreathing ?? null,
+                'asesmenCirculation' => optional($asesmen)->asesmenKepUmumCirculation ?? null,
+                'asesmenDisability' => optional($asesmen)->asesmenKepUmumDisability ?? null,
+                'asesmenExposure' => optional($asesmen)->asesmenKepUmumExposure ?? null,
+                'asesmenSkalaNyeri' => optional($asesmen)->asesmenKepUmumSkalaNyeri ?? null,
+                'asesmenRisikoJatuh' => optional($asesmen)->asesmenKepUmumRisikoJatuh ?? null,
+                'asesmenSosialEkonomi' => optional($asesmen)->asesmenKepUmumSosialEkonomi ?? null,
+                'asesmenStatusGizi' => optional($asesmen)->asesmenKepUmumGizi ?? null,
                 'asesmenTanggal' => $asesmenTanggal,
                 'tglMasukFormatted' => $tglMasukFormatted,
-                // All Item
+                // All Item with null checks
                 'faktorPemberatData' => $faktorPemberatData,
                 'kualitasNyeriData' => $kualitasNyeriData,
                 'menjalarData' => $menjalarData,
@@ -666,10 +799,6 @@ class AsesmenKeperawatanController extends Controller
                 'defaultFont' => 'sans-serif'
             ]);
 
-            // Generate nama file
-            // $filename = "asesmen_keperawatan_{$kd_pasien}_" . now()->format('Ymd_His') . ".pdf";
-
-            // return $pdf->download($filename);
             return $pdf->stream("asesmen-keperawatan-{$id}-print-pdf.pdf");
 
         } catch (\Exception $e) {
