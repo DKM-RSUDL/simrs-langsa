@@ -736,102 +736,87 @@
         });
 
         // 7. Risiko Jatuh Tindakan
-        // $(document).ready(function() {
-        //     const risikoJatuhInterventionManager = {
-        //         init: function() {
-        //             let existingTindakanInput = $('#existingTindakan-risikojatuh');
-        //             let existingTindakanValue = existingTindakanInput.val();
+        $(document).ready(function() {
+        // Fungsi untuk inisialisasi tindakan yang sudah ada
+        function initExistingTindakan() {
+            let existingTindakanInput = $('#existingTindakan-risikojatuh');
+            let existingTindakanValue = existingTindakanInput.val();
 
-        //             if (existingTindakanValue && existingTindakanValue !== '[]') {
-        //                 try {
-        //                     let interventions = JSON.parse(existingTindakanValue);
-        //                     this.updateSelectedInterventions(interventions);
-        //                 } catch (e) {
-        //                     console.error('Error parsing existing interventions:', e);
-        //                 }
-        //             }
+            if (existingTindakanValue) {
+                try {
+                    let tindakanArray = JSON.parse(existingTindakanValue);
+                    updateSelectedTindakan(tindakanArray, 'risikojatuh');
+                } catch (e) {
+                    let tindakanArray = existingTindakanValue.split(',')
+                        .map(t => t.trim())
+                        .filter(t => t);
+                    updateSelectedTindakan(tindakanArray, 'risikojatuh');
+                }
+            }
+        }
 
-        //             this.setupEventListeners();
-        //         },
+        // Event untuk tombol tambah
+        $('.btn-tindakan-keperawatan').click(function(e) {
+            let target = $(this).attr('data-bs-target');
+            $(target).modal('show');
+        });
 
-        //         setupEventListeners: function() {
-        //             // Modal trigger button
-        //             $('.btn-tindakan-keperawatan[data-bs-target="#tindakanKeperawatanRisikoJatuhModal"]')
-        //                 .on('click', function() {
-        //                     let target = $(this).attr('data-bs-target');
-        //                     $(target).modal('show');
-        //                 });
+        // Event untuk tombol simpan di modal
+        $('.btn-save-tindakan-keperawatan').click(function(e) {
+            let section = $(this).attr('data-section');
+            let modal = $(this).closest('.modal');
+            let selectedTindakanArr = [];
 
-        //             // List item selection
-        //             $('#tindakanList .tindakan-item').on('click', function() {
-        //                 const id = $(this).data('id');
-        //                 const tindakan = $(this).data('risik_jatuh_tindakan');
+            // Mengumpulkan tindakan yang dipilih
+            modal.find('.form-check-input:checked').each(function() {
+                selectedTindakanArr.push($(this).val());
+            });
 
-        //                 if (!this.isDuplicate(id)) {
-        //                     this.addIntervention(id, tindakan);
-        //                 }
-        //             }.bind(this));
+            // Update tampilan tindakan
+            updateSelectedTindakan(selectedTindakanArr, section);
+            modal.modal('hide');
+        });
 
-        //             // Delete button delegation
-        //             $('#selectedTindakanList-risikojatuh').on('click', '.remove-tindakan', function() {
-        //                 $(this).closest('.selected-tindakan').remove();
-        //             });
+        // Fungsi untuk update tampilan tindakan yang dipilih
+        function updateSelectedTindakan(dataArr, tindakanListEl) {
+            let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
+            let existingTindakan = elListTindakan.find('.selected-item span')
+                .map(function() {
+                    return $(this).text().trim();
+                })
+                .get();
 
-        //             // Search functionality
-        //             $('#searchTindakan').on('input', function() {
-        //                 const query = $(this).val().toLowerCase();
-        //                 $('#tindakanList .tindakan-item').each(function() {
-        //                     const text = $(this).text().toLowerCase();
-        //                     $(this).toggle(text.includes(query));
-        //                 });
-        //             });
-        //         },
+            // Gabungkan dengan yang sudah ada
+            let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
 
-        //         isDuplicate: function(id) {
-        //             const exists = $(`#selectedTindakanList-risikojatuh input[value="${id}"]`).length > 0;
-        //             if (exists) {
-        //                 alert('Tindakan ini sudah dipilih');
-        //                 return true;
-        //             }
-        //             return false;
-        //         },
+            let listHtml = '';
+            let jsonArray = [];
 
-        //         addIntervention: function(id, tindakan) {
-        //             const newIntervention = `
-        //             <div class="selected-tindakan d-flex align-items-center justify-content-between p-2 border rounded">
-        //                 <span>${tindakan}</span>
-        //                 <input type="hidden" name="risik_jatuh_tindakan[]" value="${id}">
-        //                 <button type="button" class="btn btn-sm btn-danger remove-tindakan">
-        //                     <i class="ti-trash"></i>
-        //                 </button>
-        //             </div>
-        //         `;
-        //             $('#selectedTindakanList-risikojatuh').append(newIntervention);
-        //             $('#tindakanKeperawatanRisikoJatuhModal').modal('hide');
-        //         },
+            allTindakan.forEach(tindakan => {
+                if (tindakan.trim()) {
+                    jsonArray.push(tindakan);
+                    listHtml += `
+                        <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                            <span>${tindakan}</span>
+                            <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
+                                <i class="ti-close"></i>
+                            </button>
+                            <input type="hidden" name="risik_jatuh_tindakan[]" value='${tindakan}'>
+                        </div>`;
+                }
+            });
 
-        //         updateSelectedInterventions: function(interventions) {
-        //             const container = $('#selectedTindakanList-risikojatuh');
-        //             container.empty();
+            elListTindakan.html(listHtml);
+        }
 
-        //             interventions.forEach(intervention => {
-        //                 const interventionHtml = `
-        //                 <div class="selected-tindakan d-flex align-items-center justify-content-between p-2 border rounded">
-        //                     <span>${intervention.risik_jatuh_tindakan}</span>
-        //                     <input type="hidden" name="risik_jatuh_tindakan[]" value="${intervention.id}">
-        //                     <button type="button" class="btn btn-sm btn-danger remove-tindakan">
-        //                         <i class="ti-trash"></i>
-        //                     </button>
-        //                 </div>
-        //             `;
-        //                 container.append(interventionHtml);
-        //             });
-        //         }
-        //     };
+        // Event untuk tombol hapus tindakan
+        $(document).on('click', '.btn-del-tindakan-keperawatan-list', function() {
+            $(this).closest('.selected-item').remove();
+        });
 
-        //     // Initialize the manager
-        //     risikoJatuhInterventionManager.init();
-        // });
+        // Inisialisasi saat halaman dimuat
+        initExistingTindakan();
+    });
 
         // 7. Resiko Jantung
         // Definisi forms untuk skor dan tipe
@@ -1021,10 +1006,45 @@
             const nutritionSelect = document.getElementById('nutritionAssessment');
             const allForms = document.querySelectorAll('.assessment-form');
 
+            // Fungsi inisialisasi untuk mode edit
+            function initializeEditMode() {
+                const selectedValue = nutritionSelect.value;
+                if (selectedValue) {
+                    // Tampilkan form yang sesuai
+                    showSelectedForm(selectedValue);
+
+                    // Hitung nilai awal berdasarkan data yang ada
+                    calculateInitialValues(selectedValue);
+                }
+            }
+
+            // Fungsi untuk menghitung nilai awal saat edit
+            function calculateInitialValues(formType) {
+                switch(formType) {
+                    case '1':
+                        calculateMSTScore();
+                        break;
+                    case '2':
+                        calculateMNAScore();
+                        initializeBMICalculation(true); // true untuk mode edit
+                        break;
+                    case '3':
+                        calculateStrongKidsScore();
+                        break;
+                    case '4':
+                        calculateNRSScore();
+                        break;
+                }
+            }
+
             // Event listener untuk perubahan select
             nutritionSelect.addEventListener('change', function() {
                 const selectedValue = this.value;
+                showSelectedForm(selectedValue);
+            });
 
+            // Fungsi untuk menampilkan form yang dipilih
+            function showSelectedForm(selectedValue) {
                 // Sembunyikan semua form
                 allForms.forEach(form => {
                     form.style.display = 'none';
@@ -1050,7 +1070,6 @@
                     '4': 'nrs'
                 };
 
-                // Tampilkan form yang dipilih
                 const formId = formMapping[selectedValue];
                 if (formId) {
                     const selectedForm = document.getElementById(formId);
@@ -1059,64 +1078,10 @@
                         initializeFormListeners(formId);
                     }
                 }
-            });
-
-            // Inisialisasi listener untuk setiap form
-            function initializeFormListeners(formId) {
-                const form = document.getElementById(formId);
-                const selects = form.querySelectorAll('select');
-
-                switch (formId) {
-                    case 'mst':
-                        selects.forEach(select => {
-                            select.addEventListener('change', () => calculateMSTScore(form));
-                        });
-                        break;
-                    case 'mna':
-                        selects.forEach(select => {
-                            select.addEventListener('change', () => calculateMNAScore(form));
-                        });
-                        initializeBMICalculation();
-                        break;
-                    case 'strong-kids':
-                        selects.forEach(select => {
-                            select.addEventListener('change', () => calculateStrongKidsScore(form));
-                        });
-                        break;
-                    case 'nrs':
-                        selects.forEach(select => {
-                            select.addEventListener('change', () => calculateNRSScore(form));
-                        });
-                        break;
-                }
             }
 
-            // Fungsi perhitungan MST
-            function calculateMSTScore() {
-                const form = document.getElementById('mst');
-                const selects = form.querySelectorAll('select');
-                let total = 0;
-
-                selects.forEach(select => {
-                    total += parseInt(select.value || 0);
-                });
-
-                const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
-                document.getElementById('gizi_mst_kesimpulan').value = kesimpulan;
-
-                const conclusions = form.querySelectorAll('.alert');
-                conclusions.forEach(alert => {
-                    if ((total <= 1 && alert.classList.contains('alert-success')) ||
-                        (total >= 2 && alert.classList.contains('alert-warning'))) {
-                        alert.style.display = 'block';
-                    } else {
-                        alert.style.display = 'none';
-                    }
-                });
-            }
-
-            // Fungsi perhitungan BMI
-            function initializeBMICalculation() {
+            // Fungsi BMI yang diperbaiki untuk edit
+            function initializeBMICalculation(isEdit = false) {
                 const weightInput = document.getElementById('mnaWeight');
                 const heightInput = document.getElementById('mnaHeight');
                 const bmiInput = document.getElementById('mnaBMI');
@@ -1135,209 +1100,179 @@
                 if (weightInput && heightInput) {
                     weightInput.addEventListener('input', calculateBMI);
                     heightInput.addEventListener('input', calculateBMI);
+
+                    // Hitung BMI saat edit jika data sudah ada
+                    if (isEdit && weightInput.value && heightInput.value) {
+                        calculateBMI();
+                    }
                 }
             }
 
-            // Fungsi perhitungan MNA
-            function calculateMNAScore(form) {
-                const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
+            // Fungsi perhitungan MST dengan dukungan edit
+            function calculateMSTScore() {
+                const form = document.getElementById('mst');
+                const selects = form.querySelectorAll('select');
                 let total = 0;
 
-                // Hitung total skor
+                // Hitung total dari select yang sudah ada nilainya
                 selects.forEach(select => {
-                    const value = parseInt(select.value || 0);
-                    total += value;
+                    if (select.value) {
+                        total += parseInt(select.value);
+                    }
                 });
 
-                // Set kesimpulan berdasarkan total skor
-                const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko' : '≤ 11 Beresiko malnutrisi';
+                // Update kesimpulan
+                const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
+                const kesimpulanInput = document.getElementById('gizi_mst_kesimpulan');
 
-                // Update hidden input untuk kesimpulan
-                const kesimpulanInput = document.getElementById('gizi_mna_kesimpulan');
                 if (kesimpulanInput) {
                     kesimpulanInput.value = kesimpulan;
                 }
 
-                // Update UI untuk menampilkan kesimpulan
-                const conclusionDiv = document.getElementById('mnaConclusion');
-                if (conclusionDiv) {
-                    const alertClass = total >= 12 ? 'alert-success' : 'alert-warning';
-                    conclusionDiv.innerHTML = `
-            <div class="alert ${alertClass}">
-                Kesimpulan: ${kesimpulan} (Total Score: ${total})
-            </div>
-            <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="${kesimpulan}">
-        `;
-                }
-            }
-
-            // Fungsi perhitungan Strong Kids
-            function calculateStrongKidsScore(form) {
-                const selects = form.querySelectorAll('select');
-                let total = 0;
-
-                // Hitung total score
-                selects.forEach(select => {
-                    total += parseInt(select.value || 0);
-                });
-
-                // Tentukan kesimpulan dan type alert
-                let kesimpulan, type, kesimpulanText;
-                if (total === 0) {
-                    kesimpulan = 'Beresiko rendah';
-                    kesimpulanText = '0 (Beresiko rendah)';
-                    type = 'success';
-                } else if (total >= 1 && total <= 3) {
-                    kesimpulan = 'Beresiko sedang';
-                    kesimpulanText = '1-3 (Beresiko sedang)';
-                    type = 'warning';
-                } else {
-                    kesimpulan = 'Beresiko Tinggi';
-                    kesimpulanText = '4-5 (Beresiko Tinggi)';
-                    type = 'danger';
-                }
-
-                // Update hidden input untuk kesimpulan
-                const kesimpulanInput = document.getElementById('gizi_strong_kesimpulan');
-                if (kesimpulanInput) {
-                    kesimpulanInput.value = kesimpulanText;
-                }
-
-                // Update UI untuk menampilkan kesimpulan
-                const conclusionDiv = document.getElementById('strongKidsConclusion');
-                if (conclusionDiv) {
-                    conclusionDiv.innerHTML = `
-            <div class="alert alert-${type}">
-                Kesimpulan: ${kesimpulanText} (Total Score: ${total})
-            </div>
-            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="${kesimpulanText}">
-        `;
-                }
-
-                // Update tampilan form conclusion
-                updateFormConclusion(form, kesimpulan, type);
-            }
-
-            // Fungsi perhitungan NRS
-            function calculateNRSScore(form) {
-                const selects = form.querySelectorAll('select');
-                let total = 0;
-
-                // Hitung total score
-                selects.forEach(select => {
-                    total += parseInt(select.value || 0);
-                });
-
-                // Tentukan kesimpulan dan type alert
-                let kesimpulan, type, kesimpulanText;
-                if (total <= 5) {
-                    kesimpulan = 'Beresiko rendah';
-                    kesimpulanText = '≤ 5 (Beresiko rendah)';
-                    type = 'success';
-                } else if (total <= 10) {
-                    kesimpulan = 'Beresiko sedang';
-                    kesimpulanText = '6-10 (Beresiko sedang)';
-                    type = 'warning';
-                } else {
-                    kesimpulan = 'Beresiko Tinggi';
-                    kesimpulanText = '> 10 (Beresiko Tinggi)';
-                    type = 'danger';
-                }
-
-                // Update hidden input untuk kesimpulan
-                const kesimpulanInput = document.getElementById('gizi_nrs_kesimpulan');
-                if (kesimpulanInput) {
-                    kesimpulanInput.value = kesimpulanText;
-                }
-
-                // Update UI untuk menampilkan kesimpulan
-                const conclusionDiv = document.getElementById('nrsConclusion');
-                if (conclusionDiv) {
-                    conclusionDiv.innerHTML = `
-            <div class="alert alert-${type}">
-                Kesimpulan: ${kesimpulanText} (Total Score: ${total})
-            </div>
-            <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="${kesimpulanText}">
-        `;
-                }
-
-                // Update tampilan form conclusion
-                updateFormConclusion(form, kesimpulan, type);
-            }
-
-            // Fungsi untuk update tampilan kesimpulan
-            function updateFormConclusion(form, text, type) {
+                // Update tampilan alert
                 const conclusions = form.querySelectorAll('.alert');
                 conclusions.forEach(alert => {
-                    if (alert.classList.contains(`alert-${type}`)) {
+                    if ((total <= 1 && alert.classList.contains('alert-success')) ||
+                        (total >= 2 && alert.classList.contains('alert-warning'))) {
                         alert.style.display = 'block';
                     } else {
                         alert.style.display = 'none';
                     }
                 });
+            }
 
-                // Update hidden input if exists
-                const hiddenInput = form.querySelector('input[type="hidden"]');
-                if (hiddenInput) {
-                    hiddenInput.value = text;
+            // Fungsi perhitungan MNA dengan dukungan edit
+            function calculateMNAScore() {
+                const form = document.getElementById('mna');
+                const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
+                let total = 0;
+
+                // Hitung total dari select yang sudah ada nilainya
+                selects.forEach(select => {
+                    if (select.value) {
+                        total += parseInt(select.value);
+                    }
+                });
+
+                // Update kesimpulan
+                const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko' : '≤ 11 Beresiko malnutrisi';
+                const kesimpulanInput = document.getElementById('gizi_mna_kesimpulan');
+
+                if (kesimpulanInput) {
+                    kesimpulanInput.value = kesimpulan;
+
+                    // Update tampilan kesimpulan
+                    const conclusionDiv = document.getElementById('mnaConclusion');
+                    if (conclusionDiv) {
+                        const alertClass = total >= 12 ? 'alert-success' : 'alert-warning';
+                        conclusionDiv.querySelector(`.alert-${alertClass}`).style.display = 'block';
+                    }
                 }
             }
+
+            // Panggil fungsi inisialisasi untuk mode edit
+            initializeEditMode();
         });
 
         // 14. Discharge Planning
         document.addEventListener('DOMContentLoaded', function() {
-            // Mendapatkan semua elemen select
+            // Get DOM elements
             const selects = document.querySelectorAll('.discharge-select');
-
-            // Mendapatkan elemen kesimpulan
             const kesimpulanKhusus = document.getElementById('kesimpulan_khusus');
             const kesimpulanTidakKhusus = document.getElementById('kesimpulan_tidak_khusus');
             const kesimpulanValue = document.getElementById('kesimpulan_value');
+            const diagnosisMedis = document.getElementById('diagnosis_medis');
 
-            // Fungsi untuk update kesimpulan
-            function updateKesimpulan() {
-                // Memeriksa apakah semua select sudah dipilih
-                const semuaTerisi = Array.from(selects).every(select => select.value !== '');
-
-                if (semuaTerisi) {
-                    // Menghitung berapa banyak jawaban "ya"
-                    const jumlahYa = Array.from(selects).filter(select => select.value === 'ya').length;
-
-                    // Jika ada minimal satu jawaban "ya", maka butuh rencana khusus
-                    if (jumlahYa > 0) {
-                        kesimpulanKhusus.style.display = 'block';
-                        kesimpulanTidakKhusus.style.display = 'none';
-                        kesimpulanValue.value = 'butuh_rencana_khusus';
-                    } else {
-                        kesimpulanKhusus.style.display = 'none';
-                        kesimpulanTidakKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
-                    }
+            // Function to validate diagnosis medis
+            function validateDiagnosisMedis() {
+                const value = diagnosisMedis.value.trim();
+                if (value === '') {
+                    diagnosisMedis.classList.add('is-invalid');
+                    diagnosisMedis.setCustomValidity('Harap isi diagnosis medis');
+                    return false;
                 } else {
-                    // Jika belum semua terisi, sembunyikan kedua kesimpulan
-                    kesimpulanKhusus.style.display = 'none';
-                    kesimpulanTidakKhusus.style.display = 'none';
-                    kesimpulanValue.value = '';
+                    diagnosisMedis.classList.remove('is-invalid');
+                    diagnosisMedis.setCustomValidity('');
+                    return true;
                 }
             }
 
-            // Tambahkan event listener untuk setiap select
-            selects.forEach(select => {
-                select.addEventListener('change', updateKesimpulan);
-            });
+            // Function to update conclusion
+            function updateKesimpulan() {
+                const semuaTerisi = Array.from(selects).every(select => select.value !== '');
 
-            // Jalankan pengecekan awal
-            updateKesimpulan();
+                // Reset display first
+                kesimpulanKhusus.style.display = 'none';
+                kesimpulanTidakKhusus.style.display = 'none';
+                kesimpulanValue.value = '';
 
-            // Tambahkan validasi form
-            const diagnosisMedis = document.getElementById('diagnosis_medis');
-            diagnosisMedis.addEventListener('input', function() {
-                if (this.value.trim() === '') {
-                    this.setCustomValidity('Harap isi diagnosis medis');
-                } else {
-                    this.setCustomValidity('');
+                if (semuaTerisi) {
+                    const jumlahYa = Array.from(selects).filter(select => select.value === 'ya').length;
+
+                    if (jumlahYa > 0) {
+                        kesimpulanKhusus.style.display = 'block';
+                        kesimpulanValue.value = 'butuh_rencana_khusus';
+                    } else {
+                        kesimpulanTidakKhusus.style.display = 'block';
+                        kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
+                    }
                 }
+            }
+
+            // Function to validate form
+            function validateForm() {
+                const diagnosisValid = validateDiagnosisMedis();
+                const selectsValid = Array.from(selects).every(select => select.value !== '');
+                return diagnosisValid && selectsValid;
+            }
+
+            // Event Listeners
+            diagnosisMedis.addEventListener('input', function() {
+                validateDiagnosisMedis();
+                this.classList.toggle('is-invalid', !validateDiagnosisMedis());
             });
+
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    updateKesimpulan();
+                    this.classList.toggle('is-invalid', !this.value);
+                });
+            });
+
+            // Initial setup for edit mode
+            function setupInitialState() {
+                // Validate diagnosis medis
+                validateDiagnosisMedis();
+
+                // Check existing select values and update conclusion
+                const hasExistingValues = Array.from(selects).some(select => select.value !== '');
+                if (hasExistingValues) {
+                    updateKesimpulan();
+                }
+
+                // Add invalid class to empty required selects
+                selects.forEach(select => {
+                    select.classList.toggle('is-invalid', !select.value);
+                });
+            }
+
+            // Form submission handler
+            const form = diagnosisMedis.closest('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!validateForm()) {
+                        e.preventDefault();
+                        // Show validation messages
+                        validateDiagnosisMedis();
+                        selects.forEach(select => {
+                            select.classList.toggle('is-invalid', !select.value);
+                        });
+                    }
+                });
+            }
+
+            // Run initial setup
+            setupInitialState();
         });
 
         // 15.Masalah Keperawatan
@@ -1350,23 +1285,23 @@
             const implementasiSet = new Set();
 
             // Mengumpulkan semua nilai unik
-            dbData.forEach(item => {
-                try {
-                    // Parse masalah_keperawatan
-                    if (item.masalah_keperawatan) {
-                        const masalahArray = JSON.parse(item.masalah_keperawatan);
-                        masalahArray.forEach(text => masalahSet.add(text));
-                    }
+            // dbData.forEach(item => {
+            //     try {
+            //         // Parse masalah_keperawatan
+            //         if (item.masalah_keperawatan) {
+            //             const masalahArray = JSON.parse(item.masalah_keperawatan);
+            //             masalahArray.forEach(text => masalahSet.add(text));
+            //         }
 
-                    // Parse implementasi
-                    if (item.implementasi) {
-                        const implementasiArray = JSON.parse(item.implementasi);
-                        implementasiArray.forEach(text => implementasiSet.add(text));
-                    }
-                } catch (e) {
-                    console.error('Error parsing JSON:', e);
-                }
-            });
+            //         // Parse implementasi
+            //         if (item.implementasi) {
+            //             const implementasiArray = JSON.parse(item.implementasi);
+            //             implementasiArray.forEach(text => implementasiSet.add(text));
+            //         }
+            //     } catch (e) {
+            //         console.error('Error parsing JSON:', e);
+            //     }
+            // });
 
             // Konversi Set ke array options
             const masalahOptions = Array.from(masalahSet).map(text => ({
@@ -1390,13 +1325,13 @@
                 const selectedItems = new Map();
 
                 // Tambahkan CSS untuk memastikan suggestions list terlihat
-                suggestionsList.style.position = 'absolute';
-                suggestionsList.style.backgroundColor = 'white';
-                suggestionsList.style.border = '1px solid #ddd';
-                suggestionsList.style.maxHeight = '200px';
-                suggestionsList.style.overflowY = 'auto';
-                suggestionsList.style.width = '100%';
-                suggestionsList.style.zIndex = '1000';
+                // suggestionsList.style.position = 'absolute';
+                // suggestionsList.style.backgroundColor = 'white';
+                // suggestionsList.style.border = '1px solid #ddd';
+                // suggestionsList.style.maxHeight = '200px';
+                // suggestionsList.style.overflowY = 'auto';
+                // suggestionsList.style.width = '100%';
+                // suggestionsList.style.zIndex = '1000';
 
                 function updateHiddenInput() {
                     const items = Array.from(selectedItems.values())
@@ -1474,55 +1409,55 @@
                     suggestionsList.style.display = 'none';
                 }
 
-                input.addEventListener('input', function() {
-                    const value = this.value.toLowerCase();
-                    console.log('Input value:', value); // Debug
-                    if (value) {
-                        const filtered = options.filter(item =>
-                            item.text.toLowerCase().includes(value)
-                        );
+                // input.addEventListener('input', function() {
+                //     const value = this.value.toLowerCase();
+                //     console.log('Input value:', value); // Debug
+                //     if (value) {
+                //         const filtered = options.filter(item =>
+                //             item.text.toLowerCase().includes(value)
+                //         );
 
-                        // Menambahkan opsi "Tambah baru" jika input tidak cocok dengan data yang ada
-                        if (filtered.length === 0 && value.trim() !== '') {
-                            filtered.push({
-                                id: value.replace(/\s+/g, '_'),
-                                text: `Tambah "${value.trim()}"`,
-                                isNew: true
-                            });
-                        }
+                //         // Menambahkan opsi "Tambah baru" jika input tidak cocok dengan data yang ada
+                //         if (filtered.length === 0 && value.trim() !== '') {
+                //             filtered.push({
+                //                 id: value.replace(/\s+/g, '_'),
+                //                 text: `Tambah "${value.trim()}"`,
+                //                 isNew: true
+                //             });
+                //         }
 
-                        console.log('Filtered suggestions:', filtered); // Debug
-                        showSuggestions(filtered);
-                    } else {
-                        suggestionsList.style.display = 'none';
-                    }
-                });
+                //         console.log('Filtered suggestions:', filtered); // Debug
+                //         showSuggestions(filtered);
+                //     } else {
+                //         suggestionsList.style.display = 'none';
+                //     }
+                // });
 
                 // Sisa kode event listener tetap sama...
-                selectedList.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('delete-btn')) {
-                        const id = e.target.dataset.id;
-                        selectedItems.delete(id);
-                        e.target.parentElement.remove();
-                        updateHiddenInput();
-                    }
-                });
+                // selectedList.addEventListener('click', function(e) {
+                //     if (e.target.classList.contains('delete-btn')) {
+                //         const id = e.target.dataset.id;
+                //         selectedItems.delete(id);
+                //         e.target.parentElement.remove();
+                //         updateHiddenInput();
+                //     }
+                // });
 
-                document.addEventListener('click', function(e) {
-                    if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
-                        suggestionsList.style.display = 'none';
-                    }
-                });
+                // document.addEventListener('click', function(e) {
+                //     if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
+                //         suggestionsList.style.display = 'none';
+                //     }
+                // });
 
-                input.removeEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        if (this.value) {
-                            const id = this.value.toLowerCase().replace(/\s+/g, '_');
-                            addItem(id, this.value);
-                        }
-                    }
-                });
+                // input.removeEventListener('keypress', function(e) {
+                //     if (e.key === 'Enter') {
+                //         e.preventDefault();
+                //         if (this.value) {
+                //             const id = this.value.toLowerCase().replace(/\s+/g, '_');
+                //             addItem(id, this.value);
+                //         }
+                //     }
+                // });
             }
 
             // Inisialisasi autocomplete

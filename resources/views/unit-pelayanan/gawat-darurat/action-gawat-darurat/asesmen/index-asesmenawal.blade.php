@@ -97,7 +97,6 @@
                     ]) }}" class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit') --}}
                 @endif
             </div>
         </li>

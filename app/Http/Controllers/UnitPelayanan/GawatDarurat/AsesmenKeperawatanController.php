@@ -122,7 +122,7 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmum->airway_status = $request->airway_status;
         $asesmenKepUmum->airway_suara_nafas = $request->airway_suara_nafas;
         $asesmenKepUmum->airway_diagnosis = $request->airway_diagnosis_type;
-        $asesmenKepUmum->airway_tindakan = json_encode($request->airway_tindakan_keperawatan);
+        $asesmenKepUmum->airway_tindakan = $request->airway_tindakan_keperawatan ? json_encode($request->airway_tindakan_keperawatan) : null;
         $asesmenKepUmum->psikologis_kondisi = $request->psikologis_kondisi;
         $asesmenKepUmum->psikologis_potensi_menyakiti = $request->psikologis_potensi_menyakiti;
         $asesmenKepUmum->psikologis_lainnya = $request->psikologis_lainnya;
@@ -157,7 +157,7 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmumBreathing->breathing_tanda_distress = $request->breathing_tanda_distress;
         $asesmenKepUmumBreathing->breathing_jalan_nafas = (int)$request->breathing_jalan_nafas;
         $asesmenKepUmumBreathing->breathing_lainnya = $request->breathing_lainnya;
-        $asesmenKepUmumBreathing->breathing_tindakan = json_encode($request->breathing_tindakan_keperawatan);
+        $asesmenKepUmumBreathing->breathing_tindakan = $request->breathing_tindakan_keperawatan ? json_encode($request->breathing_tindakan_keperawatan) : null;
 
         // Handle diagnosis nafas
         if ($request->has('breathing_diagnosis_nafas')) {
@@ -208,7 +208,7 @@ class AsesmenKeperawatanController extends Controller
                 ($defisit_type == 'aktual' ? 1 : ($defisit_type == 'risiko' ? 2 : null)) : null;
         }
         $asesmenKepUmumCirculation->circulation_lain = $request->circulation_lain;
-        $asesmenKepUmumCirculation->circulation_tindakan = !empty($request->circulation_tindakan_keperawatan) ? json_encode($request->circulation_tindakan_keperawatan) : null;
+        $asesmenKepUmumCirculation->circulation_tindakan = $request->circulation_tindakan_keperawatan ? json_encode($request->circulation_tindakan_keperawatan) : null;
         $asesmenKepUmumCirculation->save();
 
         $asesmenKepUmumDisability = new RmeAsesmenKepUmumDisability();
@@ -318,7 +318,7 @@ class AsesmenKeperawatanController extends Controller
 
         // Diagnosis Lainnya dan Tindakan
         $asesmenKepUmumExposure->exposure_diagnosis_lainnya = $request->exposure_diagnosis_lainnya;
-        $asesmenKepUmumExposure->exposure_tindakan = json_encode($request->exposure_tindakan_keperawatan);
+        $asesmenKepUmumExposure->exposure_tindakan = $request->exposure_tindakan_keperawatan ? json_encode($request->exposure_tindakan_keperawatan) : null;
         $asesmenKepUmumExposure->save();
 
         $asesmenKepUmumExposure = new RmeAsesmenKepUmumSosialEkonomi();
@@ -349,7 +349,7 @@ class AsesmenKeperawatanController extends Controller
         $asesmenKepUmumRisikoJatuh = new RmeAsesmenKepUmumRisikoJatuh();
         $asesmenKepUmumRisikoJatuh->id_asesmen = $asesmen->id;
         $asesmenKepUmumRisikoJatuh->resiko_jatuh_jenis = (int)$request->resiko_jatuh_jenis;
-        $asesmenKepUmumRisikoJatuh->risik_jatuh_tindakan = json_encode($request->risikojatuh_tindakan_keperawatan);
+        $asesmenKepUmumRisikoJatuh->risik_jatuh_tindakan = $request->risikojatuh_tindakan_keperawatan ? json_encode($request->risikojatuh_tindakan_keperawatan) : null;
 
         // Handle Skala Umum
         if ($request->resiko_jatuh_jenis == 1) {
