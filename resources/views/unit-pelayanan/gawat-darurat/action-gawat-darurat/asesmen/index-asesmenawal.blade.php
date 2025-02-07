@@ -89,7 +89,6 @@
                         class="btn btn-info btn-sm">
                         <i class="fas fa-eye"></i> Lihat
                     </button>
-                    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
                     <a href="{{ route('asesmen-keperawatan.edit', [
                         'kd_pasien' => $dataMedis->kd_pasien,
@@ -105,6 +104,7 @@
     @endforeach
 </ul>
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.create-asesmen')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.show')
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -274,7 +274,7 @@ class AsesmenKeperawatanController extends Controller
 
         // Konversi tindakan ke JSON
         $asesmenKepUmumDisability->disability_lainnya = $request->disability_lainnya;
-        $asesmenKepUmumDisability->disability_tindakan = json_encode($request->disability_tindakan_keperawatan);
+        $asesmenKepUmumDisability->disability_tindakan = $request->disability_tindakan_keperawatan ? json_encode($request->disability_tindakan_keperawatan) : null;
         $asesmenKepUmumDisability->save();
 
         $asesmenKepUmumExposure = new RmeAsesmenKepUmumExposure();
@@ -555,6 +555,8 @@ class AsesmenKeperawatanController extends Controller
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->firstOrFail();
+
+            // dd($asesmen);
 
             $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
                                 ->where('tgl_masuk', $tgl_masuk)
