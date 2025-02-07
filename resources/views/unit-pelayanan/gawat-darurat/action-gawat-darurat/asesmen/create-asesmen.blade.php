@@ -758,8 +758,47 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-tindaklanjut')
                                                     </div>
+
+                                                    <div class="mb-3">
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="rawatInap" id="rawatInap"> 
+                                                            <label for="rawatInap">Rawat Inap</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="kamarOperasi" id="kamarOperasi">
+                                                            <label for="kamarOperasi">Kamar Operasi</label> 
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar">
+                                                            <label for="rujukKeluar">Rujuk Keluar RS Bagian</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="pulangKontrol" id="pulangKontrol">
+                                                            <label for="pulangKontrol">Pulang Kontrol di Klinik</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap">
+                                                            <label for="menolakRawatInap">Menolak Rawat Inap</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia">
+                                                            <label for="meninggalDunia">Meninggal Dunia</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="textareaInput" style="display: none;">
+                                                        <label for="keteranganTindakLanjut" class="form-label">Keterangan</label>
+                                                        <textarea class="form-control" id="keteranganTindakLanjut" name="keteranganTindakLanjut" rows="3"></textarea>
+                                                    </div>
+
+                                                    <div class="mb-3" id="tanggalJamInput" style="display: none;">
+                                                        <label for="tanggalMeninggal" class="form-label">Tanggal Meninggal</label>
+                                                        <input type="date" class="form-control" id="tanggalMeninggal" name="tanggalMeninggal">
+                                                        <label for="jamMeninggal" class="form-label mt-2">Jam Meninggal</label>
+                                                        <input type="time" class="form-control" id="jamMeninggal" name="jamMeninggal">
+                                                    </div>
+
                                                     <div id="tindakLanjutInfo"></div>
                                                 </div>
 

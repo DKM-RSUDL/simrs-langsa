@@ -2,7 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <!-- Tambahkan ini ke tag <style> atau file CSS -->
-        
+
     <style>
         /* Sticky untuk side kiri khusus di dalam modal #detailPasienModal */
         #detailPasienModal .patient-card {
@@ -220,44 +220,254 @@
 
 @push('js')
     <script>
-        document.querySelectorAll('.tambah-keterangan').forEach(button => {
-            button.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const targetElement = document.getElementById(targetId);
-                const parentItem = this.closest('.pemeriksaan-item');
-                const normalCheckbox = parentItem.querySelector('.form-check-input');
-                
-                if (targetElement.style.display === 'none') {
-                    targetElement.style.display = 'block';
-                    if (normalCheckbox) {
-                        normalCheckbox.checked = false;
+        document.addEventListener('DOMContentLoaded', function() {
+            // === Kode untuk handle pemeriksaan fisik ===
+            document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    const parentItem = this.closest('.pemeriksaan-item');
+                    const normalCheckbox = parentItem.querySelector('.form-check-input');
+
+                    if (targetElement.style.display === 'none') {
+                        targetElement.style.display = 'block';
+                        if (normalCheckbox) {
+                            normalCheckbox.checked = false;
+                        }
+                    } else {
+                        targetElement.style.display = 'none';
                     }
-                } else {
-                    targetElement.style.display = 'none';
+                });
+            });
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const row = this.closest('.row');
+                    const keteranganDiv = row.querySelector('.keterangan-index');
+                    const tambahButton = row.querySelector('.tambah-keterangan');
+                    if (this.checked) {
+                        keteranganDiv.style.display = 'none';
+                        tambahButton.disabled = true;
+                    } else {
+                        tambahButton.disabled = false;
+                    }
+                });
+            });
+
+            // === Kode untuk IMT LPT ===
+            const tbInput = document.querySelector('input[name="antropometri[tb]"]');
+            const bbInput = document.querySelector('input[name="antropometri[bb]"]');
+            const imtInput = document.querySelector('input[name="antropometri[imt]"]');
+            const lptInput = document.querySelector('input[name="antropometri[lpt]"]');
+
+            if (tbInput && bbInput && imtInput && lptInput) {
+                imtInput.readOnly = true;
+                lptInput.readOnly = true;
+                tbInput.addEventListener('input', calculateIMT_LPT);
+                bbInput.addEventListener('input', calculateIMT_LPT);
+            }
+
+            // === Kode untuk tindak lanjut ===
+            let tindakLanjutData = null;
+
+            document.querySelectorAll('input[name="tindakLanjut"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    toggleInputFields(this.value);
+                    saveTindakLanjut();
+                });
+            });
+
+            function toggleInputFields(selectedOption) {
+                document.getElementById('textareaInput').style.display = 'none';
+                document.getElementById('tanggalJamInput').style.display = 'none';
+
+                if (['rawatInap', 'kamarOperasi', 'rujukKeluar', 'pulangKontrol', 'menolakRawatInap'].includes(
+                        selectedOption)) {
+                    document.getElementById('textareaInput').style.display = 'block';
                 }
+
+                if (selectedOption === 'meninggalDunia') {
+                    document.getElementById('tanggalJamInput').style.display = 'block';
+                }
+            }
+
+            document.getElementById('keteranganTindakLanjut').addEventListener('change', saveTindakLanjut);
+            document.getElementById('tanggalMeninggal').addEventListener('change', saveTindakLanjut);
+            document.getElementById('jamMeninggal').addEventListener('change', saveTindakLanjut);
+
+            function saveTindakLanjut() {
+                var selectedOption = document.querySelector('input[name="tindakLanjut"]:checked');
+                var keterangan = document.getElementById('keteranganTindakLanjut').value;
+                var tanggalMeninggal = document.getElementById('tanggalMeninggal').value;
+                var jamMeninggal = document.getElementById('jamMeninggal').value;
+
+                if (selectedOption) {
+                    tindakLanjutData = {
+                        option: selectedOption.value,
+                        keterangan: keterangan,
+                        tanggalMeninggal: tanggalMeninggal,
+                        jamMeninggal: jamMeninggal
+                    };
+                    displayTindakLanjut();
+                }
+            }
+
+            function displayTindakLanjut() {
+                var tindakLanjutInfo = document.getElementById('tindakLanjutInfo');
+                tindakLanjutInfo.innerHTML = '';
+                if (tindakLanjutData) {
+                    var div = document.createElement('div');
+                    div.classList.add('mb-2');
+                    var infoText = `Tindak Lanjut: ${tindakLanjutData.option}`;
+
+                    if (tindakLanjutData.keterangan) {
+                        infoText += ` | Keterangan: ${tindakLanjutData.keterangan}`;
+                    }
+                    if (tindakLanjutData.tanggalMeninggal) {
+                        infoText += ` | Tanggal: ${tindakLanjutData.tanggalMeninggal}`;
+                    }
+                    if (tindakLanjutData.jamMeninggal) {
+                        infoText += ` | Jam: ${tindakLanjutData.jamMeninggal}`;
+                    }
+
+                    var textSpan = document.createElement('span');
+                    textSpan.innerText = infoText;
+                    div.appendChild(textSpan);
+                    tindakLanjutInfo.appendChild(div);
+                }
+            }
+
+            window.getTindakLanjutData = function() {
+                return tindakLanjutData ? JSON.stringify(tindakLanjutData) : null;
+            };
+
+            // === Kode untuk handle submit form dengan ajax ===
+            const form = document.getElementById('asesmenForm');
+            const submitButton = document.getElementById('saveForm');
+            const modalId = '#detailPasienModal';
+
+            submitButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                submitButton.classList.add('loading');
+                submitButton.innerHTML =
+                    '<div class="loading-spinner"></div><span class="loading-text">Mengirim...</span>';
+
+                var formData = new FormData(form);
+
+                formData.append('antropometri', getAntropometriData());
+                formData.append('vital_sign', getVitalSignData());
+                formData.append('tindakan_resusitasi', getTindakanResusitasiData());
+                formData.append('riwayat_alergi', window.getAlergiData ? window.getAlergiData() : '');
+                formData.append('retriage_data', window.getReTriageData ? window.getReTriageData() : '');
+                formData.append('diagnosa_data', window.getDiagnosaData ? window.getDiagnosaData() : '');
+                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window
+                    .getAlatTerpasangData() : '');
+                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window
+                    .getTindakLanjutData() : '');
+
+                var pemeriksaanFisik = [];
+                document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {
+                    var checkbox = item.querySelector('.form-check-input');
+                    if (checkbox) {
+                        var fullId = checkbox.id;
+                        var id = fullId.replace('show_', '').replace('_normal', '');
+
+                        var isNormal = checkbox.checked;
+                        var keteranganDiv = item.querySelector('.keterangan');
+                        var keteranganInput = keteranganDiv ? keteranganDiv.querySelector('input') :
+                            null;
+                        var keterangan = keteranganInput ? keteranganInput.value : '';
+
+                        if (!isNormal && keterangan) {
+                            pemeriksaanFisik.push({
+                                id: parseInt(id),
+                                is_normal: 0,
+                                keterangan: keterangan
+                            });
+                        } else if (isNormal) {
+                            pemeriksaanFisik.push({
+                                id: parseInt(id),
+                                is_normal: 1,
+                                keterangan: ''
+                            });
+                        }
+                    }
+                });
+
+                formData.append('pemeriksaan_fisik', JSON.stringify(pemeriksaanFisik));
+
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                console.log('Response error:', text);
+                                iziToast.error({
+                                    title: 'Error',
+                                    message: 'Terjadi kesalahan saat mengirim data.',
+                                    position: 'topRight'
+                                });
+                                throw new Error(text);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        iziToast.success({
+                            title: 'Sukses',
+                            message: 'Data berhasil dikirim.',
+                            position: 'topRight'
+                        });
+
+                        submitButton.classList.remove('loading');
+                        submitButton.innerHTML = 'Kirim';
+
+                        $(modalId).modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open');
+                        $('body').css('padding-right', '');
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        submitButton.classList.remove('loading');
+                        submitButton.innerHTML = 'Kirim';
+
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Terjadi kesalahan saat mengirim data.',
+                            position: 'topRight'
+                        });
+                    });
             });
         });
 
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const row = this.closest('.row');
-                const keteranganDiv = row.querySelector('.keterangan-index');
-                const tambahButton = row.querySelector('.tambah-keterangan');
-                if (this.checked) {
-                    keteranganDiv.style.display = 'none';
-                    tambahButton.disabled = true;
-                } else {
-                    tambahButton.disabled = false;
-                }
-            });
-        });
-
+        // === Helper functions yang dipanggil saat submit ===
         function getVitalSignData() {
             const vitalSign = {};
             vitalSign.gcs = window.gcsData || {
-                eye: { value: 0, description: "" },
-                verbal: { value: 0, description: "" },
-                motoric: { value: 0, description: "" },
+                eye: {
+                    value: 0,
+                    description: ""
+                },
+                verbal: {
+                    value: 0,
+                    description: ""
+                },
+                motoric: {
+                    value: 0,
+                    description: ""
+                },
                 total: 0
             };
             const fields = [
@@ -318,213 +528,20 @@
 
             if (!tbInput || !bbInput || !imtInput || !lptInput) return;
 
-            // Get values
-            const tinggiCm = parseFloat(tbInput.value); // dalam cm
-            const berat = parseFloat(bbInput.value); // dalam kg
+            const tinggiCm = parseFloat(tbInput.value);
+            const berat = parseFloat(bbInput.value);
 
             if (!isNaN(tinggiCm) && !isNaN(berat) && tinggiCm > 0) {
-                // Convert cm to meter for IMT calculation
                 const tinggiMeter = tinggiCm / 100;
-                
-                // Calculate IMT and LPT
                 const imt = berat / (tinggiMeter * tinggiMeter);
                 const lpt = (tinggiCm * berat) / 3600;
 
-                // Set values with 2 decimal places
                 imtInput.value = imt.toFixed(2);
                 lptInput.value = lpt.toFixed(2);
             } else {
-                // Clear IMT and LPT if inputs are invalid
                 imtInput.value = '';
                 lptInput.value = '';
             }
         }
-
-        document.getElementById('asesmenForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            var alergiDataJson = window.getAlergiData();
-            var reTriaseDataJson = window.getReTriageData();
-            var diagnosaDataJson = window.getDiagnosaData();
-            var alatDataJson = window.getAlatTerpasangData();
-            var tindaklanjutDataJson = window.getTindakLanjutData();
-
-            var hiddenAlergiInput = document.createElement('input');
-            hiddenAlergiInput.type = 'hidden';
-            hiddenAlergiInput.name = 'riwayat_alergi';
-            hiddenAlergiInput.value = alergiDataJson;
-
-            var hiddenReTriaseInput = document.createElement('input');
-            hiddenReTriaseInput.type = 'hidden';
-            hiddenReTriaseInput.name = 'retriage_data';
-            hiddenReTriaseInput.value = reTriaseDataJson;
-
-            var hiddenDiagnosaInput = document.createElement('input');
-            hiddenDiagnosaInput.type = 'hidden';
-            hiddenDiagnosaInput.name = 'diagnosa_data';
-            hiddenDiagnosaInput.value = diagnosaDataJson;
-
-            var hiddenAlatInput = document.createElement('input');
-            hiddenAlatInput.type = 'hidden';
-            hiddenAlatInput.name = 'alat_terpasang_data';
-            hiddenAlatInput.value = alatDataJson;
-
-            var hiddenTindakLanjutInput = document.createElement('input');
-            hiddenTindakLanjutInput.type = 'hidden';
-            hiddenTindakLanjutInput.name = 'tindak_lanjut_data';
-            hiddenTindakLanjutInput.value = tindaklanjutDataJson;
-
-            this.appendChild(hiddenAlergiInput);
-            this.appendChild(hiddenReTriaseInput);
-            this.appendChild(hiddenDiagnosaInput);
-            this.appendChild(hiddenAlatInput);
-            this.appendChild(hiddenTindakLanjutInput);
-
-            this.submit();
-        });
-
-        // Funsi Submit Ajax
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('asesmenForm');
-            const submitButton = document.getElementById('saveForm');
-            const modalId = '#detailPasienModal'
-
-            const tbInput = document.querySelector('input[name="antropometri[tb]"]');
-            const bbInput = document.querySelector('input[name="antropometri[bb]"]');
-            const imtInput = document.querySelector('input[name="antropometri[imt]"]');
-            const lptInput = document.querySelector('input[name="antropometri[lpt]"]');
-
-            // Pastikan semua elemen ada
-            if (tbInput && bbInput && imtInput && lptInput) {
-                // Set readonly untuk IMT dan LPT
-                imtInput.readOnly = true;
-                lptInput.readOnly = true;
-
-                // Add event listeners untuk TB dan BB
-                tbInput.addEventListener('input', calculateIMT_LPT);
-                bbInput.addEventListener('input', calculateIMT_LPT);
-            }
-
-            submitButton.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // Tambahkan efek loading ke button
-                submitButton.classList.add('loading');
-                submitButton.innerHTML =
-                    '<div class="loading-spinner"></div><span class="loading-text">Mengirim...</span>';
-
-                var formData = new FormData(form);
-                console.log(window.getReTriageData());
-                
-
-                // Tambahkan data tambahan ke formData
-                formData.append('antropometri', getAntropometriData());
-                formData.append('vital_sign', getVitalSignData());
-                formData.append('tindakan_resusitasi', getTindakanResusitasiData());
-                formData.append('riwayat_alergi', window.getAlergiData ? window.getAlergiData() : '');
-                formData.append('retriage_data', window.getReTriageData() ? window.getReTriageData() : '');
-                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window
-                    .getTindakLanjutData() : '');
-                formData.append('diagnosa_data', window.getDiagnosaData ? window.getDiagnosaData() : '');
-                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window
-                    .getAlatTerpasangData() : '');
-
-                var pemeriksaanFisik = [];
-                document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {
-                    var checkbox = item.querySelector('.form-check-input');
-                    if (checkbox) {
-                        // Ambil ID yang benar, hapus 'show_' dan '_normal' dari ID
-                        var fullId = checkbox.id;
-                        var id = fullId.replace('show_', '').replace('_normal', '');
-                        
-                        var isNormal = checkbox.checked;
-                        var keteranganDiv = item.querySelector('.keterangan');
-                        var keteranganInput = keteranganDiv ? keteranganDiv.querySelector('input') : null;
-                        var keterangan = keteranganInput ? keteranganInput.value : '';
-
-                        if (!isNormal && keterangan) {
-                            pemeriksaanFisik.push({
-                                id: parseInt(id), // Pastikan ID berupa angka
-                                is_normal: 0,
-                                keterangan: keterangan
-                            });
-                        } else if (isNormal) {
-                            pemeriksaanFisik.push({
-                                id: parseInt(id), // Pastikan ID berupa angka
-                                is_normal: 1,
-                                keterangan: ''
-                            });
-                        }
-                    }
-                });
-
-
-                // Add console.log to debug
-                // console.log('Pemeriksaan Fisik Data:', pemeriksaanFisik);
-                formData.append('pemeriksaan_fisik', JSON.stringify(pemeriksaanFisik));
-                // console.log(formData);
-                // return false;
-                // Kirim data menggunakan Fetch API
-                fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.text().then(text => {
-                                console.log('Response error:', text);
-                                iziToast.error({
-                                    title: 'Error',
-                                    message: 'Terjadi kesalahan saat mengirim data.',
-                                    position: 'topRight'
-                                });
-                                throw new Error(text);
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Success:', data);
-
-                        // Tampilkan pesan sukses
-                        iziToast.success({
-                            title: 'Sukses',
-                            message: 'Data berhasil dikirim.',
-                            position: 'topRight'
-                        });
-
-                        // Hapus efek loading dari button
-                        submitButton.classList.remove('loading');
-                        submitButton.innerHTML = 'Kirim';
-
-                        // Tutup modal
-                        $(modalId).modal('hide');
-                        $('.modal-backdrop').remove();
-                        $('body').removeClass('modal-open');
-                        $('body').css('padding-right', '');
-
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1000);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-
-                        submitButton.classList.remove('loading');
-                        submitButton.innerHTML = 'Kirim';
-
-                        iziToast.error({
-                            title: 'Error',
-                            message: 'Terjadi kesalahan saat mengirim data.',
-                            position: 'topRight'
-                        });
-                    });
-            });
-
-        });
     </script>
 @endpush
