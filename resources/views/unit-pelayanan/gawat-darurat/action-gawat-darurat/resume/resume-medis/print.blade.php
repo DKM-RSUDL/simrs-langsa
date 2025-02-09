@@ -184,7 +184,7 @@
             </tr>
             <tr>
                 <th>Hasil Pemeriksaan Fisik</th>
-                <td></td>
+                <td>{{ $hasilKonpas }}</td>
             </tr>
             <tr>
                 <th>Temuan Klinik Penunjang</th>
@@ -192,19 +192,90 @@
             </tr>
             <tr>
                 <th>Diagnosis Primer</th>
-                <td></td>
+                <td>{{ $resume->diagnosis[0] ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Diagnosis Sekunder</th>
-                <td></td>
+                <td>
+                    @if (isset($resume->diagnosis[1]))
+                        @for ($i=1; $i < count($resume->diagnosis); $i++)
+                            - {{ $resume->diagnosis[$i] }} <br>
+                        @endfor
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Tindakan</th>
-                <td></td>
+                <td>
+                    <ul>
+                        @if (!empty($labor))
+                            <li>
+                                <p><strong>Lab Test</strong></p>
+                                <ol>
+                                    @foreach ($labor as $lab)
+                                        @foreach ($lab->details as $dt)
+                                            <li>
+                                                {{ $dt->produk->deskripsi }} <br>
+                                            </li>
+                                        @endforeach
+                                    @endforeach
+                                </ol>
+                            </li>
+                        @endif
+
+                        @if (!empty($radiologi))
+                            <li>
+                                <p><strong>Rad Test</strong></p>
+                                <ol>
+                                    @foreach ($radiologi as $rad)
+                                        @foreach ($rad->details as $dt)
+                                            <li>
+                                                {{ $dt->produk->deskripsi }} <br>
+                                            </li>
+                                        @endforeach
+                                    @endforeach
+                                </ol>
+                            </li>
+                        @endif
+
+                        @if (!empty($tindakan))
+                            <li>
+                                <p><strong>Lainnya</strong></p>
+                                <ol>
+                                    @foreach ($tindakan as $tind)
+                                        <li>
+                                            {{ $tind->produk->deskripsi }} <br>
+                                        </li>
+                                    @endforeach
+                                </ol>
+                            </li>
+                        @endif
+                    </ul>
+                </td>
             </tr>
             <tr>
                 <th>Terapi Selama Dirawat</th>
-                <td></td>
+                <td>
+                    @foreach ($resepAll as $resep)
+                        @foreach ($resep->detailResep as $dt)
+                            - {{ $dt->aptObat->nama_obat . ' ' . $dt->cara_pakai }} <br>
+                        @endforeach
+                    @endforeach
+                </td>
+            </tr>
+            <tr class="table-section-title">
+                <th colspan="2">Anjuran / Follow up</th>
+            </tr>
+            <tr>
+                <th>Diet</th>
+                <td>{{ $resume->anjuran_diet }}</td>
+            </tr>
+            <tr>
+                <th>Edukasi</th>
+                <td>{{ $resume->anjuran_edukasi }}</td>
+            </tr>
+            <tr class="table-section-title">
+                <th colspan="2">Tindak lanjut</th>
             </tr>
             <tr>
                 <th>Tindak Lanjut</th>

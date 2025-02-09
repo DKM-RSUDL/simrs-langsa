@@ -348,12 +348,12 @@
 
                             <div class="form-group">
                                 <label for="anjuran_diet" class="form-label">Diet</label>
-                                <textarea class="form-control" id="anjuran_diet" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                                <textarea class="form-control" id="anjuran_diet" rows="3">{{ $dataResume->anjuran_diet ?? '-' }}</textarea>
                             </div>
 
                             <div class="form-group mt-3">
                                 <label for="anjuran_edukasi" class="form-label">Edukasi</label>
-                                <textarea class="form-control" id="anjuran_edukasi" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
+                                <textarea class="form-control" id="anjuran_edukasi" rows="3">{{ $dataResume->anjuran_edukasi ?? '-' }}</textarea>
                             </div>
                         </div>
 
@@ -564,6 +564,7 @@
             const previousTglPulang = '{{ $dataResume->rmeResumeDet->tgl_pulang ?? '' }}';
             const previousJamPulang = '{{ $dataResume->rmeResumeDet->jam_pulang ?? '' }}';
             const previousAlasanPulang = '{{ $dataResume->rmeResumeDet->alasan_pulang ?? '' }}';
+            const previousKondisiPulang = '{{ $dataResume->rmeResumeDet->kondisi_pulang ?? '' }}';
 
 
             // Ambil resume_id, biarkan null jika tidak ada
@@ -679,10 +680,12 @@
             let tglPulangTL = $('#selesaiKlinikModal #tgl_pulang').val() || previousTglPulang;
             let jamPulangTL = $('#selesaiKlinikModal #jam_pulang').val()  || previousJamPulang;
             let alasanPulangTL = $('#selesaiKlinikModal #alasan_pulang').val()  || previousAlasanPulang;
+            let kondisiPulangTL = $('#selesaiKlinikModal #kondisi_pulang').val()  || previousKondisiPulang;
 
             formData.append('tgl_pulang', tglPulangTL);
             formData.append('jam_pulang', jamPulangTL);
             formData.append('alasan_pulang', alasanPulangTL);
+            formData.append('kondisi_pulang', kondisiPulangTL);
 
             formData.append('anjuran_diet', $('#anjuran_diet').val().trim());
             formData.append('anjuran_edukasi', $('#anjuran_edukasi').val().trim());

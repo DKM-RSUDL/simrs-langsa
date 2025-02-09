@@ -1095,7 +1095,6 @@
                     <button
                     class="btn btn-info print-pdf-btn"
                     onclick="printPDF(this)"
-                    data-id="{{ $item->id }}"
                     data-kd-pasien="{{ $dataMedis->kd_pasien }}"
                     data-tgl-masuk="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}"
                   >

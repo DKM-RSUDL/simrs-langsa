@@ -23,6 +23,14 @@
                         <option value="3" @selected($dataResume->rmeResumeDet->alasan_pulang == 3)>Atas Permintaan Sendiri</option>
                     </select>
                 </div>
+                <div class="form-group mt-3">
+                    <label for="kondisi_pulang" class="form-label">Kondisi Pulang</label>
+                    <select name="kondisi_pulang" id="kondisi_pulang" class="form-select">
+                        <option value="">--Pilih Kondisi--</option>
+                        <option value="1" @selected($dataResume->rmeResumeDet->kondisi_pulang == 1)>Mandiri</option>
+                        <option value="2" @selected($dataResume->rmeResumeDet->kondisi_pulang == 2)>Tidak Mandiri</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -44,8 +52,9 @@
             let tglPulang = $modal.find('#tgl_pulang').val();
             let jamPulang = $modal.find('#jam_pulang').val();
             let alasanPulang = $modal.find('#alasan_pulang').val();
+            let kondisiPulang = $modal.find('#kondisi_pulang').val();
 
-            if(tglPulang == '' || jamPulang == '' || alasanPulang == '') {
+            if(tglPulang == '' || jamPulang == '' || alasanPulang == '' || kondisiPulang == '') {
                 Swal.fire({
                     title: "Error",
                     text: 'Harap mengisi semua inputan pulang !',

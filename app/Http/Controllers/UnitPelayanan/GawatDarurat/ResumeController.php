@@ -11,6 +11,8 @@ use App\Models\DokterKlinik;
 use App\Models\ICD9Baru;
 use App\Models\Konsultasi;
 use App\Models\Kunjungan;
+use App\Models\ListTindakanPasien;
+use App\Models\MrResep;
 use App\Models\Penyakit;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
@@ -317,6 +319,7 @@ class ResumeController extends Controller
                 'tgl_pulang'    => $request->tgl_pulang,
                 'jam_pulang'    => $request->jam_pulang,
                 'alasan_pulang'    => $request->alasan_pulang,
+                'kondisi_pulang'    => $request->kondisi_pulang,
             ]
         );
 
@@ -387,7 +390,68 @@ class ResumeController extends Controller
 
         if (empty($resume)) return back()->with('error', 'Gagal menemukan data resume !');
 
-        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact('resume', 'dataMedis'))
+        $konpas = $resume->konpas;
+
+        $sistole = isset($konpas['sistole']['hasil']) ? $konpas['sistole']['hasil'] : '-';
+        $distole = isset($konpas['distole']['hasil']) ? $konpas['distole']['hasil'] : '-';
+        $tdKonpas = "TD : $sistole/$distole mmHg";
+
+        $rrKonpas = isset($konpas['respiration_rate']['hasil']) ? $konpas['respiration_rate']['hasil'] : '-';
+        $rr = "RR : $rrKonpas x/mnt";
+
+        $respKonpas = isset($konpas['nadi']['hasil']) ? $konpas['nadi']['hasil'] : '-';
+        $resp = "Resp : $respKonpas x/mnt";
+
+        $tempKonpas = isset($konpas['suhu']['hasil']) ? $konpas['suhu']['hasil'] : '-';
+        $temp = "Suhu : $tempKonpas C";
+
+        $tbKonpas = isset($konpas['tinggi_badan']['hasil']) ? $konpas['tinggi_badan']['hasil'] : '-';
+        $tb = "TB : $tbKonpas cm";
+
+        $bbKonpas = isset($konpas['berat_badan']['hasil']) ? $konpas['berat_badan']['hasil'] : '-';
+        $bb = "BB : $bbKonpas kg";
+
+        $hasilKonpas = "$tdKonpas, $rr, $resp, $temp, $tb, $bb";
+
+        $resepAll = MrResep::with(['detailResep'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+        $labor = SegalaOrder::with(['details'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 'LB')
+            ->get();
+
+        $radiologi = SegalaOrder::with(['details'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 'RD')
+            ->get();
+
+        $tindakan = ListTindakanPasien::with(['produk'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->get();
+
+        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact(
+            'resume',
+            'dataMedis',
+            'hasilKonpas',
+            'resepAll',
+            'labor',
+            'radiologi',
+            'tindakan'
+        ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
     }
