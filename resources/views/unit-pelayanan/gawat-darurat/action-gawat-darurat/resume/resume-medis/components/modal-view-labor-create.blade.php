@@ -23,6 +23,7 @@
                             <th>Hasil</th>
                             <th>Satuan</th>
                             <th>Nilai Normal</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                     <tbody id="modal-hasil-content">
@@ -31,6 +32,7 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-primary" id="saveLabDataPrint">Simpan Pilihan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -68,7 +70,7 @@
                         // Header klasifikasi
                         $('#modal-hasil-content').append(`
                             <tr class="table-secondary">
-                                <td colspan="5" class="fw-bold">${klasifikasi}</td>
+                                <td colspan="6" class="fw-bold">${klasifikasi}</td>
                             </tr>
                         `);
 
@@ -81,6 +83,9 @@
                                     <td>${test.hasil || '-'}</td>
                                     <td>${test.satuan || '-'}</td>
                                     <td>${test.nilai_normal || '-'}</td>
+                                    <td>
+                                        <input type="checkbox" name="labdata_print[]" value="${test.item_test + ' = ' + test.hasil + ' ' + test.satuan}" class="addLabDataPrint">
+                                    </td>
                                 </tr>
                             `;
                             $('#modal-hasil-content').append(row);
@@ -110,6 +115,26 @@
 
                 // Tampilkan modal
                 $('#modal-view-labor-create').modal('show');
+            });
+
+
+            $('#saveLabDataPrint').click(function() {
+                let $this = $(this);
+                let $modal = $this.closest('.modal');
+                let hasilPemeriksaanInputEl = $('#pemeriksaan_penunjang');
+                let hasilPemeriksaanVal = $(hasilPemeriksaanInputEl).val();
+
+                let hasilSelected = $('input[name="labdata_print[]"]:checked');
+                let hasilVal = '';
+
+                $(hasilSelected).each((i, e) => {
+                    if($(e).val().trim() != '') hasilVal += $(e).val().trim() + ', ';
+                });
+
+                let valResult = hasilPemeriksaanVal + hasilVal;
+                $(hasilPemeriksaanInputEl).val(valResult);
+
+                $modal.modal('hide');
             });
         });
     </script>

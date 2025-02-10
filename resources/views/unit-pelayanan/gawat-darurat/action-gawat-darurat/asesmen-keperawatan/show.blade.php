@@ -48,8 +48,9 @@
                                         </p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>                                        
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="showBreathingTandaDistress"></ul>                                        
+                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>
+                                        <ul class="list-unstyled border-start border-primary ps-2"
+                                            id="showBreathingTandaDistress"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -104,8 +105,9 @@
                                                 id="breathing_gangguan"></span></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>                                        
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="breathing_tindakan"></ul>
+                                        <label class="form-label fw-bold">Tindakan Keperawatan :</label>
+                                        <ul class="list-unstyled border-start border-primary ps-2"
+                                            id="breathing_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +176,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="circulation_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2"
+                                            id="circulation_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -224,7 +227,8 @@
                                     <div class="mb-3">
                                         <span class="form-label fw-bold">Diagnosis Keperawatan :</span><br>
                                         <p class="form-control-plaintext">Perfusi jaringan cereberal tidak efektif :
-                                            <span id="disability_diagnosis_perfusi"></span></p>
+                                            <span id="disability_diagnosis_perfusi"></span>
+                                        </p>
                                         <p class="form-control-plaintext">Intoleransi aktivitas : <span
                                                 id="disability_diagnosis_intoleransi"></span></p>
                                         <p class="form-control-plaintext">Kendala komunikasi verbal : <span
@@ -241,7 +245,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="disability_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2"
+                                            id="disability_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +320,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tindakan Keperawatan :</label>
-                                        <ul class="list-unstyled border-start border-primary ps-2" id="exposure_tindakan"></ul>                                        
+                                        <ul class="list-unstyled border-start border-primary ps-2"
+                                            id="exposure_tindakan"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -361,15 +367,18 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Peringan :</label>
-                                        <p id="skala_nyeri_peringan_id" class="form-control-plaintext  border-bottom"></p>
+                                        <p id="skala_nyeri_peringan_id" class="form-control-plaintext  border-bottom">
+                                        </p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Frekuensi :</label>
-                                        <p id="skala_nyeri_frekuensi_id" class="form-control-plaintext  border-bottom"></p>
+                                        <p id="skala_nyeri_frekuensi_id"
+                                            class="form-control-plaintext  border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Jenis :</label>
-                                        <p id="skala_nyeri_jenis_id" class="form-control-plaintext  border-bottom"></p>
+                                        <p id="skala_nyeri_jenis_id" class="form-control-plaintext  border-bottom">
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -381,215 +390,281 @@
                 <div class="tab-pane fade show mt-3">
                     <div class="card">
                         <div class="card-body">
-                                <h5>7. Risiko Jatuh</h5>
-                                <!-- Form Skala Umum -->
-                                <div id="form_skala_umum" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien berusia < dari 2 tahun? :</label>
-                                                <p id="risiko_jatuh_umum_usia" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien dalam kondisi sebagai geriatri, dizzines, vertigo, gangguan keseimbangan, gangguan penglihatan, penggunaan obat sedasi, status kesadaran dan atau kejiwaan, konsumsi alkohol? :</label>
-                                                <p id="risiko_jatuh_umum_kondisi_khusus" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien didiagnosis sebagai pasien dengan penyakit parkinson? :</label>
-                                                <p id="risiko_jatuh_umum_diagnosis_parkinson" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <h5>7. Risiko Jatuh</h5>
+                            <!-- Form Skala Umum -->
+                            <div id="form_skala_umum" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien berusia < dari 2 tahun?
+                                                    :</label>
+                                                    <p id="risiko_jatuh_umum_usia"
+                                                        class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien sedang mendapatkan obat sedasi, riwayat tirah baring lama, perubahan posisi yang akan meningkatkan risiko jatuh? :</label>
-                                                <p id="risiko_jatuh_umum_pengobatan_berisiko" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien saat ini sedang berada pada salah satu lokasi ini: rehab medik, ruangan dengan penerangan kurang dan bertangga? :</label>
-                                                <p id="risiko_jatuh_umum_lokasi_berisiko" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="risiko_jatuh_umum_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien dalam kondisi sebagai
+                                                geriatri, dizzines, vertigo, gangguan keseimbangan, gangguan
+                                                penglihatan, penggunaan obat sedasi, status kesadaran dan atau kejiwaan,
+                                                konsumsi alkohol? :</label>
+                                            <p id="risiko_jatuh_umum_kondisi_khusus"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien didiagnosis sebagai pasien
+                                                dengan penyakit parkinson? :</label>
+                                            <p id="risiko_jatuh_umum_diagnosis_parkinson"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien sedang mendapatkan obat
+                                                sedasi, riwayat tirah baring lama, perubahan posisi yang akan
+                                                meningkatkan risiko jatuh? :</label>
+                                            <p id="risiko_jatuh_umum_pengobatan_berisiko"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien saat ini sedang berada pada
+                                                salah satu lokasi ini: rehab medik, ruangan dengan penerangan kurang dan
+                                                bertangga? :</label>
+                                            <p id="risiko_jatuh_umum_lokasi_berisiko"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="risiko_jatuh_umum_kesimpulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Form Skala Morse -->
-                                <div id="form_skala_morse" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien pernah mengalami Jatuh? :</label>
-                                                <p id="risiko_jatuh_morse_riwayat_jatuh" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien memiliki diagnosis skunder? :</label>
-                                                <p id="risiko_jatuh_morse_diagnosis_sekunder" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien membutuhkan bantuan ambulasi? :</label>
-                                                <p id="risiko_jatuh_morse_bantuan_ambulasi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien terpasang infus? :</label>
-                                                <p id="risiko_jatuh_morse_terpasang_infus" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Form Skala Morse -->
+                            <div id="form_skala_morse" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien pernah mengalami Jatuh? :</label>
+                                            <p id="risiko_jatuh_morse_riwayat_jatuh"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Bagaimana cara berjalan pasien? :</label>
-                                                <p id="risiko_jatuh_morse_cara_berjalan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Bagaimana status mental pasien? :</label>
-                                                <p id="risiko_jatuh_morse_status_mental" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="risiko_jatuh_morse_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien memiliki diagnosis skunder?
+                                                :</label>
+                                            <p id="risiko_jatuh_morse_diagnosis_sekunder"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien membutuhkan bantuan ambulasi?
+                                                :</label>
+                                            <p id="risiko_jatuh_morse_bantuan_ambulasi"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien terpasang infus? :</label>
+                                            <p id="risiko_jatuh_morse_terpasang_infus"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Bagaimana cara berjalan pasien? :</label>
+                                            <p id="risiko_jatuh_morse_cara_berjalan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Bagaimana status mental pasien? :</label>
+                                            <p id="risiko_jatuh_morse_status_mental"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="risiko_jatuh_morse_kesimpulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Isi form humpty -->
-                                <div id="form_skala_humpty" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Usia Anak? :</label>
-                                                <p id="risiko_jatuh_pediatrik_usia_anak" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Jenis kelamin :</label>
-                                                <p id="risiko_jatuh_pediatrik_jenis_kelamin" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Diagnosis :</label>
-                                                <p id="risiko_jatuh_pediatrik_diagnosis" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Gangguan Kognitif :</label>
-                                                <p id="risiko_jatuh_pediatrik_gangguan_kognitif" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Isi form humpty -->
+                            <div id="form_skala_humpty" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Usia Anak? :</label>
+                                            <p id="risiko_jatuh_pediatrik_usia_anak"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Faktor Lingkungan :</label>
-                                                <p id="risiko_jatuh_pediatrik_faktor_lingkungan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pembedahan/ sedasi/ Anestesi :</label>
-                                                <p id="risiko_jatuh_pediatrik_pembedahan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Penggunaan Medika mentosa :</label>
-                                                <p id="risiko_jatuh_pediatrik_penggunaan_mentosa" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="risiko_jatuh_pediatrik_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Jenis kelamin :</label>
+                                            <p id="risiko_jatuh_pediatrik_jenis_kelamin"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Diagnosis :</label>
+                                            <p id="risiko_jatuh_pediatrik_diagnosis"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Gangguan Kognitif :</label>
+                                            <p id="risiko_jatuh_pediatrik_gangguan_kognitif"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Faktor Lingkungan :</label>
+                                            <p id="risiko_jatuh_pediatrik_faktor_lingkungan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pembedahan/ sedasi/ Anestesi :</label>
+                                            <p id="risiko_jatuh_pediatrik_pembedahan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Penggunaan Medika mentosa :</label>
+                                            <p id="risiko_jatuh_pediatrik_penggunaan_mentosa"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="risiko_jatuh_pediatrik_kesimpulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Isi form ontario -->
-                                <div id="form_skala_ontario" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <span class="fw-bold">1. Riwayat Jatuh</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien datang kerumah sakit karena jatuh? :</label>
-                                                <p id="risiko_jatuh_lansia_jatuh_saat_masuk_rs" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien memiliki 2 kali atau apakah pasien mengalami jatuh dalam 2 bulan terakhir ini/ diagnosis multiple? :</label>
-                                                <p id="risiko_jatuh_lansia_riwayat_jatuh_2_bulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <span class="fw-bold">2. Status Mental</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien bingung? (Tidak dapat membuat keputusan, jaga jarak tempatnya, gangguan daya ingat) :</label>
-                                                <p id="risiko_jatuh_lansia_status_bingung" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien disorientasi? (tidak menyadarkan waktu, tempat atau orang) :</label>
-                                                <p id="risiko_jatuh_lansia_status_disorientasi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami agitasi? (keresahan, gelisah, dan cemas) :</label>
-                                                <p id="risiko_jatuh_lansia_status_agitasi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <span class="fw-bold">3. Status Mental</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien memakai Kacamata? :</label>
-                                                <p id="risiko_jatuh_lansia_kacamata" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami kelainya penglihatan/buram? :</label>
-                                                <p id="risiko_jatuh_lansia_kelainan_penglihatan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mempunyai glukoma/ katarak/ degenerasi makula? :</label>
-                                                <p id="risiko_jatuh_lansia_glukoma" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <span class="fw-bold">4. Kebiasaan Berkemih</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah terdapat perubahan perilaku berkemih? (frekuensi, urgensi, inkontinensia, noktura) :</label>
-                                                <p id="risiko_jatuh_lansia_perubahan_berkemih" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Isi form ontario -->
+                            <div id="form_skala_ontario" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="fw-bold">1. Riwayat Jatuh</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien datang kerumah sakit karena
+                                                jatuh? :</label>
+                                            <p id="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <span class="fw-bold">5. Transfer (dari tempat tidur ke kursi dan kembali lagi ke tempat tidur)</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Mandiri (boleh menolak saat bantu jatuh) :</label>
-                                                <p id="risiko_jatuh_lansia_transfer_mandiri" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Memerlukan sedikit bantuan (1 orang) / dalam pengawasan :</label>
-                                                <p id="risiko_jatuh_lansia_transfer_bantuan_sedikit" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Memerlukan bantuan yang nyata (2 orang) :</label>
-                                                <p id="risiko_jatuh_lansia_transfer_bantuan_nyata" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Tidak dapat duduk dengan seimbang, perlu bantuan total :</label>
-                                                <p id="risiko_jatuh_lansia_transfer_bantuan_total" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <span class="fw-bold">6. Mobilitas Pasien</span>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Mandiri (dapat menggunakan alat bantu jalan) :</label>
-                                                <p id="risiko_jatuh_lansia_mobilitas_mandiri" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">berjalan dengan bantuan 1 orang (verbal/ fisik) :</label>
-                                                <p id="risiko_jatuh_lansia_mobilitas_bantuan_1_orang" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Menggunakan kusi roda :</label>
-                                                <p id="risiko_jatuh_lansia_mobilitas_kursi_roda" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Imobilisasi :</label>
-                                                <p id="risiko_jatuh_lansia_mobilitas_imobilisasi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="risiko_jatuh_lansia_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien memiliki 2 kali atau apakah pasien
+                                                mengalami jatuh dalam 2 bulan terakhir ini/ diagnosis multiple?
+                                                :</label>
+                                            <p id="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <span class="fw-bold">2. Status Mental</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien bingung? (Tidak dapat
+                                                membuat keputusan, jaga jarak tempatnya, gangguan daya ingat) :</label>
+                                            <p id="risiko_jatuh_lansia_status_bingung"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien disorientasi? (tidak
+                                                menyadarkan waktu, tempat atau orang) :</label>
+                                            <p id="risiko_jatuh_lansia_status_disorientasi"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami agitasi?
+                                                (keresahan, gelisah, dan cemas) :</label>
+                                            <p id="risiko_jatuh_lansia_status_agitasi"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <span class="fw-bold">3. Status Mental</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien memakai Kacamata? :</label>
+                                            <p id="risiko_jatuh_lansia_kacamata"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami kelainya
+                                                penglihatan/buram? :</label>
+                                            <p id="risiko_jatuh_lansia_kelainan_penglihatan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mempunyai glukoma/ katarak/
+                                                degenerasi makula? :</label>
+                                            <p id="risiko_jatuh_lansia_glukoma"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <span class="fw-bold">4. Kebiasaan Berkemih</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah terdapat perubahan perilaku
+                                                berkemih? (frekuensi, urgensi, inkontinensia, noktura) :</label>
+                                            <p id="risiko_jatuh_lansia_perubahan_berkemih"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="fw-bold">5. Transfer (dari tempat tidur ke kursi dan kembali lagi
+                                            ke tempat tidur)</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Mandiri (boleh menolak saat bantu jatuh)
+                                                :</label>
+                                            <p id="risiko_jatuh_lansia_transfer_mandiri"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Memerlukan sedikit bantuan (1 orang) /
+                                                dalam pengawasan :</label>
+                                            <p id="risiko_jatuh_lansia_transfer_bantuan_sedikit"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Memerlukan bantuan yang nyata (2 orang)
+                                                :</label>
+                                            <p id="risiko_jatuh_lansia_transfer_bantuan_nyata"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Tidak dapat duduk dengan seimbang, perlu
+                                                bantuan total :</label>
+                                            <p id="risiko_jatuh_lansia_transfer_bantuan_total"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <span class="fw-bold">6. Mobilitas Pasien</span>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Mandiri (dapat menggunakan alat bantu
+                                                jalan) :</label>
+                                            <p id="risiko_jatuh_lansia_mobilitas_mandiri"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">berjalan dengan bantuan 1 orang (verbal/
+                                                fisik) :</label>
+                                            <p id="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Menggunakan kusi roda :</label>
+                                            <p id="risiko_jatuh_lansia_mobilitas_kursi_roda"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Imobilisasi :</label>
+                                            <p id="risiko_jatuh_lansia_mobilitas_imobilisasi"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="risiko_jatuh_lansia_kesimpulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div id="form_tidak_ada_resiko" style="display: none;">
-                                    <p>Tidak ada risiko jatuh yang teridentifikasi</p>
-                                </div>
+                            <div id="form_tidak_ada_resiko" style="display: none;">
+                                <p>Tidak ada risiko jatuh yang teridentifikasi</p>
+                            </div>
 
-                                <label class="form-label fw-bold">Resiko Jatuh Tindakan :</label>
-                                <ul class="list-unstyled border-start border-primary ps-2" id="risik_jatuh_tindakan"></ul>                                
+                            <label class="form-label fw-bold">Resiko Jatuh Tindakan :</label>
+                            <ul class="list-unstyled border-start border-primary ps-2" id="risik_jatuh_tindakan"></ul>
 
                         </div>
                     </div>
@@ -607,8 +682,10 @@
                                         <p id="psikologis_kondisi" class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Potensi menyakiti diri sendiri/orang lain :</label>
-                                        <p id="psikologis_potensi_menyakiti" class="form-control-plaintext border-bottom"></p>
+                                        <label class="form-label fw-bold">Potensi menyakiti diri sendiri/orang lain
+                                            :</label>
+                                        <p id="psikologis_potensi_menyakiti"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -654,33 +731,40 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Pekerjaan :</label>
-                                        <p id="sosial_ekonomi_pekerjaan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_pekerjaan" class="form-control-plaintext border-bottom">
+                                        </p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tingkat penghasilan :</label>
-                                        <p id="sosial_ekonomi_tingkat_penghasilan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_tingkat_penghasilan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Status pernikahan :</label>
-                                        <p id="sosial_ekonomi_status_pernikahan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_status_pernikahan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tempat tinggal :</label>
-                                        <p id="sosial_ekonomi_tempat_tinggal" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_tempat_tinggal"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Status tinggal dengan keluarga :</label>
-                                        <p id="sosial_ekonomi_tinggal_dengan_keluarga" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_tinggal_dengan_keluarga"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Curiga penganiayaan :</label>
-                                        <p id="sosial_ekonomi_curiga_penganiayaan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_curiga_penganiayaan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Lainnya :</label>
-                                        <p id="sosial_ekonomi_keterangan_lain" class="form-control-plaintext border-bottom"></p>
+                                        <p id="sosial_ekonomi_keterangan_lain"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                             </div>
@@ -693,134 +777,180 @@
                     <div class="card">
                         <div class="card-body">
                             <h5>11. Status Gizi</h5>
-                                <!-- Form mst -->
-                                <div id="form_mst" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami penurunan BB yang tidak diinginkan dalam 6 bulan terakhir? :</label>
-                                                <p id="gizi_mst_penurunan_bb" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Jika jawaban di atas "Ya ada penurunan BB", berapa penurunan BB tersebut? :</label>
-                                                <p id="gizi_mst_jumlah_penurunan_bb" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah asupan makan berkurang karena tidak nafsu makan? :</label>
-                                                <p id="gizi_mst_nafsu_makan_berkurang" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Form mst -->
+                            <div id="form_mst" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami penurunan BB yang
+                                                tidak diinginkan dalam 6 bulan terakhir? :</label>
+                                            <p id="gizi_mst_penurunan_bb"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pasien didiagnosa khusus seperti: DM, Cancer (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imum :</label>
-                                                <p id="gizi_mst_diagnosis_khusus" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan</label>
-                                                <p id="gizi_mst_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Jika jawaban di atas "Ya ada penurunan
+                                                BB", berapa penurunan BB tersebut? :</label>
+                                            <p id="gizi_mst_jumlah_penurunan_bb"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah asupan makan berkurang karena
+                                                tidak nafsu makan? :</label>
+                                            <p id="gizi_mst_nafsu_makan_berkurang"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Pasien didiagnosa khusus seperti: DM,
+                                                Cancer (kemoterapi), Geriatri, GGk (hemodialisis), Penurunan Imum
+                                                :</label>
+                                            <p id="gizi_mst_diagnosis_khusus"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan</label>
+                                            <p id="gizi_mst_kesimpulan" class="form-control-plaintext border-bottom">
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Form mna -->
-                                <div id="form_mna" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami penurunan asupan makanan selama 3 bulan terakhir karena hilang selera makan, masalah pencernaan, kesulitan mengunyah atau menelan? :</label>
-                                                <p id="gizi_mna_penurunan_asupan_3_bulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami kehilangan Berat Badan (BB) selama 3 bulan terakhir? :</label>
-                                                <p id="gizi_mna_kehilangan_bb_3_bulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Bagaimana mobilisasi atau pergerakan pasien? :</label>
-                                                <p id="gizi_mna_mobilisasi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah Pasien mengalami stres psikologi atau penyakit akut selama 3 bulan terakhir? :</label>
-                                                <p id="gizi_mna_stress_penyakit_akut" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien mengalami masalah neuropsikologi? :</label>
-                                                <p id="gizi_mna_status_neuropsikologi" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Form mna -->
+                            <div id="form_mna" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami penurunan asupan
+                                                makanan selama 3 bulan terakhir karena hilang selera makan, masalah
+                                                pencernaan, kesulitan mengunyah atau menelan? :</label>
+                                            <p id="gizi_mna_penurunan_asupan_3_bulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Berapa Berat Badan (BB) pasien? (Kg) :</label>
-                                                <p id="gizi_mna_berat_badan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Berapa Tinggi Badan (TB) pasien? (cm) :</label>
-                                                <p id="gizi_mna_tinggi_badan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Indeks Massa Tubuh (IMT) :</label>
-                                                <p id="gizi_mna_imt" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="gizi_mna_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami kehilangan Berat
+                                                Badan (BB) selama 3 bulan terakhir? :</label>
+                                            <p id="gizi_mna_kehilangan_bb_3_bulan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Bagaimana mobilisasi atau pergerakan
+                                                pasien? :</label>
+                                            <p id="gizi_mna_mobilisasi" class="form-control-plaintext border-bottom">
+                                            </p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah Pasien mengalami stres psikologi
+                                                atau penyakit akut selama 3 bulan terakhir? :</label>
+                                            <p id="gizi_mna_stress_penyakit_akut"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien mengalami masalah
+                                                neuropsikologi? :</label>
+                                            <p id="gizi_mna_status_neuropsikologi"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Berapa Berat Badan (BB) pasien? (Kg)
+                                                :</label>
+                                            <p id="gizi_mna_berat_badan" class="form-control-plaintext border-bottom">
+                                            </p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Berapa Tinggi Badan (TB) pasien? (cm)
+                                                :</label>
+                                            <p id="gizi_mna_tinggi_badan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Indeks Massa Tubuh (IMT) :</label>
+                                            <p id="gizi_mna_imt" class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="gizi_mna_kesimpulan" class="form-control-plaintext border-bottom">
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Form strong-kids -->
-                                <div id="form_strong-kids" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah anak tampa kurus kehilangan lemak subkutan, kehilangan massa otot, dan/ atau wajah cekung? :</label>
-                                                <p id="gizi_strong_status_kurus" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah terdapat penurunan BB selama satu bulan terakhir (untuk semua usia)? (berdasarkan penilaian objektif data BB bila ada/penilaian subjektif dari orang tua pasien ATAu tidak ada peningkatan berat badan atau tinggi badan (pada bayi < 1 tahun) selama 3 bulan terakhir) :</label>
-                                                <p id="gizi_strong_penurunan_bb" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            <!-- Form strong-kids -->
+                            <div id="form_strong-kids" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah anak tampa kurus kehilangan lemak
+                                                subkutan, kehilangan massa otot, dan/ atau wajah cekung? :</label>
+                                            <p id="gizi_strong_status_kurus"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah salah satu dari hal berikut ini ada?
-                                                    - Diare berlabihan (>= 5 kali perhari) dan/atau muntah(>3 klai perhari) selama 1-3 hari terakhir - Penurunan asupan makanan selama 1-3 hari terakhir - Intervensi gizi yang sudah ada sebelumnya (misalnya, ONS atau pemberian maka selang) :</label>
-                                                <p id="gizi_strong_gangguan_pencernaan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah terdapat penyakit atau keadaan yang mengakibatkan pasien berisiko mengalaman mainutrisi?
-                                                    <a href="#">Lihat penyakit yang berisiko malnutrisi</a> :</label>
-                                                <p id="gizi_strong_penyakit_berisiko" class="form-control-plaintext border-bottom"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Kesimpulan :</label>
-                                                <p id="gizi_strong_kesimpulan" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah terdapat penurunan BB selama satu
+                                                bulan terakhir (untuk semua usia)? (berdasarkan penilaian objektif data
+                                                BB bila ada/penilaian subjektif dari orang tua pasien ATAu tidak ada
+                                                peningkatan berat badan atau tinggi badan (pada bayi < 1 tahun) selama 3
+                                                    bulan terakhir) :</label>
+                                                    <p id="gizi_strong_penurunan_bb"
+                                                        class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah salah satu dari hal berikut ini
+                                                ada?
+                                                - Diare berlabihan (>= 5 kali perhari) dan/atau muntah(>3 klai perhari)
+                                                selama 1-3 hari terakhir - Penurunan asupan makanan selama 1-3 hari
+                                                terakhir - Intervensi gizi yang sudah ada sebelumnya (misalnya, ONS atau
+                                                pemberian maka selang) :</label>
+                                            <p id="gizi_strong_gangguan_pencernaan"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah terdapat penyakit atau keadaan
+                                                yang mengakibatkan pasien berisiko mengalaman mainutrisi?
+                                                <a href="#">Lihat penyakit yang berisiko malnutrisi</a> :</label>
+                                            <p id="gizi_strong_penyakit_berisiko"
+                                                class="form-control-plaintext border-bottom"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Kesimpulan :</label>
+                                            <p id="gizi_strong_kesimpulan"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Form nrs -->
-                                <div id="form_nrs" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien berusia < dari 2 tahun? :</label>
-                                                <p id="risiko_jatuh_umum_usia" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                            </div>
+                            <!-- Form nrs -->
+                            <div id="form_nrs" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien berusia < dari 2 tahun?
+                                                    :</label>
+                                                    <p id="risiko_jatuh_umum_usia"
+                                                        class="form-control-plaintext border-bottom"></p>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Apakah pasien sedang mendapatkan obat sedasi, riwayat tirah baring lama, perubahan posisi yang akan meningkatkan risiko jatuh? :</label>
-                                                <p id="risiko_jatuh_umum_pengobatan_berisiko" class="form-control-plaintext border-bottom"></p>
-                                            </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Apakah pasien sedang mendapatkan obat
+                                                sedasi, riwayat tirah baring lama, perubahan posisi yang akan
+                                                meningkatkan risiko jatuh? :</label>
+                                            <p id="risiko_jatuh_umum_pengobatan_berisiko"
+                                                class="form-control-plaintext border-bottom"></p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div id="form_tidak_ada_satus_gizi" style="display: none;">
-                                    <p>Tidak ada status gizi</p>
-                                </div>
+                            <div id="form_tidak_ada_satus_gizi" style="display: none;">
+                                <p>Tidak ada status gizi</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -851,37 +981,45 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Gaya bicara :</label>
-                                        <p id="kebutuhan_edukasi_gaya_bicara" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_gaya_bicara"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Bahasa sehari-hari :</label>
-                                        <p id="kebutuhan_edukasi_bahasa_sehari_hari" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_bahasa_sehari_hari"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Perlu penerjemah :</label>
-                                        <p id="kebutuhan_edukasi_perlu_penerjemah" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_perlu_penerjemah"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Hambatan komunikasi :</label>
-                                        <p id="kebutuhan_edukasi_hambatan_komunikasi" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_hambatan_komunikasi"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Media belajar yang disukai :</label>
-                                        <p id="kebutuhan_edukasi_media_belajar" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_media_belajar"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Tingkat pendidikan :</label>
-                                        <p id="kebutuhan_edukasi_tingkat_pendidikan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_tingkat_pendidikan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Edukasi yang dibutuhkan :</label>
-                                        <p id="kebutuhan_edukasi_edukasi_dibutuhkan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_edukasi_dibutuhkan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Lainnya :</label>
-                                        <p id="kebutuhan_edukasi_keterangan_lain" class="form-control-plaintext border-bottom"></p>
+                                        <p id="kebutuhan_edukasi_keterangan_lain"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                             </div>
@@ -898,29 +1036,37 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Diagnosis medis :</label>
-                                        <p id="discharge_planning_diagnosis_medis" class="form-control-plaintext border-bottom"></p>
+                                        <p id="discharge_planning_diagnosis_medis"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Usia lanjut :</label>
-                                        <p id="discharge_planning_usia_lanjut" class="form-control-plaintext border-bottom"></p>
+                                        <p id="discharge_planning_usia_lanjut"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Hambatan mobilisasi :</label>
-                                        <p id="discharge_planning_hambatan_mobilisasi" class="form-control-plaintext border-bottom"></p>
+                                        <p id="discharge_planning_hambatan_mobilisasi"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Membutuhkan pelayanan medis berkelanjutan :</label>
-                                        <p id="discharge_planning_pelayanan_medis" class="form-control-plaintext border-bottom"></p>
+                                        <label class="form-label fw-bold">Membutuhkan pelayanan medis berkelanjutan
+                                            :</label>
+                                        <p id="discharge_planning_pelayanan_medis"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Ketergantungan dengan orang lain dalam aktivitas harian :</label>
-                                        <p id="discharge_planning_ketergantungan_aktivitas" class="form-control-plaintext border-bottom"></p>
+                                        <label class="form-label fw-bold">Ketergantungan dengan orang lain dalam
+                                            aktivitas harian :</label>
+                                        <p id="discharge_planning_ketergantungan_aktivitas"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Kesimpulan :</label>
-                                        <p id="discharge_planning_kesimpulan" class="form-control-plaintext border-bottom"></p>
+                                        <p id="discharge_planning_kesimpulan"
+                                            class="form-control-plaintext border-bottom"></p>
                                     </div>
                                 </div>
                             </div>
@@ -945,6 +1091,18 @@
                     </div>
                 </div>
 
+                <div class="modal-footer">
+                    <button
+                    class="btn btn-info print-pdf-btn"
+                    onclick="printPDF(this)"
+                    data-kd-pasien="{{ $dataMedis->kd_pasien }}"
+                    data-tgl-masuk="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}"
+                  >
+                    <i class="fas fa-print"></i> Print PDF
+                  </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -952,6 +1110,52 @@
 
 @push('js')
     <script>
+        function printPDF(element) {
+            const id = element.dataset.id;
+            const kdPasien = element.dataset.kdPasien;
+            const tglMasuk = element.dataset.tglMasuk;
+
+            if (!id || !kdPasien || !tglMasuk) {
+                Swal.fire('Error', 'Data tidak lengkap untuk generate PDF', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Generating PDF...',
+                html: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Generate URL PDF dengan data yang benar
+                    const url = `/unit-pelayanan/gawat-darurat/pelayanan/${kdPasien}/${tglMasuk}/asesmen-keperawatan/${id}/print-pdf`;
+
+                    // Buka PDF di tab baru
+                    window.open(url, '_blank');
+
+                    // Tutup loading setelah 2 detik
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 2000);
+                }
+            });
+        }
+
+        // Tambahkan event listener saat modal show untuk update tombol print
+        $('#showasesmenKeperawatanModal').on('show.bs.modal', function(e) {
+            const button = $(e.relatedTarget);
+            const id = button.data('id');
+            const kdPasien = button.data('kd-pasien');
+            const tglMasuk = button.data('tgl-masuk');
+
+            // Update tombol print di dalam modal
+            const printButton = $(this).find('.print-pdf-btn');
+            printButton.attr('data-id', id);
+            printButton.attr('data-kd-pasien', kdPasien);
+            printButton.attr('data-tgl-masuk', tglMasuk);
+        });
+
+
         function showAsesmenKeperawatan(id, kdPasien, tglMasuk) {
             const url = `/unit-pelayanan/gawat-darurat/pelayanan/${kdPasien}/${tglMasuk}/asesmen-keperawatan/${id}`;
 
@@ -973,31 +1177,38 @@
                             pekerjaan
                         } = response.data;
 
+                        // Update print button data
+                        const printBtn = $('#showasesmenKeperawatanModal .print-pdf-btn');
+                        printBtn.attr('data-id', id);
+                        printBtn.attr('data-kd-pasien', kdPasien);
+                        printBtn.attr('data-tgl-masuk', tglMasuk);
+
                         // Data pasien
                         $('#patientName').text(pasien.nama || '-');
-                        $('#patientGender').text(pasien.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan');                        
-                        $('#patientAge').text(`${formatDate(pasien.tgl_lahir)} (${calculateAge(pasien.tgl_lahir)} Tahun)`);
+                        $('#patientGender').text(pasien.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan');
+                        $('#patientAge').text(
+                            `${formatDate(pasien.tgl_lahir)} (${calculateAge(pasien.tgl_lahir)} Tahun)`);
                         $('#assessmentDate').text(pasien.kd_pasien || '-');
 
                         function calculateAge(dateString) {
-                        const dob = new Date(dateString);
-                        const today = new Date();
-                        let age = today.getFullYear() - dob.getFullYear();
-                        const monthDiff = today.getMonth() - dob.getMonth();
-                        
-                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                            age--;
-                        }
-                        return age;
+                            const dob = new Date(dateString);
+                            const today = new Date();
+                            let age = today.getFullYear() - dob.getFullYear();
+                            const monthDiff = today.getMonth() - dob.getMonth();
+
+                            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                                age--;
+                            }
+                            return age;
                         }
 
                         function formatDate(dateString) {
-                        const options = { 
-                            day: '2-digit',
-                            month: 'long', 
-                            year: 'numeric'
-                        };
-                        return new Date(dateString).toLocaleDateString('id-ID', options);
+                            const options = {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric'
+                            };
+                            return new Date(dateString).toLocaleDateString('id-ID', options);
                         }
 
                         // Pastikan objek asesmen tersedia dengan fallback
@@ -1024,7 +1235,7 @@
                         // Tanda distress dengan robust parsing
                         let tindakanArray = JSON.parse(asesmenKepUmum.airway_tindakan);
                         let tindakanArrayHtml = '';
-                        $.each(tindakanArray, function(i,e){
+                        $.each(tindakanArray, function(i, e) {
                             tindakanArrayHtml += `<li>${e}</li>`;
                         });
                         $('#showBreathingTandaDistress').html(tindakanArrayHtml);
@@ -1052,10 +1263,10 @@
                         );
                         let breathingTindakanArray = JSON.parse(asesmenBreathing.breathing_tindakan);
                         let breathingTindakanHtml = '';
-                        $.each(breathingTindakanArray, function(i,e){
+                        $.each(breathingTindakanArray, function(i, e) {
                             breathingTindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#breathing_tindakan').html(breathingTindakanHtml);                        
+                        $('#breathing_tindakan').html(breathingTindakanHtml);
 
                         // Data Circulation
                         $('#circulation_akral').text(
@@ -1098,11 +1309,11 @@
                             asesmenCirculation.circulation_diagnosis_defisit == 2 ? 'Resiko' : '-'
                         );
                         let circulation_tindakanArray = JSON.parse(asesmenCirculation.circulation_tindakan);
-			            let circulation_tindakanHtml = '';
-                            $.each(circulation_tindakanArray, function(i,e){
+                        let circulation_tindakanHtml = '';
+                        $.each(circulation_tindakanArray, function(i, e) {
                             circulation_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#circulation_tindakan').html(circulation_tindakanHtml);                         
+                        $('#circulation_tindakan').html(circulation_tindakanHtml);
 
                         // Data Disability
                         $('#disability_kesadaran').text(asesmenDisability.disability_kesadaran || '-');
@@ -1115,7 +1326,7 @@
                             asesmenDisability.disability_respon_cahaya == 1 ? 'Ya' : '-'
                         );
                         $('#disability_diameter_pupil').text(asesmenDisability.disability_diameter_pupil ||
-                        '-');
+                            '-');
                         $('#disability_motorik').text(
                             asesmenDisability.disability_motorik == 0 ? 'Tidak' :
                             asesmenDisability.disability_motorik == 1 ? 'Ya' : '-'
@@ -1148,11 +1359,11 @@
                         $('#disability_lainnya').text(asesmenDisability.disability_lainnya || '-');
 
                         let disability_tindakanArray = JSON.parse(asesmenDisability.disability_tindakan);
-			            let disability_tindakanHtml = '';
-                            $.each(disability_tindakanArray, function(i,e){
+                        let disability_tindakanHtml = '';
+                        $.each(disability_tindakanArray, function(i, e) {
                             disability_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#disability_tindakan').html(disability_tindakanHtml);                                                 
+                        $('#disability_tindakan').html(disability_tindakanHtml);
 
                         // Data Exposure
                         $('#exposure_deformitas').text(
@@ -1160,7 +1371,7 @@
                             asesmenExposure.exposure_deformitas == 1 ? 'Ya' : '-'
                         );
                         $('#exposure_deformitas_daerah').text(asesmenExposure.exposure_deformitas_daerah ||
-                        '-');
+                            '-');
                         $('#exposure_kontusion').text(
                             asesmenExposure.exposure_kontusion == 0 ? 'Tidak' :
                             asesmenExposure.exposure_kontusion == 1 ? 'Ya' : '-'
@@ -1197,45 +1408,59 @@
                             asesmenExposure.exposure_diagosis_integritas == 2 ? 'Resiko' : '-'
                         );
                         $('#exposure_diagnosis_lainnya').text(asesmenExposure.exposure_diagnosis_lainnya ||
-                        '-');
+                            '-');
 
                         let exposure_tindakanArray = JSON.parse(asesmenExposure.exposure_tindakan);
-			            let exposure_tindakanHtml = '';
-                            $.each(exposure_tindakanArray, function(i,e){
+                        let exposure_tindakanHtml = '';
+                        $.each(exposure_tindakanArray, function(i, e) {
                             exposure_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#exposure_tindakan').html(exposure_tindakanHtml);                         
+                        $('#exposure_tindakan').html(exposure_tindakanHtml);
 
                         // Data Skala Nyeri
                         $('#skala_nyeri').text(asesmenSkalaNyeri.skala_nyeri || '-');
                         $('#skala_nyeri_lokasi').text(asesmenSkalaNyeri.skala_nyeri_lokasi || '-');
+
                         function getPemberatText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'Cahaya';
-                                case 2: return 'Gelap';
-                                case 3: return 'Berbaring';
-                                case 4: return 'Gerakan';
-                                case 5: return 'Lainnya';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'Cahaya';
+                                case 2:
+                                    return 'Gelap';
+                                case 3:
+                                    return 'Berbaring';
+                                case 4:
+                                    return 'Gerakan';
+                                case 5:
+                                    return 'Lainnya';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_pemberat_id !== undefined) {
-                            $('#skala_nyeri_pemberat_id').text(getPemberatText(asesmenSkalaNyeri.skala_nyeri_pemberat_id));
+                            $('#skala_nyeri_pemberat_id').text(getPemberatText(asesmenSkalaNyeri
+                                .skala_nyeri_pemberat_id));
                         } else {
                             $('#skala_nyeri_pemberat_id').text('-');
                         }
+
                         function getKualitasText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'Nyeri Tumpul';
-                                case 2: return 'Nyeri Tajam';
-                                case 3: return 'Panas/Terbakar';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'Nyeri Tumpul';
+                                case 2:
+                                    return 'Nyeri Tajam';
+                                case 3:
+                                    return 'Panas/Terbakar';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_pemberat_id !== undefined) {
-                            $('#skala_nyeri_kualitas_id').text(getKualitasText(asesmenSkalaNyeri.skala_nyeri_kualitas_id));
+                            $('#skala_nyeri_kualitas_id').text(getKualitasText(asesmenSkalaNyeri
+                                .skala_nyeri_kualitas_id));
                         } else {
                             $('#skala_nyeri_kualitas_id').text('-');
                         }
@@ -1244,46 +1469,65 @@
                             asesmenSkalaNyeri.skala_nyeri_menjalar_id == 2 ? 'Tidak' : '-'
                         );
                         $('#skala_nyeri_durasi').text(asesmenSkalaNyeri.skala_nyeri_durasi || '-');
+
                         function getPeringanText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'Cahaya';
-                                case 2: return 'Gelap';
-                                case 3: return 'Berbaring';
-                                case 4: return 'Gerakan';
-                                case 5: return 'Lainnya';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'Cahaya';
+                                case 2:
+                                    return 'Gelap';
+                                case 3:
+                                    return 'Berbaring';
+                                case 4:
+                                    return 'Gerakan';
+                                case 5:
+                                    return 'Lainnya';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_peringan_id !== undefined) {
-                            $('#skala_nyeri_peringan_id').text(getPeringanText(asesmenSkalaNyeri.skala_nyeri_peringan_id));
+                            $('#skala_nyeri_peringan_id').text(getPeringanText(asesmenSkalaNyeri
+                                .skala_nyeri_peringan_id));
                         } else {
                             $('#skala_nyeri_peringan_id').text('-');
                         }
+
                         function getFrekuensiText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'Jarang';
-                                case 2: return 'Hilang Timbul';
-                                case 3: return 'Panas/Terbakar';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'Jarang';
+                                case 2:
+                                    return 'Hilang Timbul';
+                                case 3:
+                                    return 'Panas/Terbakar';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_frekuensi_id !== undefined) {
-                            $('#skala_nyeri_frekuensi_id').text(getFrekuensiText(asesmenSkalaNyeri.skala_nyeri_frekuensi_id));
+                            $('#skala_nyeri_frekuensi_id').text(getFrekuensiText(asesmenSkalaNyeri
+                                .skala_nyeri_frekuensi_id));
                         } else {
                             $('#skala_nyeri_frekuensi_id').text('-');
                         }
+
                         function getJenisText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'Nyeri Akut';
-                                case 2: return 'Kronik';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'Nyeri Akut';
+                                case 2:
+                                    return 'Kronik';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_jenis_id !== undefined) {
-                            $('#skala_nyeri_jenis_id').text(getJenisText(asesmenSkalaNyeri.skala_nyeri_jenis_id));
+                            $('#skala_nyeri_jenis_id').text(getJenisText(asesmenSkalaNyeri
+                                .skala_nyeri_jenis_id));
                         } else {
                             $('#skala_nyeri_jenis_id').text('-');
                         }
@@ -1291,14 +1535,14 @@
                         // Data Risiko Jatuh
                         showRisikoJatuhForm(asesmenRisikoJatuh.resiko_jatuh_jenis, asesmenRisikoJatuh);
                         // Set tindakan
-                        
+
                         let risik_jatuh_tindakanArray = JSON.parse(asesmenRisikoJatuh.risik_jatuh_tindakan);
-			            let risik_jatuh_tindakanHtml = '';
-                            $.each(risik_jatuh_tindakanArray, function(i,e){
+                        let risik_jatuh_tindakanHtml = '';
+                        $.each(risik_jatuh_tindakanArray, function(i, e) {
                             risik_jatuh_tindakanHtml += `<li>${e}</li>`;
                         });
-                        $('#risik_jatuh_tindakan').html(risik_jatuh_tindakanHtml);    
-                                                
+                        $('#risik_jatuh_tindakan').html(risik_jatuh_tindakanHtml);
+
                         // 8. Status Psikologis
                         $('#psikologis_kondisi').text(asesmenKepUmum.psikologis_kondisi || '-');
                         $('#psikologis_potensi_menyakiti').text(
@@ -1322,54 +1566,84 @@
                             pekerjaanMap[asesmenSosialEkonomi.sosial_ekonomi_pekerjaan] || '-'
                         );
 
-                        $('#sosial_ekonomi_tingkat_penghasilan').text(asesmenSosialEkonomi.sosial_ekonomi_tingkat_penghasilan || '-');
+                        $('#sosial_ekonomi_tingkat_penghasilan').text(asesmenSosialEkonomi
+                            .sosial_ekonomi_tingkat_penghasilan || '-');
+
                         function getstatus_pernikahanText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 0: return 'Belum Kawin';
-                                case 1: return 'Kawin';
-                                case 2: return 'Janda';
-                                case 3: return 'Duda';
-                                default: return '-';
+                            switch (id) {
+                                case 0:
+                                    return 'Belum Kawin';
+                                case 1:
+                                    return 'Kawin';
+                                case 2:
+                                    return 'Janda';
+                                case 3:
+                                    return 'Duda';
+                                default:
+                                    return '-';
                             }
                         }
-                        if (asesmenSosialEkonomi && asesmenSosialEkonomi.sosial_ekonomi_status_pernikahan !== undefined) {
-                            $('#sosial_ekonomi_status_pernikahan').text(getstatus_pernikahanText(asesmenSosialEkonomi.sosial_ekonomi_status_pernikahan));
+                        if (asesmenSosialEkonomi && asesmenSosialEkonomi.sosial_ekonomi_status_pernikahan !==
+                            undefined) {
+                            $('#sosial_ekonomi_status_pernikahan').text(getstatus_pernikahanText(
+                                asesmenSosialEkonomi.sosial_ekonomi_status_pernikahan));
                         } else {
                             $('#sosial_ekonomi_status_pernikahan').text('-');
                         }
+
                         function getstatus_pendidikanText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 1: return 'TK';
-                                case 2: return 'SD/MIN';
-                                case 3: return 'SLTP/SMP/MTSN/SLP';
-                                case 4: return 'SLTA/SMA/SMU/SMK/MAN/SLA';
-                                case 5: return 'D2';
-                                case 6: return 'D3';
-                                case 7: return 'S1';
-                                case 8: return 'S2';
-                                case 9: return 'S3';
-                                case 10: return 'TIDAK SEKOLAH';
-                                case 13: return 'BELUM SEKOLAH';
-                                case 14: return 'PAUD';
-                                case 15: return 'D4';
-                                case 16: return 'D1';
-                                default: return '-';
+                            switch (id) {
+                                case 1:
+                                    return 'TK';
+                                case 2:
+                                    return 'SD/MIN';
+                                case 3:
+                                    return 'SLTP/SMP/MTSN/SLP';
+                                case 4:
+                                    return 'SLTA/SMA/SMU/SMK/MAN/SLA';
+                                case 5:
+                                    return 'D2';
+                                case 6:
+                                    return 'D3';
+                                case 7:
+                                    return 'S1';
+                                case 8:
+                                    return 'S2';
+                                case 9:
+                                    return 'S3';
+                                case 10:
+                                    return 'TIDAK SEKOLAH';
+                                case 13:
+                                    return 'BELUM SEKOLAH';
+                                case 14:
+                                    return 'PAUD';
+                                case 15:
+                                    return 'D4';
+                                case 16:
+                                    return 'D1';
+                                default:
+                                    return '-';
                             }
                         }
-                        if (asesmenSosialEkonomi && asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan !== undefined) {
-                            $('#sosial_ekonomi_status_pendidikan').text(getstatus_pendidikanText(asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan));
+                        if (asesmenSosialEkonomi && asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan !==
+                            undefined) {
+                            $('#sosial_ekonomi_status_pendidikan').text(getstatus_pendidikanText(
+                                asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan));
                         } else {
                             $('#sosial_ekonomi_status_pendidikan').text('-');
                         }
-                        $('#sosial_ekonomi_tempat_tinggal').text(asesmenSosialEkonomi.sosial_ekonomi_tempat_tinggal || '-');
-                        $('#sosial_ekonomi_tinggal_dengan_keluarga').text(asesmenSosialEkonomi.sosial_ekonomi_tinggal_dengan_keluarga || '-');
+                        $('#sosial_ekonomi_tempat_tinggal').text(asesmenSosialEkonomi
+                            .sosial_ekonomi_tempat_tinggal || '-');
+                        $('#sosial_ekonomi_tinggal_dengan_keluarga').text(asesmenSosialEkonomi
+                            .sosial_ekonomi_tinggal_dengan_keluarga || '-');
                         $('#sosial_ekonomi_curiga_penganiayaan').text(
                             asesmenSosialEkonomi.sosial_ekonomi_curiga_penganiayaan == 1 ? 'Ya' :
                             asesmenSosialEkonomi.sosial_ekonomi_curiga_penganiayaan == 0 ? 'Tidak' : '-'
                         );
-                        $('#sosial_ekonomi_keterangan_lain').text(asesmenSosialEkonomi.sosial_ekonomi_keterangan_lain || '-');
+                        $('#sosial_ekonomi_keterangan_lain').text(asesmenSosialEkonomi
+                            .sosial_ekonomi_keterangan_lain || '-');
 
                         // 11. Status Gizi
                         showStatusGiziForm(asesmenStatusGizi.gizi_jenis, asesmenStatusGizi);
@@ -1380,36 +1654,53 @@
                         // 13. Kebutuhan Edukasi
                         function getedukasi_gaya_bicaraText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 0: return 'Normal';
-                                case 1: return 'Tidak Normal';
-                                case 2: return 'Belum Bisa Bicara';
-                                default: return '-';
+                            switch (id) {
+                                case 0:
+                                    return 'Normal';
+                                case 1:
+                                    return 'Tidak Normal';
+                                case 2:
+                                    return 'Belum Bisa Bicara';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenKepUmum && asesmenKepUmum.kebutuhan_edukasi_gaya_bicara !== undefined) {
-                            $('#kebutuhan_edukasi_gaya_bicara').text(getedukasi_gaya_bicaraText(asesmenKepUmum.kebutuhan_edukasi_gaya_bicara));
+                            $('#kebutuhan_edukasi_gaya_bicara').text(getedukasi_gaya_bicaraText(asesmenKepUmum
+                                .kebutuhan_edukasi_gaya_bicara));
                         } else {
                             $('#kebutuhan_edukasi_gaya_bicara').text('-');
                         }
-                        $('#kebutuhan_edukasi_bahasa_sehari_hari').text(asesmenKepUmum.kebutuhan_edukasi_bahasa_sehari_hari || '-');
+                        $('#kebutuhan_edukasi_bahasa_sehari_hari').text(asesmenKepUmum
+                            .kebutuhan_edukasi_bahasa_sehari_hari || '-');
                         $('#kebutuhan_edukasi_perlu_penerjemah').text(
                             asesmenKepUmum.kebutuhan_edukasi_perlu_penerjemah == 1 ? 'Ya' :
                             asesmenKepUmum.kebutuhan_edukasi_perlu_penerjemah == 0 ? 'Tidak' : '-'
                         );
-                        $('#kebutuhan_edukasi_hambatan_komunikasi').text(asesmenKepUmum.kebutuhan_edukasi_hambatan_komunikasi || '-');
-                        $('#kebutuhan_edukasi_media_belajar').text(asesmenKepUmum.kebutuhan_edukasi_media_belajar || '-');
-                        $('#kebutuhan_edukasi_tingkat_pendidikan').text(asesmenKepUmum.kebutuhan_edukasi_tingkat_pendidikan || '-');
-                        $('#kebutuhan_edukasi_edukasi_dibutuhkan').text(asesmenKepUmum.kebutuhan_edukasi_edukasi_dibutuhkan || '-');
-                        $('#kebutuhan_edukasi_keterangan_lain').text(asesmenKepUmum.kebutuhan_edukasi_keterangan_lain || '-');
+                        $('#kebutuhan_edukasi_hambatan_komunikasi').text(asesmenKepUmum
+                            .kebutuhan_edukasi_hambatan_komunikasi || '-');
+                        $('#kebutuhan_edukasi_media_belajar').text(asesmenKepUmum
+                            .kebutuhan_edukasi_media_belajar || '-');
+                        $('#kebutuhan_edukasi_tingkat_pendidikan').text(asesmenKepUmum
+                            .kebutuhan_edukasi_tingkat_pendidikan || '-');
+                        $('#kebutuhan_edukasi_edukasi_dibutuhkan').text(asesmenKepUmum
+                            .kebutuhan_edukasi_edukasi_dibutuhkan || '-');
+                        $('#kebutuhan_edukasi_keterangan_lain').text(asesmenKepUmum
+                            .kebutuhan_edukasi_keterangan_lain || '-');
 
                         // 14. Discharge Planning
-                        $('#discharge_planning_diagnosis_medis').text(asesmenKepUmum.discharge_planning_diagnosis_medis || '-');
-                        $('#discharge_planning_usia_lanjut').text(asesmenKepUmum.discharge_planning_usia_lanjut || '-');
-                        $('#discharge_planning_hambatan_mobilisasi').text(asesmenKepUmum.discharge_planning_hambatan_mobilisasi || '-');
-                        $('#discharge_planning_pelayanan_medis').text(asesmenKepUmum.discharge_planning_pelayanan_medis || '-');
-                        $('#discharge_planning_ketergantungan_aktivitas').text(asesmenKepUmum.discharge_planning_ketergantungan_aktivitas || '-');
-                        $('#discharge_planning_kesimpulan').text(asesmenKepUmum.discharge_planning_kesimpulan || '-');
+                        $('#discharge_planning_diagnosis_medis').text(asesmenKepUmum
+                            .discharge_planning_diagnosis_medis || '-');
+                        $('#discharge_planning_usia_lanjut').text(asesmenKepUmum
+                            .discharge_planning_usia_lanjut || '-');
+                        $('#discharge_planning_hambatan_mobilisasi').text(asesmenKepUmum
+                            .discharge_planning_hambatan_mobilisasi || '-');
+                        $('#discharge_planning_pelayanan_medis').text(asesmenKepUmum
+                            .discharge_planning_pelayanan_medis || '-');
+                        $('#discharge_planning_ketergantungan_aktivitas').text(asesmenKepUmum
+                            .discharge_planning_ketergantungan_aktivitas || '-');
+                        $('#discharge_planning_kesimpulan').text(asesmenKepUmum.discharge_planning_kesimpulan ||
+                            '-');
 
                         // 15. Evaluasi
                         $('#evaluasi').text(asesmenKepUmum.evaluasi || '-');
@@ -1420,7 +1711,7 @@
                     } else {
                         Swal.fire('Peringatan', 'Data tidak ditemukan', 'warning');
                     }
-                // log($response);
+                    // log($response);
                 },
                 error: function(xhr, status, error) {
                     console.error('AJAX Error:', status, error);
@@ -1431,13 +1722,19 @@
             // Data Risiko Jatuh
             // Fungsi untuk mendapatkan nama jenis risiko jatuh
             function getJenisRisikoText(id) {
-                switch(parseInt(id)) {
-                    case 1: return 'Skala Umum';
-                    case 2: return 'Skala Morse';
-                    case 3: return 'Skala Pediatrik';
-                    case 4: return 'Skala Lansia';
-                    case 5: return 'Lainnya';
-                    default: return '-';
+                switch (parseInt(id)) {
+                    case 1:
+                        return 'Skala Umum';
+                    case 2:
+                        return 'Skala Morse';
+                    case 3:
+                        return 'Skala Pediatrik';
+                    case 4:
+                        return 'Skala Lansia';
+                    case 5:
+                        return 'Lainnya';
+                    default:
+                        return '-';
                 }
             }
 
@@ -1454,7 +1751,8 @@
                 console.log('Received data:', asesmenRisikoJatuh);
 
                 // Sembunyikan semua form
-                $('#form_skala_umum, #form_skala_morse, #form_skala_humpty, #form_skala_ontario, #form_tidak_ada_resiko').hide();
+                $('#form_skala_umum, #form_skala_morse, #form_skala_humpty, #form_skala_ontario, #form_tidak_ada_resiko')
+                    .hide();
 
                 // Tampilkan jenis risiko jatuh
                 $('#jenis_risiko_jatuh').text(getJenisRisikoText(jenisId));
@@ -1468,7 +1766,7 @@
                 const parsedId = parseInt(jenisId);
                 console.log('Parsed ID:', parsedId);
 
-                switch(parsedId) {
+                switch (parsedId) {
                     case 1: // Skala Umum
                         $('#form_skala_umum').show();
                         $('#risiko_jatuh_umum_usia').text(
@@ -1503,17 +1801,23 @@
                             asesmenRisikoJatuh.risiko_jatuh_morse_diagnosis_sekunder == 0 ? 'Tidak' :
                             asesmenRisikoJatuh.risiko_jatuh_morse_diagnosis_sekunder == 15 ? 'Ya' : '-'
                         );
+
                         function getBantuanAmbulasiText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 0: return 'Tidak ada/ bed rest/ bantuan perawat';
-                                case 15: return 'Kruk/ tongkat/ alat bantu berjalan';
-                                case 30: return 'Meja/ kursi';
-                                default: return '-';
+                            switch (id) {
+                                case 0:
+                                    return 'Tidak ada/ bed rest/ bantuan perawat';
+                                case 15:
+                                    return 'Kruk/ tongkat/ alat bantu berjalan';
+                                case 30:
+                                    return 'Meja/ kursi';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_morse_bantuan_ambulasi !== undefined) {
-                            $('#risiko_jatuh_morse_bantuan_ambulasi').text(getBantuanAmbulasiText(asesmenRisikoJatuh.risiko_jatuh_morse_bantuan_ambulasi));
+                            $('#risiko_jatuh_morse_bantuan_ambulasi').text(getBantuanAmbulasiText(asesmenRisikoJatuh
+                                .risiko_jatuh_morse_bantuan_ambulasi));
                         } else {
                             $('#risiko_jatuh_morse_bantuan_ambulasi').text('-');
                         }
@@ -1521,40 +1825,55 @@
                             asesmenRisikoJatuh.risiko_jatuh_morse_terpasang_infus == 0 ? 'Tidak' :
                             asesmenRisikoJatuh.risiko_jatuh_morse_terpasang_infus == 15 ? 'Ya' : '-'
                         );
+
                         function getCaraBerjalanText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 0: return 'Normal/ bed rest/ kursi roda';
-                                case 20: return 'Terganggu';
-                                case 15: return 'Lemah';
-                                default: return '-';
+                            switch (id) {
+                                case 0:
+                                    return 'Normal/ bed rest/ kursi roda';
+                                case 20:
+                                    return 'Terganggu';
+                                case 15:
+                                    return 'Lemah';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_morse_cara_berjalan !== undefined) {
-                            $('#risiko_jatuh_morse_cara_berjalan').text(getCaraBerjalanText(asesmenRisikoJatuh.risiko_jatuh_morse_cara_berjalan));
+                            $('#risiko_jatuh_morse_cara_berjalan').text(getCaraBerjalanText(asesmenRisikoJatuh
+                                .risiko_jatuh_morse_cara_berjalan));
                         } else {
                             $('#risiko_jatuh_morse_cara_berjalan').text('-');
                         }
                         $('#risiko_jatuh_morse_status_mental').text(
-                            asesmenRisikoJatuh.risiko_jatuh_morse_status_mental == 0 ? 'Beroroentasi pada kemampuannya' :
-                            asesmenRisikoJatuh.risiko_jatuh_morse_status_mental == 15 ? 'Lupa akan keterbatasannya' : '-'
+                            asesmenRisikoJatuh.risiko_jatuh_morse_status_mental == 0 ?
+                            'Beroroentasi pada kemampuannya' :
+                            asesmenRisikoJatuh.risiko_jatuh_morse_status_mental == 15 ? 'Lupa akan keterbatasannya' :
+                            '-'
                         );
                         $('#risiko_jatuh_morse_kesimpulan').text(asesmenRisikoJatuh.risiko_jatuh_morse_kesimpulan || '-');
                         break;
                     case 3: // Skala Pediatrik
                         $('#form_skala_humpty').show();
+
                         function getUsiaAnakText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 4: return 'Dibawah 3 tahun';
-                                case 3: return '3-7 tahun';
-                                case 2: return '7-13 tahun';
-                                case 1: return 'Diatas 13 tahun';
-                                default: return '-';
+                            switch (id) {
+                                case 4:
+                                    return 'Dibawah 3 tahun';
+                                case 3:
+                                    return '3-7 tahun';
+                                case 2:
+                                    return '7-13 tahun';
+                                case 1:
+                                    return 'Diatas 13 tahun';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_usia_anak !== undefined) {
-                            $('#risiko_jatuh_pediatrik_usia_anak').text(getUsiaAnakText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_usia_anak));
+                            $('#risiko_jatuh_pediatrik_usia_anak').text(getUsiaAnakText(asesmenRisikoJatuh
+                                .risiko_jatuh_pediatrik_usia_anak));
                         } else {
                             $('#risiko_jatuh_pediatrik_usia_anak').text('-');
                         }
@@ -1566,79 +1885,115 @@
                             asesmenRisikoJatuh.risiko_jatuh_pediatrik_jenis_kelamin == 2 ? 'Laki-Laki' :
                             asesmenRisikoJatuh.risiko_jatuh_pediatrik_jenis_kelamin == 1 ? 'Perempuan' : '-'
                         );
+
                         function getPediatrikDiagnosisText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 4: return 'Diagnosis Neurologis';
-                                case 3: return `Perubahan oksigennasi (diangnosis respiratorik, dehidrasi, anemia, syncope, pusing, dsb)`;
-                                case 2: return 'Gangguan perilaku /psikiatri';
-                                case 1: return 'Diagnosis lainnya';
-                                default: return '-';
+                            switch (id) {
+                                case 4:
+                                    return 'Diagnosis Neurologis';
+                                case 3:
+                                    return `Perubahan oksigennasi (diangnosis respiratorik, dehidrasi, anemia, syncope, pusing, dsb)`;
+                                case 2:
+                                    return 'Gangguan perilaku /psikiatri';
+                                case 1:
+                                    return 'Diagnosis lainnya';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_diagnosis !== undefined) {
-                            $('#risiko_jatuh_pediatrik_diagnosis').text(getPediatrikDiagnosisText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_diagnosis));
+                            $('#risiko_jatuh_pediatrik_diagnosis').text(getPediatrikDiagnosisText(asesmenRisikoJatuh
+                                .risiko_jatuh_pediatrik_diagnosis));
                         } else {
                             $('#risiko_jatuh_pediatrik_diagnosis').text('-');
                         }
+
                         function getGangguanKognitifText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 3: return 'Tidak menyadari keterbatasan dirinya';
-                                case 2: return 'Lupa akan adanya keterbatasan';
-                                case 1: return 'Orientasi baik terhadap dari sendiri';
-                                default: return '-';
+                            switch (id) {
+                                case 3:
+                                    return 'Tidak menyadari keterbatasan dirinya';
+                                case 2:
+                                    return 'Lupa akan adanya keterbatasan';
+                                case 1:
+                                    return 'Orientasi baik terhadap dari sendiri';
+                                default:
+                                    return '-';
                             }
                         }
-                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_gangguan_kognitif !== undefined) {
-                            $('#risiko_jatuh_pediatrik_gangguan_kognitif').text(getGangguanKognitifText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_gangguan_kognitif));
+                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_gangguan_kognitif !==
+                            undefined) {
+                            $('#risiko_jatuh_pediatrik_gangguan_kognitif').text(getGangguanKognitifText(asesmenRisikoJatuh
+                                .risiko_jatuh_pediatrik_gangguan_kognitif));
                         } else {
                             $('#risiko_jatuh_pediatrik_gangguan_kognitif').text('-');
                         }
+
                         function getpediatrik_faktor_lingkunganText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 4: return `Riwayat jatuh /bayi diletakkan di tempat tidur dewasa`;
-                                case 3: return `Pasien menggunakan alat bantu /bayi diletakkan di tempat tidur bayi /perabot rumah`;
-                                case 2: return 'Pasien diletakkan di tempat tidur';
-                                case 1: return 'Area di luar rumah sakit';
-                                default: return '-';
+                            switch (id) {
+                                case 4:
+                                    return `Riwayat jatuh /bayi diletakkan di tempat tidur dewasa`;
+                                case 3:
+                                    return `Pasien menggunakan alat bantu /bayi diletakkan di tempat tidur bayi /perabot rumah`;
+                                case 2:
+                                    return 'Pasien diletakkan di tempat tidur';
+                                case 1:
+                                    return 'Area di luar rumah sakit';
+                                default:
+                                    return '-';
                             }
                         }
-                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_faktor_lingkungan !== undefined) {
-                            $('#risiko_jatuh_pediatrik_faktor_lingkungan').text(getpediatrik_faktor_lingkunganText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_faktor_lingkungan));
+                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_faktor_lingkungan !==
+                            undefined) {
+                            $('#risiko_jatuh_pediatrik_faktor_lingkungan').text(getpediatrik_faktor_lingkunganText(
+                                asesmenRisikoJatuh.risiko_jatuh_pediatrik_faktor_lingkungan));
                         } else {
                             $('#risiko_jatuh_pediatrik_faktor_lingkungan').text('-');
                         }
+
                         function getpediatrik_pembedahanText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 3: return 'Dalam 24 jam';
-                                case 2: return 'Dalam 48 jam';
-                                case 1: return '<48 jam atau tidak menjalani pembedahan/sedasi/anestesi';
-                                default: return '-';
+                            switch (id) {
+                                case 3:
+                                    return 'Dalam 24 jam';
+                                case 2:
+                                    return 'Dalam 48 jam';
+                                case 1:
+                                    return '<48 jam atau tidak menjalani pembedahan/sedasi/anestesi';
+                                default:
+                                    return '-';
                             }
                         }
                         if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_pembedahan !== undefined) {
-                            $('#risiko_jatuh_pediatrik_pembedahan').text(getpediatrik_pembedahanText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_pembedahan));
+                            $('#risiko_jatuh_pediatrik_pembedahan').text(getpediatrik_pembedahanText(asesmenRisikoJatuh
+                                .risiko_jatuh_pediatrik_pembedahan));
                         } else {
                             $('#risiko_jatuh_pediatrik_pembedahan').text('-');
                         }
+
                         function getpediatrik_penggunaan_mentosaText(id) {
                             id = parseInt(id);
-                            switch(id) {
-                                case 3: return 'Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi, antidepresan, pencahar, diuretik, narkose';
-                                case 2: return 'Penggunaan salah satu obat diatas';
-                                case 1: return 'Penggunaan medikasi lainnya/tidak ada mediksi';
-                                default: return '-';
+                            switch (id) {
+                                case 3:
+                                    return 'Penggunaan multiple: sedative, obat hipnosis, barbiturate, fenotiazi, antidepresan, pencahar, diuretik, narkose';
+                                case 2:
+                                    return 'Penggunaan salah satu obat diatas';
+                                case 1:
+                                    return 'Penggunaan medikasi lainnya/tidak ada mediksi';
+                                default:
+                                    return '-';
                             }
                         }
-                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_penggunaan_mentosa !== undefined) {
-                            $('#risiko_jatuh_pediatrik_penggunaan_mentosa').text(getpediatrik_penggunaan_mentosaText(asesmenRisikoJatuh.risiko_jatuh_pediatrik_penggunaan_mentosa));
+                        if (asesmenRisikoJatuh && asesmenRisikoJatuh.risiko_jatuh_pediatrik_penggunaan_mentosa !==
+                            undefined) {
+                            $('#risiko_jatuh_pediatrik_penggunaan_mentosa').text(getpediatrik_penggunaan_mentosaText(
+                                asesmenRisikoJatuh.risiko_jatuh_pediatrik_penggunaan_mentosa));
                         } else {
                             $('#risiko_jatuh_pediatrik_penggunaan_mentosa').text('-');
                         }
-                        $('#risiko_jatuh_pediatrik_kesimpulan').text(asesmenRisikoJatuh.risiko_jatuh_pediatrik_kesimpulan || '-');
+                        $('#risiko_jatuh_pediatrik_kesimpulan').text(asesmenRisikoJatuh.risiko_jatuh_pediatrik_kesimpulan ||
+                            '-');
                         break;
                     case 4: // Skala Lansia
                         $('#form_skala_ontario').show();
@@ -1722,57 +2077,66 @@
 
             // 11. Status Gizi
             function showStatusGiziForm(jenisId, asesmenStatusGizi) {
-            // Hide all forms first
-            $('#form_mst, #form_mna, #form_strong-kids, #form_nrs, #form_tidak_ada_satus_gizi').hide();
+                // Hide all forms first
+                $('#form_mst, #form_mna, #form_strong-kids, #form_nrs, #form_tidak_ada_satus_gizi').hide();
 
-            // Exit if no data
-            if (!asesmenStatusGizi) {
-                $('#form_tidak_ada_satus_gizi').show();
-                return;
-            }
-
-            const parsedId = parseInt(jenisId);
-
-            switch(parsedId) {
-                case 1: // MST
-                    $('#form_mst').show();
-                    displayMSTData(asesmenStatusGizi);
-                    break;
-                case 2: // MNA
-                    $('#form_mna').show();
-                    displayMNAData(asesmenStatusGizi);
-                    break;
-                case 3: // Strong Kids
-                    $('#form_strong-kids').show();
-                    displayStrongKidsData(asesmenStatusGizi);
-                    break;
-                case 4: // NRS
-                    $('#form_nrs').show();
-                    displayNRSData(asesmenStatusGizi);
-                    break;
-                default:
+                // Exit if no data
+                if (!asesmenStatusGizi) {
                     $('#form_tidak_ada_satus_gizi').show();
-            }
+                    return;
+                }
+
+                const parsedId = parseInt(jenisId);
+
+                switch (parsedId) {
+                    case 1: // MST
+                        $('#form_mst').show();
+                        displayMSTData(asesmenStatusGizi);
+                        break;
+                    case 2: // MNA
+                        $('#form_mna').show();
+                        displayMNAData(asesmenStatusGizi);
+                        break;
+                    case 3: // Strong Kids
+                        $('#form_strong-kids').show();
+                        displayStrongKidsData(asesmenStatusGizi);
+                        break;
+                    case 4: // NRS
+                        $('#form_nrs').show();
+                        displayNRSData(asesmenStatusGizi);
+                        break;
+                    default:
+                        $('#form_tidak_ada_satus_gizi').show();
+                }
             }
 
             // MST Form Display
             function displayMSTData(data) {
                 function getMstPenurunanBBText(id) {
-                    switch(parseInt(id)) {
-                        case 0: return 'Tidak ada penurunan Berat Badan (BB)';
-                        case 2: return 'Tidak yakin/ tidak tahu/ terasa baju lebih longgar';
-                        case 3: return 'Ya ada penurunan BB';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 0:
+                            return 'Tidak ada penurunan Berat Badan (BB)';
+                        case 2:
+                            return 'Tidak yakin/ tidak tahu/ terasa baju lebih longgar';
+                        case 3:
+                            return 'Ya ada penurunan BB';
+                        default:
+                            return '-';
                     }
                 }
 
                 function getMstJumlahPenurunanBBText(id) {
-                    switch(parseInt(id)) {
-                        case 1: return '1-5 kg';
-                        case 2: return '6-10 kg';
-                        case 3: return '11-15 kg';
-                        case 4: return '>15 kg';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 1:
+                            return '1-5 kg';
+                        case 2:
+                            return '6-10 kg';
+                        case 3:
+                            return '11-15 kg';
+                        case 4:
+                            return '>15 kg';
+                        default:
+                            return '-';
                     }
                 }
 
@@ -1786,43 +2150,66 @@
             // MNA Form Display
             function displayMNAData(data) {
                 function getmna_penurunan_asupan_3_bulan(id) {
-                    switch(parseInt(id)) {
-                        case 0: return 'Mengalami penurunan asupan makanan yang parah';
-                        case 1: return 'Mengalami penurunan asupan makanan sedang';
-                        case 2: return 'Tidak mengalami penurunan asupan makanan';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 0:
+                            return 'Mengalami penurunan asupan makanan yang parah';
+                        case 1:
+                            return 'Mengalami penurunan asupan makanan sedang';
+                        case 2:
+                            return 'Tidak mengalami penurunan asupan makanan';
+                        default:
+                            return '-';
                     }
                 }
+
                 function getmna_kehilangan_bb_3_bulan(id) {
-                    switch(parseInt(id)) {
-                        case 0: return 'Kehilangan BB lebih dari 3 Kg';
-                        case 1: return 'Tidak tahu';
-                        case 2: return 'Kehilangan BB antara 1 s.d 3 Kg';
-                        case 3: return 'Tidak ada kehilangan BB';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 0:
+                            return 'Kehilangan BB lebih dari 3 Kg';
+                        case 1:
+                            return 'Tidak tahu';
+                        case 2:
+                            return 'Kehilangan BB antara 1 s.d 3 Kg';
+                        case 3:
+                            return 'Tidak ada kehilangan BB';
+                        default:
+                            return '-';
                     }
                 }
+
                 function getmna_mobilisasi(id) {
-                    switch(parseInt(id)) {
-                        case 0: return 'Hanya di tempat tidur atau kursi roda';
-                        case 1: return 'Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan';
-                        case 2: return 'Dapat jalan-jalan';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 0:
+                            return 'Hanya di tempat tidur atau kursi roda';
+                        case 1:
+                            return 'Dapat turun dari tempat tidur tapi tidak dapat jalan-jalan';
+                        case 2:
+                            return 'Dapat jalan-jalan';
+                        default:
+                            return '-';
                     }
                 }
+
                 function getgizi_mna_status_neuropsikologi(id) {
-                    switch(parseInt(id)) {
-                        case 0: return 'Demensia atau depresi berat';
-                        case 1: return 'Demensia ringan';
-                        case 2: return 'Tidak mengalami masalah neuropsikologi';
-                        default: return '-';
+                    switch (parseInt(id)) {
+                        case 0:
+                            return 'Demensia atau depresi berat';
+                        case 1:
+                            return 'Demensia ringan';
+                        case 2:
+                            return 'Tidak mengalami masalah neuropsikologi';
+                        default:
+                            return '-';
                     }
                 }
-                $('#gizi_mna_penurunan_asupan_3_bulan').text(getmna_penurunan_asupan_3_bulan(data.gizi_mna_penurunan_asupan_3_bulan));
-                $('#gizi_mna_kehilangan_bb_3_bulan').text(getmna_kehilangan_bb_3_bulan(data.gizi_mna_kehilangan_bb_3_bulan));
+                $('#gizi_mna_penurunan_asupan_3_bulan').text(getmna_penurunan_asupan_3_bulan(data
+                    .gizi_mna_penurunan_asupan_3_bulan));
+                $('#gizi_mna_kehilangan_bb_3_bulan').text(getmna_kehilangan_bb_3_bulan(data
+                .gizi_mna_kehilangan_bb_3_bulan));
                 $('#gizi_mna_mobilisasi').text(getmna_mobilisasi(data.gizi_mna_mobilisasi));
                 $('#gizi_mna_stress_penyakit_akut').text(data.gizi_mna_stress_penyakit_akut == 1 ? 'Ya' : 'Tidak');
-                $('#gizi_mna_status_neuropsikologi').text(getgizi_mna_status_neuropsikologi(data.gizi_mna_status_neuropsikologi));
+                $('#gizi_mna_status_neuropsikologi').text(getgizi_mna_status_neuropsikologi(data
+                    .gizi_mna_status_neuropsikologi));
                 $('#gizi_mna_berat_badan').text(data.gizi_mna_berat_badan || '-');
                 $('#gizi_mna_tinggi_badan').text(data.gizi_mna_tinggi_badan || '-');
                 $('#gizi_mna_imt').text(data.gizi_mna_imt || '-');

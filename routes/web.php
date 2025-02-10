@@ -563,6 +563,7 @@ Route::middleware('auth')->group(function () {
                                     Route::delete('/', 'deleteKonsultasi')->name('.delete');
                                     Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
                                     Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                                 });
                             });
                         });
@@ -599,6 +600,7 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/{id}', 'show')->name('.show');
                                     Route::get('/{id}/edit', 'edit')->name('.edit');
                                     Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                 });
                             });
                         });
@@ -610,6 +612,15 @@ Route::middleware('auth')->group(function () {
                         Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);
+
+                        Route::controller(GawatDaruratResumeController::class)->group(function () {
+                            Route::name('resume')->group(function () {
+                                Route::prefix('/{urut_masuk}/resume')->group(function () {
+                                    Route::post('/validasi', 'validasiResume')->name('.validasi');
+                                    Route::get('/{data}/pdf', 'pdf')->name('.pdf');
+                                });
+                            });
+                        });
                     });
                 });
             });
