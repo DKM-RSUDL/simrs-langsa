@@ -278,63 +278,97 @@
             });
 
             function toggleInputFields(selectedOption) {
-                document.getElementById('textareaInput').style.display = 'none';
-                document.getElementById('tanggalJamInput').style.display = 'none';
+                // Hide all input fields first
+                const allFields = [
+                    'formRujukKeluar',
+                    'formpulangSembuh',
+                    'formberobatJalan',
+                    'formMenolakRawatInap',
+                    'formmeninggalDunia',
+                    'formDOA',
+                    'formRawatInap',
+                    'formKamarOperasi'
+                ];
+                
+                allFields.forEach(field => {
+                    document.getElementById(field).style.display = 'none';
+                });
 
-                if (['rawatInap', 'kamarOperasi', 'rujukKeluar', 'pulangKontrol', 'menolakRawatInap'].includes(
-                        selectedOption)) {
-                    document.getElementById('textareaInput').style.display = 'block';
-                }
-
-                if (selectedOption === 'meninggalDunia') {
-                    document.getElementById('tanggalJamInput').style.display = 'block';
+                // Show relevant fields based on selection
+                switch(selectedOption) {
+                    case 'rawatInap':
+                        document.getElementById('formRawatInap').style.display = 'block';
+                        break;
+                    case 'kamarOperasi':
+                        document.getElementById('formKamarOperasi').style.display = 'block';
+                        break;
+                    case 'menolakRawatInap':
+                        document.getElementById('formMenolakRawatInap').style.display = 'block';
+                        break;
+                    case 'rujukKeluar':
+                        document.getElementById('formRujukKeluar').style.display = 'block';
+                        break;
+                    case 'pulangSembuh':
+                        document.getElementById('formpulangSembuh').style.display = 'block';
+                        break;
+                    case 'berobatJalan':
+                        document.getElementById('formberobatJalan').style.display = 'block';
+                        break;
+                    case 'meninggalDunia':
+                        document.getElementById('formmeninggalDunia').style.display = 'block';
+                        break;
+                    case 'deathofarrival':
+                        document.getElementById('formDOA').style.display = 'block';
+                        break;
                 }
             }
 
-            document.getElementById('keteranganTindakLanjut').addEventListener('change', saveTindakLanjut);
-            document.getElementById('tanggalMeninggal').addEventListener('change', saveTindakLanjut);
-            document.getElementById('jamMeninggal').addEventListener('change', saveTindakLanjut);
+            const formFields = [
+                'tanggalDoa',
+                'jamDoa',
+                'alasanMenolak',
+                'tanggalMeninggal',
+                'jamMeninggal',
+                'tujuan_rujuk',
+                'alasan_rujuk',
+                'transportasi_rujuk',
+                'tanggalPulang',
+                'jamPulang',
+                'alasan_pulang',
+                'tanggal_berobat',
+                'keteranganRawatInap',
+                'poli'
+            ];
+
+            formFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.addEventListener('change', saveTindakLanjut);
+                }
+            });
+
 
             function saveTindakLanjut() {
-                var selectedOption = document.querySelector('input[name="tindakLanjut"]:checked');
-                var keterangan = document.getElementById('keteranganTindakLanjut').value;
-                var tanggalMeninggal = document.getElementById('tanggalMeninggal').value;
-                var jamMeninggal = document.getElementById('jamMeninggal').value;
+                const selectedOption = document.querySelector('input[name="tindakLanjut"]:checked');
+                if (!selectedOption) return;
 
-                if (selectedOption) {
-                    tindakLanjutData = {
-                        option: selectedOption.value,
-                        keterangan: keterangan,
-                        tanggalMeninggal: tanggalMeninggal,
-                        jamMeninggal: jamMeninggal
-                    };
-                    displayTindakLanjut();
-                }
-            }
-
-            function displayTindakLanjut() {
-                var tindakLanjutInfo = document.getElementById('tindakLanjutInfo');
-                tindakLanjutInfo.innerHTML = '';
-                if (tindakLanjutData) {
-                    var div = document.createElement('div');
-                    div.classList.add('mb-2');
-                    var infoText = `Tindak Lanjut: ${tindakLanjutData.option}`;
-
-                    if (tindakLanjutData.keterangan) {
-                        infoText += ` | Keterangan: ${tindakLanjutData.keterangan}`;
-                    }
-                    if (tindakLanjutData.tanggalMeninggal) {
-                        infoText += ` | Tanggal: ${tindakLanjutData.tanggalMeninggal}`;
-                    }
-                    if (tindakLanjutData.jamMeninggal) {
-                        infoText += ` | Jam: ${tindakLanjutData.jamMeninggal}`;
-                    }
-
-                    var textSpan = document.createElement('span');
-                    textSpan.innerText = infoText;
-                    div.appendChild(textSpan);
-                    tindakLanjutInfo.appendChild(div);
-                }
+                tindakLanjutData = {
+                    option: selectedOption.value,
+                    keterangan: document.getElementById('keteranganTindakLanjut')?.value || '',
+                    tanggalMeninggal: document.getElementById('tanggalMeninggal')?.value || '',
+                    jamMeninggal: document.getElementById('jamMeninggal')?.value || '',
+                    // Rujuk Keluar fields
+                    tujuan_rujuk: document.getElementById('tujuan_rujuk')?.value || '',
+                    alasan_rujuk: document.getElementById('alasan_rujuk')?.value || '',
+                    transportasi_rujuk: document.getElementById('transportasi_rujuk')?.value || '',
+                    // Pulang Sembuh fields
+                    tanggalPulang: document.getElementById('tanggalPulang')?.value || '',
+                    jamPulang: document.getElementById('jamPulang')?.value || '',
+                    alasan_pulang: document.getElementById('alasan_pulang')?.value || '',
+                    // Berobat Jalan fields
+                    tanggal_berobat: document.getElementById('tanggal_berobat')?.value || '',
+                    poli: document.getElementById('poli')?.value || ''
+                };
             }
 
             window.getTindakLanjutData = function() {
@@ -361,10 +395,8 @@
                 formData.append('riwayat_alergi', window.getAlergiData ? window.getAlergiData() : '');
                 formData.append('retriage_data', window.getReTriageData ? window.getReTriageData() : '');
                 formData.append('diagnosa_data', window.getDiagnosaData ? window.getDiagnosaData() : '');
-                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window
-                    .getAlatTerpasangData() : '');
-                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window
-                    .getTindakLanjutData() : '');
+                formData.append('alat_terpasang_data', window.getAlatTerpasangData ? window.getAlatTerpasangData() : '');
+                formData.append('tindak_lanjut_data', window.getTindakLanjutData ? window.getTindakLanjutData() : '');
 
                 var pemeriksaanFisik = [];
                 document.querySelectorAll('.pemeriksaan-item').forEach(function(item) {

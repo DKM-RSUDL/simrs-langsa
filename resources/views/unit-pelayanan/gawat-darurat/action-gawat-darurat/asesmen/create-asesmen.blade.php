@@ -771,11 +771,15 @@
                                                         </div>
                                                         <div>
                                                             <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar">
-                                                            <label for="rujukKeluar">Rujuk Keluar RS Bagian</label>
+                                                            <label for="rujukKeluar">Rujuk Keluar RS Lain</label>
                                                         </div>
                                                         <div>
-                                                            <input type="radio" name="tindakLanjut" value="pulangKontrol" id="pulangKontrol">
-                                                            <label for="pulangKontrol">Pulang Kontrol di Klinik</label>
+                                                            <input type="radio" name="tindakLanjut" value="pulangSembuh" id="pulangSembuh">
+                                                            <label for="pulangSembuh">Pulang</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="berobatJalan" id="berobatJalan">
+                                                            <label for="berobatJalan">Berobat Jalan Ke Poli</label>
                                                         </div>
                                                         <div>
                                                             <input type="radio" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap">
@@ -785,21 +789,94 @@
                                                             <input type="radio" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia">
                                                             <label for="meninggalDunia">Meninggal Dunia</label>
                                                         </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="deathofarrival" id="deathofarrival">
+                                                            <label for="deathofarrival">DOA</label>
+                                                        </div>
                                                     </div>
 
-                                                    <div class="mb-3" id="textareaInput" style="display: none;">
-                                                        <label for="keteranganTindakLanjut" class="form-label">Keterangan</label>
-                                                        <textarea class="form-control" id="keteranganTindakLanjut" name="keteranganTindakLanjut" rows="3"></textarea>
+                                                    <div class="mb-3" id="formMenolakRawatInap" style="display: none;">
+                                                        <label for="alasanMenolak" class="form-label">Alasan</label>
+                                                        <textarea class="form-control" id="alasanMenolak" name="alasanMenolak" rows="3"></textarea>
                                                     </div>
 
-                                                    <div class="mb-3" id="tanggalJamInput" style="display: none;">
+                                                    <div class="mb-3" id="formRujukKeluar" style="display: none;">
+                                                        <div class="mb-3">
+                                                            <label for="tujuan_rujuk" class="form-label">Tujuan Rujuk</label>
+                                                            <input type="text" class="form-control" id="tujuan_rujuk" name="tujuan_rujuk">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="alasan_rujuk" class="form-label">Alasan Rujuk</label>
+                                                            <select class="form-select" id="alasan_rujuk" name="alasan_rujuk">
+                                                                <option selected disabled>Pilih Alasan Rujuk</option>
+                                                                <option value="1">Indikasi Medis</option>
+                                                                <option value="2">Kamar Penuh</option>
+                                                                <option value="3">Permintaan Pasien</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="transportasi_rujuk" class="form-label">Transportasi Rujuk</label>
+                                                            <select class="form-select" id="transportasi_rujuk" name="transportasi_rujuk">
+                                                                <option selected disabled>Pilih Transportasi Rujuk</option>
+                                                                <option value="1">Ambulance</option>
+                                                                <option value="2">Kendaraan Pribadi</option>
+                                                                <option value="3">Lainnya</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formpulangSembuh" style="display: none;">
+                                                        <label for="tanggalPulang" class="form-label">Tanggal Pulang</label>
+                                                        <input type="date" class="form-control" id="tanggalPulang" name="tanggalPulang">
+                                                        <label for="jamPulang" class="form-label mt-2">Jam Pulang</label>
+                                                        <input type="time" class="form-control" id="jamPulang" name="jamPulang">
+                                                        <div class="mb-3">
+                                                            <label for="alasn_pulang" class="form-label">Alasan Pulang</label>
+                                                            <select class="form-select" id="alasan_pulang" name="alasan_pulang">
+                                                                <option selected disabled>Pilih Alasan Pulang</option>
+                                                                <option value="1">Sembuh</option>
+                                                                <option value="2">Indikasi Medis</option>
+                                                                <option value="3">Permintaan Pasien</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formberobatJalan" style="display: none;">
+                                                        <label for="tanggal_berobat" class="form-label">Tanggal Berobat</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggal_berobat" id="tanggal_berobat">
+                                                        <label for="poli" class="form-label">Poli</label>
+                                                        <select class="form-select" id="poli" name="poli">
+                                                            <option selected disabled>Pilih Poli</option>
+                                                            <option value="1">Poli Umum</option>
+                                                            <option value="2">Poli Anak</option>
+                                                            <option value="3">Poli Bedah</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formmeninggalDunia" style="display: none;">
                                                         <label for="tanggalMeninggal" class="form-label">Tanggal Meninggal</label>
-                                                        <input type="date" class="form-control" id="tanggalMeninggal" name="tanggalMeninggal">
+                                                        <input type="date" class="form-control mb-2" name="tanggalMeninggal" id="tanggalMeninggal">
                                                         <label for="jamMeninggal" class="form-label mt-2">Jam Meninggal</label>
                                                         <input type="time" class="form-control" id="jamMeninggal" name="jamMeninggal">
                                                     </div>
 
-                                                    <div id="tindakLanjutInfo"></div>
+                                                    <div class="mb-3" id="formDOA" style="display: none;">
+                                                        <label for="tanggalDoa" class="form-label">Tanggal Meninggal</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggalDoa" id="tanggalDoa">
+                                                        <label for="jamDoa" class="form-label mt-2">Jam Meninggal</label>
+                                                        <input type="time" class="form-control" id="jamDoa" name="jamDoa">
+                                                    </div>
+
+                                                    <div class="mb-3" id="formRawatInap" style="display: none;">
+                                                        <label for="keteranganRawatInap" class="form-label">Keterangan</label>
+                                                        <textarea class="form-control" id="keteranganRawatInap" name="keteranganRawatInap" rows="3"></textarea>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formKamarOperasi" style="display: none;">
+                                                        <label for="kamarOperasi" class="form-label">Kamar Operasi</label>
+                                                        <input type="text" class="form-control" id="kamarOperasi" name="kamarOperasi">
+                                                    </div>
+
                                                 </div>
 
                                             </div>

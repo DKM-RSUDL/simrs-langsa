@@ -718,7 +718,6 @@ class AsesmenController extends Controller
             if ($request->has('tindak_lanjut_data')) {
                 $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
 
-                // Create RmeAsesmenDtl record even if tindakLanjutData is empty/null
                 $tindakLanjutDtl = new RmeAsesmenDtl();
                 $tindakLanjutDtl->id_asesmen = $asesmen->id;
 
@@ -727,6 +726,7 @@ class AsesmenController extends Controller
                         case 'rawatInap':
                             $tindakLanjutDtl->tindak_lanjut_code = 1;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+                            $tindakLanjutDtl->keterangan  =  $tindakLanjutData['keteranganRawatInap'] ?? '';
                             break;
                         case 'pulangKontrol':
                             $tindakLanjutDtl->tindak_lanjut_code = 2;
@@ -760,11 +760,11 @@ class AsesmenController extends Controller
                     }
                 } else {
                     // Set null values when tindakLanjutData is empty
-                    $tindakLanjutDtl->tindak_lanjut_code = null;
-                    $tindakLanjutDtl->tindak_lanjut_name = null;
-                    $tindakLanjutDtl->keterangan = null;
-                    $tindakLanjutDtl->tanggal_meninggal = null;
-                    $tindakLanjutDtl->jam_meninggal = null;
+                    $tindakLanjutDtl->tindak_lanjut_code = '';
+                    $tindakLanjutDtl->tindak_lanjut_name = '';
+                    $tindakLanjutDtl->keterangan = '';
+                    $tindakLanjutDtl->tanggal_meninggal = '';
+                    $tindakLanjutDtl->jam_meninggal = '';
                 }
 
                 $tindakLanjutDtl->save();
