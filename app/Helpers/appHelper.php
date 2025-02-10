@@ -83,3 +83,88 @@ if (!function_exists('selisihHari')) {
         return $selisih->days; // Mengembalikan jumlah hari
     }
 }
+
+if (!function_exists('tindakLanjutLabel')) {
+    function tindakLanjutLabel($tlCode)
+    {
+        $label = '-';
+
+        switch ($tlCode) {
+            case 1:
+                $label = 'Rawat Inap';
+                break;
+            case 2:
+                $label = 'Kontrol Ulang';
+                break;
+            case 3:
+                $label = 'Selesai di Unit';
+                break;
+            case 4:
+                $label = 'Rujuk Internal';
+                break;
+            case 5:
+                $label = 'Rujuk RS Lain';
+                break;
+            case 6:
+                $label = 'Pulang';
+                break;
+            case 7:
+                $label = 'Kamar Operasi';
+                break;
+            case 8:
+                $label = 'Berobat Jalan Ke Poli';
+                break;
+            case 9:
+                $label = 'Menolak Rawat Inap';
+                break;
+            case 10:
+                $label = 'Meninggal Dunia';
+                break;
+            case 11:
+                $label = 'Doa (Death On Arrive)';
+                break;
+        }
+
+
+        return $label;
+    }
+}
+
+if (!function_exists('alasanPulangLabel')) {
+    function alasanPulangLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Sembuh';
+                break;
+            case 2:
+                $label = 'Indikasi Medis';
+                break;
+            case 3:
+                $label = 'Atas Permintaan Sendiri';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('kondisiPulangLabel')) {
+    function kondisiPulangLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Mandiri';
+                break;
+            case 2:
+                $label = 'Tidak Mandiri';
+                break;
+        }
+
+        return $label;
+    }
+}
