@@ -13,8 +13,13 @@
             <a href="{{ url()->previous() }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <form id="asesmenForm" method="POST">
+            <form id="asesmenForm" method="POST" action="{{ route('asesmen-keperawatan.update', [
+                'kd_pasien' => $dataMedis->kd_pasien,
+                'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                'id' => $asesmen->id
+            ]) }}">
                 @csrf
+                @method('PUT')
 
                 <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
                 <div class="d-flex justify-content-center">
@@ -114,7 +119,7 @@
                                                     Stridor</option>
                                             </select>
                                         </div>
-                                        <!-- Diagnosis Section -->
+
                                         <div class="form-group diagnosis-section" id="airway-diagnosis">
                                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
                                             <div class="w-100">
@@ -124,30 +129,36 @@
                                                             <div class="form-check">
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-radio diagnose-prwt-checkbox"
-                                                                    id="jalan_nafas_tidak_efektif" name="airway_diagnosis[]"
-                                                                    value="jalan_nafas_tidak_efektif"
-                                                                    {{ !empty($asesmen->asesmenKepUmum->airway_tindakan) ? 'checked' : '' }}>
-                                                                <label class="form-check-label"
-                                                                    for="jalan_nafas_tidak_efektif">
+                                                                    id="jalan_nafas_tidak_efektif"
+                                                                    name="airway_diagnosis"
+                                                                    value="1"
+                                                                    {{ $asesmen->asesmenKepUmum && !is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'checked' : '' }}>
+                                                                <!-- Tambahkan hidden input untuk memastikan field selalu dikirim -->
+                                                                <input type="hidden" name="current_airway_diagnosis" value="{{ $asesmen->asesmenKepUmum->airway_diagnosis ?? '' }}">
+                                                                <label class="form-check-label" for="jalan_nafas_tidak_efektif">
                                                                     Jalan nafas tidak efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="airway_aktual" name="airway_diagnosis_type"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
+                                                                        id="airway_aktual"
+                                                                        name="airway_diagnosis_type"
                                                                         value="1"
-                                                                        {{ old('airway_diagnosis_type', $asesmen->asesmenKepUmum->airway_diagnosis ?? '') == '1' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="airway_aktual">Aktual</label>
+                                                                        {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '1' ? 'checked' : '' }}
+                                                                        {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="airway_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="airway_risiko" name="airway_diagnosis_type"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
+                                                                        id="airway_risiko"
+                                                                        name="airway_diagnosis_type"
                                                                         value="2"
-                                                                        {{ old('airway_diagnosis_type', $asesmen->asesmenKepUmum->airway_diagnosis ?? '') == '2' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="airway_risiko">Risiko</label>
+                                                                        {{ $asesmen->asesmenKepUmum && $asesmen->asesmenKepUmum->airway_diagnosis == '2' ? 'checked' : '' }}
+                                                                        {{ !$asesmen->asesmenKepUmum || is_null($asesmen->asesmenKepUmum->airway_diagnosis) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="airway_risiko">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -159,18 +170,19 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <!-- Hidden input to store existing tindakan for JavaScript initialization -->
-                                                <input type="hidden" id="existingTindakan-airway"
-                                                    value="{{ $asesmen->asesmenKepUmum->airway_tindakan ?? '' }}">
+                                                <input type="hidden"
+                                                       id="existingTindakan-airway"
+                                                       value="{{ optional($asesmen->asesmenKepUmum)->airway_tindakan }}">
 
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                    data-bs-target="#tindakanKeperawatanAirwayModal">
+                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-airway mb-3"
+                                                        data-bs-target="#tindakanKeperawatanAirwayModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-airway" class="d-flex flex-column gap-2">
-                                                    <!-- Existing tindakan will be dynamically populated by JavaScript -->
+                                                <div id="selectedTindakanList-airway"
+                                                     class="d-flex flex-column gap-2">
+                                                    <!-- Airway tindakan list will be populated by JavaScript -->
                                                 </div>
                                             </div>
                                         </div>
@@ -289,29 +301,37 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="pola_nafas_tidak_efektif"
-                                                                    name="breathing_diagnosis_nafas[]" value="pola_nafas"
+                                                                    name="breathing_diagnosis_nafas[]"
+                                                                    value="pola_nafas"
                                                                     {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'checked' : '' }}>
-                                                                <label class="form-check-label"
-                                                                    for="pola_nafas_tidak_efektif">
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="current_breathing_diagnosis_nafas"
+                                                                    value="{{ $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas ?? '' }}">
+                                                                <label class="form-check-label" for="pola_nafas_tidak_efektif">
                                                                     Pola Nafas Tidak Efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
                                                                         id="breathing_aktual"
-                                                                        name="breathing_diagnosis_type" value="1"
-                                                                        {{ old('breathing_diagnosis_type', $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi ?? '') == '1' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="breathing_aktual">Aktual</label>
+                                                                        name="breathing_diagnosis_type"
+                                                                        value="1"
+                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '1' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="breathing_aktual">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
                                                                         id="breathing_risiko"
-                                                                        name="breathing_diagnosis_type" value="2"
-                                                                        {{ old('breathing_diagnosis_type', $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi ?? '') == '2' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="breathing_risiko">Risiko</label>
+                                                                        name="breathing_diagnosis_type"
+                                                                        value="2"
+                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_diagnosis_nafas) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="breathing_risiko">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -324,29 +344,37 @@
                                                                 <input type="checkbox"
                                                                     class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
                                                                     id="gangguan_pertukaran_gas"
-                                                                    name="breathing_gangguan[]" value="gangguan"
+                                                                    name="breathing_gangguan[]"
+                                                                    value="gangguan"
                                                                     {{ !empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'checked' : '' }}>
-                                                                <label class="form-check-label"
-                                                                    for="gangguan_pertukaran_gas">
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="current_breathing_gangguan"
+                                                                    value="{{ $asesmen->asesmenKepUmumBreathing->breathing_gangguan ?? '' }}">
+                                                                <label class="form-check-label" for="gangguan_pertukaran_gas">
                                                                     Gangguan Pertukaran Gas
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
                                                                         id="breathing_aktual_1"
-                                                                        name="breathing_gangguan_type" value="1"
-                                                                        {{ old('breathing_gangguan_type', $asesmen->asesmenKepUmumBreathing->breathing_gangguan ?? '') == '1' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="breathing_aktual_1">Aktual</label>
+                                                                        name="breathing_gangguan_type"
+                                                                        value="1"
+                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '1' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="breathing_aktual_1">Aktual</label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
+                                                                    <input type="radio"
+                                                                        class="form-check-input"
                                                                         id="breathing_risiko_1"
-                                                                        name="breathing_gangguan_type" value="2"
-                                                                        {{ old('breathing_gangguan_type', $asesmen->asesmenKepUmumBreathing->breathing_gangguan ?? '') == '2' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="breathing_risiko_1">Risiko</label>
+                                                                        name="breathing_gangguan_type"
+                                                                        value="2"
+                                                                        {{ $asesmen->asesmenKepUmumBreathing && $asesmen->asesmenKepUmumBreathing->breathing_gangguan == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumBreathing->breathing_gangguan) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="breathing_risiko_1">Risiko</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -356,20 +384,21 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Tindakan Keperawatan</label>
+                                            <label class="form-label" style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <!-- Hidden input to store existing tindakan for JavaScript initialization -->
-                                                <input type="hidden" id="existingTindakan-breathing"
-                                                    value="{{ $asesmen->asesmenKepUmumBreathing->breathing_tindakan ?? '' }}">
+                                                <input type="hidden"
+                                                       id="existingTindakan-breathing"
+                                                       value="{{ optional($asesmen->asesmenKepUmumBreathing)->breathing_tindakan }}">
 
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                    data-bs-target="#tindakanKeperawatanBreathingModal">
+                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-breathing mb-3"
+                                                        data-bs-target="#tindakanKeperawatanBreathingModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-breathing" class="d-flex flex-column gap-2">
-                                                    <!-- Existing tindakan will be dynamically populated by JavaScript -->
+                                                <div id="selectedTindakanList-breathing"
+                                                     class="d-flex flex-column gap-2">
+                                                    <!-- Tindakan list will be populated by JavaScript -->
                                                 </div>
                                             </div>
                                         </div>
@@ -510,101 +539,99 @@
                                                 name="circulation_lain"
                                                 value="{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_lain }}">
                                         </div>
+
                                         <div class="form-group diagnosis-section">
                                             <label style="min-width: 200px;">Diagnosis Keperawatan</label>
                                             <div class="w-100">
-                                                <div class="diagnosis-item">
-                                                    <!-- Diagnosis 1 -->
+                                                <div class="diagnosis-list">
+                                                    <!-- Diagnosis 1: Perfusi Jaringan -->
                                                     <div class="diagnosis-row border-top border-bottom py-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div class="form-check">
                                                                 <input type="checkbox"
-                                                                    class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                                    id="perfusi_jaringan_perifer_tidak_efektif"
-                                                                    name="circulation_diagnosis_perfusi[]"
-                                                                    value="perfusi_jaringan_perifer_tidak_efektif"
-                                                                    {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'checked' : '' }}>
-                                                                <label class="form-check-label"
-                                                                    for="perfusi_jaringan_perifer_tidak_efektif">
+                                                                       class="form-check-input diagnose-prwt-checkbox"
+                                                                       id="circulation_diagnosis_perfusi"
+                                                                       name="circulation_diagnosis_perfusi"
+                                                                       value="1" {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="circulation_diagnosis_perfusi"
+                                                                    value="{{ $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi ?? '' }}">
+                                                                <label class="form-check-label" for="circulation_diagnosis_perfusi">
                                                                     Perfusi Jaringan Perifer Tidak Efektif
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="circulation_aktual"
-                                                                        name="circulation_diagnosis_perfusi_type"
-                                                                        value="aktual"
-                                                                        {{ old(
-                                                                            'circulation_diagnosis_perfusi_type',
-                                                                            optional($asesmen->asesmenKepUmumCirculation)->circulation_diagnosis_perfusi,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="circulation_aktual">Aktual</label>
+                                                                    <input type="radio"
+                                                                           class="form-check-input"
+                                                                           id="circulation_perfusi_aktual"
+                                                                           name="circulation_diagnosis_perfusi_type"
+                                                                           value="1"
+                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="circulation_perfusi_aktual">
+                                                                        Aktual
+                                                                    </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="circulation_risiko"
-                                                                        name="circulation_diagnosis_perfusi_type"
-                                                                        value="risiko"
-                                                                        {{ old(
-                                                                            'circulation_diagnosis_perfusi_type',
-                                                                            optional($asesmen->asesmenKepUmumCirculation)->circulation_diagnosis_perfusi,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="circulation_risiko">Risiko</label>
+                                                                    <input type="radio"
+                                                                           class="form-check-input"
+                                                                           id="circulation_perfusi_risiko"
+                                                                           name="circulation_diagnosis_perfusi_type"
+                                                                           value="2"
+                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi == '2' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_perfusi) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="circulation_perfusi_risiko">
+                                                                        Risiko
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Diagnosis 2 -->
+                                                    <!-- Diagnosis 2: Defisit Volume -->
                                                     <div class="diagnosis-row border-bottom py-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div class="form-check">
                                                                 <input type="checkbox"
-                                                                    class="form-check-input diagnosis-checkbox diagnose-prwt-checkbox"
-                                                                    id="defisit_volume_cairan"
-                                                                    name="circulation_diagnosis_defisit[]"
-                                                                    value="defisit_volume_cairan"
-                                                                    {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'checked' : '' }}>
-                                                                <label class="form-check-label"
-                                                                    for="defisit_volume_cairan">
+                                                                       class="form-check-input diagnose-prwt-checkbox"
+                                                                       id="circulation_diagnosis_defisit"
+                                                                       name="circulation_diagnosis_defisit"
+                                                                       value="1"
+                                                                       {{ !empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="circulation_diagnosis_defisit"
+                                                                    value="{{ $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit ?? '' }}">
+                                                                <label class="form-check-label" for="circulation_diagnosis_defisit">
                                                                     Defisit Volume Cairan
                                                                 </label>
                                                             </div>
                                                             <div class="d-flex gap-4">
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="circulation_aktual_1"
-                                                                        name="circulation_diagnosis_defisit_type"
-                                                                        value="aktual"
-                                                                        {{ old(
-                                                                            'circulation_diagnosis_defisit_type',
-                                                                            optional($asesmen->asesmenKepUmumCirculation)->circulation_diagnosis_defisit,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="circulation_aktual_1">Aktual</label>
+                                                                    <input type="radio"
+                                                                           class="form-check-input"
+                                                                           id="circulation_defisit_aktual"
+                                                                           name="circulation_diagnosis_defisit_type"
+                                                                           value="1"
+                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="circulation_defisit_aktual">
+                                                                        Aktual
+                                                                    </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="radio" class="form-check-input"
-                                                                        id="circulation_risiko_1"
-                                                                        name="circulation_diagnosis_defisit_type"
-                                                                        value="risiko"
-                                                                        {{ old(
-                                                                            'circulation_diagnosis_defisit_type',
-                                                                            optional($asesmen->asesmenKepUmumCirculation)->circulation_diagnosis_defisit,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="circulation_risiko_1">Risiko</label>
+                                                                    <input type="radio"
+                                                                           class="form-check-input"
+                                                                           id="circulation_defisit_risiko"
+                                                                           name="circulation_diagnosis_defisit_type"
+                                                                           value="2"
+                                                                            {{ $asesmen->asesmenKepUmumCirculation && $asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit == '2' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumCirculation->circulation_diagnosis_defisit) ? 'disabled' : '' }}>
+                                                                    <label class="form-check-label" for="circulation_defisit_risiko">
+                                                                        Risiko
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -612,21 +639,21 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <!-- Hidden input to store existing interventions -->
-                                                <input type="hidden" id="existingTindakan-circulation"
-                                                    value='{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_tindakan ?? '[]' }}'>
+                                                <input type="hidden"
+                                                       id="existingTindakan-circulation"
+                                                       value='{{ optional($asesmen->asesmenKepUmumCirculation)->circulation_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                    data-bs-target="#tindakanKeperawatanCirculationModal">
+                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-circulation mb-3"
+                                                        data-bs-target="#tindakanKeperawatanCirculationModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
                                                 <div id="selectedTindakanList-circulation"
-                                                    class="d-flex flex-column gap-2">
-                                                    <!-- Interventions will be dynamically populated here -->
+                                                     class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -746,6 +773,11 @@
                                                                     name="disability_diagnosis_perfusi[]"
                                                                     value="perfusi_jaringan_cereberal_tidak_efektif"
                                                                     {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="disability_diagnosis_perfusi"
+                                                                    value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi ?? '' }}">
+
                                                                 <label class="form-check-label"
                                                                     for="perfusi_jaringan_cereberal_tidak_efektif">
                                                                     Perfusi jaringan cereberal tidak efektif
@@ -757,12 +789,8 @@
                                                                         id="disability_aktual"
                                                                         name="disability_diagnosis_perfusi_type"
                                                                         value="1"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_perfusi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_perfusi,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual">Aktual</label>
                                                                 </div>
@@ -771,12 +799,8 @@
                                                                         id="disability_risiko"
                                                                         name="disability_diagnosis_perfusi_type"
                                                                         value="2"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_perfusi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_perfusi,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_perfusi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko">Risiko</label>
                                                                 </div>
@@ -794,6 +818,10 @@
                                                                     name="disability_diagnosis_intoleransi[]"
                                                                     value="intoleransi_aktivitas"
                                                                     {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="disability_diagnosis_intoleransi"
+                                                                    value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="intoleransi_aktivitas">
                                                                     Intoleransi aktivitas
@@ -805,12 +833,8 @@
                                                                         id="disability_aktual_1"
                                                                         name="disability_diagnosis_intoleransi_type"
                                                                         value="1"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_intoleransi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_intoleransi,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_1">Aktual</label>
                                                                 </div>
@@ -819,12 +843,8 @@
                                                                         id="disability_risiko_1"
                                                                         name="disability_diagnosis_intoleransi_type"
                                                                         value="2"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_intoleransi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_intoleransi,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi == '2' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_intoleransi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_1">Risiko</label>
                                                                 </div>
@@ -842,6 +862,10 @@
                                                                     name="disability_diagnosis_komunikasi[]"
                                                                     value="kendala_komunikasi_verbal"
                                                                     {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="disability_diagnosis_komunikasi"
+                                                                    value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kendala_komunikasi_verbal">
                                                                     Kendala komunikasi verbal
@@ -853,12 +877,8 @@
                                                                         id="disability_aktual_2"
                                                                         name="disability_diagnosis_komunikasi_type"
                                                                         value="1"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_komunikasi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_komunikasi,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                            {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_2">Aktual</label>
                                                                 </div>
@@ -867,12 +887,8 @@
                                                                         id="disability_risiko_2"
                                                                         name="disability_diagnosis_komunikasi_type"
                                                                         value="2"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_komunikasi_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_komunikasi,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_komunikasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_2">Risiko</label>
                                                                 </div>
@@ -889,6 +905,10 @@
                                                                     id="kejang_ulang" name="disability_diagnosis_kejang[]"
                                                                     value="kejang_ulang"
                                                                     {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="disability_diagnosis_perfusi"
+                                                                    value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang ?? '' }}">
                                                                 <label class="form-check-label" for="kejang_ulang">
                                                                     Kejang ulang
                                                                 </label>
@@ -899,12 +919,8 @@
                                                                         id="disability_aktual_3"
                                                                         name="disability_diagnosis_kejang_type"
                                                                         value="1"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_kejang_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_kejang,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '1' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_3">Aktual</label>
                                                                 </div>
@@ -913,12 +929,8 @@
                                                                         id="disability_risiko_3"
                                                                         name="disability_diagnosis_kejang_type"
                                                                         value="2"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_kejang_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_kejang,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kejang) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_3">Risiko</label>
                                                                 </div>
@@ -936,6 +948,10 @@
                                                                     name="disability_diagnosis_kesadaran[]"
                                                                     value="penurunan_kesadaran"
                                                                     {{ !empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="disability_diagnosis_kesadaran"
+                                                                    value="{{ $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran ?? '' }}">
                                                                 <label class="form-check-label" for="penurunan_kesadaran">
                                                                     Penurunan kesadaran
                                                                 </label>
@@ -946,12 +962,8 @@
                                                                         id="disability_aktual_4"
                                                                         name="disability_diagnosis_kesadaran_type"
                                                                         value="1"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_kesadaran_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_kesadaran,
-                                                                        ) == '1'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '1' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_4">Aktual</label>
                                                                 </div>
@@ -960,12 +972,8 @@
                                                                         id="disability_risiko_4"
                                                                         name="disability_diagnosis_kesadaran_type"
                                                                         value="2"
-                                                                        {{ old(
-                                                                            'disability_diagnosis_kesadaran_type',
-                                                                            optional($asesmen->asesmenKepUmumDisability)->disability_diagnosis_kesadaran,
-                                                                        ) == '2'
-                                                                            ? 'checked'
-                                                                            : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumDisability && $asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumDisability->disability_diagnosis_kesadaran) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_4">Risiko</label>
                                                                 </div>
@@ -987,19 +995,17 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <!-- Hidden input to store existing interventions -->
-                                                <input type="hidden" id="existingTindakan-disability"
-                                                    value='{{ optional($asesmen->asesmenKepUmumDisability)->disability_tindakan ?? '[]' }}'>
-
+                                                <input type="hidden"
+                                                       id="existingTindakan-disability"
+                                                       value='{{ optional($asesmen->asesmenKepUmumDisability)->disability_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                    data-bs-target="#tindakanKeperawatanDisabilityModal">
+                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-disability mb-3"
+                                                        data-bs-target="#tindakanKeperawatanDisabilityModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
                                                 <div id="selectedTindakanList-disability"
-                                                    class="d-flex flex-column gap-2">
-                                                    <!-- Interventions will be dynamically populated here -->
+                                                     class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -1049,7 +1055,7 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="kontusion_ya"
                                                             name="exposure_kontusion" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '0' ? 'checked' : '' }}>
+                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_kontusion == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="kontusion_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1074,7 +1080,7 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="abrasi_ya"
                                                             name="exposure_abrasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '0' ? 'checked' : '' }}>
+                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_abrasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="abrasi_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1100,7 +1106,7 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="penetrasi_ya"
                                                             name="exposure_penetrasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '0' ? 'checked' : '' }}>
+                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_penetrasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="penetrasi_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1125,7 +1131,7 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="laserasi_ya"
                                                             name="exposure_laserasi" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '0' ? 'checked' : '' }}>
+                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_laserasi == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="laserasi_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1150,7 +1156,7 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="edema_ya"
                                                             name="exposure_edema" value="1"
-                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '0' ? 'checked' : '' }}>
+                                                            {{ optional($asesmen->asesmenKepUmumExposure)->exposure_edema == '1' ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="edema_ya">Ya</label>
                                                     </div>
                                                 </div>
@@ -1187,7 +1193,11 @@
                                                                     id="kerusakan_mobilitas_fisik"
                                                                     name="exposure_diagnosis_mobilitasi[]"
                                                                     value="mobilitasi_type"
-                                                                    {{ $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi ? 'checked' : '' }}>
+                                                                    {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="exposure_diagnosis_mobilitasi"
+                                                                    value="{{ $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_mobilitas_fisik">
                                                                     Kerusakan Mobilitas Fisik
@@ -1199,7 +1209,8 @@
                                                                         id="exposure_aktual"
                                                                         name="exposure_diagnosis_mobilitasi_type"
                                                                         value="1"
-                                                                        {{ optional($asesmen->asesmenKepUmumExposure)->exposure_diagnosis_mobilitasi == '1' ? 'checked' : '' }}>
+                                                                            {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '1' ? 'checked' : '' }}
+                                                                            {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual">Aktual</label>
                                                                 </div>
@@ -1208,7 +1219,8 @@
                                                                         id="exposure_risiko"
                                                                         name="exposure_diagnosis_mobilitasi_type"
                                                                         value="2"
-                                                                        {{ optional($asesmen->asesmenKepUmumExposure)->exposure_diagnosis_mobilitasi == '2' ? 'checked' : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagnosis_mobilitasi) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_risiko">Risiko</label>
                                                                 </div>
@@ -1225,7 +1237,11 @@
                                                                     id="kerusakan_integritas_jaringan"
                                                                     name="exposure_diagosis_integritas[]"
                                                                     value="integritas_type"
-                                                                    {{ $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas ? 'checked' : '' }}>
+                                                                    {{ !empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'checked' : '' }}>
+                                                                <!-- Hidden input untuk menjaga nilai saat ini -->
+                                                                <input type="hidden"
+                                                                    name="exposure_diagosis_integritas"
+                                                                    value="{{ $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas ?? '' }}">
                                                                 <label class="form-check-label"
                                                                     for="kerusakan_integritas_jaringan">
                                                                     Kerusakan Integritas Jaringan
@@ -1237,7 +1253,8 @@
                                                                         id="exposure_aktual_1"
                                                                         name="exposure_diagosis_integritas_type"
                                                                         value="1"
-                                                                        {{ optional($asesmen->asesmenKepUmumExposure)->exposure_diagosis_integritas == '1' ? 'checked' : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '1' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_aktual_1">Aktual</label>
                                                                 </div>
@@ -1246,7 +1263,8 @@
                                                                         id="exposure_risiko_1"
                                                                         name="exposure_diagosis_integritas_type"
                                                                         value="2"
-                                                                        {{ optional($asesmen->asesmenKepUmumExposure)->exposure_diagosis_integritas == '2' ? 'checked' : '' }}>
+                                                                        {{ $asesmen->asesmenKepUmumExposure && $asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas == '2' ? 'checked' : '' }}
+                                                                        {{ empty($asesmen->asesmenKepUmumExposure->exposure_diagosis_integritas) ? 'disabled' : '' }}>
                                                                     <label class="form-check-label"
                                                                         for="exposure_risiko_1">Risiko</label>
                                                                 </div>
@@ -1268,17 +1286,17 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tindakan Keperawatan</label>
                                             <div class="w-100">
-                                                <input type="hidden" id="existingTindakan-exposure"
-                                                    value='{{ optional($asesmen->asesmenKepUmumExposure)->exposure_tindakan ?? '[]' }}'>
-
+                                                <input type="hidden"
+                                                       id="existingTindakan-exposure"
+                                                       value='{{ optional($asesmen->asesmenKepUmumExposure)->exposure_tindakan ?? '[]' }}'>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary btn-tindakan-keperawatan mb-3"
-                                                    data-bs-target="#tindakanKeperawatanExposureModal">
+                                                        class="btn btn-sm btn-outline-secondary btn-tindakan-exposure mb-3"
+                                                        data-bs-target="#tindakanKeperawatanExposureModal">
                                                     <i class="ti-plus"></i> Tambah
                                                 </button>
 
-                                                <div id="selectedTindakanList-exposure" class="d-flex flex-column gap-2">
-                                                    <!-- Interventions will be dynamically populated here -->
+                                                <div id="selectedTindakanList-exposure"
+                                                     class="d-flex flex-column gap-2">
                                                 </div>
                                             </div>
                                         </div>
@@ -2558,16 +2576,14 @@
                                         </div>
                                         <!-- Nilai -->
                                         <div id="mstConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-success"
-                                                style="display: {{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') == 'Tidak berisiko malnutrisi' ? 'block' : 'none' }};">
+                                            <div class="alert alert-success" style="display: none;">
                                                 Kesimpulan: 0-1 tidak berisiko malnutrisi
                                             </div>
-                                            <div class="alert alert-warning"
-                                                style="display: {{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') == 'Berisiko malnutrisi' ? 'block' : 'none' }};">
+                                            <div class="alert alert-warning" style="display: none;">
                                                 Kesimpulan: ≥ 2 berisiko malnutrisi
                                             </div>
                                             <input type="hidden" name="gizi_mst_kesimpulan" id="gizi_mst_kesimpulan"
-                                                value="{{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') }}">
+                                                   value="{{ old('gizi_mst_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mst_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -2748,9 +2764,6 @@
 
                                         <!-- Kesimpulan -->
                                         <div id="mnaConclusion" class="risk-indicators mt-4">
-                                            <div class="alert alert-info mb-3">
-                                                Silakan isi semua parameter di atas untuk melihat kesimpulan
-                                            </div>
                                             <div class="alert alert-success" style="display: none;">
                                                 Kesimpulan: Total Skor ≥ 12 (Tidak Beresiko Malnutrisi)
                                             </div>
@@ -2758,7 +2771,7 @@
                                                 Kesimpulan: Total Skor ≤ 11 (Beresiko Malnutrisi)
                                             </div>
                                             <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan"
-                                                value="{{ old('gizi_mna_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kesimpulan ?? '') }}">
+                                                   value="{{ old('gizi_mna_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_mna_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -2864,9 +2877,8 @@
                                             <div class="alert alert-danger" style="display: none;">
                                                 Kesimpulan: 4-5 (Beresiko Tinggi)
                                             </div>
-                                            <input type="hidden" name="gizi_strong_kesimpulan"
-                                                id="gizi_strong_kesimpulan"
-                                                value="{{ old('gizi_strong_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_strong_kesimpulan ?? '') }}">
+                                            <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan"
+                                                   value="{{ old('gizi_strong_kesimpulan', $asesmen->asesmenKepUmumGizi->gizi_strong_kesimpulan ?? '') }}">
                                         </div>
                                     </div>
 
@@ -3482,5 +3494,5 @@
     </div>
     </div>
 
-    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan')
+    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.modal-tindakankeperawatan-edit')
 @endsection
