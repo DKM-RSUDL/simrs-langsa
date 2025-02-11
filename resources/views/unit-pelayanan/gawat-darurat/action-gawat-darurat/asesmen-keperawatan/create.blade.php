@@ -1681,7 +1681,7 @@
                                         <h5 class="section-title">10. Status Sosial Ekonomi</h5>
 
                                         <div class="form-group mb-3">
-                                            <label class="form-label" style="min-width: 200px;">Pekerjaan</label>
+                                            <label style="min-width: 200px;">Pekerjaan</label>
                                             <select class="form-select" name="sosial_ekonomi_pekerjaan"
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
