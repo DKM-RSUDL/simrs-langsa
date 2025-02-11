@@ -184,7 +184,17 @@
             </tr>
             <tr>
                 <th>Hasil Pemeriksaan Fisik</th>
-                <td>{{ $hasilKonpas }}</td>
+                <td>
+                    {{ $hasilKonpas }}
+
+                    @if (!empty($pemeriksaanFisik))
+                            <br>
+                        @foreach ($pemeriksaanFisik as $pf)
+                            <br>
+                            {{ $pf->itemFisik->nama }} : {{ $pf->keterangan }}
+                        @endforeach
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Temuan Klinik Penunjang</th>
@@ -278,10 +288,51 @@
                 <th colspan="2">Tindak lanjut</th>
             </tr>
             <tr>
-                <th>Tindak Lanjut</th>
-                <td></td>
+                <th>Nama</th>
+                <td>{{ tindakLanjutLabel($resume->rmeResumeDet->tindak_lanjut_code) }}</td>
             </tr>
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 6)
+                <tr>
+                    <th>Waktu Pulang</th>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_pulang)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_pulang)) . ' WIB' }}</td>
+                </tr>
+                <tr>
+                    <th>Alasan Pulang</th>
+                    <td>{{ alasanPulangLabel($resume->rmeResumeDet->alasan_pulang) }}</td>
+                </tr>
+                <tr>
+                    <th>Kondisi Pulang</th>
+                    <td>{{ kondisiPulangLabel($resume->rmeResumeDet->kondisi_pulang) }}</td>
+                </tr>
+            @endif
         </table>
     </main>
+
+    <footer>
+        <div class="left-column">
+            <p>DPJP yang merawat</p>
+            <p class="name-konsulen">{{ $dataMedis->dokter->nama_lengkap }}</p>
+            <p class="identity-num">
+                @php
+                    $identityNum = 'Id Peg. ' . $dataMedis->dokter->kd_karyawan;
+                    if(!empty($dataMedis->dokter->detail->nip_baru)) $identityNum = 'NIP. ' . $dataMedis->dokter->detail->nip_baru;
+                    echo $identityNum;
+                @endphp
+            </p>
+        </div>
+
+        {{-- <div class="right-column">
+            <p>Dokter Konsulen</p>
+            <p class="name-konsulen">{{ $konsultasi->dokterTujuan->nama_lengkap }}</p>
+            <p class="identity-num">
+                @php
+                    $identityNum = 'Id Peg. ' . $konsultasi->dokterTujuan->kd_karyawan;
+                    if(!empty($konsultasi->dokterTujuan->detail->nip_baru)) $identityNum = 'NIP. ' . $konsultasi->dokterTujuan->detail->nip_baru;
+                    echo $identityNum;
+                @endphp
+            </p>
+        </div> --}}
+    </footer>
 </body>
 </html>

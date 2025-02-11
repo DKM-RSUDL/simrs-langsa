@@ -14,6 +14,8 @@ use App\Models\Kunjungan;
 use App\Models\ListTindakanPasien;
 use App\Models\MrResep;
 use App\Models\Penyakit;
+use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\RujukanKunjungan;
@@ -443,6 +445,22 @@ class ResumeController extends Controller
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->get();
 
+
+        $lastAsesmen = RmeAsesmen::with(['pemeriksaanFisik'])
+            ->where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', date('Y-m-d', strtotime($dataMedis->tgl_masuk)))
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->where('kategori', 1)
+            ->where('sub_kategori', 1)
+            ->first();
+
+        $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with(['itemFisik'])
+            ->where('id_asesmen', $lastAsesmen->id)
+            ->where('is_normal', 0)
+            ->get();
+
+
         $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.print', compact(
             'resume',
             'dataMedis',
@@ -450,7 +468,8 @@ class ResumeController extends Controller
             'resepAll',
             'labor',
             'radiologi',
-            'tindakan'
+            'tindakan',
+            'pemeriksaanFisik'
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('resume_' . $resume->kd_pasien . '_' . $resume->tgl_konsul . '.pdf');
