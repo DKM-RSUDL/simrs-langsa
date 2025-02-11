@@ -184,7 +184,17 @@
             </tr>
             <tr>
                 <th>Hasil Pemeriksaan Fisik</th>
-                <td>{{ $hasilKonpas }}</td>
+                <td>
+                    {{ $hasilKonpas }}
+
+                    @if (!empty($pemeriksaanFisik))
+                            <br>
+                        @foreach ($pemeriksaanFisik as $pf)
+                            <br>
+                            {{ $pf->itemFisik->nama }} : {{ $pf->keterangan }}
+                        @endforeach
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Temuan Klinik Penunjang</th>

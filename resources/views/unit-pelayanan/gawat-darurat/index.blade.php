@@ -488,6 +488,19 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row mt-5">
+                                                <div class="col-12">
+                                                    <div class="card mb-3">
+                                                        <div class="card-header border-bottom">
+                                                            <p class="m-0 p-0 fw-bold">Vital Sign</p>
+                                                        </div>
+                                                        <div class="card-body">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-5">
                                                 <div class="col-3">
 
                                                     <div class="card mb-3">
