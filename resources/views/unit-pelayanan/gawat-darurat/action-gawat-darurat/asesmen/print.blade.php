@@ -189,6 +189,16 @@
     <div class="section">
         <div class="section-title">TRIASE</div>
         <div style="padding: 5px;">
+            <table class="bordered">
+                <tr>
+                    <th class="col-header">Warna</th>
+                    <th class="col-header">Kesimpulan Triase</th>
+                </tr>
+                <tr>
+                    <td>{{ $triase['warna'] ?? '-' }}</td>
+                    <td>{{ $triase['label'] ?? '-' }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 

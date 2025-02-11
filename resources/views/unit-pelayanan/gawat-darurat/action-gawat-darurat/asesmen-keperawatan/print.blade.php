@@ -452,7 +452,7 @@
                 <br>:
                 @php
                     $disabilitydiagnosiskesadaran = $asesmenDisability->disability_diagnosis_kesadaran ?? '-';
-                    echo ($disabilitydiagnosiskesadaran === '0') ? 'Aktual' : ($disabilitydiagnosiskesadaran === '2' ? 'Resiko' : $disabilitydiagnosiskesadaran);
+                    echo ($disabilitydiagnosiskesadaran === '1') ? 'Aktual' : ($disabilitydiagnosiskesadaran === '2' ? 'Resiko' : $disabilitydiagnosiskesadaran);
                 @endphp
             </td>
         </tr>
@@ -1049,7 +1049,7 @@
         @break
 
         @default
-        <div class="alert alert-warning" role="alert">
+        <div class="text-center" role="alert">
             Belum ada penilaian risiko jatuh yang dipilih.
         </div>
     @endswitch
@@ -1108,7 +1108,7 @@
     <table class="detail-table">
         <tr>
             <td>Agama/Kepercayaan</td>
-            <td>: {{ $asesmenKepUmum->spiritual_agama }}</td>
+            <td>: {{ isset($agamaData[$asesmenKepUmum->spiritual_agama]) ? $agamaData[$asesmenKepUmum->spiritual_agama] : '-' }}</td>
             <td>Nilai Nilai Spritiual Pasien</td>
             <td>: {{ $asesmenKepUmum->spiritual_nilai }}</td>
         </tr>
@@ -1146,57 +1146,7 @@
                 @endphp
             </td>
             <td>Status pendidikan</td>
-            <td>:
-                @php
-                    $ekonomiStatusPernikahan = $asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan ?? '-';
-                    switch ($ekonomiStatusPernikahan) {
-                        case '1':
-                            echo 'TK';
-                            break;
-                        case '2':
-                            echo 'SD/MIN';
-                            break;
-                        case '3':
-                            echo 'SLTP/SMP/MTSN/SLP';
-                            break;
-                        case '4':
-                            echo 'SLTA/SMA/SMU/SMK/MAN/SLA';
-                            break;
-                        case '5':
-                            echo 'D2';
-                            break;
-                        case '6':
-                            echo 'D3';
-                            break;
-                        case '7':
-                            echo 'S1';
-                            break;
-                        case '8':
-                            echo 'S2';
-                            break;
-                        case '9':
-                            echo 'S3';
-                            break;
-                        case '10':
-                            echo 'TIDAK SEKOLAH';
-                            break;
-                        case '13':
-                            echo 'BELUM SEKOLAH';
-                            break;
-                        case '14':
-                            echo 'PAUD';
-                            break;
-                        case '15':
-                            echo 'D4';
-                            break;
-                        case '1':
-                            echo 'D1';
-                            break;
-                        default:
-                            echo $ekonomiStatusPernikahan;
-                    }
-                @endphp
-            </td>
+            <td>: {{ isset($pendidikanData[$asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan]) ? $pendidikanData[$asesmenSosialEkonomi->sosial_ekonomi_status_pernikahan] : '-' }}</td>
         </tr>
         <tr>
             <td>Tempat tinggal</td>

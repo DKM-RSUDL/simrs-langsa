@@ -1665,12 +1665,9 @@
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                             <select class="form-select" name="spiritual_agama">
                                                 <option value="">--Pilih--</option>
-                                                <option value="islam">Islam</option>
-                                                <option value="kristen">Kristen</option>
-                                                <option value="katolik">Katolik</option>
-                                                <option value="hindu">Hindu</option>
-                                                <option value="buddha">Buddha</option>
-                                                <option value="konghucu">Konghucu</option>
+                                                @foreach ($agama as $agam)
+                                                    <option value="{{ $agam->kd_agama }}">{{ $agam->agama }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -1722,20 +1719,11 @@
                                             <label style="min-width: 200px;">Status pendidikan</label>
                                             <select class="form-select" name="sosial_ekonomi_status_pendidikan">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1">TK</option>
-                                                <option value="2">SD/MIN</option>
-                                                <option value="3">SLTP/SMP/MTSN/SLP</option>
-                                                <option value="4">SLTA/SMA/SMU/SMK/MAN/SLA</option>
-                                                <option value="5">D2</option>
-                                                <option value="6">D3</option>
-                                                <option value="7">S1</option>
-                                                <option value="8">S2</option>
-                                                <option value="9">S3</option>
-                                                <option value="10">TIDAK SEKOLAH</option>
-                                                <option value="13">BELUM SEKOLAH</option>
-                                                <option value="14">PAUD</option>
-                                                <option value="15">D4</option>
-                                                <option value="16">D1</option>
+                                                @foreach ($pendidikan as $didikan)
+                                                    <option value="{{ $didikan->kd_pendidikan}}">
+                                                        {{ $didikan->pendidikan }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 

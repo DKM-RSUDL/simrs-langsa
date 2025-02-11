@@ -526,7 +526,7 @@
 
                         // **Perbaikan: Pastikan tombol print mengambil ID asesmen yang benar**
                         let btnPrint = document.getElementById('btnPrintAsesmen');
-                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.asesmen.kd_pasien}/${response.data.asesmen.tgl_masuk}/asesmen/${id}/print`;
+                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
 
                         modal.show();
                     } else {
