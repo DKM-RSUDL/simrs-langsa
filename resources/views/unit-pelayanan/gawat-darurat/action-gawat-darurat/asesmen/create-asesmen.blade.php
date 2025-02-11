@@ -790,8 +790,8 @@
                                                             <label for="meninggalDunia">Meninggal Dunia</label>
                                                         </div>
                                                         <div>
-                                                            <input type="radio" name="tindakLanjut" value="deathofarrival" id="deathofarrival">
-                                                            <label for="deathofarrival">DOA</label>
+                                                            <input type="radio" name="tindakLanjut" value="deathoffarrival" id="deathoffarrival">
+                                                            <label for="deathoffarrival">DOA</label>
                                                         </div>
                                                     </div>
 
@@ -842,10 +842,10 @@
                                                     </div>
 
                                                     <div class="mb-3" id="formberobatJalan" style="display: none;">
-                                                        <label for="tanggal_berobat" class="form-label">Tanggal Berobat</label>
-                                                        <input type="date" class="form-control mb-2" name="tanggal_berobat" id="tanggal_berobat">
-                                                        <label for="poli" class="form-label">Poli</label>
-                                                        <select class="form-select" id="poli" name="poli">
+                                                        <label for="tanggal_rajal" class="form-label">Tanggal Berobat</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggal_rajal" id="tanggal_rajal">
+                                                        <label for="poli_unit_tujuan" class="form-label">Poli</label>
+                                                        <select class="form-select" id="poli_unit_tujuan" name="poli_unit_tujuan">
                                                             <option selected disabled>Pilih Poli</option>
                                                             <option value="1">Poli Umum</option>
                                                             <option value="2">Poli Anak</option>

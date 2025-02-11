@@ -317,7 +317,7 @@
                     case 'meninggalDunia':
                         document.getElementById('formmeninggalDunia').style.display = 'block';
                         break;
-                    case 'deathofarrival':
+                    case 'deathoffarrival':
                         document.getElementById('formDOA').style.display = 'block';
                         break;
                 }
@@ -335,9 +335,10 @@
                 'tanggalPulang',
                 'jamPulang',
                 'alasan_pulang',
-                'tanggal_berobat',
+                'tanggal_rajal',
+                'poli_unit_tujuan',
                 'keteranganRawatInap',
-                'poli'
+                'kamarOperasi'
             ];
 
             formFields.forEach(fieldId => {
@@ -354,9 +355,12 @@
 
                 tindakLanjutData = {
                     option: selectedOption.value,
-                    keterangan: document.getElementById('keteranganTindakLanjut')?.value || '',
-                    tanggalMeninggal: document.getElementById('tanggalMeninggal')?.value || '',
-                    jamMeninggal: document.getElementById('jamMeninggal')?.value || '',
+                    // Rawat Inap fields
+                    keteranganRawatInap: document.getElementById('keteranganRawatInap')?.value || '',
+                    // Kamar Operasi fields
+                    kamarOperasi: document.getElementById('kamarOperasi')?.value || '',
+                    // Menolak Rawat Inap fields
+                    alasanMenolak: document.getElementById('alasanMenolak')?.value || '',
                     // Rujuk Keluar fields
                     tujuan_rujuk: document.getElementById('tujuan_rujuk')?.value || '',
                     alasan_rujuk: document.getElementById('alasan_rujuk')?.value || '',
@@ -366,8 +370,14 @@
                     jamPulang: document.getElementById('jamPulang')?.value || '',
                     alasan_pulang: document.getElementById('alasan_pulang')?.value || '',
                     // Berobat Jalan fields
-                    tanggal_berobat: document.getElementById('tanggal_berobat')?.value || '',
-                    poli: document.getElementById('poli')?.value || ''
+                    tanggal_rajal: document.getElementById('tanggal_rajal')?.value || '',
+                    poli_unit_tujuan: document.getElementById('poli_unit_tujuan')?.value || '',
+                    // Meninggal Dunia fields
+                    tanggalMeninggal: document.getElementById('tanggalMeninggal')?.value || '',
+                    jamMeninggal: document.getElementById('jamMeninggal')?.value || '',
+                    // DOA fields
+                    tanggalDoa: document.getElementById('tanggalDoa')?.value || '',
+                    jamDoa: document.getElementById('jamDoa')?.value || ''
                 };
             }
 

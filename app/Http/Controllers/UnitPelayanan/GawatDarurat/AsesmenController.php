@@ -714,7 +714,6 @@ class AsesmenController extends Controller
             }
 
             //simpan tindak lanjut
-            // Handle tindak lanjut if exists (now optional)
             if ($request->has('tindak_lanjut_data')) {
                 $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
 
@@ -726,45 +725,78 @@ class AsesmenController extends Controller
                         case 'rawatInap':
                             $tindakLanjutDtl->tindak_lanjut_code = 1;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-                            $tindakLanjutDtl->keterangan  =  $tindakLanjutData['keteranganRawatInap'] ?? '';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keteranganRawatInap'] ?? '';
                             break;
-                        case 'pulangKontrol':
-                            $tindakLanjutDtl->tindak_lanjut_code = 2;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
+
+                        case 'kamarOperasi':
+                            $tindakLanjutDtl->tindak_lanjut_code = 7;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Kamar Operasi';
+                            $tindakLanjutDtl->kamar_operasi = $tindakLanjutData['kamarOperasi'] ?? '';
                             break;
+
                         case 'rujukKeluar':
                             $tindakLanjutDtl->tindak_lanjut_code = 5;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? '';
+                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? '';
+                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? '';
                             break;
-                        case 'kamarOperasi':
-                            $tindakLanjutDtl->tindak_lanjut_code = 4;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
-                            break;
-                        case 'menolakRawatInap':
-                        case 'meninggalDunia':
+
+                        case 'pulangSembuh':
                             $tindakLanjutDtl->tindak_lanjut_code = 3;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
+                            $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggalPulang'] ?? '';
+                            $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jamPulang'] ?? '';
+                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
                             break;
+
+                        case 'berobatJalan':
+                            $tindakLanjutDtl->tindak_lanjut_code = 8;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
+                            $tindakLanjutDtl->tanggal_rajal = $tindakLanjutData['tanggal_rajal'] ?? '';
+                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? '';
+                            break;
+
+                        case 'menolakRawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 6;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? '';
+                            break;
+
+                        case 'meninggalDunia':
+                            $tindakLanjutDtl->tindak_lanjut_code = 7;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'] ?? '';
+                            break;
+
+                        case 'deathofarrival':
+                            $tindakLanjutDtl->tindak_lanjut_code = 9;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalDoa'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamDoa'] ?? '';
+                            break;
+
                         default:
                             $tindakLanjutDtl->tindak_lanjut_code = null;
                             $tindakLanjutDtl->tindak_lanjut_name = null;
                     }
-
-                    if (isset($tindakLanjutData['keterangan'])) {
-                        $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
-                    }
-
-                    if (isset($tindakLanjutData['tanggalMeninggal'], $tindakLanjutData['jamMeninggal'])) {
-                        $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
-                        $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
-                    }
                 } else {
-                    // Set null values when tindakLanjutData is empty
+                    // Set default empty values when tindakLanjutData is empty
                     $tindakLanjutDtl->tindak_lanjut_code = '';
                     $tindakLanjutDtl->tindak_lanjut_name = '';
                     $tindakLanjutDtl->keterangan = '';
                     $tindakLanjutDtl->tanggal_meninggal = '';
                     $tindakLanjutDtl->jam_meninggal = '';
+                    $tindakLanjutDtl->tanggal_pulang = '';
+                    $tindakLanjutDtl->jam_pulang = '';
+                    $tindakLanjutDtl->alasan_pulang = '';
+                    $tindakLanjutDtl->tanggal_rajal = '';
+                    $tindakLanjutDtl->poli_unit_tujuan = '';
+                    $tindakLanjutDtl->tujuan_rujuk = '';
+                    $tindakLanjutDtl->alasan_rujuk = '';
+                    $tindakLanjutDtl->transportasi_rujuk = '';
+                    $tindakLanjutDtl->kamar_operasi = '';
                 }
 
                 $tindakLanjutDtl->save();
