@@ -129,12 +129,12 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Pucat :</label>
-                                        <p id="circulation_pucat" class="form-control-plaintext border-bottom">
+                                        <p id="circulationPucat" class="form-control-plaintext border-bottom">
                                         </p>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Cianoisis :</label>
-                                        <p id="circulation_cianosis" class="form-control-plaintext border-bottom">
+                                        <p id="circulationCianosis" class="form-control-plaintext border-bottom">
                                         </p>
                                     </div>
                                     <div class="mb-3">
@@ -1285,11 +1285,11 @@
                             asesmenCirculation.circulation_akral == 1 ? 'Hangat' :
                             asesmenCirculation.circulation_akral == 2 ? 'Dingin' : '-'
                         );
-                        $('#circulation_pucat').text(
+                        $('#circulationPucat').text(
                             asesmenCirculation.circulation_pucat == 0 ? 'Tidak' :
                             asesmenCirculation.circulation_pucat == 1 ? 'Ya' : '-'
                         );
-                        $('#circulation_cianosis').text(
+                        $('#circulationCianosis').text(
                             asesmenCirculation.circulation_cianosis == 0 ? 'Tidak' :
                             asesmenCirculation.circulation_cianosis == 1 ? 'Ya' : '-'
                         );
