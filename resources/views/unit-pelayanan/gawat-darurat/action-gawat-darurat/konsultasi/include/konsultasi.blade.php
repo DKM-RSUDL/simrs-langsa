@@ -45,7 +45,7 @@
         <!-- Search Bar -->
         <div class="col-md-3">
             <form method="GET"
-                action="{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+                action="{{ route('konsultasi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
 
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Dokter & Konsulen"
@@ -69,7 +69,7 @@
         <thead class="table-primary">
             <tr>
                 <th>Tanggal</th>
-                <th>Dari PPA</th>
+                <th>Dari</th>
                 <th>Konsulen</th>
                 <th>Konsul yang diminta</th>
                 <th>Status Konsul</th>
@@ -78,55 +78,37 @@
         </thead>
         <tbody>
             @foreach ($konsultasi as $konsul)
-                @php
-                    $konsulenHarap = $konsul->kd_konsulen_diharapkan;
-                    $konsulenHarapLabel = '';
-
-                    switch ($konsulenHarap) {
-                        case 1:
-                            $konsulenHarapLabel = 'Konsul Sewaktu';
-                            break;
-                        case 2:
-                            $konsulenHarapLabel = 'Rawat Bersama';
-                            break;
-                        case 3:
-                            $konsulenHarapLabel = 'Alih Rawat';
-                            break;
-                        case 4:
-                            $konsulenHarapLabel =
-                                'Kembali ke unit yang meminta untuk persetujuan tindakan & pengobatan';
-                            break;
-                    }
-                @endphp
-
                 <tr>
-                    <td>{{ date('d M Y', strtotime($konsul->tgl_masuk_tujuan)) }}
-                        {{ date('H:i', strtotime($konsul->jam_masuk_tujuan)) }}</td>
-                    <td>{{ $konsul->dokter_asal->nama_lengkap }} ({{ $konsul->unit_asal->nama_unit ?? '-' }})</td>
-                    <td>{{ $konsul->unit_tujuan->nama_unit }}</td>
                     <td>
-                        <p class="text-primary fw-bold m-0 p-0" id="konsulenHarapLabel">{{ $konsulenHarapLabel }}</p>
-                        <p class="m-0 p-0" id="konsulDimintaLabel">{{ $konsul->konsul }}</p>
+                        {{ date('d M Y', strtotime($konsul->tgl_konsul)) }}
+                        {{ date('H:i', strtotime($konsul->jam_konsul)) }}
+                    </td>
+                    <td>{{ $konsul->dokterAsal->nama_lengkap }}</td>
+                    <td>{{ $konsul->dokterTujuan->nama_lengkap }}</td>
+                    <td>
+                        <p class="m-0 p-0" id="konsulDimintaLabel">{{ $konsul->konsultasi }}</p>
                     </td>
                     <td>
-                        <p class="text-primary fw-bold m-0 p-0" id="konsulenStatusLabel">Dikirim</p>
-                        {{-- <p class="m-0 p-0" id="konsulenKetLabel">Saran untuk dilakukan pemeriksaan</p> --}}
+                        @if (empty($konsul->instruksi))
+                            <p class="text-warning fw-bold m-0 p-0" id="konsulenStatusLabel">Di kirim</p>
+                        @else
+                            <p class="text-success fw-bold m-0 p-0" id="konsulenStatusLabel">Di jawab</p>
+                        @endif
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning btn-edit-konsultasi" data-bs-target="#editKonsulModal"
-                            data-unittujuan="{{ $konsul->kd_unit_tujuan }}"
-                            data-tglkonsul="{{ $konsul->tgl_masuk_tujuan }}"
-                            data-jamkonsul="{{ $konsul->jam_masuk_tujuan }}"
-                            data-urutkonsul="{{ $konsul->urut_konsul }}">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-sm btn-delete-konsultasi"
-                            data-unittujuan="{{ $konsul->kd_unit_tujuan }}"
-                            data-tglkonsul="{{ $konsul->tgl_masuk_tujuan }}"
-                            data-jamkonsul="{{ $konsul->jam_masuk_tujuan }}"
-                            data-urutkonsul="{{ $konsul->urut_konsul }}">
-                            <i class="bi bi-x-circle-fill text-danger"></i>
-                        </button>
+                        <div class="d-flex">
+                            <a href="{{ route('konsultasi.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($konsul->id)]) }}" class="btn btn-sm btn-info btn-print-konsultasi" target="_blank">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <button class="btn btn-sm btn-warning btn-edit-konsultasi mx-2" data-bs-target="#editKonsulModal"
+                                data-konsul="{{ encrypt($konsul->id) }}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-sm btn-delete-konsultasi"
+                                data-konsul="{{ encrypt($konsul->id) }}">
+                                <i class="bi bi-x-circle-fill text-danger"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             @endforeach

@@ -192,7 +192,7 @@
                             <h6>Antropometri</h6>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label>TB (meter)</label>
+                                    <label>TB (cm)</label>
                                     <input type="number" class="form-control" name="edit_antropometri_tb">
                                 </div>
                                 <div class="col">
@@ -677,10 +677,6 @@
             }
 
         }
-
-        $('input[type="radio"]').change(function() {
-            console.log(`Radio ${this.name} changed to:`, this.value);
-        });
 
         function getTindakLanjutOption(code) {
             switch (code) {
@@ -1292,5 +1288,33 @@
             $('#editAddAlergi').data('hasChanges', false);
             originalAlergiData = [];
         });
+
+        // Tambahkan event listener untuk input BB dan TB
+        $('input[name="edit_antropometri_bb"], input[name="edit_antropometri_tb"]').on('input', function() {
+            calculateIMTAndLPT();
+        });
+
+        function calculateIMTAndLPT() {
+            const bb = parseFloat($('input[name="edit_antropometri_bb"]').val()); // BB dalam kg
+            const tb = parseFloat($('input[name="edit_antropometri_tb"]').val()); // TB dalam cm
+            
+            // Hitung IMT dan LPT jika BB dan TB tersedia
+            if (!isNaN(bb) && !isNaN(tb) && tb > 0) {
+                // IMT = BB / (TB/100)²
+                const imt = (bb / ((tb/100) * (tb/100))).toFixed(1);
+                $('input[name="edit_antropometri_imt"]').val(imt);
+                
+                // LPT menggunakan TB dalam cm
+                $('input[name="edit_antropometri_lpt"]').val(tb); // LPT sama dengan TB dalam cm
+            } else {
+                // Kosongkan field jika data tidak lengkap
+                $('input[name="edit_antropometri_imt"]').val('');
+                $('input[name="edit_antropometri_lpt"]').val('');
+            }
+        }
+
+        // Set input IMT dan LPT menjadi readonly
+        $('input[name="edit_antropometri_imt"], input[name="edit_antropometri_lpt"]').prop('readonly', true);
+
     </script>
 @endpush

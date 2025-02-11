@@ -373,11 +373,8 @@
 
                     if ($(this).is(':checked')) {
                         radioInputs.prop('disabled', false);
-
-                        // Jika belum ada radio yang dipilih, set required
-                        if (!radioInputs.filter(':checked').length) {
-                            radioInputs.prop('required', true);
-                        }
+                        // Hapus required
+                        radioInputs.prop('required', false);
                     } else {
                         radioInputs.prop('disabled', true);
                         radioInputs.prop('required', false);
@@ -392,16 +389,14 @@
             $('.diagnose-prwt-checkbox').change(function() {
                 let diagnosisWrap = $(this).closest('.diagnosis-row');
                 let radioInputs = diagnosisWrap.find('input[type="radio"]');
-                let currentValue = null;
 
                 if ($(this).is(':checked')) {
                     radioInputs.prop('disabled', false);
-                    radioInputs.prop('required', true);
+                    // Hapus required
+                    radioInputs.prop('required', false);
 
-                    // Jika sebelumnya sudah ada nilai yang disimpan, gunakan nilai tersebut
-                    currentValue = radioInputs.filter(':checked').val();
-                    if (!currentValue) {
-                        // Default ke aktual jika belum ada yang dipilih
+                    // Opsional: Tambahkan default pilihan jika belum ada yang dipilih
+                    if (!radioInputs.filter(':checked').length) {
                         diagnosisWrap.find('#airway_aktual').prop('checked', true);
                     }
                 } else {
@@ -411,16 +406,11 @@
                 }
             });
 
-            // Handle form submission
+            // Modifikasi form submission
             $('#asesmenForm').submit(function(e) {
-                let diagnosisChecked = $('.diagnose-prwt-checkbox').is(':checked');
-                let diagnosisTypeSelected = $('input[name="airway_diagnosis_type"]:checked').length > 0;
-
-                if (diagnosisChecked && !diagnosisTypeSelected) {
-                    e.preventDefault();
-                    alert('Silakan pilih tipe diagnosis (Aktual/Risiko)');
-                    return false;
-                }
+                // Hapus validasi paksa
+                // Biarkan form submit tanpa syarat
+                return true;
             });
 
             // Handle radio button changes
@@ -1531,91 +1521,53 @@
             const kesimpulanValue = document.getElementById('kesimpulan_value');
             const diagnosisMedis = document.getElementById('diagnosis_medis');
 
-            // Function to validate diagnosis medis
-            function validateDiagnosisMedis() {
-                const value = diagnosisMedis.value.trim();
-                if (value === '') {
-                    diagnosisMedis.classList.add('is-invalid');
-                    diagnosisMedis.setCustomValidity('Harap isi diagnosis medis');
-                    return false;
-                } else {
-                    diagnosisMedis.classList.remove('is-invalid');
-                    diagnosisMedis.setCustomValidity('');
-                    return true;
-                }
-            }
-
             // Function to update conclusion
             function updateKesimpulan() {
-                const semuaTerisi = Array.from(selects).every(select => select.value !== '');
-
                 // Reset display first
                 kesimpulanKhusus.style.display = 'none';
                 kesimpulanTidakKhusus.style.display = 'none';
                 kesimpulanValue.value = '';
 
-                if (semuaTerisi) {
-                    const jumlahYa = Array.from(selects).filter(select => select.value === 'ya').length;
+                // Hitung berapa banyak field yang diisi dengan 'ya'
+                const jumlahYa = Array.from(selects)
+                    .filter(select => select.value === 'ya')
+                    .length;
 
-                    if (jumlahYa > 0) {
-                        kesimpulanKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'butuh_rencana_khusus';
-                    } else {
-                        kesimpulanTidakKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
-                    }
+                if (jumlahYa > 0) {
+                    kesimpulanKhusus.style.display = 'block';
+                    kesimpulanValue.value = 'butuh_rencana_khusus';
+                } else {
+                    kesimpulanTidakKhusus.style.display = 'block';
+                    kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
                 }
-            }
-
-            // Function to validate form
-            function validateForm() {
-                const diagnosisValid = validateDiagnosisMedis();
-                const selectsValid = Array.from(selects).every(select => select.value !== '');
-                return diagnosisValid && selectsValid;
             }
 
             // Event Listeners
             diagnosisMedis.addEventListener('input', function() {
-                validateDiagnosisMedis();
-                this.classList.toggle('is-invalid', !validateDiagnosisMedis());
+                // Tidak perlu validasi wajib
             });
 
             selects.forEach(select => {
                 select.addEventListener('change', function() {
                     updateKesimpulan();
-                    this.classList.toggle('is-invalid', !this.value);
                 });
             });
 
             // Initial setup for edit mode
             function setupInitialState() {
-                // Validate diagnosis medis
-                validateDiagnosisMedis();
-
-                // Check existing select values and update conclusion
-                const hasExistingValues = Array.from(selects).some(select => select.value !== '');
+                // Cek apakah ada nilai yang sudah dipilih
+                const hasExistingValues = Array.from(selects).some(select => select.value === 'ya');
                 if (hasExistingValues) {
                     updateKesimpulan();
                 }
-
-                // Add invalid class to empty required selects
-                selects.forEach(select => {
-                    select.classList.toggle('is-invalid', !select.value);
-                });
             }
 
             // Form submission handler
             const form = diagnosisMedis.closest('form');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    if (!validateForm()) {
-                        e.preventDefault();
-                        // Show validation messages
-                        validateDiagnosisMedis();
-                        selects.forEach(select => {
-                            select.classList.toggle('is-invalid', !select.value);
-                        });
-                    }
+                    // Hapus validasi paksa
+                    // Biarkan form submit tanpa syarat
                 });
             }
 

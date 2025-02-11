@@ -73,4 +73,13 @@ if (!function_exists('getKategoriAsesmen')) {
     }
 }
 
+if (!function_exists('selisihHari')) {
+    function selisihHari($tanggalMulai, $tanggalAkhir)
+    {
+        $mulai = new DateTime($tanggalMulai);
+        $akhir = new DateTime($tanggalAkhir);
+        $selisih = $mulai->diff($akhir);
 
+        return $selisih->days; // Mengembalikan jumlah hari
+    }
+}

@@ -744,6 +744,11 @@
                                         <p id="sosial_ekonomi_status_pernikahan"
                                             class="form-control-plaintext border-bottom"></p>
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Status pendidikan :</label>
+                                        <p id="sosial_ekonomi_status_pendidikan"
+                                            class="form-control-plaintext border-bottom"></p>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -1095,7 +1100,6 @@
                     <button
                     class="btn btn-info print-pdf-btn"
                     onclick="printPDF(this)"
-                    data-id="{{ $item->id }}"
                     data-kd-pasien="{{ $dataMedis->kd_pasien }}"
                     data-tgl-masuk="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}"
                   >
@@ -1175,7 +1179,14 @@
                         const {
                             asesmen,
                             pasien,
-                            pekerjaan
+                            pekerjaan,
+                            faktorPemberat,
+                            faktorPeringan,
+                            kualitasNyeri,
+                            frekuensiNyeri,
+                            jenisNyeri,
+                            agama,
+                            pendidikan,
                         } = response.data;
 
                         // Update print button data
@@ -1422,116 +1433,56 @@
                         $('#skala_nyeri').text(asesmenSkalaNyeri.skala_nyeri || '-');
                         $('#skala_nyeri_lokasi').text(asesmenSkalaNyeri.skala_nyeri_lokasi || '-');
 
-                        function getPemberatText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'Cahaya';
-                                case 2:
-                                    return 'Gelap';
-                                case 3:
-                                    return 'Berbaring';
-                                case 4:
-                                    return 'Gerakan';
-                                case 5:
-                                    return 'Lainnya';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_pemberat_id !== undefined) {
-                            $('#skala_nyeri_pemberat_id').text(getPemberatText(asesmenSkalaNyeri
-                                .skala_nyeri_pemberat_id));
-                        } else {
-                            $('#skala_nyeri_pemberat_id').text('-');
-                        }
+                        const pemberatMap = (faktorPemberat || []).reduce((map, item) => {
+                            map[item.id] = item.name;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#skala_nyeri_pemberat_id').text(
+                            pemberatMap[asesmenSkalaNyeri.skala_nyeri_pemberat_id] || '-'
+                        );
 
-                        function getKualitasText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'Nyeri Tumpul';
-                                case 2:
-                                    return 'Nyeri Tajam';
-                                case 3:
-                                    return 'Panas/Terbakar';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_pemberat_id !== undefined) {
-                            $('#skala_nyeri_kualitas_id').text(getKualitasText(asesmenSkalaNyeri
-                                .skala_nyeri_kualitas_id));
-                        } else {
-                            $('#skala_nyeri_kualitas_id').text('-');
-                        }
+                        const kualitasMap = (kualitasNyeri || []).reduce((map, item) => {
+                            map[item.id] = item.name;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#skala_nyeri_kualitas_id').text(
+                            kualitasMap[asesmenSkalaNyeri.skala_nyeri_kualitas_id] || '-'
+                        );
+
                         $('#skala_nyeri_menjalar_id').text(
                             asesmenSkalaNyeri.skala_nyeri_menjalar_id == 1 ? 'Ya' :
                             asesmenSkalaNyeri.skala_nyeri_menjalar_id == 2 ? 'Tidak' : '-'
                         );
                         $('#skala_nyeri_durasi').text(asesmenSkalaNyeri.skala_nyeri_durasi || '-');
 
-                        function getPeringanText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'Cahaya';
-                                case 2:
-                                    return 'Gelap';
-                                case 3:
-                                    return 'Berbaring';
-                                case 4:
-                                    return 'Gerakan';
-                                case 5:
-                                    return 'Lainnya';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_peringan_id !== undefined) {
-                            $('#skala_nyeri_peringan_id').text(getPeringanText(asesmenSkalaNyeri
-                                .skala_nyeri_peringan_id));
-                        } else {
-                            $('#skala_nyeri_peringan_id').text('-');
-                        }
+                        const peringanMap = (faktorPeringan || []).reduce((map, item) => {
+                            map[item.id] = item.name;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#skala_nyeri_peringan_id').text(
+                            peringanMap[asesmenSkalaNyeri.skala_nyeri_peringan_id] || '-'
+                        );
 
-                        function getFrekuensiText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'Jarang';
-                                case 2:
-                                    return 'Hilang Timbul';
-                                case 3:
-                                    return 'Panas/Terbakar';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_frekuensi_id !== undefined) {
-                            $('#skala_nyeri_frekuensi_id').text(getFrekuensiText(asesmenSkalaNyeri
-                                .skala_nyeri_frekuensi_id));
-                        } else {
-                            $('#skala_nyeri_frekuensi_id').text('-');
-                        }
+                        const frekuensiNyeriMap = (frekuensiNyeri || []).reduce((map, item) => {
+                            map[item.id] = item.name;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#skala_nyeri_frekuensi_id').text(
+                            frekuensiNyeriMap[asesmenSkalaNyeri.skala_nyeri_frekuensi_id] || '-'
+                        );
 
-                        function getJenisText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'Nyeri Akut';
-                                case 2:
-                                    return 'Kronik';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSkalaNyeri && asesmenSkalaNyeri.skala_nyeri_jenis_id !== undefined) {
-                            $('#skala_nyeri_jenis_id').text(getJenisText(asesmenSkalaNyeri
-                                .skala_nyeri_jenis_id));
-                        } else {
-                            $('#skala_nyeri_jenis_id').text('-');
-                        }
+                        const jenisNyeriMap = (jenisNyeri || []).reduce((map, item) => {
+                            map[item.id] = item.name;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#skala_nyeri_jenis_id').text(
+                            jenisNyeriMap[asesmenSkalaNyeri.skala_nyeri_jenis_id] || '-'
+                        );
 
                         // Data Risiko Jatuh
                         showRisikoJatuhForm(asesmenRisikoJatuh.resiko_jatuh_jenis, asesmenRisikoJatuh);
@@ -1553,7 +1504,15 @@
                         $('#psikologis_lainnya').text(asesmenKepUmum.psikologis_lainnya || '-');
 
                         // 9. Status Spiritual
-                        $('#spiritual_agama').text(asesmenKepUmum.spiritual_agama || '-');
+                        const agamaMap = (agama || []).reduce((map, item) => {
+                            map[item.kd_agama] = item.agama;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#spiritual_agama').text(
+                            agamaMap[asesmenKepUmum.spiritual_agama] || '-'
+                        );
+
                         $('#spiritual_nilai').text(asesmenKepUmum.spiritual_nilai || '-');
 
                         // 10. Status Sosial Ekonomi
@@ -1593,48 +1552,15 @@
                             $('#sosial_ekonomi_status_pernikahan').text('-');
                         }
 
-                        function getstatus_pendidikanText(id) {
-                            id = parseInt(id);
-                            switch (id) {
-                                case 1:
-                                    return 'TK';
-                                case 2:
-                                    return 'SD/MIN';
-                                case 3:
-                                    return 'SLTP/SMP/MTSN/SLP';
-                                case 4:
-                                    return 'SLTA/SMA/SMU/SMK/MAN/SLA';
-                                case 5:
-                                    return 'D2';
-                                case 6:
-                                    return 'D3';
-                                case 7:
-                                    return 'S1';
-                                case 8:
-                                    return 'S2';
-                                case 9:
-                                    return 'S3';
-                                case 10:
-                                    return 'TIDAK SEKOLAH';
-                                case 13:
-                                    return 'BELUM SEKOLAH';
-                                case 14:
-                                    return 'PAUD';
-                                case 15:
-                                    return 'D4';
-                                case 16:
-                                    return 'D1';
-                                default:
-                                    return '-';
-                            }
-                        }
-                        if (asesmenSosialEkonomi && asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan !==
-                            undefined) {
-                            $('#sosial_ekonomi_status_pendidikan').text(getstatus_pendidikanText(
-                                asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan));
-                        } else {
-                            $('#sosial_ekonomi_status_pendidikan').text('-');
-                        }
+                        const pendidikanMap = (pendidikan || []).reduce((map, item) => {
+                            map[item.kd_pendidikan] = item.pendidikan;
+                            return map;
+                        }, {});
+                        // Display pekerjaan
+                        $('#sosial_ekonomi_status_pendidikan').text(
+                            pendidikanMap[asesmenSosialEkonomi.sosial_ekonomi_status_pendidikan] || '-'
+                        );
+
                         $('#sosial_ekonomi_tempat_tinggal').text(asesmenSosialEkonomi
                             .sosial_ekonomi_tempat_tinggal || '-');
                         $('#sosial_ekonomi_tinggal_dengan_keluarga').text(asesmenSosialEkonomi

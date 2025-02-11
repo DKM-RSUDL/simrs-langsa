@@ -119,6 +119,25 @@ class AsesmenController extends Controller
             // Parse tanggal tanpa waktu
             $date = Carbon::parse($tgl_masuk)->format('Y-m-d');
 
+            // Mengambil data kunjungan dan tanggal triase terkait
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=',
+                    't.kd_pasien'
+                );
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=',
+                    't.tgl_transaksi'
+                );
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
             $asesmen = RmeAsesmen::with([
                 'menjalar',
                 'frekuensiNyeri',
@@ -189,7 +208,8 @@ class AsesmenController extends Controller
                         'tindaklanjut' => $asesmen->tindaklanjut,
                         'pemeriksaan_fisik' => $pemeriksaanFisik
 
-                    ]
+                    ],
+                    'dataMedis' => $dataMedis
                 ]
             ]);
         } catch (\Exception $e) {
@@ -694,11 +714,9 @@ class AsesmenController extends Controller
             }
 
             //simpan tindak lanjut
-            // Handle tindak lanjut if exists (now optional)
             if ($request->has('tindak_lanjut_data')) {
                 $tindakLanjutData = json_decode($request->tindak_lanjut_data, true);
 
-                // Create RmeAsesmenDtl record even if tindakLanjutData is empty/null
                 $tindakLanjutDtl = new RmeAsesmenDtl();
                 $tindakLanjutDtl->id_asesmen = $asesmen->id;
 
@@ -707,44 +725,78 @@ class AsesmenController extends Controller
                         case 'rawatInap':
                             $tindakLanjutDtl->tindak_lanjut_code = 1;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keteranganRawatInap'] ?? '';
                             break;
-                        case 'pulangKontrol':
-                            $tindakLanjutDtl->tindak_lanjut_code = 2;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
+
+                        case 'kamarOperasi':
+                            $tindakLanjutDtl->tindak_lanjut_code = 7;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Kamar Operasi';
+                            $tindakLanjutDtl->kamar_operasi = $tindakLanjutData['kamarOperasi'] ?? '';
                             break;
+
                         case 'rujukKeluar':
                             $tindakLanjutDtl->tindak_lanjut_code = 5;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? '';
+                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? '';
+                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? '';
                             break;
-                        case 'kamarOperasi':
-                            $tindakLanjutDtl->tindak_lanjut_code = 4;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
-                            break;
-                        case 'menolakRawatInap':
-                        case 'meninggalDunia':
+
+                        case 'pulangSembuh':
                             $tindakLanjutDtl->tindak_lanjut_code = 3;
-                            $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
+                            $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggalPulang'] ?? '';
+                            $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jamPulang'] ?? '';
+                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
                             break;
+
+                        case 'berobatJalan':
+                            $tindakLanjutDtl->tindak_lanjut_code = 8;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
+                            $tindakLanjutDtl->tanggal_rajal = $tindakLanjutData['tanggal_rajal'] ?? '';
+                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? '';
+                            break;
+
+                        case 'menolakRawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 6;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? '';
+                            break;
+
+                        case 'meninggalDunia':
+                            $tindakLanjutDtl->tindak_lanjut_code = 7;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'] ?? '';
+                            break;
+
+                        case 'deathofarrival':
+                            $tindakLanjutDtl->tindak_lanjut_code = 9;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalDoa'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamDoa'] ?? '';
+                            break;
+
                         default:
                             $tindakLanjutDtl->tindak_lanjut_code = null;
                             $tindakLanjutDtl->tindak_lanjut_name = null;
                     }
-
-                    if (isset($tindakLanjutData['keterangan'])) {
-                        $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
-                    }
-
-                    if (isset($tindakLanjutData['tanggalMeninggal'], $tindakLanjutData['jamMeninggal'])) {
-                        $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
-                        $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
-                    }
                 } else {
-                    // Set null values when tindakLanjutData is empty
-                    $tindakLanjutDtl->tindak_lanjut_code = null;
-                    $tindakLanjutDtl->tindak_lanjut_name = null;
-                    $tindakLanjutDtl->keterangan = null;
-                    $tindakLanjutDtl->tanggal_meninggal = null;
-                    $tindakLanjutDtl->jam_meninggal = null;
+                    // Set default empty values when tindakLanjutData is empty
+                    $tindakLanjutDtl->tindak_lanjut_code = '';
+                    $tindakLanjutDtl->tindak_lanjut_name = '';
+                    $tindakLanjutDtl->keterangan = '';
+                    $tindakLanjutDtl->tanggal_meninggal = '';
+                    $tindakLanjutDtl->jam_meninggal = '';
+                    $tindakLanjutDtl->tanggal_pulang = '';
+                    $tindakLanjutDtl->jam_pulang = '';
+                    $tindakLanjutDtl->alasan_pulang = '';
+                    $tindakLanjutDtl->tanggal_rajal = '';
+                    $tindakLanjutDtl->poli_unit_tujuan = '';
+                    $tindakLanjutDtl->tujuan_rujuk = '';
+                    $tindakLanjutDtl->alasan_rujuk = '';
+                    $tindakLanjutDtl->transportasi_rujuk = '';
+                    $tindakLanjutDtl->kamar_operasi = '';
                 }
 
                 $tindakLanjutDtl->save();
@@ -864,6 +916,23 @@ class AsesmenController extends Controller
 
     public function print($kd_pasien, $tgl_masuk, $id)
     {
+
+        // dd($tgl_masuk);
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
         // Ambil data asesmen
         $asesmen = RmeAsesmen::with([
             'pasien',
@@ -878,11 +947,42 @@ class AsesmenController extends Controller
             'pemeriksaanFisik.itemFisik',
             'user'
         ])
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
+
+        $triaselabel ='-';
+        $triasename = '-';
+        
+        switch ($dataMedis->kd_triase) {
+            case '1':
+                $triaselabel = 'FALSE EMERGENCY';
+                $triasename = 'HIJAU';
+                break;
+            case '2':
+                $triaselabel = 'URGNET';
+                $triasename = 'KUNING';
+                break;
+            case '3':
+                $triaselabel = 'EMERGENCY';
+                $triasename = 'MERAH';
+                break;
+            case '4':
+                $triaselabel = 'RESUSITASI';
+                $triasename = 'MERAH';
+                break;
+            case '5':
+                $triaselabel = 'DOA';
+                $triasename = 'HITAM';
+                break;
+        }
 
         $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.print', [
-            'asesmen' => $asesmen
+            'asesmen' => $asesmen,
+            'triase' => [
+                'label' => $triaselabel,
+                'warna' => $triasename,
+            ]
+
         ]);
 
         $pdf->setPaper('a4', 'portrait');

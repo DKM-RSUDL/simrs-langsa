@@ -294,7 +294,7 @@
                     // Ajax request untuk mendapatkan dokter
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         data: {
                             "_token": "{{ csrf_token() }}",
                             "kd_unit": unitId

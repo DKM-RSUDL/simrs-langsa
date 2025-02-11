@@ -41,7 +41,7 @@ class MrResep extends Model
 
     public function detailResep()
     {
-        return $this->hasMany(MrResepDtl::class, 'ID_MRRESEP', 'ID_MRRESEP');
+        return $this->hasMany(MrResepDtl::class, 'id_mrresep', 'id_mrresep');
     }
 
     public function aptObat()

@@ -11,11 +11,61 @@
             line-height: 1.4;
         }
 
-        .header {
+        header {
+            width: 100%;
+            display: table;
+            padding-bottom: 30px;
+            border-bottom: 2px solid black
+        }
+
+        header .left-column {
+            display: table-cell;
+            width: 20%;
+            vertical-align: top;
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 10px;
+        }
+
+        header .left-column p {
+            margin: 5px;
+        }
+
+        header .center-column {
+            display: table-cell;
+            width: auto;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        header .center-column p {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        header .right-column {
+            display: table-cell;
+            width: 40%;
+            vertical-align: top;
+            text-align: right;
+        }
+
+        header .header-logo {
+            width: 80px;
+        }
+
+        header .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header .info-table {
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        header .info-table td {
+            padding: 8px;
+            border: 1px solid black;
         }
 
         .logo {
@@ -79,52 +129,78 @@
         @page {
             margin: 0.5cm;
         }
+
+        .section table.bordered ul {
+            margin: 5px 0;
+        }
+
+        .section table.bordered ul li {
+            margin: 3px 0;
+        }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <div class="title">RUMAH SAKIT UMUM DAERAH LANGSA</div>
-        <div class="subtitle">FORMULIR ASESMEN KEPERAWATAN & MEDIS</div>
-        <div class="subtitle">GAWAT DARURAT</div>
-    </div>
+    <header>
+        <div class="left-column">
+            <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" class="header-logo" alt="Logo">
+            <p>RSUD Langsa</p>
+            <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
+        </div>
+        <div class="center-column">
+            <p>ASESMEN MEDIS<br>IGD</p>
+        </div>
+        <div class="right-column">
+            <table class="info-table">
+                <tr>
+                    <td><strong>No RM</strong></td>
+                    <td>{{ $asesmen->kd_pasien }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Nama</strong></td>
+                    <td>{{ str()->title($asesmen->pasien->nama) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Jenis Kelamin</strong></td>
+                    <td>
+                        @php
+                            $gender = '-';
 
-    <!-- Identitas Pasien -->
-    <div class="section-title">DATA PASIEN</div>
-    <table class="bordered">
-        <tr>
-            <td class="col-header">Nama Pasien</td>
-            <td>: {{ $asesmen->pasien->nama ?? '-' }}</td>
-            <td class="col-header">No. RM</td>
-            <td>: {{ $asesmen->kd_pasien ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">Tanggal Lahir</td>
-            <td>: {{ $asesmen->pasien->tgl_lahir ? date('d-m-Y', strtotime($asesmen->pasien->tgl_lahir)) : '-' }}</td>
-            <td class="col-header">Tanggal Masuk</td>
-            <td>: {{ date('d-m-Y H:i', strtotime($asesmen->tgl_masuk)) }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">Jenis Kelamin</td>
-            <td>:
-                @php
-                    $jenisKelamin = $asesmen->pasien->jenis_kelamin ?? '-';
-                    switch ($jenisKelamin) {
-                        case '1':
-                            echo 'Laki-laki';
-                            break;
-                        case '2':
-                            echo 'Perempuan';
-                            break;
-                        default:
-                            echo $jenisKelamin;
-                    }
-                @endphp
-            </td>
-            <td class="col-header">Jam Asesmen</td>
-            <td>: {{ date('H:i', strtotime($asesmen->waktu_asesmen)) }}</td>
-        </tr>
-    </table>
+                            if ($asesmen->pasien->jenis_kelamin == 1) {
+                                $gender = 'Laki-Laki';
+                            }
+                            if ($asesmen->pasien->jenis_kelamin == 0) {
+                                $gender = 'Perempuan';
+                            }
+
+                            echo $gender;
+                        @endphp
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Tanggal Lahir</strong></td>
+                    <td>{{ date('d/m/Y', strtotime($asesmen->pasien->tgl_lahir)) }}</td>
+                </tr>
+            </table>
+        </div>
+    </header>
+
+    <!-- Triase Section -->
+    <div class="section">
+        <div class="section-title">TRIASE</div>
+        <div style="padding: 5px;">
+            <table class="bordered">
+                <tr>
+                    <th class="col-header">Warna</th>
+                    <th class="col-header">Kesimpulan Triase</th>
+                </tr>
+                <tr>
+                    <td>{{ $triase['warna'] ?? '-' }}</td>
+                    <td>{{ $triase['label'] ?? '-' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     <!-- Tindakan Resusitasi -->
     <div class="section">
@@ -289,7 +365,8 @@
                     <table style="width: 100%;">
                         <tr>
                             <td width="40%" style="padding: 3px; border: none;">Skala Nyeri</td>
-                            <td width="60%" style="padding: 3px; border: none;">: {{ $asesmen->skala_nyeri ?? '-' }}</td>
+                            <td width="60%" style="padding: 3px; border: none;">: {{ $asesmen->skala_nyeri ?? '-' }}
+                            </td>
                         </tr>
                         <tr>
                             <td style="padding: 3px; border: none;">Lokasi</td>
@@ -373,51 +450,6 @@
                     @endif
                 </tr>
             @endfor
-        </table>
-    </div>
-
-
-
-    <!-- Penilaian Nyeri -->
-    <div class="section">
-        <div class="section-title">PENILAIAN NYERI</div>
-        <table>
-            <tr>
-                <td class="col-header">Skala Nyeri</td>
-                <td>: {{ $asesmen->skala_nyeri ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Lokasi</td>
-                <td>: {{ $asesmen->lokasi ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Durasi</td>
-                <td>: {{ $asesmen->durasi ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Menjalar</td>
-                <td>: {{ $asesmen->menjalar->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Frekuensi</td>
-                <td>: {{ $asesmen->frekuensiNyeri->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Kualitas</td>
-                <td>: {{ $asesmen->kualitasNyeri->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Faktor Pemberat</td>
-                <td>: {{ $asesmen->faktorPemberat->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Faktor Peringan</td>
-                <td>: {{ $asesmen->faktorPeringan->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Efek Nyeri</td>
-                <td>: {{ $asesmen->efekNyeri->name ?? '-' }}</td>
-            </tr>
         </table>
     </div>
 

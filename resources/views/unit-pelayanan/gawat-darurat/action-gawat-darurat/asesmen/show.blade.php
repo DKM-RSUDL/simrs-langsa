@@ -64,17 +64,17 @@
 
                                             <div class="form-line">
                                                 <h6>Riwayat Penyakit Pasien</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Penyakit Keluarga Pasien</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_penyakit_keluarga" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_penyakit_keluarga" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
                                                 <h6>Riwayat Pengobatan</h6>
-                                                <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan" readonly></textarea>
+                                                <textarea class="form-control mb-2" rows="2" name="riwayat_pengobatan" readonly></textarea>
                                             </div>
 
                                             <div class="form-line">
@@ -526,7 +526,7 @@
 
                         // **Perbaikan: Pastikan tombol print mengambil ID asesmen yang benar**
                         let btnPrint = document.getElementById('btnPrintAsesmen');
-                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.asesmen.kd_pasien}/${response.data.asesmen.tgl_masuk}/asesmen/${id}/print`;
+                        btnPrint.href = `/unit-pelayanan/gawat-darurat/pelayanan/${response.data.dataMedis.kd_pasien}/${response.data.dataMedis.tgl_masuk.split(' ')[0]}/asesmen/${id}/print`;
 
                         modal.show();
                     } else {

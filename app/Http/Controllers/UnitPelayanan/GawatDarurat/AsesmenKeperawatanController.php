@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
+use App\Models\Agama;
 use App\Models\Kunjungan;
 use App\Models\Pekerjaan;
+use App\Models\Pendidikan;
 use App\Models\RmeAsesmen;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -63,6 +65,8 @@ class AsesmenKeperawatanController extends Controller
         $frekuensiNyeri = RmeFrekuensiNyeri::all();
         $menjalar = RmeMenjalar::all();
         $jenisNyeri = RmeJenisNyeri::all();
+        $agama = Agama::all();
+        $pendidikan = Pendidikan::all();
 
         $rmeAsesmenKepUmum = RmeAsesmenKepUmum::select('masalah_keperawatan', 'implementasi')->get();
 
@@ -99,7 +103,9 @@ class AsesmenKeperawatanController extends Controller
             'kualitasNyeri',
             'frekuensiNyeri',
             'menjalar',
-            'jenisNyeri'
+            'jenisNyeri',
+            'agama',
+            'pendidikan'
         ));
     }
 
@@ -268,7 +274,7 @@ class AsesmenKeperawatanController extends Controller
             $kesadaranType = $request->disability_diagnosis_kesadaran_type ?? null;
 
             $asesmenKepUmumDisability->disability_diagnosis_kesadaran = in_array('penurunan_kesadaran', $kesadaranSelected)
-                ? ($kesadaranType === '1' ? 1 : ($kesadaranType === '2' ? 2 : 0))
+                ? ($kesadaranType == '1' ? 1 : ($kesadaranType == '2' ? 2 : 0))
                 : 0;
         }
 
@@ -506,6 +512,13 @@ class AsesmenKeperawatanController extends Controller
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->first();
             $pekerjaan = Pekerjaan::all();
+            $faktorPemberat = RmeFaktorPemberat::all();
+            $faktorPeringan = RmeFaktorPeringan::all();
+            $kualitasNyeri = RmeKualitasNyeri::all();
+            $frekuensiNyeri = RmeFrekuensiNyeri::all();
+            $jenisNyeri = RmeJenisNyeri::all();
+            $agama = Agama::all();
+            $pendidikan = Pendidikan::all();
 
             if (!$dataMedis) {
                 return response()->json([
@@ -520,7 +533,14 @@ class AsesmenKeperawatanController extends Controller
                     'asesmen' => $asesmen,
                     'pasien' => $dataMedis->pasien ?? null,
                     'medis' => $dataMedis ?? null,
-                    'pekerjaan' => $pekerjaan ?? null
+                    'pekerjaan' => $pekerjaan ?? null,
+                    'faktorPemberat' => $faktorPemberat ?? null,
+                    'faktorPeringan' => $faktorPeringan ?? null,
+                    'kualitasNyeri' => $kualitasNyeri ?? null,
+                    'frekuensiNyeri' => $frekuensiNyeri ?? null,
+                    'jenisNyeri' => $jenisNyeri ?? null,
+                    'agama' => $agama ?? null,
+                    'pendidikan' => $pendidikan ?? null,
                 ]
             ]);
         } catch (ModelNotFoundException $e) {
@@ -556,27 +576,27 @@ class AsesmenKeperawatanController extends Controller
                 ->where('tgl_masuk', $tgl_masuk)
                 ->firstOrFail();
 
-            // dd($asesmen);
 
             $dataMedis = Kunjungan::where('kd_pasien', $kd_pasien)
                 ->where('tgl_masuk', $tgl_masuk)
                 ->firstOrFail();
 
-            // Load required data for dropdowns
-            $formData = [
+            $data = [
+                'asesmen'   => $asesmen,
+                'dataMedis' => $dataMedis,
                 'pekerjaan' => Pekerjaan::all(),
                 'faktorPemberat' => RmeFaktorPemberat::all(),
                 'faktorPeringan' => RmeFaktorPeringan::all(),
                 'kualitasNyeri' => RmeKualitasNyeri::all(),
                 'frekuensiNyeri' => RmeFrekuensiNyeri::all(),
                 'menjalar' => RmeMenjalar::all(),
-                'jenisNyeri' => RmeJenisNyeri::all()
+                'jenisNyeri' => RmeJenisNyeri::all(),
+                'agama' => Agama::all(),
+                'pendidikan' => Pendidikan::all(),
             ];
 
-            return view(
-                'unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit',
-                array_merge(compact('asesmen', 'dataMedis'), $formData)
-            );
+
+            return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.edit', $data);
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data asesmen tidak ditemukan');
         } catch (\Exception $e) {
@@ -1056,17 +1076,45 @@ class AsesmenKeperawatanController extends Controller
                 ->first();
 
             // Initialize collections with empty arrays if data is null
-            $faktorPemberatData = RmeFaktorPemberat::all()->pluck('name', 'id') ?? collect();
-            $kualitasNyeriData = RmeKualitasNyeri::all()->pluck('name', 'id') ?? collect();
-            $menjalarData = RmeMenjalar::all()->pluck('name', 'id') ?? collect();
-            $faktorPeringanData = RmeFaktorPeringan::all()->pluck('name', 'id') ?? collect();
-            $frekuensiNyeriData = RmeFrekuensiNyeri::all()->pluck('name', 'id') ?? collect();
-            $jenisNyeriData = RmeJenisNyeri::all()->pluck('name', 'id') ?? collect();
-            $pekerjaanData = Pekerjaan::all()->pluck('pekerjaan', 'kd_pekerjaan') ?? collect();
+            $faktorPemberatData = cache()->remember('faktor_pemberat', 3600, function() {
+                return RmeFaktorPemberat::select('id', 'name')->pluck('name', 'id');
+            });
 
-            // Set default values for dates
-            $asesmenTanggal = optional($asesmen)->created_at ?? now();
-            $tglMasukFormatted = optional($dataMedis)->tgl_masuk ?? now();
+            $kualitasNyeriData = cache()->remember('kualitas_nyeri', 3600, function() {
+                return RmeKualitasNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $menjalarData = cache()->remember('menjalar', 3600, function() {
+                return RmeMenjalar::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $faktorPeringanData = cache()->remember('faktor_peringan', 3600, function() {
+                return RmeFaktorPeringan::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $frekuensiNyeriData = cache()->remember('frekuensi_nyeri', 3600, function() {
+                return RmeFrekuensiNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $jenisNyeriData = cache()->remember('jenis_nyeri', 3600, function() {
+                return RmeJenisNyeri::select('id', 'name')->pluck('name', 'id');
+            });
+
+            $pekerjaanData = cache()->remember('pekerjaan', 3600, function() {
+                return Pekerjaan::select('kd_pekerjaan', 'pekerjaan')->pluck('pekerjaan', 'kd_pekerjaan');
+            });
+
+            $agamaData = cache()->remember('agama', 3600, function() {
+                return Agama::select('kd_agama', 'agama')->pluck('agama', 'kd_agama');
+            });
+
+            $pendidikanData = cache()->remember('pendidikan', 3600, function() {
+                return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
+            });
+
+            // 4. Optimize date handling
+            $asesmenTanggal = $asesmen->created_at ?? now();
+            $tglMasukFormatted = $dataMedis->tgl_masuk ?? now();
 
             // Generate PDF with null checks
             $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen-keperawatan.print', [
@@ -1092,6 +1140,8 @@ class AsesmenKeperawatanController extends Controller
                 'frekuensiNyeriData' => $frekuensiNyeriData,
                 'jenisNyeriData' => $jenisNyeriData,
                 'pekerjaanData' => $pekerjaanData,
+                'agamaData' => $agamaData,
+                'pendidikanData' => $pendidikanData,
             ]);
 
             // Set konfigurasi PDF

@@ -62,17 +62,34 @@
         var alergis = []; // Array untuk menyimpan daftar alergi
 
         function updateMainView() {
+            var alergiTable = document.querySelector('#createAlergiTable tbody');
+            
+            // Cek jika data kosong
+            if (!alergis || alergis.length === 0) {
+                alergiTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            Isikan data alergi pasien jika ada yang tercatat
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Jika ada data, tampilkan seperti biasa
             alergiTable.innerHTML = alergis.map((a, index) => `
-            <tr>
-                <td>${a.jenis}</td>
-                <td>${a.alergen}</td>
-                <td>${a.reaksi}</td>
-                <td>${a.keparahan}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-link delete-main-alergi" data-index="${index}"><i class="bi bi-trash-fill text-danger"></i></button>
-                </td>
-            </tr>
-        `).join('');
+                <tr>
+                    <td>${a.jenis}</td>
+                    <td>${a.alergen}</td>
+                    <td>${a.reaksi}</td>
+                    <td>${a.keparahan}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-link delete-main-alergi" data-index="${index}">
+                            <i class="bi bi-trash-fill text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function updateModalView() {

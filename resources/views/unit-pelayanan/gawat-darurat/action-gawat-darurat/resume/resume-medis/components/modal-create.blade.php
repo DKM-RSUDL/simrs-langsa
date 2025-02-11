@@ -225,7 +225,7 @@
                             </div>
 
                             <div class="mt-3">
-                                <strong class="fw-bold">Hasil Pemeriksaan Penunjang Lainnya</strong>
+                                <strong class="fw-bold">Hasil Pemeriksaan Penunjang</strong>
                                 <textarea class="form-control" id="pemeriksaan_penunjang" rows="3">{{ $dataResume->pemeriksaan_penunjang ?? '-' }}</textarea>
                             </div>
 
@@ -344,6 +344,20 @@
                         </div>
 
                         <div class="mt-3">
+                            <strong class="fw-bold">Anjuran/Follow up</strong>
+
+                            <div class="form-group">
+                                <label for="anjuran_diet" class="form-label">Diet</label>
+                                <textarea class="form-control" id="anjuran_diet" rows="3">{{ $dataResume->anjuran_diet ?? '-' }}</textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="anjuran_edukasi" class="form-label">Edukasi</label>
+                                <textarea class="form-control" id="anjuran_edukasi" rows="3">{{ $dataResume->anjuran_edukasi ?? '-' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
                             <strong class="fw-bold">Tindak Lanjut</strong>
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
@@ -374,12 +388,12 @@
                                         </a>
 
                                         <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="selesai" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Selesai di Klinik ini"
-                                                data-code="3"
-                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '3' ? 'checked' : '' }}>
-                                            <label for="selesai">Selesai di Klinik ini</label>
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btnPulang">
+                                            <input type="radio" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Pulang"
+                                                data-code="6"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '6' ? 'checked' : '' }}>
+                                            <label for="selesai">Pulang <span></span></label>
                                         </a>
                                     </div>
 
@@ -417,9 +431,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
-                    Print</button>
-                <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
+                <a href="{{ route('resume.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($dataResume->id)]) }}" target="_blank" class="btn btn-sm btn-info">
+                    <i class="bi bi-printer"></i>
+                    Print
+                </a>
+                <button type="button" class="btn btn-sm btn-primary" id="update">Ubah</button>
+                <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -433,6 +450,7 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kode-icd9')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-konsul-rujukan')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-pulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-create-alergi')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kontrol-ulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-rs-rujuk-bagian')
@@ -450,6 +468,78 @@
             $(this).find('input[type="radio"]').prop('checked', true);
         });
 
+        // validasi
+        $('#btnValidate').click(function(e) {
+            let $this = $(this);
+            let resumeId = "{{ encrypt($dataResume->id) }}";
+
+            Swal.fire({
+                title: "Konfirmasi",
+                text: "Apakah anda yakin ingin validasi resume ? Resume yang telah divalidasi tidak dapat dirubah kembali",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('resume.validasi', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            resume_id: resumeId
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                            $this.prop('disabled', true);
+                        },
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false
+                                });
+
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: "Success",
+                                text: 'Resume berhasil di validasi !',
+                                icon: "success",
+                                allowOutsideClick: false
+                            });
+
+                            window.location.reload();
+                        },
+                        complete: function() {
+                            $this.html('Validasi');
+                            $this.prop('disabled', false);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Internal Server Error !",
+                                icon: "error"
+                            });
+                        }
+                    });
+
+                }
+            });
+
+        });
+
+        // simpan data
         $('#update').click(function(e) {
             e.preventDefault();
 
@@ -471,6 +561,11 @@
             const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
             const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
             const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+            const previousTglPulang = '{{ $dataResume->rmeResumeDet->tgl_pulang ?? '' }}';
+            const previousJamPulang = '{{ $dataResume->rmeResumeDet->jam_pulang ?? '' }}';
+            const previousAlasanPulang = '{{ $dataResume->rmeResumeDet->alasan_pulang ?? '' }}';
+            const previousKondisiPulang = '{{ $dataResume->rmeResumeDet->kondisi_pulang ?? '' }}';
+
 
             // Ambil resume_id, biarkan null jika tidak ada
             if (!resume_id || resume_id === 'null') {
@@ -581,6 +676,20 @@
             console.log('Sending unit_rujuk_internal:', unitId);
             formData.append('unit_rujuk_internal', unitId);
 
+            // tindak lanjut pulang
+            let tglPulangTL = $('#selesaiKlinikModal #tgl_pulang').val() || previousTglPulang;
+            let jamPulangTL = $('#selesaiKlinikModal #jam_pulang').val()  || previousJamPulang;
+            let alasanPulangTL = $('#selesaiKlinikModal #alasan_pulang').val()  || previousAlasanPulang;
+            let kondisiPulangTL = $('#selesaiKlinikModal #kondisi_pulang').val()  || previousKondisiPulang;
+
+            formData.append('tgl_pulang', tglPulangTL);
+            formData.append('jam_pulang', jamPulangTL);
+            formData.append('alasan_pulang', alasanPulangTL);
+            formData.append('kondisi_pulang', kondisiPulangTL);
+
+            formData.append('anjuran_diet', $('#anjuran_diet').val().trim());
+            formData.append('anjuran_edukasi', $('#anjuran_edukasi').val().trim());
+
             formData.append('tindak_lanjut_name', tindakLanjutElement.val());
             formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
 
@@ -589,7 +698,7 @@
             // Show konfirmasi
             Swal.fire({
                 title: 'Konfirmasi',
-                text: 'Apakah Anda yakin ingin validasi data resume ini?',
+                text: 'Apakah Anda yakin ingin mengubah data resume ini?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Validasi',
@@ -625,7 +734,7 @@
                             timer: 3000
                         }).then(() => {
                             $('#modal-edit-resume').modal('hide');
-                            window.location.reload();
+                            // window.location.reload();
                         });
                     } else {
                         Swal.fire({

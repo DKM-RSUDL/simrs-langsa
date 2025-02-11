@@ -31,9 +31,9 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Tanggal Asesmen</label>
-                                            <input type="date" name="tgl_masuk" id="tgl_asesmen_keperawatan"
+                                            <input type="date" name="waktu_asesmen" id="tgl_asesmen_keperawatan"
                                                 class="form-control"
-                                                value="{{ old('tgl_masuk', date('Y-m-d', strtotime($asesmen->tgl_masuk))) }}">
+                                                value="{{ old('waktu_asesmen', date('Y-m-d', strtotime($asesmen->waktu_asesmen))) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -2230,24 +2230,12 @@
                                         <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                         <select class="form-select" name="spiritual_agama">
                                             <option value="">--Pilih--</option>
-                                            <option value="islam"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'islam' ? 'selected' : '' }}>
-                                                Islam</option>
-                                            <option value="Kristen"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'Kristen' ? 'selected' : '' }}>
-                                                Kristen</option>
-                                            <option value="katolik"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'katolik' ? 'selected' : '' }}>
-                                                Katolik</option>
-                                            <option value="hindu"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'hindu' ? 'selected' : '' }}>
-                                                Hindu</option>
-                                            <option value="buddha"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'buddha' ? 'selected' : '' }}>
-                                                Buddha</option>
-                                            <option value="konghucu"
-                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == 'konghucu' ? 'selected' : '' }}>
-                                                Konghucu</option>
+                                            @foreach ($agama as $agam)
+                                                <option value="{{ $agam->kd_agama }}"
+                                                                {{ old('spiritual_agama', $asesmen->asesmenKepUmum->spiritual_agama ?? '') == $agam->kd_agama ? 'selected' : '' }}>
+                                                                {{ $agam->agama }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -2336,28 +2324,10 @@
                                             class="form-select @error('sosial_ekonomi_status_pendidikan') is-invalid @enderror"
                                             name="sosial_ekonomi_status_pendidikan">
                                             <option value="">--Pilih--</option>
-                                            @php
-                                                $pendidikanOptions = [
-                                                    '1' => 'TK',
-                                                    '2' => 'SD/MIN',
-                                                    '3' => 'SLTP/SMP/MTSN/SLP',
-                                                    '4' => 'SLTA/SMA/SMU/SMK/MAN/SLA',
-                                                    '5' => 'D2',
-                                                    '6' => 'D3',
-                                                    '7' => 'S1',
-                                                    '8' => 'S2',
-                                                    '9' => 'S3',
-                                                    '10' => 'TIDAK SEKOLAH',
-                                                    '13' => 'BELUM SEKOLAH',
-                                                    '14' => 'PAUD',
-                                                    '15' => 'D4',
-                                                    '16' => 'D1',
-                                                ];
-                                            @endphp
-                                            @foreach ($pendidikanOptions as $value => $label)
-                                                <option value="{{ $value }}"
-                                                    {{ old('sosial_ekonomi_status_pendidikan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '') == $value ? 'selected' : '' }}>
-                                                    {{ $label }}
+                                            @foreach ($pendidikan as $pendidik)
+                                                <option value="{{ $pendidik->kd_pendidikan }}"
+                                                                {{ old('sosial_ekonomi_status_pendidikan', $asesmen->asesmenKepUmumSosialEkonomi->sosial_ekonomi_status_pendidikan ?? '') == $pendidik->kd_pendidikan ? 'selected' : '' }}>
+                                                                {{ $pendidik->pendidikan }}
                                                 </option>
                                             @endforeach
                                         </select>

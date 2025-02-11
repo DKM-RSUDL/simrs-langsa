@@ -554,15 +554,16 @@ Route::middleware('auth')->group(function () {
                         });
 
                         // Konsultasi
-                        Route::prefix('konsultasi')->group(function () {
+                        Route::prefix('{urut_masuk}/konsultasi')->group(function () {
                             Route::name('konsultasi')->group(function () {
                                 Route::controller(GawatDaruratKonsultasiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
-                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                                     Route::post('/', 'storeKonsultasi')->name('.store');
                                     Route::put('/', 'updateKonsultasi')->name('.update');
                                     Route::delete('/', 'deleteKonsultasi')->name('.delete');
                                     Route::post('/get-konsul-ajax', 'getKonsulAjax')->name('.get-konsul-ajax');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    Route::post('/get-dokter-unit', 'getDokterbyUnit')->name('.get-dokter-unit');
                                 });
                             });
                         });
@@ -611,6 +612,15 @@ Route::middleware('auth')->group(function () {
                         Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);
+
+                        Route::controller(GawatDaruratResumeController::class)->group(function () {
+                            Route::name('resume')->group(function () {
+                                Route::prefix('/{urut_masuk}/resume')->group(function () {
+                                    Route::post('/validasi', 'validasiResume')->name('.validasi');
+                                    Route::get('/{data}/pdf', 'pdf')->name('.pdf');
+                                });
+                            });
+                        });
                     });
                 });
             });
