@@ -461,9 +461,116 @@
                         <div class="form-line">
                             <div class="d-flex align-items-center mb-3">
                                 <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
-                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.edit-tindaklanjut')
                             </div>
-                            <div id="editTindakLanjutInfo"></div>
+
+                            <div class="mb-3">
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="rujukKeluar" id="edit_rujukKeluar">
+                                    <label for="edit_rujukKeluar">Rujuk Keluar RS Lain</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="pulangSembuh" id="edit_pulangSembuh">
+                                    <label for="edit_pulangSembuh">Pulang</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="berobatJalan" id="edit_berobatJalan">
+                                    <label for="edit_berobatJalan">Berobat Jalan Ke Poli</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="menolakRawatInap" id="edit_menolakRawatInap">
+                                    <label for="edit_menolakRawatInap">Menolak Rawat Inap</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="meninggalDunia" id="edit_meninggalDunia">
+                                    <label for="edit_meninggalDunia">Meninggal Dunia</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="deathoffarrival" id="edit_deathoffarrival">
+                                    <label for="edit_deathoffarrival">DOA</label>
+                                </div>
+                            </div>
+
+                            <!-- Form untuk setiap opsi tindak lanjut -->
+                            <div id="edit_formMenolakRawatInap" style="display: none;">
+                                <label for="edit_alasanMenolak" class="form-label">Alasan</label>
+                                <textarea class="form-control" id="edit_alasanMenolak" name="edit_alasanMenolak" rows="3"></textarea>
+                            </div>
+
+                            <div id="edit_formRujukKeluar" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="edit_tujuan_rujuk" class="form-label">Tujuan Rujuk</label>
+                                    <input type="text" class="form-control" id="edit_tujuan_rujuk" name="edit_tujuan_rujuk">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_alasan_rujuk" class="form-label">Alasan Rujuk</label>
+                                    <select class="form-select" id="edit_alasan_rujuk" name="edit_alasan_rujuk">
+                                        <option selected disabled>Pilih Alasan Rujuk</option>
+                                        <option value="1">Indikasi Medis</option>
+                                        <option value="2">Kamar Penuh</option>
+                                        <option value="3">Permintaan Pasien</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_transportasi_rujuk" class="form-label">Transportasi Rujuk</label>
+                                    <select class="form-select" id="edit_transportasi_rujuk" name="edit_transportasi_rujuk">
+                                        <option selected disabled>Pilih Transportasi Rujuk</option>
+                                        <option value="1">Ambulance</option>
+                                        <option value="2">Kendaraan Pribadi</option>
+                                        <option value="3">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="edit_formpulangSembuh" style="display: none;">
+                                <label for="edit_tanggalPulang" class="form-label">Tanggal Pulang</label>
+                                <input type="date" class="form-control" id="edit_tanggalPulang" name="edit_tanggalPulang">
+                                <label for="edit_jamPulang" class="form-label mt-2">Jam Pulang</label>
+                                <input type="time" class="form-control" id="edit_jamPulang" name="edit_jamPulang">
+                                <div class="mb-3">
+                                    <label for="edit_alasn_pulang" class="form-label">Alasan Pulang</label>
+                                    <select class="form-select" id="edit_alasn_pulang" name="edit_alasn_pulang">
+                                        <option selected disabled>Pilih Alasan Pulang</option>
+                                        <option value="1">Sembuh</option>
+                                        <option value="2">Indikasi Medis</option>
+                                        <option value="3">Permintaan Pasien</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_kondisi_pulang" class="form-label">Kondisi Pulang</label>
+                                    <select class="form-select" id="edit_kondisi_pulang" name="edit_kondisi_pulang">
+                                        <option selected disabled>Pilih Kondisi Pulang</option>
+                                        <option value="1">Mandiri</option>
+                                        <option value="2">Tidak Mandiri</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="edit_formberobatJalan" style="display: none;">
+                                <label for="edit_tanggal_rajal" class="form-label">Tanggal Berobat</label>
+                                <input type="date" class="form-control mb-2" name="edit_tanggal_rajal" id="edit_tanggal_rajal">
+                                <label for="edit_poli_unit_tujuan" class="form-label">Poli</label>
+                                <select class="form-select" id="edit_poli_unit_tujuan" name="edit_poli_unit_tujuan">
+                                    <option selected disabled>Pilih Poli</option>
+                                    @foreach($unitPoli as $poli)
+                                        <option value="{{ $poli->kd_unit }}">{{ $poli->nama_unit }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="edit_formmeninggalDunia" style="display: none;">
+                                <label for="edit_tanggalMeninggal" class="form-label">Tanggal Meninggal</label>
+                                <input type="date" class="form-control mb-2" name="edit_tanggalMeninggal" id="edit_tanggalMeninggal">
+                                <label for="edit_jamMeninggal" class="form-label mt-2">Jam Meninggal</label>
+                                <input type="time" class="form-control" id="edit_jamMeninggal" name="edit_jamMeninggal">
+                            </div>
+
+                            <div class="mb-3" id="edit_formDOA" style="display: none;">
+                                <label for="edit_tanggalDoa" class="form-label">Tanggal Meninggal</label>
+                                <input type="date" class="form-control mb-2" name="edit_tanggalDoa" id="edit_tanggalDoa">
+                                <label for="edit_jamDoa" class="form-label mt-2">Jam Meninggal</label>
+                                <input type="time" class="form-control" id="edit_jamDoa" name="edit_jamDoa">
+                            </div>
+
                         </div>
 
                     </form>
@@ -483,6 +590,142 @@
         let originalAlergiData = [];
         let originalDiagnosisData = [];
         let originalAlatData = [];
+        let editTindakLanjutData = null;
+        let originalResusitasiData = null;
+
+        // Fungsi Edit Tindak Lanjut
+        function fillEditTindakLanjut(data) {
+            if (!data.tindaklanjut) return;
+            
+            const tindakLanjut = data.tindaklanjut;
+            
+            // Reset semua form
+            $('input[name="edit_tindakLanjut"]').prop('checked', false);
+            hideAllEditTindakLanjutForms();
+            
+            // Set radio button sesuai tindak lanjut
+            switch(tindakLanjut.tindak_lanjut_code) {
+                case 5: // Rujuk RS Lain
+                    $('input[name="edit_tindakLanjut"][value="rujukKeluar"]').prop('checked', true);
+                    $('#edit_formRujukKeluar').show();
+                    $('#edit_tujuan_rujuk').val(tindakLanjut.tujuan_rujuk);
+                    $('#edit_alasan_rujuk').val(tindakLanjut.alasan_rujuk);
+                    $('#edit_transportasi_rujuk').val(tindakLanjut.transportasi_rujuk);
+                    break;
+                case 6: // Pulang
+                    $('input[name="edit_tindakLanjut"][value="pulangSembuh"]').prop('checked', true);
+                    $('#edit_formPulangSembuh').show();
+                    // Isi form pulang
+                    break;
+                case 8: // Berobat Jalan
+                    $('input[name="edit_tindakLanjut"][value="berobatJalan"]').prop('checked', true);
+                    $('#edit_formberobatJalan').show();
+                    // Isi form berobat jalan
+                    break;
+                case 9: // Menolak Rawat Inap
+                    $('input[name="edit_tindakLanjut"][value="menolakRawatInap"]').prop('checked', true);
+                    $('#edit_formMenolakRawatInap').show();
+                    // Isi form menolak rawat inap
+                    break;
+                case 10: // Meninggal Dunia
+                    $('input[name="edit_tindakLanjut"][value="meninggalDunia"]').prop('checked', true);
+                    $('#edit_formmeninggalDunia').show();
+                    $('#edit_tanggalMeninggal').val(tindakLanjut.tanggal_meninggal);
+                    $('#edit_jamMeninggal').val(tindakLanjut.jam_meninggal);
+                    break;
+                case 11: // DOA
+                    $('input[name="edit_tindakLanjut"][value="deathoffarrival"]').prop('checked', true);
+                    $('#edit_formDOA').show();
+                    $('#edit_tanggalDoa').val(tindakLanjut.tanggal_meninggal);
+                    $('#edit_jamDoa').val(tindakLanjut.jam_meninggal);
+                    break;
+                default:
+                    break;
+            }
+            
+            editTindakLanjutData = tindakLanjut;
+        }
+
+        function hideAllEditTindakLanjutForms() {
+            $('#edit_formMenolakRawatInap').hide();
+            $('#edit_formRujukKeluar').hide();
+            $('#edit_formpulangSembuh').hide();
+            $('#edit_formberobatJalan').hide();
+            $('#edit_formDOA').hide();
+            $('#edit_formmeninggalDunia').hide();
+        }
+
+        $('input[name="edit_tindakLanjut"]').on('change', function() {
+            hideAllEditTindakLanjutForms();
+            const selectedValue = $(this).val();
+            
+            switch(selectedValue) {
+                case 'rujukKeluar':
+                    $('#edit_formRujukKeluar').show();
+                    break;
+                case 'pulangSembuh':
+                    $('#edit_formpulangSembuh').show();
+                    break;
+                case 'berobatJalan':
+                    $('#edit_formberobatJalan').show();
+                    break;
+                case 'menolakRawatInap':
+                    $('#edit_formMenolakRawatInap').show();
+                    break;
+                case 'meninggalDunia':
+                    $('#edit_formmeninggalDunia').show();
+                    break;
+                case 'deathoffarrival':
+                    $('#edit_formDOA').show();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+
+        // Fungsi untuk mengumpulkan data tindak lanjut saat update
+        function collectEditTindakLanjutData() {
+            const selectedOption = $('input[name="edit_tindakLanjut"]:checked').val();
+            if (!selectedOption) return null;
+            
+            const tindakLanjutData = {
+                option: selectedOption
+            };
+            
+            switch(selectedOption) {
+                case 'rujukKeluar':
+                    tindakLanjutData.tujuan_rujuk = $('#edit_tujuan_rujuk').val();
+                    tindakLanjutData.alasan_rujuk = $('#edit_alasan_rujuk').val();
+                    tindakLanjutData.transportasi_rujuk = $('#edit_transportasi_rujuk').val();
+                    break;
+                case 'pulangSembuh':
+                    tindakLanjutData.tanggal_pulang = $('#edit_tanggalPulang').val();
+                    tindakLanjutData.jam_pulang = $('#edit_jamPulang').val();
+                    tindakLanjutData.alasan_pulang = $('#edit_alasan_pulang').val();
+                    tindakLanjutData.transportasi_pulang = $('#edit_transportasi_pulang').val();
+                    break;
+                case 'berobatJalan':
+                    tindakLanjutData.tanggal_berobat = $('#edit_tanggalBerobat').val();
+                    tindakLanjutData.jam_berobat = $('#edit_jamBerobat').val();
+                    break;
+                case 'menolakRawatInap':
+                    tindakLanjutData.alasan_menolak = $('#edit_alasanMenolak').val();
+                    break;
+                case 'meninggalDunia':    
+                    tindakLanjutData.tanggal_meninggal = $('#edit_tanggalMeninggal').val();
+                    tindakLanjutData.jam_meninggal = $('#edit_jamMeninggal').val();
+                    break;
+                case 'deathoffarrival':
+                    tindakLanjutData.tanggal_meninggal = $('#edit_tanggalDoa').val();
+                    tindakLanjutData.jam_meninggal = $('#edit_jamDoa').val();
+                    break;
+                default:
+                    break;
+            }
+            
+            return tindakLanjutData;
+        }
 
         // Fungsi edit
         function editAsesmen(id) {
@@ -522,7 +765,6 @@
             });
         }
 
-        let originalResusitasiData = null;
         // Fungsi mengisi form
         function fillEditForm(data) {
             // console.log('Raw data:', data);
@@ -658,41 +900,6 @@
                 updateEditReTriaseTable();
             }
 
-            if (data.tindaklanjut && data.tindaklanjut.length > 0) {
-                const tindakLanjut = data.tindaklanjut[0]; // Ambil data pertama
-                let tindakLanjutData = {
-                    option: getTindakLanjutOption(tindakLanjut.tindak_lanjut_code),
-                    keterangan: tindakLanjut.keterangan || '',
-                    tanggalMeninggal: tindakLanjut.tanggal_meninggal ? formatDate(tindakLanjut.tanggal_meninggal) : '',
-                    jamMeninggal: tindakLanjut.jam_meninggal ? formatTime(tindakLanjut.jam_meninggal) : '',
-                    rs_rujuk: tindakLanjut.rs_rujuk || '',
-                    rs_rujuk_bagian: tindakLanjut.rs_rujuk_bagian || '',
-                    tgl_kontrol_ulang: tindakLanjut.tgl_kontrol_ulang || '',
-                    unit_rawat_inap: tindakLanjut.unit_rawat_inap || '',
-                    unit_rujuk_internal: tindakLanjut.unit_rujuk_internal || ''
-                };
-
-                // Memperbarui display dan menyimpan data
-                window.fillEditTindakLanjut(tindakLanjutData);
-            }
-
-        }
-
-        function getTindakLanjutOption(code) {
-            switch (code) {
-                case '1':
-                    return 'rawatInap';
-                case '2':
-                    return 'pulangKontrol';
-                case '3':
-                    return 'menolakRawatInap'; // atau 'meninggalDunia' tergantung kondisi
-                case '4':
-                    return 'kamarOperasi';
-                case '5':
-                    return 'rujukKeluar';
-                default:
-                    return '';
-            }
         }
 
         // Fungsi untuk format tanggal dari database
@@ -705,93 +912,6 @@
         function formatTime(timeString) {
             if (!timeString || timeString === '1900-01-01 00:00:00.000') return '';
             return timeString.split(' ')[1].substring(0, 5); // Ambil bagian jam:menit
-        }
-
-        // Update fungsi displayEditTindakLanjut untuk menampilkan data yang lebih lengkap
-        function displayEditTindakLanjut() {
-            var tindakLanjutInfo = document.getElementById('editTindakLanjutInfo');
-            tindakLanjutInfo.innerHTML = '';
-
-            if (editTindakLanjutData) {
-                var div = document.createElement('div');
-                div.classList.add('mb-2', 'd-flex', 'justify-content-between', 'align-items-center');
-
-                // Format display text berdasarkan tipe tindak lanjut
-                let infoText = `Tindak Lanjut: ${formatTindakLanjutText(editTindakLanjutData.option)}`;
-
-                if (editTindakLanjutData.keterangan) {
-                    infoText += ` | Keterangan: ${editTindakLanjutData.keterangan}`;
-                }
-
-                // Tambahkan informasi tambahan sesuai tipe
-                switch (editTindakLanjutData.option) {
-                    case 'meninggalDunia':
-                        if (editTindakLanjutData.tanggalMeninggal) {
-                            infoText += ` | Tanggal: ${editTindakLanjutData.tanggalMeninggal}`;
-                        }
-                        if (editTindakLanjutData.jamMeninggal) {
-                            infoText += ` | Jam: ${editTindakLanjutData.jamMeninggal}`;
-                        }
-                        break;
-                    case 'rujukKeluar':
-                        if (editTindakLanjutData.rs_rujuk) {
-                            infoText += ` | RS Rujukan: ${editTindakLanjutData.rs_rujuk}`;
-                        }
-                        break;
-                    case 'pulangKontrol':
-                        if (editTindakLanjutData.tgl_kontrol_ulang) {
-                            infoText += ` | Tanggal Kontrol: ${editTindakLanjutData.tgl_kontrol_ulang}`;
-                        }
-                        break;
-                    case 'rawatInap':
-                        if (editTindakLanjutData.unit_rawat_inap) {
-                            infoText += ` | Unit: ${editTindakLanjutData.unit_rawat_inap}`;
-                        }
-                        break;
-                }
-
-                var textSpan = document.createElement('span');
-                textSpan.innerText = infoText;
-                div.appendChild(textSpan);
-
-                var buttonGroup = document.createElement('div');
-
-                var editButton = document.createElement('button');
-                editButton.innerHTML = '<i class="bi bi-pencil-fill"></i>';
-                editButton.className = 'btn btn-sm btn-outline-primary me-2';
-                editButton.addEventListener('click', editTindakLanjut);
-
-                var deleteButton = document.createElement('button');
-                deleteButton.innerHTML = '<i class="bi bi-trash-fill"></i>';
-                deleteButton.className = 'btn btn-sm btn-outline-danger';
-                deleteButton.addEventListener('click', deleteEditTindakLanjut);
-
-                buttonGroup.appendChild(editButton);
-                buttonGroup.appendChild(deleteButton);
-                div.appendChild(buttonGroup);
-
-                tindakLanjutInfo.appendChild(div);
-            }
-        }
-
-        // Fungsi untuk format text tindak lanjut
-        function formatTindakLanjutText(option) {
-            switch (option) {
-                case 'rawatInap':
-                    return 'Rawat Inap';
-                case 'kamarOperasi':
-                    return 'Kamar Operasi';
-                case 'rujukKeluar':
-                    return 'Rujuk Keluar RS';
-                case 'pulangKontrol':
-                    return 'Pulang Kontrol';
-                case 'menolakRawatInap':
-                    return 'Menolak Rawat Inap';
-                case 'meninggalDunia':
-                    return 'Meninggal Dunia';
-                default:
-                    return option;
-            }
         }
 
         // Fungsi untuk memperbarui tampilan tabel Re-Triase
@@ -1239,7 +1359,7 @@
                 diagnosis: window.originalDiagnosisData,
                 retriase_data: window.originalReTriaseData,
                 alat_terpasang: collectEditAlat(),
-                tindak_lanjut: window.collectEditTindakLanjut()
+                tindak_lanjut_data: collectEditTindakLanjutData(),
 
             };
 

@@ -529,25 +529,96 @@
                         <td class="col-header">Status</td>
                         <td>: {{ $asesmen->tindaklanjut[0]['tindak_lanjut_name'] ?? '-' }}</td>
                     </tr>
-                    @if (!empty($asesmen->tindaklanjut[0]['keterangan']))
-                        <tr>
-                            <td class="col-header">Keterangan</td>
-                            <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] }}</td>
-                        </tr>
-                    @endif
-                    @if (!empty($asesmen->tindaklanjut[0]['tanggal_meninggal']) && !empty($asesmen->tindaklanjut[0]['jam_meninggal']))
-                        <tr>
-                            <td class="col-header">Waktu Meninggal</td>
-                            <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) }}
-                                {{ $asesmen->tindaklanjut[0]['jam_meninggal'] }}</td>
-                        </tr>
-                    @endif
-                    @if (!empty($asesmen->tindaklanjut[0]['tgl_kontrol_ulang']))
-                        <tr>
-                            <td class="col-header">Tanggal Kontrol</td>
-                            <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tgl_kontrol_ulang'])) }}</td>
-                        </tr>
-                    @endif
+
+                    @switch($asesmen->tindaklanjut[0]['tindak_lanjut_code'])
+                        @case('1') {{-- Rawat Inap --}}
+                            <tr>
+                                <td class="col-header">Keterangan</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('7') {{-- Kamar Operasi --}}
+                            <tr>
+                                <td class="col-header">Kamar Operasi</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('5') {{-- Rujuk RS Lain --}}
+                            <tr>
+                                <td class="col-header">Tujuan Rujuk</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['tujuan_rujuk'] ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Alasan Rujuk</td>
+                                <td>: {{ ($asesmen->tindaklanjut[0]['alasan_rujuk']) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Transportasi</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['transportasi_rujuk'] ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('6') {{-- Pulang Sembuh --}}
+                            <tr>
+                                <td class="col-header">Tanggal Pulang</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_pulang'])) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Jam Pulang</td>
+                                <td>: {{ substr($asesmen->tindaklanjut[0]['jam_pulang'], 11, 5) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Alasan Pulang</td>
+                                <td>: {{ alasanPulangLabel($asesmen->tindaklanjut[0]['alasan_pulang']) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Kondisi Pulang</td>
+                                <td>: {{ kondisiPulangLabel($asesmen->tindaklanjut[0]['kondisi_pulang']) ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('8') {{-- Berobat Jalan --}}
+                            <tr>
+                                <td class="col-header">Tanggal Berobat</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_rajal'])) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Poli Tujuan</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['poli_unit_tujuan'] ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('9') {{-- Menolak Rawat Inap --}}
+                            <tr>
+                                <td class="col-header">Alasan Menolak</td>
+                                <td>: {{ $asesmen->tindaklanjut[0]['keterangan'] ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('10') {{-- Meninggal Dunia --}}
+                            <tr>
+                                <td class="col-header">Tanggal Meninggal</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Jam Meninggal</td>
+                                <td>: {{ substr($asesmen->tindaklanjut[0]['jam_meninggal'], 11, 5) ?? '-' }}</td>
+                            </tr>
+                        @break
+
+                        @case('11') {{-- DOA --}}
+                            <tr>
+                                <td class="col-header">Tanggal DOA</td>
+                                <td>: {{ date('d-m-Y', strtotime($asesmen->tindaklanjut[0]['tanggal_meninggal'])) ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-header">Jam DOA</td>
+                                <td>: {{ substr($asesmen->tindaklanjut[0]['jam_meninggal'], 11, 5) ?? '-' }}</td>
+                            </tr>
+                        @break
+                    @endswitch
                 </table>
             @else
                 -

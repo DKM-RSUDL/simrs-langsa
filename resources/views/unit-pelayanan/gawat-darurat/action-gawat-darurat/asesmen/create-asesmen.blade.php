@@ -761,14 +761,14 @@
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <div>
+                                                        {{-- <div>
                                                             <input type="radio" name="tindakLanjut" value="rawatInap" id="rawatInap"> 
                                                             <label for="rawatInap">Rawat Inap</label>
-                                                        </div>
-                                                        <div>
+                                                        </div> --}}
+                                                        {{-- <div>
                                                             <input type="radio" name="tindakLanjut" value="kamarOperasi" id="kamarOperasi">
                                                             <label for="kamarOperasi">Kamar Operasi</label> 
-                                                        </div>
+                                                        </div> --}}
                                                         <div>
                                                             <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar">
                                                             <label for="rujukKeluar">Rujuk Keluar RS Lain</label>
@@ -839,6 +839,14 @@
                                                                 <option value="3">Permintaan Pasien</option>
                                                             </select>
                                                         </div>
+                                                        <div class="mb-3">
+                                                            <label for="kondisi_pulang" class="form-label">Kondisi Pulang</label>
+                                                            <select class="form-select" id="kondisi_pulang" name="kondisi_pulang">
+                                                                <option selected disabled>Pilih Kondisi Pulang</option>
+                                                                <option value="1">Mandiri</option>
+                                                                <option value="2">Tidak Mandiri</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
 
                                                     <div class="mb-3" id="formberobatJalan" style="display: none;">
@@ -847,9 +855,9 @@
                                                         <label for="poli_unit_tujuan" class="form-label">Poli</label>
                                                         <select class="form-select" id="poli_unit_tujuan" name="poli_unit_tujuan">
                                                             <option selected disabled>Pilih Poli</option>
-                                                            <option value="1">Poli Umum</option>
-                                                            <option value="2">Poli Anak</option>
-                                                            <option value="3">Poli Bedah</option>
+                                                            @foreach($unitPoli as $poli)
+                                                                <option value="{{ $poli->kd_unit }}">{{ $poli->nama_unit }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
 
@@ -868,8 +876,45 @@
                                                     </div>
 
                                                     <div class="mb-3" id="formRawatInap" style="display: none;">
-                                                        <label for="keteranganRawatInap" class="form-label">Keterangan</label>
-                                                        <textarea class="form-control" id="keteranganRawatInap" name="keteranganRawatInap" rows="3"></textarea>
+                                                        <div class="mb-3">
+                                                            <label for="tanggalRawatInap" class="form-label">Tanggal</label>
+                                                            <input type="date" class="form-control" id="tanggalRawatInap" name="tanggalRawatInap">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="jamRawatInap" class="form-label">Jam</label>
+                                                            <input type="time" class="form-control" id="jamRawatInap" name="jamRawatInap">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="keluhanUtama_ranap" class="form-label">Keluhan Utama</label>
+                                                            <textarea class="form-control" id="keluhanUtama_ranap" name="keluhanUtama_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="hasilPemeriksaan_ranap" class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
+                                                            <textarea class="form-control" id="hasilPemeriksaan_ranap" name="hasilPemeriksaan_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="jalannyaPenyakit_ranap" class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
+                                                            <textarea class="form-control" id="jalannyaPenyakit_ranap" name="jalannyaPenyakit_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="diagnosis_ranap" class="form-label">Diagnosis</label>
+                                                            <textarea class="form-control" id="diagnosis_ranap" name="diagnosis_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="tindakan_ranap" class="form-label">Tindakan yang Telah Dilakukan</label>
+                                                            <textarea class="form-control" id="tindakan_ranap" name="tindakan_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="anjuran_ranap" class="form-label">Anjuran</label>
+                                                            <textarea class="form-control" id="anjuran_ranap" name="anjuran_ranap" rows="3"></textarea>
+                                                        </div>
                                                     </div>
 
                                                     <div class="mb-3" id="formKamarOperasi" style="display: none;">

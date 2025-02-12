@@ -337,8 +337,16 @@
                 'alasan_pulang',
                 'tanggal_rajal',
                 'poli_unit_tujuan',
-                'keteranganRawatInap',
-                'kamarOperasi'
+                'kamarOperasi',
+                'kondisi_pulang',
+                'tanggalRawatInap',
+                'jamRawatInap',
+                'keluhanUtama_ranap',
+                'hasilPemeriksaan_ranap',
+                'jalannyaPenyakit_ranap',
+                'diagnosis_ranap',
+                'tindakan_ranap',
+                'anjuran_ranap'
             ];
 
             formFields.forEach(fieldId => {
@@ -356,7 +364,14 @@
                 tindakLanjutData = {
                     option: selectedOption.value,
                     // Rawat Inap fields
-                    keteranganRawatInap: document.getElementById('keteranganRawatInap')?.value || '',
+                    keteranganRawatInap: document.getElementById('tanggalRawatInap')?.value || '',
+                    jamRawatInap: document.getElementById('jamRawatInap')?.value || '',
+                    keluhanUtama_ranap: document.getElementById('keluhanUtama_ranap')?.value || '',
+                    hasilPemeriksaan_ranap: document.getElementById('hasilPemeriksaan_ranap')?.value || '',
+                    jalannyaPenyakit_ranap: document.getElementById('jalannyaPenyakit_ranap')?.value || '',
+                    diagnosis_ranap: document.getElementById('diagnosis_ranap')?.value || '',
+                    tindakan_ranap: document.getElementById('tindakan_ranap')?.value || '',
+                    anjuran_ranap: document.getElementById('anjuran_ranap')?.value || '',
                     // Kamar Operasi fields
                     kamarOperasi: document.getElementById('kamarOperasi')?.value || '',
                     // Menolak Rawat Inap fields
@@ -369,6 +384,7 @@
                     tanggalPulang: document.getElementById('tanggalPulang')?.value || '',
                     jamPulang: document.getElementById('jamPulang')?.value || '',
                     alasan_pulang: document.getElementById('alasan_pulang')?.value || '',
+                    kondisi_pulang: document.getElementById('kondisi_pulang')?.value || '',
                     // Berobat Jalan fields
                     tanggal_rajal: document.getElementById('tanggal_rajal')?.value || '',
                     poli_unit_tujuan: document.getElementById('poli_unit_tujuan')?.value || '',

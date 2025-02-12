@@ -494,6 +494,9 @@
 
 @push('js')
     <script>
+
+        window.unitPoli = {!! json_encode($unitPoli) !!};
+
         function showAsesmen(id) {
             const button = event.target.closest('button');
             const url = button.dataset.url;
@@ -540,7 +543,6 @@
                 }
             });
         }
-
 
         function handleTextareaData(asesmen) {
             $('textarea[name="anamnesis"]').val(asesmen.anamnesis || '-');
@@ -790,7 +792,7 @@
             const container = $('#showTindakLanjutInfo');
             container.empty();
 
-            // Check if tindakLanjutData is array and has data
+            // Check if tindakLanjutData exists
             if (!tindakLanjutData || !Array.isArray(tindakLanjutData) || tindakLanjutData.length === 0) {
                 container.html(`
                     <div class="alert alert-info">
@@ -800,68 +802,243 @@
                 return;
             }
 
-            // Get the first tindak lanjut data (since it's in array)
+            // Get the first tindak lanjut data
             const data = tindakLanjutData[0];
 
-            // Get badge color based on tindak_lanjut_code
-            const getBadgeClass = (code) => {
-                switch (parseInt(code)) {
-                    case 1:
-                        return 'bg-primary'; // Rawat Inap
-                    case 2:
-                        return 'bg-success'; // Kontrol Ulang
-                    case 3:
-                        return 'bg-secondary'; // Selesai di Unit
-                    case 4:
-                        return 'bg-info'; // Rujuk Internal
-                    case 5:
-                        return 'bg-warning'; // Rujuk RS Lain
-                    default:
-                        return 'bg-secondary';
-                }
-            };
+            // Siapkan content berdasarkan tindak lanjut code
+            let additionalInfo = '';
+            
+            switch(parseInt(data.tindak_lanjut_code)) {
+                case 1: // Rawat Inap
+                    additionalInfo = `
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Keterangan:</label>
+                            <p class="mb-0">${data.keterangan || '-'}</p>
+                        </div>`;
+                    break;
+                    
+                case 7: // Kamar Operasi
+                    additionalInfo = `
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Kamar Operasi:</label>
+                            <p class="mb-0">${data.keterangan || '-'}</p>
+                        </div>`;
+                    break;
 
-            // Format tanggal dan jam meninggal jika ada
-            // const meninggalInfo = data.tanggal_meninggal ? `
-        //     <div class="col-md-12 mt-3">
-        //         <label class="fw-bold">Waktu Meninggal:</label>
-        //         <p class="mb-0">${data.tanggal_meninggal} ${data.jam_meninggal || ''}</p>
-        //     </div>
-        // ` : '';
+                case 5: // Rujuk RS Lain
+                    let transportasiText = '-';
+                    switch(data.transportasi_rujuk) {
+                        case '1':
+                            transportasiText = 'Ambulance';
+                            break;
+                        case '2':
+                            transportasiText = 'Kendaraan Pribadi';
+                            break;
+                        case '3':
+                            transportasiText = 'Lainnya';
+                            break;
+                    }
 
-            // Format tanggal kontrol jika ada
-            const kontrolInfo = data.tgl_kontrol_ulang ? `
-                <div class="col-md-12 mt-3">
-                    <label class="fw-bold">Tanggal Kontrol:</label>
-                    <p class="mb-0">${data.tgl_kontrol_ulang}</p>
-                </div>
-            ` : '';
+                    additionalInfo = `
+                        <div class="col-md-4 mt-2">
+                            <label class="fw-bold">Tujuan Rujuk:</label>
+                            <p class="mb-0">${data.tujuan_rujuk || '-'}</p>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <label class="fw-bold">Alasan Rujuk:</label>
+                            <p class="mb-0">${data.alasan_rujuk ? 'Indikasi Medis' : '-'}</p>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <label class="fw-bold">Transportasi:</label>
+                            <p class="mb-0">${transportasiText}</p>
+                        </div>`;
+                    break;
+
+                case 6: // Pulang
+                    // Format tanggal pulang
+                    let formattedTanggal = '-';
+                    if (data.tanggal_pulang) {
+                        formattedTanggal = new Date(data.tanggal_pulang).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+
+                    // Format jam pulang
+                    let formattedJam = '-';
+                    if (data.jam_pulang) {
+                        formattedJam = new Date(data.jam_pulang).toLocaleTimeString('id-ID', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+
+                    // Format alasan pulang
+                    let alasanPulangText = '-';
+                    switch(data.alasan_pulang) {
+                        case '1':
+                            alasanPulangText = 'Sembuh';
+                            break;
+                        case '2':
+                            alasanPulangText = 'Indikasi Medis';
+                            break;
+                        case '3':
+                            alasanPulangText = 'Permintaan Pasien';
+                            break;
+                    }
+
+                    // Format kondisi pulang
+                    let kondisiPulangText = '-';
+                    switch(data.kondisi_pulang) {
+                        case '1':
+                            kondisiPulangText = 'Mandiri';
+                            break;
+                        case '2':
+                            kondisiPulangText = 'Tidak Mandiri';
+                            break;
+                    }
+
+                    additionalInfo = `
+                        <div class="col-md-3 mt-2">
+                            <label class="fw-bold">Tanggal Pulang:</label>
+                            <p class="mb-0">${formattedTanggal}</p>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <label class="fw-bold">Jam Pulang:</label>
+                            <p class="mb-0">${formattedJam}</p>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <label class="fw-bold">Alasan Pulang:</label>
+                            <p class="mb-0">${alasanPulangText}</p>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <label class="fw-bold">Kondisi Pulang:</label>
+                            <p class="mb-0">${kondisiPulangText}</p>
+                        </div>`;
+                    break;
+
+                case 8: // Berobat Jalan
+                        
+                    let tanggalRajal = '-';
+                    if (data.tanggal_rajal) {
+                        tanggalRajal = new Date(data.tanggal_rajal).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+
+                    const selectedPoli = window.unitPoli ? window.unitPoli.find(poli => poli.kd_unit === data.poli_unit_tujuan) : null;
+                    const poliName = selectedPoli ? selectedPoli.nama_unit : data.poli_unit_tujuan;
+
+                    additionalInfo = `
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Tanggal Berobat:</label>
+                            <p class="mb-0">${tanggalRajal}</p>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Poli Tujuan:</label>
+                            <p class="mb-0">${poliName || '-'}</p>
+                        </div>`;
+                    break;
+
+                case 9: // Menolak Rawat Inap
+                    additionalInfo = `
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Alasan Menolak:</label>
+                            <p class="mb-0">${data.keterangan || '-'}</p>
+                        </div>`;
+                    break;
+
+                case 10: // Meninggal Dunia
+                    let formattedTanggalMeninggal = '-';
+                    if (data.tanggal_meninggal) {
+                        formattedTanggalMeninggal = new Date(data.tanggal_meninggal).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+
+                    // Format jam meninggal
+                    let formattedJamMeninggal = '-';
+                    if (data.jam_meninggal) {
+                        if (data.jam_meninggal.includes(':')) {
+                            formattedJamMeninggal = data.jam_meninggal;
+                        } else {
+                            formattedJamMeninggal = new Date(data.jam_meninggal).toLocaleTimeString('id-ID', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    }
+
+                    additionalInfo = `
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Tanggal Meninggal:</label>
+                            <p class="mb-0">${formattedTanggalMeninggal}</p>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Jam Meninggal:</label>
+                            <p class="mb-0">${formattedJamMeninggal}</p>
+                        </div>`;
+                    break;
+
+                case 11: // DOA 
+                    let formattedTanggalDOA = '-';
+                    if (data.tanggal_meninggal) {
+                        formattedTanggalDOA = new Date(data.tanggal_meninggal).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+
+                    // Format jam DOA
+                    let formattedJamDOA = '-';
+                    if (data.jam_meninggal) {
+                        if (data.jam_meninggal.includes(':')) {
+                            formattedJamDOA = data.jam_meninggal;
+                        } else {
+                            formattedJamDOA = new Date(data.jam_meninggal).toLocaleTimeString('id-ID', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    }
+
+                    additionalInfo = `
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Tanggal DOA:</label>
+                            <p class="mb-0">${formattedTanggalDOA}</p>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Jam DOA:</label>
+                            <p class="mb-0">${formattedJamDOA}</p>
+                        </div>`;
+                    break;
+            }
 
             const infoBox = `
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-12">
                                 <label class="fw-bold">Tindak Lanjut:</label>
                                 <div class="mt-2">
-                                    <span class="badge ${getBadgeClass(data.tindak_lanjut_code)}">
+                                    <span class="badge bg-primary">
                                         ${data.tindak_lanjut_name || '-'}
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="fw-bold">Keterangan:</label>
-                                <p class="mb-0">${data.keterangan || '-'}</p>
-                            </div>
-                            ${kontrolInfo}
+                            ${additionalInfo}
                         </div>
                     </div>
                 </div>
             `;
-
             container.html(infoBox);
         }
-
 
         function handlePemeriksaanFisik(pemeriksaanFisik) {
             const container = $('#show_pemeriksaan_fisik_container'); // Updated container ID for 'show'

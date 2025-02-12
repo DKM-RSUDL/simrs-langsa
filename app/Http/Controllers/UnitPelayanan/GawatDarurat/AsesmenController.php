@@ -21,6 +21,7 @@ use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
+use App\Models\Unit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -80,6 +81,7 @@ class AsesmenController extends Controller
         $faktorpemberat = RmeFaktorPemberat::all();
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
+        $unitPoli = Unit::where('kd_bagian', '2')->where('aktif', 1)->get();
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
         $asesmen = RmeAsesmen::with(['user'])
@@ -108,6 +110,7 @@ class AsesmenController extends Controller
             'faktorperingan',
             'efeknyeri',
             'asesmen',
+            'unitPoli',
             'tindakanData'
         ));
     }
@@ -304,66 +307,69 @@ class AsesmenController extends Controller
                 }
             }
 
-            if ($request->has('tindak_lanjut')) {
-                try {
-                    $tindakLanjutData = is_string($request->tindak_lanjut) ?
-                    json_decode($request->tindak_lanjut, true) :
-                    $request->tindak_lanjut;
+            if ($request->has('tindak_lanjut_data')) {
+                $tindakLanjutData = is_string($request->tindak_lanjut_data) ?
+                json_decode($request->tindak_lanjut_data, true) :
+                $request->tindak_lanjut_data;
 
-                    if (!$tindakLanjutData) {
-                        throw new \Exception("Invalid tindak lanjut data format");
-                    }
+                $tindakLanjutDtl = RmeAsesmenDtl::where('id_asesmen', $id)->first();
+                if (!$tindakLanjutDtl) {
+                    $tindakLanjutDtl = new RmeAsesmenDtl();
+                    $tindakLanjutDtl->id_asesmen = $id;
+                }
 
-                    $tindakLanjutDtl = RmeAsesmenDtl::firstOrCreate(['id_asesmen' => $id]);
+                if ($tindakLanjutData && isset($tindakLanjutData['option'])) {
+                    switch ($tindakLanjutData['option']) {
+                        case 'rujukKeluar':
+                            $tindakLanjutDtl->tindak_lanjut_code = 5;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
+                            $tindakLanjutDtl->tujuan_rujuk = $tindakLanjutData['tujuan_rujuk'] ?? '';
+                            $tindakLanjutDtl->alasan_rujuk = $tindakLanjutData['alasan_rujuk'] ?? '';
+                            $tindakLanjutDtl->transportasi_rujuk = $tindakLanjutData['transportasi_rujuk'] ?? '';
+                            break;
 
-                    // Set default values
-                    $tindakLanjutDtl->tindak_lanjut_code = null;
-                    $tindakLanjutDtl->tindak_lanjut_name = null;
-                    $tindakLanjutDtl->keterangan = null;
-                    $tindakLanjutDtl->tanggal_meninggal = null;
-                    $tindakLanjutDtl->jam_meninggal = null;
+                        case 'pulangSembuh':
+                            $tindakLanjutDtl->tindak_lanjut_code = 6;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
+                            $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggal_pulang'] ?? '';
+                            $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jam_pulang'] ?? '';
+                            $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
+                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? '';
+                            break;
 
-                    if (!empty($tindakLanjutData['option'])) {
-                        switch ($tindakLanjutData['option']) {
-                            case 'rawatInap':
-                                $tindakLanjutDtl->tindak_lanjut_code = 1;
-                                $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-                                break;
-                            case 'pulangKontrol':
-                                $tindakLanjutDtl->tindak_lanjut_code = 2;
-                                $tindakLanjutDtl->tindak_lanjut_name = 'Kontrol Ulang';
-                                break;
-                            case 'rujukKeluar':
-                                $tindakLanjutDtl->tindak_lanjut_code = 5;
-                                $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
-                                break;
-                            case 'kamarOperasi':
-                                $tindakLanjutDtl->tindak_lanjut_code = 4;
-                                $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk Internal';
-                                break;
-                            case 'menolakRawatInap':
-                            case 'meninggalDunia':
-                                $tindakLanjutDtl->tindak_lanjut_code = 3;
-                                $tindakLanjutDtl->tindak_lanjut_name = 'Selesai di Unit';
-                                break;
-                        }
+                        case 'berobatJalan':
+                            $tindakLanjutDtl->tindak_lanjut_code = 8;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Berobat Jalan Ke Poli';
+                            $tindakLanjutDtl->tanggal_rajal = $tindakLanjutData['tanggal_rajal'] ?? '';
+                            $tindakLanjutDtl->poli_unit_tujuan = $tindakLanjutData['poli_unit_tujuan'] ?? '';
+                            break;
 
-                        if (!empty($tindakLanjutData['keterangan'])) {
-                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keterangan'];
-                        }
+                        case 'menolakRawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 9;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['alasan_menolak'] ?? '';
+                            break;
 
-                        if (!empty($tindakLanjutData['tanggalMeninggal'])) {
-                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'];
-                        }
+                        case 'meninggalDunia':
+                            $tindakLanjutDtl->tindak_lanjut_code = 10;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggal_meninggal'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jam_meninggal'] ?? '';
+                            break;
 
-                        if (!empty($tindakLanjutData['jamMeninggal'])) {
-                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'];
-                        }
+                        case 'deathoffarrival':
+                            $tindakLanjutDtl->tindak_lanjut_code = 11;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
+                            $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggal_meninggal'] ?? '';
+                            $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jam_meninggal'] ?? '';
+                            break;
+
+                        default:
+                            $tindakLanjutDtl->tindak_lanjut_code = null;
+                            $tindakLanjutDtl->tindak_lanjut_name = null;
                     }
 
                     $tindakLanjutDtl->save();
-                } catch (\Exception $e) {
-                    //
                 }
             }
 
@@ -731,7 +737,7 @@ class AsesmenController extends Controller
                         case 'kamarOperasi':
                             $tindakLanjutDtl->tindak_lanjut_code = 7;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Kamar Operasi';
-                            $tindakLanjutDtl->kamar_operasi = $tindakLanjutData['kamarOperasi'] ?? '';
+                            $tindakLanjutDtl->keterangan = $tindakLanjutData['kamarOperasi'] ?? '';
                             break;
 
                         case 'rujukKeluar':
@@ -743,11 +749,12 @@ class AsesmenController extends Controller
                             break;
 
                         case 'pulangSembuh':
-                            $tindakLanjutDtl->tindak_lanjut_code = 3;
+                            $tindakLanjutDtl->tindak_lanjut_code = 6;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Pulang Sembuh';
                             $tindakLanjutDtl->tanggal_pulang = $tindakLanjutData['tanggalPulang'] ?? '';
                             $tindakLanjutDtl->jam_pulang = $tindakLanjutData['jamPulang'] ?? '';
                             $tindakLanjutDtl->alasan_pulang = $tindakLanjutData['alasan_pulang'] ?? '';
+                            $tindakLanjutDtl->kondisi_pulang = $tindakLanjutData['kondisi_pulang'] ?? '';
                             break;
 
                         case 'berobatJalan':
@@ -758,20 +765,20 @@ class AsesmenController extends Controller
                             break;
 
                         case 'menolakRawatInap':
-                            $tindakLanjutDtl->tindak_lanjut_code = 6;
+                            $tindakLanjutDtl->tindak_lanjut_code = 9;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Menolak Rawat Inap';
                             $tindakLanjutDtl->keterangan = $tindakLanjutData['alasanMenolak'] ?? '';
                             break;
 
                         case 'meninggalDunia':
-                            $tindakLanjutDtl->tindak_lanjut_code = 7;
+                            $tindakLanjutDtl->tindak_lanjut_code = 10;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Meninggal Dunia';
                             $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalMeninggal'] ?? '';
                             $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamMeninggal'] ?? '';
                             break;
 
                         case 'deathofarrival':
-                            $tindakLanjutDtl->tindak_lanjut_code = 9;
+                            $tindakLanjutDtl->tindak_lanjut_code = 11;
                             $tindakLanjutDtl->tindak_lanjut_name = 'DOA';
                             $tindakLanjutDtl->tanggal_meninggal = $tindakLanjutData['tanggalDoa'] ?? '';
                             $tindakLanjutDtl->jam_meninggal = $tindakLanjutData['jamDoa'] ?? '';
