@@ -388,24 +388,23 @@
                                         </a>
 
                                         <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none" id="btnPulang">
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
+                                            id="btnPulang">
                                             <input type="radio" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Pulang"
-                                                data-code="6"
+                                                class="form-check-input me-2" value="Pulang" data-code="6"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '6' ? 'checked' : '' }}>
                                             <label for="selesai">Pulang <span></span></label>
                                         </a>
-                                    </div>
 
-                                    <div class="col-md-6">
                                         <a href="javascript:void(0)" id="btn-rs-rujuk-bagian"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rujuk" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rujuk RS lain bagian:"
                                                 data-code="5"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
-                                            <label for="rujuk">Rujuk RS lain bagian:
-                                                <span id="selected-rs-info">
+                                            <label for="rujuk">Rujuk RS lain
+                                                <span id="selected-rs-info" class="text-muted fst-italic small ms-2"
+                                                    hidden>
                                                     @if (($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5')
                                                         {{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}
                                                         {{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}
@@ -414,12 +413,68 @@
                                             </label>
                                         </a>
 
-                                        <a href="#"
+                                        <a href="#" id="btn-rawat-inap"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="rawat" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Rawat Inap" data-code="1"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
                                             <label for="rawat">Rawat Inap</label>
+                                        </a>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <a href="javascript:void(0)" id="btn-berobat-jalanke-poli"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="berobat-jalanke-poli-radio"
+                                                name="tindak_lanjut_name" class="form-check-input me-2"
+                                                value="Berobat Jalan ke Poli" data-code="8"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '8' ? 'checked' : '' }}>
+                                            <label for="berobat-jalanke-poli-radio">
+                                                Berobat Jalan Ke Poli
+                                                <span id="selected-poli-info" class="text-muted fst-italic small ms-2"
+                                                    hidden></span>
+                                            </label>
+                                        </a>
+
+                                        <a href="javascript:void(0)" id="btn-menolak-rawat-inap"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="menolak-rawat-inap-radio"
+                                                name="tindak_lanjut_name" class="form-check-input me-2"
+                                                value="Menolak Rawat Inap" data-code="9"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '9' ? 'checked' : '' }}>
+                                            <label for="menolak-rawat-inap-radio">
+                                                Menolak Rawat Inap
+                                                <span id="selected-menolak-info"
+                                                    class="text-muted fst-italic small ms-2" hidden></span>
+                                            </label>
+                                        </a>
+
+                                        <a href="javascript:void(0)" id="btn-meninggal-dunia"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="meninggal-dunia-radio"
+                                                name="tindak_lanjut_name" class="form-check-input me-2"
+                                                value="Meninggal Dunia" data-code="10"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '10' ? 'checked' : '' }}>
+                                            <label for="meninggal-dunia-radio">
+                                                Meninggal Dunia
+                                                <span id="selected-meninggal-info"
+                                                    class="text-muted fst-italic small ms-2" hidden></span>
+                                            </label>
+                                        </a>
+
+                                        <a href="javascript:void(0)" id="btn-doa"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="doa-radio"
+                                                name="tindak_lanjut_name" class="form-check-input me-2"
+                                                value="DOA (death on arrival)" data-code="11"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '11' ? 'checked' : '' }}>
+                                            <label for="doa-radio">
+                                                DOA (death on arrival)
+                                                <span id="selected-doa-info" hidden
+                                                    class="text-muted fst-italic small ms-2"></span>
+                                            </label>
                                         </a>
                                     </div>
                                 </div>
@@ -431,7 +486,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{ route('resume.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($dataResume->id)]) }}" target="_blank" class="btn btn-sm btn-info">
+                <a href="{{ route('resume.pdf', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($dataResume->id)]) }}"
+                    target="_blank" class="btn btn-sm btn-info">
                     <i class="bi bi-printer"></i>
                     Print
                 </a>
@@ -455,6 +511,10 @@
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-kontrol-ulang')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-rs-rujuk-bagian')
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-labor-create')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-berobat-jalan')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-rawat-inap')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-meninggal-dunia')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-doa')
 
 
 @push('js')
@@ -494,14 +554,16 @@
                         },
                         dataType: "json",
                         beforeSend: function() {
-                            $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                            $this.html(
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                            );
                             $this.prop('disabled', true);
                         },
-                        success: function (res) {
+                        success: function(res) {
                             let status = res.status;
                             let msg = res.message;
 
-                            if(status == 'error') {
+                            if (status == 'error') {
                                 Swal.fire({
                                     title: "Error",
                                     text: msg,
@@ -559,7 +621,21 @@
 
             const previousTglKontrolUlang = '{{ $dataResume->rmeResumeDet->tgl_kontrol_ulang ?? '' }}';
             const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
+
             const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
+            const previousAlasanRujuk = '{{ $dataResume->rmeResumeDet->alasan_rujuk ?? '' }}';
+            const previousTransportasiRujuk = '{{ $dataResume->rmeResumeDet->transportasi_rujuk ?? '' }}';
+
+            const previousTglRajal = '{{ $dataResume->rmeResumeDet->tgl_rajal ?? '' }}';
+            const previousUnitRajal = '{{ $dataResume->rmeResumeDet->unit_rajal ?? '' }}';
+
+            const previousAlasanMenolakInap = '{{ $dataResume->rmeResumeDet->alasan_menolak_inap ?? '' }}';
+
+            const previousTglMeninggal = '{{ $dataResume->rmeResumeDet->tgl_meninggal ?? '' }}';
+            const previousJamMeninggal = '{{ $dataResume->rmeResumeDet->jam_meninggal ?? '' }}';
+            const previousTglMeninggalDoa = '{{ $dataResume->rmeResumeDet->tgl_meninggal_doa ?? '' }}';
+            const previousJamMeninggalDoa = '{{ $dataResume->rmeResumeDet->jam_meninggal_doa ?? '' }}';
+
             const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
             const previousTglPulang = '{{ $dataResume->rmeResumeDet->tgl_pulang ?? '' }}';
             const previousJamPulang = '{{ $dataResume->rmeResumeDet->jam_pulang ?? '' }}';
@@ -658,18 +734,34 @@
             formData.append('tgl_kontrol_ulang', ControlUlangTgl);
 
             // Get Rujuk RS lain bagian
-            const RujukRSBagian = $('#selected-rs-info').text().trim();
-            let rs_rujuk_bagian, rs_rujuk;
-            if (RujukRSBagian) {
-                const parts = RujukRSBagian.split(' - ');
-                rs_rujuk_bagian = parts[0].trim() || previousRsRujukBagian;
-                rs_rujuk = parts.length > 1 ? parts[1].trim() || previousRsRujuk : previousRsRujuk;
-            } else {
-                rs_rujuk_bagian = previousRsRujukBagian;
-                rs_rujuk = previousRsRujuk;
-            }
-            formData.append('rs_rujuk_bagian', rs_rujuk_bagian);
-            formData.append('rs_rujuk', rs_rujuk);
+            const rsRujuk = $('#rs-rujuk').val() || previousRsRujuk;
+            formData.append('rs_rujuk', rsRujuk);
+            const alasanRujuk = $('#alasan_rujuk').val() || previousAlasanRujuk;
+            formData.append('alasan_rujuk', alasanRujuk);
+            const transportasiRujuk = $('#transportasi_rujuk').val() || previousTransportasiRujuk;
+            formData.append('transportasi_rujuk', transportasiRujuk);
+
+            // Get Berobat Jalan Ke Poli
+            const tglRajal = $('#tgl-rajal').val() || previousTglRajal;
+            formData.append('tgl_rajal', tglRajal);
+            const unitRajal = $('#unit_rajal').val() || previousUnitRajal;
+            formData.append('unit_rajal', unitRajal);
+
+            // Get Alasan menolak inap
+            const MenolakInap = $('#alasan-menolak').val() || previousAlasanMenolakInap;
+            formData.append('alasan_menolak_inap', MenolakInap);
+
+            // Get Meninggal Dunia
+            const tglMeninggal = $('#tgl-meninggal').val() || previousTglMeninggal;
+            formData.append('tgl_meninggal', tglMeninggal);
+            const jamMeninggal = $('#jam-meninggal').val() || previousJamMeninggal;
+            formData.append('jam_meninggal', jamMeninggal);
+
+            // Get DOA (death on arrival)
+            const tglMeninggalDoa = $('#tgl-meninggal-doa').val() || previousTglMeninggalDoa;
+            formData.append('tgl_meninggal_doa', tglMeninggalDoa);
+            const jamMeninggalDoa = $('#jam-meninggal-doa').val() || previousJamMeninggalDoa;
+            formData.append('jam_meninggal_doa', jamMeninggalDoa);
 
             // Ambil ID unit dari atribut data-unit-id
             const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
@@ -678,9 +770,9 @@
 
             // tindak lanjut pulang
             let tglPulangTL = $('#selesaiKlinikModal #tgl_pulang').val() || previousTglPulang;
-            let jamPulangTL = $('#selesaiKlinikModal #jam_pulang').val()  || previousJamPulang;
-            let alasanPulangTL = $('#selesaiKlinikModal #alasan_pulang').val()  || previousAlasanPulang;
-            let kondisiPulangTL = $('#selesaiKlinikModal #kondisi_pulang').val()  || previousKondisiPulang;
+            let jamPulangTL = $('#selesaiKlinikModal #jam_pulang').val() || previousJamPulang;
+            let alasanPulangTL = $('#selesaiKlinikModal #alasan_pulang').val() || previousAlasanPulang;
+            let kondisiPulangTL = $('#selesaiKlinikModal #kondisi_pulang').val() || previousKondisiPulang;
 
             formData.append('tgl_pulang', tglPulangTL);
             formData.append('jam_pulang', jamPulangTL);

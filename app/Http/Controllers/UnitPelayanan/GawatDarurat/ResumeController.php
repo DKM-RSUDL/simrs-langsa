@@ -258,9 +258,17 @@ class ResumeController extends Controller
             'tindak_lanjut_name' => 'required|string',
             'tgl_kontrol_ulang' => 'nullable|string',
             'rs_rujuk' => 'nullable|string',
-            'rs_rujuk_bagian' => 'nullable|string',
+            'alasan_rujuk' => 'nullable|string',
+            'transportasi_rujuk' => 'nullable|string',
             'unit_rujuk_internal' => 'nullable|string',
             'unit_rawat_inap' => 'nullable|string',
+            'tgl_rajal' => 'nullable|string',
+            'unit_rajal' => 'nullable|string',
+            'alasan_menolak_inap' => 'nullable|string',
+            'tgl_meninggal' => 'nullable|string',
+            'jam_meninggal' => 'nullable|string',
+            'tgl_meninggal_doa' => 'nullable|string',
+            'jam_meninggal_doa' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -315,17 +323,23 @@ class ResumeController extends Controller
                 'tindak_lanjut_code' => $request->tindak_lanjut_code,
                 'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
                 'rs_rujuk' => $request->rs_rujuk,
-                'rs_rujuk_bagian' => $request->rs_rujuk_bagian,
+                'alasan_rujuk' => $request->alasan_rujuk,
+                'transportasi_rujuk' => $request->transportasi_rujuk,
                 'unit_rujuk_internal' => $request->unit_rujuk_internal,
                 'unit_rawat_inap' => $request->unit_rawat_inap,
                 'tgl_pulang'    => $request->tgl_pulang,
                 'jam_pulang'    => $request->jam_pulang,
                 'alasan_pulang'    => $request->alasan_pulang,
                 'kondisi_pulang'    => $request->kondisi_pulang,
+                'tgl_rajal'    => $request->tgl_rajal,
+                'unit_rajal'    => $request->unit_rajal,
+                'alasan_menolak_inap'    => $request->alasan_menolak_inap,
+                'tgl_meninggal'    => $request->tgl_meninggal,
+                'jam_meninggal'    => $request->jam_meninggal,
+                'tgl_meninggal_doa'    => $request->tgl_meninggal_doa,
+                'jam_meninggal_doa'    => $request->jam_meninggal_doa,
             ]
         );
-
-
 
         return response()->json([
             'success' => true,
