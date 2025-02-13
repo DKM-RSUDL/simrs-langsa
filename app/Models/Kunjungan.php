@@ -60,11 +60,12 @@ class Kunjungan extends Model
         'rujukan_ket',
         'status_inap',
         'status_kunjungan',
+        'triase_id'
     ];
 
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class,'kd_pasien', 'kd_pasien');
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
     }
 
     public function dokter()

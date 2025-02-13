@@ -210,97 +210,152 @@
     <script>
         // 1. Status Air way
         $(document).ready(function() {
-            // Disable
-            $('.diagnosis-row input[type="radio"]').prop('disabled', true);
+            // Initialize state management for airway
+            let airwayTindakanState = [];
 
-            // Tindakan
-            $('.btn-tindakan-keperawatan').click(function(e) {
+            // Handle modal show
+            $('.btn-tindakan-airway').click(function(e) {
                 let target = $(this).attr('data-bs-target');
                 $(target).modal('show');
             });
 
-            // Save
-            $('.btn-save-tindakan-keperawatan').click(function(e) {
-                let section = $(this).attr('data-section');
-                let modal = $(this).closest('.modal');
-                let selectedTindakanArr = [];
+            // Function to update airway tindakan display
+            function updateAirwayTindakan(dataArr, append = false) {
+                const airwayListEl = $('#selectedTindakanList-airway');
+                let airwayCurrent = [];
 
-                // Collect
-                modal.find('.form-check-input:checked').each(function() {
-                    selectedTindakanArr.push($(this).val());
-                });
+                // Jika append true, ambil data yang sudah ada
+                if (append) {
+                    airwayCurrent = airwayListEl.find('.airway-item span')
+                        .map(function() {
+                            return $(this).text().trim();
+                        }).get();
+                }
 
-                // Update
-                updateSelectedTindakan(selectedTindakanArr, section);
-                modal.modal('hide');
-            });
+                // Gabungkan data lama dengan data baru dan hilangkan duplikat
+                let airwayAll = [...new Set([...airwayCurrent, ...dataArr])];
+                let airwayHtml = '';
 
-            // Function to update
-            function updateSelectedTindakan(dataArr, tindakanListEl) {
-                let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-                let existingTindakan = elListTindakan.find('.selected-item span')
-                    .map(function() {
-                        return $(this).text().trim();
-                    })
-                    .get();
-
-                // Combine existing
-                let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
-
-                let listHtml = '';
-                let jsonArray = [];
-                allTindakan.forEach(tindakan => {
-                    if (tindakan.trim()) {
-                        jsonArray.push(tindakan);
-                        listHtml += `
-                            <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                                <span>${tindakan}</span>
-                                <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
-                                    <i class="ti-close"></i>
-                                </button>
-                                <input type="hidden" name="airway_tindakan[]" value='${JSON.stringify(jsonArray)}'>
-                            </div>`;
-                    }
-                });
-
-                elListTindakan.html(listHtml);
-            }
-
-            // Remove
-            $(document).on('click', '.btn-del-tindakan-keperawatan-list', function() {
-                $(this).closest('.selected-item').remove();
-            });
-
-            // Initialize
-            function initExistingTindakan() {
-                let sections = ['airway'];
-
-                sections.forEach(section => {
-                    let existingTindakanInput = $(`#existingTindakan-${section}`);
-                    let existingTindakanValue = existingTindakanInput.val();
-
-                    if (existingTindakanValue) {
-                        try {
-                            let tindakanArray = JSON.parse(existingTindakanValue);
-                            updateSelectedTindakan(tindakanArray, section);
-                        } catch (e) {
-                            let tindakanArray = existingTindakanValue.split(',').map(t => t.trim()).filter(
-                                t => t);
-                            updateSelectedTindakan(tindakanArray, section);
+                if (airwayAll.length > 0) {
+                    airwayAll.forEach(item => {
+                        if (item.trim()) {
+                            airwayHtml += `
+                                <div class="airway-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-airway-delete text-danger p-0">
+                                        <i class="ti-close"></i>
+                                    </button>
+                                </div>`;
                         }
-                    }
-                });
-            }
-            initExistingTindakan();
+                    });
 
-            // Checkbox Handling
+                    // Add hidden input with all airway tindakan
+                    airwayHtml += `<input type="hidden" name="airway_tindakan" value='${JSON.stringify(airwayAll)}'>`;
+                }
+
+                airwayListEl.html(airwayHtml);
+                airwayTindakanState = airwayAll;
+            }
+
+            // Save airway tindakan from modal
+            $('.btn-save-tindakan-airway').click(function(e) {
+                let modal = $(this).closest('.modal');
+                let airwaySelected = [];
+
+                // Collect checked items
+                modal.find('.form-check-input:checked').each(function() {
+                    airwaySelected.push($(this).val());
+                });
+
+                // Update dengan append = true untuk menambahkan ke data yang sudah ada
+                updateAirwayTindakan(airwaySelected, true);
+                modal.modal('hide');
+
+                // Reset checkboxes setelah simpan
+                modal.find('.form-check-input').prop('checked', false);
+            });
+
+            // Handle removal of airway item
+            $(document).on('click', '.btn-airway-delete', function() {
+                let airwayItem = $(this).closest('.airway-item');
+                let airwayContainer = airwayItem.parent();
+                let airwayRemovedText = airwayItem.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox if exists
+                $(`#tindakanKeperawatanAirwayModal .form-check-input[value="${airwayRemovedText}"]`).prop('checked', false);
+
+                airwayItem.remove();
+
+                // Update hidden input after removal
+                let airwayRemaining = airwayContainer.find('.airway-item span').map(function() {
+                    return $(this).text().trim();
+                }).get();
+
+                if (airwayRemaining.length > 0) {
+                    let airwayHiddenInput = `<input type="hidden" name="airway_tindakan" value='${JSON.stringify(airwayRemaining)}'>`;
+                    airwayContainer.find('input[type="hidden"]').remove();
+                    airwayContainer.append(airwayHiddenInput);
+                } else {
+                    airwayContainer.find('input[type="hidden"]').remove();
+                }
+
+                airwayTindakanState = airwayRemaining;
+            });
+
+            // Initialize existing airway data
+            function initializeAirwayData() {
+                let airwayExisting = $('#existingTindakan-airway').val();
+
+                if (airwayExisting) {
+                    try {
+                        let airwayArray = JSON.parse(airwayExisting);
+                        if (Array.isArray(airwayArray)) {
+                            airwayTindakanState = airwayArray;
+                            updateAirwayTindakan(airwayArray, false);
+
+                            // Pre-check modal checkboxes for existing items
+                            airwayArray.forEach(item => {
+                                let airwayCheckbox = $('.modal .form-check-input[value="' + item + '"]');
+                                if (airwayCheckbox.length) {
+                                    airwayCheckbox.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing airway data:', e);
+                    }
+                }
+            }
+
+            // Reset airway modal when closed
+            $('#tindakanKeperawatanAirwayModal').on('hidden.bs.modal', function() {
+                let modal = $(this);
+                if (!modal.find('.airway-item').length) {
+                    modal.find('.form-check-input').prop('checked', false);
+                }
+            });
+
+            // Form submission handler
+            $('#asesmenForm').on('submit', function(e) {
+                if (airwayTindakanState.length > 0) {
+                    const airwayInput = $('input[name="airway_tindakan"]');
+                    if (!airwayInput.length) {
+                        $(this).append(`<input type="hidden" name="airway_tindakan" value='${JSON.stringify(airwayTindakanState)}'>`);
+                    }
+                }
+            });
+
+            // Initialize on page load
+            initializeAirwayData();
+
+            // Handle checkbox changes for diagnosis (tetap sama karena tidak terkait dengan airway)
             $('.diagnose-prwt-checkbox').change(function() {
                 let diagnosisWrap = $(this).closest('.diagnosis-row');
                 let radioInputs = diagnosisWrap.find('input[type="radio"]');
 
                 if ($(this).is(':checked')) {
                     radioInputs.prop('disabled', false);
-                    radioInputs.prop('required', false);
+                    radioInputs.prop('required', true);
                 } else {
                     radioInputs.prop('disabled', true);
                     radioInputs.prop('checked', false);
@@ -309,514 +364,702 @@
             });
         });
 
+        $(document).ready(function() {
+            // Initial state for radio buttons
+            function initDiagnosisState() {
+                $('.diagnose-prwt-checkbox').each(function() {
+                    let diagnosisWrap = $(this).closest('.diagnosis-row');
+                    let radioInputs = diagnosisWrap.find('input[type="radio"]');
+
+                    if ($(this).is(':checked')) {
+                        radioInputs.prop('disabled', false);
+                        // Hapus required
+                        radioInputs.prop('required', false);
+                    } else {
+                        radioInputs.prop('disabled', true);
+                        radioInputs.prop('required', false);
+                    }
+                });
+            }
+
+            // Run initialization
+            initDiagnosisState();
+
+            // Handle checkbox changes
+            $('.diagnose-prwt-checkbox').change(function() {
+                let diagnosisWrap = $(this).closest('.diagnosis-row');
+                let radioInputs = diagnosisWrap.find('input[type="radio"]');
+
+                if ($(this).is(':checked')) {
+                    radioInputs.prop('disabled', false);
+                    // Hapus required
+                    radioInputs.prop('required', false);
+
+                    // Opsional: Tambahkan default pilihan jika belum ada yang dipilih
+                    if (!radioInputs.filter(':checked').length) {
+                        diagnosisWrap.find('#airway_aktual').prop('checked', true);
+                    }
+                } else {
+                    radioInputs.prop('disabled', true);
+                    radioInputs.prop('checked', false);
+                    radioInputs.prop('required', false);
+                }
+            });
+
+            // Modifikasi form submission
+            $('#asesmenForm').submit(function(e) {
+                // Hapus validasi paksa
+                // Biarkan form submit tanpa syarat
+                return true;
+            });
+
+            // Handle radio button changes
+            $('input[name="airway_diagnosis_type"]').change(function() {
+                if ($(this).is(':checked')) {
+                    $(this).closest('.diagnosis-row')
+                        .find('input[name="airway_diagnosis"]')
+                        .prop('checked', true);
+                }
+            });
+        });
+
         // 2. Status Breathing
         $(document).ready(function() {
-            const breathingInterventionManager = {
-                init: function() {
-                    let sections = ['breathing'];
+            // Initialize state management
+            let breathingTindakanState = [];
 
-                    sections.forEach(section => {
-                        this.initExistingInterventions(section);
-                        this.setupEventListeners(section);
-                    });
+            // Handle modal show
+            $('.btn-tindakan-breathing').click(function() {
+                let target = $(this).data('bs-target');
+                $(target).modal('show');
+            });
 
-                    $('.diagnosis-row input[type="radio"]').prop('disabled', true);
-                },
+            // Function to update breathing tindakan display
+            function updateBreathingTindakan(dataArr, append = false) {
+                const breathingListEl = $('#selectedTindakanList-breathing');
+                let breathingCurrent = [];
 
-                // Setup event listeners
-                setupEventListeners: function(section) {
-                    // Modal trigger
-                    $(`.btn-tindakan-keperawatan[data-bs-target="#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal"]`)
-                        .on('click', function() {
-                            let target = $(this).attr('data-bs-target');
-                            $(target).modal('show');
-                        });
-
-                    // Save
-                    $(`#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal .btn-save-tindakan-keperawatan`)
-                        .on('click', function() {
-                            let modal = $(this).closest('.modal');
-                            let selectedTindakanArr = [];
-
-                            modal.find('.form-check-input:checked').each(function() {
-                                selectedTindakanArr.push($(this).val());
-                            });
-
-                            // Update
-                            breathingInterventionManager.updateSelectedInterventions(
-                                selectedTindakanArr, section);
-                            modal.modal('hide');
-                        });
-
-                    // Remove
-                    $(`#selectedTindakanList-${section}`).on('click', '.btn-del-tindakan-keperawatan-list',
-                        function() {
-                            $(this).closest('.selected-item').remove();
-                        });
-
-                    // Diagnosis checkbox
-                    $('.diagnose-prwt-checkbox').change(function() {
-                        let diagnosisWrap = $(this).closest('.diagnosis-row');
-                        let radioInputs = diagnosisWrap.find('input[type="radio"]');
-
-                        if ($(this).is(':checked')) {
-                            radioInputs.prop('disabled', false);
-                            radioInputs.prop('required', false);
-                        } else {
-                            radioInputs.prop('disabled', true);
-                            radioInputs.prop('checked', false);
-                            radioInputs.prop('required', false);
-                        }
-                    });
-                },
-
-                // Initialize existing
-                initExistingInterventions: function(section) {
-                    let existingTindakanInput = $(`#existingTindakan-${section}`);
-                    let existingTindakanValue = existingTindakanInput.val();
-
-                    if (existingTindakanValue) {
-                        try {
-                            let tindakanArray = JSON.parse(existingTindakanValue);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        } catch (e) {
-                            let tindakanArray = existingTindakanValue.split(',').map(t => t.trim()).filter(
-                                t => t);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        }
-                    }
-                },
-
-                // Update
-                updateSelectedInterventions: function(dataArr, tindakanListEl) {
-                    let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-                    let existingTindakan = elListTindakan.find('.selected-item span')
+                // If append is true, get existing data
+                if (append) {
+                    breathingCurrent = breathingListEl.find('.breathing-item span')
                         .map(function() {
                             return $(this).text().trim();
-                        })
-                        .get();
+                        }).get();
+                }
 
-                    let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
+                // Combine old and new data, remove duplicates
+                let breathingAll = [...new Set([...breathingCurrent, ...dataArr])];
+                let breathingHtml = '';
 
-                    let listHtml = '';
-                    let jsonArray = [];
-                    allTindakan.forEach(tindakan => {
-                        if (tindakan.trim()) {
-                            jsonArray.push(tindakan);
-                            listHtml += `
-                                <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                                    <span>${tindakan}</span>
-                                    <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
+                if (breathingAll.length > 0) {
+                    breathingAll.forEach(item => {
+                        if (item.trim()) {
+                            breathingHtml += `
+                                <div class="breathing-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-breathing-delete text-danger p-0">
                                         <i class="ti-close"></i>
                                     </button>
-                                    <input type="hidden" name="${tindakanListEl}_tindakan[]" value='${JSON.stringify(jsonArray)}'>
                                 </div>`;
                         }
                     });
 
-                    elListTindakan.html(listHtml);
+                    breathingHtml += `<input type="hidden" name="breathing_tindakan" value='${JSON.stringify(breathingAll)}'>`;
                 }
-            };
 
-            // Initialize
-            breathingInterventionManager.init();
+                breathingListEl.html(breathingHtml);
+                breathingTindakanState = breathingAll;
+            }
+
+            // Handle checkbox changes in breathing modal
+            $('#tindakanKeperawatanBreathingModal .form-check-input').change(function() {
+                let modal = $(this).closest('.modal');
+                let breathingSelected = [];
+
+                // Collect all checked items
+                modal.find('.form-check-input:checked').each(function() {
+                    breathingSelected.push($(this).val());
+                });
+
+                // Update display immediately
+                updateBreathingTindakan(breathingSelected, false);
+            });
+
+            // Save breathing from modal
+            $('.btn-save-tindakan-breathing').click(function() {
+                let modal = $(this).closest('.modal');
+                modal.modal('hide');
+            });
+
+            // Handle removal of breathing item
+            $(document).on('click', '.btn-breathing-delete', function() {
+                const breathingItem = $(this).closest('.breathing-item');
+                const breathingText = breathingItem.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox if exists
+                $(`#tindakanKeperawatanBreathingModal .form-check-input[value="${breathingText}"]`).prop('checked', false);
+
+                // Update state
+                breathingTindakanState = breathingTindakanState.filter(text => text !== breathingText);
+
+                // Update display
+                updateBreathingTindakan(breathingTindakanState, false);
+            });
+
+            // Initialize existing breathing data
+            function initializeBreathingData() {
+                const breathingExisting = $('#existingTindakan-breathing').val();
+
+                if (breathingExisting) {
+                    try {
+                        const breathingParsed = JSON.parse(breathingExisting);
+                        if (Array.isArray(breathingParsed)) {
+                            breathingTindakanState = breathingParsed;
+                            updateBreathingTindakan(breathingParsed, false);
+
+                            // Pre-check modal checkboxes
+                            breathingParsed.forEach(item => {
+                                const breathingCheck = $('#tindakanKeperawatanBreathingModal .form-check-input[value="' + item + '"]');
+                                if (breathingCheck.length) {
+                                    breathingCheck.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error parsing breathing data:', error);
+                    }
+                }
+            }
+
+            // Reset breathing modal when closed
+            $('#tindakanKeperawatanBreathingModal').on('hidden.bs.modal', function() {
+                const modal = $(this);
+                if (breathingTindakanState.length === 0) {
+                    modal.find('.form-check-input').prop('checked', false);
+                }
+            });
+
+            // Form submission handler
+            $('#asesmenForm').on('submit', function(e) {
+                if (breathingTindakanState.length > 0) {
+                    const breathingInput = $('input[name="breathing_tindakan"]');
+                    if (!breathingInput.length) {
+                        $(this).append(`<input type="hidden" name="breathing_tindakan" value='${JSON.stringify(breathingTindakanState)}'>`);
+                    }
+                }
+            });
+
+            // Initialize on page load
+            initializeBreathingData();
         });
 
         // 3. Status Circulation
         $(document).ready(function() {
-            const circulationInterventionManager = {
-                init: function() {
-                    let sections = ['circulation'];
+            // Initialize state
+            let circulationState = [];
 
-                    sections.forEach(section => {
-                        this.initExistingInterventions(section);
-                        this.setupEventListeners(section);
-                    });
+            // Handle modal show
+            $('.btn-tindakan-circulation').click(function() {
+                let target = $(this).data('bs-target');
+                $(target).modal('show');
+            });
 
-                    $('.diagnosis-row input[type="radio"]').prop('disabled', true);
-                },
+            // Update circulation list
+            function updateCirculation(dataArr, append = false) {
+                const listEl = $('#selectedTindakanList-circulation');
+                let currentItems = [];
 
-                // Setup event listeners
-                setupEventListeners: function(section) {
-                    // Modal
-                    $(`.btn-tindakan-keperawatan[data-bs-target="#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal"]`)
-                        .on('click', function() {
-                            let target = $(this).attr('data-bs-target');
-                            $(target).modal('show');
-                        });
-
-                    // Save
-                    $(`#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal .btn-save-tindakan-keperawatan`)
-                        .on('click', function() {
-                            let modal = $(this).closest('.modal');
-                            let selectedTindakanArr = [];
-
-                            modal.find('.form-check-input:checked').each(function() {
-                                selectedTindakanArr.push($(this).val());
-                            });
-
-                            // Update
-                            circulationInterventionManager.updateSelectedInterventions(
-                                selectedTindakanArr, section);
-                            modal.modal('hide');
-                        });
-
-                    // Remove
-                    $(`#selectedTindakanList-${section}`).on('click', '.btn-del-tindakan-keperawatan-list',
-                        function() {
-                            $(this).closest('.selected-item').remove();
-                        });
-
-                    // Diagnosis checkbox handling
-                    $('.diagnose-prwt-checkbox').change(function() {
-                        let diagnosisWrap = $(this).closest('.diagnosis-row');
-                        let radioInputs = diagnosisWrap.find('input[type="radio"]');
-
-                        if ($(this).is(':checked')) {
-                            radioInputs.prop('disabled', false);
-                            radioInputs.prop('required', false);
-                        } else {
-                            radioInputs.prop('disabled', true);
-                            radioInputs.prop('checked', false);
-                            radioInputs.prop('required', false);
-                        }
-                    });
-                },
-
-                // Initialize existing
-                initExistingInterventions: function(section) {
-                    let existingTindakanInput = $(`#existingTindakan-${section}`);
-                    let existingTindakanValue = existingTindakanInput.val();
-
-                    if (existingTindakanValue) {
-                        try {
-                            let tindakanArray = JSON.parse(existingTindakanValue);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        } catch (e) {
-                            let tindakanArray = existingTindakanValue.split(',').map(t => t.trim()).filter(
-                                t => t);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        }
-                    }
-                },
-
-                // Update selected
-                updateSelectedInterventions: function(dataArr, tindakanListEl) {
-                    let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-                    let existingTindakan = elListTindakan.find('.selected-item span')
+                if (append) {
+                    currentItems = listEl.find('.circulation-item span')
                         .map(function() {
                             return $(this).text().trim();
-                        })
-                        .get();
+                        }).get();
+                }
 
-                    let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
+                let allItems = [...new Set([...currentItems, ...dataArr])];
+                let html = '';
 
-                    let listHtml = '';
-                    let jsonArray = [];
-                    allTindakan.forEach(tindakan => {
-                        if (tindakan.trim()) {
-                            jsonArray.push(tindakan);
-                            listHtml += `
-                                <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                                    <span>${tindakan}</span>
-                                    <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
+                if (allItems.length > 0) {
+                    allItems.forEach(item => {
+                        if (item.trim()) {
+                            html += `
+                                <div class="circulation-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-delete-circulation text-danger p-0">
                                         <i class="ti-close"></i>
                                     </button>
-                                    <input type="hidden" name="${tindakanListEl}_tindakan[]" value='${JSON.stringify(jsonArray)}'>
                                 </div>`;
                         }
                     });
 
-                    elListTindakan.html(listHtml);
+                    html += `<input type="hidden" name="circulation_tindakan" value='${JSON.stringify(allItems)}'>`;
                 }
-            };
 
-            // Initialize
-            circulationInterventionManager.init();
+                listEl.html(html);
+                circulationState = allItems;
+            }
+
+            // Handle checkbox changes
+            $('#tindakanKeperawatanCirculationModal .form-check-input').change(function() {
+                let modal = $(this).closest('.modal');
+                let selected = [];
+
+                modal.find('.form-check-input:checked').each(function() {
+                    selected.push($(this).val());
+                });
+
+                updateCirculation(selected, false);
+            });
+
+            // Save from modal
+            $('.btn-save-circulation').click(function() {
+                let modal = $(this).closest('.modal');
+                modal.modal('hide');
+            });
+
+            // Handle item removal
+            $(document).on('click', '.btn-delete-circulation', function() {
+                const item = $(this).closest('.circulation-item');
+                const text = item.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox
+                $(`#tindakanKeperawatanCirculationModal .form-check-input[value="${text}"]`).prop('checked', false);
+
+                // Update state and display
+                circulationState = circulationState.filter(t => t !== text);
+                updateCirculation(circulationState, false);
+            });
+
+            // Initialize existing data
+            function initializeCirculation() {
+                const existing = $('#existingTindakan-circulation').val();
+
+                if (existing) {
+                    try {
+                        const parsed = JSON.parse(existing);
+                        if (Array.isArray(parsed)) {
+                            circulationState = parsed;
+                            updateCirculation(parsed, false);
+
+                            parsed.forEach(item => {
+                                const checkbox = $(`#tindakanKeperawatanCirculationModal .form-check-input[value="${item}"]`);
+                                if (checkbox.length) {
+                                    checkbox.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error parsing circulation data:', error);
+                    }
+                }
+            }
+
+            // Reset modal when closed
+            $('#tindakanKeperawatanCirculationModal').on('hidden.bs.modal', function() {
+                const modal = $(this);
+                if (circulationState.length === 0) {
+                    modal.find('.form-check-input').prop('checked', false);
+                }
+            });
+
+            // Handle form submission
+            $('#asesmenForm').on('submit', function(e) {
+                if (circulationState.length > 0) {
+                    const input = $('input[name="circulation_tindakan"]');
+                    if (!input.length) {
+                        $(this).append(`<input type="hidden" name="circulation_tindakan" value='${JSON.stringify(circulationState)}'>`);
+                    }
+                }
+            });
+
+            // Initialize on page load
+            initializeCirculation();
         });
 
         // 4. Status Disability
         $(document).ready(function() {
-            const disabilityInterventionManager = {
-                init: function() {
-                    let sections = ['disability'];
+            // Initialize state
+            let disabilityState = [];
 
-                    sections.forEach(section => {
-                        this.initExistingInterventions(section);
-                        this.setupEventListeners(section);
-                    });
+            // Handle modal show
+            $('.btn-tindakan-disability').click(function() {
+                let target = $(this).data('bs-target');
+                $(target).modal('show');
+            });
 
-                    $('.diagnosis-row input[type="radio"]').prop('disabled', true);
-                },
+            // Update disability list
+            function updateDisability(dataArr, append = false) {
+                const listEl = $('#selectedTindakanList-disability');
+                let currentItems = [];
 
-                // Setup event listeners
-                setupEventListeners: function(section) {
-                    $(`.btn-tindakan-keperawatan[data-bs-target="#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal"]`)
-                        .on('click', function() {
-                            let target = $(this).attr('data-bs-target');
-                            $(target).modal('show');
-                        });
-
-                    // Save
-                    $(`#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal .btn-save-tindakan-keperawatan`)
-                        .on('click', function() {
-                            let modal = $(this).closest('.modal');
-                            let selectedTindakanArr = [];
-
-                            modal.find('.form-check-input:checked').each(function() {
-                                selectedTindakanArr.push($(this).val());
-                            });
-
-                            // Update
-                            disabilityInterventionManager.updateSelectedInterventions(
-                                selectedTindakanArr, section);
-                            modal.modal('hide');
-                        });
-
-                    // Remove
-                    $(`#selectedTindakanList-${section}`).on('click', '.btn-del-tindakan-keperawatan-list',
-                        function() {
-                            $(this).closest('.selected-item').remove();
-                        });
-
-                    // Diagnosis checkbox
-                    $('.diagnose-prwt-checkbox').change(function() {
-                        let diagnosisWrap = $(this).closest('.diagnosis-row');
-                        let radioInputs = diagnosisWrap.find('input[type="radio"]');
-
-                        if ($(this).is(':checked')) {
-                            radioInputs.prop('disabled', false);
-                            radioInputs.prop('required', false);
-                        } else {
-                            radioInputs.prop('disabled', true);
-                            radioInputs.prop('checked', false);
-                            radioInputs.prop('required', false);
-                        }
-                    });
-                },
-
-                // Initialize
-                initExistingInterventions: function(section) {
-                    let existingTindakanInput = $(`#existingTindakan-${section}`);
-                    let existingTindakanValue = existingTindakanInput.val();
-
-                    if (existingTindakanValue) {
-                        try {
-                            let tindakanArray = JSON.parse(existingTindakanValue);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        } catch (e) {
-                            let tindakanArray = existingTindakanValue.split(',').map(t => t.trim()).filter(
-                                t => t);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        }
-                    }
-                },
-
-                // Update
-                updateSelectedInterventions: function(dataArr, tindakanListEl) {
-                    let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-                    let existingTindakan = elListTindakan.find('.selected-item span')
+                if (append) {
+                    currentItems = listEl.find('.disability-item span')
                         .map(function() {
                             return $(this).text().trim();
-                        })
-                        .get();
+                        }).get();
+                }
 
-                    let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
+                let allItems = [...new Set([...currentItems, ...dataArr])];
+                let html = '';
 
-                    let listHtml = '';
-                    let jsonArray = [];
-                    allTindakan.forEach(tindakan => {
-                        if (tindakan.trim()) {
-                            jsonArray.push(tindakan);
-                            listHtml += `
-                                <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                                    <span>${tindakan}</span>
-                                    <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
+                if (allItems.length > 0) {
+                    allItems.forEach(item => {
+                        if (item.trim()) {
+                            html += `
+                                <div class="disability-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-delete-disability text-danger p-0">
                                         <i class="ti-close"></i>
                                     </button>
-                                    <input type="hidden" name="${tindakanListEl}_tindakan_keperawatan[]" value='${JSON.stringify(jsonArray)}'>
                                 </div>`;
                         }
                     });
 
-                    elListTindakan.html(listHtml);
+                    html += `<input type="hidden" name="disability_tindakan" value='${JSON.stringify(allItems)}'>`;
                 }
-            };
 
-            // Initialize
-            disabilityInterventionManager.init();
+                listEl.html(html);
+                disabilityState = allItems;
+            }
+
+            // Handle checkbox changes
+            $('#tindakanKeperawatanDisabilityModal .form-check-input').change(function() {
+                let modal = $(this).closest('.modal');
+                let selected = [];
+
+                modal.find('.form-check-input:checked').each(function() {
+                    selected.push($(this).val());
+                });
+
+                updateDisability(selected, false);
+            });
+
+            // Save from modal
+            $('.btn-save-disability').click(function() {
+                let modal = $(this).closest('.modal');
+                modal.modal('hide');
+            });
+
+            // Handle item removal
+            $(document).on('click', '.btn-delete-disability', function() {
+                const item = $(this).closest('.disability-item');
+                const text = item.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox
+                $(`#tindakanKeperawatanDisabilityModal .form-check-input[value="${text}"]`).prop('checked', false);
+
+                // Update state and display
+                disabilityState = disabilityState.filter(t => t !== text);
+                updateDisability(disabilityState, false);
+            });
+
+            // Initialize existing data
+            function initializeDisability() {
+                const existing = $('#existingTindakan-disability').val();
+
+                if (existing) {
+                    try {
+                        const parsed = JSON.parse(existing);
+                        if (Array.isArray(parsed)) {
+                            disabilityState = parsed;
+                            updateDisability(parsed, false);
+
+                            parsed.forEach(item => {
+                                const checkbox = $(`#tindakanKeperawatanDisabilityModal .form-check-input[value="${item}"]`);
+                                if (checkbox.length) {
+                                    checkbox.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error parsing disability data:', error);
+                    }
+                }
+            }
+
+            // Reset modal when closed
+            $('#tindakanKeperawatanDisabilityModal').on('hidden.bs.modal', function() {
+                const modal = $(this);
+                if (disabilityState.length === 0) {
+                    modal.find('.form-check-input').prop('checked', false);
+                }
+            });
+
+            // Handle form submission
+            $('#asesmenForm').on('submit', function(e) {
+                if (disabilityState.length > 0) {
+                    const input = $('input[name="disability_tindakan"]');
+                    if (!input.length) {
+                        $(this).append(`<input type="hidden" name="disability_tindakan" value='${JSON.stringify(disabilityState)}'>`);
+                    }
+                }
+            });
+
+            // Initialize on page load
+            initializeDisability();
         });
 
         // 5. Status Exposure
         $(document).ready(function() {
-            const exposureInterventionManager = {
-                init: function() {
-                    let sections = ['exposure'];
+            // Initialize state
+            let exposureState = [];
 
-                    sections.forEach(section => {
-                        this.initExistingInterventions(section);
-                        this.setupEventListeners(section);
-                    });
-                },
+            // Handle modal show
+            $('.btn-tindakan-exposure').click(function() {
+                let target = $(this).data('bs-target');
+                $(target).modal('show');
+            });
 
-                setupEventListeners: function(section) {
-                    $(`.btn-tindakan-keperawatan[data-bs-target="#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal"]`)
-                        .on('click', function() {
-                            let target = $(this).attr('data-bs-target');
-                            $(target).modal('show');
-                        });
+            // Update exposure list
+            function updateExposure(dataArr, append = false) {
+                const listEl = $('#selectedTindakanList-exposure');
+                let currentItems = [];
 
-                    $(`#tindakanKeperawatan${section.charAt(0).toUpperCase() + section.slice(1)}Modal .btn-save-tindakan-keperawatan`)
-                        .on('click', function() {
-                            let modal = $(this).closest('.modal');
-                            let selectedTindakanArr = [];
-
-                            modal.find('.form-check-input:checked').each(function() {
-                                selectedTindakanArr.push($(this).val());
-                            });
-
-                            exposureInterventionManager.updateSelectedInterventions(selectedTindakanArr,
-                                section);
-                            modal.modal('hide');
-                        });
-
-                    $(`#selectedTindakanList-${section}`).on('click', '.btn-del-tindakan-keperawatan-list',
-                        function() {
-                            $(this).closest('.selected-item').remove();
-                        });
-                },
-
-                initExistingInterventions: function(section) {
-                    let existingTindakanInput = $(`#existingTindakan-${section}`);
-                    let existingTindakanValue = existingTindakanInput.val();
-
-                    if (existingTindakanValue) {
-                        try {
-                            let tindakanArray = JSON.parse(existingTindakanValue);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        } catch (e) {
-                            let tindakanArray = existingTindakanValue.split(',').map(t => t.trim()).filter(
-                                t => t);
-                            this.updateSelectedInterventions(tindakanArray, section);
-                        }
-                    }
-                },
-
-                updateSelectedInterventions: function(dataArr, tindakanListEl) {
-                    let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-                    let existingTindakan = elListTindakan.find('.selected-item span')
+                if (append) {
+                    currentItems = listEl.find('.exposure-item span')
                         .map(function() {
                             return $(this).text().trim();
-                        })
-                        .get();
+                        }).get();
+                }
 
-                    let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
+                let allItems = [...new Set([...currentItems, ...dataArr])];
+                let html = '';
 
-                    let listHtml = '';
-                    let jsonArray = [];
-                    allTindakan.forEach(tindakan => {
-                        if (tindakan.trim()) {
-                            jsonArray.push(tindakan);
-                            listHtml += `
-                            <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                                <span>${tindakan}</span>
-                                <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
-                                    <i class="ti-close"></i>
-                                </button>
-                                <input type="hidden" name="${tindakanListEl}_tindakan_keperawatan[]" value='${JSON.stringify(jsonArray)}'>
-                            </div>`;
+                if (allItems.length > 0) {
+                    allItems.forEach(item => {
+                        if (item.trim()) {
+                            html += `
+                                <div class="exposure-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-delete-exposure text-danger p-0">
+                                        <i class="ti-close"></i>
+                                    </button>
+                                </div>`;
                         }
                     });
 
-                    elListTindakan.html(listHtml);
+                    html += `<input type="hidden" name="exposure_tindakan" value='${JSON.stringify(allItems)}'>`;
                 }
-            };
 
-            exposureInterventionManager.init();
+                listEl.html(html);
+                exposureState = allItems;
+            }
+
+            // Handle checkbox changes
+            $('#tindakanKeperawatanExposureModal .form-check-input').change(function() {
+                let modal = $(this).closest('.modal');
+                let selected = [];
+
+                modal.find('.form-check-input:checked').each(function() {
+                    selected.push($(this).val());
+                });
+
+                updateExposure(selected, false);
+            });
+
+            // Save from modal
+            $('.btn-save-exposure').click(function() {
+                let modal = $(this).closest('.modal');
+                modal.modal('hide');
+            });
+
+            // Handle item removal
+            $(document).on('click', '.btn-delete-exposure', function() {
+                const item = $(this).closest('.exposure-item');
+                const text = item.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox
+                $(`#tindakanKeperawatanExposureModal .form-check-input[value="${text}"]`).prop('checked', false);
+
+                // Update state and display
+                exposureState = exposureState.filter(t => t !== text);
+                updateExposure(exposureState, false);
+            });
+
+            // Initialize existing data
+            function initializeExposure() {
+                const existing = $('#existingTindakan-exposure').val();
+
+                if (existing) {
+                    try {
+                        const parsed = JSON.parse(existing);
+                        if (Array.isArray(parsed)) {
+                            exposureState = parsed;
+                            updateExposure(parsed, false);
+
+                            parsed.forEach(item => {
+                                const checkbox = $(`#tindakanKeperawatanExposureModal .form-check-input[value="${item}"]`);
+                                if (checkbox.length) {
+                                    checkbox.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error parsing exposure data:', error);
+                    }
+                }
+            }
+
+            // Reset modal when closed
+            $('#tindakanKeperawatanExposureModal').on('hidden.bs.modal', function() {
+                const modal = $(this);
+                if (exposureState.length === 0) {
+                    modal.find('.form-check-input').prop('checked', false);
+                }
+            });
+
+            // Handle form submission
+            $('#asesmenForm').on('submit', function(e) {
+                if (exposureState.length > 0) {
+                    const input = $('input[name="exposure_tindakan"]');
+                    if (!input.length) {
+                        $(this).append(`<input type="hidden" name="exposure_tindakan" value='${JSON.stringify(exposureState)}'>`);
+                    }
+                }
+            });
+
+            // Initialize on page load
+            initializeExposure();
         });
 
         // 7. Risiko Jatuh Tindakan
         $(document).ready(function() {
-        // Fungsi untuk inisialisasi tindakan yang sudah ada
-        function initExistingTindakan() {
-            let existingTindakanInput = $('#existingTindakan-risikojatuh');
-            let existingTindakanValue = existingTindakanInput.val();
+            // Initialize state
+            let risikoJatuhState = [];
 
-            if (existingTindakanValue) {
-                try {
-                    let tindakanArray = JSON.parse(existingTindakanValue);
-                    updateSelectedTindakan(tindakanArray, 'risikojatuh');
-                } catch (e) {
-                    let tindakanArray = existingTindakanValue.split(',')
-                        .map(t => t.trim())
-                        .filter(t => t);
-                    updateSelectedTindakan(tindakanArray, 'risikojatuh');
+            // Handle modal show
+            $('.btn-tindakan-keperawatan[data-section="risikojatuh"]').click(function() {
+                let target = $(this).data('bs-target');
+                $(target).modal('show');
+            });
+
+            // Update risiko jatuh list
+            function updateRisikoJatuh(dataArr, append = false) {
+                const listEl = $('#selectedTindakanList-risikojatuh');
+                let currentItems = [];
+
+                if (append) {
+                    currentItems = listEl.find('.risikojatuh-item span')
+                        .map(function() {
+                            return $(this).text().trim();
+                        }).get();
+                }
+
+                let allItems = [...new Set([...currentItems, ...dataArr])];
+                let html = '';
+
+                if (allItems.length > 0) {
+                    allItems.forEach(item => {
+                        if (item.trim()) {
+                            html += `
+                                <div class="risikojatuh-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
+                                    <span>${item}</span>
+                                    <button type="button" class="btn btn-sm btn-delete-risikojatuh text-danger p-0">
+                                        <i class="ti-close"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    });
+
+                    html += `<input type="hidden" name="risik_jatuh_tindakan" value='${JSON.stringify(allItems)}'>`;
+                }
+
+                listEl.html(html);
+                risikoJatuhState = allItems;
+            }
+
+            // Handle checkbox changes
+            $('#tindakanKeperawatanRisikoJatuhModal .form-check-input').change(function() {
+                let modal = $(this).closest('.modal');
+                let selected = [];
+
+                // Special handling for "Tidak ada intervensi"
+                if ($(this).val() === "Tidak ada intervensi" && $(this).is(':checked')) {
+                    // Uncheck all other checkboxes
+                    modal.find('.form-check-input').not(this).prop('checked', false);
+                    selected = ["Tidak ada intervensi"];
+                } else if ($(this).is(':checked')) {
+                    // If checking any other option, uncheck "Tidak ada intervensi"
+                    modal.find('#intervensiRisikoJatuh4').prop('checked', false);
+
+                    // Collect all checked items
+                    modal.find('.form-check-input:checked').each(function() {
+                        selected.push($(this).val());
+                    });
+                } else {
+                    // Normal collection of checked items
+                    modal.find('.form-check-input:checked').each(function() {
+                        selected.push($(this).val());
+                    });
+                }
+
+                updateRisikoJatuh(selected, false);
+            });
+
+            // Save from modal
+            $('.btn-save-tindakan-keperawatan[data-section="risikojatuh"]').click(function() {
+                let modal = $(this).closest('.modal');
+                modal.modal('hide');
+            });
+
+            // Handle item removal
+            $(document).on('click', '.btn-delete-risikojatuh', function() {
+                const item = $(this).closest('.risikojatuh-item');
+                const text = item.find('span').text().trim();
+
+                // Uncheck the corresponding checkbox
+                $(`#tindakanKeperawatanRisikoJatuhModal .form-check-input[value="${text}"]`).prop('checked', false);
+
+                // Update state and display
+                risikoJatuhState = risikoJatuhState.filter(t => t !== text);
+                updateRisikoJatuh(risikoJatuhState, false);
+            });
+
+            // Initialize existing data
+            function initializeRisikoJatuh() {
+                const existing = $('#existingTindakan-risikojatuh').val();
+
+                if (existing) {
+                    try {
+                        const parsed = JSON.parse(existing);
+                        if (Array.isArray(parsed)) {
+                            risikoJatuhState = parsed;
+                            updateRisikoJatuh(parsed, false);
+
+                            parsed.forEach(item => {
+                                const checkbox = $(`#tindakanKeperawatanRisikoJatuhModal .form-check-input[value="${item}"]`);
+                                if (checkbox.length) {
+                                    checkbox.prop('checked', true);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error parsing risiko jatuh data:', error);
+                    }
                 }
             }
-        }
 
-        // Event untuk tombol tambah
-        $('.btn-tindakan-keperawatan').click(function(e) {
-            let target = $(this).attr('data-bs-target');
-            $(target).modal('show');
-        });
-
-        // Event untuk tombol simpan di modal
-        $('.btn-save-tindakan-keperawatan').click(function(e) {
-            let section = $(this).attr('data-section');
-            let modal = $(this).closest('.modal');
-            let selectedTindakanArr = [];
-
-            // Mengumpulkan tindakan yang dipilih
-            modal.find('.form-check-input:checked').each(function() {
-                selectedTindakanArr.push($(this).val());
-            });
-
-            // Update tampilan tindakan
-            updateSelectedTindakan(selectedTindakanArr, section);
-            modal.modal('hide');
-        });
-
-        // Fungsi untuk update tampilan tindakan yang dipilih
-        function updateSelectedTindakan(dataArr, tindakanListEl) {
-            let elListTindakan = $(`#selectedTindakanList-${tindakanListEl}`);
-            let existingTindakan = elListTindakan.find('.selected-item span')
-                .map(function() {
-                    return $(this).text().trim();
-                })
-                .get();
-
-            // Gabungkan dengan yang sudah ada
-            let allTindakan = [...new Set([...dataArr, ...existingTindakan])];
-
-            let listHtml = '';
-            let jsonArray = [];
-
-            allTindakan.forEach(tindakan => {
-                if (tindakan.trim()) {
-                    jsonArray.push(tindakan);
-                    listHtml += `
-                        <div class="selected-item d-flex align-items-center justify-content-between gap-2 bg-light p-2 rounded">
-                            <span>${tindakan}</span>
-                            <button type="button" class="btn btn-sm btn-del-tindakan-keperawatan-list text-danger p-0">
-                                <i class="ti-close"></i>
-                            </button>
-                            <input type="hidden" name="risik_jatuh_tindakan[]" value='${tindakan}'>
-                        </div>`;
+            // Reset modal when closed
+            $('#tindakanKeperawatanRisikoJatuhModal').on('hidden.bs.modal', function() {
+                const modal = $(this);
+                if (risikoJatuhState.length === 0) {
+                    modal.find('.form-check-input').prop('checked', false);
                 }
             });
 
-            elListTindakan.html(listHtml);
-        }
+            // Handle form submission
+            $('#asesmenForm').on('submit', function(e) {
+                if (risikoJatuhState.length > 0) {
+                    const input = $('input[name="risik_jatuh_tindakan"]');
+                    if (!input.length) {
+                        $(this).append(`<input type="hidden" name="risik_jatuh_tindakan" value='${JSON.stringify(risikoJatuhState)}'>`);
+                    }
+                }
+            });
 
-        // Event untuk tombol hapus tindakan
-        $(document).on('click', '.btn-del-tindakan-keperawatan-list', function() {
-            $(this).closest('.selected-item').remove();
+            // Initialize on page load
+            initializeRisikoJatuh();
         });
-
-        // Inisialisasi saat halaman dimuat
-        initExistingTindakan();
-    });
 
         // 7. Resiko Jantung
         // Definisi forms untuk skor dan tipe
@@ -1012,7 +1255,6 @@
                 if (selectedValue) {
                     // Tampilkan form yang sesuai
                     showSelectedForm(selectedValue);
-
                     // Hitung nilai awal berdasarkan data yang ada
                     calculateInitialValues(selectedValue);
                 }
@@ -1026,13 +1268,10 @@
                         break;
                     case '2':
                         calculateMNAScore();
-                        initializeBMICalculation(true); // true untuk mode edit
+                        initializeBMICalculation(true);
                         break;
                     case '3':
                         calculateStrongKidsScore();
-                        break;
-                    case '4':
-                        calculateNRSScore();
                         break;
                 }
             }
@@ -1041,6 +1280,16 @@
             nutritionSelect.addEventListener('change', function() {
                 const selectedValue = this.value;
                 showSelectedForm(selectedValue);
+
+                // Reset dan sembunyikan semua alert kesimpulan
+                document.querySelectorAll('.risk-indicators .alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+
+                // Kalkulasi ulang nilai sesuai form yang dipilih
+                if (selectedValue !== '5') {
+                    calculateInitialValues(selectedValue);
+                }
             });
 
             // Fungsi untuk menampilkan form yang dipilih
@@ -1058,7 +1307,6 @@
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'
                     });
-                    document.getElementById('cannot-assess').value = 'tidak ada status gizi';
                     return;
                 }
 
@@ -1066,8 +1314,7 @@
                 const formMapping = {
                     '1': 'mst',
                     '2': 'mna',
-                    '3': 'strong-kids',
-                    '4': 'nrs'
+                    '3': 'strong-kids'
                 };
 
                 const formId = formMapping[selectedValue];
@@ -1077,6 +1324,35 @@
                         selectedForm.style.display = 'block';
                         initializeFormListeners(formId);
                     }
+                }
+            }
+
+            // Inisialisasi listener untuk setiap form
+            function initializeFormListeners(formId) {
+                const form = document.getElementById(formId);
+                if (!form) return;
+
+                // Tambahkan event listener untuk semua select dalam form
+                const selects = form.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.addEventListener('change', () => {
+                        switch(formId) {
+                            case 'mst':
+                                calculateMSTScore();
+                                break;
+                            case 'mna':
+                                calculateMNAScore();
+                                break;
+                            case 'strong-kids':
+                                calculateStrongKidsScore();
+                                break;
+                        }
+                    });
+                });
+
+                // Khusus untuk MNA, initialize BMI calculation
+                if (formId === 'mna') {
+                    initializeBMICalculation();
                 }
             }
 
@@ -1094,6 +1370,8 @@
                         const heightInMeters = height / 100;
                         const bmi = weight / (heightInMeters * heightInMeters);
                         bmiInput.value = bmi.toFixed(2);
+                        // Trigger MNA calculation after BMI update
+                        calculateMNAScore();
                     }
                 }
 
@@ -1101,7 +1379,6 @@
                     weightInput.addEventListener('input', calculateBMI);
                     heightInput.addEventListener('input', calculateBMI);
 
-                    // Hitung BMI saat edit jika data sudah ada
                     if (isEdit && weightInput.value && heightInput.value) {
                         calculateBMI();
                     }
@@ -1111,6 +1388,8 @@
             // Fungsi perhitungan MST dengan dukungan edit
             function calculateMSTScore() {
                 const form = document.getElementById('mst');
+                if (!form) return;
+
                 const selects = form.querySelectorAll('select');
                 let total = 0;
 
@@ -1132,11 +1411,11 @@
                 // Update tampilan alert
                 const conclusions = form.querySelectorAll('.alert');
                 conclusions.forEach(alert => {
-                    if ((total <= 1 && alert.classList.contains('alert-success')) ||
-                        (total >= 2 && alert.classList.contains('alert-warning'))) {
-                        alert.style.display = 'block';
-                    } else {
-                        alert.style.display = 'none';
+                    if (alert.classList.contains('alert-success')) {
+                        alert.style.display = total <= 1 ? 'block' : 'none';
+                    }
+                    if (alert.classList.contains('alert-warning')) {
+                        alert.style.display = total >= 2 ? 'block' : 'none';
                     }
                 });
             }
@@ -1144,6 +1423,8 @@
             // Fungsi perhitungan MNA dengan dukungan edit
             function calculateMNAScore() {
                 const form = document.getElementById('mna');
+                if (!form) return;
+
                 const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
                 let total = 0;
 
@@ -1155,23 +1436,80 @@
                 });
 
                 // Update kesimpulan
-                const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko' : '≤ 11 Beresiko malnutrisi';
+                const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko Malnutrisi' : '≤ 11 Beresiko Malnutrisi';
                 const kesimpulanInput = document.getElementById('gizi_mna_kesimpulan');
+                const conclusionDiv = document.getElementById('mnaConclusion');
 
                 if (kesimpulanInput) {
                     kesimpulanInput.value = kesimpulan;
+                }
 
-                    // Update tampilan kesimpulan
-                    const conclusionDiv = document.getElementById('mnaConclusion');
-                    if (conclusionDiv) {
-                        const alertClass = total >= 12 ? 'alert-success' : 'alert-warning';
-                        conclusionDiv.querySelector(`.alert-${alertClass}`).style.display = 'block';
+                if (conclusionDiv) {
+                    const successAlert = conclusionDiv.querySelector('.alert-success');
+                    const warningAlert = conclusionDiv.querySelector('.alert-warning');
+
+                    if (successAlert && warningAlert) {
+                        successAlert.style.display = total >= 12 ? 'block' : 'none';
+                        warningAlert.style.display = total < 12 ? 'block' : 'none';
                     }
                 }
             }
 
-            // Panggil fungsi inisialisasi untuk mode edit
+            // Fungsi perhitungan Strong Kids
+            function calculateStrongKidsScore() {
+                const form = document.getElementById('strong-kids');
+                if (!form) return;
+
+                const selects = form.querySelectorAll('select');
+                let total = 0;
+
+                selects.forEach(select => {
+                    if (select.value) {
+                        total += parseInt(select.value);
+                    }
+                });
+
+                const conclusionDiv = document.getElementById('strongKidsConclusion');
+                const kesimpulanInput = document.getElementById('gizi_strong_kesimpulan');
+
+                let kesimpulan = '';
+                if (total === 0) {
+                    kesimpulan = 'Beresiko rendah';
+                } else if (total >= 1 && total <= 3) {
+                    kesimpulan = 'Beresiko sedang';
+                } else {
+                    kesimpulan = 'Beresiko Tinggi';
+                }
+
+                if (kesimpulanInput) {
+                    kesimpulanInput.value = kesimpulan;
+                }
+
+                if (conclusionDiv) {
+                    const successAlert = conclusionDiv.querySelector('.alert-success');
+                    const warningAlert = conclusionDiv.querySelector('.alert-warning');
+                    const dangerAlert = conclusionDiv.querySelector('.alert-danger');
+
+                    if (successAlert && warningAlert && dangerAlert) {
+                        successAlert.style.display = total === 0 ? 'block' : 'none';
+                        warningAlert.style.display = (total >= 1 && total <= 3) ? 'block' : 'none';
+                        dangerAlert.style.display = total >= 4 ? 'block' : 'none';
+                    }
+                }
+            }
+
+            // Inisialisasi saat halaman dimuat
             initializeEditMode();
+
+            // Tambahkan event listeners untuk semua input/select
+            document.querySelectorAll('select, input').forEach(element => {
+                element.addEventListener('change', function() {
+                    const formType = nutritionSelect.value;
+                    if (formType) {
+                        calculateInitialValues(formType);
+                    }
+                });
+            });
         });
 
         // 14. Discharge Planning
@@ -1183,91 +1521,53 @@
             const kesimpulanValue = document.getElementById('kesimpulan_value');
             const diagnosisMedis = document.getElementById('diagnosis_medis');
 
-            // Function to validate diagnosis medis
-            function validateDiagnosisMedis() {
-                const value = diagnosisMedis.value.trim();
-                if (value === '') {
-                    diagnosisMedis.classList.add('is-invalid');
-                    diagnosisMedis.setCustomValidity('Harap isi diagnosis medis');
-                    return false;
-                } else {
-                    diagnosisMedis.classList.remove('is-invalid');
-                    diagnosisMedis.setCustomValidity('');
-                    return true;
-                }
-            }
-
             // Function to update conclusion
             function updateKesimpulan() {
-                const semuaTerisi = Array.from(selects).every(select => select.value !== '');
-
                 // Reset display first
                 kesimpulanKhusus.style.display = 'none';
                 kesimpulanTidakKhusus.style.display = 'none';
                 kesimpulanValue.value = '';
 
-                if (semuaTerisi) {
-                    const jumlahYa = Array.from(selects).filter(select => select.value === 'ya').length;
+                // Hitung berapa banyak field yang diisi dengan 'ya'
+                const jumlahYa = Array.from(selects)
+                    .filter(select => select.value === 'ya')
+                    .length;
 
-                    if (jumlahYa > 0) {
-                        kesimpulanKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'butuh_rencana_khusus';
-                    } else {
-                        kesimpulanTidakKhusus.style.display = 'block';
-                        kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
-                    }
+                if (jumlahYa > 0) {
+                    kesimpulanKhusus.style.display = 'block';
+                    kesimpulanValue.value = 'butuh_rencana_khusus';
+                } else {
+                    kesimpulanTidakKhusus.style.display = 'block';
+                    kesimpulanValue.value = 'tidak_butuh_rencana_khusus';
                 }
-            }
-
-            // Function to validate form
-            function validateForm() {
-                const diagnosisValid = validateDiagnosisMedis();
-                const selectsValid = Array.from(selects).every(select => select.value !== '');
-                return diagnosisValid && selectsValid;
             }
 
             // Event Listeners
             diagnosisMedis.addEventListener('input', function() {
-                validateDiagnosisMedis();
-                this.classList.toggle('is-invalid', !validateDiagnosisMedis());
+                // Tidak perlu validasi wajib
             });
 
             selects.forEach(select => {
                 select.addEventListener('change', function() {
                     updateKesimpulan();
-                    this.classList.toggle('is-invalid', !this.value);
                 });
             });
 
             // Initial setup for edit mode
             function setupInitialState() {
-                // Validate diagnosis medis
-                validateDiagnosisMedis();
-
-                // Check existing select values and update conclusion
-                const hasExistingValues = Array.from(selects).some(select => select.value !== '');
+                // Cek apakah ada nilai yang sudah dipilih
+                const hasExistingValues = Array.from(selects).some(select => select.value === 'ya');
                 if (hasExistingValues) {
                     updateKesimpulan();
                 }
-
-                // Add invalid class to empty required selects
-                selects.forEach(select => {
-                    select.classList.toggle('is-invalid', !select.value);
-                });
             }
 
             // Form submission handler
             const form = diagnosisMedis.closest('form');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    if (!validateForm()) {
-                        e.preventDefault();
-                        // Show validation messages
-                        validateDiagnosisMedis();
-                        selects.forEach(select => {
-                            select.classList.toggle('is-invalid', !select.value);
-                        });
-                    }
+                    // Hapus validasi paksa
+                    // Biarkan form submit tanpa syarat
                 });
             }
 
