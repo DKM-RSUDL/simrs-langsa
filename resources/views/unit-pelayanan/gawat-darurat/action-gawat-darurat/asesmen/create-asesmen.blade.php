@@ -238,7 +238,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-line">
+                                                <div class="form-line" data-triase-vital-sign="{{ $dataMedis->getVitalSign ? $dataMedis->getVitalSign->vital_sign : '' }}">
                                                     <h6>Vital Sign</h6>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -271,7 +271,7 @@
                                                         <div class="col-2 position-relative">
                                                             <label>GCS</label>
                                                             <input type="text" class="form-control" id="gcsValue"
-                                                                name="vital_sign[gcs_display]" value="15" readonly
+                                                                name="vital_sign[gcs_display]" value="0" readonly
                                                                 onclick="openGCSModal()">
                                                             <i class="bi bi-pencil position-absolute"
                                                                 style="top: 50%; right: 10px; transform: translateY(-50%);"
@@ -282,14 +282,14 @@
                                                         <div class="col-4">
                                                             <label>AVPU</label>
                                                             <select class="form-select" name="vital_sign[avpu]">
-                                                                <option selected disabled>Pilih</option>
-                                                                <option>Sadar Baik/Alert : 0</option>
-                                                                <option>Berespon dengan kata-kata/Voice: 1</option>
-                                                                <option>Hanya berespon jika dirangsang nyeri/pain: 2
+                                                                <option selected disabled>--Pilih--</option>
+                                                                <option>Sadar Baik/Alert</option>
+                                                                <option>Berespon dengan kata-kata/Voice</option>
+                                                                <option>Hanya berespon jika dirangsang nyeri/pain
                                                                 </option>
-                                                                <option>Pasien tidak sadar/unresponsive: 3</option>
-                                                                <option>Gelisah atau bingung: 4</option>
-                                                                <option>Acute Confusional States: 5</option>
+                                                                <option>Pasien tidak sadar/unresponsive</option>
+                                                                <option>Gelisah atau bingung</option>
+                                                                <option>Acute Confusional States</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-3">
@@ -303,9 +303,7 @@
                                                                 name="vital_sign[spo2_dengan_o2]">
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="form-line">
                                                     <h6>Antropometri</h6>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -329,6 +327,7 @@
                                                             <input type="number" class="form-control" name="antropometri[imt]" readonly>
                                                         </div>
                                                     </div>
+
                                                 </div>
 
                                                 <div class="form-line">

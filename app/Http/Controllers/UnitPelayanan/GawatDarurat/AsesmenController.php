@@ -34,7 +34,7 @@ class AsesmenController extends Controller
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'getVitalSign'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');

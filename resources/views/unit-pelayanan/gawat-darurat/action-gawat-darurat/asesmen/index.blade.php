@@ -401,6 +401,63 @@
                 return tindakLanjutData ? JSON.stringify(tindakLanjutData) : null;
             };
 
+            function fillVitalSignFromTriase() {
+                const vitalSignContainer = document.querySelector('[data-triase-vital-sign]');
+                const vitalSignData = vitalSignContainer?.dataset.triaseVitalSign;
+                
+                if (vitalSignData) {
+                    try {
+                        const vitalSign = JSON.parse(vitalSignData);
+                        
+                        // Mapping untuk vital sign
+                        const vitalSignMapping = {
+                            'sistole': 'td_sistole',
+                            'diastole': 'td_diastole',
+                            'nadi': 'nadi',
+                            'respiration': 'resp',
+                            'suhu': 'suhu',
+                            'spo2_tanpa_o2': 'spo2_tanpa_o2',
+                            'spo2_dengan_o2': 'spo2_dengan_o2'
+                        };
+
+                        // Isi form vital sign
+                        Object.entries(vitalSignMapping).forEach(([triaseKey, formKey]) => {
+                            const input = document.querySelector(`[name="vital_sign[${formKey}]"]`);
+                            if (input && vitalSign[triaseKey]) {
+                                input.value = vitalSign[triaseKey];
+                            }
+                        });
+
+                        // Mapping untuk antropometri
+                        const antropometriMapping = {
+                            'tinggi_badan': 'tb',
+                            'berat_badan': 'bb'
+                        };
+
+                        // Isi form antropometri
+                        Object.entries(antropometriMapping).forEach(([triaseKey, formKey]) => {
+                            const input = document.querySelector(`[name="antropometri[${formKey}]"]`);
+                            if (input && vitalSign[triaseKey]) {
+                                input.value = vitalSign[triaseKey];
+                                // Trigger event input untuk menghitung IMT dan LPT
+                                input.dispatchEvent(new Event('input'));
+                            }
+                        });
+
+                    } catch (e) {
+                        console.error('Error parsing vital sign data:', e);
+                    }
+                }
+            }
+
+            fillVitalSignFromTriase();
+
+            // Juga panggil saat modal dibuka (jika menggunakan modal)
+            const asesmenModal = document.getElementById('asesmenModal');
+            if (asesmenModal) {
+                asesmenModal.addEventListener('show.bs.modal', fillVitalSignFromTriase);
+            }
+
             // === Kode untuk handle submit form dengan ajax ===
             const form = document.getElementById('asesmenForm');
             const submitButton = document.getElementById('saveForm');

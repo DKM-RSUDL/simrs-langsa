@@ -168,13 +168,14 @@
                                 <div class="col-4">
                                     <label>AVPU</label>
                                     <select class="form-select" name="edit_vital_sign_avpu">
-                                        <option selected disabled>Pilih</option>
-                                        <option>Sadar Baik/Alert : 0</option>
-                                        <option>Berespon dengan kata-kata/Voice: 1</option>
-                                        <option>Hanya berespon jika dirangsang nyeri/pain: 2</option>
-                                        <option>Pasien tidak sadar/unresponsive: 3</option>
-                                        <option>Gelisah atau bingung: 4</option>
-                                        <option>Acute Confusional States: 5</option>
+                                        <option selected disabled>--Pilih--</option>
+                                        <option>Sadar Baik/Alert</option>
+                                        <option>Berespon dengan kata-kata/Voice</option>
+                                        <option>Hanya berespon jika dirangsang nyeri/pain
+                                        </option>
+                                        <option>Pasien tidak sadar/unresponsive</option>
+                                        <option>Gelisah atau bingung</option>
+                                        <option>Acute Confusional States</option>
                                     </select>
                                 </div>
                                 <div class="col-3">

@@ -88,6 +88,12 @@ class Kunjungan extends Model
         return $this->belongsTo(RegistrasrHasil::class, 'kd_pasien', 'kd_pasien');
     }
 
+    public function getVitalSign()
+    {
+        return $this->hasOne(DataTriase::class, 'kd_pasien_triase', 'kd_pasien')
+                    ->whereNull('id_asesmen')  
+                    ->latest('tanggal_triase'); 
+    }
 
     // public function resep()
     // {
