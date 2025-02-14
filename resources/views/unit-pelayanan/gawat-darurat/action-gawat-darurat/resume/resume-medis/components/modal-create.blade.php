@@ -479,8 +479,8 @@
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '11' ? 'checked' : '' }}>
                                             <label for="doa-radio">
                                                 DOA (death on arrival)
-                                                <span id="selected-doa-info" hidden
-                                                    class="text-muted fst-italic small ms-2"></span>
+                                                <span id="selected-doa-info"
+                                                    class="text-muted fst-italic small ms-2" hidden></span>
                                             </label>
                                         </a>
                                     </div>
