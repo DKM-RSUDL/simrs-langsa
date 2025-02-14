@@ -362,7 +362,7 @@
                             <div class="bg-light p-3 border rounded">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="javascript:void(0)" id="btn-tgl-kontrol-ulang"
+                                        {{-- <a href="javascript:void(0)" id="btn-tgl-kontrol-ulang"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="kontrol" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Kontrol ulang, tgl:"
@@ -371,9 +371,9 @@
                                             <label for="kontrol">Kontrol ulang, tgl:<span id="selected-date">
                                                     {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '2' ? $dataResume->rmeResumeDet->tgl_kontrol_ulang : '' }}
                                                 </span></label>
-                                        </a>
+                                        </a> --}}
 
-                                        <a href="javascript:void(0)" id="btn-konsul-rujukan"
+                                        {{-- <a href="javascript:void(0)" id="btn-konsul-rujukan"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="konsul" name="tindak_lanjut_name"
                                                 class="form-check-input me-2" value="Konsul/Rujuk Internal Ke:"
@@ -385,15 +385,22 @@
                                                     {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '4' ? $dataResume->rmeResumeDet->unitRujukanInternal?->nama_unit : '' }}
                                                 </span>
                                             </label>
+                                        </a> --}}
+
+                                        <a href="#" id="btn-rawat-inap"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="rawat" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Rawat Inap" data-code="1"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
+                                            <label for="rawat">Rawat Inap</label>
                                         </a>
 
-                                        <a href="#"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
-                                            id="btnPulang">
-                                            <input type="radio" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Pulang" data-code="6"
-                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '6' ? 'checked' : '' }}>
-                                            <label for="selesai">Pulang <span></span></label>
+                                        <a href="#" id=""
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
+                                            <input type="radio" id="kamar-operasi" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Kamar Operasi" data-code="7"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '7' ? 'checked' : '' }}>
+                                            <label for="kamar-operasi">Kamar Operasi</label>
                                         </a>
 
                                         <a href="javascript:void(0)" id="btn-rs-rujuk-bagian"
@@ -413,18 +420,18 @@
                                             </label>
                                         </a>
 
-                                        <a href="#" id="btn-rawat-inap"
-                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rawat" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rawat Inap" data-code="1"
-                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '1' ? 'checked' : '' }}>
-                                            <label for="rawat">Rawat Inap</label>
+                                        <a href="#"
+                                            class="tindak-lanjut-option d-block mb-2 text-decoration-none"
+                                            id="btnPulang">
+                                            <input type="radio" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Pulang" data-code="6"
+                                                {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '6' ? 'checked' : '' }}>
+                                            <label for="selesai">Pulang <span></span></label>
                                         </a>
 
                                     </div>
 
                                     <div class="col-md-6">
-
                                         <a href="javascript:void(0)" id="btn-berobat-jalanke-poli"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
                                             <input type="radio" id="berobat-jalanke-poli-radio"
