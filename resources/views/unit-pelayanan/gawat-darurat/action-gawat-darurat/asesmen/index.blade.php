@@ -270,6 +270,20 @@
             // === Kode untuk tindak lanjut ===
             let tindakLanjutData = null;
 
+            function updateRawatInapDiagnosis() {
+                const diagnosisRanapInput = document.getElementById('diagnosis_ranap');
+                if (diagnosisRanapInput && window.getDiagnosaData) {
+                    try {
+                        const diagnoses = JSON.parse(window.getDiagnosaData());
+                        if (Array.isArray(diagnoses) && diagnoses.length > 0) {
+                            diagnosisRanapInput.value = diagnoses.join('\n');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing diagnosis data:', error);
+                    }
+                }
+            }
+
             document.querySelectorAll('input[name="tindakLanjut"]').forEach(function(radio) {
                 radio.addEventListener('change', function() {
                     toggleInputFields(this.value);
@@ -298,6 +312,7 @@
                 switch(selectedOption) {
                     case 'rawatInap':
                         document.getElementById('formRawatInap').style.display = 'block';
+                        updateRawatInapDiagnosis();
                         break;
                     case 'kamarOperasi':
                         document.getElementById('formKamarOperasi').style.display = 'block';
@@ -364,7 +379,7 @@
                 tindakLanjutData = {
                     option: selectedOption.value,
                     // Rawat Inap fields
-                    keteranganRawatInap: document.getElementById('tanggalRawatInap')?.value || '',
+                    tanggalRawatInap: document.getElementById('tanggalRawatInap')?.value || '',
                     jamRawatInap: document.getElementById('jamRawatInap')?.value || '',
                     keluhanUtama_ranap: document.getElementById('keluhanUtama_ranap')?.value || '',
                     hasilPemeriksaan_ranap: document.getElementById('hasilPemeriksaan_ranap')?.value || '',

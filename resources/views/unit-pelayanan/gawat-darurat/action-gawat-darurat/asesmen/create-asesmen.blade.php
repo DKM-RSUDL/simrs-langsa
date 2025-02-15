@@ -760,10 +760,10 @@
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        {{-- <div>
+                                                        <div>
                                                             <input type="radio" name="tindakLanjut" value="rawatInap" id="rawatInap"> 
                                                             <label for="rawatInap">Rawat Inap</label>
-                                                        </div> --}}
+                                                        </div>
                                                         {{-- <div>
                                                             <input type="radio" name="tindakLanjut" value="kamarOperasi" id="kamarOperasi">
                                                             <label for="kamarOperasi">Kamar Operasi</label> 
@@ -886,7 +886,7 @@
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label for="keluhanUtama_ranap" class="form-label">Keluhan Utama</label>
+                                                            <label for="keluhanUtama_ranap" class="form-label">Keluhan Utama & Riwayat Penyakit </label>
                                                             <textarea class="form-control" id="keluhanUtama_ranap" name="keluhanUtama_ranap" rows="3"></textarea>
                                                         </div>
 

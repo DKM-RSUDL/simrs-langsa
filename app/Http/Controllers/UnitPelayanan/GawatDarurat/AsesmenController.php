@@ -20,6 +20,7 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\RmeSpri;
 use App\Models\SegalaOrder;
 use App\Models\Unit;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -320,6 +321,36 @@ class AsesmenController extends Controller
 
                 if ($tindakLanjutData && isset($tindakLanjutData['option'])) {
                     switch ($tindakLanjutData['option']) {
+                        case 'rawatInap':
+                            $tindakLanjutDtl->tindak_lanjut_code = 1;
+                            $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
+
+                            $spri = RmeSpri::where('id_asesmen', $id)->first();
+
+                            $spriData = [
+                                'kd_pasien' => $dataMedis->kd_pasien,
+                                'kd_unit' => $dataMedis->kd_unit,
+                                'tgl_masuk' => $dataMedis->tgl_masuk,
+                                'urut_masuk' => $dataMedis->urut_masuk,
+                                'id_asesmen' => $id,
+                                'tanggal_ranap' => $tindakLanjutData['tanggalRawatInap'] ?? '',
+                                'jam_ranap' => $tindakLanjutData['jamRawatInap'] ?? null,
+                                'keluhan_utama' => $tindakLanjutData['keluhanUtama_ranap'] ?? '',
+                                'jalannya_penyakit' => $tindakLanjutData['jalannyaPenyakit_ranap'] ?? '',
+                                'hasil_pemeriksaan' => $tindakLanjutData['hasilPemeriksaan_ranap'] ?? '',
+                                'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? '',
+                                'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? '',
+                                'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? ''
+                            ];
+                            if ($spri) {
+                                // Update data yang sudah ada
+                                $spri->update($spriData);
+                            } else {
+                                // Buat data baru jika belum ada
+                                RmeSpri::create($spriData);
+                            }
+                            break;
+
                         case 'rujukKeluar':
                             $tindakLanjutDtl->tindak_lanjut_code = 5;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rujuk RS Lain';
@@ -731,7 +762,22 @@ class AsesmenController extends Controller
                         case 'rawatInap':
                             $tindakLanjutDtl->tindak_lanjut_code = 1;
                             $tindakLanjutDtl->tindak_lanjut_name = 'Rawat Inap';
-                            $tindakLanjutDtl->keterangan = $tindakLanjutData['keteranganRawatInap'] ?? '';
+
+                            RmeSpri::create([
+                                'kd_pasien' => $dataMedis->kd_pasien,
+                                'kd_unit' => $dataMedis->kd_unit,
+                                'tgl_masuk' => $dataMedis->tgl_masuk,
+                                'urut_masuk' => $dataMedis->urut_masuk,
+                                'id_asesmen' => $asesmen->id,
+                                'tanggal_ranap' => $tindakLanjutData['tanggalRawatInap'] ?? '',
+                                'jam_ranap' => $tindakLanjutData['jamRawatInap'] ?? null,
+                                'keluhan_utama' => $tindakLanjutData['keluhanUtama_ranap'] ?? '',
+                                'jalannya_penyakit' => $tindakLanjutData['jalannyaPenyakit_ranap'] ?? '',
+                                'hasil_pemeriksaan' => $tindakLanjutData['hasilPemeriksaan_ranap'] ?? '',
+                                'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? '',
+                                'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? '',
+                                'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? ''
+                            ]);
                             break;
 
                         case 'kamarOperasi':
