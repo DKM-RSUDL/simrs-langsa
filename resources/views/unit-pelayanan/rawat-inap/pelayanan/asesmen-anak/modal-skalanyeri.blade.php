@@ -53,16 +53,16 @@
                     <h6 class="mb-3">1. WAJAH (FACE)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="1" data-category="wajah">
-                            <label class="form-check-label">Tersenyum tidak ada ekspresi</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="1" data-category="wajah" id="wajah1">
+                            <label class="form-check-label" for="wajah1">Tersenyum tidak ada ekspresi</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="2" data-category="wajah">
-                            <label class="form-check-label">Kadang meringis, mengerutkan kening, menarik diri, kurang merespond dengan baik/ekspresi datar</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="2" data-category="wajah" id="wajah2">
+                            <label class="form-check-label" for="wajah2">Kadang meringis, mengerutkan kening, menarik diri, kurang merespond dengan baik/ekspresi datar</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="3" data-category="wajah">
-                            <label class="form-check-label">Sering cemberut konstan, rahang terkutup, dagu bergetar, kerutan yang dalam di dahi, mata tertutup, mulut terbuka, garing yang dalam disekitar hidung/ bibir</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="3" data-category="wajah" id="wajah3">
+                            <label class="form-check-label" for="wajah3">Sering cemberut konstan, rahang terkutup, dagu bergetar, kerutan yang dalam di dahi, mata tertutup, mulut terbuka, garing yang dalam disekitar hidung/ bibir</label>
                         </div>
                     </div>
                 </div>
@@ -72,16 +72,16 @@
                     <h6 class="mb-3">2. KAKI (LEG)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="1" data-category="kaki">
-                            <label class="form-check-label">Posisi normal atau santai</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="1" data-category="kaki" id="kaki1">
+                            <label class="form-check-label" for="kaki1">Posisi normal atau santai</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="2" data-category="kaki">
-                            <label class="form-check-label">Tidak nyaman, gelisah, tegang, tonus meningkat, kaku, fleksi / ekstensi anggota badan intermiten</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="2" data-category="kaki" id="kaki2">
+                            <label class="form-check-label" for="kaki2">Tidak nyaman, gelisah, tegang, tonus meningkat, kaku, fleksi / ekstensi anggota badan intermiten</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="3" data-category="kaki">
-                            <label class="form-check-label">Menendang atau kaki disusun, hipertonisitas fleksi / ekstensi anggota badan secara berlebihan, tremor</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="3" data-category="kaki" id="kaki3">
+                            <label class="form-check-label" for="kaki3">Menendang atau kaki disusun, hipertonisitas fleksi / ekstensi anggota badan secara berlebihan, tremor</label>
                         </div>
                     </div>
                 </div>
@@ -91,16 +91,16 @@
                     <h6 class="mb-3">3. AKTIVITAS (ACTIVITY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="1" data-category="aktivitas">
-                            <label class="form-check-label">Berbaring dengan tenang, posisi normal, bergerak dengan mudah dan bebas</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="1" data-category="aktivitas" id="aktivitas1">
+                            <label class="form-check-label" for="aktivitas1">Berbaring dengan tenang, posisi normal, bergerak dengan mudah dan bebas</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="2" data-category="aktivitas">
-                            <label class="form-check-label">Menggeliat, menggeser maju mundur, tegang, ragu-ragu untuk bergerak, menjaga, tekanan pada bagian tubuh</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="2" data-category="aktivitas" id="aktivitas2">
+                            <label class="form-check-label" for="aktivitas2">Menggeliat, menggeser maju mundur, tegang, ragu-ragu untuk bergerak, menjaga, tekanan pada bagian tubuh</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="3" data-category="aktivitas">
-                            <label class="form-check-label">Melengkung, kaku, atau menyentak, posisi tetap, goyang, gerakan kepala dari sisi ke sisi, menggosokan bagian tubuh</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="3" data-category="aktivitas" id="aktivitas3">
+                            <label class="form-check-label" for="aktivitas3">Melengkung, kaku, atau menyentak, posisi tetap, goyang, gerakan kepala dari sisi ke sisi, menggosokan bagian tubuh</label>
                         </div>
                     </div>
                 </div>
@@ -110,16 +110,16 @@
                     <h6 class="mb-3">4. MENANGIS (CRY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="1" data-category="menangis">
-                            <label class="form-check-label">Tidak menangis (pada saat terjaga atau saat tidur)</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="1" data-category="menangis" id="menangis1">
+                            <label class="form-check-label" for="menangis1">Tidak menangis (pada saat terjaga atau saat tidur)</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="2" data-category="menangis">
-                            <label class="form-check-label">Erangan atau rengakan, sesekali menangis, mendesah, sesekali mengeluh</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="2" data-category="menangis" id="menangis2">
+                            <label class="form-check-label" for="menangis2">Erangan atau rengakan, sesekali menangis, mendesah, sesekali mengeluh</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="3" data-category="menangis">
-                            <label class="form-check-label">Terus menerus menangis, menjerit, isak tangis, menggerang, menggerarn, sering mengeluh</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="3" data-category="menangis" id="menangis3">
+                            <label class="form-check-label" for="menangis3">Terus menerus menangis, menjerit, isak tangis, menggerang, menggerarn, sering mengeluh</label>
                         </div>
                     </div>
                 </div>
@@ -129,16 +129,16 @@
                     <h6 class="mb-3">5. KONSOLABILITAS (CONSOLABILITY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="1" data-category="konsolabilitas">
-                            <label class="form-check-label">Tenang, santai dan riang</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="1" data-category="konsolabilitas" id="konsolabilitas1">
+                            <label class="form-check-label" for="konsolabilitas1">Tenang, santai dan riang</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="2" data-category="konsolabilitas">
-                            <label class="form-check-label">Perlu diyakinkan dengan sentuhan pelukan, mengajak berbicara, Perhatian dapat dialihkan</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="2" data-category="konsolabilitas" id="konsolabilitas2">
+                            <label class="form-check-label" for="konsolabilitas2">Perlu diyakinkan dengan sentuhan pelukan, mengajak berbicara, Perhatian dapat dialihkan</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="3" data-category="konsolabilitas">
-                            <label class="form-check-label">Sulit untuk dibujuk atau dibuat nyaman</label>
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="3" data-category="konsolabilitas" id="konsolabilitas3">
+                            <label class="form-check-label" for="konsolabilitas3">Sulit untuk dibujuk atau dibuat nyaman</label>
                         </div>
                     </div>
                 </div>
@@ -185,16 +185,16 @@
                     <h6 class="mb-3">1. MENANGIS (CRY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="1" data-category="menangis">
-                            <label class="form-check-label">Tidak menangis atau tangisan tidak melengking</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="1" data-category="menangis" id="cries_menangis1">
+                            <label class="form-check-label" for="cries_menangis1">Tidak menangis atau tangisan tidak melengking</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="2" data-category="menangis">
-                            <label class="form-check-label">Tangisan melengking tetapi mudah dihibur</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="2" data-category="menangis" id="cries_menangis2">
+                            <label class="form-check-label" for="cries_menangis2">Tangisan melengking tetapi mudah dihibur</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="3" data-category="menangis">
-                            <label class="form-check-label">Tangisan melengking dan tidak mudah dihibur</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="menangis[]" value="3" data-category="menangis" id="cries_menangis3">
+                            <label class="form-check-label" for="cries_menangis3">Tangisan melengking dan tidak mudah dihibur</label>
                         </div>
                     </div>
                 </div>
@@ -204,16 +204,16 @@
                     <h6 class="mb-3">2. KEBUTUHAN OKSIGEN (REQUIRES)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="1" data-category="oksigen">
-                            <label class="form-check-label">Tidak membutuhkan oksigen</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="1" data-category="oksigen" id="cries_oksigen1">
+                            <label class="form-check-label" for="cries_oksigen1">Tidak membutuhkan oksigen</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="2" data-category="oksigen">
-                            <label class="form-check-label">Membutuhkan oksigen < 30%</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="2" data-category="oksigen" id="cries_oksigen2">
+                            <label class="form-check-label" for="cries_oksigen2">Membutuhkan oksigen < 30%</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="3" data-category="oksigen">
-                            <label class="form-check-label">Membutuhkan oksigen > 30%</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="oksigen[]" value="3" data-category="oksigen" id="cries_oksigen3">
+                            <label class="form-check-label" for="cries_oksigen3">Membutuhkan oksigen > 30%</label>
                         </div>
                     </div>
                 </div>
@@ -223,16 +223,16 @@
                     <h6 class="mb-3">3. PENINGKATAN TANDA-TANDA VITAL (INCREASED)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="1" data-category="vital">
-                            <label class="form-check-label">Berdenyut jantung dan TD tidak mengalami perubahan</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="1" data-category="vital" id="cries_vital1">
+                            <label class="form-check-label" for="cries_vital1">Berdenyut jantung dan TD tidak mengalami perubahan</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="2" data-category="vital">
-                            <label class="form-check-label">Denyut jantung dan TD meningkata < 20% dari baseline</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="2" data-category="vital" id="cries_vital2">
+                            <label class="form-check-label" for="cries_vital2">Denyut jantung dan TD meningkata < 20% dari baseline</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="3" data-category="vital">
-                            <label class="form-check-label">Denyut jantung dan TD meningkata > 20% dari baseline</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="vital[]" value="3" data-category="vital" id="cries_vital3">
+                            <label class="form-check-label" for="cries_vital3">Denyut jantung dan TD meningkata > 20% dari baseline</label>
                         </div>
                     </div>
                 </div>
@@ -242,16 +242,16 @@
                     <h6 class="mb-3">4. WAJAH (EXPRESSION)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="1" data-category="wajah">
-                            <label class="form-check-label">Tidak ada seringai</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="1" data-category="wajah" id="cries_wajah1">
+                            <label class="form-check-label" for="cries_wajah1">Tidak ada seringai</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="2" data-category="wajah">
-                            <label class="form-check-label">Seringai ada</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="2" data-category="wajah" id="cries_wajah2">
+                            <label class="form-check-label" for="cries_wajah2">Seringai ada</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="3" data-category="wajah">
-                            <label class="form-check-label">Seringai ada dan tidak ada tangisan dengkur</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="wajah[]" value="3" data-category="wajah" id="cries_wajah3">
+                            <label class="form-check-label" for="cries_wajah3">Seringai ada dan tidak ada tangisan dengkur</label>
                         </div>
                     </div>
                 </div>
@@ -261,16 +261,16 @@
                     <h6 class="mb-3">5. SULIT TIDUR (SLEEPLESS)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="1" data-category="tidur">
-                            <label class="form-check-label">Terus menerus tidur</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="1" data-category="tidur" id="cries_tidur1">
+                            <label class="form-check-label" for="cries_tidur1">Terus menerus tidur</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="2" data-category="tidur">
-                            <label class="form-check-label">Terbangun pada interval berulang</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="2" data-category="tidur" id="cries_tidur2">
+                            <label class="form-check-label" for="cries_tidur2">Terbangun pada interval berulang</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="3" data-category="tidur">
-                            <label class="form-check-label">Terjaga/terbangun terus menerus</label>
+                            <input class="form-check-input cries-check" type="checkbox" name="tidur[]" value="3" data-category="tidur" id="cries_tidur3">
+                            <label class="form-check-label" for="cries_tidur3">Terjaga/terbangun terus menerus</label>
                         </div>
                     </div>
                 </div>

@@ -270,6 +270,20 @@
             // === Kode untuk tindak lanjut ===
             let tindakLanjutData = null;
 
+            function updateRawatInapDiagnosis() {
+                const diagnosisRanapInput = document.getElementById('diagnosis_ranap');
+                if (diagnosisRanapInput && window.getDiagnosaData) {
+                    try {
+                        const diagnoses = JSON.parse(window.getDiagnosaData());
+                        if (Array.isArray(diagnoses) && diagnoses.length > 0) {
+                            diagnosisRanapInput.value = diagnoses.join('\n');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing diagnosis data:', error);
+                    }
+                }
+            }
+
             document.querySelectorAll('input[name="tindakLanjut"]').forEach(function(radio) {
                 radio.addEventListener('change', function() {
                     toggleInputFields(this.value);
@@ -298,6 +312,7 @@
                 switch(selectedOption) {
                     case 'rawatInap':
                         document.getElementById('formRawatInap').style.display = 'block';
+                        updateRawatInapDiagnosis();
                         break;
                     case 'kamarOperasi':
                         document.getElementById('formKamarOperasi').style.display = 'block';
@@ -337,8 +352,16 @@
                 'alasan_pulang',
                 'tanggal_rajal',
                 'poli_unit_tujuan',
-                'keteranganRawatInap',
-                'kamarOperasi'
+                'kamarOperasi',
+                'kondisi_pulang',
+                'tanggalRawatInap',
+                'jamRawatInap',
+                'keluhanUtama_ranap',
+                'hasilPemeriksaan_ranap',
+                'jalannyaPenyakit_ranap',
+                'diagnosis_ranap',
+                'tindakan_ranap',
+                'anjuran_ranap'
             ];
 
             formFields.forEach(fieldId => {
@@ -356,7 +379,14 @@
                 tindakLanjutData = {
                     option: selectedOption.value,
                     // Rawat Inap fields
-                    keteranganRawatInap: document.getElementById('keteranganRawatInap')?.value || '',
+                    tanggalRawatInap: document.getElementById('tanggalRawatInap')?.value || '',
+                    jamRawatInap: document.getElementById('jamRawatInap')?.value || '',
+                    keluhanUtama_ranap: document.getElementById('keluhanUtama_ranap')?.value || '',
+                    hasilPemeriksaan_ranap: document.getElementById('hasilPemeriksaan_ranap')?.value || '',
+                    jalannyaPenyakit_ranap: document.getElementById('jalannyaPenyakit_ranap')?.value || '',
+                    diagnosis_ranap: document.getElementById('diagnosis_ranap')?.value || '',
+                    tindakan_ranap: document.getElementById('tindakan_ranap')?.value || '',
+                    anjuran_ranap: document.getElementById('anjuran_ranap')?.value || '',
                     // Kamar Operasi fields
                     kamarOperasi: document.getElementById('kamarOperasi')?.value || '',
                     // Menolak Rawat Inap fields
@@ -369,6 +399,7 @@
                     tanggalPulang: document.getElementById('tanggalPulang')?.value || '',
                     jamPulang: document.getElementById('jamPulang')?.value || '',
                     alasan_pulang: document.getElementById('alasan_pulang')?.value || '',
+                    kondisi_pulang: document.getElementById('kondisi_pulang')?.value || '',
                     // Berobat Jalan fields
                     tanggal_rajal: document.getElementById('tanggal_rajal')?.value || '',
                     poli_unit_tujuan: document.getElementById('poli_unit_tujuan')?.value || '',
@@ -384,6 +415,63 @@
             window.getTindakLanjutData = function() {
                 return tindakLanjutData ? JSON.stringify(tindakLanjutData) : null;
             };
+
+            function fillVitalSignFromTriase() {
+                const vitalSignContainer = document.querySelector('[data-triase-vital-sign]');
+                const vitalSignData = vitalSignContainer?.dataset.triaseVitalSign;
+                
+                if (vitalSignData) {
+                    try {
+                        const vitalSign = JSON.parse(vitalSignData);
+                        
+                        // Mapping untuk vital sign
+                        const vitalSignMapping = {
+                            'sistole': 'td_sistole',
+                            'diastole': 'td_diastole',
+                            'nadi': 'nadi',
+                            'respiration': 'resp',
+                            'suhu': 'suhu',
+                            'spo2_tanpa_o2': 'spo2_tanpa_o2',
+                            'spo2_dengan_o2': 'spo2_dengan_o2'
+                        };
+
+                        // Isi form vital sign
+                        Object.entries(vitalSignMapping).forEach(([triaseKey, formKey]) => {
+                            const input = document.querySelector(`[name="vital_sign[${formKey}]"]`);
+                            if (input && vitalSign[triaseKey]) {
+                                input.value = vitalSign[triaseKey];
+                            }
+                        });
+
+                        // Mapping untuk antropometri
+                        const antropometriMapping = {
+                            'tinggi_badan': 'tb',
+                            'berat_badan': 'bb'
+                        };
+
+                        // Isi form antropometri
+                        Object.entries(antropometriMapping).forEach(([triaseKey, formKey]) => {
+                            const input = document.querySelector(`[name="antropometri[${formKey}]"]`);
+                            if (input && vitalSign[triaseKey]) {
+                                input.value = vitalSign[triaseKey];
+                                // Trigger event input untuk menghitung IMT dan LPT
+                                input.dispatchEvent(new Event('input'));
+                            }
+                        });
+
+                    } catch (e) {
+                        console.error('Error parsing vital sign data:', e);
+                    }
+                }
+            }
+
+            fillVitalSignFromTriase();
+
+            // Juga panggil saat modal dibuka (jika menggunakan modal)
+            const asesmenModal = document.getElementById('asesmenModal');
+            if (asesmenModal) {
+                asesmenModal.addEventListener('show.bs.modal', fillVitalSignFromTriase);
+            }
 
             // === Kode untuk handle submit form dengan ajax ===
             const form = document.getElementById('asesmenForm');

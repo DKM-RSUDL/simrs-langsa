@@ -9,6 +9,7 @@ use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
@@ -26,6 +27,7 @@ class AsesmenKepAnakController extends Controller
         $faktorpemberat = RmeFaktorPemberat::all();
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
+        $jenisnyeri = RmeJenisNyeri::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -76,6 +78,7 @@ class AsesmenKepAnakController extends Controller
             'faktorpemberat',
             'faktorperingan',
             'efeknyeri',
+            'jenisnyeri',
             'user'
         ));
     }

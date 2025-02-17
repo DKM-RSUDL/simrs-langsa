@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${a.severe}</td>
                     <td>
                         <button class="btn btn-sm btn-link delete-alergi" data-index="${index}">
-                            <i class="ti-trash text-danger"></i>
+                            <i class="fas fa-times text-danger"></i>
                         </button>
                     </td>
                 </tr>
