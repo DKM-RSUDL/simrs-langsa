@@ -102,11 +102,11 @@
                                             <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
-                                                    <input type="number" class="form-control" name="sistole"
+                                                    <input type="number" class="form-control" name="darah_sistole"
                                                         placeholder="Sistole">
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <input type="number" class="form-control" name="diastole"
+                                                    <input type="number" class="form-control" name="darah_diastole"
                                                         placeholder="Diastole">
                                                 </div>
                                             </div>
@@ -114,19 +114,19 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nadi (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nadi"
+                                            <input type="number" class="form-control" name="nadi"
                                                 placeholder="frekuensi nadi per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nafas (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nafas"
+                                            <input type="number" class="form-control" name="nafas"
                                                 placeholder="frekuensi nafas per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="text" class="form-control" name="suhu"
+                                            <input type="number" class="form-control" name="suhu"
                                                 placeholder="suhu dalam celcius">
                                         </div>
 

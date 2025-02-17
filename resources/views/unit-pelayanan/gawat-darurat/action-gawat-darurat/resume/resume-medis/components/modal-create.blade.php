@@ -405,16 +405,16 @@
 
                                         <a href="javascript:void(0)" id="btn-rs-rujuk-bagian"
                                             class="tindak-lanjut-option d-block mb-2 text-decoration-none">
-                                            <input type="radio" id="rujuk" name="tindak_lanjut_name"
-                                                class="form-check-input me-2" value="Rujuk RS lain bagian:"
+                                            <input type="radio" id="rujuk_rs_lain" name="tindak_lanjut_name"
+                                                class="form-check-input me-2" value="Rujuk RS Lain"
                                                 data-code="5"
                                                 {{ ($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5' ? 'checked' : '' }}>
-                                            <label for="rujuk">Rujuk RS lain
+                                            <label for="rujuk_rs_lain">Rujuk RS lain
                                                 <span id="selected-rs-info" class="text-muted fst-italic small ms-2"
                                                     hidden>
                                                     @if (($dataResume->rmeResumeDet->tindak_lanjut_code ?? '') == '5')
                                                         {{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}
-                                                        {{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}
+                                                        {{ $dataResume->rmeResumeDet->alasan_rujuk ?? '' }}
                                                     @endif
                                                 </span>
                                             </label>

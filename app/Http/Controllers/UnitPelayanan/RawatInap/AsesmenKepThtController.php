@@ -7,6 +7,7 @@ use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenThtDataMasuk;
+use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,18 @@ class AsesmenKepThtController extends Controller
         $asesmenThtDataMasuk->ruang = $request->ruang;
         $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
         $asesmenThtDataMasuk->save();
+
+        $asesmenThtPemeriksaanFisik = new RmeAsesmenThtPemeriksaanFisik();
+        $asesmenThtPemeriksaanFisik->id_asesmen = $asesmenTht->id;
+        $asesmenThtPemeriksaanFisik->darah_sistole = $request->darah_sistole;
+        $asesmenThtPemeriksaanFisik->darah_diastole = $request->darah_diastole;
+        $asesmenThtPemeriksaanFisik->nadi = $request->nadi;
+        $asesmenThtPemeriksaanFisik->nafas = $request->nafas;
+        $asesmenThtPemeriksaanFisik->suhu = $request->suhu;
+        $asesmenThtPemeriksaanFisik->sensorium = $request->sensorium;
+        $asesmenThtPemeriksaanFisik->ku_kp_kg = $request->ku_kp_kg;
+        $asesmenThtPemeriksaanFisik->avpu = $request->avpu;
+        $asesmenThtPemeriksaanFisik->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
