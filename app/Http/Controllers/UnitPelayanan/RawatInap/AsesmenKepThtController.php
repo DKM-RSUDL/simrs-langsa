@@ -5,8 +5,12 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenThtDataMasuk;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class AsesmenKepThtController extends Controller
 {
@@ -60,5 +64,36 @@ class AsesmenKepThtController extends Controller
             'itemFisik',
             'user'
         ));
+    }
+
+    public function store(Request $request, $kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    {
+        // dd($request);
+        $asesmenTht = new RmeAsesmen();
+        $asesmenTht->kd_pasien = $request->kd_pasien;
+        $asesmenTht->kd_unit = $request->kd_unit;
+        $asesmenTht->tgl_masuk = $request->tgl_masuk;
+        $asesmenTht->urut_masuk = $request->urut_masuk;
+        $asesmenTht->user_id = Auth::id();
+        $asesmenTht->waktu_asesmen = date('Y-m-d H:i:s');
+        $asesmenTht->kategori = 1;
+        $asesmenTht->sub_kategori = 5;
+        $asesmenTht->save();
+
+        $asesmenThtDataMasuk = new RmeAsesmenThtDataMasuk();
+        $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
+        $asesmenThtDataMasuk->tgl_masuk = $request->tgl_masuk;
+        $asesmenThtDataMasuk->kondisi_masuk = $request->kondisi_masuk;
+        $asesmenThtDataMasuk->ruang = $request->ruang;
+        $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
+        $asesmenThtDataMasuk->save();
+
+        // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
+        //     'kd_pasien' => $kd_pasien,
+        //     'kd_unit' => $kd_unit,
+        //     'tgl_masuk' => $tgl_masuk,
+        //     'urut_masuk' => $urut_masuk
+        // ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
+        return back()->with('success', 'Berhasil menambah asesmen keperawatan THT!');
     }
 }
