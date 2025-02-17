@@ -466,6 +466,10 @@
 
                             <div class="mb-3">
                                 <div>
+                                    <input type="radio" name="edit_tindakLanjut" value="rawatInap" id="edit_rawatInap"> 
+                                    <label for="edit_rawatInap">Rawat Inap</label>
+                                </div>
+                                <div>
                                     <input type="radio" name="edit_tindakLanjut" value="rujukKeluar" id="edit_rujukKeluar">
                                     <label for="edit_rujukKeluar">Rujuk Keluar RS Lain</label>
                                 </div>
@@ -492,6 +496,49 @@
                             </div>
 
                             <!-- Form untuk setiap opsi tindak lanjut -->
+
+                            <div class="mb-3" id="edit_formRawatInap" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="edit_tanggalRawatInap" class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control" id="edit_tanggalRawatInap" name="edit_tanggalRawatInap">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_jamRawatInap" class="form-label">Jam</label>
+                                    <input type="time" class="form-control" id="edit_jamRawatInap" name="edit_jamRawatInap">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_keluhanUtama_ranap" class="form-label">Keluhan Utama & Riwayat Penyakit </label>
+                                    <textarea class="form-control" id="edit_keluhanUtama_ranap" name="edit_keluhanUtama_ranap" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_hasilPemeriksaan_ranap" class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
+                                    <textarea class="form-control" id="edit_hasilPemeriksaan_ranap" name="edit_hasilPemeriksaan_ranap" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_jalannyaPenyakit_ranap" class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
+                                    <textarea class="form-control" id="edit_jalannyaPenyakit_ranap" name="edit_jalannyaPenyakit_ranap" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_diagnosis_ranap" class="form-label">Diagnosis</label>
+                                    <textarea class="form-control" id="edit_diagnosis_ranap" name="edit_diagnosis_ranap" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_tindakan_ranap" class="form-label">Tindakan yang Telah Dilakukan</label>
+                                    <textarea class="form-control" id="edit_tindakan_ranap" name="edit_tindakan_ranap" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit_anjuran_ranap" class="form-label">Anjuran</label>
+                                    <textarea class="form-control" id="edit_anjuran_ranap" name="edit_anjuran_ranap" rows="3"></textarea>
+                                </div>
+                            </div>
+
                             <div id="edit_formMenolakRawatInap" style="display: none;">
                                 <label for="edit_alasanMenolak" class="form-label">Alasan</label>
                                 <textarea class="form-control" id="edit_alasanMenolak" name="edit_alasanMenolak" rows="3"></textarea>
@@ -606,6 +653,18 @@
             
             // Set radio button sesuai tindak lanjut
             switch(tindakLanjut.tindak_lanjut_code) {
+                case 1: // Rawat Inap
+                    $('input[name="edit_tindakLanjut"][value="rawatInap"]').prop('checked', true);
+                    $('#edit_formRawatInap').show();
+                    $('#edit_tanggalRawatInap').val(tindakLanjut.tanggal_rawat_inap);
+                    $('#edit_jamRawatInap').val(tindakLanjut.jam_rawat_inap);
+                    $('#edit_keluhanUtama_ranap').val(tindakLanjut.keluhan_utama_ranap);
+                    $('#edit_hasilPemeriksaan_ranap').val(tindakLanjut.hasil_pemeriksaan_ranap);
+                    $('#edit_jalannyaPenyakit_ranap').val(tindakLanjut.jalannya_penyakit_ranap);
+                    $('#edit_diagnosis_ranap').val(tindakLanjut.diagnosis_ranap);
+                    $('#edit_tindakan_ranap').val(tindakLanjut.tindakan_ranap);
+                    $('#edit_anjuran_ranap').val(tindakLanjut.anjuran_ranap);
+                    break;
                 case 5: // Rujuk RS Lain
                     $('input[name="edit_tindakLanjut"][value="rujukKeluar"]').prop('checked', true);
                     $('#edit_formRujukKeluar').show();
@@ -648,6 +707,7 @@
         }
 
         function hideAllEditTindakLanjutForms() {
+            $('#edit_formRawatInap').hide();
             $('#edit_formMenolakRawatInap').hide();
             $('#edit_formRujukKeluar').hide();
             $('#edit_formpulangSembuh').hide();
@@ -661,6 +721,9 @@
             const selectedValue = $(this).val();
             
             switch(selectedValue) {
+                case 'rawatInap':
+                    $('#edit_formRawatInap').show();
+                    break;
                 case 'rujukKeluar':
                     $('#edit_formRujukKeluar').show();
                     break;
@@ -695,6 +758,16 @@
             };
             
             switch(selectedOption) {
+                case 'rawatInap':
+                    tindakLanjutData.tanggal_rawat_inap = $('#edit_tanggalRawatInap').val();
+                    tindakLanjutData.jam_rawat_inap = $('#edit_jamRawatInap').val();
+                    tindakLanjutData.keluhan_utama_ranap = $('#edit_keluhanUtama_ranap').val();
+                    tindakLanjutData.hasil_pemeriksaan_ranap = $('#edit_hasilPemeriksaan_ranap').val();
+                    tindakLanjutData.jalannya_penyakit_ranap = $('#edit_jalannyaPenyakit_ranap').val();
+                    tindakLanjutData.diagnosis_ranap = $('#edit_diagnosis_ranap').val();
+                    tindakLanjutData.tindakan_ranap = $('#edit_tindakan_ranap').val();
+                    tindakLanjutData.anjuran_ranap = $('#edit_anjuran_ranap').val();
+                    break;
                 case 'rujukKeluar':
                     tindakLanjutData.tujuan_rujuk = $('#edit_tujuan_rujuk').val();
                     tindakLanjutData.alasan_rujuk = $('#edit_alasan_rujuk').val();
@@ -1367,6 +1440,8 @@
             const editButton = $(`button[onclick="editAsesmen('${window.currentAsesmenId}')"]`);
             const baseUrl = editButton.data('url');
             const updateUrl = baseUrl.replace('/show', '');
+
+            console.log('Data yang dikirim:', formData);
 
             $.ajax({
                 url: updateUrl,

@@ -124,14 +124,35 @@
 
 <ul class="list-group" id="asesmenList">
     @foreach ($asesmen as $item)
-        <li class="list-group-item d-flex justify-content-between align-items-center"
+        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $item->id }}"
+            data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
             data-name="{{ $item->user->name }}">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
-                    width="70" height="70">
-                <div>
-                    <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
-                    By: <span class="fw-bold">{{ $item->user->name }}</span>
+            
+            <div class="d-flex align-items-center gap-4">
+
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('d') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('M-y') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('H:i') }}
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
+                        width="70" height="70">
+                   <div>
+                        <div class="text-primary fw-bold mb-1">
+                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}
+                        </div>
+                        <div class="text-muted">
+                            By: <span class="fw-semibold">{{ $item->user->name }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div>
@@ -205,3 +226,53 @@
         });
     }
 </script>
+
+<style>
+    #asesmenList .list-group-item:nth-child(even) {
+        background-color: #edf7ff;
+    }
+
+    /* Background putih untuk item ganjil */
+    #asesmenList .list-group-item:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    /* Efek hover tetap sama untuk konsistensi */
+    #asesmenList .list-group-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .list-group-item {
+        margin-bottom: 0.2rem;
+        border-radius: 0.5rem !important;
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+        background: white;
+        transition: all 0.2s;
+    }
+
+    .list-group-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .gap-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .gap-4 {
+        gap: 1.5rem !important;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn i {
+        font-size: 0.875rem;
+    }
+</style>

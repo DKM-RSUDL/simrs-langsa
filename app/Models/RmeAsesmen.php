@@ -97,6 +97,12 @@ class RmeAsesmen extends Model
         return $this->hasMany(RmeAsesmenDtl::class, 'id_asesmen', 'id');
     }
 
+    public function spri()
+    {
+        return $this->hasOne(RmeSpri::class, 'id_asesmen', 'id');
+    }
+
+
     // aesmen keperawatan
     public function asesmenKepUmum()
     {

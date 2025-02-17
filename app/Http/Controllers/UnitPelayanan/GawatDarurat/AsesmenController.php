@@ -149,13 +149,15 @@ class AsesmenController extends Controller
                 'faktorPemberat',
                 'faktorPeringan',
                 'efekNyeri',
-                'tindaklanjut'
+                'tindaklanjut',
+                'tindaklanjut.spri'
             ])
                 ->where('id', $id)
                 ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $date)
                 ->firstOrFail();
 
+            // dd($asesmen);
 
             $tindakanResusitasi = is_string($asesmen->tindakan_resusitasi)
                 ? json_decode($asesmen->tindakan_resusitasi, true)
@@ -210,6 +212,7 @@ class AsesmenController extends Controller
                         'alat_terpasang' => $alatTerpasang,
                         'show_kondisi_pasien' => $asesmen->kondisi_pasien,
                         'tindaklanjut' => $asesmen->tindaklanjut,
+                        'spri' => $asesmen->spri,
                         'pemeriksaan_fisik' => $pemeriksaanFisik
 
                     ],
@@ -333,11 +336,11 @@ class AsesmenController extends Controller
                                 'tgl_masuk' => $dataMedis->tgl_masuk,
                                 'urut_masuk' => $dataMedis->urut_masuk,
                                 'id_asesmen' => $id,
-                                'tanggal_ranap' => $tindakLanjutData['tanggalRawatInap'] ?? '',
-                                'jam_ranap' => $tindakLanjutData['jamRawatInap'] ?? null,
-                                'keluhan_utama' => $tindakLanjutData['keluhanUtama_ranap'] ?? '',
-                                'jalannya_penyakit' => $tindakLanjutData['jalannyaPenyakit_ranap'] ?? '',
-                                'hasil_pemeriksaan' => $tindakLanjutData['hasilPemeriksaan_ranap'] ?? '',
+                                'tanggal_ranap' => $tindakLanjutData['tanggal_rawat_inap'] ?? '',  
+                                'jam_ranap' => $tindakLanjutData['jam_rawat_inap'] ?? '',          
+                                'keluhan_utama' => $tindakLanjutData['keluhan_utama_ranap'] ?? '',
+                                'jalannya_penyakit' => $tindakLanjutData['jalannya_penyakit_ranap'] ?? '',
+                                'hasil_pemeriksaan' => $tindakLanjutData['hasil_pemeriksaan_ranap'] ?? '',
                                 'diagnosis' => $tindakLanjutData['diagnosis_ranap'] ?? '',
                                 'tindakan' => $tindakLanjutData['tindakan_ranap'] ?? '',
                                 'anjuran' => $tindakLanjutData['anjuran_ranap'] ?? ''

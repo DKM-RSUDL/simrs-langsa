@@ -1073,10 +1073,69 @@
 
             switch (parseInt(data.tindak_lanjut_code)) {
                 case 1: // Rawat Inap
+                    // Destructure spri data from data object, ensuring we have access to it
+                    const spriData = data.spri || {};
+                    
+                    let formattedTanggalRanap = '-';
+                    let formattedJamRanap = '-';
+
+                    if (spriData.tanggal_ranap) {
+                        try {
+                            formattedTanggalRanap = new Date(spriData.tanggal_ranap).toLocaleDateString('id-ID', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                        } catch (e) {
+                            console.error('Error formatting tanggal_ranap:', e);
+                            formattedTanggalRanap = spriData.tanggal_ranap;
+                        }
+                    }
+
+                    if (spriData.jam_ranap) {
+                        try {
+                            formattedJamRanap = new Date(spriData.jam_ranap).toLocaleTimeString('id-ID', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        } catch (e) {
+                            console.error('Error formatting jam_ranap:', e);
+                            formattedJamRanap = spriData.jam_ranap;
+                        }
+                    }
+
                     additionalInfo = `
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Tanggal Rawat Inap:</label>
+                            <p class="mb-0">${formattedTanggalRanap}</p>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="fw-bold">Jam Rawat Inap:</label>
+                            <p class="mb-0">${formattedJamRanap}</p>
+                        </div>
                         <div class="col-12 mt-2">
-                            <label class="fw-bold">Keterangan:</label>
-                            <p class="mb-0">${data.keterangan || '-'}</p>
+                            <label class="fw-bold">Keluhan Utama:</label>
+                            <p class="mb-0">${spriData.keluhan_utama || '-'}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Jalannya Penyakit:</label>
+                            <p class="mb-0">${spriData.jalannya_penyakit || '-'}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Hasil Pemeriksaan:</label>
+                            <p class="mb-0">${spriData.hasil_pemeriksaan || '-'}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Diagnosis:</label>
+                            <p class="mb-0">${spriData.diagnosis || '-'}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Tindakan:</label>
+                            <p class="mb-0">${spriData.tindakan || '-'}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="fw-bold">Anjuran:</label>
+                            <p class="mb-0">${spriData.anjuran || '-'}</p>
                         </div>`;
                     break;
 

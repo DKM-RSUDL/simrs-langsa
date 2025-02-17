@@ -23,4 +23,10 @@ class RmeAsesmenDtl extends Model
         'rs_rujuk_bagian',
         'keterangan',
     ];
+
+    public function spri()
+    {
+        return $this->hasOne(RmeSpri::class, 'id_asesmen', 'id_asesmen');
+    }
+
 }
