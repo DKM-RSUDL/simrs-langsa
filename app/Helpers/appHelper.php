@@ -168,3 +168,45 @@ if (!function_exists('kondisiPulangLabel')) {
         return $label;
     }
 }
+
+if (!function_exists('alasanRujukLabel')) {
+    function alasanRujukLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Indikasi Medis';
+                break;
+            case 2:
+                $label = 'Kamar Penuh';
+                break;
+            case 3:
+                $label = 'Permintaan Pasien';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('transportasiRujukLabel')) {
+    function transportasiRujukLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Ambulance';
+                break;
+            case 2:
+                $label = 'Kendaraan Pribadi';
+                break;
+            case 3:
+                $label = 'Lainnya';
+                break;
+        }
+
+        return $label;
+    }
+}
