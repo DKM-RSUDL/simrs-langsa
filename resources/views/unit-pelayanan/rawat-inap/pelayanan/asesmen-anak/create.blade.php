@@ -290,17 +290,17 @@
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Merangkak</label>
-                                                <input type="text" class="form-control" name="Merangkak">
+                                                <input type="text" class="form-control" name="merangkak">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Duduk</label>
-                                                <input type="text" class="form-control" name="Duduk">
+                                                <input type="text" class="form-control" name="duduk">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Berdiri</label>
-                                                <input type="text" class="form-control" name="Berdiri">
+                                                <input type="text" class="form-control" name="berdiri">
                                             </div>
                                         </div>
 
@@ -2033,63 +2033,61 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="section-title">16. Diagnosis</h5>
+                                         <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
-                                            <label class="form-label fw-semibold">Diagnosis Banding</label>
-                                            
-                                            <!-- Search and Add -->
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan diagnosis banding yang tidak ditemukan.</small>
+
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="Cari atau tambah diagnosis banding">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                                <span class="input-group-text bg-white">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
                                             </div>
 
-                                            <!-- List Diagnosis -->
-                                            <div class="list-group">
-                                                <!-- Item dengan close button -->
-                                                <div class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                                                    <span>1. Defisit Perawatan Diri (Self-Care Deficit)</span>
-                                                    <button class="btn btn-sm btn-link text-danger p-0" title="Hapus">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
+                                            <div class="diagnosis-list bg-light p-3 rounded">
+                                                <div class="diagnosis-item mb-2">
+                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
                                                 </div>
-                                                <div class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                                <div class="diagnosis-item">
                                                     <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                    <button class="btn btn-sm btn-link text-danger p-0" title="Hapus">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- Diagnosis Kerja -->
                                         <div class="mb-4">
-                                            <label class="form-label fw-semibold">Diagnosis Kerja</label>
-                                            
-                                            <!-- Search and Add -->
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan
+                                                diagnosis kerja yang tidak ditemukan.</small>
+
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="Cari atau tambah diagnosis kerja">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Kerja">
+                                                <span class="input-group-text bg-white">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
                                             </div>
 
-                                            <!-- List Diagnosis -->
-                                            <div class="list-group">
-                                                <div class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                                                    <span>1. Defisit Perawatan Diri (Self-Care Deficit)</span>
-                                                    <button class="btn btn-sm btn-link text-danger p-0" title="Hapus">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
+                                            <div class="diagnosis-list bg-light p-3 rounded">
+                                                <div class="diagnosis-item mb-2">
+                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
                                                 </div>
-                                                <div class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                                <div class="diagnosis-item">
                                                     <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                    <button class="btn btn-sm btn-link text-danger p-0" title="Hapus">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
