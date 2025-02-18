@@ -241,6 +241,143 @@
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
+            //STATUS FUNGSINOAL//
+
+            // Event handler untuk Status Fungsional
+            const statusFungsionalSelect = document.getElementById('skala_fungsional');
+            const adlTotal = document.getElementById('adl_total');
+            const adlKesimpulanAlert = document.getElementById('adl_kesimpulan');
+
+            if (statusFungsionalSelect) {
+                statusFungsionalSelect.addEventListener('change', function() {
+                    if (this.value === 'Pengkajian Aktivitas') {
+                        // Reset nilai sebelum menampilkan modal
+                        adlTotal.value = '';
+                        adlKesimpulanAlert.className = 'alert alert-info';
+                        adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('modalADL'));
+                        modal.show();
+                    } else if (this.value === 'Lainnya') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Skala pengukuran lainnya belum tersedia',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            // Reset pilihan setelah menampilkan alert
+                            this.value = '';
+                            adlTotal.value = '';
+                            adlKesimpulanAlert.className = 'alert alert-info';
+                            adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                        });
+                    }
+                });
+            }
+
+            // ADL Handler - Perhitungan total dan kesimpulan
+            const updateADLTotal = () => {
+                const adlChecks = document.querySelectorAll('.adl-check:checked');
+                const adlModalTotal = document.getElementById('adlTotal');
+                const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                
+                let total = 0;
+                adlChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                // Update total di modal
+                if (adlModalTotal) {
+                    adlModalTotal.value = total;
+                }
+
+                // Hitung jumlah kategori yang sudah dipilih
+                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
+                const allCategoriesSelected = checkedCategories.size === 3; // 3 kategori: makan, berjalan, mandi
+
+                if (!allCategoriesSelected) {
+                    if (adlModalKesimpulan) {
+                        adlModalKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                        adlModalKesimpulan.textContent = 'Pilih semua kategori terlebih dahulu';
+                    }
+                    return;
+                }
+
+                // Update kesimpulan berdasarkan total skor
+                let kesimpulan = '';
+                let alertClass = '';
+                
+                if (total <= 4) {
+                    kesimpulan = 'Mandiri';
+                    alertClass = 'alert-success';
+                } else if (total <= 8) {
+                    kesimpulan = 'Ketergantungan Ringan';
+                    alertClass = 'alert-info';
+                } else if (total <= 11) {
+                    kesimpulan = 'Ketergantungan Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    kesimpulan = 'Ketergantungan Berat';
+                    alertClass = 'alert-danger';
+                }
+
+                // Update kesimpulan di modal
+                if (adlModalKesimpulan) {
+                    adlModalKesimpulan.className = `alert ${alertClass} py-1 px-3 mb-0`;
+                    adlModalKesimpulan.textContent = kesimpulan;
+                }
+            };
+
+            // Event listeners untuk ADL checkboxes
+            document.querySelectorAll('.adl-check').forEach(check => {
+                check.addEventListener('change', updateADLTotal);
+            });
+
+            // Handle ADL save button
+            const simpanADL = document.getElementById('simpanADL');
+            if (simpanADL) {
+                simpanADL.addEventListener('click', function() {
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                    
+                    if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
+                        // Update nilai total
+                        adlTotal.value = adlModalTotal.value;
+                        
+                        // Update kesimpulan di form utama
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
+                        
+                        // Tutup modal
+                        bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
+                    }
+                });
+            }
+
+            // Reset form ADL when modal is closed
+            const modalADL = document.getElementById('modalADL');
+            if (modalADL) {
+                modalADL.addEventListener('hidden.bs.modal', function() {
+                    document.querySelectorAll('.adl-check').forEach(check => {
+                        check.checked = false;
+                    });
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    if (adlModalTotal) {
+                        adlModalTotal.value = '';
+                    }
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                    if (adlModalKesimpulan) {
+                        adlModalKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                        adlModalKesimpulan.textContent = 'Pilih semua kategori terlebih dahulu';
+                    }
+                });
+            }
+
+
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
             //JENIS SKALA//
 
             const skalaSelect = document.getElementById('jenis_skala_nyeri');
@@ -760,7 +897,7 @@
             //------------------------------------------------------------//
             //------------------------------------------------------------//
 
-            // Event listeners untuk status gizi
+            // EVENT LISTENER UNTUK STATUS GIZI
             const nutritionSelect = document.getElementById('nutritionAssessment');
             const allForms = document.querySelectorAll('.assessment-form');
 
@@ -803,6 +940,57 @@
                     }
                 }
             });
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+            // 16. Discharge PLANING
+            const dischargePlanningSection = document.getElementById('discharge-planning');
+            const allSelects = dischargePlanningSection.querySelectorAll('select');
+            const alertWarning = dischargePlanningSection.querySelector('.alert-warning');
+            const alertSuccess = dischargePlanningSection.querySelector('.alert-success');
+
+            // Function untuk update kesimpulan
+            function updateDischargePlanningConclusion() {
+                let needsSpecialPlan = false;
+                let allSelected = true;
+
+                // Cek semua select
+                allSelects.forEach(select => {
+                    if (!select.value) {
+                        allSelected = false;
+                    } else if (select.value === 'ya') {
+                        needsSpecialPlan = true;
+                    }
+                });
+
+                // Jika belum semua dipilih, sembunyikan kedua alert
+                if (!allSelected) {
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'none';
+                    return;
+                }
+
+                // Update tampilan kesimpulan
+                if (needsSpecialPlan) {
+                    alertWarning.style.display = 'block';
+                    alertSuccess.style.display = 'none';
+                } else {
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'block';
+                }
+            }
+
+            // Tambahkan event listener untuk setiap select
+            allSelects.forEach(select => {
+                select.addEventListener('change', updateDischargePlanningConclusion);
+            });
+
+            // Inisialisasi awal
+            updateDischargePlanningConclusion();
+            
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
 
 
         });

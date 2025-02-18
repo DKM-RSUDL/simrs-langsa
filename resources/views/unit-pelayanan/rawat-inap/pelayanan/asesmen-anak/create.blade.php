@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('components.patient-card-keperawatan')
+            @include('components.patient-card-kep-anak')
         </div>
 
         <div class="col-md-9">
@@ -290,17 +290,17 @@
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Merangkak</label>
-                                                <input type="text" class="form-control" name="Merangkak">
+                                                <input type="text" class="form-control" name="merangkak">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Duduk</label>
-                                                <input type="text" class="form-control" name="Duduk">
+                                                <input type="text" class="form-control" name="duduk">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">Berdiri</label>
-                                                <input type="text" class="form-control" name="Berdiri">
+                                                <input type="text" class="form-control" name="berdiri">
                                             </div>
                                         </div>
 
@@ -1330,7 +1330,7 @@
                                     </div>
 
                                     <div class="section-separator" id="status_sosial_ekonomi">
-                                        <h5 class="section-title">12. Status Sosial Ekonomi</h5>
+                                        <h5 class="section-title">11. Status Sosial Ekonomi</h5>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pekerjaan</label>
@@ -1386,8 +1386,8 @@
 
                                     </div>
 
-                                    <div class="section-separator">
-                                        <h5 class="section-title">11. Status Gizi</h5>
+                                    <div class="section-separator" id="status_gizi">
+                                        <h5 class="section-title">12. Status Gizi</h5>
                                         <div class="form-group mb-4">
                                             <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
                                                 <option value="">--Pilih--</option>
@@ -1837,31 +1837,32 @@
                                     </div>
 
                                     <div class="section-separator" id="status-fungsional">
-                                        <h5 class="section-title">14. Status Fungsional</h5>
+                                        <h5 class="section-title">13. Status Fungsional</h5>
 
                                         <div class="mb-4">
-                                            <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian(ADL) sesuai kondisi pasien</label>
-                                            <select class="form-select" name="skala_fungsional">
+                                            <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
+                                            <select class="form-select" name="skala_fungsional" id="skala_fungsional">
                                                 <option value="" selected disabled>Pilih Skala Fungsional</option>
-                                                <option value="Pengkajian_aktivitas_harian">Pengkajian Aktivitas Harian</option>
+                                                <option value="Pengkajian Aktivitas">Pengkajian Aktivitas Harian</option>
+                                                <option value="Lainnya">Lainnya</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nilai Skala ADL</label>
-                                            <input type="text" class="form-control" id="nilai_skala_adl" name="nilai_skala_adl" readonly>
+                                            <input type="text" class="form-control" id="adl_total" name="adl_total" readonly>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                            <div class="alert alert-success">
-                                                Pilih skala nyeri terlebih dahulu
+                                            <div id="adl_kesimpulan" class="alert alert-info">
+                                                Pilih skala aktivitas harian terlebih dahulu
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="kebutuhan-edukasi">
-                                        <h5 class="section-title">15. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran
+                                        <h5 class="section-title">14. Status Kebutuhan Edukasi, Pendidikan dan Pengajaran
                                         </h5>
 
                                         <div class="form-group">
@@ -1930,11 +1931,11 @@
                                     </div>
 
                                     <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">16. Disharge Planning</h5>
+                                        <h5 class="section-title">15. Discharge Planning</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
-                                            <input type="text" class="form-control" name="diagnosis_medis" readonly
+                                            <input type="text" class="form-control" name="diagnosis_medis"
                                                 placeholder="Diagnosis">
                                         </div>
 
@@ -2006,15 +2007,16 @@
                                             </select>
                                         </div>
 
-                                        <div class="mb-4">
-                                            <label class="form-label">Perkiraan lama hari dirawat</label>
-                                            <input type="text" class="form-control" name="perkiraan_hari"
-                                                placeholder="hari">
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label class="form-label">Rencana Tanggal Pulang</label>
-                                            <input type="date" class="form-control" name="tanggal_pulang">
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Perkiraan lama hari dirawat</label>
+                                                <input type="text" class="form-control" name="perkiraan_hari" placeholder="hari">
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <label class="form-label">Rencana Tanggal Pulang</label>
+                                                <input type="date" class="form-control" name="tanggal_pulang">
+                                            </div>
                                         </div>
 
                                         <div class="mt-4">
@@ -2031,56 +2033,186 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="section-title">17. Diagnosis</h5>
+                                         <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
 
+                                        <!-- Diagnosis Banding -->
                                         <div class="mb-4">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Cari dan tambah Diagnosis">
-                                                <button class="btn btn-outline-primary" type="button">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan diagnosis banding yang tidak ditemukan.</small>
+
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                                <span class="input-group-text bg-white">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+
+                                            <div class="diagnosis-list bg-light p-3 rounded">
+                                                <div class="diagnosis-item mb-2">
+                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
+                                                </div>
+                                                <div class="diagnosis-item">
+                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="list-group">
-                                            <div class="list-group-item list-group-item-light">
-                                                1. Defisit Perawatan Diri (Self-Care Deficit)
+                                        <!-- Diagnosis Kerja -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan
+                                                diagnosis kerja yang tidak ditemukan.</small>
+
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Kerja">
+                                                <span class="input-group-text bg-white">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
                                             </div>
-                                            <div class="list-group-item list-group-item-light">
-                                                2. Risiko Infeksi (Risk for Infection)
+
+                                            <div class="diagnosis-list bg-light p-3 rounded">
+                                                <div class="diagnosis-item mb-2">
+                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
+                                                </div>
+                                                <div class="diagnosis-item">
+                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div class="section-separator" id="implementasi">
-                                        <h5 class="section-title">18. Implementasi</h5>
+                                        <h5 class="section-title">17. Implementasi</h5>
 
-                                        <div class="mb-4">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Cari dan tambah Implemtasi">
-                                                <button class="btn btn-outline-primary" type="button">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                        <!-- Rencana Penatalaksanaan -->
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Rencana Penatalaksanaan dan Pengobatan</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- Observasi -->
+                                                <div class="border-bottom pb-3 mb-3">
+                                                    <h6 class="mb-2">Observasi</h6>
+                                                    <div class="input-group mb-2">
+                                                        <input type="text" class="form-control" placeholder="Cari dan tambah observasi">
+                                                        <button class="btn btn-outline-primary" type="button">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="list-group">
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>1. Monitor pola nafas ( frekuensi, kedalaman, usaha nafas )</span>
+                                                            <button class="btn btn-sm btn-link text-danger p-0">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Terapeutik -->
+                                                <div class="border-bottom pb-3 mb-3">
+                                                    <h6 class="mb-2">Terapeutik</h6>
+                                                    <div class="input-group mb-2">
+                                                        <input type="text" class="form-control" placeholder="Cari dan tambah terapeutik">
+                                                        <button class="btn btn-outline-primary" type="button">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="list-group">
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>1. Berikan minum hangat</span>
+                                                            <button class="btn btn-sm btn-link text-danger p-0">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>2. Posisikan semi fowler atau fowler</span>
+                                                            <button class="btn btn-sm btn-link text-danger p-0">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Edukasi -->
+                                                <div class="border-bottom pb-3 mb-3">
+                                                    <h6 class="mb-2">Edukasi</h6>
+                                                    <div class="input-group mb-2">
+                                                        <input type="text" class="form-control" placeholder="Cari dan tambah edukasi">
+                                                        <button class="btn btn-outline-primary" type="button">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="list-group">
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>1. Anjuran asupan cairan 2000 ml/hari</span>
+                                                            <button class="btn btn-sm btn-link text-danger p-0">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Kolaborasi -->
+                                                <div class="mb-0">
+                                                    <h6 class="mb-2">Kolaborasi</h6>
+                                                    <div class="input-group mb-2">
+                                                        <input type="text" class="form-control" placeholder="Cari dan tambah kolaborasi">
+                                                        <button class="btn btn-outline-primary" type="button">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="list-group">
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>1. Kolaborasi pemberian bronkodilator</span>
+                                                            <button class="btn btn-sm btn-link text-danger p-0">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="list-group">
-                                            <div class="list-group-item list-group-item-light">
-                                                1. Memberikan antibiotik intravena sesuai jadwal.
+                                        <!-- Prognosis -->
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Prognosis</h6>
                                             </div>
-                                            <div class="list-group-item list-group-item-light">
-                                                2. Mengajarkan pasien cara menggunakan inhaler untuk asma
-                                            </div>
-                                            <div class="list-group-item list-group-item-light">
-                                                3. Membersihkan luka dengan cairan NaCl dan mengganti balutan setiap hari
+                                            <div class="card-body">
+                                                <div class="input-group mb-2">
+                                                    <input type="text" class="form-control" placeholder="Cari dan tambah prognosis">
+                                                    <button class="btn btn-outline-primary" type="button">
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="list-group">
+                                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span>1. Memberikan antibiotik intravena sesuai jadwal</span>
+                                                        <button class="btn btn-sm btn-link text-danger p-0">
+                                                            <i class="bi bi-x"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="implementasi-evaluasi">
-                                        <h5 class="section-title">19. Implementasi</h5>
+                                    <div class="section-separator" id="evaluasi">
+                                        <h5 class="section-title">18. Evaluasi</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Tambah Evaluasi Keperawatan</label>

@@ -800,7 +800,7 @@
                 text: 'Apakah Anda yakin ingin mengubah data resume ini?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Validasi',
+                confirmButtonText: 'Ya',
                 cancelButtonText: 'Batal',
                 showLoaderOnConfirm: true,
                 preConfirm: () => {

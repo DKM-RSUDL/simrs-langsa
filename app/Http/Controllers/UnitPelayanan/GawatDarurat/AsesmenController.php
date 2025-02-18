@@ -86,15 +86,15 @@ class AsesmenController extends Controller
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
         $asesmen = RmeAsesmen::with(['user'])
-        ->leftJoin('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
-        ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
-        ->select(
-            'RME_ASESMEN.*',
-            'data_triase.tanggal_triase',
-            'data_triase.id as id_triase'
-        )
-        ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc') 
-        ->get();
+            ->leftJoin('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+            ->select(
+                'RME_ASESMEN.*',
+                'data_triase.tanggal_triase',
+                'data_triase.id as id_triase'
+            )
+            ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc')
+            ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index', compact(
             'dataMedis',
@@ -125,22 +125,26 @@ class AsesmenController extends Controller
 
             // Mengambil data kunjungan dan tanggal triase terkait
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=',
-                    't.kd_pasien'
-                );
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=',
-                    't.tgl_transaksi'
-                );
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+                ->join('transaksi as t', function ($join) {
+                    $join->on(
+                        'kunjungan.kd_pasien',
+                        '=',
+                        't.kd_pasien'
+                    );
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on(
+                        'kunjungan.tgl_masuk',
+                        '=',
+                        't.tgl_transaksi'
+                    );
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
 
             $asesmen = RmeAsesmen::with([
                 'menjalar',
@@ -313,8 +317,8 @@ class AsesmenController extends Controller
 
             if ($request->has('tindak_lanjut_data')) {
                 $tindakLanjutData = is_string($request->tindak_lanjut_data) ?
-                json_decode($request->tindak_lanjut_data, true) :
-                $request->tindak_lanjut_data;
+                    json_decode($request->tindak_lanjut_data, true) :
+                    $request->tindak_lanjut_data;
 
                 $tindakLanjutDtl = RmeAsesmenDtl::where('id_asesmen', $id)->first();
                 if (!$tindakLanjutDtl) {
@@ -336,8 +340,8 @@ class AsesmenController extends Controller
                                 'tgl_masuk' => $dataMedis->tgl_masuk,
                                 'urut_masuk' => $dataMedis->urut_masuk,
                                 'id_asesmen' => $id,
-                                'tanggal_ranap' => $tindakLanjutData['tanggal_rawat_inap'] ?? '',  
-                                'jam_ranap' => $tindakLanjutData['jam_rawat_inap'] ?? '',          
+                                'tanggal_ranap' => $tindakLanjutData['tanggal_rawat_inap'] ?? '',
+                                'jam_ranap' => $tindakLanjutData['jam_rawat_inap'] ?? '',
                                 'keluhan_utama' => $tindakLanjutData['keluhan_utama_ranap'] ?? '',
                                 'jalannya_penyakit' => $tindakLanjutData['jalannya_penyakit_ranap'] ?? '',
                                 'hasil_pemeriksaan' => $tindakLanjutData['hasil_pemeriksaan_ranap'] ?? '',
@@ -436,33 +440,43 @@ class AsesmenController extends Controller
             $resumeData = [
                 'anamnesis'             => $request->anamnesis,
                 'diagnosis'             => $diagnosa,
-                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code,
-                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
+                'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
+                'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
+                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk,
+                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk,
+                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk,
+                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang,
+                'jam_pulang'            => $tindakLanjutDtl->jam_pulang,
+                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang,
+                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang,
+                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal,
+                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan,
+                'keterangan'            => $tindakLanjutDtl->keterangan,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
+                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
+                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal,
                 'konpas'                => [
                     'sistole'   => [
-                        'hasil' => $vitalSign['td_sistole']
+                        'hasil' => $vitalSign['td_sistole'] ?? null
                     ],
                     'distole'   => [
-                        'hasil' => $vitalSign['td_diastole']
+                        'hasil' => $vitalSign['td_diastole'] ?? null
                     ],
                     'respiration_rate'   => [
-                        'hasil' => $vitalSign['resp']
+                        'hasil' => $vitalSign['resp'] ?? null
                     ],
                     'suhu'   => [
-                        'hasil' => $vitalSign['suhu']
+                        'hasil' => $vitalSign['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $vitalSign['nadi']
+                        'hasil' => $vitalSign['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $antropometri['tb']
+                        'hasil' => $antropometri['tb'] ?? null
                     ],
                     'berat_badan'   => [
-                        'hasil' => $antropometri['bb']
+                        'hasil' => $antropometri['bb'] ?? null
                     ]
                 ]
             ];
@@ -870,10 +884,20 @@ class AsesmenController extends Controller
                 'diagnosis'             => $diagnosa,
                 'tindak_lanjut_code'    => $tindakLanjutDtl->tindak_lanjut_code ?? null,
                 'tindak_lanjut_name'    => $tindakLanjutDtl->tindak_lanjut_name ?? null,
-                'tgl_kontrol_ulang'     => null,
-                'unit_rujuk_internal'   => null,
-                'rs_rujuk'              => null,
-                'rs_rujuk_bagian'       => null,
+                'tujuan_rujuk'          => $tindakLanjutDtl->tujuan_rujuk,
+                'alasan_rujuk'          => $tindakLanjutDtl->alasan_rujuk,
+                'transportasi_rujuk'    => $tindakLanjutDtl->transportasi_rujuk,
+                'tanggal_pulang'        => $tindakLanjutDtl->tanggal_pulang,
+                'jam_pulang'            => $tindakLanjutDtl->jam_pulang,
+                'alasan_pulang'         => $tindakLanjutDtl->alasan_pulang,
+                'kondisi_pulang'        => $tindakLanjutDtl->kondisi_pulang,
+                'tanggal_rajal'         => $tindakLanjutDtl->tanggal_rajal,
+                'poli_unit_tujuan'      => $tindakLanjutDtl->poli_unit_tujuan,
+                'keterangan'            => $tindakLanjutDtl->keterangan,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
+                'jam_meninggal'         => $tindakLanjutDtl->jam_meninggal,
+                'tanggal_meninggal'     => $tindakLanjutDtl->tanggal_meninggal,
+                'jam_meninggal_doa'     => $tindakLanjutDtl->jam_meninggal,
                 'konpas'                => [
                     'sistole'   => [
                         'hasil' => $vitalSign['td_sistole'] ?? null
@@ -888,10 +912,10 @@ class AsesmenController extends Controller
                         'hasil' => $vitalSign['suhu'] ?? null
                     ],
                     'nadi'   => [
-                        'hasil' => $vitalSign['nadi'] ?? null 
+                        'hasil' => $vitalSign['nadi'] ?? null
                     ],
                     'tinggi_badan'   => [
-                        'hasil' => $antropometri['tb'] ?? null 
+                        'hasil' => $antropometri['tb'] ?? null
                     ],
                     'berat_badan'   => [
                         'hasil' => $antropometri['bb'] ?? null
@@ -922,10 +946,20 @@ class AsesmenController extends Controller
         $resumeDtlData = [
             'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
             'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
-            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
-            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
-            'rs_rujuk'              => $data['rs_rujuk'],
-            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+            'rs_rujuk'              => $data['tujuan_rujuk'],
+            'alasan_rujuk'          => $data['alasan_rujuk'],
+            'transportasi_rujuk'    => $data['transportasi_rujuk'],
+            'tgl_pulang'            => $data['tanggal_pulang'],
+            'jam_pulang'            => $data['jam_pulang'],
+            'alasan_pulang'         => $data['alasan_pulang'],
+            'kondisi_pulang'        => $data['kondisi_pulang'],
+            'tgl_rajal'             => $data['tanggal_rajal'],
+            'unit_rajal'            => $data['poli_unit_tujuan'],
+            'alasan_menolak_inap'   => $data['keterangan'],
+            'tgl_meninggal'         => $data['tanggal_meninggal'],
+            'jam_meninggal'         => $data['jam_meninggal'],
+            'tgl_meninggal_doa'     => $data['tanggal_meninggal'],
+            'jam_meninggal_doa'     => $data['jam_meninggal'],
         ];
 
         if (empty($resume)) {
@@ -961,10 +995,20 @@ class AsesmenController extends Controller
             } else {
                 $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
                 $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
-                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
-                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
-                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
-                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->rs_rujuk            = $data['tujuan_rujuk'];
+                $resumeDtl->alasan_rujuk        = $data['alasan_rujuk'];
+                $resumeDtl->transportasi_rujuk  = $data['transportasi_rujuk'];
+                $resumeDtl->tgl_pulang          = $data['tanggal_pulang'];
+                $resumeDtl->jam_pulang          = $data['jam_pulang'];
+                $resumeDtl->alasan_pulang       = $data['alasan_pulang'];
+                $resumeDtl->kondisi_pulang      = $data['kondisi_pulang'];
+                $resumeDtl->tgl_rajal           = $data['tanggal_rajal'];
+                $resumeDtl->unit_rajal          = $data['poli_unit_tujuan'];
+                $resumeDtl->alasan_menolak_inap = $data['keterangan'];
+                $resumeDtl->tgl_meninggal       = $data['tanggal_meninggal'];
+                $resumeDtl->jam_meninggal       = $data['jam_meninggal'];
+                $resumeDtl->tgl_meninggal_doa   = $data['tanggal_meninggal'];
+                $resumeDtl->jam_meninggal_doa   = $data['jam_meninggal'];
                 $resumeDtl->save();
             }
         }
@@ -1006,9 +1050,9 @@ class AsesmenController extends Controller
             ->where('id', $id)
             ->first();
 
-        $triaselabel ='-';
+        $triaselabel = '-';
         $triasename = '-';
-        
+
         switch ($dataMedis->kd_triase) {
             case '1':
                 $triaselabel = 'FALSE EMERGENCY';
@@ -1045,5 +1089,4 @@ class AsesmenController extends Controller
 
         return $pdf->stream("Asesmen-Keperawatan-Medis-{$id}.pdf");
     }
-
 }
