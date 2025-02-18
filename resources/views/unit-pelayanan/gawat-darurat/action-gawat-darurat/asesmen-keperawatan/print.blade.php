@@ -14,11 +14,61 @@
             color: #333;
         }
 
-        .header {
+        header {
+            width: 100%;
+            display: table;
+            padding-bottom: 30px;
+            border-bottom: 2px solid black
+        }
+
+        header .left-column {
+            display: table-cell;
+            width: 20%;
+            vertical-align: top;
             text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            border-bottom: 2px solid #333;
+        }
+
+        header .left-column p {
+            margin: 5px;
+        }
+
+        header .center-column {
+            display: table-cell;
+            width: auto;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        header .center-column p {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        header .right-column {
+            display: table-cell;
+            width: 40%;
+            vertical-align: top;
+            text-align: right;
+        }
+
+        header .header-logo {
+            width: 80px;
+        }
+
+        header .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header .info-table {
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        header .info-table td {
+            padding: 8px;
+            border: 1px solid black;
         }
 
         .patient-info,
@@ -81,44 +131,48 @@
 </head>
 
 <body>
-    <div class="header">
-        <h2>RUMAH SAKIT UMUM DAERAH LANGSA</h2>
-        <h3>FORMULIR ASESMEN KEPERAWATAN & MEDIS</h3>
-        <h3>GAWAT DARURAT</h3>
-    </div>
+    <header>
+        <div class="left-column">
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/img/Logo-RSUD-Langsa-1.png'))) }}" class="header-logo" alt="Logo">
+            <p>RSUD Langsa</p>
+            <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
+        </div>
+        <div class="center-column">
+            <p>Formulir Asesmen Keperawatan & Medis<br>IGD</p>
+        </div>
+        <div class="right-column">
+            <table class="info-table">
+                <tr>
+                    <td><strong>No RM</strong></td>
+                    <td>{{ $pasien->kd_pasien }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Nama</strong></td>
+                    <td>{{ str()->title($pasien->nama) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Jenis Kelamin</strong></td>
+                    <td>
+                        @php
+                            $gender = '-';
 
-    <div class="section-title">Data Pasien</div>
-    <table class="patient-info">
-        <tr>
-            <td class="col-header">Nama Pasien</td>
-            <td>: {{ $pasien->nama ?? '-' }}</td>
-            <td class="col-header">No. RM</td>
-            <td>: {{ $pasien->kd_pasien ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">Tanggal Lahir</td>
-            <td>: {{ $pasien->tgl_lahir ? date('d-m-Y', strtotime($pasien->tgl_lahir)) : '-' }}</td>
-            <td class="col-header">Tanggal Masuk</td>
-            <td>: {{ $asesmen->tgl_masuk ? date('d-m-Y', strtotime($asesmen->tgl_masuk)) : '-' }}</td>
-        </tr>
-        <tr>
-            <td class="col-header">Jenis Kelamin</td>
-            <td>:
-                @php
-                    $jenisKelamin = $pasien->jenis_kelamin ?? null;
-                    echo match($jenisKelamin) {
-                        '1' => 'Laki-laki',
-                        '2' => 'Perempuan',
-                        default => '-'
-                    };
-                @endphp
-            </td>
-            <td class="col-header">Jam Asesmen</td>
-            <td>: {{ $asesmen->waktu_asesmen ? date('H:i', strtotime($asesmen->waktu_asesmen)) : '-' }}</td>
-        </tr>
-    </table>
+                            if($pasien->jenis_kelamin == 1) $gender = 'Laki-Laki';
+                            if($pasien->jenis_kelamin == 0) $gender = 'Perempuan';
 
-    <div class="section-title">1. Status Airway</div>
+                            echo $gender;
+                        @endphp
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Tanggal Lahir</strong></td>
+                    <td>{{ date('d/m/Y', strtotime($pasien->tgl_lahir)) }}</td>
+                </tr>
+            </table>
+        </div>
+    </header>
+
+
+    <div class="section-title mt-3">1. Status Airway</div>
     <table class="detail-table">
         <tr>
             <td class="col-header">Status Airway</td>

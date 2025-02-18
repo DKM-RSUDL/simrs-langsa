@@ -22,11 +22,19 @@ class RmeResumeDtl extends Model
         'unit_rujuk_internal',
         'unit_rawat_inap',
         'rs_rujuk',
-        'rs_rujuk_bagian',
+        'alasan_rujuk',
+        'transportasi_rujuk',
         'tgl_pulang',
         'jam_pulang',
         'alasan_pulang',
-        'kondisi_pulang'
+        'kondisi_pulang',
+        'tgl_rajal',
+        'unit_rajal',
+        'alasan_menolak_inap',
+        'tgl_meninggal',
+        'jam_meninggal',
+        'tgl_meninggal_doa',
+        'jam_meninggal_doa',
     ];
 
     public function resume()
