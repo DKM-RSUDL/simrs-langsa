@@ -25,7 +25,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" id="simpanRiwayat">Simpan</button>
+                <button type="button" class="btn btn-primary" id="simpanRiwayat" data-bs-dismiss="modal">Simpan</button>
             </div>
         </div>
     </div>
@@ -69,7 +69,11 @@ function updateRiwayatList() {
 // Function to update the modal's temporary list
 function updateModalRiwayatList() {
     const modalList = document.getElementById('modalRiwayatList');
-    const modalEmptyState = document.getElementById('modalEmptyStateRiwayat');
+    // Buat ulang empty state element
+    const modalEmptyState = document.createElement('div');
+    modalEmptyState.id = 'modalEmptyStateRiwayat';
+    modalEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
+    modalEmptyState.innerHTML = '<p class="mb-0">Belum ada riwayat dalam list sementara</p>';
     
     // Clear the current list
     modalList.innerHTML = '';
@@ -112,10 +116,6 @@ function saveRiwayat() {
         tempRiwayatList = []; // Clear temporary list
         updateRiwayatList();
         updateModalRiwayatList();
-        
-        // Close modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('riwayatKeluargaModal'));
-        modal.hide();
     }
 }
 

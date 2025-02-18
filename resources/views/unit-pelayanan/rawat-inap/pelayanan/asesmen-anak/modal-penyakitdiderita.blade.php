@@ -27,7 +27,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" id="simpanPenyakit">Simpan</button>
+                <button type="button" class="btn btn-primary" id="simpanPenyakit"
+                    data-bs-dismiss="modal">Simpan</button>
             </div>
         </div>
     </div>
@@ -71,7 +72,11 @@
     // Function to update the modal's temporary list
     function updateModalList() {
         const modalList = document.getElementById('modalPenyakitList');
-        const modalEmptyState = document.getElementById('modalEmptyState');
+        // Buat ulang empty state element
+        const modalEmptyState = document.createElement('div');
+        modalEmptyState.id = 'modalEmptyState';
+        modalEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
+        modalEmptyState.innerHTML = '<p class="mb-0">Belum ada penyakit dalam list sementara</p>';
 
         // Clear the current list
         modalList.innerHTML = '';
@@ -84,11 +89,11 @@
                 const item = document.createElement('div');
                 item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
                 item.innerHTML = `
-                <span>${penyakit}</span>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeTempPenyakit(${index})">
-                    <i class="ti-trash"></i>
-                </button>
-            `;
+                    <span>${penyakit}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeTempPenyakit(${index})">
+                        <i class="ti-trash"></i>
+                    </button>
+                `;
                 modalList.appendChild(item);
             });
         }
@@ -113,11 +118,12 @@
             penyakitList = [...penyakitList, ...tempPenyakitList];
             tempPenyakitList = []; // Clear temporary list
             updatePenyakitList();
-            updateModalList();
 
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('penyakitModal'));
-            modal.hide();
+            // Tutup modal
+            document.querySelector('[data-bs-dismiss="modal"]').click();
+
+            // Update list setelah modal tertutup
+            updateModalList();
         }
     }
 

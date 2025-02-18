@@ -10,5 +10,6 @@ class RmeAsesmenKepAnakResikoDekubitus extends Model
     use HasFactory;
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_RESIKO_DEKUBITUS';
+    public $timestamps = false;
     protected $guarded = ['id'];
 }

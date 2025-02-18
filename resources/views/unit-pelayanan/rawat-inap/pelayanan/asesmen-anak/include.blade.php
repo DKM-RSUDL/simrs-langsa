@@ -388,7 +388,8 @@
             const nrsKesimpulan = document.getElementById('nrs_kesimpulan');
             const simpanNRS = document.getElementById('simpanNRS');
             const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-            const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
+            const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+            const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
 
             if (skalaSelect) {
                 skalaSelect.addEventListener('change', function() {
@@ -457,12 +458,38 @@
             // Save NRS value
             if (simpanNRS) {
                 simpanNRS.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
-                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeriAlert) {
-                        nilaiSkalaNyeri.value = nrsValue.value;
-                        kesimpulanNyeriAlert.innerHTML = nrsKesimpulan.innerHTML;
-                        kesimpulanNyeriAlert.className = nrsKesimpulan.className;
+                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeri && kesimpulanNyeriAlert) {
+                        const value = parseInt(nrsValue.value);
+                        nilaiSkalaNyeri.value = value;
+                        
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (value >= 0 && value <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (value >= 4 && value <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else if (value >= 7 && value <= 10) {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        // Update both the input and alert
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        
                         bootstrap.Modal.getInstance(nrsModal).hide();
                     }
                 });
@@ -489,8 +516,6 @@
                 const flaccChecks = document.querySelectorAll('.flacc-check:checked');
                 const flaccTotal = document.getElementById('flaccTotal');
                 const flaccKesimpulan = document.getElementById('flaccKesimpulan');
-                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
                 
                 let total = 0;
                 flaccChecks.forEach(check => {
@@ -498,7 +523,6 @@
                 });
                 
                 flaccTotal.value = total;
-                nilaiSkalaNyeri.value = total;
 
                 // Update kesimpulan
                 let kesimpulan = '';
@@ -521,19 +545,8 @@
 
                 // Update kesimpulan di modal FLACC
                 if (flaccKesimpulan) {
-                    flaccKesimpulan.textContent = kesimpulan.toUpperCase(); // FLACC tetap pakai uppercase
+                    flaccKesimpulan.textContent = kesimpulan;
                     flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
-                }
-
-                // Update kesimpulan di form utama dengan format yang sama seperti NRS
-                if (kesimpulanNyeriAlert) {
-                    kesimpulanNyeriAlert.innerHTML = `
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi ${emoji} fs-4"></i>
-                            <span>${kesimpulan}</span>
-                        </div>
-                    `;
-                    kesimpulanNyeriAlert.className = `alert ${alertClass}`;
                 }
             };
 
@@ -546,8 +559,6 @@
             const simpanFLACC = document.getElementById('simpanFLACC');
             if (simpanFLACC) {
                 simpanFLACC.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                     const flaccTotal = document.getElementById('flaccTotal');
                     
                     if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
@@ -570,22 +581,18 @@
                             emoji = 'bi-emoji-frown';
                         }
 
-                        // Update nilai
+                        // Update all relevant fields
                         nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
 
-                        // Update kesimpulan
-                        if (kesimpulanNyeriAlert) {
-                            kesimpulanNyeriAlert.innerHTML = `
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi ${emoji} fs-4"></i>
-                                    <span>${kesimpulan}</span>
-                                </div>
-                            `;
-                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        }
-
-                        // Tutup modal
-                        bootstrap.Modal.getInstance(document.getElementById('modalFLACC')).hide();
+                        bootstrap.Modal.getInstance(flaccModal).hide();
                     }
                 });
             }
@@ -594,13 +601,13 @@
             const modalFLACC = document.getElementById('modalFLACC');
             if (modalFLACC) {
                 modalFLACC.addEventListener('hidden.bs.modal', function() {
-                    document.querySelectorAll('.flacc-check').forEach(check => {
-                        check.checked = false;
-                    });
-                    const flaccTotal = document.getElementById('flaccTotal');
-                    if (flaccTotal) {
-                        flaccTotal.value = '';
-                    }
+                    // document.querySelectorAll('.flacc-check').forEach(check => {
+                    //     check.checked = false;
+                    // });
+                    // const flaccTotal = document.getElementById('flaccTotal');
+                    // if (flaccTotal) {
+                    //     flaccTotal.value = '';
+                    // }
                     const flaccKesimpulan = document.getElementById('flaccKesimpulan');
                     if (flaccKesimpulan) {
                         flaccKesimpulan.textContent = 'Pilih kategori untuk melihat kesimpulan';
@@ -614,8 +621,6 @@
                 const criesChecks = document.querySelectorAll('.cries-check:checked');
                 const criesTotal = document.getElementById('criesTotal');
                 const criesKesimpulan = document.getElementById('criesKesimpulan');
-                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                 
                 let total = 0;
                 criesChecks.forEach(check => {
@@ -623,7 +628,6 @@
                 });
                 
                 criesTotal.value = total;
-                nilaiSkalaNyeri.value = total;
 
                 // Update kesimpulan
                 let kesimpulan = '';
@@ -646,7 +650,7 @@
 
                 // Update kesimpulan di modal CRIES
                 if (criesKesimpulan) {
-                    criesKesimpulan.textContent = kesimpulan.toUpperCase();
+                    criesKesimpulan.textContent = kesimpulan;
                     criesKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
                 }
             };
@@ -660,12 +664,10 @@
             const simpanCRIES = document.getElementById('simpanCRIES');
             if (simpanCRIES) {
                 simpanCRIES.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                     const criesTotal = document.getElementById('criesTotal');
                     
                     if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
-                        let total = parseInt(criesTotal.value);
+                        let total = criesTotal.value ? parseInt(criesTotal.value) : null;
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
@@ -684,28 +686,18 @@
                             emoji = 'bi-emoji-frown';
                         }
 
-                        // Update nilai
+                        // Update all relevant fields
                         nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
 
-                        // Update kesimpulan
-                        if (kesimpulanNyeriAlert) {
-                            kesimpulanNyeriAlert.innerHTML = `
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi ${emoji} fs-4"></i>
-                                    <span>${kesimpulan}</span>
-                                </div>
-                            `;
-                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        }
-
-                        // Tutup modal
-                        const modalCRIES = document.getElementById('modalCRIES');
-                        if (modalCRIES) {
-                            const modalInstance = bootstrap.Modal.getInstance(modalCRIES);
-                            if (modalInstance) {
-                                modalInstance.hide();
-                            }
-                        }
+                        bootstrap.Modal.getInstance(criesModal).hide();
                     }
                 });
             }
@@ -714,13 +706,13 @@
             const modalCRIES = document.getElementById('modalCRIES');
             if (modalCRIES) {
                 modalCRIES.addEventListener('hidden.bs.modal', function() {
-                    document.querySelectorAll('.cries-check').forEach(check => {
-                        check.checked = false;
-                    });
-                    const criesTotal = document.getElementById('criesTotal');
-                    if (criesTotal) {
-                        criesTotal.value = '';
-                    }
+                    // document.querySelectorAll('.cries-check').forEach(check => {
+                    //     check.checked = false;
+                    // });
+                    // const criesTotal = document.getElementById('criesTotal');
+                    // if (criesTotal) {
+                    //     criesTotal.value = '';
+                    // }
                     const criesKesimpulan = document.getElementById('criesKesimpulan');
                     if (criesKesimpulan) {
                         criesKesimpulan.textContent = 'Pilih semua kategori untuk melihat kesimpulan';

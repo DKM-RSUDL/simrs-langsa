@@ -10,5 +10,6 @@ class RmeAsesmenKepAnakStatusPsikologis extends Model
     use HasFactory;
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_STATUS_PSIKOLOGIS';
+    public $timestamps = false;
     protected $guarded = ['id'];
 }

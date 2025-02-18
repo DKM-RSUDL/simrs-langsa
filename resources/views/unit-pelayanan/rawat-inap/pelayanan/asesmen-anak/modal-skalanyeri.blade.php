@@ -53,15 +53,15 @@
                     <h6 class="mb-3">1. WAJAH (FACE)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="0" data-category="wajah" id="wajah1">
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah[]" value="0" data-category="wajah" id="wajah1">
                             <label class="form-check-label" for="wajah1">Tersenyum tidak ada ekspresi</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="1" data-category="wajah" id="wajah2">
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah[]" value="1" data-category="wajah" id="wajah2">
                             <label class="form-check-label" for="wajah2">Kadang meringis, mengerutkan kening, menarik diri, kurang merespond dengan baik/ekspresi datar</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="wajah" value="2" data-category="wajah" id="wajah3">
+                            <input class="form-check-input flacc-check" type="checkbox" name="wajah[]" value="2" data-category="wajah" id="wajah3">
                             <label class="form-check-label" for="wajah3">Sering cemberut konstan, rahang terkutup, dagu bergetar, kerutan yang dalam di dahi, mata tertutup, mulut terbuka, garing yang dalam disekitar hidung/ bibir</label>
                         </div>
                     </div>
@@ -72,15 +72,15 @@
                     <h6 class="mb-3">2. KAKI (LEG)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="0" data-category="kaki" id="kaki1">
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki[]" value="0" data-category="kaki" id="kaki1">
                             <label class="form-check-label" for="kaki1">Posisi normal atau santai</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="1" data-category="kaki" id="kaki2">
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki[]" value="1" data-category="kaki" id="kaki2">
                             <label class="form-check-label" for="kaki2">Tidak nyaman, gelisah, tegang, tonus meningkat, kaku, fleksi / ekstensi anggota badan intermiten</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="kaki" value="2" data-category="kaki" id="kaki3">
+                            <input class="form-check-input flacc-check" type="checkbox" name="kaki[]" value="2" data-category="kaki" id="kaki3">
                             <label class="form-check-label" for="kaki3">Menendang atau kaki disusun, hipertonisitas fleksi / ekstensi anggota badan secara berlebihan, tremor</label>
                         </div>
                     </div>
@@ -91,15 +91,15 @@
                     <h6 class="mb-3">3. AKTIVITAS (ACTIVITY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="0" data-category="aktivitas" id="aktivitas1">
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas[]" value="0" data-category="aktivitas" id="aktivitas1">
                             <label class="form-check-label" for="aktivitas1">Berbaring dengan tenang, posisi normal, bergerak dengan mudah dan bebas</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="1" data-category="aktivitas" id="aktivitas2">
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas[]" value="1" data-category="aktivitas" id="aktivitas2">
                             <label class="form-check-label" for="aktivitas2">Menggeliat, menggeser maju mundur, tegang, ragu-ragu untuk bergerak, menjaga, tekanan pada bagian tubuh</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas" value="2" data-category="aktivitas" id="aktivitas3">
+                            <input class="form-check-input flacc-check" type="checkbox" name="aktivitas[]" value="2" data-category="aktivitas" id="aktivitas3">
                             <label class="form-check-label" for="aktivitas3">Melengkung, kaku, atau menyentak, posisi tetap, goyang, gerakan kepala dari sisi ke sisi, menggosokan bagian tubuh</label>
                         </div>
                     </div>
@@ -110,15 +110,15 @@
                     <h6 class="mb-3">4. MENANGIS (CRY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="1" data-category="menangis" id="menangis1">
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis[]" value="1" data-category="menangis" id="menangis1">
                             <label class="form-check-label" for="menangis1">Tidak menangis (pada saat terjaga atau saat tidur)</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="2" data-category="menangis" id="menangis2">
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis[]" value="2" data-category="menangis" id="menangis2">
                             <label class="form-check-label" for="menangis2">Erangan atau rengakan, sesekali menangis, mendesah, sesekali mengeluh</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="menangis" value="3" data-category="menangis" id="menangis3">
+                            <input class="form-check-input flacc-check" type="checkbox" name="menangis[]" value="3" data-category="menangis" id="menangis3">
                             <label class="form-check-label" for="menangis3">Terus menerus menangis, menjerit, isak tangis, menggerang, menggerarn, sering mengeluh</label>
                         </div>
                     </div>
@@ -129,15 +129,15 @@
                     <h6 class="mb-3">5. KONSOLABILITAS (CONSOLABILITY)</h6>
                     <div class="ms-3">
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="1" data-category="konsolabilitas" id="konsolabilitas1">
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas[]" value="1" data-category="konsolabilitas" id="konsolabilitas1">
                             <label class="form-check-label" for="konsolabilitas1">Tenang, santai dan riang</label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="2" data-category="konsolabilitas" id="konsolabilitas2">
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas[]" value="2" data-category="konsolabilitas" id="konsolabilitas2">
                             <label class="form-check-label" for="konsolabilitas2">Perlu diyakinkan dengan sentuhan pelukan, mengajak berbicara, Perhatian dapat dialihkan</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas" value="3" data-category="konsolabilitas" id="konsolabilitas3">
+                            <input class="form-check-input flacc-check" type="checkbox" name="konsolabilitas[]" value="3" data-category="konsolabilitas" id="konsolabilitas3">
                             <label class="form-check-label" for="konsolabilitas3">Sulit untuk dibujuk atau dibuat nyaman</label>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                         <div class="col-md-4">
                             <div class="d-flex align-items-center gap-2">
                                 <label class="form-label mb-0">JUMLAH SKALA:</label>
-                                <input type="text" class="form-control" id="flaccTotal" readonly style="width: 80px;">
+                                <input type="text" class="form-control" name="flaccTotal" id="flaccTotal" readonly style="width: 80px;">
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -281,7 +281,7 @@
                         <div class="col-md-4">
                             <div class="d-flex align-items-center gap-2">
                                 <label class="form-label mb-0">JUMLAH SKALA:</label>
-                                <input type="text" class="form-control" id="criesTotal" readonly style="width: 80px;">
+                                <input type="text" class="form-control" name="criesTotal" id="criesTotal" readonly style="width: 80px;">
                             </div>
                         </div>
                         <div class="col-md-8">

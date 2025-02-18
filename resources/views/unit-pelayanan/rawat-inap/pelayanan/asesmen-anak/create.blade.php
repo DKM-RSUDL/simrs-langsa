@@ -92,13 +92,13 @@
                                                 
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
-                                                    <input type="text" class="form-control" name="sistole"
+                                                    <input type="number" class="form-control" name="sistole"
                                                         placeholder="Sistole">
                                                 </div>
                                                 
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
-                                                    <input type="text" class="form-control" name="diastole"
+                                                    <input type="number" class="form-control" name="diastole"
                                                         placeholder="Diastole">
                                                 </div>
                                             </div>
@@ -106,19 +106,19 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nadi (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nadi"
+                                            <input type="number" class="form-control" name="nadi"
                                                 placeholder="frekuensi nadi per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nafas (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nafas"
+                                            <input type="number" class="form-control" name="nafas"
                                                 placeholder="frekuensi nafas per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="text" class="form-control" name="suhu"
+                                            <input type="number" class="form-control" name="suhu"
                                                 placeholder="suhu dalam celcius">
                                         </div>
 
@@ -127,12 +127,12 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Tanpa Bantuan O2</label>
-                                                    <input type="text" class="form-control" name="saturasi_o2_tanpa"
-                                                        placeholder="Tanpa bantuan O2">
+                                                    <input type="number" class="form-control" name="saturasi_o2_tanpa"
+                                                            placeholder="Tanpa bantuan O2">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Bantuan O2</label>
-                                                    <input type="text" class="form-control" name="saturasi_o2_dengan"
+                                                    <input type="number" class="form-control" name="saturasi_o2_dengan"
                                                         placeholder="Dengan bantuan O2">
                                                 </div>
                                             </div>
@@ -168,9 +168,9 @@
                                             <label style="min-width: 200px;">Penglihatan</label>
                                             <select class="form-select" name="penglihatan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Baik">Baik</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Alat Bantu">Alat Bantu</option>
+                                                <option value="1">Baik</option>
+                                                <option value="2">Rusak</option>
+                                                <option value="3">Alat Bantu</option>
                                             </select>
                                         </div>
 
@@ -178,9 +178,9 @@
                                             <label style="min-width: 200px;">Pendengaran</label>
                                             <select class="form-select" name="pendengaran">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Baik">Baik</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Alat Bantu">Alat Bantu</option>
+                                                <option value="1">Baik</option>
+                                                <option value="2">Rusak</option>
+                                                <option value="3">Alat Bantu</option>
                                             </select>
                                         </div>
 
@@ -188,8 +188,8 @@
                                             <label style="min-width: 200px;">Bicara</label>
                                             <select class="form-select" name="bicara">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Gangguan">Gangguan</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Gangguan</option>
                                             </select>
                                         </div>
 
@@ -197,9 +197,9 @@
                                             <label style="min-width: 200px;">Refleks Menelan</label>
                                             <select class="form-select" name="refleks_menelan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Sulit">Sulit</option>
+                                                <option value="1">Normal</option>
+                                                <option value="3">Rusak</option>
+                                                <option value="2">Sulit</option>
                                             </select>
                                         </div>
 
@@ -207,8 +207,8 @@
                                             <label style="min-width: 200px;">Pola Tidur</label>
                                             <select class="form-select" name="pola_tidur">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Masalah">Masalah</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Masalah</option>
                                             </select>
                                         </div>
 
@@ -216,9 +216,9 @@
                                             <label style="min-width: 200px;">Luka</label>
                                             <select class="form-select" name="luka">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Gangguan">Gangguan</option>
-                                                <option value="Tidak Ada Luka">Tidak Ada Luka</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Gangguan</option>
+                                                <option value="3">Tidak Ada Luka</option>
                                             </select>
                                         </div>
 
@@ -226,10 +226,10 @@
                                             <label style="min-width: 200px;">Defekasi</label>
                                             <select class="form-select" name="defekasi">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Tidak Ada">Tidak Ada</option>
-                                                <option value="Ada, Normal">Ada, Normal</option>
-                                                <option value="Konsitipasi">Konsitipasi</option>
-                                                <option value="Inkontinesia Alvi">Inkontinesia Alvi</option>
+                                                <option value="1">Tidak Ada</option>
+                                                <option value="2">Ada, Normal</option>
+                                                <option value="3">Konsitipasi</option>
+                                                <option value="4">Inkontinesia Alvi</option>
                                             </select>
                                         </div>
 
@@ -237,9 +237,9 @@
                                             <label style="min-width: 200px;">Miksi</label>
                                             <select class="form-select" name="miksi">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Retensio">Retensio</option>
-                                                <option value="Inkontinesia Urine">Inkontinesia Urine</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Retensio</option>
+                                                <option value="3">Inkontinesia Urine</option>
                                             </select>
                                         </div>
 
@@ -247,9 +247,9 @@
                                             <label style="min-width: 200px;">Gastrointestinal</label>
                                             <select class="form-select" name="gastrointestinal">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Nausea">Nausea</option>
-                                                <option value="Muntah">Muntah</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Nausea</option>
+                                                <option value="3">Muntah</option>
                                             </select>
                                         </div>
 
@@ -343,39 +343,53 @@
                                         </div>
 
                                         <div class="row g-3">
-                                            @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                <div class="col-md-6">
-                                                    <div class="d-flex flex-column gap-3">
-                                                        @foreach ($chunk as $item)
-                                                            <div class="pemeriksaan-item">
-                                                                <div class="d-flex align-items-center border-bottom pb-2">
-                                                                    <div class="flex-grow-1">{{ $item->nama }}</div>
-                                                                    <div class="form-check me-3">
-                                                                        <input type="checkbox" class="form-check-input"
-                                                                            id="{{ strtolower($item->nama) }}-normal"
-                                                                            checked>
-                                                                        <label class="form-check-label"
-                                                                            for="{{ strtolower($item->nama) }}-normal">Normal</label>
+                                            <div class="pemeriksaan-fisik">
+                                                <h6>Pemeriksaan Fisik</h6>
+                                                <p class="text-small">Centang normal jika fisik yang dinilai
+                                                    normal,
+                                                    pilih tanda tambah
+                                                    untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                                    Jika
+                                                    tidak dipilih salah satunya, maka pemeriksaan tidak
+                                                    dilakukan.
+                                                </p>
+                                                <div class="row">
+                                                    @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                                        <div class="col-md-6">
+                                                            <div class="d-flex flex-column gap-3">
+                                                                @foreach ($chunk as $item)
+                                                                    <div class="pemeriksaan-item">
+                                                                        <div class="d-flex align-items-center border-bottom pb-2">
+                                                                            <div class="flex-grow-1">{{ $item->nama }}</div>
+                                                                            <div class="form-check me-3">
+                                                                                <input type="checkbox" class="form-check-input"
+                                                                                    id="{{ $item->id }}-normal"
+                                                                                    name="{{ $item->id }}-normal"
+                                                                                    checked>
+                                                                                <label class="form-check-label"
+                                                                                    for="{{ $item->id }}-normal">Normal</label>
+                                                                            </div>
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">
+                                                                                <i class="bi bi-plus"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
+                                                                            style="display:none;">
+                                                                            <input type="text" class="form-control"
+                                                                                name="{{ $item->id }}_keterangan"
+                                                                                placeholder="Tambah keterangan jika tidak normal...">
+                                                                        </div>
                                                                     </div>
-                                                                    <button
-                                                                        class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                        type="button"
-                                                                        data-target="{{ strtolower($item->nama) }}-keterangan">
-                                                                        <i class="bi bi-plus"></i>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="keterangan mt-2"
-                                                                    id="{{ strtolower($item->nama) }}-keterangan"
-                                                                    style="display:none;">
-                                                                    <input type="text" class="form-control"
-                                                                        name="{{ strtolower($item->nama) }}_keterangan"
-                                                                        placeholder="Tambah keterangan jika tidak normal...">
-                                                                </div>
+                                                                @endforeach
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         </div>
                                     </div>
 
@@ -399,6 +413,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesimpulan Nyeri</label>
+                                            <input type="hidden" class="form-control" id="kesimpulan_nyeri" name="kesimpulan_nyeri">
                                             <div class="alert alert-success" id="kesimpulan_nyeri_alert">
                                                 Pilih skala nyeri terlebih dahulu
                                             </div>
@@ -615,11 +630,12 @@
                                             id="openAlergiModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-
+                                        <input type="hidden" name="alergis" id="alergisInput">
                                         <div class="table-responsive">
                                             <table class="table" id="createAlergiTable">
-                                                <thead>
+                                               <thead>
                                                     <tr>
+                                                        <th>Jenis</th>
                                                         <th>Alergen</th>
                                                         <th>Reaksi</th>
                                                         <th>Severe</th>
@@ -2211,6 +2227,14 @@
                                         </div>
                                     </div>
 
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+
                                     <div class="section-separator" id="evaluasi">
                                         <h5 class="section-title">18. Evaluasi</h5>
 
@@ -2220,6 +2244,7 @@
                                                 placeholder="Tambah evaluasi keperawatan..."></textarea>
                                         </div>
 
+
                                         <div class="text-end">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
@@ -2227,19 +2252,16 @@
 
                                 </div>
                             </div>
+
+
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+
 
 @endsection
 

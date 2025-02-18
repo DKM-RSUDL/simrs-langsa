@@ -10,5 +10,6 @@ class RmeAsesmenKepAnakStatusFungsional extends Model
     use HasFactory;
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_STATUS_FUNGSIONAL';
+    public $timestamps = false;
     protected $guarded = ['id'];
 }
