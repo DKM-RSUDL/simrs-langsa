@@ -775,31 +775,36 @@
                                                 <div class="row">
                                                     @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
                                                         <div class="col-md-6">
-                                                            @foreach ($chunk as $item)
-                                                                <div class="pemeriksaan-item">
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="flex-grow-1">
-                                                                            {{ $item->nama }}</div>
-                                                                        <div class="form-check me-2">
-                                                                            <input type="checkbox"
-                                                                                class="form-check-input"
-                                                                                id="{{ $item->id }}-normal-index">
-                                                                            <label class="form-check-label"
-                                                                                for="{{ $item->id }}-normal-index">Normal</label>
+                                                            <div class="d-flex flex-column gap-3">
+                                                                @foreach ($chunk as $item)
+                                                                    <div class="pemeriksaan-item">
+                                                                        <div class="d-flex align-items-center border-bottom pb-2">
+                                                                            <div class="flex-grow-1">{{ $item->nama }}</div>
+                                                                            <div class="form-check me-3">
+                                                                                <input type="checkbox" class="form-check-input"
+                                                                                    id="{{ $item->id }}-normal"
+                                                                                    name="{{ $item->id }}-normal"
+                                                                                    checked>
+                                                                                <label class="form-check-label"
+                                                                                    for="{{ $item->id }}-normal">Normal</label>
+                                                                            </div>
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">
+                                                                                <i class="bi bi-plus"></i>
+                                                                            </button>
                                                                         </div>
-                                                                        <button
-                                                                            class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                            type="button"
-                                                                            data-target="{{ $item->id }}-keterangan-index">+</button>
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
+                                                                            style="display:none;">
+                                                                            <input type="text" class="form-control"
+                                                                                name="{{ $item->id }}_keterangan"
+                                                                                placeholder="Tambah keterangan jika tidak normal...">
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="keterangan mt-2"
-                                                                        id="{{ $item->id }}-keterangan-index"
-                                                                        style="display:none;">
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="Keterangan">
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
+                                                                @endforeach
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>

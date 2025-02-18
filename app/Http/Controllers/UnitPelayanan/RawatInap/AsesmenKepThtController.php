@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeAsesmenThtDataMasuk;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use Carbon\Carbon;
@@ -22,12 +23,12 @@ class AsesmenKepThtController extends Controller
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
@@ -178,6 +179,22 @@ class AsesmenKepThtController extends Controller
         $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
 
         $asesmenThtPemeriksaanFisik->save();
+
+        //Simpan ke table RmePemeriksaanFisik
+        $itemFisik = MrItemFisik::all();
+        foreach ($itemFisik as $item) {
+            $itemName = strtolower($item->nama);
+            $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+            $keterangan = $request->input($item->id . '_keterangan');
+            if($isNormal) $keterangan = '';
+
+            RmeAsesmenPemeriksaanFisik::create([
+                'id_asesmen' => $asesmenTht->id,
+                'id_item_fisik' => $item->id,
+                'is_normal' => $isNormal,
+                'keterangan' => $keterangan
+            ]);
+        }
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
