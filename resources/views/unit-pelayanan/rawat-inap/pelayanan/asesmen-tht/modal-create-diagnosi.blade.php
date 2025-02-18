@@ -41,12 +41,20 @@
         $('#modal-create-diagnosis').modal('show');
     });
 
-    // kode baru :
-    let dataDiagnosis = @json($dataResume->diagnosis ?? []);
-
     $(document).ready(function() {
-        // Fungsi untuk menampilkan diagnosis
+        // Inisialisasi data dari database jika ada
+        let dataDiagnosis = @json($dataResume->riwayat_kesehatan_penyakit_diderita ?? []);
+
+        // Fungsi untuk menghapus duplikat dari array
+        function removeDuplicates(arr) {
+            return [...new Set(arr)];
+        }
+
+        // Fungsi untuk memperbarui hidden input dan tampilan
         function displayDiagnosis() {
+            // Bersihkan duplikat sebelum menampilkan
+            dataDiagnosis = removeDuplicates(dataDiagnosis);
+
             let diagnosisList = '';
             let diagnoseDisplay = '';
 
@@ -56,77 +64,99 @@
 
                     // Untuk modal diagnosis
                     diagnosisList += `
-            <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                <a href="javascript:void(0)" class="fw-bold edit-diagnosis" data-id="${uniqueId}">${diagnosis}</a>
-                <button type="button" class="btn remove-diagnosis mt-1" data-id="${uniqueId}">
-                    <i class="fas fa-times text-danger"></i>
-                </button>
-            </li>`;
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                        <span class="fw-bold">${diagnosis}</span>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-link edit-diagnosis" data-id="${uniqueId}">
+                                <i class="bi bi-pencil text-primary"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-link remove-diagnosis" data-id="${uniqueId}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </button>
+                        </div>
+                    </li>`;
 
-                    // Untuk tampilan utama dengan handle untuk drag
+                    // Untuk tampilan utama
                     diagnoseDisplay += `
-            <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2"
-                 id="main-${uniqueId}" data-diagnosis="${diagnosis}">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="drag-handle" style="cursor: move;">
-                        <i class="bi bi-grip-vertical"></i>
-                    </span>
-                    <a href="javascript:void(0)" class="fw-bold">${diagnosis}</a>
-                </div>
-                <button type="button" class="btn remove-main-diagnosis" data-id="${uniqueId}">
-                    <i class="fas fa-times text-danger"></i>
-                </button>
-            </div>`;
+                    <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2"
+                        id="main-${uniqueId}" data-diagnosis="${diagnosis}">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="drag-handle" style="cursor: move;">
+                                <i class="bi bi-grip-vertical"></i>
+                            </span>
+                            <span class="fw-bold">${diagnosis}</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-link remove-main-diagnosis" data-id="${uniqueId}">
+                            <i class="bi bi-x-circle text-danger"></i>
+                        </button>
+                    </div>`;
                 });
             }
 
+            // Update tampilan
             $('#diagnosisList').html(diagnosisList);
             $('.diagnosis-list').html(diagnoseDisplay);
+
+            // Update hidden input dengan JSON string
+            $('#diagnosisData').val(JSON.stringify(dataDiagnosis));
 
             // Initialize Sortable
             initializeSortable();
         }
 
+        // Inisialisasi Sortable
         function initializeSortable() {
             let diagnosisList = document.querySelector('.diagnosis-list');
             if (diagnosisList) {
                 new Sortable(diagnosisList, {
                     animation: 150,
                     handle: '.drag-handle',
-                    onEnd: function() {
-                        // Update dataDiagnosis array setelah drag
-                        dataDiagnosis = [];
+                    onEnd: function(evt) {
+                        // Buat array baru dari urutan setelah drag
+                        let newOrder = [];
                         $('.diagnosis-item').each(function() {
                             let diagnosis = $(this).data('diagnosis');
-                            dataDiagnosis.push(diagnosis);
+                            if (diagnosis && !newOrder.includes(diagnosis)) {
+                                newOrder.push(diagnosis);
+                            }
                         });
-                        console.log('Urutan diagnosis setelah drag:', dataDiagnosis);
+
+                        // Update dataDiagnosis dengan array baru tanpa duplikat
+                        dataDiagnosis = newOrder;
+
+                        // Update hidden input
+                        $('#diagnosisData').val(JSON.stringify(dataDiagnosis));
+
+                        // Refresh tampilan
+                        displayDiagnosis();
                     }
                 });
             }
         }
 
-        // Panggil fungsi saat dokumen siap
+        // Tampilkan data awal
         displayDiagnosis();
 
-        // Tampilkan diagnosis saat modal dibuka
+        // Buka modal
         $('#btn-diagnosis').on('click', function() {
             displayDiagnosis();
             $('#modal-create-diagnosis').modal('show');
         });
 
-        // Add diagnosis ke modal
+        // Tambah diagnosis
         $('#btnAddDiagnosis').click(function() {
-            var diagnosis = $('#searchDiagnosisInput').val();
-
+            var diagnosis = $('#searchDiagnosisInput').val().trim();
             if (diagnosis !== '') {
-                dataDiagnosis.push(diagnosis);
-                displayDiagnosis();
+                // Cek apakah diagnosis sudah ada
+                if (!dataDiagnosis.includes(diagnosis)) {
+                    dataDiagnosis.push(diagnosis);
+                    displayDiagnosis();
+                }
                 $('#searchDiagnosisInput').val('');
             }
         });
 
-        // Enter key pada input diagnosis
+        // Handle enter key
         $('#searchDiagnosisInput').keypress(function(e) {
             if (e.which === 13) {
                 e.preventDefault();
@@ -157,20 +187,22 @@
             $('#modal-daftar-input-diagnosis').modal('hide');
         });
 
-        // Remove diagnosis
+        // Hapus diagnosis
         $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
             var diagnosisId = $(this).data('id');
             var index = diagnosisId.split('-')[1];
-
-            dataDiagnosis.splice(index, 1);
-            displayDiagnosis();
+            if (index >= 0 && index < dataDiagnosis.length) {
+                dataDiagnosis.splice(index, 1);
+                displayDiagnosis();
+            }
         });
 
-        // Save diagnosis
+        // Simpan diagnosis
         $('#btnSaveDiagnose').click(function() {
+            // Pastikan tidak ada duplikat sebelum menyimpan
+            dataDiagnosis = removeDuplicates(dataDiagnosis);
             displayDiagnosis();
             $('#modal-create-diagnosis').modal('hide');
         });
     });
-
 </script>

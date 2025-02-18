@@ -9,6 +9,7 @@ use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeAsesmenThtDataMasuk;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
+use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,12 +83,47 @@ class AsesmenKepThtController extends Controller
         $asesmenTht->sub_kategori = 5;
         $asesmenTht->save();
 
+        $request->validate([
+            'hasil_pemeriksaan_penunjang_darah' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'hasil_pemeriksaan_penunjang_urine' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'hasil_pemeriksaan_penunjang_rontgent' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
+        ]);
+
         $asesmenThtDataMasuk = new RmeAsesmenThtDataMasuk();
         $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
         $asesmenThtDataMasuk->tgl_masuk = $request->tgl_masuk;
         $asesmenThtDataMasuk->kondisi_masuk = $request->kondisi_masuk;
         $asesmenThtDataMasuk->ruang = $request->ruang;
         $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
+
+        // Array untuk menyimpan path file yang berhasil diupload
+        $uploadedFiles = [];
+
+        // Fungsi helper untuk upload file
+        $uploadFile = function($fieldName) use ($request, &$uploadedFiles) {
+            if ($request->hasFile($fieldName)) {
+                try {
+                    $file = $request->file($fieldName);
+                    $path = $file->store('uploads/gawat-inap/asesmen-tht', 'public');
+
+                    if ($path) {
+                        $uploadedFiles[] = $path;
+                        return basename($path);
+                    }
+                } catch (\Exception $e) {
+                    throw new \Exception("Gagal mengupload file {$fieldName}");
+                }
+            }
+            return null;
+        };
+
+        // Upload files
+        $asesmenThtDataMasuk->hasil_pemeriksaan_penunjang_darah = $uploadFile('hasil_pemeriksaan_penunjang_darah');
+        $asesmenThtDataMasuk->hasil_pemeriksaan_penunjang_urine = $uploadFile('hasil_pemeriksaan_penunjang_urine');
+        $asesmenThtDataMasuk->hasil_pemeriksaan_penunjang_rontgent = $uploadFile('hasil_pemeriksaan_penunjang_rontgent');
+        $asesmenThtDataMasuk->hasil_pemeriksaan_penunjang_histopatology = $uploadFile('hasil_pemeriksaan_penunjang_histopatology');
+
         $asesmenThtDataMasuk->save();
 
         $asesmenThtPemeriksaanFisik = new RmeAsesmenThtPemeriksaanFisik();
@@ -186,7 +222,7 @@ class AsesmenKepThtController extends Controller
             $itemName = strtolower($item->nama);
             $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
             $keterangan = $request->input($item->id . '_keterangan');
-            if($isNormal) $keterangan = '';
+            if ($isNormal) $keterangan = '';
 
             RmeAsesmenPemeriksaanFisik::create([
                 'id_asesmen' => $asesmenTht->id,
@@ -195,6 +231,85 @@ class AsesmenKepThtController extends Controller
                 'keterangan' => $keterangan
             ]);
         }
+
+        $asesmenThtRiwayatKesehatanObatAlergi = new RmeAsesmenThtRiwayatKesehatanObatAlergi();
+        $asesmenThtRiwayatKesehatanObatAlergi->id_asesmen = $asesmenTht->id;
+        $penyakitDiderita = $request->riwayat_kesehatan_penyakit_diderita;
+        if ($penyakitDiderita) {
+            $decodedPenyakit = json_decode($penyakitDiderita);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $asesmenThtRiwayatKesehatanObatAlergi->riwayat_kesehatan_penyakit_diderita = $penyakitDiderita;
+            } else {
+                throw new \Exception('Invalid JSON format for penyakit_diderita');
+            }
+        } else {
+            $asesmenThtRiwayatKesehatanObatAlergi->riwayat_kesehatan_penyakit_diderita = null;
+        }
+
+        $penyakitKeluarga = $request->riwayat_kesehatan_penyakit_keluarga;
+        if ($penyakitKeluarga) {
+            // Validasi JSON string
+            $decodedPenyakit = json_decode($penyakitKeluarga);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $asesmenThtRiwayatKesehatanObatAlergi->riwayat_kesehatan_penyakit_keluarga = $penyakitKeluarga;
+            } else {
+                throw new \Exception('Invalid JSON format for penyakit_Keluarga');
+            }
+        } else {
+            $asesmenThtRiwayatKesehatanObatAlergi->riwayat_kesehatan_penyakit_keluarga = null;
+        }
+
+        $riwayatObat = $request->riwayat_penggunaan_obat;
+        if ($riwayatObat) {
+            $decodedObat = json_decode($riwayatObat, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Format JSON untuk riwayat obat tidak valid');
+            }
+
+            // Validasi struktur data
+            foreach ($decodedObat as $obat) {
+                if (!isset(
+                    $obat['namaObat'],
+                    $obat['dosis'],
+                    $obat['satuan'],
+                    $obat['frekuensi'],
+                    $obat['keterangan']
+                )) {
+                    throw new \Exception('Data obat tidak lengkap');
+                }
+            }
+
+            $asesmenThtRiwayatKesehatanObatAlergi->riwayat_penggunaan_obat = $riwayatObat;
+        } else {
+            $asesmenThtRiwayatKesehatanObatAlergi->riwayat_penggunaan_obat = null;
+        }
+
+        $dataAlergi = $request->alergi;
+        if ($dataAlergi) {
+            $decodedObat = json_decode($dataAlergi, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Format JSON untuk alergi tidak valid');
+            }
+
+            // Validasi struktur data
+            foreach ($decodedObat as $obat) {
+                if (!isset(
+                    $obat['alergen'],
+                    $obat['reaksi'],
+                    $obat['severe'],
+                )) {
+                    throw new \Exception('Data alergi tidak lengkap');
+                }
+            }
+
+            $asesmenThtRiwayatKesehatanObatAlergi->alergi = $dataAlergi;
+        } else {
+            $asesmenThtRiwayatKesehatanObatAlergi->alergi = null;
+        }
+
+        $asesmenThtRiwayatKesehatanObatAlergi->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,

@@ -102,6 +102,7 @@
 
     <!-- js for this page only -->
     @stack('js')
+    @stack('modals')
     <!-- ======= -->
 </body>
 

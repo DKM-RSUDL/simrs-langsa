@@ -148,7 +148,6 @@
             position: relative;
             display: inline-block;
         }
-
     </style>
 @endpush
 
@@ -491,5 +490,100 @@
 
         tinggiInput.addEventListener('input', validateNumberInput);
         beratInput.addEventListener('input', validateNumberInput);
+
+
+        // 7. Hasil Pemeriksaan Penunjang
+        document.addEventListener('DOMContentLoaded', function() {
+        const maxFileSize = 2 * 1024 * 1024; // 2MB
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+        // Fungsi untuk validasi file
+        function validateFile(file) {
+            if (!file) return false;
+
+            if (file.size > maxFileSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File terlalu besar',
+                    text: 'Ukuran file maksimal 2MB'
+                });
+                return false;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Format tidak didukung',
+                    text: 'Format yang diizinkan: PDF, JPG, PNG'
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+        // Fungsi untuk preview file
+        function previewFile(input) {
+            const previewContainer = document.getElementById(input.dataset.previewContainer);
+            const fileInfo = document.getElementById(`${input.id}Info`);
+            const file = input.files[0];
+
+            previewContainer.innerHTML = '';
+
+            if (file && validateFile(file)) {
+                // Update file info
+                fileInfo.innerHTML = `
+                    <span class="text-primary">File dipilih: ${file.name}</span>
+                    <button type="button" class="btn btn-link text-danger p-0 ms-2 clear-file" data-input="${input.id}">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                `;
+
+                // Create preview
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.style.maxWidth = '100px';
+                    img.style.maxHeight = '100px';
+                    img.className = 'mt-2 rounded';
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+
+                    previewContainer.appendChild(img);
+                } else if (file.type === 'application/pdf') {
+                    const pdfIcon = document.createElement('i');
+                    pdfIcon.className = 'bi bi-file-pdf text-danger fs-1 mt-2';
+                    previewContainer.appendChild(pdfIcon);
+                }
+            } else {
+                fileInfo.innerHTML = '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+            }
+        }
+
+        // Event listener untuk file inputs
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                previewFile(this);
+            });
+        });
+
+        // Event listener untuk tombol clear
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.clear-file')) {
+                const btn = e.target.closest('.clear-file');
+                const inputId = btn.dataset.input;
+                const input = document.getElementById(inputId);
+                const previewContainer = document.getElementById(input.dataset.previewContainer);
+
+                input.value = '';
+                previewContainer.innerHTML = '';
+                document.getElementById(`${inputId}Info`).innerHTML =
+                    '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+            }
+        });
+    });
     </script>
 @endpush
