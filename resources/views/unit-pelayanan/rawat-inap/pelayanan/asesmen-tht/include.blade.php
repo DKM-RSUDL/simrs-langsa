@@ -431,5 +431,65 @@
 
 
         });
+
+        // Ambil referensi input elements
+        const tinggiInput = document.querySelector('input[name="antropometri_tinggi_badan"]');
+        const beratInput = document.querySelector('input[name="antropometr_berat_badan"]');
+        const imtInput = document.querySelector('input[name="antropometri_imt"]');
+        const lptInput = document.querySelector('input[name="antropometri_lpt"]');
+
+        // Fungsi untuk menghitung IMT
+        function hitungIMT(berat, tinggi) {
+            // Konversi tinggi dari cm ke meter
+            const tinggiMeter = tinggi / 100;
+            return berat / (tinggiMeter * tinggiMeter);
+        }
+
+        // Fungsi untuk menghitung LPT
+        function hitungLPT(berat, tinggi) {
+            // Konversi tinggi dari cm ke meter
+            const tinggiMeter = tinggi / 100;
+            return Math.sqrt((tinggiMeter * berat) / 3600);
+        }
+
+        // Fungsi untuk memformat angka
+        function formatNumber(number) {
+            return number.toFixed(2);
+        }
+
+        // Fungsi untuk memvalidasi input
+        function validateInput(value) {
+            return !isNaN(value) && value > 0;
+        }
+
+        // Fungsi untuk update hasil perhitungan
+        function updateHasil() {
+            const tinggi = parseFloat(tinggiInput.value);
+            const berat = parseFloat(beratInput.value);
+
+            if (validateInput(tinggi) && validateInput(berat)) {
+                const imt = hitungIMT(berat, tinggi);
+                const lpt = hitungLPT(berat, tinggi);
+
+                imtInput.value = formatNumber(imt);
+                lptInput.value = formatNumber(lpt);
+            } else {
+                imtInput.value = '';
+                lptInput.value = '';
+            }
+        }
+
+        // Tambahkan event listener untuk input
+        tinggiInput.addEventListener('input', updateHasil);
+        beratInput.addEventListener('input', updateHasil);
+
+        // Tambahkan validasi untuk hanya menerima angka
+        function validateNumberInput(event) {
+            const input = event.target;
+            input.value = input.value.replace(/[^0-9.]/g, '');
+        }
+
+        tinggiInput.addEventListener('input', validateNumberInput);
+        beratInput.addEventListener('input', validateNumberInput);
     </script>
 @endpush

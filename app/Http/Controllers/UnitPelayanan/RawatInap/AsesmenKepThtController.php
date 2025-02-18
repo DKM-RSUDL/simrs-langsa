@@ -99,6 +99,84 @@ class AsesmenKepThtController extends Controller
         $asesmenThtPemeriksaanFisik->sensorium = $request->sensorium;
         $asesmenThtPemeriksaanFisik->ku_kp_kg = $request->ku_kp_kg;
         $asesmenThtPemeriksaanFisik->avpu = $request->avpu;
+        $asesmenThtPemeriksaanFisik->pangkal_lidah = $request->pangkal_lidah;
+        $asesmenThtPemeriksaanFisik->tonsil_lidah = $request->tonsil_lidah;
+        $asesmenThtPemeriksaanFisik->epiglotis = $request->epiglotis;
+        $asesmenThtPemeriksaanFisik->pita_suara = $request->pita_suara;
+        // Daun Telinga
+        $asesmenThtPemeriksaanFisik->daun_telinga_nanah_kana = $request->daun_telinga_nanah_kana;
+        $asesmenThtPemeriksaanFisik->daun_telinga_nanah_kiri = $request->daun_telinga_nanah_kiri;
+        $asesmenThtPemeriksaanFisik->daun_telinga_darah_kanan = $request->daun_telinga_darah_kanan;
+        $asesmenThtPemeriksaanFisik->daun_telinga_darah_kiri = $request->daun_telinga_darah_kiri;
+        $asesmenThtPemeriksaanFisik->daun_telinga_lainnya_kanan = $request->daun_telinga_lainnya_kanan;
+        $asesmenThtPemeriksaanFisik->daun_telinga_lainnya_kiri = $request->daun_telinga_lainnya_kiri;
+        // Liang Telinga
+        $asesmenThtPemeriksaanFisik->liang_telinga_darah_kanan = $request->liang_telinga_darah_kanan;
+        $asesmenThtPemeriksaanFisik->liang_telinga_darah_kiri = $request->liang_telinga_darah_kiri;
+        $asesmenThtPemeriksaanFisik->liang_telinga_nanah_kanan = $request->liang_telinga_nanah_kanan;
+        $asesmenThtPemeriksaanFisik->liang_telinga_nanah_kiri = $request->liang_telinga_nanah_kiri;
+        $asesmenThtPemeriksaanFisik->liang_telinga_berbau_kanan = $request->liang_telinga_berbau_kanan;
+        $asesmenThtPemeriksaanFisik->liang_telinga_berbau_kiri = $request->liang_telinga_berbau_kiri;
+        $asesmenThtPemeriksaanFisik->liang_telinga_lainnya_kanan = $request->liang_telinga_lainnya_kanan;
+        $asesmenThtPemeriksaanFisik->liang_telinga_lainnya_kiri = $request->liang_telinga_lainnya_kiri;
+        // Tes Pendengaran
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_renne_res_kanan = $request->tes_pendengaran_renne_res_kanan;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_renne_res_kiri = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kanan = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_weber_tes_kiri = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kanan = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_schwabach_test_kiri = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kanan = $request->tes_pendengaran_renne_res_kiri;
+        $asesmenThtPemeriksaanFisik->tes_pendengaran_bebisik_kiri = $request->tes_pendengaran_renne_res_kiri;
+        // Paranatal Sinus
+        $asesmenThtPemeriksaanFisik->senus_frontalis_nyeri_tekan_kanan = $request->senus_frontalis_nyeri_tekan_kanan;
+        $asesmenThtPemeriksaanFisik->senus_frontalis_nyeri_tekan_kiri = $request->senus_frontalis_nyeri_tekan_kiri;
+        $asesmenThtPemeriksaanFisik->senus_frontalis_transluminasi_kanan = $request->senus_frontalis_transluminasi_kanan;
+        $asesmenThtPemeriksaanFisik->senus_frontalis_transluminasi_kiri = $request->senus_frontalis_transluminasi_kanan;
+        // Sinus Maksinasi
+        $asesmenThtPemeriksaanFisik->sinus_maksinasi_nyari_tekan_kanan = $request->sinus_maksinasi_nyari_tekan_kanan;
+        $asesmenThtPemeriksaanFisik->sinus_maksinasi_nyari_tekan_kiri = $request->sinus_maksinasi_nyari_tekan_kiri;
+        $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kanan = $request->sinus_maksinasi_nyari_tekan_kiri;
+        $asesmenThtPemeriksaanFisik->sinus_maksinasi_transluminasi_kiri = $request->sinus_maksinasi_nyari_tekan_kiri;
+        // Rhinoscopi Anterior
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_cavun_nasi_kanan = $request->rhinoscopi_anterior_cavun_nasi_kanan;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_cavun_nasi_kiri = $request->rhinoscopi_anterior_cavun_nasi_kanan;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_konka_inferior_kanan = $request->rhinoscopi_anterior_konka_inferior_kanan;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_konka_inferior_kiri = $request->rhinoscopi_anterior_konka_inferior_kiri;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kanan = $request->rhinoscopi_anterior_konka_inferior_kiri;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_anterior_septum_nasi_kiri = $request->rhinoscopi_anterior_konka_inferior_kiri;
+        // Rhinoscopi Pasterior
+        $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kanan = $request->rhinoscopi_pasterior_septum_nasi_kanan;
+        $asesmenThtPemeriksaanFisik->rhinoscopi_pasterior_septum_nasi_kiri = $request->rhinoscopi_pasterior_septum_nasi_kiri;
+        // Meatus Nasi
+        $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kanan = $request->meatus_nasi_superior_kanan;
+        $asesmenThtPemeriksaanFisik->meatus_nasi_superior_kiri = $request->meatus_nasi_superior_kiri;
+        $asesmenThtPemeriksaanFisik->meatus_nasi_media_kanan = $request->meatus_nasi_media_kanan;
+        $asesmenThtPemeriksaanFisik->meatus_nasi_media_kiri = $request->meatus_nasi_media_kiri;
+        $asesmenThtPemeriksaanFisik->meatus_nasi_inferior_kanan = $request->meatus_nasi_inferior_kanan;
+        $asesmenThtPemeriksaanFisik->meatus_nasi_inferior_kiri = $request->meatus_nasi_inferior_kiri;
+        // Membran Tympani
+        $asesmenThtPemeriksaanFisik->membran_tympani_warna_kanan = $request->membran_tympani_warna_kanan;
+        $asesmenThtPemeriksaanFisik->membran_tympani_warna_kiri = $request->membran_tympani_warna_kiri;
+        $asesmenThtPemeriksaanFisik->membran_tympani_perforasi_kanan = $request->membran_tympani_perforasi_kanan;
+        $asesmenThtPemeriksaanFisik->membran_tympani_perforasi_kiri = $request->membran_tympani_perforasi_kiri;
+        $asesmenThtPemeriksaanFisik->membran_tympani_lainnya_kanan = $request->membran_tympani_lainnya_kanan;
+        $asesmenThtPemeriksaanFisik->membran_tympani_lainnya_kiri = $request->membran_tympani_lainnya_kiri;
+        // Hidung
+        $asesmenThtPemeriksaanFisik->hidung_bentuk_kanan = $request->hidung_bentuk_kanan;
+        $asesmenThtPemeriksaanFisik->hidung_bentuk_kiri = $request->hidung_bentuk_kiri;
+        $asesmenThtPemeriksaanFisik->hidung_luka_kanan = $request->hidung_luka_kanan;
+        $asesmenThtPemeriksaanFisik->hidung_luka_kiri = $request->hidung_luka_kiri;
+        $asesmenThtPemeriksaanFisik->hidung_bisul_kanan = $request->hidung_bisul_kanan;
+        $asesmenThtPemeriksaanFisik->hidung_bisul_kiri = $request->hidung_bisul_kiri;
+        $asesmenThtPemeriksaanFisik->hidung_fissare_kanan = $request->hidung_fissare_kanan;
+        $asesmenThtPemeriksaanFisik->hidung_fissare_kiri = $request->hidung_fissare_kiri;
+        // Antropometri
+        $asesmenThtPemeriksaanFisik->antropometri_tinggi_badan = $request->antropometri_tinggi_badan;
+        $asesmenThtPemeriksaanFisik->antropometr_berat_badan = $request->antropometr_berat_badan;
+        $asesmenThtPemeriksaanFisik->antropometri_imt = $request->antropometri_imt;
+        $asesmenThtPemeriksaanFisik->antropometri_lpt = $request->antropometri_lpt;
+
         $asesmenThtPemeriksaanFisik->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [

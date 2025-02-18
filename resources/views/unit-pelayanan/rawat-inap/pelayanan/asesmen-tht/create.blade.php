@@ -165,7 +165,7 @@
                                         </div>
                                         <div class="form-group mt-3">
                                             <label style="min-width: 200px;">Tonsil Lidah</label>
-                                            <input type="text" class="form-control" name="pangkal_lidah"
+                                            <input type="text" class="form-control" name="tonsil_lidah"
                                                 placeholder="Jelaskan">
                                         </div>
                                         <div class="form-group mt-3">
@@ -186,14 +186,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="nanah_kanan"
+                                                    <input type="text" class="form-control" name="daun_telinga_nanah_kana"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="nanah_kiri"
+                                                    <input type="text" class="form-control" name="daun_telinga_nanah_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -205,14 +205,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="darah_kanan"
+                                                    <input type="text" class="form-control" name="daun_telinga_darah_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="darah_kiri"
+                                                    <input type="text" class="form-control" name="daun_telinga_darah_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -224,14 +224,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="lainnya_kanan"
+                                                    <input type="text" class="form-control" name="daun_telinga_lainnya_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="lainnya_kiri"
+                                                    <input type="text" class="form-control" name="daun_telinga_lainnya_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -243,14 +243,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="darah_kanan"
+                                                    <input type="text" class="form-control" name="liang_telinga_darah_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="darah_kiri"
+                                                    <input type="text" class="form-control" name="liang_telinga_darah_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -261,14 +261,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="nanah_kanan"
+                                                    <input type="text" class="form-control" name="liang_telinga_nanah_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="nanah_kiri"
+                                                    <input type="text" class="form-control" name="liang_telinga_nanah_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -279,14 +279,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="berbau_kanan"
+                                                    <input type="text" class="form-control" name="liang_telinga_berbau_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="berbau_kiri"
+                                                    <input type="text" class="form-control" name="liang_telinga_berbau_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -297,14 +297,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="lainnya_kanan"
+                                                    <input type="text" class="form-control" name="liang_telinga_lainnya_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="lainnya_kiri"
+                                                    <input type="text" class="form-control" name="liang_telinga_lainnya_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -316,14 +316,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="renne_tes_kanan"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_renne_res_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="renne_tes_kiri"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_renne_res_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -334,14 +334,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="weber_test_kanan"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_weber_tes_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="weber_test_kiri"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_weber_tes_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -353,13 +353,13 @@
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
                                                     <input type="text" class="form-control"
-                                                        name="schwabach_test_kanan" placeholder="jelaskan">
+                                                        name="tes_pendengaran_schwabach_test_kanan" placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="schwabach_test_kiri"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_schwabach_test_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -370,14 +370,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="bebisik_kanan"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_bebisik_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="bebisik_kiri"
+                                                    <input type="text" class="form-control" name="tes_pendengaran_bebisik_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -390,14 +390,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="nyeri_tekan_kanan"
+                                                    <input type="text" class="form-control" name="senus_frontalis_nyeri_tekan_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="nyeri_tekan_kiri"
+                                                    <input type="text" class="form-control" name="senus_frontalis_nyeri_tekan_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -408,14 +408,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="transluminasi_kanan"
+                                                    <input type="text" class="form-control" name="senus_frontalis_transluminasi_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="transluminasi_kiri"
+                                                    <input type="text" class="form-control" name="senus_frontalis_transluminasi_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -427,14 +427,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="nyari_tekan_kanan"
+                                                    <input type="text" class="form-control" name="sinus_maksinasi_nyari_tekan_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="nyari_tekan_kiri"
+                                                    <input type="text" class="form-control" name="sinus_maksinasi_nyari_tekan_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -445,14 +445,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="transluminasi_kanan"
+                                                    <input type="text" class="form-control" name="sinus_maksinasi_transluminasi_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="transluminasi_kiri"
+                                                    <input type="text" class="form-control" name="sinus_maksinasi_transluminasi_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -464,14 +464,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="cavun_nasi_kanan"
+                                                    <input type="text" class="form-control" name="rhinoscopi_anterior_cavun_nasi_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="cavun_nasi_kiri"
+                                                    <input type="text" class="form-control" name="rhinoscopi_anterior_cavun_nasi_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -483,13 +483,13 @@
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
                                                     <input type="text" class="form-control"
-                                                        name="konka_inferior_kanan" placeholder="jelaskan">
+                                                        name="rhinoscopi_anterior_konka_inferior_kanan" placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="konka_inferior_kiri"
+                                                    <input type="text" class="form-control" name="rhinoscopi_anterior_konka_inferior_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -499,14 +499,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="septum_nasi_kanan"
+                                                    <input type="text" class="form-control" name="rhinoscopi_anterior_septum_nasi_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="septum_nasi_kiri"
+                                                    <input type="text" class="form-control" name="rhinoscopi_anterior_septum_nasi_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -519,14 +519,14 @@
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
                                                     <input type="text" class="form-control"
-                                                        name="rhinoscopi_pasterior_kanan" placeholder="jelaskan">
+                                                        name="rhinoscopi_pasterior_septum_nasi_kanan" placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
                                                     <input type="text" class="form-control"
-                                                        name="rhinoscopi_pasterior_kiri" placeholder="jelaskan">
+                                                        name="rhinoscopi_pasterior_septum_nasi_kiri" placeholder="jelaskan">
                                                 </div>
                                             </div>
                                         </div>
@@ -537,14 +537,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="superior_kanan"
+                                                    <input type="text" class="form-control" name="meatus_nasi_superior_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="superior_kiri"
+                                                    <input type="text" class="form-control" name="meatus_nasi_superior_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -554,14 +554,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="media_kanan"
+                                                    <input type="text" class="form-control" name="meatus_nasi_media_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="media_kiri"
+                                                    <input type="text" class="form-control" name="meatus_nasi_media_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -571,14 +571,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="inferior_kanan"
+                                                    <input type="text" class="form-control" name="meatus_nasi_inferior_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="inferior_kiri"
+                                                    <input type="text" class="form-control" name="meatus_nasi_inferior_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -590,14 +590,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="warna_kanan"
+                                                    <input type="text" class="form-control" name="membran_tympani_warna_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="warna_kiri"
+                                                    <input type="text" class="form-control" name="membran_tympani_warna_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -607,14 +607,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="perforasi_kanan"
+                                                    <input type="text" class="form-control" name="membran_tympani_perforasi_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="perforasi_kiri"
+                                                    <input type="text" class="form-control" name="membran_tympani_perforasi_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -624,14 +624,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="lainnya_kanan"
+                                                    <input type="text" class="form-control" name="membran_tympani_lainnya_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="lainnya_kiri"
+                                                    <input type="text" class="form-control" name="membran_tympani_lainnya_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -643,14 +643,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="bentuk_kanan"
+                                                    <input type="text" class="form-control" name="hidung_bentuk_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="bentuk_kiri"
+                                                    <input type="text" class="form-control" name="hidung_bentuk_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -660,14 +660,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="luka_kanan"
+                                                    <input type="text" class="form-control" name="hidung_luka_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="luka_kiri"
+                                                    <input type="text" class="form-control" name="hidung_luka_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -677,14 +677,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="bisul_kanan"
+                                                    <input type="text" class="form-control" name="hidung_bisul_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="bisul_kiri"
+                                                    <input type="text" class="form-control" name="hidung_bisul_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -694,14 +694,14 @@
                                             <div class="col-4">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kanan</span>
-                                                    <input type="text" class="form-control" name="fissare_kanan"
+                                                    <input type="text" class="form-control" name="hidung_fissare_kanan"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
                                             <div class="col-5">
                                                 <div class="input-group">
                                                     <span class="input-group-text">Kiri</span>
-                                                    <input type="text" class="form-control" name="fissare_kiri"
+                                                    <input type="text" class="form-control" name="hidung_fissare_kiri"
                                                         placeholder="jelaskan">
                                                 </div>
                                             </div>
@@ -711,11 +711,11 @@
 
                                         <div class="form-group mt-4">
                                             <label style="min-width: 200px;">Tinggi Badan</label>
-                                            <input type="text" class="form-control" name="tinggi_badan">
+                                            <input type="text" class="form-control" name="antropometri_tinggi_badan">
                                         </div>
                                         <div class="form-group mt-4">
                                             <label style="min-width: 200px;">Berat Badan</label>
-                                            <input type="text" class="form-control" name="berat_badan">
+                                            <input type="text" class="form-control" name="antropometr_berat_badan">
                                         </div>
 
                                         <div class="form-group">
@@ -723,7 +723,7 @@
                                                 (IMT)</label>
                                             <div class="flex-grow-1">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="imt" readonly>
+                                                    <input type="text" class="form-control" name="antropometri_imt" readonly>
                                                     <span class="input-group-text text-muted fst-italic">rumus: IMT = berat
                                                         (kg) / tinggi (m) / tinggi (m)</span>
                                                 </div>
@@ -735,7 +735,7 @@
                                                 (LPT)</label>
                                             <div class="flex-grow-1">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="lpt" readonly>
+                                                    <input type="text" class="form-control" name="antropometri_lpt" readonly>
                                                     <span class="input-group-text text-muted fst-italic">rumus: LPT =
                                                         tinggi
                                                         (m2) x berat (kg) / 3600</span>
