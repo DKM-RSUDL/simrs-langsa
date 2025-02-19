@@ -1109,18 +1109,34 @@
                                         <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
-                                        <div class="mb-4">
+                                        <div class="mb-4 position-relative">
                                             <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis banding yang tidak ditemukan.</small>
+                                            <small class="d-block text-secondary mb-3">
+                                                Pilih tanda dokumen untuk mencari diagnosis banding,
+                                                apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan diagnosis banding yang tidak ditemukan.
+                                            </small>
 
-                                            <div class="input-group mb-3">
+                                            <div class="form-group">
+                                                <div class="w-100">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="inputMasalah"
+                                                            placeholder="Ketik masalah keperawatan...">
+                                                    </div>
+                                                    <div id="masalahSuggestions" class="suggestions-list"></div>
+                                                    <div id="selectedMasalahList" class="selected-items mt-3"></div>
+                                                    <input type="hidden" name="nama"
+                                                        id="masalahKeperawatanValue">
+                                                </div>
+                                            </div>
+
+                                            {{-- <div class="input-group mb-3 position-relative">
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                                <input type="text"
+                                                       class="form-control border-start-0 ps-0"
+                                                       placeholder="Cari dan tambah Diagnosis Banding">
                                                 <span class="input-group-text bg-white">
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
@@ -1133,7 +1149,7 @@
                                                 <div class="diagnosis-item">
                                                     <span>2. Risiko Infeksi (Risk for Infection)</span>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                         <!-- Diagnosis Kerja -->

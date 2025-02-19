@@ -710,5 +710,179 @@
         setupReadonlyRadios();
         calculateConclusion();
     });
+
+    // 9. Diagnosis Diagnosis Banding
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select DOM elements
+        const searchInput = document.querySelector('.input-group input');
+        const addButton = document.querySelector('.input-group .bi-plus-circle');
+        const diagnosisList = document.querySelector('.diagnosis-list');
+        const searchResultsList = document.createElement('div');
+        searchResultsList.className = 'search-results-list list-group position-absolute bg-white border rounded';
+        searchResultsList.style.display = 'none';
+        searchResultsList.style.zIndex = '1000';
+        searchResultsList.style.width = 'calc(100% - 30px)';
+
+        // Insert search results list after the input group
+        searchInput.closest('.input-group').after(searchResultsList);
+
+        // Existing diagnoses list
+        let currentDiagnoses = [
+            { id: 1, nama: 'Deficit Perawatan Diri (Self-Care Deficit)' },
+            { id: 2, nama: 'Risiko Infeksi (Risk for Infection)' }
+        ];
+
+        // Render current diagnoses list
+        function renderDiagnosisList() {
+            diagnosisList.innerHTML = currentDiagnoses.map((diagnosis, index) => `
+                <div class="diagnosis-item mb-2" data-id="${diagnosis.id}">
+                    <span>${index + 1}. ${diagnosis.nama}</span>
+                    <button class="btn btn-sm btn-danger remove-diagnosis ml-2">×</button>
+                </div>
+            `).join('');
+
+            // Add remove event listeners
+            diagnosisList.querySelectorAll('.remove-diagnosis').forEach(button => {
+                button.addEventListener('click', function() {
+                    const diagnosisId = parseInt(this.closest('.diagnosis-item').dataset.id);
+                    currentDiagnoses = currentDiagnoses.filter(d => d.id !== diagnosisId);
+                    renderDiagnosisList();
+                });
+            });
+        }
+
+        // Initial render
+        renderDiagnosisList();
+
+        // Search function (simulating backend search)
+        async function searchDiagnosis(query) {
+            try {
+                // Simulated API call - replace with actual fetch to your backend
+                const response = await fetch(`/api/diagnosis-banding/search?query=${encodeURIComponent(query)}`);
+                const results = await response.json();
+                return results;
+            } catch (error) {
+                console.error('Search error:', error);
+                return [];
+            }
+        }
+
+        // Add new diagnosis function
+        async function addDiagnosis(nama) {
+            try {
+                // Simulated API call - replace with actual fetch to your backend
+                const response = await fetch('/api/diagnosis-banding/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add CSRF token if needed
+                        // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ nama: nama })
+                });
+                const newDiagnosis = await response.json();
+                return newDiagnosis;
+            } catch (error) {
+                console.error('Add diagnosis error:', error);
+                return null;
+            }
+        }
+
+        // Debounce search input
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            // Clear previous results
+            searchResultsList.innerHTML = '';
+            searchResultsList.style.display = 'none';
+
+            if (query.length > 2) {
+                searchTimeout = setTimeout(async () => {
+                    const results = await searchDiagnosis(query);
+
+                    // If no results, show option to add new
+                    if (results.length === 0) {
+                        searchResultsList.innerHTML = `
+                            <div class="list-group-item list-group-item-action text-primary" id="add-new-diagnosis">
+                                Tambah "${query}" sebagai diagnosis banding baru
+                            </div>
+                        `;
+                        searchResultsList.style.display = 'block';
+
+                        // Add event listener to add new diagnosis
+                        document.getElementById('add-new-diagnosis').addEventListener('click', async () => {
+                            const newDiagnosis = await addDiagnosis(query);
+                            if (newDiagnosis) {
+                                currentDiagnoses.push(newDiagnosis);
+                                renderDiagnosisList();
+                                searchInput.value = '';
+                                searchResultsList.style.display = 'none';
+                            }
+                        });
+                    } else {
+                        // Render search results
+                        searchResultsList.innerHTML = results.map(result => `
+                            <div class="list-group-item list-group-item-action" data-id="${result.id}">
+                                ${result.nama}
+                            </div>
+                        `).join('');
+                        searchResultsList.style.display = 'block';
+
+                        // Add click event to select diagnosis
+                        searchResultsList.querySelectorAll('.list-group-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                const selectedDiagnosis = results.find(
+                                    r => r.id === parseInt(item.dataset.id)
+                                );
+
+                                // Check if already exists in current list
+                                const exists = currentDiagnoses.some(
+                                    d => d.id === selectedDiagnosis.id
+                                );
+
+                                if (!exists) {
+                                    currentDiagnoses.push(selectedDiagnosis);
+                                    renderDiagnosisList();
+                                }
+
+                                searchInput.value = '';
+                                searchResultsList.style.display = 'none';
+                            });
+                        });
+                    }
+                }, 300);
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) &&
+                !searchResultsList.contains(event.target)) {
+                searchResultsList.style.display = 'none';
+            }
+        });
+
+        // Handle add button click
+        addButton.addEventListener('click', async () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                const newDiagnosis = await addDiagnosis(query);
+                if (newDiagnosis) {
+                    currentDiagnoses.push(newDiagnosis);
+                    renderDiagnosisList();
+                    searchInput.value = '';
+                }
+            }
+        });
+
+        // Optional: Handle enter key
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addButton.click();
+            }
+        });
+    });
     </script>
 @endpush

@@ -4,10 +4,11 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\RmeAsesmenthtDiagnosisImplementasi;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenPemeriksaanFisik;
-use App\Models\RmeAsesmenThtDataMasuk;
+use App\Models\RmeAsesmenTht;
 use App\Models\RmeAsesmenThtDischargePlanning;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
@@ -22,6 +23,7 @@ class AsesmenKepThtController extends Controller
     {
         $user = auth()->user();
         $itemFisik = MrItemFisik::orderby('urut')->get();
+        $thtDiagnosisImplementasi = RmeAsesmenthtDiagnosisImplementasi::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -66,7 +68,8 @@ class AsesmenKepThtController extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
-            'user'
+            'user',
+            'thtDiagnosisImplementasi'
         ));
     }
 
@@ -91,7 +94,7 @@ class AsesmenKepThtController extends Controller
             'hasil_pemeriksaan_penunjang_histopatology' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
 
-        $asesmenThtDataMasuk = new RmeAsesmenThtDataMasuk();
+        $asesmenThtDataMasuk = new RmeAsesmenTht();
         $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
         $asesmenThtDataMasuk->tgl_masuk = $request->tgl_masuk;
         $asesmenThtDataMasuk->kondisi_masuk = $request->kondisi_masuk;
@@ -323,6 +326,11 @@ class AsesmenKepThtController extends Controller
         $asesmenThtDischargePlanning->dp_rencana_pulang = $request->dp_rencana_pulang;
         $asesmenThtDischargePlanning->dp_kesimpulan = $request->dp_kesimpulan;
         $asesmenThtDischargePlanning->save();
+
+        // $thtDiagnosisImplementasi = new RmeAsesmenthtDiagnosisImplementasi();
+        // $thtDiagnosisImplementasi->id = $request->id; // auto-increment
+        // $thtDiagnosisImplementasi->nama = $request->nama;
+        // $thtDiagnosisImplementasi->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
