@@ -67,6 +67,7 @@
                 </button>
             </div>
         `).join('');
+        document.getElementById('intervensi_risiko_jatuh_json').value = JSON.stringify(selectedIntervensi);
 
         // Reset checkbox jika "Tidak ada intervensi" dipilih
         const noIntervensiCheckbox = document.getElementById('intervensiRisikoJatuh4');
@@ -128,5 +129,11 @@ function deleteIntervensi(button) {
         }
     });
     button.parentElement.remove();
+
+    const remainingIntervensi = [];
+    document.querySelectorAll('#selectedTindakanList-risikojatuh span').forEach(span => {
+        remainingIntervensi.push(span.textContent);
+    });
+    document.getElementById('intervensi_risiko_jatuh_json').value = JSON.stringify(remainingIntervensi);
 }
 </script>

@@ -10,5 +10,6 @@ class RmeAsesmenKepAnakFisik extends Model
     use HasFactory;
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_FISIK';
+    public $timestamps = false;
     protected $guarded = ['id'];
 }

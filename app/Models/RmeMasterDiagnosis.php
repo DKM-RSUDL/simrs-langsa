@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RmeAsesmenKepAnakStatusNyeri extends Model
+class RmeMasterDiagnosis extends Model
 {
     use HasFactory;
-
-    protected $table = 'RME_ASESMEN_KEP_ANAK_STATUS_NYERI';
+    protected $table = 'RME_MASTER_DIAGNOSIS';
     public $timestamps = false;
-    protected $guarded = ['id'];
 }

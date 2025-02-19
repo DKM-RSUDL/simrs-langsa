@@ -1105,50 +1105,33 @@
                                         </form>
                                     </div>
 
-                                    <div class="section-separator" style="margin-bottom: 2rem;">
+                                    <div class="section-separator" id="diagnosis">
                                         <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
-                                        <div class="mb-4 position-relative">
+                                        <div class="mb-4">
                                             <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                            <small class="d-block text-secondary mb-3">
-                                                Pilih tanda dokumen untuk mencari diagnosis banding,
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis banding,
                                                 apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan diagnosis banding yang tidak ditemukan.
-                                            </small>
+                                                keterangan diagnosis banding yang tidak ditemukan.</small>
 
-                                            <div class="form-group position-relative">
-                                                <div class="w-100">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" id="inputDiagnosisBanding"
-                                                            placeholder="Ketik diagnosis banding...">
-                                                    </div>
-                                                    <div id="diagnosisBandingSuggestions" class="suggestions-list"></div>
-                                                    <div id="selectedDiagnosisBandingList" class="selected-items mt-3"></div>
-                                                    <input type="hidden" name="diagnosis_banding" id="asesmenThtDiagnosisBandingValue">
-                                                </div>
-                                            </div>
-
-                                            {{-- <div class="input-group mb-3 position-relative">
+                                            <div class="input-group mb-3">
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text"
-                                                       class="form-control border-start-0 ps-0"
-                                                       placeholder="Cari dan tambah Diagnosis Banding">
-                                                <span class="input-group-text bg-white">
+                                                <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Diagnosis Banding">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
                                             </div>
 
-                                            <div class="diagnosis-list bg-light p-3 rounded">
-                                                <div class="diagnosis-item mb-2">
-                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
-                                                </div>
-                                                <div class="diagnosis-item">
-                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                </div>
-                                            </div> --}}
+                                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
+                                            </div>
+                                            
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
 
                                         <!-- Diagnosis Kerja -->
@@ -1156,30 +1139,27 @@
                                             <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan
-                                                diagnosis kerja yang tidak ditemukan.</small>
+                                                keterangan diagnosis kerja yang tidak ditemukan.</small>
 
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Diagnosis Kerja">
-                                                <span class="input-group-text bg-white">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
                                             </div>
 
-                                            <div class="diagnosis-list bg-light p-3 rounded">
-                                                <div class="diagnosis-item mb-2">
-                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
-                                                </div>
-                                                <div class="diagnosis-item">
-                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                </div>
+                                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
                                             </div>
+                                            
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                         </div>
-                                    </div>
+                                    </div>                                    
 
                                     <div class="section-separator" style="margin-bottom: 2rem;">
                                         <h5 class="fw-semibold mb-4">10. Implementasi</h5>

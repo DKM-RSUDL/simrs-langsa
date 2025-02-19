@@ -92,13 +92,13 @@
                                                 
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
-                                                    <input type="text" class="form-control" name="sistole"
+                                                    <input type="number" class="form-control" name="sistole"
                                                         placeholder="Sistole">
                                                 </div>
                                                 
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
-                                                    <input type="text" class="form-control" name="diastole"
+                                                    <input type="number" class="form-control" name="diastole"
                                                         placeholder="Diastole">
                                                 </div>
                                             </div>
@@ -106,19 +106,19 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nadi (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nadi"
+                                            <input type="number" class="form-control" name="nadi"
                                                 placeholder="frekuensi nadi per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nafas (Per Menit)</label>
-                                            <input type="text" class="form-control" name="nafas"
+                                            <input type="number" class="form-control" name="nafas"
                                                 placeholder="frekuensi nafas per menit">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Suhu (C)</label>
-                                            <input type="text" class="form-control" name="suhu"
+                                            <input type="number" class="form-control" name="suhu"
                                                 placeholder="suhu dalam celcius">
                                         </div>
 
@@ -127,12 +127,12 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Tanpa Bantuan O2</label>
-                                                    <input type="text" class="form-control" name="saturasi_o2_tanpa"
-                                                        placeholder="Tanpa bantuan O2">
+                                                    <input type="number" class="form-control" name="saturasi_o2_tanpa"
+                                                            placeholder="Tanpa bantuan O2">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Bantuan O2</label>
-                                                    <input type="text" class="form-control" name="saturasi_o2_dengan"
+                                                    <input type="number" class="form-control" name="saturasi_o2_dengan"
                                                         placeholder="Dengan bantuan O2">
                                                 </div>
                                             </div>
@@ -168,9 +168,9 @@
                                             <label style="min-width: 200px;">Penglihatan</label>
                                             <select class="form-select" name="penglihatan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Baik">Baik</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Alat Bantu">Alat Bantu</option>
+                                                <option value="1">Baik</option>
+                                                <option value="2">Rusak</option>
+                                                <option value="3">Alat Bantu</option>
                                             </select>
                                         </div>
 
@@ -178,9 +178,9 @@
                                             <label style="min-width: 200px;">Pendengaran</label>
                                             <select class="form-select" name="pendengaran">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Baik">Baik</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Alat Bantu">Alat Bantu</option>
+                                                <option value="1">Baik</option>
+                                                <option value="2">Rusak</option>
+                                                <option value="3">Alat Bantu</option>
                                             </select>
                                         </div>
 
@@ -188,8 +188,8 @@
                                             <label style="min-width: 200px;">Bicara</label>
                                             <select class="form-select" name="bicara">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Gangguan">Gangguan</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Gangguan</option>
                                             </select>
                                         </div>
 
@@ -197,9 +197,9 @@
                                             <label style="min-width: 200px;">Refleks Menelan</label>
                                             <select class="form-select" name="refleks_menelan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Rusak">Rusak</option>
-                                                <option value="Sulit">Sulit</option>
+                                                <option value="1">Normal</option>
+                                                <option value="3">Rusak</option>
+                                                <option value="2">Sulit</option>
                                             </select>
                                         </div>
 
@@ -207,8 +207,8 @@
                                             <label style="min-width: 200px;">Pola Tidur</label>
                                             <select class="form-select" name="pola_tidur">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Masalah">Masalah</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Masalah</option>
                                             </select>
                                         </div>
 
@@ -216,9 +216,9 @@
                                             <label style="min-width: 200px;">Luka</label>
                                             <select class="form-select" name="luka">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Gangguan">Gangguan</option>
-                                                <option value="Tidak Ada Luka">Tidak Ada Luka</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Gangguan</option>
+                                                <option value="3">Tidak Ada Luka</option>
                                             </select>
                                         </div>
 
@@ -226,10 +226,10 @@
                                             <label style="min-width: 200px;">Defekasi</label>
                                             <select class="form-select" name="defekasi">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Tidak Ada">Tidak Ada</option>
-                                                <option value="Ada, Normal">Ada, Normal</option>
-                                                <option value="Konsitipasi">Konsitipasi</option>
-                                                <option value="Inkontinesia Alvi">Inkontinesia Alvi</option>
+                                                <option value="1">Tidak Ada</option>
+                                                <option value="2">Ada, Normal</option>
+                                                <option value="3">Konsitipasi</option>
+                                                <option value="4">Inkontinesia Alvi</option>
                                             </select>
                                         </div>
 
@@ -237,9 +237,9 @@
                                             <label style="min-width: 200px;">Miksi</label>
                                             <select class="form-select" name="miksi">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Retensio">Retensio</option>
-                                                <option value="Inkontinesia Urine">Inkontinesia Urine</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Retensio</option>
+                                                <option value="3">Inkontinesia Urine</option>
                                             </select>
                                         </div>
 
@@ -247,9 +247,9 @@
                                             <label style="min-width: 200px;">Gastrointestinal</label>
                                             <select class="form-select" name="gastrointestinal">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Normal">Normal</option>
-                                                <option value="Nausea">Nausea</option>
-                                                <option value="Muntah">Muntah</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Nausea</option>
+                                                <option value="3">Muntah</option>
                                             </select>
                                         </div>
 
@@ -343,39 +343,53 @@
                                         </div>
 
                                         <div class="row g-3">
-                                            @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                <div class="col-md-6">
-                                                    <div class="d-flex flex-column gap-3">
-                                                        @foreach ($chunk as $item)
-                                                            <div class="pemeriksaan-item">
-                                                                <div class="d-flex align-items-center border-bottom pb-2">
-                                                                    <div class="flex-grow-1">{{ $item->nama }}</div>
-                                                                    <div class="form-check me-3">
-                                                                        <input type="checkbox" class="form-check-input"
-                                                                            id="{{ strtolower($item->nama) }}-normal"
-                                                                            checked>
-                                                                        <label class="form-check-label"
-                                                                            for="{{ strtolower($item->nama) }}-normal">Normal</label>
+                                            <div class="pemeriksaan-fisik">
+                                                <h6>Pemeriksaan Fisik</h6>
+                                                <p class="text-small">Centang normal jika fisik yang dinilai
+                                                    normal,
+                                                    pilih tanda tambah
+                                                    untuk menambah keterangan fisik yang ditemukan tidak normal.
+                                                    Jika
+                                                    tidak dipilih salah satunya, maka pemeriksaan tidak
+                                                    dilakukan.
+                                                </p>
+                                                <div class="row">
+                                                    @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
+                                                        <div class="col-md-6">
+                                                            <div class="d-flex flex-column gap-3">
+                                                                @foreach ($chunk as $item)
+                                                                    <div class="pemeriksaan-item">
+                                                                        <div class="d-flex align-items-center border-bottom pb-2">
+                                                                            <div class="flex-grow-1">{{ $item->nama }}</div>
+                                                                            <div class="form-check me-3">
+                                                                                <input type="checkbox" class="form-check-input"
+                                                                                    id="{{ $item->id }}-normal"
+                                                                                    name="{{ $item->id }}-normal"
+                                                                                    checked>
+                                                                                <label class="form-check-label"
+                                                                                    for="{{ $item->id }}-normal">Normal</label>
+                                                                            </div>
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">
+                                                                                <i class="bi bi-plus"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="keterangan mt-2"
+                                                                            id="{{ $item->id }}-keterangan"
+                                                                            style="display:none;">
+                                                                            <input type="text" class="form-control"
+                                                                                name="{{ $item->id }}_keterangan"
+                                                                                placeholder="Tambah keterangan jika tidak normal...">
+                                                                        </div>
                                                                     </div>
-                                                                    <button
-                                                                        class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                        type="button"
-                                                                        data-target="{{ strtolower($item->nama) }}-keterangan">
-                                                                        <i class="bi bi-plus"></i>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="keterangan mt-2"
-                                                                    id="{{ strtolower($item->nama) }}-keterangan"
-                                                                    style="display:none;">
-                                                                    <input type="text" class="form-control"
-                                                                        name="{{ strtolower($item->nama) }}_keterangan"
-                                                                        placeholder="Tambah keterangan jika tidak normal...">
-                                                                </div>
+                                                                @endforeach
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         </div>
                                     </div>
 
@@ -399,6 +413,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesimpulan Nyeri</label>
+                                            <input type="hidden" class="form-control" id="kesimpulan_nyeri" name="kesimpulan_nyeri">
                                             <div class="alert alert-success" id="kesimpulan_nyeri_alert">
                                                 Pilih skala nyeri terlebih dahulu
                                             </div>
@@ -615,11 +630,12 @@
                                             id="openAlergiModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-
+                                        <input type="hidden" name="alergis" id="alergisInput">
                                         <div class="table-responsive">
                                             <table class="table" id="createAlergiTable">
-                                                <thead>
+                                               <thead>
                                                     <tr>
+                                                        <th>Jenis</th>
                                                         <th>Alergen</th>
                                                         <th>Reaksi</th>
                                                         <th>Severe</th>
@@ -633,34 +649,35 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="risiko-jatuh">
+                                    <div class="section-separator" id="risiko_jatuh">
                                         <h5 class="section-title">7. Risiko Jatuh</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Pilih jenis penilaian risiko jatuh sesuai dengan
                                                 kondisi
                                                 pasien:</label>
-                                            <select class="form-select" id="risikoJatuhSkala">
+                                            <select class="form-select" id="risikoJatuhSkala" name="resiko_jatuh_jenis"
+                                                onchange="showForm(this.value)">
                                                 <option value="">--Pilih Skala--</option>
-                                                <option value="skala_umum">Skala Umum</option>
-                                                <option value="skala_morse">Skala Morse</option>
-                                                <option value="skala_humpty">Skala Humpty-Dumpty / Pediatrik</option>
-                                                <option value="skala_ontario">Skala Ontario Modified Stratify Sydney /
-                                                    Lansia
+                                                <option value="1">Skala Umum</option>
+                                                <option value="2">Skala Morse</option>
+                                                <option value="3">Skala Humpty-Dumpty / Pediatrik</option>
+                                                <option value="4">Skala Ontario Modified Stratify Sydney / Lansia
                                                 </option>
-                                                <option value="lainnya">Lainnya</option>
+                                                <option value="5">Lainnya</option>
                                             </select>
                                         </div>
 
-                                        <!-- Form Skala Umum -->
+                                        <!-- Form Skala Umum 1 -->
                                         <div id="skala_umumForm" class="risk-form">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Umum</h5>
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien berusia < dari 2 tahun?</label>
-                                                        <select class="form-select" onchange="updateConclusion('umum')">
-                                                            <option value="">--Pilih--</option>
-                                                            <option value="ya">Ya</option>
-                                                            <option value="tidak">Tidak</option>
+                                                        <select class="form-select" name="risiko_jatuh_umum_usia"
+                                                            onchange="updateConclusion('umum')">
+                                                            <option value="">pilih</option>
+                                                            <option value="1">Ya</option>
+                                                            <option value="0">Tidak</option>
                                                         </select>
                                             </div>
                                             <div class="mb-3">
@@ -670,20 +687,22 @@
                                                     status
                                                     kesadaran dan
                                                     atau kejiwaan, konsumsi alkohol?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="ya">Ya</option>
-                                                    <option value="tidak">Tidak</option>
+                                                <select class="form-select" onchange="updateConclusion('umum')"
+                                                    name="risiko_jatuh_umum_kondisi_khusus">
+                                                    <option value="">pilih</option>
+                                                    <option value="1">Ya</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien didiagnosis sebagai pasien dengan
                                                     penyakit
                                                     parkinson?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="ya">Ya</option>
-                                                    <option value="tidak">Tidak</option>
+                                                <select class="form-select" onchange="updateConclusion('umum')"
+                                                    name="risiko_jatuh_umum_diagnosis_parkinson">
+                                                    <option value="">pilih</option>
+                                                    <option value="1">Ya</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
@@ -691,10 +710,11 @@
                                                     riwayat
                                                     tirah baring
                                                     lama, perubahan posisi yang akan meningkatkan risiko jatuh?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="ya">Ya</option>
-                                                    <option value="tidak">Tidak</option>
+                                                <select class="form-select" onchange="updateConclusion('umum')"
+                                                    name="risiko_jatuh_umum_pengobatan_berisiko">
+                                                    <option value="">pilih</option>
+                                                    <option value="1">Ya</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
@@ -702,87 +722,96 @@
                                                     satu
                                                     lokasi ini: rehab
                                                     medik, ruangan dengan penerangan kurang dan bertangga?</label>
-                                                <select class="form-select" onchange="updateConclusion('umum')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="ya">Ya</option>
-                                                    <option value="tidak">Tidak</option>
+                                                <select class="form-select" onchange="updateConclusion('umum')"
+                                                    name="risiko_jatuh_umum_lokasi_berisiko">
+                                                    <option value="">pilih</option>
+                                                    <option value="1">Ya</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="conclusion bg-success">
-                                                <p class="conclusion-text">Kesimpulan: <span id="kesimpulanTextForm">Tidak
-                                                        berisiko jatuh</span>
-                                                </p>
+                                                <p class="conclusion-text">Kesimpulan: <span
+                                                        id="kesimpulanTextForm"></span></p>
+                                                <input type="hidden" name="risiko_jatuh_umum_kesimpulan"
+                                                    id="risiko_jatuh_umum_kesimpulan">
                                             </div>
                                         </div>
 
-                                        <!-- Memperbaiki bagian Form Skala Morse -->
+                                        <!-- Memperbaiki bagian Form Skala Morse 2 -->
                                         <div id="skala_morseForm" class="risk-form">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Morse</h5>
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien pernah mengalami Jatuh?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_riwayat_jatuh"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
                                                     <option value="25">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien memiliki diagnosis skunder?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_diagnosis_sekunder"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
                                                     <option value="15">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien membutuhkan bantuan ambulasi?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="0">Meja/ kursi</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_bantuan_ambulasi"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
+                                                    <option value="30">Meja/ kursi</option>
                                                     <option value="15">Kruk/ tongkat/ alat bantu berjalan</option>
-                                                    <option value="30">Tidak ada/ bed rest/ bantuan perawat</option>
+                                                    <option value="0">Tidak ada/ bed rest/ bantuan perawat</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Pasien terpasang infus?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_terpasang_infus"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
                                                     <option value="20">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Bagaimana cara berjalan pasien?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_cara_berjalan"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
                                                     <option value="0">Normal/ bed rest/ kursi roda</option>
-                                                    <option value="10">Terganggu</option>
-                                                    <option value="20">Lemah</option>
+                                                    <option value="20">Terganggu</option>
+                                                    <option value="10">Lemah</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Bagaimana status mental pasien?</label>
-                                                <select class="form-select" onchange="updateConclusion('morse')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_morse_status_mental"
+                                                    onchange="updateConclusion('morse')">
+                                                    <option value="">pilih</option>
                                                     <option value="0">Beroroentasi pada kemampuannya</option>
                                                     <option value="15">Lupa akan keterbatasannya</option>
                                                 </select>
                                             </div>
                                             <div class="conclusion bg-success">
                                                 <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm">Tidak
-                                                        berisiko jatuh</span>
-                                                </p>
+                                                        id="kesimpulanTextForm"></span></p>
+                                                <input type="hidden" name="risiko_jatuh_morse_kesimpulan"
+                                                    id="risiko_jatuh_morse_kesimpulan">
                                             </div>
                                         </div>
 
-                                        <!-- Form Risiko Skala Humpty Dumpty -->
+                                        <!-- Form Risiko Skala Humpty Dumpty 3 -->
                                         <div id="skala_humptyForm" class="risk-form">
                                             <h5 class="mb-4">Penilaian Risiko Skala Humpty Dumpty/ Pediatrik</h5>
                                             <div class="mb-3">
                                                 <label class="form-label">Usia Anak?</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_usia_anak"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="4">Dibawah 3 tahun</option>
                                                     <option value="3">3-7 tahun</option>
                                                     <option value="2">7-13 tahun</option>
@@ -791,16 +820,18 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Jenis kelamin</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_jenis_kelamin"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="2">Laki-laki</option>
                                                     <option value="1">Perempuan</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Diagnosis</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_diagnosis"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="4">Diagnosis Neurologis</option>
                                                     <option value="3">Perubahan oksigennasi (diangnosis respiratorik,
                                                         dehidrasi, anemia,
@@ -811,8 +842,10 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Gangguan Kognitif</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_pediatrik_gangguan_kognitif"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="3">Tidak menyadari keterbatasan dirinya</option>
                                                     <option value="2">Lupa akan adanya keterbatasan</option>
                                                     <option value="1">Orientasi baik terhadap dari sendiri</option>
@@ -820,8 +853,10 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Faktor Lingkungan</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_pediatrik_faktor_lingkungan"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="4">Riwayat jatuh /bayi diletakkan di tempat tidur
                                                         dewasa</option>
                                                     <option value="3">Pasien menggunakan alat bantu /bayi diletakkan
@@ -834,19 +869,21 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Pembedahan/ sedasi/ Anestesi</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_pediatrik_pembedahan"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="3">Dalam 24 jam</option>
                                                     <option value="2">Dalam 48 jam</option>
-                                                    <option value="1">> 48 jam atau tidak menjalani pembedahan
-                                                        /sedasi
-                                                        /anestesi</option>
+                                                    <option value="1">> 48 jam atau tidak menjalani
+                                                        pembedahan/sedasi/anestesi</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Penggunaan Medika mentosa</label>
-                                                <select class="form-select" onchange="updateConclusion('humpty')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_pediatrik_penggunaan_mentosa"
+                                                    onchange="updateConclusion('humpty')">
+                                                    <option value="">pilih</option>
                                                     <option value="3">Penggunaan multiple: sedative, obat hipnosis,
                                                         barbiturate, fenotiazi,
                                                         antidepresan, pencahar, diuretik, narkose</option>
@@ -857,13 +894,13 @@
                                             </div>
                                             <div class="conclusion bg-success">
                                                 <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm">Tidak
-                                                        berisiko jatuh</span>
-                                                </p>
+                                                        id="kesimpulanTextForm"></span></p>
+                                                <input type="hidden" name="risiko_jatuh_pediatrik_kesimpulan"
+                                                    id="risiko_jatuh_pediatrik_kesimpulan">
                                             </div>
                                         </div>
 
-                                        <!-- Form Skala Humpty Dumpty -->
+                                        <!-- Form Skala Humpty Dumpty 4 -->
                                         <div id="skala_ontarioForm" class="risk-form">
                                             <h5 class="mb-4">Penilaian Risiko Jatuh Skala Ontario Modified Stratify
                                                 Sydney/
@@ -874,9 +911,11 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien datang kerumah sakit karena
                                                     jatuh?</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="2">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_jatuh_saat_masuk_rs"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="6">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -885,9 +924,11 @@
                                                     mengalami
                                                     jatuh dalam 2
                                                     bulan terakhir ini/ diagnosis multiple?</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="2">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_riwayat_jatuh_2_bulan"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="6">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -898,9 +939,10 @@
                                                 <label class="form-label">Apakah pasien bingung? (Tidak dapat membuat
                                                     keputusan, jaga jarak
                                                     tempatnya, gangguan daya ingat)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_bingung"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="14">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -908,9 +950,11 @@
                                                 <label class="form-label">Apakah pasien disorientasi? (tidak menyadarkan
                                                     waktu, tempat atau
                                                     orang)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_status_disorientasi"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="14">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -918,9 +962,10 @@
                                                 <label class="form-label">Apakah pasien mengalami agitasi? (keresahan,
                                                     gelisah, dan
                                                     cemas)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_status_agitasi"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="14">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -928,9 +973,10 @@
                                             <!-- 3. Penglihatan -->
                                             <h6 class="mb-3">3. Penglihatan</h6>
                                             <div class="mb-3">
-                                                <label class="form-label">Apakah pasien memiliki kataraks?</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <label class="form-label">Apakah pasien memakai Kacamata? </label>
+                                                <select class="form-select" name="risiko_jatuh_lansia_kacamata"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
@@ -938,8 +984,10 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Apakah pasien mengalami kelainya
                                                     penglihatan/buram?</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_kelainan_penglihatan"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
@@ -948,8 +996,9 @@
                                                 <label class="form-label">Apakah pasien mempunyai glukoma/ katarak/
                                                     degenerasi
                                                     makula?</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_glukoma"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
@@ -961,9 +1010,11 @@
                                                 <label class="form-label">Apakah terdapat perubahan perilaku berkemih?
                                                     (frekuensi, urgensi,
                                                     inkontinensia, noktura)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_perubahan_berkemih"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="2">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -973,35 +1024,40 @@
                                                 tempat tidur)</h6>
                                             <div class="mb-3">
                                                 <label class="form-label">Mandiri (boleh menolak saat bantu jatuh)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_mandiri"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="0">Ya</option>
-                                                    <option value="1">Tidak</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam
                                                     pengawasan</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_sedikit" onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Memerlukan bantuan yang nyata (2 orang)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_transfer_bantuan_nyata"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="2">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Tidak dapat duduk dengan seimbang, perlu bantuan
                                                     total</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_transfer_bantuan_total"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="3">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
@@ -1011,46 +1067,52 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Mandiri (dapat menggunakan alat bantu
                                                     jalan)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select" name="risiko_jatuh_lansia_mobilitas_mandiri"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="0">Ya</option>
-                                                    <option value="1">Tidak</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">berjalan dengan bantuan 1 orang (verbal/
                                                     fisik)</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_mobilitas_bantuan_1_orang"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Menggunakan kusi roda</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_mobilitas_kursi_roda"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="2">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Imobilisasi</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="1">Ya</option>
+                                                <select class="form-select"
+                                                    name="risiko_jatuh_lansia_mobilitas_imobilisasi"
+                                                    onchange="updateConclusion('ontario')">
+                                                    <option value="">pilih</option>
+                                                    <option value="3">Ya</option>
                                                     <option value="0">Tidak</option>
                                                 </select>
                                             </div>
 
                                             <div class="conclusion bg-success">
                                                 <p class="conclusion-text">Kesimpulan: <span
-                                                        id="kesimpulanTextForm">Tidak
-                                                        berisiko jatuh</span>
-                                                </p>
+                                                        id="kesimpulanTextForm"></span></p>
+                                                <input type="hidden" name="risiko_jatuh_lansia_kesimpulan"
+                                                    id="risiko_jatuh_lansia_kesimpulan">
                                             </div>
                                         </div>
-
 
                                         <div class="mb-4">
                                             <h6 class="mb-3">Intervensi Risiko Jatuh</h6>
@@ -1063,8 +1125,10 @@
                                             </button>
                                             <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
                                             </div>
+                                            <input type="hidden" name="intervensi_risiko_jatuh_json" id="intervensi_risiko_jatuh_json" value="[]">
                                         </div>
                                     </div>
+
 
                                     <div class="section-separator" id="decubitus">
                                         <h5 class="section-title">8. Risiko dekubitus</h5>
@@ -1241,6 +1305,7 @@
                                                     <!-- Selected items will be displayed here as badges -->
                                                 </div>
                                             </div>
+                                            <input type="hidden" name="kondisi_psikologis_json" id="kondisi_psikologis_json" value="[]">
                                         </div>
 
                                         <div class="mb-4">
@@ -1283,14 +1348,15 @@
                                                     <!-- Selected items will be displayed here as badges -->
                                                 </div>
                                             </div>
+                                            <input type="hidden" name="gangguan_perilaku_json" id="gangguan_perilaku_json" value="[]">
                                         </div>
 
                                         <div class="mb-4">
                                             <label class="form-label">Potensi menyakiti diri sendiri/orang lain</label>
                                             <select class="form-select" name="potensi_menyakiti">
                                                 <option value="" selected disabled>pilih</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
                                             </select>
                                         </div>
 
@@ -1298,8 +1364,8 @@
                                             <label class="form-label">Anggota Keluarga Gangguan Jiwa</label>
                                             <select class="form-select" name="anggota_keluarga_gangguan_jiwa">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
                                             </select>
                                         </div>
 
@@ -1316,15 +1382,22 @@
                                             <select class="form-select" name="keyakinan_agama">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="Islam">Islam</option>
-                                                <option value="Kristen">Kristen</option>
+                                                <option value="Protestan">Protestan</option>
+                                                <option value="Khatolik">Khatolik</option>
+                                                <option value="Budha">Budha</option>
+                                                <option value="Hindu">Hindu</option>
+                                                <option value="Konghucu">Konghucu</option>
+                                                <option value="Lainnya">Lainnya</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pandangan Pasien Terhadap Penyakit Nya</label>
-                                            <select class="form-select" name="riwayat_kecelakaan">
+                                            <select class="form-select" name="pandangan_terhadap_penyakit">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Ya">Ya</option>
-                                                <option value="Tidak">Tidak</option>
+                                                <option value="Takdir">Takdir</option>
+                                                <option value="Hukuman">Hukuman</option>
+                                                <option value="Tidak Ada">Tidak Ada</option>
+                                                <option value="Lainnya">Lainnya</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1859,6 +1932,15 @@
                                                 Pilih skala aktivitas harian terlebih dahulu
                                             </div>
                                         </div>
+                                        <!-- Hidden fields untuk menyimpan data ADL -->
+                                        <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" value="">
+                                        <input type="hidden" id="adl_makan" name="adl_makan" value="">
+                                        <input type="hidden" id="adl_makan_value" name="adl_makan_value" value="">
+                                        <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="">
+                                        <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value" value="">
+                                        <input type="hidden" id="adl_mandi" name="adl_mandi" value="">
+                                        <input type="hidden" id="adl_mandi_value" name="adl_mandi_value" value="">
+                                        <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" value="">
                                     </div>
 
                                     <div class="section-separator" id="kebutuhan-edukasi">
@@ -1878,10 +1960,28 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
                                             <select class="form-select" name="bahasa_sehari_hari">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="indonesia">Bahasa Indonesia</option>
-                                                <option value="daerah">Bahasa Daerah</option>
-                                                <option value="asing">Bahasa Asing</option>
+                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="indonesia" selected>Bahasa Indonesia</option>
+                                                <option value="aceh">Aceh</option>
+                                                <option value="batak">Batak</option>
+                                                <option value="minangkabau">Minangkabau</option>
+                                                <option value="melayu">Melayu</option>
+                                                <option value="sunda">Sunda</option>
+                                                <option value="jawa">Jawa</option>
+                                                <option value="madura">Madura</option>
+                                                <option value="bali">Bali</option>
+                                                <option value="sasak">Sasak</option>
+                                                <option value="banjar">Banjar</option>
+                                                <option value="bugis">Bugis</option>
+                                                <option value="toraja">Toraja</option>
+                                                <option value="makassar">Makassar</option>
+                                                <option value="dayak">Dayak</option>
+                                                <option value="tidung">Tidung</option>
+                                                <option value="ambon">Ambon</option>
+                                                <option value="ternate">Ternate</option>
+                                                <option value="tidore">Tidore</option>
+                                                <option value="papua">Papua</option>
+                                                <option value="asmat">Asmat</option>
                                             </select>
                                         </div>
 
@@ -1943,8 +2043,8 @@
                                             <label class="form-label">Usia lanjut</label>
                                             <select class="form-select" name="usia_lanjut">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
                                             </select>
                                         </div>
 
@@ -1952,8 +2052,8 @@
                                             <label class="form-label">Hambatan mobilisasi</label>
                                             <select class="form-select" name="hambatan_mobilisasi">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="0">Ya</option>
+                                                <option value="1">Tidak</option>
                                             </select>
                                         </div>
 
@@ -2022,6 +2122,9 @@
                                         <div class="mt-4">
                                             <label class="form-label">KESIMPULAN</label>
                                             <div class="d-flex flex-column gap-2">
+                                                <div class="alert alert-info">
+                                                    Pilih semua Planning
+                                                </div>
                                                 <div class="alert alert-warning">
                                                     Mebutuhkan rencana pulang khusus
                                                 </div>
@@ -2029,11 +2132,12 @@
                                                     Tidak mebutuhkan rencana pulang khusus
                                                 </div>
                                             </div>
+                                            <input type="hidden" id="kesimpulan" name="kesimpulan_planing" value="Tidak mebutuhkan rencana pulang khusus">
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                         <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -2046,21 +2150,19 @@
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Diagnosis Banding">
-                                                <span class="input-group-text bg-white">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-banding">
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
                                             </div>
 
-                                            <div class="diagnosis-list bg-light p-3 rounded">
-                                                <div class="diagnosis-item mb-2">
-                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
-                                                </div>
-                                                <div class="diagnosis-item">
-                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                </div>
+                                            <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
                                             </div>
+                                            
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
 
                                         <!-- Diagnosis Kerja -->
@@ -2068,28 +2170,25 @@
                                             <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan
-                                                diagnosis kerja yang tidak ditemukan.</small>
+                                                keterangan diagnosis kerja yang tidak ditemukan.</small>
 
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text bg-white border-end-0">
                                                     <i class="bi bi-search text-secondary"></i>
                                                 </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
+                                                <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0"
                                                     placeholder="Cari dan tambah Diagnosis Kerja">
-                                                <span class="input-group-text bg-white">
+                                                <span class="input-group-text bg-white" id="add-diagnosis-kerja">
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
                                             </div>
 
-                                            <div class="diagnosis-list bg-light p-3 rounded">
-                                                <div class="diagnosis-item mb-2">
-                                                    <span>1. Deficit Perawatan Diri (Self-Care Deficit)</span>
-                                                </div>
-                                                <div class="diagnosis-item">
-                                                    <span>2. Risiko Infeksi (Risk for Infection)</span>
-                                                </div>
+                                            <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                                <!-- Diagnosis items will be added here dynamically -->
                                             </div>
+                                            
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                         </div>
                                     </div>
 
@@ -2211,6 +2310,14 @@
                                         </div>
                                     </div>
 
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+
                                     <div class="section-separator" id="evaluasi">
                                         <h5 class="section-title">18. Evaluasi</h5>
 
@@ -2220,6 +2327,7 @@
                                                 placeholder="Tambah evaluasi keperawatan..."></textarea>
                                         </div>
 
+
                                         <div class="text-end">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
@@ -2227,19 +2335,16 @@
 
                                 </div>
                             </div>
+
+
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+
 
 @endsection
 

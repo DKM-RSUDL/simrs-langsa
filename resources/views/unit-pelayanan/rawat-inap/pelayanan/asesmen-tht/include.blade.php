@@ -148,29 +148,6 @@
             position: relative;
             display: inline-block;
         }
-
-
-        .suggestions-list {
-            position: absolute;
-            z-index: 1000;
-            width: calc(100% - 2rem);
-            max-height: 200px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            display: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .suggestion-item {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .suggestion-item:hover {
-            background-color: #f8f9fa;
-        }
     </style>
 @endpush
 
@@ -734,136 +711,180 @@
             calculateConclusion();
         });
 
-        // 9. Diagnosis Diagnosis Banding
+        // 9. Diagnosis Diagnosis Banding        
         document.addEventListener('DOMContentLoaded', function() {
-            // Get DOM elements
-            const input = document.getElementById('inputDiagnosisBanding');
-            const suggestionsList = document.getElementById('diagnosisBandingSuggestions');
-            const selectedList = document.getElementById('selectedDiagnosisBandingList');
-            const hiddenInput = document.getElementById('asesmenThtDiagnosisBandingValue');
+            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
+            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
 
-            // Existing database options
-            const dbOptions = {!! json_encode($thtDiagnosisImplementasi->pluck('diagnosis_banding')->unique()->values()) !!};
+            function initDiagnosisManagement(prefix, hiddenFieldId) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
 
-            // Prepare options array
-            const diagnosisBandingOptions = dbOptions.map(text => ({
-                id: text.toLowerCase().replace(/\s+/g, '_'),
-                text: text
-            }));
-
-            // Update hidden input 
-            function updateHiddenInput(text) {
-                // Directly set the input value to the text
-                hiddenInput.value = text || '';
-            }
-
-            // Show suggestions
-            function showSuggestions(suggestions) {
-                suggestionsList.innerHTML = '';
-                if (suggestions.length > 0) {
-                    suggestions.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'suggestion-item';
-                        
-                        // Highlight if it's a new item
-                        if (item.isNew) {
-                            div.style.color = '#0066cc';
-                            div.innerHTML = `<i class="fas fa-plus"></i> ${item.text}`;
-                        } else {
-                            div.textContent = item.text;
-                        }
-
-                        div.onclick = () => {
-                            // Clean text for new items
-                            const cleanText = item.isNew 
-                                ? item.text.replace('Tambah "', '').replace('"', '') 
-                                : item.text;
-                            
-                            selectItem(cleanText);
-                        };
-
-                        suggestionsList.appendChild(div);
-                    });
-                    suggestionsList.style.display = 'block';
-                } else {
-                    suggestionsList.style.display = 'none';
-                }
-            }
-
-            // Select item
-            function selectItem(text) {
-                // Clear previous selections
-                selectedList.innerHTML = '';
-                
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'd-flex align-items-center bg-light p-2 rounded mb-2';
-                itemDiv.innerHTML = `
-                    <span class="flex-grow-1">${text}</span>
-                    <button type="button" class="delete-btn btn btn-sm btn-danger ml-2">×</button>
-                `;
-
-                selectedList.appendChild(itemDiv);
-                
-                // Update hidden input directly with text
-                updateHiddenInput(text);
-                
-                // Reset input and hide suggestions
-                input.value = '';
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 30px)';
                 suggestionsList.style.display = 'none';
-            }
-
-            // Input event listener
-            input.addEventListener('input', function() {
-                const value = this.value.trim().toLowerCase();
                 
-                if (value) {
-                    // Filter existing options
-                    const filtered = diagnosisBandingOptions.filter(item => 
-                        item.text.toLowerCase().includes(value)
-                    );
+                // Insert suggestions list after input
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
 
-                    // Add "Add new" option if no matches
-                    if (filtered.length === 0 && value) {
-                        filtered.push({
-                            id: value.replace(/\s+/g, '_'),
-                            text: `Tambah "${value}"`,
-                            isNew: true
+                // Database options
+                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+
+                // Prepare options array
+                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+                
+                // Load initial data if available
+                let diagnosisList = [];
+                try {
+                    diagnosisList = JSON.parse(hiddenInput.value) || [];
+                    renderDiagnosisList();
+                } catch (e) {
+                    diagnosisList = [];
+                    updateHiddenInput();
+                }
+                
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+                    
+                    if (inputValue) {
+                        // Filter database options
+                        const filteredOptions = diagnosisOptions.filter(option => 
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+                        
+                        // Show suggestions
+                        showSuggestions(filteredOptions, inputValue);
+                    } else {
+                        // Hide suggestions if input is empty
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                // Function to show suggestions
+                function showSuggestions(options, inputValue) {
+                    suggestionsList.innerHTML = '';
+                    
+                    if (options.length > 0) {
+                        // Render existing options
+                        options.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
+                            suggestionItem.textContent = option.text;
+                            suggestionItem.addEventListener('click', () => {
+                                addDiagnosis(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
                         });
-                    }
-
-                    // Show suggestions
-                    showSuggestions(filtered);
-                } else {
-                    suggestionsList.style.display = 'none';
-                }
-            });
-
-            // Delete item event listener
-            selectedList.addEventListener('click', function(e) {
-                if (e.target.classList.contains('delete-btn')) {
-                    // Clear selected list and hidden input
-                    selectedList.innerHTML = '';
-                    updateHiddenInput('');
-                }
-            });
-
-            // Close suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
-                    suggestionsList.style.display = 'none';
-                }
-            });
-
-            // Handle Enter key
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const value = this.value.trim();
-                    if (value) {
-                        selectItem(value);
+                        
+                        // Add option to create new if no exact match
+                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.textContent = `Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addDiagnosis(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+                        
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.textContent = `Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addDiagnosis(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
                     }
                 }
-            });
+                
+                // Add diagnosis when plus button is clicked
+                addButton.addEventListener('click', function() {
+                    const diagnosisText = inputField.value.trim();
+                    if (diagnosisText) {
+                        addDiagnosis(diagnosisText);
+                    }
+                });
+                
+                // Add diagnosis when Enter key is pressed
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const diagnosisText = this.value.trim();
+                        if (diagnosisText) {
+                            addDiagnosis(diagnosisText);
+                        }
+                    }
+                });
+                
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                function addDiagnosis(diagnosisText) {
+                    // Check for duplicates
+                    if (!diagnosisList.includes(diagnosisText)) {
+                        diagnosisList.push(diagnosisText);
+                        inputField.value = '';
+                        renderDiagnosisList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+                    } else {
+                        // Optional: Show feedback that it's a duplicate
+                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
+                    }
+                }
+                
+                function renderDiagnosisList() {
+                    listContainer.innerHTML = '';
+                    
+                    diagnosisList.forEach((diagnosis, index) => {
+                        const diagnosisItem = document.createElement('div');
+                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+                        
+                        const diagnosisSpan = document.createElement('span');
+                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm text-danger';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.type = 'button';
+                        deleteButton.addEventListener('click', function() {
+                            diagnosisList.splice(index, 1);
+                            renderDiagnosisList();
+                            updateHiddenInput();
+                        });
+                        
+                        diagnosisItem.appendChild(diagnosisSpan);
+                        diagnosisItem.appendChild(deleteButton);
+                        listContainer.appendChild(diagnosisItem);
+                    });
+                }
+                
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(diagnosisList);
+                }
+            }
         });
     </script>
 @endpush

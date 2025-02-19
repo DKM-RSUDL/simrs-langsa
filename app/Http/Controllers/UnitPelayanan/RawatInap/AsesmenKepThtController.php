@@ -12,6 +12,7 @@ use App\Models\RmeAsesmenTht;
 use App\Models\RmeAsesmenThtDischargePlanning;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
+use App\Models\RmeMasterDiagnosis;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +23,9 @@ class AsesmenKepThtController extends Controller
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
-        $itemFisik = MrItemFisik::orderby('urut')->get();
-        $thtDiagnosisImplementasi = RmeAsesmenthtDiagnosisImplementasi::select('diagnosis_banding')->get();        
+        $itemFisik = MrItemFisik::orderby('urut')->get();        
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -68,8 +70,8 @@ class AsesmenKepThtController extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
-            'user',
-            'thtDiagnosisImplementasi'
+            'user',            
+            'rmeMasterDiagnosis'
         ));
     }
 
@@ -330,7 +332,21 @@ class AsesmenKepThtController extends Controller
         $thtDiagnosisImplementasi = new RmeAsesmenthtDiagnosisImplementasi();
         $thtDiagnosisImplementasi->id_asesmen = $asesmenTht->id;
         $thtDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
+        $thtDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
         $thtDiagnosisImplementasi->save();
+
+        //Simpan Diagnosa ke Master
+        $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+        $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);                
+        $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+        foreach ($allDiagnoses as $diagnosa) {
+            $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+            if (!$existingDiagnosa) {
+                $masterDiagnosa = new RmeMasterDiagnosis();
+                $masterDiagnosa->nama_diagnosis = $diagnosa;
+                $masterDiagnosa->save();
+            }
+        }
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
