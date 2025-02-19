@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenKepAnak;
 use App\Models\RmeAsesmenKepAnakFisik;
+use App\Models\RmeAsesmenKepAnakGizi;
+use App\Models\RmeAsesmenKepAnakRencanaPulang;
+use App\Models\RmeAsesmenKepAnakResikoDekubitus;
 use App\Models\RmeAsesmenKepAnakRisikoJatuh;
 use App\Models\RmeAsesmenKepAnakRiwayatKesehatan;
+use App\Models\RmeAsesmenKepAnakStatusFungsional;
 use App\Models\RmeAsesmenKepAnakStatusNyeri;
+use App\Models\RmeAsesmenKepAnakStatusPsikologis;
 use App\Models\RmeAsesmenKepUmumRisikoJatuh;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeEfekNyeri;
@@ -18,6 +24,7 @@ use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
+use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -112,7 +119,6 @@ class AsesmenKepAnakController extends Controller
             $dataAsesmen->kategori = 1;
             $dataAsesmen->sub_kategori = 7;
             $dataAsesmen->anamnesis = $request->anamnesis;
-
             $alergis = collect(json_decode($request->alergis, true))->map(function ($item) {
                 return [
                     'jenis' => $item['jenis'],
@@ -123,6 +129,45 @@ class AsesmenKepAnakController extends Controller
             })->toArray();
             $dataAsesmen->riwayat_alergi = json_encode($alergis);
             $dataAsesmen->save();
+
+            //Simpan ke table RmeAsesmenKepAnak
+            $asesmenKepAnak = new RmeAsesmenKepAnak();
+            $asesmenKepAnak->id_asesmen = $dataAsesmen->id;
+            $asesmenKepAnak->cara_masuk = $request->cara_masuk;
+            $asesmenKepAnak->kasus_trauma = $request->kasus_trauma;
+            $asesmenKepAnak->anamnesis = $request->anamnesis;
+            $asesmenKepAnak->anamnesis = $request->anamnesis;
+            $asesmenKepAnak->alergi = json_encode($alergis);
+            $asesmenKepAnak->pandangan_terhadap_penyakit = $request->pandangan_terhadap_penyakit;
+            $asesmenKepAnak->agama = $request->keyakinan_agama;
+            $asesmenKepAnak->gaya_bicara = $request->gaya_bicara;
+            $asesmenKepAnak->bahasa = $request->bahasa_sehari_hari;
+            $asesmenKepAnak->perlu_penerjemahan = $request->perlu_penerjemah;
+            $asesmenKepAnak->hambatan_komunikasi = $request->hambatan_komunikasi;
+            $asesmenKepAnak->media_disukai = $request->media_disukai;
+            $asesmenKepAnak->tingkat_pendidikan = $request->tingkat_pendidikan;
+            $asesmenKepAnak->diagnosis_banding = $request->diagnosis_banding ?? '[]';
+            $asesmenKepAnak->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
+            $asesmenKepAnak->rencana_penatalaksanaan = '';
+            $asesmenKepAnak->prognosis = '';
+            $asesmenKepAnak->evaluasi = '';
+            $asesmenKepAnak->save();
+
+            //Simpan Diagnosa ke Master
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            $asesmenKepAnak->diagnosis_banding = $request->diagnosis_banding ?? '[]';
+            $asesmenKepAnak->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
+            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+            foreach ($allDiagnoses as $diagnosa) {
+                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+                if (!$existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis();
+                    $masterDiagnosa->nama_diagnosis = $diagnosa;
+                    $masterDiagnosa->save();
+                }
+            }
+
 
             //Simpan ke table RmeAsesmenKepAnakFisik
             $asesmenKepAnakFisik = new RmeAsesmenKepAnakFisik();
@@ -237,10 +282,16 @@ class AsesmenKepAnakController extends Controller
             $riwayatKesehatan->tumbuh_kembang = $request->tumbuh_kembang;
             $riwayatKesehatan->save();
 
+            //Simpan ke table RmeAsesmenKepAnakRisikoJatuh
             $asesmenKepAnakRisikoJatuh = new RmeAsesmenKepAnakRisikoJatuh();
             $asesmenKepAnakRisikoJatuh->id_asesmen = $dataAsesmen->id;
             $asesmenKepAnakRisikoJatuh->resiko_jatuh_jenis = (int)$request->resiko_jatuh_jenis;
-            $asesmenKepAnakRisikoJatuh->risiko_jatuh_tindakan = $request->risikojatuh_tindakan_keperawatan ? json_encode($request->risikojatuh_tindakan_keperawatan) : null;
+            if ($request->has('intervensi_risiko_jatuh_json')) {
+                $intervensiRisikoJatuhJson = $request->intervensi_risiko_jatuh_json;
+                $asesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh = $intervensiRisikoJatuhJson;
+            } else {
+                $asesmenKepAnakRisikoJatuh->intervensi_risiko_jatuh = '[]';
+            }
 
             // Handle Skala Umum
             if ($request->resiko_jatuh_jenis == 1) {
@@ -249,7 +300,7 @@ class AsesmenKepAnakController extends Controller
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_umum_diagnosis_parkinson = $request->risiko_jatuh_umum_diagnosis_parkinson ? 1 : 0;
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_umum_pengobatan_berisiko = $request->risiko_jatuh_umum_pengobatan_berisiko ? 1 : 0;
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_umum_lokasi_berisiko = $request->risiko_jatuh_umum_lokasi_berisiko ? 1 : 0;
-                $asesmenKepAnakRisikoJatuh->risiko_jatuh_umum_kesimpulan = $request->input('risiko_jatuh_umum_kesimpulan', 'Tidak berisiko jatuh');
+                $asesmenKepAnakRisikoJatuh->kesimpulan_skala_umum = $request->input('risiko_jatuh_umum_kesimpulan', 'Tidak berisiko jatuh');
             }
 
             // Handle Skala Morse
@@ -260,7 +311,7 @@ class AsesmenKepAnakController extends Controller
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_morse_terpasang_infus = array_search($request->risiko_jatuh_morse_terpasang_infus, ['20' => 20, '0' => 0]);
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_morse_cara_berjalan = array_search($request->risiko_jatuh_morse_cara_berjalan, ['0' => 0, '20' => 20, 10 => 10]);
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_morse_status_mental = array_search($request->risiko_jatuh_morse_status_mental, ['0' => 0, '15' => 15]);
-                $asesmenKepAnakRisikoJatuh->risiko_jatuh_morse_kesimpulan = $request->risiko_jatuh_morse_kesimpulan;
+                $asesmenKepAnakRisikoJatuh->kesimpulan_skala_morse = $request->risiko_jatuh_morse_kesimpulan;
                 $asesmenKepAnakRisikoJatuh->save();
             }
 
@@ -273,7 +324,7 @@ class AsesmenKepAnakController extends Controller
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_pediatrik_faktor_lingkungan = array_search($request->risiko_jatuh_pediatrik_faktor_lingkungan, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_pediatrik_pembedahan = array_search($request->risiko_jatuh_pediatrik_pembedahan, ['3' => 3, '2' => 2, '1' => 1]);
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa = array_search($request->risiko_jatuh_pediatrik_penggunaan_mentosa, ['3' => 3, '2' => 2, '1' => 1]);
-                $asesmenKepAnakRisikoJatuh->risiko_jatuh_pediatrik_kesimpulan = $request->risiko_jatuh_pediatrik_kesimpulan;
+                $asesmenKepAnakRisikoJatuh->kesimpulan_skala_pediatrik = $request->risiko_jatuh_pediatrik_kesimpulan;
             }
 
             // Handle Skala Lansia/Ontario
@@ -295,11 +346,166 @@ class AsesmenKepAnakController extends Controller
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_bantuan_1_orang = $request->risiko_jatuh_lansia_mobilitas_bantuan_1_orang;
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_kursi_roda = array_search($request->risiko_jatuh_lansia_mobilitas_kursi_roda, ['2' => 2, '0' => 0]);
                 $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_mobilitas_imobilisasi = array_search($request->risiko_jatuh_lansia_mobilitas_imobilisasi, ['3' => 2, '0' => 0]);
-                $asesmenKepAnakRisikoJatuh->risiko_jatuh_lansia_kesimpulan = $request->risiko_jatuh_lansia_kesimpulan;
+                $asesmenKepAnakRisikoJatuh->kesimpulan_skala_lansia = $request->risiko_jatuh_lansia_kesimpulan;
             } else if ($request->resiko_jatuh_jenis == 5) {
                 $asesmenKepAnakRisikoJatuh->resiko_jatuh_lainnya = 'resiko jatuh lainnya';
             }
             $asesmenKepAnakRisikoJatuh->save();
+
+
+            //Simpan ke table RmeAsesmenKepAnakStatusPsikologi
+            $statusPsikologis = new RmeAsesmenKepAnakStatusPsikologis();
+            $statusPsikologis->id_asesmen = $dataAsesmen->id;
+            $statusPsikologis->kondisi_psikologis = $request->kondisi_psikologis_json ?? '[]';
+            $statusPsikologis->gangguan_perilaku = $request->gangguan_perilaku_json ?? '[]';
+            $statusPsikologis->potensi_menyakiti = $request->potensi_menyakiti;
+            $statusPsikologis->keluarga_gangguan_jiwa = $request->anggota_keluarga_gangguan_jiwa;
+            $statusPsikologis->lainnya = $request->psikologis_lainnya;
+            $statusPsikologis->save();
+
+
+            //Simpan ke table RmeAsesmenKepAnakGizi
+            $asesmenKepAnakStatusGizi = new RmeAsesmenKepAnakGizi();
+            $asesmenKepAnakStatusGizi->id_asesmen = $dataAsesmen->id;
+            $asesmenKepAnakStatusGizi->gizi_jenis = (int)$request->gizi_jenis;
+
+            // Handle MST Form
+            if ($request->gizi_jenis == 1
+            ) {
+                $asesmenKepAnakStatusGizi->gizi_mst_penurunan_bb = $request->gizi_mst_penurunan_bb;
+                $asesmenKepAnakStatusGizi->gizi_mst_jumlah_penurunan_bb = $request->gizi_mst_jumlah_penurunan_bb;
+                $asesmenKepAnakStatusGizi->gizi_mst_nafsu_makan_berkurang = $request->gizi_mst_nafsu_makan_berkurang;
+                $asesmenKepAnakStatusGizi->gizi_mst_diagnosis_khusus = $request->gizi_mst_diagnosis_khusus;
+                $asesmenKepAnakStatusGizi->gizi_mst_kesimpulan = $request->gizi_mst_kesimpulan;
+            }
+
+            // Handle MNA Form
+            else if ($request->gizi_jenis == 2) {
+                $asesmenKepAnakStatusGizi->gizi_mna_penurunan_asupan_3_bulan = (int)$request->gizi_mna_penurunan_asupan_3_bulan;
+                $asesmenKepAnakStatusGizi->gizi_mna_kehilangan_bb_3_bulan = (int)$request->gizi_mna_kehilangan_bb_3_bulan;
+                $asesmenKepAnakStatusGizi->gizi_mna_mobilisasi = (int)$request->gizi_mna_mobilisasi;
+                $asesmenKepAnakStatusGizi->gizi_mna_stress_penyakit_akut = (int)$request->gizi_mna_stress_penyakit_akut;
+                $asesmenKepAnakStatusGizi->gizi_mna_status_neuropsikologi = (int)$request->gizi_mna_status_neuropsikologi;
+                $asesmenKepAnakStatusGizi->gizi_mna_berat_badan = (int)$request->gizi_mna_berat_badan;
+                $asesmenKepAnakStatusGizi->gizi_mna_tinggi_badan = (int)$request->gizi_mna_tinggi_badan;
+
+                // Hitung dan simpan IMT
+                $heightInMeters = $request->gizi_mna_tinggi_badan / 100;
+                $imt = $request->gizi_mna_berat_badan / ($heightInMeters * $heightInMeters);
+                $asesmenKepAnakStatusGizi->gizi_mna_imt = number_format($imt, 2, '.', '');
+
+                $asesmenKepAnakStatusGizi->gizi_mna_kesimpulan = $request->gizi_mna_kesimpulan;
+            }
+
+            // Handle Strong Kids Form
+            else if ($request->gizi_jenis == 3) {
+                $asesmenKepAnakStatusGizi->gizi_strong_status_kurus = $request->gizi_strong_status_kurus;
+                $asesmenKepAnakStatusGizi->gizi_strong_penurunan_bb = $request->gizi_strong_penurunan_bb;
+                $asesmenKepAnakStatusGizi->gizi_strong_gangguan_pencernaan = $request->gizi_strong_gangguan_pencernaan;
+                $asesmenKepAnakStatusGizi->gizi_strong_penyakit_berisiko = $request->gizi_strong_penyakit_berisiko;
+                $asesmenKepAnakStatusGizi->gizi_strong_kesimpulan = $request->gizi_strong_kesimpulan;
+            }
+
+            // Handle NRS Form
+            else if ($request->gizi_jenis == 4) {
+                $asesmenKepAnakStatusGizi->gizi_nrs_jatuh_saat_masuk_rs = $request->gizi_nrs_jatuh_saat_masuk_rs;
+                $asesmenKepAnakStatusGizi->gizi_nrs_jatuh_2_bulan_terakhir = $request->gizi_nrs_jatuh_2_bulan_terakhir;
+                $asesmenKepAnakStatusGizi->gizi_nrs_status_delirium = $request->gizi_nrs_status_delirium;
+                $asesmenKepAnakStatusGizi->gizi_nrs_status_disorientasi = $request->gizi_nrs_status_disorientasi;
+                $asesmenKepAnakStatusGizi->gizi_nrs_status_agitasi = $request->gizi_nrs_status_agitasi;
+                $asesmenKepAnakStatusGizi->gizi_nrs_menggunakan_kacamata = $request->gizi_nrs_menggunakan_kacamata;
+                $asesmenKepAnakStatusGizi->gizi_nrs_keluhan_penglihatan_buram = $request->gizi_nrs_keluhan_penglihatan_buram;
+                $asesmenKepAnakStatusGizi->gizi_nrs_degenerasi_makula = $request->gizi_nrs_degenerasi_makula;
+                $asesmenKepAnakStatusGizi->gizi_nrs_perubahan_berkemih = $request->gizi_nrs_perubahan_berkemih;
+                $asesmenKepAnakStatusGizi->gizi_nrs_transfer_mandiri = $request->gizi_nrs_transfer_mandiri;
+                $asesmenKepAnakStatusGizi->gizi_nrs_transfer_bantuan_1_orang = $request->gizi_nrs_transfer_bantuan_1_orang;
+                $asesmenKepAnakStatusGizi->gizi_nrs_transfer_bantuan_2_orang = $request->gizi_nrs_transfer_bantuan_2_orang;
+                $asesmenKepAnakStatusGizi->gizi_nrs_transfer_bantuan_total = $request->gizi_nrs_transfer_bantuan_total;
+                $asesmenKepAnakStatusGizi->gizi_nrs_mobilitas_mandiri = $request->gizi_nrs_mobilitas_mandiri;
+                $asesmenKepAnakStatusGizi->gizi_nrs_mobilitas_bantuan_1_orang = $request->gizi_nrs_mobilitas_bantuan_1_orang;
+                $asesmenKepAnakStatusGizi->gizi_nrs_mobilitas_kursi_roda = $request->gizi_nrs_mobilitas_kursi_roda;
+                $asesmenKepAnakStatusGizi->gizi_nrs_mobilitas_imobilisasi = $request->gizi_nrs_mobilitas_imobilisasi;
+                $asesmenKepAnakStatusGizi->gizi_nrs_kesimpulan = $request->gizi_nrs_kesimpulan;
+            } else if ($request->gizi_jenis == 5) {
+                $asesmenKepAnakStatusGizi->status_gizi_tidakada = 'tidak ada status gizi';
+            }
+
+            $asesmenKepAnakStatusGizi->save();
+
+            //Simpan ke table RmeAsesmenKepAnakStatusDecubitus
+            $decubitusData = new RmeAsesmenKepAnakResikoDekubitus();
+            $decubitusData->id_asesmen = $dataAsesmen->id;
+            $jenisSkala = $request->input('jenis_skala_dekubitus') === 'norton' ? 1 : 2;
+            $decubitusData->jenis_skala = $jenisSkala;
+            // If Norton scale
+            if ($jenisSkala === 1) {
+                $decubitusData->norton_kondisi_fisik = $request->input('kondisi_fisik');
+                $decubitusData->norton_kondisi_mental = $request->input('kondisi_mental');
+                $decubitusData->norton_aktivitas = $request->input('aktivitas');
+                $decubitusData->norton_mobilitas = $request->input('mobilitas');
+                $decubitusData->norton_inkontenesia = $request->input('inkontinensia');
+
+                // Calculate total score
+                $totalScore =
+                    (int)$request->input('kondisi_fisik') +
+                    (int)$request->input('kondisi_mental') +
+                    (int)$request->input('aktivitas') +
+                    (int)$request->input('mobilitas') +
+                    (int)$request->input('inkontinensia');
+
+                // Determine conclusion based on total score
+                if ($totalScore <= 12) {
+                    $kesimpulan = 'Risiko Tinggi';
+                } elseif ($totalScore <= 14) {
+                    $kesimpulan = 'Risiko Sedang';
+                } else {
+                    $kesimpulan = 'Risiko Rendah';
+                }
+
+                $decubitusData->norton_kesimpulan = $kesimpulan . " (Skor: $totalScore)";
+            }
+            $decubitusData->save();
+
+            //Simpan ke table RmeAsesmenKepAnakStatusFungsional
+            $statusFungsional = new RmeAsesmenKepAnakStatusFungsional();
+            $statusFungsional->id_asesmen = $dataAsesmen->id;
+            if ($request->filled('skala_fungsional')) {
+
+                if ($request->filled('skala_fungsional')) {
+                    if ($request->skala_fungsional === 'Pengkajian Aktivitas') {
+                        $statusFungsional->jenis_skala = 1;
+                    } else if ($request->skala_fungsional === 'Lainnya') {
+                        $statusFungsional->jenis_skala = 2;
+                    }
+                } else {
+                    $statusFungsional->jenis_skala = 0;
+                }
+
+                // Simpan data ADL
+                $statusFungsional->makan = $request->adl_makan;
+                $statusFungsional->berjalan = $request->adl_berjalan;
+                $statusFungsional->mandi = $request->adl_mandi;
+                $statusFungsional->jumlah_skala = $request->filled('adl_total') ? (int)$request->adl_total : null;
+                $statusFungsional->kesimpulan = $request->adl_kesimpulan_value;
+                $statusFungsional->nilai_skala_adl = $request->filled('adl_total') ? (int)$request->adl_total : null;
+                $statusFungsional->kesimpulan_fungsional = $request->adl_kesimpulan_value;
+                $statusFungsional->save();
+            }
+
+            // Simpan ke table RmeAsesmenKepAnakRencana
+            $asesmenRencana = new RmeAsesmenKepAnakRencanaPulang();
+            $asesmenRencana->id_asesmen = $dataAsesmen->id;
+            $asesmenRencana->diagnosis_medis = $request->diagnosis_medis;
+            $asesmenRencana->usia_lanjut = $request->usia_lanjut;
+            $asesmenRencana->hambatan_mobilisasi = $request->hambatan_mobilisasi;
+            $asesmenRencana->membutuhkan_pelayanan_medis = $request->penggunaan_media_berkelanjutan;
+            $asesmenRencana->memerlukan_keterampilan_khusus = $request->keterampilan_khusus;
+            $asesmenRencana->memerlukan_alat_bantu = $request->alat_bantu;
+            $asesmenRencana->memiliki_nyeri_kronis = $request->nyeri_kronis;
+            $asesmenRencana->perkiraan_lama_dirawat = $request->perkiraan_hari;
+            $asesmenRencana->rencana_pulang = $request->tanggal_pulang;
+            $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
+            $asesmenRencana->save();
 
 
             return redirect()->back()->with('success', 'Data asesmen anak berhasil disimpan');
