@@ -1117,16 +1117,15 @@
                                                 keterangan diagnosis banding yang tidak ditemukan.
                                             </small>
 
-                                            <div class="form-group">
+                                            <div class="form-group position-relative">
                                                 <div class="w-100">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="inputMasalah"
-                                                            placeholder="Ketik masalah keperawatan...">
+                                                        <input type="text" class="form-control" id="inputDiagnosisBanding"
+                                                            placeholder="Ketik diagnosis banding...">
                                                     </div>
-                                                    <div id="masalahSuggestions" class="suggestions-list"></div>
-                                                    <div id="selectedMasalahList" class="selected-items mt-3"></div>
-                                                    <input type="hidden" name="nama"
-                                                        id="masalahKeperawatanValue">
+                                                    <div id="diagnosisBandingSuggestions" class="suggestions-list"></div>
+                                                    <div id="selectedDiagnosisBandingList" class="selected-items mt-3"></div>
+                                                    <input type="hidden" name="diagnosis_banding" id="asesmenThtDiagnosisBandingValue">
                                                 </div>
                                             </div>
 

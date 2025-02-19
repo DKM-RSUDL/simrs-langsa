@@ -23,7 +23,7 @@ class AsesmenKepThtController extends Controller
     {
         $user = auth()->user();
         $itemFisik = MrItemFisik::orderby('urut')->get();
-        $thtDiagnosisImplementasi = RmeAsesmenthtDiagnosisImplementasi::all();
+        $thtDiagnosisImplementasi = RmeAsesmenthtDiagnosisImplementasi::select('diagnosis_banding')->get();        
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -327,10 +327,10 @@ class AsesmenKepThtController extends Controller
         $asesmenThtDischargePlanning->dp_kesimpulan = $request->dp_kesimpulan;
         $asesmenThtDischargePlanning->save();
 
-        // $thtDiagnosisImplementasi = new RmeAsesmenthtDiagnosisImplementasi();
-        // $thtDiagnosisImplementasi->id = $request->id; // auto-increment
-        // $thtDiagnosisImplementasi->nama = $request->nama;
-        // $thtDiagnosisImplementasi->save();
+        $thtDiagnosisImplementasi = new RmeAsesmenthtDiagnosisImplementasi();
+        $thtDiagnosisImplementasi->id_asesmen = $asesmenTht->id;
+        $thtDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
+        $thtDiagnosisImplementasi->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,

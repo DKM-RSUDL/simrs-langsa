@@ -148,16 +148,39 @@
             position: relative;
             display: inline-block;
         }
+
+
+        .suggestions-list {
+            position: absolute;
+            z-index: 1000;
+            width: calc(100% - 2rem);
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
     </style>
 @endpush
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             //------------------------------------------------------------//
             // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
             document.querySelectorAll('.tambah-keterangan').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const targetId = this.getAttribute('data-target');
                     const keteranganDiv = document.getElementById(targetId);
                     const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
@@ -175,7 +198,7 @@
 
             // Event handler untuk checkbox normal
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+                checkbox.addEventListener('change', function () {
                     const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
                         '.keterangan');
                     if (this.checked) {
@@ -202,7 +225,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function() {
+                skalaSelect.addEventListener('change', function () {
                     const selectedValue = this.value;
                     console.log('Selected value:', selectedValue); // Debug log
 
@@ -276,7 +299,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function() {
+                skalaSelect.addEventListener('change', function () {
                     const selectedValue = this.value;
 
                     // Hide all forms
@@ -366,7 +389,7 @@
                     });
                 }
 
-                btnKondisiPsikologis.addEventListener('click', function(e) {
+                btnKondisiPsikologis.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -396,7 +419,7 @@
                 });
 
                 document.querySelectorAll('.kondisi-options .form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
+                    checkbox.addEventListener('change', function () {
                         if (this.checked) {
                             selectedItems.add(this.value);
                         } else {
@@ -406,7 +429,7 @@
                     });
                 });
 
-                selectedKondisiPsikologis.addEventListener('click', function(e) {
+                selectedKondisiPsikologis.addEventListener('click', function (e) {
                     if (e.target.classList.contains('remove-item')) {
                         const value = e.target.dataset.value;
                         selectedItems.delete(value);
@@ -416,7 +439,7 @@
                     }
                 });
 
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!dropdownKondisiPsikologis.contains(e.target) && e.target !==
                         btnKondisiPsikologis) {
                         dropdownKondisiPsikologis.style.display = 'none';
@@ -493,396 +516,354 @@
 
 
         // 7. Hasil Pemeriksaan Penunjang
-        document.addEventListener('DOMContentLoaded', function() {
-        const maxFileSize = 2 * 1024 * 1024; // 2MB
-        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxFileSize = 2 * 1024 * 1024; // 2MB
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 
-        // Fungsi untuk validasi file
-        function validateFile(file) {
-            if (!file) return false;
+            // Fungsi untuk validasi file
+            function validateFile(file) {
+                if (!file) return false;
 
-            if (file.size > maxFileSize) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'File terlalu besar',
-                    text: 'Ukuran file maksimal 2MB'
-                });
-                return false;
-            }
-
-            if (!allowedTypes.includes(file.type)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Format tidak didukung',
-                    text: 'Format yang diizinkan: PDF, JPG, PNG'
-                });
-                return false;
-            }
-
-            return true;
-        }
-
-        // Fungsi untuk preview file
-        function previewFile(input) {
-            const previewContainer = document.getElementById(input.dataset.previewContainer);
-            const fileInfo = document.getElementById(`${input.id}Info`);
-            const file = input.files[0];
-
-            previewContainer.innerHTML = '';
-
-            if (file && validateFile(file)) {
-                // Update file info
-                fileInfo.innerHTML = `
-                    <span class="text-primary">File dipilih: ${file.name}</span>
-                    <button type="button" class="btn btn-link text-danger p-0 ms-2 clear-file" data-input="${input.id}">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                `;
-
-                // Create preview
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.style.maxWidth = '100px';
-                    img.style.maxHeight = '100px';
-                    img.className = 'mt-2 rounded';
-
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-
-                    previewContainer.appendChild(img);
-                } else if (file.type === 'application/pdf') {
-                    const pdfIcon = document.createElement('i');
-                    pdfIcon.className = 'bi bi-file-pdf text-danger fs-1 mt-2';
-                    previewContainer.appendChild(pdfIcon);
+                if (file.size > maxFileSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File terlalu besar',
+                        text: 'Ukuran file maksimal 2MB'
+                    });
+                    return false;
                 }
-            } else {
-                fileInfo.innerHTML = '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
-            }
-        }
 
-        // Event listener untuk file inputs
-        document.querySelectorAll('input[type="file"]').forEach(input => {
-            input.addEventListener('change', function() {
-                previewFile(this);
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Format tidak didukung',
+                        text: 'Format yang diizinkan: PDF, JPG, PNG'
+                    });
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Fungsi untuk preview file
+            function previewFile(input) {
+                const previewContainer = document.getElementById(input.dataset.previewContainer);
+                const fileInfo = document.getElementById(`${input.id}Info`);
+                const file = input.files[0];
+
+                previewContainer.innerHTML = '';
+
+                if (file && validateFile(file)) {
+                    // Update file info
+                    fileInfo.innerHTML = `
+                        <span class="text-primary">File dipilih: ${file.name}</span>
+                        <button type="button" class="btn btn-link text-danger p-0 ms-2 clear-file" data-input="${input.id}">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    `;
+
+                    // Create preview
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.style.maxWidth = '100px';
+                        img.style.maxHeight = '100px';
+                        img.className = 'mt-2 rounded';
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+
+                        previewContainer.appendChild(img);
+                    } else if (file.type === 'application/pdf') {
+                        const pdfIcon = document.createElement('i');
+                        pdfIcon.className = 'bi bi-file-pdf text-danger fs-1 mt-2';
+                        previewContainer.appendChild(pdfIcon);
+                    }
+                } else {
+                    fileInfo.innerHTML = '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+                }
+            }
+
+            // Event listener untuk file inputs
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function () {
+                    previewFile(this);
+                });
+            });
+
+            // Event listener untuk tombol clear
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.clear-file')) {
+                    const btn = e.target.closest('.clear-file');
+                    const inputId = btn.dataset.input;
+                    const input = document.getElementById(inputId);
+                    const previewContainer = document.getElementById(input.dataset.previewContainer);
+
+                    input.value = '';
+                    previewContainer.innerHTML = '';
+                    document.getElementById(`${inputId}Info`).innerHTML =
+                        '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+                }
             });
         });
 
-        // Event listener untuk tombol clear
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.clear-file')) {
-                const btn = e.target.closest('.clear-file');
-                const inputId = btn.dataset.input;
-                const input = document.getElementById(inputId);
-                const previewContainer = document.getElementById(input.dataset.previewContainer);
+        // 8. Discharge Planning
+        document.addEventListener('DOMContentLoaded', function () {
+            const lamaDirawatInput = document.getElementById('lamaDirawat');
+            const rencanaPulangInput = document.getElementById('rencanaPulang');
 
-                input.value = '';
-                previewContainer.innerHTML = '';
-                document.getElementById(`${inputId}Info`).innerHTML =
-                    '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
-            }
-        });
-    });
+            const riskFactorInputs = document.querySelectorAll('.risk-factor');
+            const needSpecialPlanAlert = document.getElementById('needSpecialPlanAlert');
+            const noSpecialPlanAlert = document.getElementById('noSpecialPlanAlert');
+            const needSpecialRadio = document.getElementById('need_special');
+            const noSpecialRadio = document.getElementById('no_special');
+            const conclusionSection = document.getElementById('conclusionSection');
+            const conclusionText = document.getElementById('conclusionText');
 
-    // 8. Discharge Planning
-    document.addEventListener('DOMContentLoaded', function() {
-        const lamaDirawatInput = document.getElementById('lamaDirawat');
-        const rencanaPulangInput = document.getElementById('rencanaPulang');
+            const dpKesimpulanHidden = document.getElementById('dp_kesimpulan_hidden');
 
-        const riskFactorInputs = document.querySelectorAll('.risk-factor');
-        const needSpecialPlanAlert = document.getElementById('needSpecialPlanAlert');
-        const noSpecialPlanAlert = document.getElementById('noSpecialPlanAlert');
-        const needSpecialRadio = document.getElementById('need_special');
-        const noSpecialRadio = document.getElementById('no_special');
-        const conclusionSection = document.getElementById('conclusionSection');
-        const conclusionText = document.getElementById('conclusionText');
-
-        const dpKesimpulanHidden = document.getElementById('dp_kesimpulan_hidden');
-
-        // Update rencana pulang date
-        lamaDirawatInput.addEventListener('change', function() {
-            updateRencanaPulang();
-        });
-
-        riskFactorInputs.forEach(input => {
-            input.addEventListener('change', calculateConclusion);
-        });
-
-        function updateRencanaPulang() {
-            const days = parseInt(lamaDirawatInput.value) || 0;
-            if (days > 0) {
-                const today = new Date();
-                const futureDate = new Date(today);
-                futureDate.setDate(today.getDate() + days);
-
-                const options = { day: '2-digit', month: 'short', year: 'numeric' };
-                rencanaPulangInput.value = futureDate.toLocaleDateString('id-ID', options);
-            }
-        }
-
-        function calculateConclusion() {
-            // Check if all completed
-            let allCompleted = true;
-            let hasYesAnswer = false;
+            // Update rencana pulang date
+            lamaDirawatInput.addEventListener('change', function () {
+                updateRencanaPulang();
+            });
 
             riskFactorInputs.forEach(input => {
-                if (input.value === '') {
-                    allCompleted = false;
-                } else if (input.value === '1') {
-                    hasYesAnswer = true;
-                }
+                input.addEventListener('change', calculateConclusion);
             });
 
-            if (allCompleted) {
-                if (hasYesAnswer) {
-                    displayConclusion(true);
-                } else {
-                    displayConclusion(false);
+            function updateRencanaPulang() {
+                const days = parseInt(lamaDirawatInput.value) || 0;
+                if (days > 0) {
+                    const today = new Date();
+                    const futureDate = new Date(today);
+                    futureDate.setDate(today.getDate() + days);
+
+                    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                    rencanaPulangInput.value = futureDate.toLocaleDateString('id-ID', options);
                 }
-            } else {
-                hideConclusion();
             }
-        }
 
-        function displayConclusion(needsSpecialPlan) {
-            conclusionSection.style.display = 'block';
+            function calculateConclusion() {
+                // Check if all completed
+                let allCompleted = true;
+                let hasYesAnswer = false;
 
-            if (needsSpecialPlan) {
-                needSpecialPlanAlert.style.display = 'block';
-                noSpecialPlanAlert.style.display = 'none';
-                needSpecialRadio.checked = true;
-
-                needSpecialRadio.disabled = false;
-                needSpecialRadio.readOnly = true;
-
-                if (dpKesimpulanHidden) {
-                    dpKesimpulanHidden.value = "Membutuhkan rencana pulang khusus";
-                }
-
-                conclusionSection.style.backgroundColor = '#fff3cd';
-                conclusionText.innerHTML = 'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
-            } else {
-                needSpecialPlanAlert.style.display = 'none';
-                noSpecialPlanAlert.style.display = 'block';
-                noSpecialRadio.checked = true;
-
-                noSpecialRadio.disabled = false;
-                noSpecialRadio.readOnly = true;
-
-                if (dpKesimpulanHidden) {
-                    dpKesimpulanHidden.value = "Tidak membutuhkan rencana pulang khusus";
-                }
-
-                conclusionSection.style.backgroundColor = '#d1e7dd';
-                conclusionText.innerHTML = 'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
-            }
-        }
-
-        function hideConclusion() {
-            conclusionSection.style.display = 'none';
-            needSpecialPlanAlert.style.display = 'none';
-            noSpecialPlanAlert.style.display = 'none';
-            needSpecialRadio.checked = false;
-            noSpecialRadio.checked = false;
-
-            if (dpKesimpulanHidden) {
-                dpKesimpulanHidden.value = '';
-            }
-        }
-
-        function setupReadonlyRadios() {
-            // Mencegah perubahan manual pada radio button
-            needSpecialRadio.addEventListener('click', function(e) {
-                if (!this.checked) {
-                    e.preventDefault();
-                }
-            });
-
-            noSpecialRadio.addEventListener('click', function(e) {
-                if (!this.checked) {
-                    e.preventDefault();
-                }
-            });
-        }
-
-        setupReadonlyRadios();
-        calculateConclusion();
-    });
-
-    // 9. Diagnosis Diagnosis Banding
-    document.addEventListener('DOMContentLoaded', function() {
-        // Select DOM elements
-        const searchInput = document.querySelector('.input-group input');
-        const addButton = document.querySelector('.input-group .bi-plus-circle');
-        const diagnosisList = document.querySelector('.diagnosis-list');
-        const searchResultsList = document.createElement('div');
-        searchResultsList.className = 'search-results-list list-group position-absolute bg-white border rounded';
-        searchResultsList.style.display = 'none';
-        searchResultsList.style.zIndex = '1000';
-        searchResultsList.style.width = 'calc(100% - 30px)';
-
-        // Insert search results list after the input group
-        searchInput.closest('.input-group').after(searchResultsList);
-
-        // Existing diagnoses list
-        let currentDiagnoses = [
-            { id: 1, nama: 'Deficit Perawatan Diri (Self-Care Deficit)' },
-            { id: 2, nama: 'Risiko Infeksi (Risk for Infection)' }
-        ];
-
-        // Render current diagnoses list
-        function renderDiagnosisList() {
-            diagnosisList.innerHTML = currentDiagnoses.map((diagnosis, index) => `
-                <div class="diagnosis-item mb-2" data-id="${diagnosis.id}">
-                    <span>${index + 1}. ${diagnosis.nama}</span>
-                    <button class="btn btn-sm btn-danger remove-diagnosis ml-2">×</button>
-                </div>
-            `).join('');
-
-            // Add remove event listeners
-            diagnosisList.querySelectorAll('.remove-diagnosis').forEach(button => {
-                button.addEventListener('click', function() {
-                    const diagnosisId = parseInt(this.closest('.diagnosis-item').dataset.id);
-                    currentDiagnoses = currentDiagnoses.filter(d => d.id !== diagnosisId);
-                    renderDiagnosisList();
+                riskFactorInputs.forEach(input => {
+                    if (input.value === '') {
+                        allCompleted = false;
+                    } else if (input.value === '1') {
+                        hasYesAnswer = true;
+                    }
                 });
-            });
-        }
 
-        // Initial render
-        renderDiagnosisList();
-
-        // Search function (simulating backend search)
-        async function searchDiagnosis(query) {
-            try {
-                // Simulated API call - replace with actual fetch to your backend
-                const response = await fetch(`/api/diagnosis-banding/search?query=${encodeURIComponent(query)}`);
-                const results = await response.json();
-                return results;
-            } catch (error) {
-                console.error('Search error:', error);
-                return [];
-            }
-        }
-
-        // Add new diagnosis function
-        async function addDiagnosis(nama) {
-            try {
-                // Simulated API call - replace with actual fetch to your backend
-                const response = await fetch('/api/diagnosis-banding/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Add CSRF token if needed
-                        // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ nama: nama })
-                });
-                const newDiagnosis = await response.json();
-                return newDiagnosis;
-            } catch (error) {
-                console.error('Add diagnosis error:', error);
-                return null;
-            }
-        }
-
-        // Debounce search input
-        let searchTimeout;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            const query = this.value.trim();
-
-            // Clear previous results
-            searchResultsList.innerHTML = '';
-            searchResultsList.style.display = 'none';
-
-            if (query.length > 2) {
-                searchTimeout = setTimeout(async () => {
-                    const results = await searchDiagnosis(query);
-
-                    // If no results, show option to add new
-                    if (results.length === 0) {
-                        searchResultsList.innerHTML = `
-                            <div class="list-group-item list-group-item-action text-primary" id="add-new-diagnosis">
-                                Tambah "${query}" sebagai diagnosis banding baru
-                            </div>
-                        `;
-                        searchResultsList.style.display = 'block';
-
-                        // Add event listener to add new diagnosis
-                        document.getElementById('add-new-diagnosis').addEventListener('click', async () => {
-                            const newDiagnosis = await addDiagnosis(query);
-                            if (newDiagnosis) {
-                                currentDiagnoses.push(newDiagnosis);
-                                renderDiagnosisList();
-                                searchInput.value = '';
-                                searchResultsList.style.display = 'none';
-                            }
-                        });
+                if (allCompleted) {
+                    if (hasYesAnswer) {
+                        displayConclusion(true);
                     } else {
-                        // Render search results
-                        searchResultsList.innerHTML = results.map(result => `
-                            <div class="list-group-item list-group-item-action" data-id="${result.id}">
-                                ${result.nama}
-                            </div>
-                        `).join('');
-                        searchResultsList.style.display = 'block';
+                        displayConclusion(false);
+                    }
+                } else {
+                    hideConclusion();
+                }
+            }
 
-                        // Add click event to select diagnosis
-                        searchResultsList.querySelectorAll('.list-group-item').forEach(item => {
-                            item.addEventListener('click', () => {
-                                const selectedDiagnosis = results.find(
-                                    r => r.id === parseInt(item.dataset.id)
-                                );
+            function displayConclusion(needsSpecialPlan) {
+                conclusionSection.style.display = 'block';
 
-                                // Check if already exists in current list
-                                const exists = currentDiagnoses.some(
-                                    d => d.id === selectedDiagnosis.id
-                                );
+                if (needsSpecialPlan) {
+                    needSpecialPlanAlert.style.display = 'block';
+                    noSpecialPlanAlert.style.display = 'none';
+                    needSpecialRadio.checked = true;
 
-                                if (!exists) {
-                                    currentDiagnoses.push(selectedDiagnosis);
-                                    renderDiagnosisList();
-                                }
+                    needSpecialRadio.disabled = false;
+                    needSpecialRadio.readOnly = true;
 
-                                searchInput.value = '';
-                                searchResultsList.style.display = 'none';
-                            });
+                    if (dpKesimpulanHidden) {
+                        dpKesimpulanHidden.value = "Membutuhkan rencana pulang khusus";
+                    }
+
+                    conclusionSection.style.backgroundColor = '#fff3cd';
+                    conclusionText.innerHTML = 'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
+                } else {
+                    needSpecialPlanAlert.style.display = 'none';
+                    noSpecialPlanAlert.style.display = 'block';
+                    noSpecialRadio.checked = true;
+
+                    noSpecialRadio.disabled = false;
+                    noSpecialRadio.readOnly = true;
+
+                    if (dpKesimpulanHidden) {
+                        dpKesimpulanHidden.value = "Tidak membutuhkan rencana pulang khusus";
+                    }
+
+                    conclusionSection.style.backgroundColor = '#d1e7dd';
+                    conclusionText.innerHTML = 'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
+                }
+            }
+
+            function hideConclusion() {
+                conclusionSection.style.display = 'none';
+                needSpecialPlanAlert.style.display = 'none';
+                noSpecialPlanAlert.style.display = 'none';
+                needSpecialRadio.checked = false;
+                noSpecialRadio.checked = false;
+
+                if (dpKesimpulanHidden) {
+                    dpKesimpulanHidden.value = '';
+                }
+            }
+
+            function setupReadonlyRadios() {
+                // Mencegah perubahan manual pada radio button
+                needSpecialRadio.addEventListener('click', function (e) {
+                    if (!this.checked) {
+                        e.preventDefault();
+                    }
+                });
+
+                noSpecialRadio.addEventListener('click', function (e) {
+                    if (!this.checked) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            setupReadonlyRadios();
+            calculateConclusion();
+        });
+
+        // 9. Diagnosis Diagnosis Banding
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const input = document.getElementById('inputDiagnosisBanding');
+            const suggestionsList = document.getElementById('diagnosisBandingSuggestions');
+            const selectedList = document.getElementById('selectedDiagnosisBandingList');
+            const hiddenInput = document.getElementById('asesmenThtDiagnosisBandingValue');
+
+            // Existing database options
+            const dbOptions = {!! json_encode($thtDiagnosisImplementasi->pluck('diagnosis_banding')->unique()->values()) !!};
+
+            // Prepare options array
+            const diagnosisBandingOptions = dbOptions.map(text => ({
+                id: text.toLowerCase().replace(/\s+/g, '_'),
+                text: text
+            }));
+
+            // Update hidden input 
+            function updateHiddenInput(text) {
+                // Directly set the input value to the text
+                hiddenInput.value = text || '';
+            }
+
+            // Show suggestions
+            function showSuggestions(suggestions) {
+                suggestionsList.innerHTML = '';
+                if (suggestions.length > 0) {
+                    suggestions.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        
+                        // Highlight if it's a new item
+                        if (item.isNew) {
+                            div.style.color = '#0066cc';
+                            div.innerHTML = `<i class="fas fa-plus"></i> ${item.text}`;
+                        } else {
+                            div.textContent = item.text;
+                        }
+
+                        div.onclick = () => {
+                            // Clean text for new items
+                            const cleanText = item.isNew 
+                                ? item.text.replace('Tambah "', '').replace('"', '') 
+                                : item.text;
+                            
+                            selectItem(cleanText);
+                        };
+
+                        suggestionsList.appendChild(div);
+                    });
+                    suggestionsList.style.display = 'block';
+                } else {
+                    suggestionsList.style.display = 'none';
+                }
+            }
+
+            // Select item
+            function selectItem(text) {
+                // Clear previous selections
+                selectedList.innerHTML = '';
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'd-flex align-items-center bg-light p-2 rounded mb-2';
+                itemDiv.innerHTML = `
+                    <span class="flex-grow-1">${text}</span>
+                    <button type="button" class="delete-btn btn btn-sm btn-danger ml-2">×</button>
+                `;
+
+                selectedList.appendChild(itemDiv);
+                
+                // Update hidden input directly with text
+                updateHiddenInput(text);
+                
+                // Reset input and hide suggestions
+                input.value = '';
+                suggestionsList.style.display = 'none';
+            }
+
+            // Input event listener
+            input.addEventListener('input', function() {
+                const value = this.value.trim().toLowerCase();
+                
+                if (value) {
+                    // Filter existing options
+                    const filtered = diagnosisBandingOptions.filter(item => 
+                        item.text.toLowerCase().includes(value)
+                    );
+
+                    // Add "Add new" option if no matches
+                    if (filtered.length === 0 && value) {
+                        filtered.push({
+                            id: value.replace(/\s+/g, '_'),
+                            text: `Tambah "${value}"`,
+                            isNew: true
                         });
                     }
-                }, 300);
-            }
-        });
 
-        // Close search results when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!searchInput.contains(event.target) &&
-                !searchResultsList.contains(event.target)) {
-                searchResultsList.style.display = 'none';
-            }
-        });
-
-        // Handle add button click
-        addButton.addEventListener('click', async () => {
-            const query = searchInput.value.trim();
-            if (query) {
-                const newDiagnosis = await addDiagnosis(query);
-                if (newDiagnosis) {
-                    currentDiagnoses.push(newDiagnosis);
-                    renderDiagnosisList();
-                    searchInput.value = '';
+                    // Show suggestions
+                    showSuggestions(filtered);
+                } else {
+                    suggestionsList.style.display = 'none';
                 }
-            }
-        });
+            });
 
-        // Optional: Handle enter key
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addButton.click();
-            }
+            // Delete item event listener
+            selectedList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    // Clear selected list and hidden input
+                    selectedList.innerHTML = '';
+                    updateHiddenInput('');
+                }
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !suggestionsList.contains(e.target)) {
+                    suggestionsList.style.display = 'none';
+                }
+            });
+
+            // Handle Enter key
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = this.value.trim();
+                    if (value) {
+                        selectItem(value);
+                    }
+                }
+            });
         });
-    });
     </script>
 @endpush
