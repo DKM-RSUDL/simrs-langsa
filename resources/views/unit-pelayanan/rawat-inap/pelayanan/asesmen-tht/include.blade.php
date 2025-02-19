@@ -585,5 +585,130 @@
             }
         });
     });
+
+    // 8. Discharge Planning
+    document.addEventListener('DOMContentLoaded', function() {
+        const lamaDirawatInput = document.getElementById('lamaDirawat');
+        const rencanaPulangInput = document.getElementById('rencanaPulang');
+
+        const riskFactorInputs = document.querySelectorAll('.risk-factor');
+        const needSpecialPlanAlert = document.getElementById('needSpecialPlanAlert');
+        const noSpecialPlanAlert = document.getElementById('noSpecialPlanAlert');
+        const needSpecialRadio = document.getElementById('need_special');
+        const noSpecialRadio = document.getElementById('no_special');
+        const conclusionSection = document.getElementById('conclusionSection');
+        const conclusionText = document.getElementById('conclusionText');
+
+        const dpKesimpulanHidden = document.getElementById('dp_kesimpulan_hidden');
+
+        // Update rencana pulang date
+        lamaDirawatInput.addEventListener('change', function() {
+            updateRencanaPulang();
+        });
+
+        riskFactorInputs.forEach(input => {
+            input.addEventListener('change', calculateConclusion);
+        });
+
+        function updateRencanaPulang() {
+            const days = parseInt(lamaDirawatInput.value) || 0;
+            if (days > 0) {
+                const today = new Date();
+                const futureDate = new Date(today);
+                futureDate.setDate(today.getDate() + days);
+
+                const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                rencanaPulangInput.value = futureDate.toLocaleDateString('id-ID', options);
+            }
+        }
+
+        function calculateConclusion() {
+            // Check if all completed
+            let allCompleted = true;
+            let hasYesAnswer = false;
+
+            riskFactorInputs.forEach(input => {
+                if (input.value === '') {
+                    allCompleted = false;
+                } else if (input.value === '1') {
+                    hasYesAnswer = true;
+                }
+            });
+
+            if (allCompleted) {
+                if (hasYesAnswer) {
+                    displayConclusion(true);
+                } else {
+                    displayConclusion(false);
+                }
+            } else {
+                hideConclusion();
+            }
+        }
+
+        function displayConclusion(needsSpecialPlan) {
+            conclusionSection.style.display = 'block';
+
+            if (needsSpecialPlan) {
+                needSpecialPlanAlert.style.display = 'block';
+                noSpecialPlanAlert.style.display = 'none';
+                needSpecialRadio.checked = true;
+
+                needSpecialRadio.disabled = false;
+                needSpecialRadio.readOnly = true;
+
+                if (dpKesimpulanHidden) {
+                    dpKesimpulanHidden.value = "Membutuhkan rencana pulang khusus";
+                }
+
+                conclusionSection.style.backgroundColor = '#fff3cd';
+                conclusionText.innerHTML = 'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
+            } else {
+                needSpecialPlanAlert.style.display = 'none';
+                noSpecialPlanAlert.style.display = 'block';
+                noSpecialRadio.checked = true;
+
+                noSpecialRadio.disabled = false;
+                noSpecialRadio.readOnly = true;
+
+                if (dpKesimpulanHidden) {
+                    dpKesimpulanHidden.value = "Tidak membutuhkan rencana pulang khusus";
+                }
+
+                conclusionSection.style.backgroundColor = '#d1e7dd';
+                conclusionText.innerHTML = 'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
+            }
+        }
+
+        function hideConclusion() {
+            conclusionSection.style.display = 'none';
+            needSpecialPlanAlert.style.display = 'none';
+            noSpecialPlanAlert.style.display = 'none';
+            needSpecialRadio.checked = false;
+            noSpecialRadio.checked = false;
+
+            if (dpKesimpulanHidden) {
+                dpKesimpulanHidden.value = '';
+            }
+        }
+
+        function setupReadonlyRadios() {
+            // Mencegah perubahan manual pada radio button
+            needSpecialRadio.addEventListener('click', function(e) {
+                if (!this.checked) {
+                    e.preventDefault();
+                }
+            });
+
+            noSpecialRadio.addEventListener('click', function(e) {
+                if (!this.checked) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        setupReadonlyRadios();
+        calculateConclusion();
+    });
     </script>
 @endpush

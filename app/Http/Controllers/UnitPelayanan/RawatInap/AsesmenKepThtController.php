@@ -8,6 +8,7 @@ use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeAsesmenThtDataMasuk;
+use App\Models\RmeAsesmenThtDischargePlanning;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
 use Carbon\Carbon;
@@ -96,6 +97,7 @@ class AsesmenKepThtController extends Controller
         $asesmenThtDataMasuk->kondisi_masuk = $request->kondisi_masuk;
         $asesmenThtDataMasuk->ruang = $request->ruang;
         $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
+        $asesmenThtDataMasuk->evaluasi_evaluasi_keperawatan = $request->evaluasi_evaluasi_keperawatan;
 
         // Array untuk menyimpan path file yang berhasil diupload
         $uploadedFiles = [];
@@ -308,8 +310,19 @@ class AsesmenKepThtController extends Controller
         } else {
             $asesmenThtRiwayatKesehatanObatAlergi->alergi = null;
         }
-
         $asesmenThtRiwayatKesehatanObatAlergi->save();
+
+        $asesmenThtDischargePlanning = new RmeAsesmenThtDischargePlanning();
+        $asesmenThtDischargePlanning->id_asesmen = $asesmenTht->id;
+        $asesmenThtDischargePlanning->dp_diagnosis_medis = $request->dp_diagnosis_medis;
+        $asesmenThtDischargePlanning->dp_usia_lanjut = $request->dp_usia_lanjut;
+        $asesmenThtDischargePlanning->dp_hambatan_mobilisasi = $request->dp_hambatan_mobilisasi;
+        $asesmenThtDischargePlanning->dp_layanan_medis_lanjutan = $request->dp_layanan_medis_lanjutan;
+        $asesmenThtDischargePlanning->dp_tergantung_orang_lain = $request->dp_tergantung_orang_lain;
+        $asesmenThtDischargePlanning->dp_lama_dirawat = $request->dp_lama_dirawat;
+        $asesmenThtDischargePlanning->dp_rencana_pulang = $request->dp_rencana_pulang;
+        $asesmenThtDischargePlanning->dp_kesimpulan = $request->dp_kesimpulan;
+        $asesmenThtDischargePlanning->save();
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
