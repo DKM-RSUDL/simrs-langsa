@@ -148,17 +148,16 @@
             position: relative;
             display: inline-block;
         }
-
     </style>
 @endpush
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             //------------------------------------------------------------//
             // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
             document.querySelectorAll('.tambah-keterangan').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const targetId = this.getAttribute('data-target');
                     const keteranganDiv = document.getElementById(targetId);
                     const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
@@ -176,7 +175,7 @@
 
             // Event handler untuk checkbox normal
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+                checkbox.addEventListener('change', function () {
                     const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
                         '.keterangan');
                     if (this.checked) {
@@ -203,7 +202,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function() {
+                skalaSelect.addEventListener('change', function () {
                     const selectedValue = this.value;
                     console.log('Selected value:', selectedValue); // Debug log
 
@@ -277,7 +276,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function() {
+                skalaSelect.addEventListener('change', function () {
                     const selectedValue = this.value;
 
                     // Hide all forms
@@ -367,7 +366,7 @@
                     });
                 }
 
-                btnKondisiPsikologis.addEventListener('click', function(e) {
+                btnKondisiPsikologis.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -397,7 +396,7 @@
                 });
 
                 document.querySelectorAll('.kondisi-options .form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
+                    checkbox.addEventListener('change', function () {
                         if (this.checked) {
                             selectedItems.add(this.value);
                         } else {
@@ -407,7 +406,7 @@
                     });
                 });
 
-                selectedKondisiPsikologis.addEventListener('click', function(e) {
+                selectedKondisiPsikologis.addEventListener('click', function (e) {
                     if (e.target.classList.contains('remove-item')) {
                         const value = e.target.dataset.value;
                         selectedItems.delete(value);
@@ -417,7 +416,7 @@
                     }
                 });
 
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!dropdownKondisiPsikologis.contains(e.target) && e.target !==
                         btnKondisiPsikologis) {
                         dropdownKondisiPsikologis.style.display = 'none';
@@ -491,5 +490,401 @@
 
         tinggiInput.addEventListener('input', validateNumberInput);
         beratInput.addEventListener('input', validateNumberInput);
+
+
+        // 7. Hasil Pemeriksaan Penunjang
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxFileSize = 2 * 1024 * 1024; // 2MB
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+            // Fungsi untuk validasi file
+            function validateFile(file) {
+                if (!file) return false;
+
+                if (file.size > maxFileSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File terlalu besar',
+                        text: 'Ukuran file maksimal 2MB'
+                    });
+                    return false;
+                }
+
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Format tidak didukung',
+                        text: 'Format yang diizinkan: PDF, JPG, PNG'
+                    });
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Fungsi untuk preview file
+            function previewFile(input) {
+                const previewContainer = document.getElementById(input.dataset.previewContainer);
+                const fileInfo = document.getElementById(`${input.id}Info`);
+                const file = input.files[0];
+
+                previewContainer.innerHTML = '';
+
+                if (file && validateFile(file)) {
+                    // Update file info
+                    fileInfo.innerHTML = `
+                        <span class="text-primary">File dipilih: ${file.name}</span>
+                        <button type="button" class="btn btn-link text-danger p-0 ms-2 clear-file" data-input="${input.id}">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    `;
+
+                    // Create preview
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.style.maxWidth = '100px';
+                        img.style.maxHeight = '100px';
+                        img.className = 'mt-2 rounded';
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+
+                        previewContainer.appendChild(img);
+                    } else if (file.type === 'application/pdf') {
+                        const pdfIcon = document.createElement('i');
+                        pdfIcon.className = 'bi bi-file-pdf text-danger fs-1 mt-2';
+                        previewContainer.appendChild(pdfIcon);
+                    }
+                } else {
+                    fileInfo.innerHTML = '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+                }
+            }
+
+            // Event listener untuk file inputs
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function () {
+                    previewFile(this);
+                });
+            });
+
+            // Event listener untuk tombol clear
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.clear-file')) {
+                    const btn = e.target.closest('.clear-file');
+                    const inputId = btn.dataset.input;
+                    const input = document.getElementById(inputId);
+                    const previewContainer = document.getElementById(input.dataset.previewContainer);
+
+                    input.value = '';
+                    previewContainer.innerHTML = '';
+                    document.getElementById(`${inputId}Info`).innerHTML =
+                        '<span>Format: PDF, JPG, PNG (Max 2MB)</span>';
+                }
+            });
+        });
+
+        // 8. Discharge Planning
+        document.addEventListener('DOMContentLoaded', function () {
+            const lamaDirawatInput = document.getElementById('lamaDirawat');
+            const rencanaPulangInput = document.getElementById('rencanaPulang');
+
+            const riskFactorInputs = document.querySelectorAll('.risk-factor');
+            const needSpecialPlanAlert = document.getElementById('needSpecialPlanAlert');
+            const noSpecialPlanAlert = document.getElementById('noSpecialPlanAlert');
+            const needSpecialRadio = document.getElementById('need_special');
+            const noSpecialRadio = document.getElementById('no_special');
+            const conclusionSection = document.getElementById('conclusionSection');
+            const conclusionText = document.getElementById('conclusionText');
+
+            const dpKesimpulanHidden = document.getElementById('dp_kesimpulan_hidden');
+
+            // Update rencana pulang date
+            lamaDirawatInput.addEventListener('change', function () {
+                updateRencanaPulang();
+            });
+
+            riskFactorInputs.forEach(input => {
+                input.addEventListener('change', calculateConclusion);
+            });
+
+            function updateRencanaPulang() {
+                const days = parseInt(lamaDirawatInput.value) || 0;
+                if (days > 0) {
+                    const today = new Date();
+                    const futureDate = new Date(today);
+                    futureDate.setDate(today.getDate() + days);
+
+                    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                    rencanaPulangInput.value = futureDate.toLocaleDateString('id-ID', options);
+                }
+            }
+
+            function calculateConclusion() {
+                // Check if all completed
+                let allCompleted = true;
+                let hasYesAnswer = false;
+
+                riskFactorInputs.forEach(input => {
+                    if (input.value === '') {
+                        allCompleted = false;
+                    } else if (input.value === '1') {
+                        hasYesAnswer = true;
+                    }
+                });
+
+                if (allCompleted) {
+                    if (hasYesAnswer) {
+                        displayConclusion(true);
+                    } else {
+                        displayConclusion(false);
+                    }
+                } else {
+                    hideConclusion();
+                }
+            }
+
+            function displayConclusion(needsSpecialPlan) {
+                conclusionSection.style.display = 'block';
+
+                if (needsSpecialPlan) {
+                    needSpecialPlanAlert.style.display = 'block';
+                    noSpecialPlanAlert.style.display = 'none';
+                    needSpecialRadio.checked = true;
+
+                    needSpecialRadio.disabled = false;
+                    needSpecialRadio.readOnly = true;
+
+                    if (dpKesimpulanHidden) {
+                        dpKesimpulanHidden.value = "Membutuhkan rencana pulang khusus";
+                    }
+
+                    conclusionSection.style.backgroundColor = '#fff3cd';
+                    conclusionText.innerHTML = 'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
+                } else {
+                    needSpecialPlanAlert.style.display = 'none';
+                    noSpecialPlanAlert.style.display = 'block';
+                    noSpecialRadio.checked = true;
+
+                    noSpecialRadio.disabled = false;
+                    noSpecialRadio.readOnly = true;
+
+                    if (dpKesimpulanHidden) {
+                        dpKesimpulanHidden.value = "Tidak membutuhkan rencana pulang khusus";
+                    }
+
+                    conclusionSection.style.backgroundColor = '#d1e7dd';
+                    conclusionText.innerHTML = 'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
+                }
+            }
+
+            function hideConclusion() {
+                conclusionSection.style.display = 'none';
+                needSpecialPlanAlert.style.display = 'none';
+                noSpecialPlanAlert.style.display = 'none';
+                needSpecialRadio.checked = false;
+                noSpecialRadio.checked = false;
+
+                if (dpKesimpulanHidden) {
+                    dpKesimpulanHidden.value = '';
+                }
+            }
+
+            function setupReadonlyRadios() {
+                // Mencegah perubahan manual pada radio button
+                needSpecialRadio.addEventListener('click', function (e) {
+                    if (!this.checked) {
+                        e.preventDefault();
+                    }
+                });
+
+                noSpecialRadio.addEventListener('click', function (e) {
+                    if (!this.checked) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            setupReadonlyRadios();
+            calculateConclusion();
+        });
+
+        // 9. Diagnosis Diagnosis Banding        
+        document.addEventListener('DOMContentLoaded', function() {
+            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
+            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
+
+            function initDiagnosisManagement(prefix, hiddenFieldId) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 30px)';
+                suggestionsList.style.display = 'none';
+                
+                // Insert suggestions list after input
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Database options
+                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+
+                // Prepare options array
+                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+                
+                // Load initial data if available
+                let diagnosisList = [];
+                try {
+                    diagnosisList = JSON.parse(hiddenInput.value) || [];
+                    renderDiagnosisList();
+                } catch (e) {
+                    diagnosisList = [];
+                    updateHiddenInput();
+                }
+                
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+                    
+                    if (inputValue) {
+                        // Filter database options
+                        const filteredOptions = diagnosisOptions.filter(option => 
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+                        
+                        // Show suggestions
+                        showSuggestions(filteredOptions, inputValue);
+                    } else {
+                        // Hide suggestions if input is empty
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                // Function to show suggestions
+                function showSuggestions(options, inputValue) {
+                    suggestionsList.innerHTML = '';
+                    
+                    if (options.length > 0) {
+                        // Render existing options
+                        options.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
+                            suggestionItem.textContent = option.text;
+                            suggestionItem.addEventListener('click', () => {
+                                addDiagnosis(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+                        
+                        // Add option to create new if no exact match
+                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.textContent = `Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addDiagnosis(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+                        
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.textContent = `Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addDiagnosis(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+                
+                // Add diagnosis when plus button is clicked
+                addButton.addEventListener('click', function() {
+                    const diagnosisText = inputField.value.trim();
+                    if (diagnosisText) {
+                        addDiagnosis(diagnosisText);
+                    }
+                });
+                
+                // Add diagnosis when Enter key is pressed
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const diagnosisText = this.value.trim();
+                        if (diagnosisText) {
+                            addDiagnosis(diagnosisText);
+                        }
+                    }
+                });
+                
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                function addDiagnosis(diagnosisText) {
+                    // Check for duplicates
+                    if (!diagnosisList.includes(diagnosisText)) {
+                        diagnosisList.push(diagnosisText);
+                        inputField.value = '';
+                        renderDiagnosisList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+                    } else {
+                        // Optional: Show feedback that it's a duplicate
+                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
+                    }
+                }
+                
+                function renderDiagnosisList() {
+                    listContainer.innerHTML = '';
+                    
+                    diagnosisList.forEach((diagnosis, index) => {
+                        const diagnosisItem = document.createElement('div');
+                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+                        
+                        const diagnosisSpan = document.createElement('span');
+                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm text-danger';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.type = 'button';
+                        deleteButton.addEventListener('click', function() {
+                            diagnosisList.splice(index, 1);
+                            renderDiagnosisList();
+                            updateHiddenInput();
+                        });
+                        
+                        diagnosisItem.appendChild(diagnosisSpan);
+                        diagnosisItem.appendChild(deleteButton);
+                        listContainer.appendChild(diagnosisItem);
+                    });
+                }
+                
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(diagnosisList);
+                }
+            }
+        });
     </script>
 @endpush
