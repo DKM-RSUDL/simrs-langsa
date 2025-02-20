@@ -336,7 +336,7 @@ class AsesmenKepThtController extends Controller
         $thtDiagnosisImplementasi->id_asesmen = $asesmenTht->id;
         $thtDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
         $thtDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
-        $thtDiagnosisImplementasi->rpp = $request->rpp;
+        $thtDiagnosisImplementasi->prognosis = $request->prognosis;
         $thtDiagnosisImplementasi->observasi = $request->observasi;
         $thtDiagnosisImplementasi->terapeutik = $request->terapeutik;
         $thtDiagnosisImplementasi->edukasi = $request->edukasi;
@@ -357,7 +357,7 @@ class AsesmenKepThtController extends Controller
         }
 
         // Simpan Implementasi ke Master
-        $rppList = json_decode($request->rpp ?? '[]', true);
+        $rppList = json_decode($request->prognosis ?? '[]', true);
         $observasiList = json_decode($request->observasi ?? '[]', true);
         $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
         $edukasiList = json_decode($request->edukasi ?? '[]', true);
@@ -377,7 +377,7 @@ class AsesmenKepThtController extends Controller
             }
         }
         // Simpan data
-        saveToColumn($rppList, 'rpp');
+        saveToColumn($rppList, 'prognosis'); // sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis
         saveToColumn($observasiList, 'observasi');
         saveToColumn($terapeutikList, 'terapeutik');
         saveToColumn($edukasiList, 'edukasi');

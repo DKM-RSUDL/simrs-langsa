@@ -43,6 +43,7 @@ class AsesmenKepAnakController extends Controller
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
         $jenisnyeri = RmeJenisNyeri::all();
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -94,6 +95,7 @@ class AsesmenKepAnakController extends Controller
             'faktorperingan',
             'efeknyeri',
             'jenisnyeri',
+            'rmeMasterDiagnosis',
             'user'
         ));
     }
@@ -156,8 +158,6 @@ class AsesmenKepAnakController extends Controller
             //Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
             $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
-            $asesmenKepAnak->diagnosis_banding = $request->diagnosis_banding ?? '[]';
-            $asesmenKepAnak->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
             $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
             foreach ($allDiagnoses as $diagnosa) {
                 $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();

@@ -1161,191 +1161,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="section-separator" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">10. Implementasi</h5>
-
-                                        <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan
-                                                Pengobatan</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                                rencana
-                                                Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Observasi">
-                                                <span class="input-group-text bg-white">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Observasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Observasi</label>
-                                            <div class="list-group">
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>1. Monitor pola nafas ( frekuensi, kedalaman, usaha nafas
-                                                        )</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Terapeutik">
-                                                <span class="input-group-text bg-white">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Terapeutik Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Terapeutik</label>
-                                            <div class="list-group">
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>1. Berikan minum hangat</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>2. Posisikan semi fowler atau fowler</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>3. Perhatikan kepatenan jalan nafas dengan head-tilt dan
-                                                        chin-lift
-                                                        (jaw — thrust jika curiga trauma servika)</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Edukasi">
-                                                <span class="input-group-text bg-white">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Edukasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Edukasi</label>
-                                            <div class="list-group">
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>1. Anjuran asupan cairan 2000 ml/hari, jika tidak kontra
-                                                        indikasi</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>2. Ajarkan teknik batuk efektif</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="input-group mt-2">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Kolaborasi">
-                                                <span class="input-group-text bg-white">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Kolaborasi Section -->
-                                        <div class="mb-4">
-                                            <label class="fw-semibold mb-2">Kolaborasi</label>
-                                            <div class="list-group">
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>1. Kolaborasi pemberian bronkodilator, ekspektoran, mukolitik,
-                                                        jika
-                                                        perlu</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Prognosis Section -->
-                                        <div class="mb-4">
-                                            <label class="text-primary fw-semibold">Prognosis</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan
-                                                Prognosis yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Prognosis">
-                                                <span class="input-group-text bg-white">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div class="list-group">
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>1. Memberikan antibiotik intravena sesuai jadwal</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>2. Mengajarkan pasien cara menggunakan inhaler untuk
-                                                        asma</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="list-group-item d-flex justify-content-between align-items-center border-0 ps-0">
-                                                    <span>3. Membersihkan luka dengan cairan NaCl dan mengganti balutan
-                                                        setiap
-                                                        hari</span>
-                                                    <button class="btn btn-link text-danger p-0">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
                                     <div class="section-separator" style="margin-bottom: 2rem;">
                                         <h5 class="fw-semibold mb-4">10. Implementasi</h5>
 
@@ -1355,23 +1170,6 @@
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
                                                 rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="rencana-list" class="list-group mb-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="rpp" value="[]">
                                         </div>
 
                                         <!-- Observasi Section -->
@@ -1452,6 +1250,32 @@
                                             </div>
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
+                                        </div>
+
+                                        <!-- Kolaborasi Section -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan
+                                                Prognosis yang tidak ditemukan.</small>
+                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
+                                                <span class="input-group-text bg-white" id="add-rencana">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+
+                                            <div id="rencana-list" class="list-group mb-3">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                         </div>
                                     </div>
 
