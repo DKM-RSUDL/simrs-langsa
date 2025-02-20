@@ -43,6 +43,7 @@ class AsesmenKepAnakController extends Controller
         $faktorperingan = RmeFaktorPeringan::all();
         $efeknyeri = RmeEfekNyeri::all();
         $jenisnyeri = RmeJenisNyeri::all();
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -94,6 +95,7 @@ class AsesmenKepAnakController extends Controller
             'faktorperingan',
             'efeknyeri',
             'jenisnyeri',
+            'rmeMasterDiagnosis',
             'user'
         ));
     }
