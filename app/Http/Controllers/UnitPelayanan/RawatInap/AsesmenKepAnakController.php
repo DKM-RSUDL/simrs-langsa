@@ -435,36 +435,58 @@ class AsesmenKepAnakController extends Controller
             //Simpan ke table RmeAsesmenKepAnakStatusDecubitus
             $decubitusData = new RmeAsesmenKepAnakResikoDekubitus();
             $decubitusData->id_asesmen = $dataAsesmen->id;
+
             $jenisSkala = $request->input('jenis_skala_dekubitus') === 'norton' ? 1 : 2;
             $decubitusData->jenis_skala = $jenisSkala;
-            // If Norton scale
-            if ($jenisSkala === 1) {
-                $decubitusData->norton_kondisi_fisik = $request->input('kondisi_fisik');
-                $decubitusData->norton_kondisi_mental = $request->input('kondisi_mental');
-                $decubitusData->norton_aktivitas = $request->input('aktivitas');
-                $decubitusData->norton_mobilitas = $request->input('mobilitas');
-                $decubitusData->norton_inkontenesia = $request->input('inkontinensia');
 
-                // Calculate total score
-                $totalScore =
-                    (int)$request->input('kondisi_fisik') +
-                    (int)$request->input('kondisi_mental') +
-                    (int)$request->input('aktivitas') +
-                    (int)$request->input('mobilitas') +
-                    (int)$request->input('inkontinensia');
-
-                // Determine conclusion based on total score
-                if ($totalScore <= 12) {
-                    $kesimpulan = 'Risiko Tinggi';
-                } elseif ($totalScore <= 14) {
-                    $kesimpulan = 'Risiko Sedang';
-                } else {
-                    $kesimpulan = 'Risiko Rendah';
+            // Fungsi untuk menentukan kesimpulan
+            function getRiskConclusion($score)
+            {
+                if ($score <= 12) {
+                    return 'Risiko Tinggi';
+                } elseif ($score <= 14) {
+                    return 'Risiko Sedang';
                 }
+                return 'Risiko Rendah';
+            }
 
-                $decubitusData->norton_kesimpulan = $kesimpulan . " (Skor: $totalScore)";
+            if ($jenisSkala === 1) {
+                // Norton
+                $decubitusData->norton_kondisi_fisik   = $request->input('kondisi_fisik');
+                $decubitusData->norton_kondisi_mental  = $request->input('kondisi_mental');
+                $decubitusData->norton_aktivitas       = $request->input('norton_aktivitas');
+                $decubitusData->norton_mobilitas       = $request->input('norton_mobilitas');
+                $decubitusData->norton_inkontenesia    = $request->input('inkontinensia');
+
+                $totalScore =
+                (int)$request->input('kondisi_fisik') +
+                (int)$request->input('kondisi_mental') +
+                (int)$request->input('norton_aktivitas') +
+                (int)$request->input('norton_mobilitas') +
+                (int)$request->input('inkontinensia');
+
+                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
+            } else {
+                // Braden
+                $decubitusData->braden_persepsi       = $request->input('persepsi_sensori');
+                $decubitusData->braden_kelembapan     = $request->input('kelembapan');
+                $decubitusData->braden_aktivitas      = $request->input('braden_aktivitas');
+                $decubitusData->braden_mobilitas      = $request->input('braden_mobilitas');
+                $decubitusData->braden_nutrisi        = $request->input('nutrisi');
+                $decubitusData->braden_pergesekan     = $request->input('pergesekan');
+
+                $totalScore =
+                (int)$request->input('persepsi_sensori') +
+                (int)$request->input('kelembapan') +
+                (int)$request->input('braden_aktivitas') +
+                (int)$request->input('braden_mobilitas') +
+                (int)$request->input('nutrisi') +
+                (int)$request->input('pergesekan');
+
+                $decubitusData->decubitus_kesimpulan = getRiskConclusion($totalScore);
             }
             $decubitusData->save();
+
 
             //Simpan ke table RmeAsesmenKepAnakStatusFungsional
             $statusFungsional = new RmeAsesmenKepAnakStatusFungsional();

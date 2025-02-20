@@ -810,6 +810,12 @@
                     select.addEventListener('change', () => updateDecubitusConclusion('norton'));
                 });
             }
+            const formBraden = document.getElementById('formBraden');
+            if (formBraden) {
+                formBraden.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => updateDecubitusConclusion('braden'));
+                });
+            }
 
             const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
             if (skalaDecubitusSelect) {
@@ -1398,25 +1404,32 @@
                 low: 15,    // > 15 risiko rendah
                 medium: 13,  // 13-14 risiko sedang
                 high: 12     // < 12 risiko tinggi
+            },
+            braden: {
+                high: 12,    // ≤ 12 risiko tinggi
+                medium: 16,  // 13-16 risiko sedang
+                low: 17      // ≥ 17 risiko rendah
             }
         };
 
         // Fungsi untuk menampilkan form decubitus yang dipilih
         function showDecubitusForm(formType) {
-            // Sembunyikan semua form terlebih dahulu
             document.querySelectorAll('.decubitus-form').forEach(form => {
                 form.style.display = 'none';
             });
 
-            // Tampilkan form yang dipilih
-            if (formType === 'norton' && formNorton) {
-                formNorton.style.display = 'block';
-            } else if (formType === 'braden' && formBraden) {
-                formBraden.style.display = 'block';
+            let formElement = null;
+            if (formType === 'norton') {
+                formElement = document.getElementById('formNorton');
+            } else if (formType === 'braden') {
+                formElement = document.getElementById('formBraden');
             }
 
-            // Reset form
-            resetDecubitusForm(formType);
+            // Tampilkan form yang dipilih
+            if (formElement) {
+                formElement.style.display = 'block';
+                resetDecubitusForm(formElement);
+            }
         }
 
         // Reset form saat berganti
@@ -1442,7 +1455,7 @@
             if (formType === 'norton') {
                 let total = 0;
                 let allFilled = true;
-                const fields = ['kondisi_fisik', 'kondisi_mental', 'aktivitas', 'mobilitas', 'inkontinensia'];
+                const fields = ['kondisi_fisik', 'kondisi_mental', 'norton_aktivitas', 'norton_mobilitas', 'inkontinensia'];
 
                 fields.forEach(field => {
                     const select = form.querySelector(`select[name="${field}"]`);
@@ -1471,6 +1484,49 @@
                     conclusion = 'Risiko Tinggi';
                     alertClass = 'alert-danger';
                 } else if (total <= decubitusScores.norton.medium) {
+                    conclusion = 'Risiko Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    conclusion = 'Risiko Rendah';
+                    alertClass = 'alert-success';
+                }
+
+                conclusion += ` (Skor: ${total})`;
+                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                kesimpulanDiv.textContent = conclusion;
+            }
+            else if (formType === 'braden') {
+                let total = 0;
+                let allFilled = true;
+                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi', 'pergesekan'];
+
+                fields.forEach(field => {
+                    const select = form.querySelector(`select[name="${field}"]`);
+                    if (!select || !select.value) {
+                        allFilled = false;
+                        return;
+                    }
+                    total += parseInt(select.value);
+                });
+
+                // Debug untuk melihat nilai
+                console.log('Total Braden Score:', total);
+                console.log('All Braden Fields Filled:', allFilled);
+
+                if (!allFilled) {
+                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    return;
+                }
+
+                let conclusion = '';
+                let alertClass = '';
+
+                // Cek total skor dan tentukan kesimpulan
+                if (total <= 12) {
+                    conclusion = 'Risiko Tinggi';
+                    alertClass = 'alert-danger';
+                } else if (total <= 16) {
                     conclusion = 'Risiko Sedang';
                     alertClass = 'alert-warning';
                 } else {
