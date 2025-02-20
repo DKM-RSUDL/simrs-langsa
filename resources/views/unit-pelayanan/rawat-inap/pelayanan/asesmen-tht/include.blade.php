@@ -1139,7 +1139,7 @@
                         const deleteButton = document.createElement('button');
                         deleteButton.className = 'btn btn-link text-danger p-0';
                         deleteButton.type = 'button';
-                        deleteButton.innerHTML = '<i class="bi bi-x"></i>';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
                         deleteButton.addEventListener('click', function() {
                             itemsList.splice(index, 1);
                             renderItemsList();

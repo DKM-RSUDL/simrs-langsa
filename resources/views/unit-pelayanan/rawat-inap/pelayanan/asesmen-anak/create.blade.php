@@ -2267,7 +2267,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-separator" id="implementasi" style="margin-bottom: 2rem;">
+                                    <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
                                         <h5 class="fw-semibold mb-4">10. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
@@ -2276,23 +2276,6 @@
                                             <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
                                                 rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
                                                 rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="bi bi-search text-secondary"></i>
-                                                </span>
-                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                                <span class="input-group-text bg-white" id="add-rencana">
-                                                    <i class="bi bi-plus-circle text-primary"></i>
-                                                </span>
-                                            </div>
-
-                                            <div id="rencana-list" class="list-group mb-3">
-                                                <!-- Items will be added here dynamically -->
-                                            </div>
-                                            <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="rpp" value="[]">
                                         </div>
 
                                         <!-- Observasi Section -->
@@ -2308,7 +2291,7 @@
                                                     <i class="bi bi-plus-circle text-primary"></i>
                                                 </span>
                                             </div>
-                                            <div id="observasi-list" class="list-group mb-2">
+                                            <div id="observasi-list" class="list-group mb-2 bg-light">
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
@@ -2374,16 +2357,42 @@
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
                                         </div>
+
+                                        <!-- Kolaborasi Section -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan
+                                                Prognosis yang tidak ditemukan.</small>
+                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
+                                                <span class="input-group-text bg-white" id="add-rencana">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+
+                                            <div id="rencana-list" class="list-group mb-3">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
+                                        </div>
                                     </div>
+                                
 
-
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
 
                                     <div class="section-separator" id="evaluasi">
                                         <h5 class="section-title">18. Evaluasi</h5>

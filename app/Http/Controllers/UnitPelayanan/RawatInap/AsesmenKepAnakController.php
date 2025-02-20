@@ -25,6 +25,7 @@ use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeJenisNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
+use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class AsesmenKepAnakController extends Controller
         $efeknyeri = RmeEfekNyeri::all();
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -96,6 +98,7 @@ class AsesmenKepAnakController extends Controller
             'efeknyeri',
             'jenisnyeri',
             'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
             'user'
         ));
     }
@@ -150,9 +153,12 @@ class AsesmenKepAnakController extends Controller
             $asesmenKepAnak->tingkat_pendidikan = $request->tingkat_pendidikan;
             $asesmenKepAnak->diagnosis_banding = $request->diagnosis_banding ?? '[]';
             $asesmenKepAnak->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
-            $asesmenKepAnak->rencana_penatalaksanaan = '';
-            $asesmenKepAnak->prognosis = '';
-            $asesmenKepAnak->evaluasi = '';
+            $asesmenKepAnak->prognosis = $request->prognosis;
+            $asesmenKepAnak->observasi = $request->observasi;
+            $asesmenKepAnak->terapeutik = $request->terapeutik;
+            $asesmenKepAnak->edukasi = $request->edukasi;
+            $asesmenKepAnak->kolaborasi = $request->kolaborasi;
+            $asesmenKepAnak->evaluasi = $request->evaluasi_keperawatan;
             $asesmenKepAnak->save();
 
             //Simpan Diagnosa ke Master
@@ -165,6 +171,26 @@ class AsesmenKepAnakController extends Controller
                     $masterDiagnosa = new RmeMasterDiagnosis();
                     $masterDiagnosa->nama_diagnosis = $diagnosa;
                     $masterDiagnosa->save();
+                }
+            }
+
+            // Simpan Implementasi ke Master
+            $implementasiData = [
+                'prognosis' => json_decode($request->prognosis ?? '[]',true),
+                'observasi' => json_decode($request->observasi ?? '[]',true),
+                'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
+                'edukasi' => json_decode($request->edukasi ?? '[]', true),
+                'kolaborasi' => json_decode($request->kolaborasi ?? '[]', true)
+            ];
+
+            foreach ($implementasiData as $column => $dataList) {
+                foreach ($dataList as $item) {
+                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
+                    if (!$existingImplementasi) {
+                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi->$column = $item;
+                        $masterImplementasi->save();
+                    }
                 }
             }
 
@@ -529,8 +555,8 @@ class AsesmenKepAnakController extends Controller
             $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
             $asesmenRencana->save();
 
-
-            return redirect()->back()->with('success', 'Data asesmen anak berhasil disimpan');
+            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
+                ->with('success', 'Data asesmen anak berhasil disimpan');
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
