@@ -890,7 +890,7 @@
         // 10.Implementasi
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize all sections
-            initImplementationSection('rencana', 'rencana_penatalaksanaan', 'rpp');
+            initImplementationSection('rencana', 'rencana_penatalaksanaan', 'prognosis');
             initImplementationSection('observasi', 'observasi', 'observasi');
             initImplementationSection('terapeutik', 'terapeutik', 'terapeutik');
             initImplementationSection('edukasi', 'edukasi', 'edukasi');
