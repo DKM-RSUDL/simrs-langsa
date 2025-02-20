@@ -13,6 +13,7 @@ use App\Models\RmeAsesmenThtDischargePlanning;
 use App\Models\RmeAsesmenThtPemeriksaanFisik;
 use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
 use App\Models\RmeMasterDiagnosis;
+use App\Models\RmeMasterImplementasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +24,9 @@ class AsesmenKepThtController extends Controller
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
-        $itemFisik = MrItemFisik::orderby('urut')->get();        
+        $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
 
 
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -70,8 +72,9 @@ class AsesmenKepThtController extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
-            'user',            
-            'rmeMasterDiagnosis'
+            'user',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi'
         ));
     }
 
@@ -333,11 +336,16 @@ class AsesmenKepThtController extends Controller
         $thtDiagnosisImplementasi->id_asesmen = $asesmenTht->id;
         $thtDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
         $thtDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
+        $thtDiagnosisImplementasi->rpp = $request->rpp;
+        $thtDiagnosisImplementasi->observasi = $request->observasi;
+        $thtDiagnosisImplementasi->terapeutik = $request->terapeutik;
+        $thtDiagnosisImplementasi->edukasi = $request->edukasi;
+        $thtDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
         $thtDiagnosisImplementasi->save();
 
         //Simpan Diagnosa ke Master
         $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
-        $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);                
+        $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
         $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
         foreach ($allDiagnoses as $diagnosa) {
             $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
@@ -347,6 +355,33 @@ class AsesmenKepThtController extends Controller
                 $masterDiagnosa->save();
             }
         }
+
+        // Simpan Implementasi ke Master
+        $rppList = json_decode($request->rpp ?? '[]', true);
+        $observasiList = json_decode($request->observasi ?? '[]', true);
+        $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
+        $edukasiList = json_decode($request->edukasi ?? '[]', true);
+        $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
+        // Fungsi untuk menyimpan data ke kolom tertentu
+        function saveToColumn($dataList, $column) {
+            foreach ($dataList as $item) {
+                // Cek apakah sudah ada entri
+                $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
+
+                if (!$existingImplementasi) {
+                    // Jika tidak ada, buat record baru
+                    $masterImplementasi = new RmeMasterImplementasi();
+                    $masterImplementasi->$column = $item;
+                    $masterImplementasi->save();
+                }
+            }
+        }
+        // Simpan data
+        saveToColumn($rppList, 'rpp');
+        saveToColumn($observasiList, 'observasi');
+        saveToColumn($terapeutikList, 'terapeutik');
+        saveToColumn($edukasiList, 'edukasi');
+        saveToColumn($kolaborasiList, 'kolaborasi');
 
         // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
         //     'kd_pasien' => $kd_pasien,
