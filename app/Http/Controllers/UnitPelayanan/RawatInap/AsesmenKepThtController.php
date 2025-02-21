@@ -15,6 +15,7 @@ use App\Models\RmeAsesmenThtRiwayatKesehatanObatAlergi;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -111,7 +112,7 @@ class AsesmenKepThtController extends Controller
         $uploadedFiles = [];
 
         // Fungsi helper untuk upload file
-        $uploadFile = function($fieldName) use ($request, &$uploadedFiles) {
+        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles) {
             if ($request->hasFile($fieldName)) {
                 try {
                     $file = $request->file($fieldName);
@@ -363,7 +364,8 @@ class AsesmenKepThtController extends Controller
         $edukasiList = json_decode($request->edukasi ?? '[]', true);
         $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
         // Fungsi untuk menyimpan data ke kolom tertentu
-        function saveToColumn($dataList, $column) {
+        function saveToColumn($dataList, $column)
+        {
             foreach ($dataList as $item) {
                 // Cek apakah sudah ada entri
                 $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
@@ -390,5 +392,38 @@ class AsesmenKepThtController extends Controller
         //     'urut_masuk' => $urut_masuk
         // ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
         return back()->with('success', 'Berhasil menambah asesmen keperawatan THT!');
+    }
+
+    public function show($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenTht',
+                'rmeAsesmenThtPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+                'rmeAsesmenThtDischargePlanning',
+                'rmeAsesmenThtDiagnosisImplementasi',
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->firstOrFail();
+            // dd($asesmen);
+            // dd($dataMedis);
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
+                'asesmen',
+                'dataMedis'
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

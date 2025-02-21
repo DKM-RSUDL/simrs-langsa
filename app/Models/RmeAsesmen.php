@@ -152,4 +152,26 @@ class RmeAsesmen extends Model
     {
         return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
     }
+
+    // asesmen tht
+    public function rmeAsesmenTht()
+    {
+        return $this->hasOne(RmeAsesmenTht::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtPemeriksaanFisik()
+    {
+        return $this->hasMany(RmeAsesmenThtPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtRiwayatKesehatanObatAlergi()
+    {
+        return $this->hasMany(RmeAsesmenThtRiwayatKesehatanObatAlergi::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtDischargePlanning()
+    {
+        return $this->hasMany(RmeAsesmenThtDischargePlanning::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtDiagnosisImplementasi()
+    {
+        return $this->hasMany(RmeAsesmenthtDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
 }
