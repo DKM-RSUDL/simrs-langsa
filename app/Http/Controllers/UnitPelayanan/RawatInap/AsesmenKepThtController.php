@@ -79,8 +79,8 @@ class AsesmenKepThtController extends Controller
         ));
     }
 
-    public function store(Request $request, $kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
-    {
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {        
         // dd($request);
         $asesmenTht = new RmeAsesmen();
         $asesmenTht->kd_pasien = $request->kd_pasien;
@@ -102,7 +102,7 @@ class AsesmenKepThtController extends Controller
 
         $asesmenThtDataMasuk = new RmeAsesmenTht();
         $asesmenThtDataMasuk->id_asesmen = $asesmenTht->id;
-        $asesmenThtDataMasuk->tgl_masuk = $request->tgl_masuk;
+        $asesmenThtDataMasuk->tgl_masuk = "$request->tgl_masuk $request->jam_masuk";
         $asesmenThtDataMasuk->kondisi_masuk = $request->kondisi_masuk;
         $asesmenThtDataMasuk->ruang = $request->ruang;
         $asesmenThtDataMasuk->anamnesis_anamnesis = $request->anamnesis_anamnesis;
@@ -385,16 +385,16 @@ class AsesmenKepThtController extends Controller
         saveToColumn($edukasiList, 'edukasi');
         saveToColumn($kolaborasiList, 'kolaborasi');
 
-        // return redirect()->route('rawat-inap.asesmen.keperawatan.tht.index', [
-        //     'kd_pasien' => $kd_pasien,
-        //     'kd_unit' => $kd_unit,
-        //     'tgl_masuk' => $tgl_masuk,
-        //     'urut_masuk' => $urut_masuk
-        // ])->with(['success' => 'Berhasil menambah asesmen keperawatan umum !']);
-        return back()->with('success', 'Berhasil menambah asesmen keperawatan THT!');
+        return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
+            'kd_unit' => request()->route('kd_unit'),
+            'kd_pasien' => request()->route('kd_pasien'),
+            'tgl_masuk' => request()->route('tgl_masuk'),
+            'urut_masuk' => request()->route('urut_masuk'),
+        ])->with(['success' => 'Berhasil menambah asesmen THT !']);
+        // return back()->with('success', 'Berhasil menambah asesmen keperawatan THT!');
     }
 
-    public function show($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Ambil data asesmen beserta relasinya
@@ -414,8 +414,10 @@ class AsesmenKepThtController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
+
             // dd($asesmen);
             // dd($dataMedis);
+
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
                 'asesmen',
                 'dataMedis'
