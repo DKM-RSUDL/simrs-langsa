@@ -171,10 +171,10 @@
                     <i class="fas fa-eye me-1"></i> Lihat
                 </a>
 
-                {{-- <a href="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/keperawatan/tht/' . $item->id . '/edit') }}"
+                <a href="{{ route('rawat-inap.asesmen.medis.tht.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                     class="btn btn-sm btn-secondary">
                     <i class="fas fa-edit"></i> Edit
-                </a> --}}
+                </a>
                 @elseif($item->kategori == 2)
 
                 @endif

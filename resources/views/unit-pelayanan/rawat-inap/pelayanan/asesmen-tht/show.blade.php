@@ -1,7 +1,7 @@
 @extends('layouts.administrator.master')
 
 @section('content')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.edit-include')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show-include')
 <div class="row">
     <div class="col-md-3">
         @include('components.patient-card-keperawatan')

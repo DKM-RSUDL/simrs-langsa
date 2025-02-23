@@ -80,7 +80,7 @@ class AsesmenKepThtController extends Controller
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {        
+    {
         // dd($request);
         $asesmenTht = new RmeAsesmen();
         $asesmenTht->kd_pasien = $request->kd_pasien;
@@ -427,5 +427,52 @@ class AsesmenKepThtController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Cari asesmen berdasarkan ID dengan eager loading untuk semua relasi yang dibutuhkan
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenTht',
+                'rmeAsesmenThtPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+                'rmeAsesmenThtDischargePlanning',
+                'rmeAsesmenThtDiagnosisImplementasi',
+            ])->findOrFail($id);
+
+            // Pastikan data kunjungan pasien ditemukan dan sesuai dengan parameter
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // Ambil data pendukung
+            $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+
+            // Kirim data ke view
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.edit', compact(
+                'asesmen',
+                'dataMedis',
+                'itemFisik',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+            ));
+        } catch (\Exception $e) {
+            // Tangani error dan berikan pesan yang jelas
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat mengambil data asesmen: ' . $e->getMessage());
+        }
+    }
+
+    public function update()
+    {
+
     }
 }
