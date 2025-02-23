@@ -66,9 +66,9 @@
                                         <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                         <div class="d-flex gap-3" style="width: 100%;">
                                             <input type="date" class="form-control" name="tgl_masuk"
-                                                value="{{ $asesmen->rmeAsesmenTht->tgl_masuk ?? date('Y-m-d') }}">
+                                                value="{{ $asesmen->rmeAsesmenTht[0]->tgl_masuk ?? date('Y-m-d') }}">
                                             <input type="time" class="form-control" name="jam_masuk"
-                                                value="{{ $asesmen->rmeAsesmenTht->jam_masuk ?? date('H:i') }}">
+                                                value="{{ $asesmen->rmeAsesmenTht[0]->jam_masuk ?? date('H:i') }}">
                                         </div>
                                     </div>
 
