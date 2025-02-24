@@ -2,7 +2,7 @@
 
 
 @section('content')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.include')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.create-include')
 
     <div class="row">
         <div class="col-md-3">
@@ -62,7 +62,7 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <input type="date" class="form-control" name="tgl_masuk"
                                                     value="{{ date('Y-m-d') }}">
-                                                <input type="time" class="form-control" name="tgl_masuk"
+                                                <input type="time" class="form-control" name="jam_masuk"
                                                     value="{{ date('H:i') }}">
                                             </div>
                                         </div>
