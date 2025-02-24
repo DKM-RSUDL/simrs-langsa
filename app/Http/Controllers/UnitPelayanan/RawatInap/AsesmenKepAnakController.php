@@ -657,4 +657,76 @@ class AsesmenKepAnakController extends Controller
         }
     }
 
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta semua relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenKepAnak',
+                'pemeriksaanFisik.itemFisik',
+                'rmeAsesmenKepAnakFisik',
+                'rmeAsesmenKepAnakStatusNyeri',
+                'rmeAsesmenKepAnakRiwayatKesehatan',
+                'rmeAsesmenKepAnakRisikoJatuh',
+                'rmeAsesmenKepAnakStatusPsikologis',
+                'rmeAsesmenKepAnakGizi',
+                'rmeAsesmenKepAnakResikoDekubitus',
+                'rmeAsesmenKepAnakStatusFungsional',
+                'rmeAsesmenKepAnakRencanaPulang'
+            ])->findOrFail($id);
+
+            // Pastikan data kunjungan pasien ditemukan dan sesuai dengan parameter
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', date('Y-m-d', strtotime($tgl_masuk)))
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // Mengambil umur pasien
+            if ($dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+
+            // Mengambil data tambahan yang diperlukan untuk tampilan
+            $itemFisik = MrItemFisik::orderby('urut')->get();
+            $menjalar = RmeMenjalar::all();
+            $frekuensinyeri = RmeFrekuensiNyeri::all();
+            $kualitasnyeri = RmeKualitasNyeri::all();
+            $faktorpemberat = RmeFaktorPemberat::all();
+            $faktorperingan = RmeFaktorPeringan::all();
+            $efeknyeri = RmeEfekNyeri::all();
+            $jenisnyeri = RmeJenisNyeri::all();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $user = auth()->user();
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.edit', compact(
+                'asesmen',
+                'dataMedis',
+                'itemFisik',
+                'menjalar',
+                'frekuensinyeri',
+                'kualitasnyeri',
+                'faktorpemberat',
+                'faktorperingan',
+                'efeknyeri',
+                'jenisnyeri',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+                'user'
+            ));
+
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
 }

@@ -173,6 +173,11 @@
                         class="btn btn-sm btn-info">
                         <i class="fas fa-eye me-1"></i> Lihat
                     </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 @endif
             </div>
         </li>

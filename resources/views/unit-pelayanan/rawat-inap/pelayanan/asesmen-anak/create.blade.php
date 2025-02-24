@@ -2203,7 +2203,7 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">16. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -2259,7 +2259,7 @@
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">10. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">17. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">
