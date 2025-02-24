@@ -387,6 +387,7 @@ Route::middleware('auth')->group(function () {
                                                     Route::controller(AsesmenKepAnakController::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
                                                         Route::put('/', 'update')->name('.update');
                                                     });
                                                 });

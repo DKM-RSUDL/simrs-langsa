@@ -28,6 +28,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,7 +58,7 @@ class AsesmenKepAnakController extends Controller
         })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -121,7 +122,7 @@ class AsesmenKepAnakController extends Controller
             $dataAsesmen->urut_masuk = $urut_masuk;
             $dataAsesmen->user_id = Auth::id();
             $dataAsesmen->waktu_asesmen = $waktu_asesmen;
-            $dataAsesmen->kategori = 1;
+            $dataAsesmen->kategori = 2;
             $dataAsesmen->sub_kategori = 7;
             $dataAsesmen->anamnesis = $request->anamnesis;
             $alergis = collect(json_decode($request->alergis, true))->map(function ($item) {
@@ -560,6 +561,99 @@ class AsesmenKepAnakController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta semua relasinya
+
+   
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenKepAnak',
+                'pemeriksaanFisik.itemFisik',
+                'rmeAsesmenKepAnakFisik',
+                'rmeAsesmenKepAnakStatusNyeri',
+                'rmeAsesmenKepAnakRiwayatKesehatan',
+                'rmeAsesmenKepAnakRisikoJatuh',
+                'rmeAsesmenKepAnakStatusPsikologis',
+                'rmeAsesmenKepAnakGizi',
+                'rmeAsesmenKepAnakResikoDekubitus',
+                'rmeAsesmenKepAnakStatusFungsional',
+                'rmeAsesmenKepAnakRencanaPulang'
+            ])->findOrFail($id);
+
+            // Mengambil data medis pasien
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            // Mengambil nama alergen dari riwayat_alergi
+            if ($dataMedis->riwayat_alergi) {
+                $dataMedis->riwayat_alergi = collect(json_decode($dataMedis->riwayat_alergi, true))
+                    ->pluck('alergen')
+                    ->all();
+            } else {
+                $dataMedis->riwayat_alergi = [];
+            }
+
+            $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+
+            // Mengambil data tambahan yang diperlukan untuk tampilan
+            $itemFisik = MrItemFisik::orderby('urut')->get();
+            $menjalar = RmeMenjalar::all();
+            $frekuensinyeri = RmeFrekuensiNyeri::all();
+            $kualitasnyeri = RmeKualitasNyeri::all();
+            $faktorpemberat = RmeFaktorPemberat::all();
+            $faktorperingan = RmeFaktorPeringan::all();
+            $efeknyeri = RmeEfekNyeri::all();
+            $jenisnyeri = RmeJenisNyeri::all();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $user = auth()->user();
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.show', compact(
+                'asesmen',
+                'dataMedis',
+                'itemFisik',
+                'menjalar',
+                'frekuensinyeri',
+                'kualitasnyeri',
+                'faktorpemberat',
+                'faktorperingan',
+                'efeknyeri',
+                'jenisnyeri',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+                'user'
+            ));
+
+
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

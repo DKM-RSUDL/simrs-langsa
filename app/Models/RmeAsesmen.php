@@ -174,4 +174,56 @@ class RmeAsesmen extends Model
     {
         return $this->hasMany(RmeAsesmenthtDiagnosisImplementasi::class, 'id_asesmen', 'id');
     }
+
+    // asesmen anak
+    public function rmeAsesmenKepAnak()
+    {
+        return $this->hasOne(RmeAsesmenKepAnak::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakFisik()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakFisik::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakStatusNyeri::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakRiwayatKesehatan()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakRiwayatKesehatan::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakRisikoJatuh()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakRisikoJatuh::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakStatusPsikologis()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakStatusPsikologis::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakGizi()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakGizi::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakResikoDekubitus()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakResikoDekubitus::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakStatusFungsional()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakStatusFungsional::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepAnakRencanaPulang()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakRencanaPulang::class, 'id_asesmen', 'id');
+    }
+
 }

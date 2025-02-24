@@ -2036,27 +2036,18 @@
                                             <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
                                             <select class="form-select" name="bahasa_sehari_hari">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="indonesia" selected>Bahasa Indonesia</option>
-                                                <option value="aceh">Aceh</option>
-                                                <option value="batak">Batak</option>
-                                                <option value="minangkabau">Minangkabau</option>
-                                                <option value="melayu">Melayu</option>
-                                                <option value="sunda">Sunda</option>
-                                                <option value="jawa">Jawa</option>
-                                                <option value="madura">Madura</option>
-                                                <option value="bali">Bali</option>
-                                                <option value="sasak">Sasak</option>
-                                                <option value="banjar">Banjar</option>
-                                                <option value="bugis">Bugis</option>
-                                                <option value="toraja">Toraja</option>
-                                                <option value="makassar">Makassar</option>
-                                                <option value="dayak">Dayak</option>
-                                                <option value="tidung">Tidung</option>
-                                                <option value="ambon">Ambon</option>
-                                                <option value="ternate">Ternate</option>
-                                                <option value="tidore">Tidore</option>
-                                                <option value="papua">Papua</option>
-                                                <option value="asmat">Asmat</option>
+                                                <option value="Bahasa Indoneisa" selected>Bahasa Indonesia</option>
+                                                <option value="Aceh">Aceh</option>
+                                                <option value="Batak">Batak</option>
+                                                <option value="Minangkabau">Minangkabau</option>
+                                                <option value="Melayu">Melayu</option>
+                                                <option value="Sunda">Sunda</option>
+                                                <option value="Jawa">Jawa</option>
+                                                <option value="Madura">Madura</option>
+                                                <option value="Bali">Bali</option>
+                                                <option value="Sasak">Sasak</option>
+                                                <option value="Banjar">Banjar</option>
+                                                <option value="Bugis">Bugis</option>
                                             </select>
                                         </div>
 
@@ -2095,12 +2086,12 @@
                                             <label style="min-width: 200px;">Tingkat Pendidikan</label>
                                             <select class="form-select" name="tingkat_pendidikan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="sd">SD</option>
-                                                <option value="smp">SMP</option>
-                                                <option value="sma">SMA</option>
-                                                <option value="diploma">Diploma</option>
-                                                <option value="sarjana">Sarjana</option>
-                                                <option value="tidak_sekolah">Tidak Sekolah</option>
+                                                <option value="SD">SD</option>
+                                                <option value="SMP">SMP</option>
+                                                <option value="SMA">SMA</option>
+                                                <option value="Diploma">Diploma</option>
+                                                <option value="Sarjana">Sarjana</option>
+                                                <option value="Tidak Sekolah">Tidak Sekolah</option>
                                             </select>
                                         </div>
                                     </div>
