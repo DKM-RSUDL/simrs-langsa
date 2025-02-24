@@ -373,6 +373,7 @@ Route::middleware('auth')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                                     });
                                                 });
                                             });

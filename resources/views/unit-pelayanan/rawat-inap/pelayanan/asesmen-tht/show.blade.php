@@ -13,9 +13,20 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <div>
-                <a href="#" class="btn btn-outline-primary" onclick="window.print()">
-                    <i class="fas fa-print"></i> Cetak
-                </a>
+                {{-- @if ($asesmen->kategori == 1 && $asesmen->sub_kategori == 5) --}}
+                    <a href="javascript:void(0);"
+                    class="btn btn-outline-primary"
+                    data-id="{{ $asesmen->id }}"
+                    data-kd-unit="{{ $asesmen->kd_unit }}"
+                    data-kd-pasien="{{ $asesmen->pasien->kd_pasien }}"
+                    data-tgl-masuk="{{ \Carbon\Carbon::parse($asesmen->tgl_masuk)->format('Y-m-d') }}"
+                    data-urut-masuk="{{ $asesmen->urut_masuk }}"
+                    onclick="printPDF(this)">
+                    <i class="bi bi-printer"></i>
+                        Print PDF
+                    </a>
+                {{-- @endif --}}
+
             </div>
         </div>
 
@@ -1299,8 +1310,10 @@
                                             <label class="form-label fw-bold">Usia lanjut :</label>
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
                                                 @php
-                                                $usiaLanjut = json_decode($asesmen->rmeAsesmenThtDischargePlanning,
-                                                true)[0]['dp_usia_lanjut'] ?? '-';
+                                                $usiaLanjut = json_decode(
+                                                $asesmen->rmeAsesmenThtDischargePlanning,
+                                                true
+                                                )[0]['dp_usia_lanjut'] ?? '-';
                                                 if ($usiaLanjut == 1) {
                                                 echo 'Ya';
                                                 } elseif ($usiaLanjut == 0) {
@@ -1315,8 +1328,10 @@
                                             <label class="form-label fw-bold">Hambatan mobilisasi :</label>
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
                                                 @php
-                                                $mobilisasi = json_decode($asesmen->rmeAsesmenThtDischargePlanning,
-                                                true)[0]['dp_hambatan_mobilisasi'] ?? '-';
+                                                $mobilisasi = json_decode(
+                                                $asesmen->rmeAsesmenThtDischargePlanning,
+                                                true
+                                                )[0]['dp_hambatan_mobilisasi'] ?? '-';
                                                 if ($mobilisasi == 1) {
                                                 echo 'Ya';
                                                 } elseif ($mobilisasi == 0) {
@@ -1333,8 +1348,10 @@
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
                                                 @php
                                                 $layananMedisLanjutan =
-                                                json_decode($asesmen->rmeAsesmenThtDischargePlanning,
-                                                true)[0]['dp_layanan_medis_lanjutan'] ?? '-';
+                                                json_decode(
+                                                $asesmen->rmeAsesmenThtDischargePlanning,
+                                                true
+                                                )[0]['dp_layanan_medis_lanjutan'] ?? '-';
                                                 if ($layananMedisLanjutan == 1) {
                                                 echo 'Ya';
                                                 } elseif ($layananMedisLanjutan == 0) {
@@ -1353,8 +1370,10 @@
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
                                                 @php
                                                 $tergantungOrangLain =
-                                                json_decode($asesmen->rmeAsesmenThtDischargePlanning,
-                                                true)[0]['dp_tergantung_orang_lain'] ?? '-';
+                                                json_decode(
+                                                $asesmen->rmeAsesmenThtDischargePlanning,
+                                                true
+                                                )[0]['dp_tergantung_orang_lain'] ?? '-';
                                                 if ($tergantungOrangLain == 1) {
                                                 echo 'Ya';
                                                 } elseif ($tergantungOrangLain == 0) {

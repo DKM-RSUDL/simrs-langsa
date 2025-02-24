@@ -150,3 +150,64 @@
         }
     </style>
 @endpush
+
+@push('js')
+    <script>
+        function printPDF(element) {
+            // Ambil data atribut
+            const id = element.dataset.id;
+            const kdUnit = element.dataset.kdUnit;
+            const kdPasien = element.dataset.kdPasien;
+            const tglMasuk = element.dataset.tglMasuk;
+            const urutMasuk = element.dataset.urutMasuk;
+
+            // Validasi data
+            const missingParams = [];
+            if (!id) missingParams.push('ID');
+            if (!kdUnit) missingParams.push('Unit Code');
+            if (!kdPasien) missingParams.push('Patient Code');
+            if (!tglMasuk) missingParams.push('Admission Date');
+            if (!urutMasuk) missingParams.push('Entry Order');
+
+            if (missingParams.length > 0) {
+                console.error('Missing Parameters:', missingParams);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Kesalahan',
+                    text: `Data tidak lengkap: ${missingParams.join(', ')}`,
+                    confirmButtonText: 'Tutup'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Membuat PDF',
+                html: 'Mohon tunggu, dokumen sedang disiapkan...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    // Perbaiki URL sesuai dengan route yang ada
+                    const url = `/unit-pelayanan/rawat-inap/unit/${kdUnit}/pelayanan/${kdPasien}/${tglMasuk}/${urutMasuk}/asesmen/medis/tht/${id}/print-pdf`;
+
+                    console.log('Generated URL:', url);
+
+                    const pdfWindow = window.open(url, '_blank');
+
+                    if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Popup Diblokir',
+                            text: 'Mohon izinkan popup untuk melihat PDF',
+                            confirmButtonText: 'Mengerti'
+                        });
+                    }
+
+                    setTimeout(() => {
+                        Swal.close();
+                    }, 2000);
+                }
+            });
+        }
+
+    </script>
+@endpush

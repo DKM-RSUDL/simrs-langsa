@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenKepThtController extends Controller
 {
@@ -796,4 +797,56 @@ class AsesmenKepThtController extends Controller
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmenTht = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenTht',
+                'rmeAsesmenThtPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+                'rmeAsesmenThtDischargePlanning',
+                'rmeAsesmenThtDiagnosisImplementasi',
+            ])->where('id', $id)->first();
+
+            // Ganti nama variabel $dataMedis menjadi $kunjungan
+            $kunjungan = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
+                'asesmen'    => $asesmenTht,
+                'kunjungan' => $kunjungan,
+                'pasien'     => optional($kunjungan)->pasien,
+                // variabel lainnya sesuai kebutuhan
+                'rmeAsesmenTht'                     => optional($asesmenTht)->rmeAsesmenTht,
+                'rmeAsesmenThtPemeriksaanFisik'     => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik,
+                'pemeriksaanFisik'                  => optional($asesmenTht)->pemeriksaanFisik,
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi' => optional($asesmenTht)->rmeAsesmenThtRiwayatKesehatanObatAlergi,
+                'rmeAsesmenThtDischargePlanning'    => optional($asesmenTht)->rmeAsesmenThtDischargePlanning,
+                'rmeAsesmenThtDiagnosisImplementasi'=> optional($asesmenTht)->rmeAsesmenThtDiagnosisImplementasi,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-tht-{$id}-print-pdf.pdf");
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }
