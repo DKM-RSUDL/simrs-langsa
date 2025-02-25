@@ -2,7 +2,7 @@
 
 
 @section('content')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.include')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.include')
 
     <div class="row">
         <div class="col-md-3">
