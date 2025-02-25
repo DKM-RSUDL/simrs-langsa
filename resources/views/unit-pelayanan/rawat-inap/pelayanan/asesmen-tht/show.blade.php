@@ -207,7 +207,7 @@
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Pangkal Lidah :</label>
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
-                                                <span>Sistole :
+                                                <span>
                                                     {{ json_decode(
                                                     $asesmen->rmeAsesmenThtPemeriksaanFisik,
                                                     true
@@ -268,7 +268,7 @@
 
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Nanah :</label>
+                                            <label class="form-label fw-bold">Darah :</label>
                                             <p class="form-control-plaintext form-control-plaintext border-bottom">
                                                 <span>Kanan :
                                                     {{ json_decode(

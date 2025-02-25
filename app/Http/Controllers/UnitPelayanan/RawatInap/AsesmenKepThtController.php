@@ -811,25 +811,24 @@ class AsesmenKepThtController extends Controller
                 'rmeAsesmenThtDiagnosisImplementasi',
             ])->where('id', $id)->first();
 
-            // Ganti nama variabel $dataMedis menjadi $kunjungan
-            $kunjungan = Kunjungan::with('pasien')
-                ->where('kd_unit', $kd_unit)
-                ->where('kd_pasien', $kd_pasien)
-                ->where('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->first();
+            $dataMedis = Kunjungan::with('pasien')
+                        ->where('kd_unit', $kd_unit)
+                        ->where('kd_pasien', $kd_pasien)
+                        ->where('tgl_masuk', $tgl_masuk)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->first();
 
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
-                'asesmen'    => $asesmenTht,
-                'kunjungan' => $kunjungan,
-                'pasien'     => optional($kunjungan)->pasien,
+                'asesmen'    => $asesmenTht ?? null,
+                'pasien' => optional($dataMedis)->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
                 // variabel lainnya sesuai kebutuhan
-                'rmeAsesmenTht'                     => optional($asesmenTht)->rmeAsesmenTht,
-                'rmeAsesmenThtPemeriksaanFisik'     => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik,
-                'pemeriksaanFisik'                  => optional($asesmenTht)->pemeriksaanFisik,
-                'rmeAsesmenThtRiwayatKesehatanObatAlergi' => optional($asesmenTht)->rmeAsesmenThtRiwayatKesehatanObatAlergi,
-                'rmeAsesmenThtDischargePlanning'    => optional($asesmenTht)->rmeAsesmenThtDischargePlanning,
-                'rmeAsesmenThtDiagnosisImplementasi'=> optional($asesmenTht)->rmeAsesmenThtDiagnosisImplementasi,
+                'rmeAsesmenTht'                     => optional($asesmenTht)->rmeAsesmenTht ?? null,
+                'rmeAsesmenThtPemeriksaanFisik'     => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik ?? null,
+                'pemeriksaanFisik'                  => optional($asesmenTht)->pemeriksaanFisik ?? null,
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi' => optional($asesmenTht)->rmeAsesmenThtRiwayatKesehatanObatAlergi ?? null,
+                'rmeAsesmenThtDischargePlanning'    => optional($asesmenTht)->rmeAsesmenThtDischargePlanning ?? null,
+                'rmeAsesmenThtDiagnosisImplementasi' => optional($asesmenTht)->rmeAsesmenThtDiagnosisImplementasi ?? null,
             ]);
 
             $pdf->setPaper('a4', 'portrait');
@@ -847,6 +846,4 @@ class AsesmenKepThtController extends Controller
             ], 500);
         }
     }
-
-
 }
