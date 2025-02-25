@@ -226,4 +226,9 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKepAnakRencanaPulang::class, 'id_asesmen', 'id');
     }
 
+    public function rmeAsesmenKepAnakSosialEkonomi()
+    {
+        return $this->hasOne(RmeAsesmenKepAnakSosialEkonomi::class, 'id_asesmen', 'id');
+    }
+
 }
