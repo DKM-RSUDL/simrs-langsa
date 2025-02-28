@@ -67,9 +67,9 @@ class OperasiController extends Controller
         }
 
         $dokter = DokterPenunjang::with(['dokter', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 71)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         return view('unit-pelayanan.operasi.index', compact('dokter'));
     }
@@ -77,11 +77,11 @@ class OperasiController extends Controller
     public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
+            ->where('kd_unit', 71)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
@@ -95,121 +95,5 @@ class OperasiController extends Controller
         }
 
         return view('unit-pelayanan.operasi.pelayanan.index', compact('dataMedis'));
-    }
-
-    public function asesmenPraAnestesi($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.operasi.pelayanan.asesmen-pra-anestesi', compact('dataMedis'));
-    }
-
-    public function asesmenPraOperasiPerawat($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.operasi.pelayanan.asesmen-pra-operasi-perawat', compact('dataMedis'));
-    }
-
-    public function ceklistKeselamatanOperasi($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.operasi.pelayanan.ceklist-keselamatan-pasien-operasi', compact('dataMedis'));
-    }
-
-    public function laporanOperasi($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.operasi.pelayanan.laporan-operasi', compact('dataMedis'));
-    }
-
-
-    public function catatanIntraPascaOperasi($kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                            ->where('kd_unit', 71)
-                            ->where('kd_pasien', $kd_pasien)
-                            ->where('urut_masuk', $urut_masuk)
-                            ->whereDate('tgl_masuk', $tgl_masuk)
-                            ->first();
-
-        // Menghitung umur berdasarkan tgl_lahir jika ada
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.operasi.pelayanan.catatan-intra-pasca-operasi', compact('dataMedis'));
     }
 }

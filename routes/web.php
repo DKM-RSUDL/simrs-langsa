@@ -31,6 +31,8 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as Gawat
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
+use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
+use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
@@ -683,11 +685,30 @@ Route::middleware('auth')->group(function () {
                 Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                     Route::name('.pelayanan')->group(function () {
                         Route::get('/', [OperasiController::class, 'pelayanan']);
-                        Route::get('/asesmen-pra-anestesi', [OperasiController::class, 'asesmenPraAnestesi'])->name('.asesmen-pra-anestesi');
-                        Route::get('/asesmen-pra-operasi', [OperasiController::class, 'asesmenPraOperasiPerawat'])->name('.asesmen-pra-operasi');
-                        Route::get('/ceklist-keselamatan-operasi', [OperasiController::class, 'ceklistKeselamatanOperasi'])->name('.ceklist-keselamatan-operasi');
-                        Route::get('/laporan-operasi', [OperasiController::class, 'laporanOperasi'])->name('.laporan-operasi');
-                        Route::get('/catatan-intra-operasi', [OperasiController::class, 'catatanIntraPascaOperasi'])->name('.catatan-intra-operasi');
+
+                        // ASESMEN
+                        Route::prefix('asesmen')->group(function () {
+                            Route::name('.asesmen')->group(function () {
+                                Route::controller(OperasiAsesmenController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                });
+
+                                Route::prefix('pra-anestesi')->group(function () {
+                                    Route::name('.pra-anestesi')->group(function () {
+
+                                        Route::prefix('medis')->group(function () {
+                                            Route::name('.medis')->group(function () {
+                                                Route::controller(PraAnestesiMedisController::class)->group(function () {
+                                                    Route::get('/create', 'create')->name('.create');
+                                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                                    Route::post('/', 'store')->name('.store');
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });

@@ -26,7 +26,8 @@ if (!function_exists('getParentMenus')) {
 if (!function_exists('getRoles')) {
     function getRoles()
     {
-        return Role::where('name', '!=', 'admin')->get();
+        // return Role::where('name', '!=', 'admin')->get();
+        return Role::all();
     }
 }
 
@@ -208,5 +209,26 @@ if (!function_exists('transportasiRujukLabel')) {
         }
 
         return $label;
+    }
+}
+
+if (!function_exists('kategoriAsesmenOKlabel')) {
+    function kategoriAsesmenOKlabel($kategori)
+    {
+        $kategoriLabel = '';
+
+        switch ($kategori) {
+            case 1:
+                $kategoriLabel = 'Pra Operatif Medis';
+                break;
+            case 2:
+                $kategoriLabel = 'Pra Operatif Perawat';
+                break;
+            case 3:
+                $kategoriLabel = 'Edukasi Anestesi';
+                break;
+        }
+
+        return $kategoriLabel;
     }
 }
