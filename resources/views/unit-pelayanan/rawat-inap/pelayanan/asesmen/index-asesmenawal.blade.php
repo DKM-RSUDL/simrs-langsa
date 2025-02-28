@@ -54,7 +54,7 @@
                         ]) }}">Anak</a>
                                         </li>
                     @endcanany
-                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.obstetri-maternitas.index', [
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.index', [
     'kd_unit' => request()->route('kd_unit'),
     'kd_pasien' => request()->route('kd_pasien'),
     'tgl_masuk' => request()->route('tgl_masuk'),

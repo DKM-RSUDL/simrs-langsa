@@ -114,11 +114,11 @@ class AsesmenKepThtController extends Controller
         $uploadedFiles = [];
 
         // Fungsi helper untuk upload file
-        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles) {
+        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
             if ($request->hasFile($fieldName)) {
                 try {
                     $file = $request->file($fieldName);
-                    $path = $file->store('uploads/gawat-inap/asesmen-tht', 'public');
+                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk", 'public');
 
                     if ($path) {
                         $uploadedFiles[] = $path;
@@ -513,7 +513,7 @@ class AsesmenKepThtController extends Controller
                 // Jika ada request hapus file
                 if ($request->has("delete_$field")) {
                     if ($asesmenThtDataMasuk->$field) {
-                        Storage::disk('public')->delete('uploads/gawat-inap/asesmen-tht/' . $asesmenThtDataMasuk->$field);
+                        Storage::disk('public')->delete("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field);
                         $asesmenThtDataMasuk->$field = null;
                     }
                 }
@@ -522,11 +522,11 @@ class AsesmenKepThtController extends Controller
                     try {
                         // Hapus file lama jika ada
                         if ($asesmenThtDataMasuk->$field) {
-                            Storage::disk('public')->delete('uploads/gawat-inap/asesmen-tht/' . $asesmenThtDataMasuk->$field);
+                            Storage::disk('public')->delete("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field);
                         }
 
                         // Upload file baru menggunakan store()
-                        $path = $request->file($field)->store('uploads/gawat-inap/asesmen-tht', 'public');
+                        $path = $request->file($field)->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk", 'public');
                         $asesmenThtDataMasuk->$field = basename($path);
                     } catch (\Exception $e) {
                         throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());

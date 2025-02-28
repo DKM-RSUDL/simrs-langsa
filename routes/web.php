@@ -377,6 +377,17 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            Route::prefix('obstetri-maternitas')->group(function () {
+                                                Route::name('.obstetri-maternitas')->group(function () {
+                                                    Route::controller(AsesmenObstetriMaternitas::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::put('/', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
 
@@ -406,16 +417,6 @@ Route::middleware('auth')->group(function () {
                                             Route::prefix('perinatology')->group(function () {
                                                 Route::name('.perinatology')->group(function () {
                                                     Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
-                                                        Route::get('/', 'index')->name('.index');
-                                                        Route::post('/', 'store')->name('.store');
-                                                        Route::put('/', 'update')->name('.update');
-                                                    });
-                                                });
-                                            });
-
-                                            Route::prefix('obstetri-maternitas')->group(function () {
-                                                Route::name('.obstetri-maternitas')->group(function () {
-                                                    Route::controller(AsesmenObstetriMaternitas::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::put('/', 'update')->name('.update');

@@ -202,126 +202,60 @@
 
 @push('js')
     <script>
-        // baru dari anas
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Fungsi untuk mengecek apakah suatu section assessment sudah lengkap
-                function isSectionComplete(section) {
-                    // Ambil semua input (kecuali hidden), select, dan textarea
-                    const fields = section.querySelectorAll('input:not([type="hidden"]), select, textarea');
-                    if (fields.length === 0) return true;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add IDs to all section headers
+            document.querySelectorAll('.section-separator').forEach((section, index) => {
+                const title = section.querySelector('.section-title').textContent.toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w-]+/g, '');
+                section.id = title;
+            });
 
-                    for (let field of fields) {
-                        if (field.type === 'file') {
-                            if (field.files.length === 0) return false;
-                        } else if ((field.type === 'checkbox' || field.type === 'radio') && field.required) {
-                            if (!field.checked) return false;
-                        } else {
-                            if (!field.value || field.value.trim() === '') {
-                                return false;
-                            }
-                        }
+            // Handle smooth scrolling
+            document.querySelectorAll('.assessment-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        // Remove active class from all links
+                        document.querySelectorAll('.assessment-link').forEach(l => {
+                            l.classList.remove('active');
+                        });
+
+                        // Add active class to clicked link
+                        this.classList.add('active');
+
+                        // Smooth scroll to target
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
                     }
-                    return true;
-                }
+                });
+            });
 
-      // Fungsi untuk memperbarui daftar assessment berdasarkan status masing-masing section
-      function updateAssessmentList() {
-        const assessmentLinks = document.querySelectorAll('.assessment-link');
-        assessmentLinks.forEach(link => {
-          // Ambil id section dari href (misalnya "#status-airway")
-          const sectionId = link.getAttribute('href');
-            const section = document.querySelector(sectionId);
-            const listItem = link.closest('li');
+            // Highlight current section on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        document.querySelectorAll('.assessment-link').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.5
+            });
 
-            if (section && isSectionComplete(section)) {
-            // Jika section lengkap dan belum ada ikon check, tambahkan
-            if (!listItem.querySelector('.ti-check-box')) {
-              const icon = document.createElement('i');
-            icon.className = 'ti-check-box text-success ms-auto';
-            listItem.appendChild(icon);
-            }
-          } else {
-            // Jika belum lengkap, hapus ikon check jika ada
-            const icon = listItem.querySelector('.ti-check-box');
-            if (icon) {
-                icon.remove();
-            }
-          }
+            document.querySelectorAll('.section-separator').forEach((section) => {
+                observer.observe(section);
+            });
         });
-      }
-
-            // Update assessment list saat pertama kali load
-            updateAssessmentList();
-
-            // Pasang event listener pada tiap field dalam section assessment
-            const assessmentSections = document.querySelectorAll('.assessment-section');
-      assessmentSections.forEach(section => {
-        const fields = section.querySelectorAll('input:not([type="hidden"]), select, textarea');
-        fields.forEach(field => {
-                field.addEventListener('input', updateAssessmentList);
-            field.addEventListener('change', updateAssessmentList);
-        });
-      });
-    });
-    </script>
-
-
-    // lama
-    document.addEventListener('DOMContentLoaded', function () {
-    // Add IDs to all section headers
-    document.querySelectorAll('.section-separator').forEach((section, index) => {
-    const title = section.querySelector('.section-title').textContent.toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '');
-    section.id = title;
-    });
-
-    // Handle smooth scrolling
-    document.querySelectorAll('.assessment-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-    e.preventDefault();
-    const targetId = this.getAttribute('href');
-    const targetElement = document.querySelector(targetId);
-
-    if (targetElement) {
-    // Remove active class from all links
-    document.querySelectorAll('.assessment-link').forEach(l => {
-    l.classList.remove('active');
-    });
-
-    // Add active class to clicked link
-    this.classList.add('active');
-
-    // Smooth scroll to target
-    targetElement.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-    });
-    }
-    });
-    });
-
-    // Highlight current section on scroll
-    const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-    if (entry.isIntersecting) {
-    const id = entry.target.id;
-    document.querySelectorAll('.assessment-link').forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === `#${id}`) {
-    link.classList.add('active');
-    }
-    });
-    }
-    });
-    }, {
-    threshold: 0.5
-    });
-
-    document.querySelectorAll('.section-separator').forEach((section) => {
-    observer.observe(section);
-    });
-    });
     </script>
 @endpush
