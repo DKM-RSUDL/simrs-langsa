@@ -118,11 +118,11 @@ class AsesmenKepThtController extends Controller
             if ($request->hasFile($fieldName)) {
                 try {
                     $file = $request->file($fieldName);
-                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk", 'public');
+                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
 
-                    if ($path) {
-                        $uploadedFiles[] = $path;
-                        return basename($path);
+                    if ($path) {                        
+                        return $path;
+                        
                     }
                 } catch (\Exception $e) {
                     throw new \Exception("Gagal mengupload file {$fieldName}");
@@ -509,30 +509,59 @@ class AsesmenKepThtController extends Controller
                 'hasil_pemeriksaan_penunjang_histopatology'
             ];
 
-            foreach ($fileFields as $field) {
-                // Jika ada request hapus file
-                if ($request->has("delete_$field")) {
-                    if ($asesmenThtDataMasuk->$field) {
-                        Storage::disk('public')->delete("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field);
-                        $asesmenThtDataMasuk->$field = null;
-                    }
-                }
-                // file baru diupload
-                elseif ($request->hasFile($field)) {
-                    try {
-                        // Hapus file lama jika ada
-                        if ($asesmenThtDataMasuk->$field) {
-                            Storage::disk('public')->delete("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field);
-                        }
+            // Array untuk menyimpan path file yang berhasil diupload
+        $uploadedFiles = [];
 
-                        // Upload file baru menggunakan store()
-                        $path = $request->file($field)->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk", 'public');
-                        $asesmenThtDataMasuk->$field = basename($path);
-                    } catch (\Exception $e) {
-                        throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
+        // Fungsi helper untuk upload file
+        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+            if ($request->hasFile($fieldName)) {
+                try {
+                    $file = $request->file($fieldName);
+                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+                    
+                    if ($path) {
+                        return $path;
                     }
+                } catch (\Exception $e) {
+                    throw new \Exception("Gagal mengupload file {$fieldName}");
                 }
             }
+            return null;
+        };
+
+        $fileFields = [
+            'hasil_pemeriksaan_penunjang_darah',
+            'hasil_pemeriksaan_penunjang_urine',
+            'hasil_pemeriksaan_penunjang_rontgent',
+            'hasil_pemeriksaan_penunjang_histopatology'
+        ];
+
+        foreach ($fileFields as $field) {
+            if ($request->has("delete_$field")) {
+                if ($asesmenThtDataMasuk->$field) {
+                    Storage::disk('public')->delete(
+                        "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
+                    );
+                    $asesmenThtDataMasuk->$field = null;
+                }
+            } elseif ($request->hasFile($field)) {
+                try {
+                    if ($asesmenThtDataMasuk->$field) {
+                        Storage::disk('public')->delete(
+                            "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
+                        );
+                    }
+
+                    $path = $uploadFile($field);
+                    if ($path) {
+                        $asesmenThtDataMasuk->$field = basename($path);
+                        $uploadedFiles[$field] = $path;
+                    }
+                } catch (\Exception $e) {
+                    throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
+                }
+            }
+        }
             $asesmenThtDataMasuk->save();
 
             $asesmenThtPemeriksaanFisik = RmeAsesmenThtPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmenTht->id]);

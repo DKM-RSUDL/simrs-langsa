@@ -887,46 +887,14 @@
                                                     <label class="form-label fw-bold">Darah :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah)
-                                                            <div class="d-flex align-items-center">
-                                                                @php
-                                                                    $filePath =
-                                                                        'storage/uploads/gawat-inap/asesmen-tht/' .
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_darah;
-                                                                    $fileExtension = pathinfo(
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_darah,
-                                                                        PATHINFO_EXTENSION,
-                                                                    );
-                                                                    $isPdf = strtolower($fileExtension) === 'pdf';
-                                                                @endphp
-
-                                                                <div class="file-preview me-3">
-                                                                    @if ($isPdf)
-                                                                        <div class="pdf-icon"
-                                                                            style="font-size: 48px; color: #dc3545;">
-                                                                            <i class="bi bi-file-earmark-pdf-fill"></i>
-                                                                        </div>
-                                                                    @else
-                                                                        <img src="{{ asset($filePath) }}"
-                                                                            alt="Hasil Pemeriksaan Urine"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 150px; cursor: pointer;"
-                                                                            onclick="window.open('{{ asset($filePath) }}', '_blank')">
-                                                                    @endif
-                                                                </div>
-
-                                                            </div>
+                                                        <div class="d-flex align-items-center">                                                            
                                                             <div class="action-buttons mt-2">
-                                                                <a href="{{ asset($filePath) }}"
+                                                                <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
                                                                     <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
                                                                 </a>
-                                                                <a href="{{ asset($filePath) }}"
-                                                                    class="btn btn-sm btn-secondary ms-2" download>
-                                                                    <i class="bi bi-download me-1"></i> Unduh
-                                                                </a>
                                                             </div>
+                                                        </div>
                                                         @else
                                                             <span class="text-muted">Tidak ada file</span>
                                                         @endif
@@ -936,45 +904,14 @@
                                                     <label class="form-label fw-bold">Urine :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine)
-                                                            <div class="d-flex align-items-center">
-                                                                @php
-                                                                    $filePath =
-                                                                        'storage/uploads/gawat-inap/asesmen-tht/' .
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_urine;
-                                                                    $fileExtension = pathinfo(
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_urine,
-                                                                        PATHINFO_EXTENSION,
-                                                                    );
-                                                                    $isPdf = strtolower($fileExtension) === 'pdf';
-                                                                @endphp
-
-                                                                <div class="file-preview me-3">
-                                                                    @if ($isPdf)
-                                                                        <div class="pdf-icon"
-                                                                            style="font-size: 48px; color: #dc3545;">
-                                                                            <i class="bi bi-file-earmark-pdf-fill"></i>
-                                                                        </div>
-                                                                    @else
-                                                                        <img src="{{ asset($filePath) }}"
-                                                                            alt="Hasil Pemeriksaan Urine"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 150px; cursor: pointer;"
-                                                                            onclick="window.open('{{ asset($filePath) }}', '_blank')">
-                                                                    @endif
-                                                                </div>
-                                                            </div>
+                                                        <div class="d-flex align-items-center">                                                            
                                                             <div class="action-buttons mt-2">
-                                                                <a href="{{ asset($filePath) }}"
+                                                                <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
                                                                     <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
                                                                 </a>
-                                                                <a href="{{ asset($filePath) }}"
-                                                                    class="btn btn-sm btn-secondary ms-2" download>
-                                                                    <i class="bi bi-download me-1"></i> Unduh
-                                                                </a>
                                                             </div>
+                                                        </div>
                                                         @else
                                                             <span class="text-muted">Tidak ada file</span>
                                                         @endif
@@ -988,46 +925,14 @@
                                                     <label class="form-label fw-bold">Rontgent :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent)
-                                                            <div class="d-flex align-items-center">
-                                                                @php
-                                                                    $filePath =
-                                                                        'storage/uploads/gawat-inap/asesmen-tht/' .
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_rontgent;
-                                                                    $fileExtension = pathinfo(
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_rontgent,
-                                                                        PATHINFO_EXTENSION,
-                                                                    );
-                                                                    $isPdf = strtolower($fileExtension) === 'pdf';
-                                                                @endphp
-
-                                                                <div class="file-preview me-3">
-                                                                    @if ($isPdf)
-                                                                        <div class="pdf-icon"
-                                                                            style="font-size: 48px; color: #dc3545;">
-                                                                            <i class="bi bi-file-earmark-pdf-fill"></i>
-                                                                        </div>
-                                                                    @else
-                                                                        <img src="{{ asset($filePath) }}"
-                                                                            alt="Hasil Pemeriksaan Urine"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 150px; cursor: pointer;"
-                                                                            onclick="window.open('{{ asset($filePath) }}', '_blank')">
-                                                                    @endif
-                                                                </div>
-
-                                                            </div>
+                                                        <div class="d-flex align-items-center">                                                            
                                                             <div class="action-buttons mt-2">
-                                                                <a href="{{ asset($filePath) }}"
+                                                                <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
                                                                     <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
                                                                 </a>
-                                                                <a href="{{ asset($filePath) }}"
-                                                                    class="btn btn-sm btn-secondary ms-2" download>
-                                                                    <i class="bi bi-download me-1"></i> Unduh
-                                                                </a>
                                                             </div>
+                                                        </div>
                                                         @else
                                                             <span class="text-muted">Tidak ada file</span>
                                                         @endif
@@ -1037,46 +942,14 @@
                                                     <label class="form-label fw-bold">Histopatology :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology)
-                                                            <div class="d-flex align-items-center">
-                                                                @php
-                                                                    $filePath =
-                                                                        'storage/uploads/gawat-inap/asesmen-tht/' .
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_histopatology;
-                                                                    $fileExtension = pathinfo(
-                                                                        $asesmen->rmeAsesmenTht
-                                                                            ->hasil_pemeriksaan_penunjang_histopatology,
-                                                                        PATHINFO_EXTENSION,
-                                                                    );
-                                                                    $isPdf = strtolower($fileExtension) === 'pdf';
-                                                                @endphp
-
-                                                                <div class="file-preview me-3">
-                                                                    @if ($isPdf)
-                                                                        <div class="pdf-icon"
-                                                                            style="font-size: 48px; color: #dc3545;">
-                                                                            <i class="bi bi-file-earmark-pdf-fill"></i>
-                                                                        </div>
-                                                                    @else
-                                                                        <img src="{{ asset($filePath) }}"
-                                                                            alt="Hasil Pemeriksaan Urine"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 150px; cursor: pointer;"
-                                                                            onclick="window.open('{{ asset($filePath) }}', '_blank')">
-                                                                    @endif
-                                                                </div>
-
-                                                            </div>
+                                                        <div class="d-flex align-items-center">                                                            
                                                             <div class="action-buttons mt-2">
-                                                                <a href="{{ asset($filePath) }}"
+                                                                <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
                                                                     <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
                                                                 </a>
-                                                                <a href="{{ asset($filePath) }}"
-                                                                    class="btn btn-sm btn-secondary ms-2" download>
-                                                                    <i class="bi bi-download me-1"></i> Unduh
-                                                                </a>
                                                             </div>
+                                                        </div>
                                                         @else
                                                             <span class="text-muted">Tidak ada file</span>
                                                         @endif

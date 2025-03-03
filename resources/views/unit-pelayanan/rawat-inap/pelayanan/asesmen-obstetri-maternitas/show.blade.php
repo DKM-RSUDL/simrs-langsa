@@ -934,14 +934,13 @@
                                                     <label class="form-label fw-bold">Darah :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->asesmenObstetri->hasil_pemeriksaan_penunjang_darah)
-                                                            <div class="d-flex align-items-center">
-
-                                                            </div>
-                                                            <div class="action-buttons mt-2">
-                                                                <a href="{{ asset('storage/' . $asesmen->asesmenObstetri->hasil_pemeriksaan_penunjang_darah) }}"
-                                                                    class="btn btn-sm btn-primary" target="_blank">
-                                                                    <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
-                                                                </a>
+                                                            <div class="d-flex align-items-center">                                                            
+                                                                <div class="action-buttons mt-2">
+                                                                    <a href="{{ asset('storage/' . $asesmen->asesmenObstetri->hasil_pemeriksaan_penunjang_darah) }}"
+                                                                        class="btn btn-sm btn-primary" target="_blank">
+                                                                        <i class="bi bi-eye-fill me-1"></i> Lihat Lengkap
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         @else
                                                             <span class="text-muted">Tidak ada file</span>
