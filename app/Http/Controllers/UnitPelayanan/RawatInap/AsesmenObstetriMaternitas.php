@@ -15,6 +15,7 @@ use App\Models\RmeAsesmenObstetriStatusNyeri;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -117,11 +118,11 @@ class AsesmenObstetriMaternitas extends Controller
             if ($request->hasFile($fieldName)) {
                 try {
                     $file = $request->file($fieldName);
-                    $path = $file->store("uploads/ranap/asesmen-obstetri/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk", 'public');
+                    $path = $file->store("uploads/ranap/asesmen-obstetri/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
 
-                    if ($path) {
-                        $uploadedFiles[] = $path;
-                        return basename($path);
+                    if ($path) {                        
+                        return $path;
+                        
                     }
                 } catch (\Exception $e) {
                     throw new \Exception("Gagal mengupload file {$fieldName}");
@@ -340,5 +341,41 @@ class AsesmenObstetriMaternitas extends Controller
             'urut_masuk' => request()->route('urut_masuk'),
         ])->with(['success' => 'Berhasil menambah asesmen Obstetri!']);
         // return back()->with('success', 'Berhasil menambah asesmen Obstetri!');
+    }
+
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'asesmenObstetri',
+                'rmeAsesmenObstetriPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenObstetriStatusNyeri',
+                'rmeAsesmenObstetriRiwayatKesehatan',
+                'rmeAsesmenObstetriDischargePlanning',
+                'rmeAsesmenObstetriDiagnosisImplementasi',
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            // dd($asesmen);
+            // dd($dataMedis);
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.show', compact(
+                'asesmen',
+                'dataMedis'
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
