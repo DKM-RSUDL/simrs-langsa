@@ -1,10 +1,10 @@
-<!-- Modal Pengambilan Keputusan -->
-<div class="modal fade" id="modalPengambilanKeputusan" tabindex="-1" aria-labelledby="modalPengambilanKeputusanLabel" aria-hidden="true">
+<!-- Modal Pendamping -->
+<div class="modal fade" id="modalPendamping" tabindex="-1" aria-labelledby="modalPendampingLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalPengambilanKeputusanLabel">
-                    <i class="bi bi-list-check me-2"></i>Pilih Pengambilan Keputusan
+                <h5 class="modal-title" id="modalPendampingLabel">
+                    <i class="bi bi-people me-2"></i>Pilih Pendamping
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -12,37 +12,37 @@
                 <div class="mb-3">
                     <div class="alert alert-info d-flex align-items-center" role="alert">
                         <i class="bi bi-info-circle-fill me-2"></i>
-                        <div>Pilih opsi pengambilan keputusan. Anda dapat memilih lebih dari satu opsi.</div>
+                        <div>Pilih pendamping pasien. Anda dapat memilih lebih dari satu opsi.</div>
                     </div>
                 </div>
 
                 <div class="card mb-3">
                     <div class="card-header bg-light">
-                        <strong>Pengambilan Keputusan</strong>
+                        <strong>Pendamping</strong>
                     </div>
                     <div class="card-body">
                         <div class="list-group list-group-flush">
                             <div class="list-group-item border-0 px-0">
                                 <div class="form-check">
-                                    <input class="form-check-input pengambilanKeputusanCheckbox" type="checkbox" value="Pasien Sendiri" id="pengambilanKeputusanPasien">
-                                    <label class="form-check-label" for="pengambilanKeputusanPasien">
-                                        <i class="bi bi-person text-primary me-2"></i> Pasien Sendiri
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="list-group-item border-0 px-0">
-                                <div class="form-check">
-                                    <input class="form-check-input pengambilanKeputusanCheckbox" type="checkbox" value="Suami" id="pengambilanKeputusanSuami">
-                                    <label class="form-check-label" for="pengambilanKeputusanSuami">
+                                    <input class="form-check-input pendampingCheckbox" type="checkbox" value="Suami" id="pendampingSuami">
+                                    <label class="form-check-label" for="pendampingSuami">
                                         <i class="bi bi-person-fill text-success me-2"></i> Suami
                                     </label>
                                 </div>
                             </div>
                             <div class="list-group-item border-0 px-0">
                                 <div class="form-check">
-                                    <input class="form-check-input pengambilanKeputusanCheckbox" type="checkbox" value="Keluarga" id="pengambilanKeputusanKeluarga">
-                                    <label class="form-check-label" for="pengambilanKeputusanKeluarga">
-                                        <i class="bi bi-people-fill text-warning me-2"></i> Keluarga
+                                    <input class="form-check-input pendampingCheckbox" type="checkbox" value="Orang Tua" id="pendampingOrangTua">
+                                    <label class="form-check-label" for="pendampingOrangTua">
+                                        <i class="bi bi-people-fill text-warning me-2"></i> Orang Tua
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item border-0 px-0">
+                                <div class="form-check">
+                                    <input class="form-check-input pendampingCheckbox" type="checkbox" value="Saudara" id="pendampingSaudara">
+                                    <label class="form-check-label" for="pendampingSaudara">
+                                        <i class="bi bi-person-lines-fill text-primary me-2"></i> Saudara
                                     </label>
                                 </div>
                             </div>
@@ -54,29 +54,29 @@
                 <div class="card">
                     <div class="card-header bg-light">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="lainnya" id="pengambilanKeputusanLainnya">
-                            <label class="form-check-label fw-bold" for="pengambilanKeputusanLainnya">
-                                Pengambilan Keputusan Lainnya
+                            <input class="form-check-input" type="checkbox" value="lainnya" id="pendampingLainnya">
+                            <label class="form-check-label fw-bold" for="pendampingLainnya">
+                                Pendamping Lainnya
                             </label>
                         </div>
                     </div>
-                    <div id="pengambilanKeputusanLainnyaContainer" class="card-body d-none">
-                        <p class="text-muted small mb-3">Tambahkan pengambil keputusan lain yang tidak tercantum di atas</p>
-                        <div class="pengambilanKeputusanLainnyaItems">
+                    <div id="pendampingLainnyaContainer" class="card-body d-none">
+                        <p class="text-muted small mb-3">Tambahkan pendamping lain yang tidak tercantum di atas</p>
+                        <div class="pendampingLainnyaItems">
                             <div class="lainnya-item mb-2">
                                 <div class="input-group">
                                     <span class="input-group-text bg-light">
                                         <i class="bi bi-plus-circle text-primary"></i>
                                     </span>
-                                    <input type="text" class="form-control pengambilanKeputusanLainnyaInput" placeholder="Masukkan pengambil keputusan lainnya">
-                                    <button class="btn btn-outline-danger remove-pengambilanKeputusanLainnya" type="button" title="Hapus">
+                                    <input type="text" class="form-control pendampingLainnyaInput" placeholder="Masukkan pendamping lainnya">
+                                    <button class="btn btn-outline-danger remove-pendampingLainnya" type="button" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addMorePengambilanKeputusanLainnya">
-                            <i class="bi bi-plus-lg me-1"></i> Tambah Pengambil Keputusan Lainnya
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addMorePendampingLainnya">
+                            <i class="bi bi-plus-lg me-1"></i> Tambah Pendamping Lainnya
                         </button>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg me-1"></i> Batal
                 </button>
-                <button type="button" class="btn btn-primary" id="btnSimpanPengambilanKeputusan">
+                <button type="button" class="btn btn-primary" id="btnSimpanPendamping">
                     <i class="bi bi-check-lg me-1"></i> Simpan Pilihan
                 </button>
             </div>
@@ -96,35 +96,35 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Element references
-    const modalPengambilanKeputusanElement = document.getElementById('modalPengambilanKeputusan');
-    const btnPilihPengambilanKeputusan = document.getElementById('btnPilihPengambilanKeputusan');
-    const pengambilanKeputusanLainnya = document.getElementById('pengambilanKeputusanLainnya');
-    const pengambilanKeputusanLainnyaContainer = document.getElementById('pengambilanKeputusanLainnyaContainer');
-    const addMorePengambilanKeputusanLainnyaBtn = document.getElementById('addMorePengambilanKeputusanLainnya');
-    const btnSimpanPengambilanKeputusan = document.getElementById('btnSimpanPengambilanKeputusan');
-    const pengambilanKeputusanDisplay = document.getElementById('pengambilanKeputusanDisplay');
-    const pengambilanKeputusanInput = document.getElementById('PengambilanKeputusanlInput');
-    const pengambilanKeputusanPilihan = document.getElementById('PengambilanKeputusanPilihan');
-    const checkboxPengambilanKeputusan = document.querySelectorAll('.pengambilanKeputusanCheckbox');
-    const pengambilanKeputusanLainnyaItemsContainer = document.querySelector('.pengambilanKeputusanLainnyaItems');
+    const modalPendampingElement = document.getElementById('modalPendamping');
+    const btnPilihPendamping = document.getElementById('btnPilihPendamping');
+    const pendampingLainnya = document.getElementById('pendampingLainnya');
+    const pendampingLainnyaContainer = document.getElementById('pendampingLainnyaContainer');
+    const addMorePendampingLainnyaBtn = document.getElementById('addMorePendampingLainnya');
+    const btnSimpanPendamping = document.getElementById('btnSimpanPendamping');
+    const pendampingDisplay = document.getElementById('pendampingDisplay');
+    const pendampingInput = document.getElementById('pendampingInput');
+    const pendampingPilihan = document.getElementById('pendampingPilihan');
+    const checkboxPendamping = document.querySelectorAll('.pendampingCheckbox');
+    const pendampingLainnyaItemsContainer = document.querySelector('.pendampingLainnyaItems');
 
     // Validation
-    if (!modalPengambilanKeputusanElement || !btnSimpanPengambilanKeputusan || !pengambilanKeputusanPilihan || !pengambilanKeputusanDisplay || !pengambilanKeputusanInput) {
+    if (!modalPendampingElement || !btnSimpanPendamping || !pendampingPilihan || !pendampingDisplay || !pendampingInput) {
         console.error('One or more required elements are missing.');
         return;
     }
 
     // Initialize modal
-    let modalPengambilanKeputusan;
+    let modalPendamping;
     try {
-        modalPengambilanKeputusan = new bootstrap.Modal(modalPengambilanKeputusanElement);
+        modalPendamping = new bootstrap.Modal(modalPendampingElement);
     } catch (error) {
         console.error('Failed to initialize modal:', error);
         return;
     }
 
     // Parse the stored data - handle both string and JSON formats
-    function parsePengambilanKeputusanData(inputData) {
+    function parsePendampingData(inputData) {
         let result = [];
 
         try {
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 result = inputData;
             }
         } catch (error) {
-            console.error('Error parsing pengambilan keputusan data:', error);
+            console.error('Error parsing pendamping data:', error);
 
             // Fallback: treat as comma-separated string
             if (typeof inputData === 'string') {
@@ -163,8 +163,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Open modal
-    if (btnPilihPengambilanKeputusan) {
-        btnPilihPengambilanKeputusan.addEventListener('click', () => modalPengambilanKeputusan.show());
+    if (btnPilihPendamping) {
+        btnPilihPendamping.addEventListener('click', () => modalPendamping.show());
     }
 
     // Function to add lainnya item
@@ -180,21 +180,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span class="input-group-text bg-light">
                     <i class="bi bi-plus-circle text-primary"></i>
                 </span>
-                <input type="text" class="form-control pengambilanKeputusanLainnyaInput" placeholder="Masukkan pengambil keputusan lainnya" value="${value}">
-                <button class="btn btn-outline-danger remove-pengambilanKeputusanLainnya" type="button" title="Hapus">
+                <input type="text" class="form-control pendampingLainnyaInput" placeholder="Masukkan pendamping lainnya" value="${value}">
+                <button class="btn btn-outline-danger remove-pendampingLainnya" type="button" title="Hapus">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
         `;
 
-        pengambilanKeputusanLainnyaItemsContainer.appendChild(newItem);
+        pendampingLainnyaItemsContainer.appendChild(newItem);
 
         void newItem.offsetWidth;
 
         newItem.style.opacity = '1';
         newItem.style.transform = 'translateY(0)';
 
-        const removeBtn = newItem.querySelector('.remove-pengambilanKeputusanLainnya');
+        const removeBtn = newItem.querySelector('.remove-pendampingLainnya');
         if (removeBtn) {
             removeBtn.addEventListener('click', function () {
                 newItem.style.opacity = '0';
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        const newInput = newItem.querySelector('.pengambilanKeputusanLainnyaInput');
+        const newInput = newItem.querySelector('.pendampingLainnyaInput');
         if (newInput && !value) {
             setTimeout(() => newInput.focus(), 100);
         }
@@ -214,29 +214,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Toggle "Lainnya" section
-    if (pengambilanKeputusanLainnya && pengambilanKeputusanLainnyaContainer) {
-        pengambilanKeputusanLainnya.addEventListener('change', function () {
+    if (pendampingLainnya && pendampingLainnyaContainer) {
+        pendampingLainnya.addEventListener('change', function () {
             if (this.checked) {
-                pengambilanKeputusanLainnyaContainer.classList.remove('d-none');
+                pendampingLainnyaContainer.classList.remove('d-none');
                 // Ensure there's at least one input
-                if (pengambilanKeputusanLainnyaItemsContainer.children.length === 0) {
+                if (pendampingLainnyaItemsContainer.children.length === 0) {
                     addLainnyaItem();
                 }
-                const firstInput = pengambilanKeputusanLainnyaContainer.querySelector('.pengambilanKeputusanLainnyaInput');
+                const firstInput = pendampingLainnyaContainer.querySelector('.pendampingLainnyaInput');
                 if (firstInput) {
                     setTimeout(() => firstInput.focus(), 100);
                 }
             } else {
-                pengambilanKeputusanLainnyaContainer.classList.add('d-none');
+                pendampingLainnyaContainer.classList.add('d-none');
                 // Clear all inputs
-                pengambilanKeputusanLainnyaItemsContainer.innerHTML = '';
+                pendampingLainnyaItemsContainer.innerHTML = '';
             }
         });
     }
 
     // Add new "Lainnya" input
-    if (addMorePengambilanKeputusanLainnyaBtn && pengambilanKeputusanLainnyaItemsContainer) {
-        addMorePengambilanKeputusanLainnyaBtn.addEventListener('click', function () {
+    if (addMorePendampingLainnyaBtn && pendampingLainnyaItemsContainer) {
+        addMorePendampingLainnyaBtn.addEventListener('click', function () {
             addLainnyaItem();
         });
     }
@@ -245,9 +245,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function createBadge(value, isLainnya = false) {
         const bgColor = isLainnya ? 'bg-info' : 'bg-primary';
         const icons = {
-            'Pasien Sendiri': '<i class="bi bi-person text-light me-1"></i>',
             'Suami': '<i class="bi bi-person-fill text-light me-1"></i>',
-            'Keluarga': '<i class="bi bi-people-fill text-light me-1"></i>'
+            'Orang Tua': '<i class="bi bi-people-fill text-light me-1"></i>',
+            'Saudara': '<i class="bi bi-person-lines-fill text-light me-1"></i>'
         };
         const icon = icons[value] || '<i class="bi bi-tag text-light me-1"></i>';
 
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     badge.remove();
                     if (!isLainnya) {
-                        checkboxPengambilanKeputusan.forEach(cb => {
+                        checkboxPendamping.forEach(cb => {
                             if (cb.value === value) cb.checked = false;
                         });
                     }
@@ -287,25 +287,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update input values
     function updateInputValues() {
-        const values = Array.from(pengambilanKeputusanPilihan.querySelectorAll('.badge'))
+        const values = Array.from(pendampingPilihan.querySelectorAll('.badge'))
             .map(badge => badge.dataset.value);
 
         // Update the display with comma-separated list
         const displayText = values.join(', ');
-        pengambilanKeputusanDisplay.value = displayText;
+        pendampingDisplay.value = displayText;
 
         // Update the hidden input with JSON array format
-        pengambilanKeputusanInput.value = JSON.stringify(values);
+        pendampingInput.value = JSON.stringify(values);
 
-        if (pengambilanKeputusanDisplay) {
-            pengambilanKeputusanDisplay.classList.add('border-primary');
-            setTimeout(() => pengambilanKeputusanDisplay.classList.remove('border-primary'), 500);
+        if (pendampingDisplay) {
+            pendampingDisplay.classList.add('border-primary');
+            setTimeout(() => pendampingDisplay.classList.remove('border-primary'), 500);
         }
     }
 
     // Save selections
-    if (btnSimpanPengambilanKeputusan) {
-        btnSimpanPengambilanKeputusan.addEventListener('click', function () {
+    if (btnSimpanPendamping) {
+        btnSimpanPendamping.addEventListener('click', function () {
             this.innerHTML = '<i class="bi bi-check2-all me-1"></i> Disimpan!';
             this.classList.replace('btn-primary', 'btn-success');
 
@@ -315,33 +315,33 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 1000);
 
             // Clear existing badges with animation
-            Array.from(pengambilanKeputusanPilihan.children).forEach(badge => {
+            Array.from(pendampingPilihan.children).forEach(badge => {
                 badge.style.opacity = '0';
                 badge.style.transform = 'scale(0.8)';
             });
 
             setTimeout(() => {
-                pengambilanKeputusanPilihan.innerHTML = '';
+                pendampingPilihan.innerHTML = '';
 
                 // Add badges for checked checkboxes
-                checkboxPengambilanKeputusan.forEach(checkbox => {
+                checkboxPendamping.forEach(checkbox => {
                     if (checkbox.checked) {
-                        pengambilanKeputusanPilihan.appendChild(createBadge(checkbox.value));
+                        pendampingPilihan.appendChild(createBadge(checkbox.value));
                     }
                 });
 
                 // Add badges for custom items
-                if (pengambilanKeputusanLainnya.checked) {
-                    document.querySelectorAll('.pengambilanKeputusanLainnyaInput').forEach(input => {
+                if (pendampingLainnya.checked) {
+                    document.querySelectorAll('.pendampingLainnyaInput').forEach(input => {
                         const value = input.value.trim();
                         if (value) {
-                            pengambilanKeputusanPilihan.appendChild(createBadge(value, true));
+                            pendampingPilihan.appendChild(createBadge(value, true));
                         }
                     });
                 }
 
                 updateInputValues();
-                modalPengambilanKeputusan.hide();
+                modalPendamping.hide();
             }, 300);
         });
     }
@@ -349,42 +349,42 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial load - parse saved data from the input
     function loadSavedData() {
         // Clear current selections
-        checkboxPengambilanKeputusan.forEach(checkbox => checkbox.checked = false);
-        pengambilanKeputusanLainnya.checked = false;
-        pengambilanKeputusanLainnyaContainer.classList.add('d-none');
-        pengambilanKeputusanLainnyaItemsContainer.innerHTML = '';
-        pengambilanKeputusanPilihan.innerHTML = '';
+        checkboxPendamping.forEach(checkbox => checkbox.checked = false);
+        pendampingLainnya.checked = false;
+        pendampingLainnyaContainer.classList.add('d-none');
+        pendampingLainnyaItemsContainer.innerHTML = '';
+        pendampingPilihan.innerHTML = '';
 
         // Parse the input value
-        const inputValue = pengambilanKeputusanInput.value;
+        const inputValue = pendampingInput.value;
         if (!inputValue) return;
 
         // Parse the data (handles both JSON array and comma-separated formats)
-        const savedValues = parsePengambilanKeputusanData(inputValue);
+        const savedValues = parsePendampingData(inputValue);
         if (savedValues.length === 0) return;
 
         // Update the display with clean format
-        pengambilanKeputusanDisplay.value = savedValues.join(', ');
+        pendampingDisplay.value = savedValues.join(', ');
 
         let hasCustomItems = false;
 
         savedValues.forEach(value => {
             // Check if it's one of the predefined options
-            const checkbox = Array.from(checkboxPengambilanKeputusan).find(cb => cb.value === value);
+            const checkbox = Array.from(checkboxPendamping).find(cb => cb.value === value);
 
             if (checkbox) {
                 checkbox.checked = true;
-                pengambilanKeputusanPilihan.appendChild(createBadge(value));
+                pendampingPilihan.appendChild(createBadge(value));
             } else {
                 // It's a custom item
                 if (!hasCustomItems) {
-                    pengambilanKeputusanLainnya.checked = true;
-                    pengambilanKeputusanLainnyaContainer.classList.remove('d-none');
+                    pendampingLainnya.checked = true;
+                    pendampingLainnyaContainer.classList.remove('d-none');
                     hasCustomItems = true;
                 }
 
                 addLainnyaItem(value);
-                pengambilanKeputusanPilihan.appendChild(createBadge(value, true));
+                pendampingPilihan.appendChild(createBadge(value, true));
             }
         });
     }
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSavedData();
 
     // Add event listeners to initial remove buttons
-    document.querySelectorAll('.remove-pengambilanKeputusanLainnya').forEach(button => {
+    document.querySelectorAll('.remove-pendampingLainnya').forEach(button => {
         button.addEventListener('click', function () {
             const item = this.closest('.lainnya-item');
             item.style.opacity = '0';
