@@ -120,9 +120,9 @@ class AsesmenKepThtController extends Controller
                     $file = $request->file($fieldName);
                     $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
 
-                    if ($path) {                        
+                    if ($path) {
                         return $path;
-                        
+
                     }
                 } catch (\Exception $e) {
                     throw new \Exception("Gagal mengupload file {$fieldName}");
@@ -417,12 +417,13 @@ class AsesmenKepThtController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            // dd($asesmen);
-            // dd($dataMedis);
+                $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
+                $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
                 'asesmen',
-                'dataMedis'
+                'dataMedis',
+                'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -518,7 +519,7 @@ class AsesmenKepThtController extends Controller
                 try {
                     $file = $request->file($fieldName);
                     $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
-                    
+
                     if ($path) {
                         return $path;
                     }

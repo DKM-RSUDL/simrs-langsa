@@ -631,71 +631,72 @@
                                                 pemeriksaan tidak dilakukan.
                                             </p>
                                         </div>
-                                        {{-- {{ $asesmen->pemeriksaanFisik ?? '-' }} --}}
-
-                                        @php
-                                            $pemeriksaanFisikData = json_decode($asesmen->pemeriksaanFisik, true) ?: [];
-
-                                            $totalItems = count($pemeriksaanFisikData);
-                                            $halfCount = ceil($totalItems / 2);
-                                            $firstColumn = array_slice($pemeriksaanFisikData, 0, $halfCount);
-                                            $secondColumn = array_slice($pemeriksaanFisikData, $halfCount);
-                                        @endphp
-
                                         <div class="col-12">
                                             <div class="row">
+                                                @php
+                                                    $pemeriksaanFisikData = $asesmen->pemeriksaanFisik;
+                                                    $itemFisikNames = [];
+                                                    foreach ($itemFisik as $item) {
+                                                        $itemFisikNames[$item->id] = $item->nama;
+                                                    }
+
+                                                    $totalItems = count($pemeriksaanFisikData);
+                                                    $halfCount = ceil($totalItems / 2);
+                                                    $firstColumn = $pemeriksaanFisikData->take($halfCount);
+                                                    $secondColumn = $pemeriksaanFisikData->skip($halfCount);
+                                                @endphp
                                                 <div class="col-md-6">
                                                     @foreach ($firstColumn as $item)
                                                         @php
-                                                            $status = $item['is_normal'] ?? null;
-                                                            $keterangan = $item['keterangan'] ?? null;
-
-                                                            $namaItem = 'Keterangan : ' . $item['keterangan'];
+                                                            $status = $item->is_normal;
+                                                            $keterangan = $item->keterangan;
+                                                            $itemId = $item->id_item_fisik;
+                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
                                                         @endphp
-                                                        <div
-                                                            class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                                                             <span>{{ $namaItem }}</span>
-
                                                             <div class="d-flex align-items-center">
                                                                 @if ($status == '0' || $status == 0)
-                                                                    <span class="badge bg-warning text-dark me-2">Tidak
-                                                                        Normal</span>
+                                                                    <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
                                                                 @elseif ($status == '1' || $status == 1)
                                                                     <span class="badge bg-success me-2">Normal</span>
                                                                 @else
-                                                                    <span class="badge bg-secondary me-2">Tidak
-                                                                        Diperiksa</span>
+                                                                    <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
                                                                 @endif
                                                             </div>
                                                         </div>
+                                                        @if ($keterangan && ($status == '0' || $status == 0))
+                                                            <div class="mt-1 mb-2">
+                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                            </div>
+                                                        @endif
                                                     @endforeach
                                                 </div>
-
                                                 <div class="col-md-6">
                                                     @foreach ($secondColumn as $item)
                                                         @php
-                                                            $status = $item['is_normal'] ?? null;
-                                                            $keterangan = $item['keterangan'] ?? null;
-
-                                                            // Disini Anda perlu mendapatkan nama item fisik
-                                                            $namaItem = 'Keterangan : ' . $item['keterangan'];
+                                                            $status = $item->is_normal;
+                                                            $keterangan = $item->keterangan;
+                                                            $itemId = $item->id_item_fisik;
+                                                            $namaItem = $itemFisikNames[$itemId] ?? 'Item #' . $itemId;
                                                         @endphp
-                                                        <div
-                                                            class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                                                             <span>{{ $namaItem }}</span>
-
                                                             <div class="d-flex align-items-center">
                                                                 @if ($status == '0' || $status == 0)
-                                                                    <span class="badge bg-warning text-dark me-2">Tidak
-                                                                        Normal</span>
+                                                                    <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
                                                                 @elseif ($status == '1' || $status == 1)
                                                                     <span class="badge bg-success me-2">Normal</span>
                                                                 @else
-                                                                    <span class="badge bg-secondary me-2">Tidak
-                                                                        Diperiksa</span>
+                                                                    <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
                                                                 @endif
                                                             </div>
                                                         </div>
+                                                        @if ($keterangan && ($status == '0' || $status == 0))
+                                                            <div class="mt-1 mb-2">
+                                                                <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                                            </div>
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -887,7 +888,7 @@
                                                     <label class="form-label fw-bold">Darah :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah)
-                                                        <div class="d-flex align-items-center">                                                            
+                                                        <div class="d-flex align-items-center">
                                                             <div class="action-buttons mt-2">
                                                                 <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_darah) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
@@ -904,7 +905,7 @@
                                                     <label class="form-label fw-bold">Urine :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine)
-                                                        <div class="d-flex align-items-center">                                                            
+                                                        <div class="d-flex align-items-center">
                                                             <div class="action-buttons mt-2">
                                                                 <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_urine) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
@@ -925,7 +926,7 @@
                                                     <label class="form-label fw-bold">Rontgent :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent)
-                                                        <div class="d-flex align-items-center">                                                            
+                                                        <div class="d-flex align-items-center">
                                                             <div class="action-buttons mt-2">
                                                                 <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_rontgent) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">
@@ -942,7 +943,7 @@
                                                     <label class="form-label fw-bold">Histopatology :</label>
                                                     <div class="form-control-plaintext border-bottom p-2">
                                                         @if ($asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology)
-                                                        <div class="d-flex align-items-center">                                                            
+                                                        <div class="d-flex align-items-center">
                                                             <div class="action-buttons mt-2">
                                                                 <a href="{{ asset('storage/' . $asesmen->rmeAsesmenTht->hasil_pemeriksaan_penunjang_histopatology) }}"
                                                                     class="btn btn-sm btn-primary" target="_blank">

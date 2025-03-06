@@ -365,12 +365,13 @@ class AsesmenObstetriMaternitas extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            // dd($asesmen);
-            // dd($dataMedis);
+            $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
+            $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.show', compact(
                 'asesmen',
-                'dataMedis'
+                'dataMedis',
+                'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
