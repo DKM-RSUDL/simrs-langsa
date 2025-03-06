@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class AsesmenObstetriMaternitas extends Controller
 {
@@ -694,6 +696,93 @@ class AsesmenObstetriMaternitas extends Controller
             ])->with(['success' => 'Berhasil mengupdate asesmen THT!']);
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Get assessment data
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'asesmenObstetri',
+                'rmeAsesmenObstetriPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenObstetriStatusNyeri',
+                'rmeAsesmenObstetriRiwayatKesehatan',
+                'rmeAsesmenObstetriDischargePlanning',
+                'rmeAsesmenObstetriDiagnosisImplementasi',
+            ])->where('id', $id)->first();
+
+            if (!$asesmen) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Data asesmen tidak ditemukan'
+                ], 404);
+            }
+
+            // Try to get medical record with different formatting of the date
+            $tgl_masuk_formatted = date('Y-m-d', strtotime($tgl_masuk));
+
+            $dataMedis = Kunjungan::with('pasien')
+                        ->where('kd_unit', $kd_unit)
+                        ->where('kd_pasien', $kd_pasien)
+                        ->whereDate('tgl_masuk', $tgl_masuk_formatted)
+                        ->where('urut_masuk', $urut_masuk)
+                        ->first();
+
+            // If we can't find the data medis, try getting the patient directly
+            $pasien = null;
+            if (!$dataMedis || !$dataMedis->pasien) {
+                $pasien = DB::table('pasien')->where('kd_pasien', $kd_pasien)->first();
+
+                if (!$pasien) {
+                    return response()->json([
+                        'status'  => 'error',
+                        'message' => 'Data pasien tidak ditemukan'
+                    ], 404);
+                }
+            } else {
+                $pasien = $dataMedis->pasien;
+            }
+
+            // Get physical examination data
+            $itemFisikIds = collect();
+            if ($asesmen && $asesmen->pemeriksaanFisik) {
+                $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique();
+            }
+
+            $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->get()->keyBy('id');
+
+            // Load view and generate PDF
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.print', [
+                'asesmen'    => $asesmen,
+                'pasien' => $pasien,
+                'dataMedis' => $dataMedis,
+                'asesmenObstetri' => optional($asesmen)->asesmenObstetri,
+                'rmeAsesmenObstetriPemeriksaanFisik' => optional($asesmen)->rmeAsesmenObstetriPemeriksaanFisik,
+                'pemeriksaanFisik' => optional($asesmen)->pemeriksaanFisik,
+                'rmeAsesmenObstetriStatusNyeri' => optional($asesmen)->rmeAsesmenObstetriStatusNyeri,
+                'rmeAsesmenObstetriRiwayatKesehatan' => optional($asesmen)->rmeAsesmenObstetriRiwayatKesehatan,
+                'rmeAsesmenObstetriDischargePlanning' => optional($asesmen)->rmeAsesmenObstetriDischargePlanning,
+                'rmeAsesmenObstetriDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenObstetriDiagnosisImplementasi,
+                'itemFisik' => $itemFisik,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-obstetri-maternitas-{$id}-print-pdf.pdf");
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

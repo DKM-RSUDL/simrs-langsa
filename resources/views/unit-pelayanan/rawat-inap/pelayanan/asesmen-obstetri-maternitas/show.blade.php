@@ -14,14 +14,25 @@
                 </a>
                 <div>
                     {{-- @if ($asesmen->kategori == 1 && $asesmen->sub_kategori == 5) --}}
-                    <a href="javascript:void(0);" class="btn btn-outline-primary" data-id="{{ $asesmen->id }}"
+                    {{-- <a href="javascript:void(0);" class="btn btn-outline-primary" data-id="{{ $asesmen->id }}"
                         data-kd-unit="{{ $asesmen->kd_unit }}" data-kd-pasien="{{ $asesmen->pasien->kd_pasien }}"
                         data-tgl-masuk="{{ \Carbon\Carbon::parse($asesmen->tgl_masuk)->format('Y-m-d') }}"
                         data-urut-masuk="{{ $asesmen->urut_masuk }}" onclick="printPDF(this)">
                         <i class="bi bi-printer"></i>
                         Print PDF
-                    </a>
+                    </a> --}}
                     {{-- @endif --}}
+
+                    <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.print-pdf', [
+                        $asesmen->kd_unit,
+                        $asesmen->pasien->kd_pasien,
+                        \Carbon\Carbon::parse($asesmen->tgl_masuk)->format('Y-m-d'),
+                        $asesmen->urut_masuk,
+                        $asesmen->id
+                    ]) }}" class="btn btn-outline-primary" target="_blank">
+                        <i class="bi bi-printer"></i>
+                        Print PDF
+                    </a>
 
                 </div>
             </div>

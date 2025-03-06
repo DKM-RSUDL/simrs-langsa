@@ -4,10 +4,10 @@
 @section('content')
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-include')
 @push('modals')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-kehamilan')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-penyakin-keluarwa')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-obstetrik')
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-nyeri-efek-nyeri')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-kehamilan')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-penyakin-keluarwa')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-riwayat-obstetrik')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-obstetri-maternitas.edit-modal-nyeri-efek-nyeri')
 @endpush
 
 <div class="row">
@@ -93,13 +93,13 @@
                                                     id="rs_tidak" value="0" {{ ($asesmen->asesmenObstetri->antenatal_rs ?? '') == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="rs_tidak">Tidak</label>
                                             </div>
-                                                    
+
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="antenatal_rs"
                                                     id="rs_ya" value="1" {{ ($asesmen->asesmenObstetri->antenatal_rs ?? '') == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="rs_ya">Ya</label>
                                             </div>
-                                                    
+
                                             <div class="input-group" style="width: 150px;">
                                                 <input type="number" class="form-control" name="antenatal_rs_count"
                                                     placeholder="Berapa kali" min="0"
@@ -111,18 +111,18 @@
                                     <div class="form-group row mt-3">
                                         <label class="col-sm-3 col-form-label">Pemeriksaan antenatal di tempat lain</label>
                                         <div class="col-sm-8 d-flex align-items-center gap-3">
-                                            <div class="form-check form-check-inline">                                                
+                                            <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="antenatal_lain"
                                                     id="lain_tidak" value="0" {{ ($asesmen->asesmenObstetri->antenatal_lain ?? '') == '0' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="lain_tidak">Tidak</label>
                                             </div>
-                                                    
+
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="antenatal_lain"
                                                     id="lain_ya" value="1" {{ ($asesmen->asesmenObstetri->antenatal_lain ?? '') == '1' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="lain_ya">Ya</label>
                                             </div>
-                                                    
+
                                             <div class="input-group" style="width: 150px;">
                                                 <input type="number" class="form-control" name="antenatal_lain_count"
                                                     placeholder="Berapa kali" min="0"
@@ -484,15 +484,15 @@
                                         <input type="text" class="form-control" name="serviks_pembukaan" placeholder=""
                                             value="{{ $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_pembukaan ?? '' }}">
                                         <label class="d-block mr-2">Jam</label>
-                                        @php                                            
+                                        @php
                                             $jam_pembukaan = $asesmen->rmeAsesmenObstetriPemeriksaanFisik->serviks_jam_pembukaan ?? null;
-                                                                                        
+
                                             $formatted_time = date('H:i');
-                                            
-                                            if ($jam_pembukaan) {                                                
-                                                if (preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $jam_pembukaan)) {                                                    
+
+                                            if ($jam_pembukaan) {
+                                                if (preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $jam_pembukaan)) {
                                                     $formatted_time = substr($jam_pembukaan, 0, 5);
-                                                } else {                                                    
+                                                } else {
                                                     $timestamp = strtotime($jam_pembukaan);
                                                     if ($timestamp !== false) {
                                                         $formatted_time = date('H:i', $timestamp);
