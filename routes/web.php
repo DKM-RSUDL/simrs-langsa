@@ -33,6 +33,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
+use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
@@ -702,6 +703,19 @@ Route::middleware('auth')->group(function () {
                                                     Route::get('/create', 'create')->name('.create');
                                                     Route::get('/edit/{data}', 'edit')->name('.edit');
                                                     Route::post('/', 'store')->name('.store');
+                                                    Route::put('/{data}', 'update')->name('.update');
+                                                    Route::get('/{data}', 'show')->name('.show');
+                                                });
+                                            });
+                                        });
+
+                                        Route::prefix('perawat')->group(function () {
+                                            Route::name('.perawat')->group(function () {
+                                                Route::controller(PraAnestesiPerawatController::class)->group(function () {
+                                                    Route::get('/create', 'create')->name('.create');
+                                                    Route::post('/', 'store')->name('.store');
+                                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                                    Route::put('/{data}', 'update')->name('.update');
                                                 });
                                             });
                                         });

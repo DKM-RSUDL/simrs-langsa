@@ -449,7 +449,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "#",
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "kd_unit": optVal
@@ -507,7 +507,7 @@
             $(diagnoses).each(function(i, e) {
                 dignoseListContent += `<div>
                                         <a href="#" class="fw-bold">${$(e).text()}</a>
-                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}"
+                                        <input type="hidden" name="diagnose_name[]" value="${$(e).text()}">
                                     </div>`;
 
             });
@@ -784,7 +784,7 @@
 
                                         dignoseListContent += `<div class="diag-item-wrap">
                                                                 <a href="#" class="fw-bold text-decoration-none">
-                                                                    <div class="d-flex align-items-center justify-content-between">                            
+                                                                    <div class="d-flex align-items-center justify-content-between">
                                                                         <p class="m-0 p-0">${diag.nama_penyakit}</p>
                                                                         <span class="btnListDiagnose">
                                                                             <i class="ti-close text-danger"></i>
@@ -842,7 +842,7 @@
             $(diagnoses).each(function(i, e) {
                 dignoseListContent += `<div class="diag-item-wrap">
                                         <a href="#" class="fw-bold text-decoration-none">
-                                            <div class="d-flex align-items-center justify-content-between">                            
+                                            <div class="d-flex align-items-center justify-content-between">
                                                 <p class="m-0 p-0">${$(e).text()}</p>
                                                 <span class="btnListDiagnose">
                                                     <i class="ti-close text-danger"></i>

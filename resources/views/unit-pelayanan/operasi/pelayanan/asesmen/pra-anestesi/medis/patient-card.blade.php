@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<div class="mt-2 patient-card">
+{{-- <div class="mt-2 patient-card">
     <div class="card-header">
         <h4>Asesmen :</h4>
     </div>
@@ -38,7 +38,7 @@
             </li>
         </ol>
     </div>
-</div>
+</div> --}}
 
 @push('css')
     <style>

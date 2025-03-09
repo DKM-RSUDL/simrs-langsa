@@ -11,8 +11,9 @@
 
         <div class="col-md-9">
 
-            <form method="POST" action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+            <form method="POST" action="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($asesmen->praOperatifMedis->id)]) }}">
                 @csrf
+                @method('put')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100">
