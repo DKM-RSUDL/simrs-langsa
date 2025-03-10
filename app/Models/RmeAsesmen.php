@@ -231,4 +231,55 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKepAnakSosialEkonomi::class, 'id_asesmen', 'id');
     }
 
+
+    // Relasi untuk perinatology
+    public function rmeAsesmenPerinatology()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatology::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyFisik()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyFisik::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyPemeriksaanLanjut()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyPemeriksaanLanjut::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyRiwayatIbu()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyRiwayatIbu::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyStatusNyeri::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyRisikoJatuh()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyRisikoJatuh::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyResikoDekubitus()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyResikoDekubitus::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyGizi()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyGizi::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyFungsional()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyFungsional::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenPerinatologyRencanaPulang()
+    {
+        return $this->hasOne(RmeAsesmenKepPerinatologyRencanaPulang::class, 'id_asesmen', 'id');
+    }
 }

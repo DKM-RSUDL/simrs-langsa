@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
+            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <div class="d-flex justify-content-center">
@@ -537,32 +537,30 @@
                                         <label style="min-width: 200px;">Jenis Skala NYERI</label>
                                         <select class="form-select" name="jenis_skala_nyeri" id="jenis_skala_nyeri">
                                             <option disabled>--Pilih--</option>
-                                            <option value="NRS"
-                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->jenis_skala_nyeri == 1 ? 'selected' : '' }}>
-                                                Numeric Rating Scale (NRS)</option>
-                                            <option value="FLACC"
-                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->jenis_skala_nyeri == 2 ? 'selected' : '' }}>
-                                                Face, Legs, Activity, Cry, Consolability (FLACC)</option>
-                                            <option value="CRIES"
-                                                {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->jenis_skala_nyeri == 3 ? 'selected' : '' }}>
-                                                Crying, Requires, Increased, Expression, Sleepless (CRIES)</option>
+                                            <option value="NRS" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 1 ? 'selected' : '' }}>
+                                                Numeric Rating Scale (NRS)
+                                            </option>
+                                            <option value="FLACC" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 2 ? 'selected' : '' }}>
+                                                Face, Legs, Activity, Cry, Consolability (FLACC)
+                                            </option>
+                                            <option value="CRIES" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 3 ? 'selected' : '' }}>
+                                                Crying, Requires, Increased, Expression, Sleepless (CRIES)
+                                            </option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                        <input type="text" class="form-control" id="nilai_skala_nyeri"
-                                            name="nilai_skala_nyeri" readonly
-                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri->nilai_nyeri }}">
+                                        <input type="text" class="form-control" id="nilai_skala_nyeri" name="nilai_skala_nyeri" readonly
+                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->nilai_nyeri ?? '' }}">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesimpulan Nyeri</label>
-                                        <input type="hidden" class="form-control" id="kesimpulan_nyeri"
-                                            name="kesimpulan_nyeri"
-                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri->kesimpulan_nyeri }}">
+                                        <input type="hidden" class="form-control" id="kesimpulan_nyeri" name="kesimpulan_nyeri"
+                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kesimpulan_nyeri ?? '' }}">
                                         <div class="alert alert-success" id="kesimpulan_nyeri_alert">
-                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->kesimpulan_nyeri ?? 'Pilih skala nyeri terlebih dahulu' }}
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kesimpulan_nyeri ?? 'Pilih skala nyeri terlebih dahulu' }}
                                         </div>
                                     </div>
 
@@ -573,12 +571,12 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Lokasi</label>
                                                 <input type="text" class="form-control" name="lokasi_nyeri"
-                                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri->lokasi }}">
+                                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->lokasi ?? '' }}">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Durasi</label>
                                                 <input type="text" class="form-control" name="durasi_nyeri"
-                                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri->durasi }}">
+                                                    value="{{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->durasi ?? '' }}">
                                             </div>
                                         </div>
 
@@ -589,7 +587,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($jenisnyeri as $jenis)
                                                         <option value="{{ $jenis->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->jenis_nyeri == $jenis->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri == $jenis->id ? 'selected' : '' }}>
                                                             {{ $jenis->name }}
                                                         </option>
                                                     @endforeach
@@ -601,7 +599,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($frekuensinyeri as $frekuensi)
                                                         <option value="{{ $frekuensi->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->frekuensi == $frekuensi->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi == $frekuensi->id ? 'selected' : '' }}>
                                                             {{ $frekuensi->name }}
                                                         </option>
                                                     @endforeach
@@ -616,7 +614,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($menjalar as $menjalarItem)
                                                         <option value="{{ $menjalarItem->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->menjalar == $menjalarItem->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar == $menjalarItem->id ? 'selected' : '' }}>
                                                             {{ $menjalarItem->name }}
                                                         </option>
                                                     @endforeach
@@ -628,7 +626,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($kualitasnyeri as $kualitas)
                                                         <option value="{{ $kualitas->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->kualitas == $kualitas->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas == $kualitas->id ? 'selected' : '' }}>
                                                             {{ $kualitas->name }}
                                                         </option>
                                                     @endforeach
@@ -643,7 +641,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($faktorpemberat as $pemberat)
                                                         <option value="{{ $pemberat->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->faktor_pemberat == $pemberat->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat == $pemberat->id ? 'selected' : '' }}>
                                                             {{ $pemberat->name }}
                                                         </option>
                                                     @endforeach
@@ -655,7 +653,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($faktorperingan as $peringan)
                                                         <option value="{{ $peringan->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->faktor_peringan == $peringan->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan == $peringan->id ? 'selected' : '' }}>
                                                             {{ $peringan->name }}
                                                         </option>
                                                     @endforeach
@@ -670,7 +668,7 @@
                                                     <option disabled>--Pilih--</option>
                                                     @foreach ($efeknyeri as $efek)
                                                         <option value="{{ $efek->id }}"
-                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri->efek_nyeri == $efek->id ? 'selected' : '' }}>
+                                                            {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri == $efek->id ? 'selected' : '' }}>
                                                             {{ $efek->name }}
                                                         </option>
                                                     @endforeach
@@ -2129,7 +2127,7 @@
                                     </div>
                                 </div>
 
-                                <!-- 13. Status Fungsinal -->
+                                <!-- 13. Status Fungsional -->
                                 <div class="section-separator" id="status-fungsional">
                                     <h5 class="section-title">13. Status Fungsional</h5>
 
@@ -2137,36 +2135,49 @@
                                         <label class="form-label">Pilih jenis Skala Pengkajian Aktivitas Harian (ADL) sesuai kondisi pasien</label>
                                         <select class="form-select" name="skala_fungsional" id="skala_fungsional">
                                             <option value="" disabled>Pilih Skala Fungsional</option>
-                                            <option value="Pengkajian Aktivitas" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->jenis_skala == 1 ? 'selected' : '' }}>Pengkajian Aktivitas Harian</option>
-                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->jenis_skala == 2 ? 'selected' : '' }}>Lainnya</option>
+                                            <option value="Pengkajian Aktivitas" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 1 ? 'selected' : '' }}>
+                                                Pengkajian Aktivitas Harian
+                                            </option>
+                                            <option value="Lainnya" {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala == 2 ? 'selected' : '' }}>
+                                                Lainnya
+                                            </option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nilai Skala ADL</label>
-                                        <input type="text" class="form-control" id="adl_total" name="adl_total" readonly value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->nilai_skala_adl }}">
+                                        <input type="text" class="form-control" id="adl_total" name="adl_total" readonly
+                                            value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->nilai_skala_adl ?? '' }}">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                        <div id="adl_kesimpulan" class="alert {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional ? 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' : 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' : 
-                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success'))) 
+                                        <div id="adl_kesimpulan" class="alert {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ? 
+                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' : 
+                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' : 
+                                            (strpos($asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success'))) 
                                             : 'alert-info' }}">
-                                            {{ $asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional ?: 'Pilih skala aktivitas harian terlebih dahulu' }}
+                                            {{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? 'Pilih skala aktivitas harian terlebih dahulu' }}
                                         </div>
                                     </div>
                                     
                                     <!-- Hidden fields untuk menyimpan data ADL -->
-                                    <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->jenis_skala }}">
-                                    <input type="hidden" id="adl_makan" name="adl_makan" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->makan }}">
-                                    <input type="hidden" id="adl_makan_value" name="adl_makan_value" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->makan_value }}">
-                                    <input type="hidden" id="adl_berjalan" name="adl_berjalan" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->berjalan }}">
-                                    <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->berjalan_value }}">
-                                    <input type="hidden" id="adl_mandi" name="adl_mandi" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->mandi }}">
-                                    <input type="hidden" id="adl_mandi_value" name="adl_mandi_value" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->mandi_value }}">
-                                    <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional->kesimpulan_fungsional }}">
+                                    <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->jenis_skala ?? '' }}">
+                                    <input type="hidden" id="adl_makan" name="adl_makan" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan ?? '' }}">
+                                    <input type="hidden" id="adl_makan_value" name="adl_makan_value" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->makan_value ?? '' }}">
+                                    <input type="hidden" id="adl_berjalan" name="adl_berjalan" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan ?? '' }}">
+                                    <input type="hidden" id="adl_berjalan_value" name="adl_berjalan_value" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->berjalan_value ?? '' }}">
+                                    <input type="hidden" id="adl_mandi" name="adl_mandi" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi ?? '' }}">
+                                    <input type="hidden" id="adl_mandi_value" name="adl_mandi_value" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->mandi_value ?? '' }}">
+                                    <input type="hidden" id="adl_kesimpulan_value" name="adl_kesimpulan_value" 
+                                        value="{{ $asesmen->rmeAsesmenKepAnakStatusFungsional?->kesimpulan_fungsional ?? '' }}">
                                 </div>
 
                                 <!-- 14. Kebutuhan Edukasi -->

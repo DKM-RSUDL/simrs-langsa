@@ -152,22 +152,17 @@
             <!-- Action Buttons -->
             <div class="d-flex gap-2">
                 @if ($item->kategori == 1 && $item->sub_kategori == 5)
-                <a href="{{ route('rawat-inap.asesmen.medis.tht.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                    class="btn btn-sm btn-info">
-                    <i class="fas fa-eye me-1"></i> Lihat
-                </a>
+                    <a href="{{ route('rawat-inap.asesmen.medis.tht.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
 
-                <a href="{{ route('rawat-inap.asesmen.medis.tht.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                    class="btn btn-sm btn-secondary">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
-                @elseif($item->kategori == 2)
-
-                    {{-- <a href="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/keperawatan/tht/' . $item->id . '/edit') }}"
+                    <a href="{{ route('rawat-inap.asesmen.medis.tht.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
-                    </a> --}}
+                    </a>
                 @endif
+
                 @if ($item->kategori == 2 && $item->sub_kategori == 7)
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-info">
@@ -175,6 +170,18 @@
                     </a>
 
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if ($item->kategori == 2 && $item->sub_kategori == 2)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+                    
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
