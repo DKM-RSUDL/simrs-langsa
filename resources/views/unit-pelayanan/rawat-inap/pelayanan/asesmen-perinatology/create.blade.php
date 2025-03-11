@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ url()->previous() }}" class="btn">
+            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}" class="btn">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <div class="d-flex justify-content-center">

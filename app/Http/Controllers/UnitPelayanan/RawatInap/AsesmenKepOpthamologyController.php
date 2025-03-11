@@ -5,6 +5,15 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeEfekNyeri;
+use App\Models\RmeFaktorPemberat;
+use App\Models\RmeFaktorPeringan;
+use App\Models\RmeFrekuensiNyeri;
+use App\Models\RmeJenisNyeri;
+use App\Models\RmeKualitasNyeri;
+use App\Models\RmeMasterDiagnosis;
+use App\Models\RmeMasterImplementasi;
+use App\Models\RmeMenjalar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,6 +23,15 @@ class AsesmenKepOpthamologyController extends Controller
     {
         $user = auth()->user();
         $itemFisik = MrItemFisik::orderby('urut')->get();
+        $menjalar = RmeMenjalar::all();
+        $frekuensinyeri = RmeFrekuensiNyeri::all();
+        $kualitasnyeri = RmeKualitasNyeri::all();
+        $faktorpemberat = RmeFaktorPemberat::all();
+        $faktorperingan = RmeFaktorPeringan::all();
+        $efeknyeri = RmeEfekNyeri::all();
+        $jenisnyeri = RmeJenisNyeri::all();
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -25,7 +43,7 @@ class AsesmenKepOpthamologyController extends Controller
         })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -58,6 +76,15 @@ class AsesmenKepOpthamologyController extends Controller
             'urut_masuk',
             'dataMedis',
             'itemFisik',
+            'menjalar',
+            'frekuensinyeri',
+            'kualitasnyeri',
+            'faktorpemberat',
+            'faktorperingan',
+            'efeknyeri',
+            'jenisnyeri',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi',
             'user'
         ));
     }
