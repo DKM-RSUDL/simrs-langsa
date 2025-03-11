@@ -185,11 +185,9 @@
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                <a href="{{ route('rawat-inap.asesmen.medis.tht.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                    class="btn btn-sm btn-secondary">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
-                @elseif($item->kategori == 1 && $item->sub_kategori == 4)
+                @endif
+
+                @if($item->kategori == 1 && $item->sub_kategori == 4)
                 <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                     class="btn btn-sm btn-info">
                     <i class="fas fa-eye me-1"></i> Lihat
