@@ -268,4 +268,78 @@ class PraAnestesiPerawatController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', 71)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            // Menghitung umur berdasarkan tgl_lahir jika ada
+            if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+            } else {
+                $dataMedis->pasien->umur = 'Tidak Diketahui';
+            }
+
+            if (!$dataMedis) {
+                abort(404, 'Data not found');
+            }
+
+            $perawat = User::with(['karyawan'])
+                ->whereRelation('karyawan', 'status_peg', 1)
+                ->whereRelation('karyawan', 'kd_ruangan', 4)
+                ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
+                ->get();
+
+            $jenisOperasi = DB::table('produk as p')
+                ->select(
+                    'p.kd_produk',
+                    'p.kp_produk',
+                    'p.deskripsi',
+                    't.kd_tarif',
+                    't.tarif',
+                    't.kd_unit',
+                    't.tgl_berlaku',
+                    'p.kd_klas'
+                )
+                ->join(
+                    DB::raw('(tarif as t INNER JOIN tarif_cust as tc ON t.kd_tarif = tc.kd_tarif)'),
+                    'p.kd_produk',
+                    '=',
+                    't.kd_produk'
+                )
+                ->whereIn('t.kd_unit', [71, 7])
+                ->where('t.kd_tarif', 'TU')
+                ->whereRaw("t.tgl_berlaku = (
+            SELECT TOP 1 tgl_berlaku
+            FROM tarif
+            WHERE KD_PRODUK = t.kd_produk
+            AND KD_TARIF = t.kd_tarif
+            AND KD_UNIT = t.kd_unit
+            AND (Tgl_Berakhir IS NULL OR Tgl_Berakhir >= '2025-02-21')
+            ORDER BY tgl_berlaku DESC
+        )")
+                ->whereRaw("(t.Tgl_Berakhir IS NULL OR t.Tgl_Berakhir >= '2025-02-21')")
+                ->whereRaw("LEFT(p.kd_klas, 2) = '61'")
+                ->orderBy('t.tgl_berlaku', 'DESC')
+                ->get();
+
+            $asesmen = OkAsesmen::find($id);
+
+            return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-anestesi.perawat.show', compact('dataMedis', 'asesmen', 'perawat', 'jenisOperasi'));
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }

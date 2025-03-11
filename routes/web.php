@@ -716,6 +716,7 @@ Route::middleware('auth')->group(function () {
                                                     Route::post('/', 'store')->name('.store');
                                                     Route::get('/edit/{data}', 'edit')->name('.edit');
                                                     Route::put('/{data}', 'update')->name('.update');
+                                                    Route::get('/{data}', 'show')->name('.show');
                                                 });
                                             });
                                         });

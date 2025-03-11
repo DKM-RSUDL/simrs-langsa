@@ -151,7 +151,7 @@
                 @endif
 
                 @if($item->kategori == 2)
-                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-info btn-sm px-3">
+                    <a href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-info btn-sm px-3">
                         <i class="fas fa-eye me-1"></i>
                         Lihat
                     </a>

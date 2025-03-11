@@ -226,7 +226,7 @@
                                                                         <button type="button" class="btn btn-sm btn-danger btn-delete-alergi">
                                                                             <i class="fas fa-trash"></i>
                                                                         </button>
-                                                                        <input type='hidden' name='alergi[]' value='{{ "{'alergen': '".$alergi['alergen']."', 'reaksi': '".$alergi['reaksi']."', 'severe': '".$alergi['severe']."'}" }}'>
+                                                                        <input type='hidden' name='alergi[]' value='{{ '{"alergen" : "'.$alergi['alergen'].'", "reaksi" : "'.$alergi['reaksi'].'", "severe" : "'.$alergi['severe'].'"}' }}'>
                                                                     </td>
 
                                                                 </tr>
