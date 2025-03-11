@@ -27,6 +27,7 @@ class RawatInapController extends Controller
             ->where('kd_unit', $kd_unit)
             ->first();
 
+
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit)
@@ -140,7 +141,6 @@ class RawatInapController extends Controller
                         });
                     }
                 })
-
                 ->order(function ($query) {
                     $query->orderBy('tgl_masuk', 'desc')
                         ->orderBy('jam_masuk', 'desc');
