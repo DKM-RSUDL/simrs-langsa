@@ -33,6 +33,11 @@ class OkAsesmen extends Model
         return $this->hasOne(OkPraOperasiPerawat::class, 'id_asesmen', 'id');
     }
 
+    public function edukasiAnestesi()
+    {
+        return $this->hasOne(OkEdukasiAnestesi::class, 'id_asesmen', 'id');
+    }
+
     public function userCreate()
     {
         return $this->belongsTo(User::class, 'user_create', 'id');

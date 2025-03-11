@@ -32,6 +32,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
+use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
@@ -242,7 +243,7 @@ Route::middleware('auth')->group(function () {
                         Route::name('.unit')->group(function () {
                             Route::get('/', [RawatInapController::class, 'unitPelayanan']);
                             Route::get('/aktif', [RawatInapController::class, 'unitPelayanan'])->name('.aktif');
-                            Route::get('/pending', [RawatInapController::class, 'unitPelayanan'])->name('.pending');
+                            Route::get('/pending', [RawatInapController::class, 'pending'])->name('.pending');
                         });
 
                         // Pelayanan
@@ -712,6 +713,18 @@ Route::middleware('auth')->group(function () {
                                         Route::prefix('perawat')->group(function () {
                                             Route::name('.perawat')->group(function () {
                                                 Route::controller(PraAnestesiPerawatController::class)->group(function () {
+                                                    Route::get('/create', 'create')->name('.create');
+                                                    Route::post('/', 'store')->name('.store');
+                                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                                    Route::put('/{data}', 'update')->name('.update');
+                                                    Route::get('/{data}', 'show')->name('.show');
+                                                });
+                                            });
+                                        });
+
+                                        Route::prefix('edukasi')->group(function () {
+                                            Route::name('.edukasi')->group(function () {
+                                                Route::controller(EdukasiAnestesiController::class)->group(function () {
                                                     Route::get('/create', 'create')->name('.create');
                                                     Route::post('/', 'store')->name('.store');
                                                     Route::get('/edit/{data}', 'edit')->name('.edit');
