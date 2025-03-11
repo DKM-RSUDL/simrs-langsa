@@ -152,4 +152,52 @@ class RmeAsesmen extends Model
     {
         return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
     }
+
+    // asesmen tht
+    public function rmeAsesmenTht()
+    {
+        return $this->hasOne(RmeAsesmenTht::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtPemeriksaanFisik()
+    {
+        return $this->hasMany(RmeAsesmenThtPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtRiwayatKesehatanObatAlergi()
+    {
+        return $this->hasMany(RmeAsesmenThtRiwayatKesehatanObatAlergi::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtDischargePlanning()
+    {
+        return $this->hasMany(RmeAsesmenThtDischargePlanning::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenThtDiagnosisImplementasi()
+    {
+        return $this->hasMany(RmeAsesmenthtDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
+
+    // asesmenObstetri
+    public function asesmenObstetri()
+    {
+        return $this->hasOne(RmeAsesmenObstetri::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriPemeriksaanFisik()
+    {
+        return $this->hasOne(RmeAsesmenObstetriPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenObstetriStatusNyeri::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriRiwayatKesehatan()
+    {
+        return $this->hasOne(RmeAsesmenObstetriRiwayatKesehatan::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriDischargePlanning()
+    {
+        return $this->hasOne(RmeAsesmenObstetriDischargePlanning::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriDiagnosisImplementasi()
+    {
+        return $this->hasOne(RmeAsesmenObstetriDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
 }

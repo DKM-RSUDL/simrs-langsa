@@ -2245,7 +2245,7 @@
                                             <label style="min-width: 200px;">Bahasa sehari-hari</label>
                                             <select class="form-select" name="kebutuhan_edukasi_bahasa_sehari_hari">
                                                 <option value="">--Pilih--</option>
-                                                <option value="">--Pilih--</option>
+                                                <option value="Indonesia">Indonesia</option>
                                                 <option value="aceh">Aceh</option>
                                                 <option value="batak">Batak</option>
                                                 <option value="minangkabau">Minangkabau</option>
