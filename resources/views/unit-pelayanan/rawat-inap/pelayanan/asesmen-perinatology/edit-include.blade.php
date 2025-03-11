@@ -182,37 +182,47 @@
                 button.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const keteranganDiv = document.getElementById(targetId);
-                    const normalCheckbox = this.closest('.pemeriksaan-item')?.querySelector('.form-check-input');
-                    if (keteranganDiv && normalCheckbox) {
-                        if (keteranganDiv.style.display === 'none') {
-                            keteranganDiv.style.display = 'block';
-                            normalCheckbox.checked = false;
-                        } else {
-                            keteranganDiv.style.display = 'block';
+                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
+                        '.form-check-input');
+
+                    // Toggle tampilan keterangan
+                    if (keteranganDiv.style.display === 'none') {
+                        keteranganDiv.style.display = 'block';
+                        normalCheckbox.checked = false; // Uncheck normal checkbox
+                    } else {
+                        keteranganDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                    if (pemeriksaanItem) {
+                        const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                        if (keteranganDiv) {
+                            if (this.checked) {
+                                keteranganDiv.style.display = 'none';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) input.value = '';
+                            }
                         }
                     }
                 });
             });
 
-            document.querySelectorAll('.pemeriksaan-item .form-check-input').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const keteranganDiv = this.closest('.pemeriksaan-item')?.querySelector('.keterangan');
-                    if (keteranganDiv && this.checked) {
-                        keteranganDiv.style.display = 'none';
-                        keteranganDiv.querySelector('input').value = '';
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.pemeriksaan-item').forEach(item => {
+                    const keteranganInput = item.querySelector('.keterangan input');
+                    const normalCheckbox = item.querySelector('.form-check-input');
+                    const keteranganDiv = item.querySelector('.keterangan');
+
+                    // Jika ada nilai keterangan
+                    if (keteranganInput && keteranganInput.value) {
+                        normalCheckbox.checked = false;
+                        keteranganDiv.style.display = 'block';
                     }
                 });
-            });
-
-            // Hanya centang checkbox di dalam .pemeriksaan-item secara default
-            document.querySelectorAll('.pemeriksaan-item .form-check-input').forEach(checkbox => {
-                checkbox.checked = true; // Hanya berlaku untuk pemeriksaan fisik
-                const keteranganDiv = checkbox.closest('.pemeriksaan-item')?.querySelector('.keterangan');
-                if (keteranganDiv) {
-                    keteranganDiv.style.display = 'none';
-                    const input = keteranganDiv.querySelector('input');
-                    if (input) input.value = '';
-                }
             });
 
             //====================================================================================//
@@ -293,9 +303,10 @@
             // Event handler untuk tombol Tambah Riwayat
             //====================================================================================// 
             let riwayatArray = [];
+
             function updateRiwayatJson() {
                 document.getElementById('riwayatJson').value = JSON.stringify(riwayatArray);
-            }  
+            }
 
             document.getElementById('btnTambahRiwayat')?.addEventListener('click', function() {
                 // Reset input di modal saat dibuka
@@ -332,8 +343,8 @@
 
                     // Tambahkan event untuk tombol hapus
                     row.querySelector('.hapus-riwayat')?.addEventListener('click', function() {
-                        const index = riwayatArray.findIndex(item => 
-                            item.penyakit === (namaPenyakit || '-') && 
+                        const index = riwayatArray.findIndex(item =>
+                            item.penyakit === (namaPenyakit || '-') &&
                             item.obat === (namaObat || '-')
                         );
                         if (index !== -1) {
@@ -401,7 +412,7 @@
             if (nrsValue) {
                 nrsValue.addEventListener('input', function() {
                     let value = parseInt(this.value);
-                    
+
                     // Validate range
                     if (value < 0) this.value = 0;
                     if (value > 10) this.value = 10;
@@ -411,7 +422,7 @@
                     let kesimpulan = '';
                     let alertClass = '';
                     let emoji = '';
-                    
+
                     if (value >= 0 && value <= 3) {
                         kesimpulan = 'Nyeri Ringan';
                         alertClass = 'alert-success';
@@ -444,11 +455,11 @@
                     if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeri && kesimpulanNyeriAlert) {
                         const value = parseInt(nrsValue.value);
                         nilaiSkalaNyeri.value = value;
-                        
+
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (value >= 0 && value <= 3) {
                             kesimpulan = 'Nyeri Ringan';
                             alertClass = 'alert-success';
@@ -472,7 +483,7 @@
                             </div>
                         `;
                         kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        
+
                         bootstrap.Modal.getInstance(nrsModal).hide();
                     }
                 });
@@ -499,18 +510,18 @@
                 const flaccChecks = document.querySelectorAll('.flacc-check:checked');
                 const flaccTotal = document.getElementById('flaccTotal');
                 const flaccKesimpulan = document.getElementById('flaccKesimpulan');
-                
+
                 let total = 0;
                 flaccChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 flaccTotal.value = total;
 
                 let kesimpulan = '';
                 let alertClass = '';
                 let emoji = '';
-                
+
                 if (total >= 0 && total <= 3) {
                     kesimpulan = 'Nyeri Ringan';
                     alertClass = 'alert-success';
@@ -539,13 +550,13 @@
             if (simpanFLACC) {
                 simpanFLACC.addEventListener('click', function() {
                     const flaccTotal = document.getElementById('flaccTotal');
-                    
+
                     if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
                         let total = parseInt(flaccTotal.value);
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (total >= 0 && total <= 3) {
                             kesimpulan = 'Nyeri Ringan';
                             alertClass = 'alert-success';
@@ -596,23 +607,24 @@
                 const criesChecks = document.querySelectorAll('.cries-check:checked');
                 const criesTotal = document.getElementById('criesTotal');
                 const criesKesimpulan = document.getElementById('criesKesimpulan');
-                
+
                 let total = 0;
                 criesChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 criesTotal.value = total;
 
                 let kesimpulan = '';
                 let alertClass = '';
                 let emoji = '';
-                
+
                 if (total >= 0 && total <= 3) {
                     kesimpulan = 'Nyeri Ringan';
                     alertClass = 'alert-success';
                     emoji = 'bi-emoji-smile';
-            Serra} else if (total >= 4 && total <= 6) {
+                    Serra
+                } else if (total >= 4 && total <= 6) {
                     kesimpulan = 'Nyeri Sedang';
                     alertClass = 'alert-warning';
                     emoji = 'bi-emoji-neutral';
@@ -636,13 +648,13 @@
             if (simpanCRIES) {
                 simpanCRIES.addEventListener('click', function() {
                     const criesTotal = document.getElementById('criesTotal');
-                    
+
                     if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
                         let total = criesTotal.value ? parseInt(criesTotal.value) : null;
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (total >= 0 && total <= 3) {
                             kesimpulan = 'Ny oNyeri Ringan';
                             alertClass = 'alert-success';
@@ -724,38 +736,22 @@
             }
 
             //====================================================================================//
-            // Fungsi untuk menampilkan form skala decubitus
-            //====================================================================================//
-            const formNorton = document.getElementById('formNorton');
-            if (formNorton) {
-                formNorton.querySelectorAll('select').forEach(select => {
-                    select.addEventListener('change', () => updateDecubitusConclusion('norton'));
-                });
-            }
-            const formBraden = document.getElementById('formBraden');
-            if (formBraden) {
-                formBraden.querySelectorAll('select').forEach(select => {
-                    select.addEventListener('change', () => updateDecubitusConclusion('braden'));
-                });
-            }
-
-            const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
-            if (skalaDecubitusSelect) {
-                skalaDecubitusSelect.addEventListener('change', function() {
-                    showDecubitusForm(this.value);
-                });
-                // Sembunyikan semua form saat halaman dimuat
-                showDecubitusForm('');
-            }
-
-            //====================================================================================//
             // Fungsi untuk menampilkan form status Gizi
             //====================================================================================//
             const nutritionSelect = document.getElementById('nutritionAssessment');
             const allForms = document.querySelectorAll('.assessment-form');
 
-            nutritionSelect.addEventListener('change', function() {
-                const selectedValue = this.value;
+            if (nutritionSelect) {
+                const initialValue = nutritionSelect.value;
+                if (initialValue) {
+                    // Tampilkan form yang sesuai dengan nilai yang sudah dipilih
+                    showSelectedNutritionForm();
+                }
+            }
+
+            // Tampilkan form yang dipilih saat halaman dimuat
+            function showSelectedNutritionForm() {
+                const selectedValue = nutritionSelect.value;
 
                 // Sembunyikan semua form
                 allForms.forEach(form => {
@@ -763,14 +759,6 @@
                 });
 
                 if (selectedValue === '5') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Pasien tidak dapat dinilai status gizinya',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    });
-                    document.getElementById('cannot-assess').value = 'tidak ada status gizi';
                     return;
                 }
 
@@ -791,12 +779,14 @@
                         initializeFormListeners(formId);
                     }
                 }
-            });
+            }
 
+            nutritionSelect.addEventListener('change', showSelectedNutritionForm);
 
             //====================================================================================//
             // Fungsi untuk menampilkan form Skala Fungsional ADL
             //====================================================================================//
+            // Event handler untuk Status Fungsional
             const statusFungsionalSelect = document.getElementById('skala_fungsional');
             const adlTotal = document.getElementById('adl_total');
             const adlKesimpulanAlert = document.getElementById('adl_kesimpulan');
@@ -808,7 +798,7 @@
                         adlTotal.value = '';
                         adlKesimpulanAlert.className = 'alert alert-info';
                         adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
-                        
+
                         const modal = new bootstrap.Modal(document.getElementById('modalADL'));
                         modal.show();
                     } else if (this.value === 'Lainnya') {
@@ -823,30 +813,34 @@
                             this.value = '';
                             adlTotal.value = '';
                             adlKesimpulanAlert.className = 'alert alert-info';
-                            adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                            adlKesimpulanAlert.textContent =
+                                'Pilih skala aktivitas harian terlebih dahulu';
                         });
                     }
                 });
             }
 
+            // ADL Handler - Perhitungan total dan kesimpulan
             const updateADLTotal = () => {
                 const adlChecks = document.querySelectorAll('.adl-check:checked');
                 const adlModalTotal = document.getElementById('adlTotal');
                 const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                
+
                 let total = 0;
                 adlChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 // Update total di modal
                 if (adlModalTotal) {
                     adlModalTotal.value = total;
                 }
 
                 // Hitung jumlah kategori yang sudah dipilih
-                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
-                const allCategoriesSelected = checkedCategories.size === 3; // 3 kategori: makan, berjalan, mandi
+                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute(
+                    'data-category')));
+                const allCategoriesSelected = checkedCategories.size ===
+                    3; // 3 kategori: makan, berjalan, mandi
 
                 if (!allCategoriesSelected) {
                     if (adlModalKesimpulan) {
@@ -859,7 +853,7 @@
                 // Update kesimpulan berdasarkan total skor
                 let kesimpulan = '';
                 let alertClass = '';
-                
+
                 if (total <= 4) {
                     kesimpulan = 'Mandiri';
                     alertClass = 'alert-success';
@@ -881,46 +875,55 @@
                 }
             };
 
+            // Event listeners untuk ADL checkboxes
             document.querySelectorAll('.adl-check').forEach(check => {
                 check.addEventListener('change', updateADLTotal);
             });
 
+            // Handle ADL save button
             const simpanADL = document.getElementById('simpanADL');
             if (simpanADL) {
                 simpanADL.addEventListener('click', function() {
                     const adlModalTotal = document.getElementById('adlTotal');
                     const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                    
+
                     if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
                         // Update nilai total
                         adlTotal.value = adlModalTotal.value;
-                        
+
                         // Update kesimpulan di form utama
-                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace(
+                            'py-1 px-3 mb-0', '');
                         adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
-                        
+
                         // Tutup modal
                         bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
                     }
                 });
             }
 
+            //Get Value
             const getSelectedADLValues = () => {
                 const makanValue = document.querySelector('input[name="makan"]:checked')?.value || '';
                 const berjalanValue = document.querySelector('input[name="berjalan"]:checked')?.value || '';
                 const mandiValue = document.querySelector('input[name="mandi"]:checked')?.value || '';
-                
+
                 // Map nilai menjadi teks
                 const getTextValue = (value) => {
                     switch (value) {
-                        case '1': return 'Mandiri';
-                        case '2': return '25% Dibantu';
-                        case '3': return '50% Dibantu';
-                        case '4': return '75% Dibantu';
-                        default: return '';
+                        case '1':
+                            return 'Mandiri';
+                        case '2':
+                            return '25% Dibantu';
+                        case '3':
+                            return '50% Dibantu';
+                        case '4':
+                            return '75% Dibantu';
+                        default:
+                            return '';
                     }
                 };
-                
+
                 return {
                     makan: getTextValue(makanValue),
                     makanValue: makanValue,
@@ -931,20 +934,22 @@
                 };
             };
 
+            // Reset form ADL when modal is closed
             const modalADL = document.getElementById('modalADL');
             if (simpanADL) {
                 simpanADL.addEventListener('click', function() {
                     const adlModalTotal = document.getElementById('adlTotal');
                     const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                    
+
                     if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
                         // Update nilai total
                         adlTotal.value = adlModalTotal.value;
-                        
+
                         // Update kesimpulan di form utama
-                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace(
+                            'py-1 px-3 mb-0', '');
                         adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
-                        
+
                         // Simpan nilai-nilai tersembunyi
                         const adlValues = getSelectedADLValues();
                         document.getElementById('adl_makan').value = adlValues.makan;
@@ -953,9 +958,10 @@
                         document.getElementById('adl_berjalan_value').value = adlValues.berjalanValue;
                         document.getElementById('adl_mandi').value = adlValues.mandi;
                         document.getElementById('adl_mandi_value').value = adlValues.mandiValue;
-                        document.getElementById('adl_kesimpulan_value').value = adlModalKesimpulan.textContent;
+                        document.getElementById('adl_kesimpulan_value').value = adlModalKesimpulan
+                            .textContent;
                         document.getElementById('adl_jenis_skala').value = '1'; // 1 untuk ADL
-                        
+
                         // Tutup modal
                         bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
                     }
@@ -1015,6 +1021,204 @@
             updateDischargePlanningConclusion();
 
 
+            //====================================================================================//
+            // Fungsi untuk menampilkan form skala decubitus
+            //====================================================================================//
+            const formNorton = document.getElementById('formNorton');
+            if (formNorton) {
+                formNorton.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => updateDecubitusConclusion('norton'));
+                });
+            }
+            const formBraden = document.getElementById('formBraden');
+            if (formBraden) {
+                formBraden.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => updateDecubitusConclusion('braden'));
+                });
+            }
+
+            const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
+            if (skalaDecubitusSelect && skalaDecubitusSelect.value) {
+                showDecubitusForm(skalaDecubitusSelect.value);
+            }
+
+
+            //====================================================================================//
+            // Fungsi untuk DIAGNOSIS BANDING
+            //====================================================================================//
+            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
+            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
+
+            function initDiagnosisManagement(prefix, hiddenFieldId) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 30px)';
+                suggestionsList.style.display = 'none';
+
+                // Insert suggestions list after input
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Database options
+                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+
+                // Prepare options array
+                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+
+                // Load initial data if available
+                let diagnosisList = [];
+                try {
+                    diagnosisList = JSON.parse(hiddenInput.value) || [];
+                    renderDiagnosisList();
+                } catch (e) {
+                    diagnosisList = [];
+                    updateHiddenInput();
+                }
+
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+
+                    if (inputValue) {
+                        // Filter database options
+                        const filteredOptions = diagnosisOptions.filter(option =>
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+
+                        // Show suggestions
+                        showSuggestions(filteredOptions, inputValue);
+                    } else {
+                        // Hide suggestions if input is empty
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                // Function to show suggestions
+                function showSuggestions(options, inputValue) {
+                    suggestionsList.innerHTML = '';
+
+                    if (options.length > 0) {
+                        // Render existing options
+                        options.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
+                            suggestionItem.textContent = option.text;
+                            suggestionItem.addEventListener('click', () => {
+                                addDiagnosis(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+
+                        // Add option to create new if no exact match
+                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.textContent = `Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addDiagnosis(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.textContent = `Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addDiagnosis(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+
+                // Add diagnosis when plus button is clicked
+                addButton.addEventListener('click', function() {
+                    const diagnosisText = inputField.value.trim();
+                    if (diagnosisText) {
+                        addDiagnosis(diagnosisText);
+                    }
+                });
+
+                // Add diagnosis when Enter key is pressed
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const diagnosisText = this.value.trim();
+                        if (diagnosisText) {
+                            addDiagnosis(diagnosisText);
+                        }
+                    }
+                });
+
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                function addDiagnosis(diagnosisText) {
+                    // Check for duplicates
+                    if (!diagnosisList.includes(diagnosisText)) {
+                        diagnosisList.push(diagnosisText);
+                        inputField.value = '';
+                        renderDiagnosisList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+                    } else {
+                        // Optional: Show feedback that it's a duplicate
+                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
+                    }
+                }
+
+                function renderDiagnosisList() {
+                    listContainer.innerHTML = '';
+
+                    diagnosisList.forEach((diagnosis, index) => {
+                        const diagnosisItem = document.createElement('div');
+                        diagnosisItem.className =
+                            'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+
+                        const diagnosisSpan = document.createElement('span');
+                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm text-danger';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.type = 'button';
+                        deleteButton.addEventListener('click', function() {
+                            diagnosisList.splice(index, 1);
+                            renderDiagnosisList();
+                            updateHiddenInput();
+                        });
+
+                        diagnosisItem.appendChild(diagnosisSpan);
+                        diagnosisItem.appendChild(deleteButton);
+                        listContainer.appendChild(diagnosisItem);
+                    });
+                }
+
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(diagnosisList);
+                }
+            }
 
             //====================================================================================//
         });
@@ -1177,143 +1381,10 @@
         }
 
 
-        //====================================================================================//
-        // Fungsi untuk menampilkan form skala decubitus
-        //====================================================================================//
-        const decubitusScores = {
-            norton: {
-                low: 15,    // > 15 risiko rendah
-                medium: 13,  // 13-14 risiko sedang
-                high: 12     // < 12 risiko tinggi
-            },
-            braden: {
-                high: 12,    // ≤ 12 risiko tinggi
-                medium: 16,  // 13-16 risiko sedang
-                low: 17      // ≥ 17 risiko rendah
-            }
-        };
-
-        function showDecubitusForm(formType) {
-            document.querySelectorAll('.decubitus-form').forEach(form => {
-                form.style.display = 'none';
-            });
-
-            let formElement = null;
-            if (formType === 'norton') {
-                formElement = document.getElementById('formNorton');
-            } else if (formType === 'braden') {
-                formElement = document.getElementById('formBraden');
-            }
-
-            // Tampilkan form yang dipilih
-            if (formElement) {
-                formElement.style.display = 'block';
-                resetDecubitusForm(formElement);
-            }
-        }
-
-        function resetDecubitusForm(form) {
-            if (!form) return;
-            
-            form.querySelectorAll('select').forEach(select => select.value = '');
-            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
-            if (kesimpulanDiv) {
-                kesimpulanDiv.className = 'alert alert-success mb-0 flex-grow-1';
-                kesimpulanDiv.textContent = 'Risiko Rendah';
-            }
-        }
-
-        function updateDecubitusConclusion(formType) {
-            const form = document.getElementById('form' + formType.charAt(0).toUpperCase() + formType.slice(1));
-            if (!form) return;
-
-            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
-            if (!kesimpulanDiv) return;
-
-            if (formType === 'norton') {
-                let total = 0;
-                let allFilled = true;
-                const fields = ['kondisi_fisik', 'kondisi_mental', 'norton_aktivitas', 'norton_mobilitas', 'inkontinensia'];
-
-                fields.forEach(field => {
-                    const select = form.querySelector(`select[name="${field}"]`);
-                    if (!select || !select.value) {
-                        allFilled = false;
-                        return;
-                    }
-                    total += parseInt(select.value);
-                });
-
-                if (!allFilled) {
-                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
-                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
-                    return;
-                }
-
-                let conclusion = '';
-                let alertClass = '';
-
-                // Cek total skor dan tentukan kesimpulan
-                if (total <= decubitusScores.norton.high) {
-                    conclusion = 'Risiko Tinggi';
-                    alertClass = 'alert-danger';
-                } else if (total <= decubitusScores.norton.medium) {
-                    conclusion = 'Risiko Sedang';
-                    alertClass = 'alert-warning';
-                } else {
-                    conclusion = 'Risiko Rendah';
-                    alertClass = 'alert-success';
-                }
-
-                conclusion += ` (Skor: ${total})`;
-                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
-                kesimpulanDiv.textContent = conclusion;
-            }
-            else if (formType === 'braden') {
-                let total = 0;
-                let allFilled = true;
-                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi', 'pergesekan'];
-
-                fields.forEach(field => {
-                    const select = form.querySelector(`select[name="${field}"]`);
-                    if (!select || !select.value) {
-                        allFilled = false;
-                        return;
-                    }
-                    total += parseInt(select.value);
-                });
-
-                if (!allFilled) {
-                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
-                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
-                    return;
-                }
-
-                let conclusion = '';
-                let alertClass = '';
-
-                // Cek total skor dan tentukan kesimpulan
-                if (total <= 12) {
-                    conclusion = 'Risiko Tinggi';
-                    alertClass = 'alert-danger';
-                } else if (total <= 16) {
-                    conclusion = 'Risiko Sedang';
-                    alertClass = 'alert-warning';
-                } else {
-                    conclusion = 'Risiko Rendah';
-                    alertClass = 'alert-success';
-                }
-
-                conclusion += ` (Skor: ${total})`;
-                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
-                kesimpulanDiv.textContent = conclusion;
-            }
-        }
-
-
-        //========================================================================
+        //========================================================================//
         // Event Listener untuk form status gizi
-        //=======================================================================
+        //=======================================================================//
+
         function initializeFormListeners(formId) {
             const form = document.getElementById(formId);
             const selects = form.querySelectorAll('select');
@@ -1323,39 +1394,55 @@
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateMSTScore(form));
                     });
+                    calculateMSTScore(form);
                     break;
                 case 'mna':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateMNAScore(form));
                     });
                     initializeBMICalculation();
+                    calculateMNAScore(form);
                     break;
                 case 'strong-kids':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateStrongKidsScore(form));
                     });
+                    calculateStrongKidsScore(form);
                     break;
                 case 'nrs':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateNRSScore(form));
                     });
+                    calculateNRSScore(form);
                     break;
             }
         }
 
-        function calculateMSTScore() {
-            const form = document.getElementById('mst');
+        // Fungsi perhitungan MST
+        function calculateMSTScore(form) {
+            // Periksa jika form ada
+            if (!form) return;
+
             const selects = form.querySelectorAll('select');
             let total = 0;
+            let allSelected = true;
 
+            // Hitung total skor
             selects.forEach(select => {
-                total += parseInt(select.value || 0);
+                if (select.value === '') {
+                    allSelected = false;
+                } else {
+                    total += parseInt(select.value || 0);
+                }
             });
+
+            // Jika tidak semua field dipilih, jangan update kesimpulan
+            if (!allSelected) return;
 
             const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
             document.getElementById('gizi_mst_kesimpulan').value = kesimpulan;
 
-            const conclusions = form.querySelectorAll('.alert');
+            const conclusions = form.querySelectorAll('.risk-indicators .alert');
             conclusions.forEach(alert => {
                 if ((total <= 1 && alert.classList.contains('alert-success')) ||
                     (total >= 2 && alert.classList.contains('alert-warning'))) {
@@ -1366,6 +1453,7 @@
             });
         }
 
+        // Fungsi perhitungan BMI
         function initializeBMICalculation() {
             const weightInput = document.getElementById('mnaWeight');
             const heightInput = document.getElementById('mnaHeight');
@@ -1388,6 +1476,7 @@
             }
         }
 
+        // Fungsi perhitungan MNA
         function calculateMNAScore(form) {
             const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
             let total = 0;
@@ -1420,6 +1509,7 @@
             }
         }
 
+        // Fungsi perhitungan Strong Kids
         function calculateStrongKidsScore(form) {
             const selects = form.querySelectorAll('select');
             let total = 0;
@@ -1466,6 +1556,7 @@
             updateFormConclusion(form, kesimpulan, type);
         }
 
+        // Fungsi perhitungan NRS
         function calculateNRSScore(form) {
             const selects = form.querySelectorAll('select');
             let total = 0;
@@ -1512,6 +1603,7 @@
             updateFormConclusion(form, kesimpulan, type);
         }
 
+        // Fungsi untuk update tampilan kesimpulan
         function updateFormConclusion(form, text, type) {
             const conclusions = form.querySelectorAll('.alert');
             conclusions.forEach(alert => {
@@ -1572,8 +1664,8 @@
                 if (rmeMasterImplementasi && rmeMasterImplementasi.length > 0) {
                     optionsFromDb = rmeMasterImplementasi
                         .filter(item => item[dbColumn] !== null &&
-                                    item[dbColumn] !== '(N/A)' &&
-                                    item[dbColumn] !== '(Null)')
+                            item[dbColumn] !== '(N/A)' &&
+                            item[dbColumn] !== '(Null)')
                         .map(item => item[dbColumn]);
                 }
 
@@ -1651,7 +1743,8 @@
                             const newOptionItem = document.createElement('div');
                             newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
                             newOptionItem.style.cursor = 'pointer';
-                            newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                            newOptionItem.innerHTML =
+                                `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
                             newOptionItem.addEventListener('click', () => {
                                 addItem(inputValue);
                                 suggestionsList.style.display = 'none';
@@ -1702,9 +1795,9 @@
                 });
 
                 /**
-                * Add item to the list
-                * @param {string} itemText - The text to add
-                */
+                 * Add item to the list
+                 * @param {string} itemText - The text to add
+                 */
                 function addItem(itemText) {
                     // Check for duplicates
                     if (!itemsList.includes(itemText)) {
@@ -1768,14 +1861,15 @@
                 }
 
                 /**
-                * Render items list in the container
-                */
+                 * Render items list in the container
+                 */
                 function renderItemsList() {
                     listContainer.innerHTML = '';
 
                     itemsList.forEach((item, index) => {
                         const itemElement = document.createElement('div');
-                        itemElement.className = 'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-light';
+                        itemElement.className =
+                            'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-light';
 
                         const itemSpan = document.createElement('span');
                         itemSpan.textContent = `${index + 1}. ${item}`;
@@ -1805,191 +1899,171 @@
                 }
 
                 /**
-                * Update hidden input with JSON data
-                */
+                 * Update hidden input with JSON data
+                 */
                 function updateHiddenInput() {
                     hiddenInput.value = JSON.stringify(itemsList);
                 }
             }
         });
 
+
+
         //====================================================================================//
-        // Fungsi untuk DIAGNOSIS BANDING
+        // Fungsi untuk menampilkan form skala decubitus
         //====================================================================================//
-        document.addEventListener('DOMContentLoaded', function() {
-            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
-            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
+        const decubitusScores = {
+            norton: {
+                low: 15, // > 15 risiko rendah
+                medium: 13, // 13-14 risiko sedang
+                high: 12 // < 12 risiko tinggi
+            },
+            braden: {
+                high: 12, // ≤ 12 risiko tinggi
+                medium: 16, // 13-16 risiko sedang
+                low: 17 // ≥ 17 risiko rendah
+            }
+        };
 
-            function initDiagnosisManagement(prefix, hiddenFieldId) {
-                const inputField = document.getElementById(`${prefix}-input`);
-                const addButton = document.getElementById(`add-${prefix}`);
-                const listContainer = document.getElementById(`${prefix}-list`);
-                const hiddenInput = document.getElementById(hiddenFieldId);
-                const suggestionsList = document.createElement('div');
+        // Fungsi untuk menampilkan form decubitus yang dipilih
+        function showDecubitusForm(formType) {
+            document.querySelectorAll('.decubitus-form').forEach(form => {
+                form.style.display = 'none';
+            });
 
-                // Style suggestions list
-                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
-                suggestionsList.style.zIndex = '1000';
-                suggestionsList.style.maxHeight = '200px';
-                suggestionsList.style.overflowY = 'auto';
-                suggestionsList.style.width = 'calc(100% - 30px)';
-                suggestionsList.style.display = 'none';
-                
-                // Insert suggestions list after input
-                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+            let formElement = null;
+            if (formType === 'norton') {
+                formElement = document.getElementById('formNorton');
+            } else if (formType === 'braden') {
+                formElement = document.getElementById('formBraden');
+            }
 
-                // Database options
-                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+            // Tampilkan form yang dipilih
+            if (formElement) {
+                formElement.style.display = 'block';
 
-                // Prepare options array
-                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
-                    id: text.toLowerCase().replace(/\s+/g, '_'),
-                    text: text
-                }));
-                
-                // Load initial data if available
-                let diagnosisList = [];
-                try {
-                    diagnosisList = JSON.parse(hiddenInput.value) || [];
-                    renderDiagnosisList();
-                } catch (e) {
-                    diagnosisList = [];
-                    updateHiddenInput();
-                }
-                
-                // Input event listener for suggestions
-                inputField.addEventListener('input', function() {
-                    const inputValue = this.value.trim().toLowerCase();
-                    
-                    if (inputValue) {
-                        // Filter database options
-                        const filteredOptions = diagnosisOptions.filter(option => 
-                            option.text.toLowerCase().includes(inputValue)
-                        );
-                        
-                        // Show suggestions
-                        showSuggestions(filteredOptions, inputValue);
-                    } else {
-                        // Hide suggestions if input is empty
-                        suggestionsList.style.display = 'none';
-                    }
-                });
-                
-                // Function to show suggestions
-                function showSuggestions(options, inputValue) {
-                    suggestionsList.innerHTML = '';
-                    
-                    if (options.length > 0) {
-                        // Render existing options
-                        options.forEach(option => {
-                            const suggestionItem = document.createElement('div');
-                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
-                            suggestionItem.textContent = option.text;
-                            suggestionItem.addEventListener('click', () => {
-                                addDiagnosis(option.text);
-                                suggestionsList.style.display = 'none';
-                            });
-                            suggestionsList.appendChild(suggestionItem);
-                        });
-                        
-                        // Add option to create new if no exact match
-                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
-                            const newOptionItem = document.createElement('div');
-                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
-                            newOptionItem.textContent = `Tambah "${inputValue}"`;
-                            newOptionItem.addEventListener('click', () => {
-                                addDiagnosis(inputValue);
-                                suggestionsList.style.display = 'none';
-                            });
-                            suggestionsList.appendChild(newOptionItem);
-                        }
-                        
-                        suggestionsList.style.display = 'block';
-                    } else {
-                        // If no options, show add new option
-                        const newOptionItem = document.createElement('div');
-                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
-                        newOptionItem.textContent = `Tambah "${inputValue}"`;
-                        newOptionItem.addEventListener('click', () => {
-                            addDiagnosis(inputValue);
-                            suggestionsList.style.display = 'none';
-                        });
-                        suggestionsList.appendChild(newOptionItem);
-                        suggestionsList.style.display = 'block';
-                    }
-                }
-                
-                // Add diagnosis when plus button is clicked
-                addButton.addEventListener('click', function() {
-                    const diagnosisText = inputField.value.trim();
-                    if (diagnosisText) {
-                        addDiagnosis(diagnosisText);
-                    }
-                });
-                
-                // Add diagnosis when Enter key is pressed
-                inputField.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const diagnosisText = this.value.trim();
-                        if (diagnosisText) {
-                            addDiagnosis(diagnosisText);
-                        }
-                    }
-                });
-                
-                // Close suggestions when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
-                        suggestionsList.style.display = 'none';
-                    }
-                });
-                
-                function addDiagnosis(diagnosisText) {
-                    // Check for duplicates
-                    if (!diagnosisList.includes(diagnosisText)) {
-                        diagnosisList.push(diagnosisText);
-                        inputField.value = '';
-                        renderDiagnosisList();
-                        updateHiddenInput();
-                        suggestionsList.style.display = 'none';
-                    } else {
-                        // Optional: Show feedback that it's a duplicate
-                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
-                    }
-                }
-                
-                function renderDiagnosisList() {
-                    listContainer.innerHTML = '';
-                    
-                    diagnosisList.forEach((diagnosis, index) => {
-                        const diagnosisItem = document.createElement('div');
-                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
-                        
-                        const diagnosisSpan = document.createElement('span');
-                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
-                        
-                        const deleteButton = document.createElement('button');
-                        deleteButton.className = 'btn btn-sm text-danger';
-                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
-                        deleteButton.type = 'button';
-                        deleteButton.addEventListener('click', function() {
-                            diagnosisList.splice(index, 1);
-                            renderDiagnosisList();
-                            updateHiddenInput();
-                        });
-                        
-                        diagnosisItem.appendChild(diagnosisSpan);
-                        diagnosisItem.appendChild(deleteButton);
-                        listContainer.appendChild(diagnosisItem);
-                    });
-                }
-                
-                function updateHiddenInput() {
-                    hiddenInput.value = JSON.stringify(diagnosisList);
+                // Cek apakah form sudah memiliki nilai
+                const hasValues = Array.from(formElement.querySelectorAll('select')).some(select => select.value);
+
+                // Hanya reset jika tidak ada nilai
+                if (!hasValues) {
+                    resetDecubitusForm(formElement);
+                } else {
+                    // Jika sudah ada nilai, update kesimpulan
+                    updateDecubitusConclusion(formType);
                 }
             }
-        });
+        }
+
+
+        // Reset form saat berganti
+        function resetDecubitusForm(form) {
+            if (!form) return;
+
+            form.querySelectorAll('select').forEach(select => select.value = '');
+            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
+            if (kesimpulanDiv) {
+                kesimpulanDiv.className = 'alert alert-success mb-0 flex-grow-1';
+                kesimpulanDiv.textContent = 'Risiko Rendah';
+            }
+        }
+
+        // Update kesimpulan berdasarkan pilihan
+        function updateDecubitusConclusion(formType) {
+            const form = document.getElementById('form' + formType.charAt(0).toUpperCase() + formType.slice(1));
+            if (!form) return;
+
+            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
+            if (!kesimpulanDiv) return;
+
+            if (formType === 'norton') {
+                let total = 0;
+                let allFilled = true;
+                const fields = ['kondisi_fisik', 'kondisi_mental', 'norton_aktivitas', 'norton_mobilitas', 'inkontinensia'];
+
+                fields.forEach(field => {
+                    const select = form.querySelector(`select[name="${field}"]`);
+                    if (!select || !select.value) {
+                        allFilled = false;
+                        return;
+                    }
+                    total += parseInt(select.value);
+                });
+
+                // Debug untuk melihat nilai
+                console.log('Total Score:', total);
+                console.log('All Fields Filled:', allFilled);
+
+                if (!allFilled) {
+                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    return;
+                }
+
+                let conclusion = '';
+                let alertClass = '';
+
+                // Cek total skor dan tentukan kesimpulan
+                if (total <= decubitusScores.norton.high) {
+                    conclusion = 'Risiko Tinggi';
+                    alertClass = 'alert-danger';
+                } else if (total <= decubitusScores.norton.medium) {
+                    conclusion = 'Risiko Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    conclusion = 'Risiko Rendah';
+                    alertClass = 'alert-success';
+                }
+
+                conclusion += ` (Skor: ${total})`;
+                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                kesimpulanDiv.textContent = conclusion;
+            } else if (formType === 'braden') {
+                let total = 0;
+                let allFilled = true;
+                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi',
+                    'pergesekan'
+                ];
+
+                fields.forEach(field => {
+                    const select = form.querySelector(`select[name="${field}"]`);
+                    if (!select || !select.value) {
+                        allFilled = false;
+                        return;
+                    }
+                    total += parseInt(select.value);
+                });
+
+                // Debug untuk melihat nilai
+                console.log('Total Braden Score:', total);
+                console.log('All Braden Fields Filled:', allFilled);
+
+                if (!allFilled) {
+                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    return;
+                }
+
+                let conclusion = '';
+                let alertClass = '';
+
+                // Cek total skor dan tentukan kesimpulan
+                if (total <= 12) {
+                    conclusion = 'Risiko Tinggi';
+                    alertClass = 'alert-danger';
+                } else if (total <= 16) {
+                    conclusion = 'Risiko Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    conclusion = 'Risiko Rendah';
+                    alertClass = 'alert-success';
+                }
+
+                conclusion += ` (Skor: ${total})`;
+                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                kesimpulanDiv.textContent = conclusion;
+            }
+        }
 
         //====================================================================================//
     </script>

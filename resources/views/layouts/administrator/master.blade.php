@@ -63,6 +63,8 @@
         @include('layouts.administrator.footer')
     </div>
 
+    @stack('modals')
+
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
@@ -102,7 +104,7 @@
 
     <!-- js for this page only -->
     @stack('js')
-    @stack('modals')
+
     <!-- ======= -->
 </body>
 

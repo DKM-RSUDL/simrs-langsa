@@ -1137,7 +1137,7 @@
                                         <div class="form-group mb-4">
                                             <select class="form-select" id="skalaRisikoDekubitus"
                                                 name="jenis_skala_dekubitus">
-                                                <option value="" selected disabled>Pilih skala Decubitus</option>
+                                                <option value="" selected disabled>--Pilih Skala--</option>
                                                 <option value="norton">Skala Norton</option>
                                                 <option value="braden">Skala Braden</option>
                                             </select>
@@ -1171,7 +1171,7 @@
 
                                             <div class="mb-4">
                                                 <label class="form-label">Aktivitas</label>
-                                                <select class="form-select bg-light" name="aktivitas">
+                                                <select class="form-select bg-light" name="norton_aktivitas">
                                                     <option value="" selected disabled>--Pilih--</option>
                                                     <option value="4">Aktif</option>
                                                     <option value="3">Jalan dengan bantuan</option>
@@ -1182,7 +1182,7 @@
 
                                             <div class="mb-4">
                                                 <label class="form-label">Mobilitas</label>
-                                                <select class="form-select bg-light" name="mobilitas">
+                                                <select class="form-select bg-light" name="norton_mobilitas">
                                                     <option value="" selected disabled>--Pilih--</option>
                                                     <option value="4">Bebas bergerak</option>
                                                     <option value="3">Agak terbatas</option>
@@ -1215,7 +1215,82 @@
 
                                         <!-- Form Skala Braden -->
                                         <div id="formBraden" class="decubitus-form" style="display: none;">
-                                            <!-- Add Braden scale form fields -->
+                                            <h6 class="mb-4">Penilaian Risiko DECUBITUS Skala Braden</h6>
+                                            <div class="mb-4">
+                                                <label class="form-label">Persepsi Sensori</label>
+                                                <select class="form-select bg-light" name="persepsi_sensori">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Keterbatasan Penuh</option>
+                                                    <option value="2">Sangat Terbatas</option>
+                                                    <option value="3">Keterbatasan Ringan</option>
+                                                    <option value="4">Tidak Ada Gangguan</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Kelembapan</label>
+                                                <select class="form-select bg-light" name="kelembapan">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Selalu Lembap</option>
+                                                    <option value="2">Umumnya Lembap</option>
+                                                    <option value="3">Kadang-Kadang Lembap</option>
+                                                    <option value="4">Jarang Lembap</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Aktivitas</label>
+                                                <select class="form-select bg-light" name="braden_aktivitas">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Total di Tempat Tidur</option>
+                                                    <option value="2">Dapat Duduk</option>
+                                                    <option value="3">Berjalan Kadang-kadang</option>
+                                                    <option value="4">Dapat Berjalan-jalan</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Mobilitas</label>
+                                                <select class="form-select bg-light" name="braden_mobilitas">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Tidak Mampu Bergerak Sama sekali</option>
+                                                    <option value="2">Sangat Terbatas</option>
+                                                    <option value="3">Tidak Ada Masalah</option>
+                                                    <option value="4">Tanpa Keterbatasan</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Nutrisi</label>
+                                                <select class="form-select bg-light" name="nutrisi">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Sangat Buruk</option>
+                                                    <option value="2">Kurang Menucukup</option>
+                                                    <option value="3">Mencukupi</option>
+                                                    <option value="4">Sangat Baik</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Pergesekan dan Pergeseran</label>
+                                                <select class="form-select bg-light" name="pergesekan">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="1">Bermasalah</option>
+                                                    <option value="2">Potensial Bermasalah</option>
+                                                    <option value="3">Keterbatasan Ringan</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mt-4">
+                                                <div class="d-flex gap-2">
+                                                    <span class="fw-bold">Kesimpulan :</span>
+                                                    <div id="kesimpulanNorton"
+                                                        class="alert alert-success mb-0 flex-grow-1">
+                                                        Kesimpulan Skala Braden
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
@@ -1961,27 +2036,18 @@
                                             <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
                                             <select class="form-select" name="bahasa_sehari_hari">
                                                 <option value="" disabled>--Pilih--</option>
-                                                <option value="indonesia" selected>Bahasa Indonesia</option>
-                                                <option value="aceh">Aceh</option>
-                                                <option value="batak">Batak</option>
-                                                <option value="minangkabau">Minangkabau</option>
-                                                <option value="melayu">Melayu</option>
-                                                <option value="sunda">Sunda</option>
-                                                <option value="jawa">Jawa</option>
-                                                <option value="madura">Madura</option>
-                                                <option value="bali">Bali</option>
-                                                <option value="sasak">Sasak</option>
-                                                <option value="banjar">Banjar</option>
-                                                <option value="bugis">Bugis</option>
-                                                <option value="toraja">Toraja</option>
-                                                <option value="makassar">Makassar</option>
-                                                <option value="dayak">Dayak</option>
-                                                <option value="tidung">Tidung</option>
-                                                <option value="ambon">Ambon</option>
-                                                <option value="ternate">Ternate</option>
-                                                <option value="tidore">Tidore</option>
-                                                <option value="papua">Papua</option>
-                                                <option value="asmat">Asmat</option>
+                                                <option value="Bahasa Indoneisa" selected>Bahasa Indonesia</option>
+                                                <option value="Aceh">Aceh</option>
+                                                <option value="Batak">Batak</option>
+                                                <option value="Minangkabau">Minangkabau</option>
+                                                <option value="Melayu">Melayu</option>
+                                                <option value="Sunda">Sunda</option>
+                                                <option value="Jawa">Jawa</option>
+                                                <option value="Madura">Madura</option>
+                                                <option value="Bali">Bali</option>
+                                                <option value="Sasak">Sasak</option>
+                                                <option value="Banjar">Banjar</option>
+                                                <option value="Bugis">Bugis</option>
                                             </select>
                                         </div>
 
@@ -2020,12 +2086,12 @@
                                             <label style="min-width: 200px;">Tingkat Pendidikan</label>
                                             <select class="form-select" name="tingkat_pendidikan">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="sd">SD</option>
-                                                <option value="smp">SMP</option>
-                                                <option value="sma">SMA</option>
-                                                <option value="diploma">Diploma</option>
-                                                <option value="sarjana">Sarjana</option>
-                                                <option value="tidak_sekolah">Tidak Sekolah</option>
+                                                <option value="SD">SD</option>
+                                                <option value="SMP">SMP</option>
+                                                <option value="SMA">SMA</option>
+                                                <option value="Diploma">Diploma</option>
+                                                <option value="Sarjana">Sarjana</option>
+                                                <option value="Tidak Sekolah">Tidak Sekolah</option>
                                             </select>
                                         </div>
                                     </div>
@@ -2137,7 +2203,7 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">15. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">16. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -2192,131 +2258,132 @@
                                         </div>
                                     </div>
 
+                                    <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
+                                        <h5 class="fw-semibold mb-4">17. Implementasi</h5>
 
-                                    <div class="section-separator" id="implementasi">
-                                        <h5 class="section-title">17. Implementasi</h5>
-
-                                        <!-- Rencana Penatalaksanaan -->
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <h6 class="mb-0">Rencana Penatalaksanaan dan Pengobatan</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <!-- Observasi -->
-                                                <div class="border-bottom pb-3 mb-3">
-                                                    <h6 class="mb-2">Observasi</h6>
-                                                    <div class="input-group mb-2">
-                                                        <input type="text" class="form-control" placeholder="Cari dan tambah observasi">
-                                                        <button class="btn btn-outline-primary" type="button">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="list-group">
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span>1. Monitor pola nafas ( frekuensi, kedalaman, usaha nafas )</span>
-                                                            <button class="btn btn-sm btn-link text-danger p-0">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Terapeutik -->
-                                                <div class="border-bottom pb-3 mb-3">
-                                                    <h6 class="mb-2">Terapeutik</h6>
-                                                    <div class="input-group mb-2">
-                                                        <input type="text" class="form-control" placeholder="Cari dan tambah terapeutik">
-                                                        <button class="btn btn-outline-primary" type="button">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="list-group">
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span>1. Berikan minum hangat</span>
-                                                            <button class="btn btn-sm btn-link text-danger p-0">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span>2. Posisikan semi fowler atau fowler</span>
-                                                            <button class="btn btn-sm btn-link text-danger p-0">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Edukasi -->
-                                                <div class="border-bottom pb-3 mb-3">
-                                                    <h6 class="mb-2">Edukasi</h6>
-                                                    <div class="input-group mb-2">
-                                                        <input type="text" class="form-control" placeholder="Cari dan tambah edukasi">
-                                                        <button class="btn btn-outline-primary" type="button">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="list-group">
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span>1. Anjuran asupan cairan 2000 ml/hari</span>
-                                                            <button class="btn btn-sm btn-link text-danger p-0">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Kolaborasi -->
-                                                <div class="mb-0">
-                                                    <h6 class="mb-2">Kolaborasi</h6>
-                                                    <div class="input-group mb-2">
-                                                        <input type="text" class="form-control" placeholder="Cari dan tambah kolaborasi">
-                                                        <button class="btn btn-outline-primary" type="button">
-                                                            <i class="bi bi-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="list-group">
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span>1. Kolaborasi pemberian bronkodilator</span>
-                                                            <button class="btn btn-sm btn-link text-danger p-0">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <!-- Rencana Penatalaksanaan dan Pengobatan -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                                rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
                                         </div>
 
-                                        <!-- Prognosis -->
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6 class="mb-0">Prognosis</h6>
+                                        <!-- Observasi Section -->
+                                        <div class="mb-4">
+                                            <label class="fw-semibold mb-2">Observasi</label>
+                                            <div class="input-group mt-2">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Observasi">
+                                                <span class="input-group-text bg-white" id="add-observasi">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
                                             </div>
-                                            <div class="card-body">
-                                                <div class="input-group mb-2">
-                                                    <input type="text" class="form-control" placeholder="Cari dan tambah prognosis">
-                                                    <button class="btn btn-outline-primary" type="button">
-                                                        <i class="bi bi-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="list-group">
-                                                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <span>1. Memberikan antibiotik intravena sesuai jadwal</span>
-                                                        <button class="btn btn-sm btn-link text-danger p-0">
-                                                            <i class="bi bi-x"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            <div id="observasi-list" class="list-group mb-2 bg-light">
+                                                <!-- Items will be added here dynamically -->
                                             </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="observasi" name="observasi" value="[]">
+                                        </div>
+
+                                        <!-- Terapeutik Section -->
+                                        <div class="mb-4">
+                                            <label class="fw-semibold mb-2">Terapeutik</label>
+                                            <div class="input-group mt-2">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Terapeutik">
+                                                <span class="input-group-text bg-white" id="add-terapeutik">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+                                            <div id="terapeutik-list" class="list-group mb-2">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
+                                        </div>
+
+                                        <!-- Edukasi Section -->
+                                        <div class="mb-4">
+                                            <label class="fw-semibold mb-2">Edukasi</label>
+                                            <div class="input-group mt-2">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Edukasi">
+                                                <span class="input-group-text bg-white" id="add-edukasi">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+                                            <div id="edukasi-list" class="list-group mb-2">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="edukasi" name="edukasi" value="[]">
+                                        </div>
+
+                                        <!-- Kolaborasi Section -->
+                                        <div class="mb-4">
+                                            <label class="fw-semibold mb-2">Kolaborasi</label>
+                                            <div class="input-group mt-2">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Kolaborasi">
+                                                <span class="input-group-text bg-white" id="add-kolaborasi">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+                                            <div id="kolaborasi-list" class="list-group mb-2">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
+                                        </div>
+
+                                        <!-- Kolaborasi Section -->
+                                        <div class="mb-4">
+                                            <label class="text-primary fw-semibold">Prognosis</label>
+                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                                keterangan
+                                                Prognosis yang tidak ditemukan.</small>
+                                                <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="bi bi-search text-secondary"></i>
+                                                </span>
+                                                <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
+                                                    placeholder="Cari dan tambah Rencana Penatalaksanaan">
+                                                <span class="input-group-text bg-white" id="add-rencana">
+                                                    <i class="bi bi-plus-circle text-primary"></i>
+                                                </span>
+                                            </div>
+
+                                            <div id="rencana-list" class="list-group mb-3">
+                                                <!-- Items will be added here dynamically -->
+                                            </div>
+                                            <!-- Hidden input to store JSON data -->
+                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                         </div>
                                     </div>
+                                
 
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
-                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
 
                                     <div class="section-separator" id="evaluasi">
                                         <h5 class="section-title">18. Evaluasi</h5>
