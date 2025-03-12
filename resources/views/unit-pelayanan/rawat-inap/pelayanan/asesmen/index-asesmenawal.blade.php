@@ -84,7 +84,7 @@
 ]) }}">Mata/Opthamologi</a>
                     </li>
                     <li><a class="custom__dropdown__item" href="#">Paru</a></li>
-                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.neurologi.index', [
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.neurologi.index', [
     'kd_unit' => request()->route('kd_unit'),
     'kd_pasien' => request()->route('kd_pasien'),
     'tgl_masuk' => request()->route('tgl_masuk'),
@@ -182,6 +182,16 @@
                 </a>
 
                 <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                @elseif($item->kategori == 1 && $item->sub_kategori == 3)
+                <a href="{{ route('rawat-inap.asesmen.medis.neurologi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-info">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </a>
+
+                <a href="{{ route('rawat-inap.asesmen.medis.neurologi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                     class="btn btn-sm btn-secondary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
