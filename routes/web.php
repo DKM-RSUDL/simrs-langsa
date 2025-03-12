@@ -394,6 +394,20 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            // neurologi
+                                            Route::prefix('neurologi')->group(function () {
+                                                Route::name('.neurologi')->group(function () {
+                                                    Route::controller(NeurologiController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
                                         });
                                     });
 
@@ -448,17 +462,6 @@ Route::middleware('auth')->group(function () {
                                                 });
                                             });
                                         });
-                                    });
-                                });
-                            });
-
-                            // neurologi
-                            Route::prefix('neurologi')->group(function () {
-                                Route::name('.neurologi')->group(function () {
-                                    Route::controller(NeurologiController::class)->group(function () {
-                                        Route::get('/', 'index')->name('.index');
-                                        Route::post('/', 'store')->name('.store');
-                                        Route::put('/', 'update')->name('.update');
                                     });
                                 });
                             });
