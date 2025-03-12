@@ -658,7 +658,11 @@ Route::middleware('auth')->group(function () {
                                 // klinik
                                 Route::controller(ForensikKlinikController::class)->group(function () {
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
                                     Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
 
                                 // patologi
