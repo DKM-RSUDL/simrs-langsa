@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan\Forensik;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\MrItemFisik;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,8 +15,8 @@ class ForensikKlinikController extends Controller
     public function index()
     {
         $unit = Unit::with(['bagian'])
-        ->whereIn('kd_unit', ['228', '76'])
-        ->get();
+            ->whereIn('kd_unit', ['228', '76'])
+            ->get();
 
         return view('unit-pelayanan.forensik.create', compact('unit'));
     }
@@ -24,7 +25,7 @@ class ForensikKlinikController extends Controller
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
@@ -41,15 +42,21 @@ class ForensikKlinikController extends Controller
             abort(404, 'Data not found');
         }
 
+        $itemFisik = MrItemFisik::orderby('urut')->get();
+
+
         return view(
             'unit-pelayanan.forensik.pelayanan.create',
             compact(
                 'dataMedis',
-                'kd_unit',
-                'kd_pasien',
-                'tgl_masuk',
-                'urut_masuk'
+                'itemFisik'
             )
         );
+    }
+
+
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        dd($request);
     }
 }

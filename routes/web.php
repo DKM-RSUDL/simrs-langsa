@@ -655,7 +655,13 @@ Route::middleware('auth')->group(function () {
                         Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                             Route::name('.pelayanan')->group(function () {
                                 Route::get('/', [ForensikController::class, 'pelayanan']);
-                                Route::get('/create', [ForensikKlinikController::class, 'create'])->name('.create');
+                                // klinik
+                                Route::controller(ForensikKlinikController::class)->group(function () {
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                });
+
+                                // patologi
                                 Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
                             });
                         });

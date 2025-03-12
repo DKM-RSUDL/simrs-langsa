@@ -122,7 +122,6 @@ class AsesmenKepThtController extends Controller
 
                     if ($path) {
                         return $path;
-
                     }
                 } catch (\Exception $e) {
                     throw new \Exception("Gagal mengupload file {$fieldName}");
@@ -417,8 +416,8 @@ class AsesmenKepThtController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-                $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
-                $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
+            $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
+            $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
                 'asesmen',
@@ -511,58 +510,58 @@ class AsesmenKepThtController extends Controller
             ];
 
             // Array untuk menyimpan path file yang berhasil diupload
-        $uploadedFiles = [];
+            $uploadedFiles = [];
 
-        // Fungsi helper untuk upload file
-        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
-            if ($request->hasFile($fieldName)) {
-                try {
-                    $file = $request->file($fieldName);
-                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
 
-                    if ($path) {
-                        return $path;
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
                     }
-                } catch (\Exception $e) {
-                    throw new \Exception("Gagal mengupload file {$fieldName}");
                 }
-            }
-            return null;
-        };
+                return null;
+            };
 
-        $fileFields = [
-            'hasil_pemeriksaan_penunjang_darah',
-            'hasil_pemeriksaan_penunjang_urine',
-            'hasil_pemeriksaan_penunjang_rontgent',
-            'hasil_pemeriksaan_penunjang_histopatology'
-        ];
+            $fileFields = [
+                'hasil_pemeriksaan_penunjang_darah',
+                'hasil_pemeriksaan_penunjang_urine',
+                'hasil_pemeriksaan_penunjang_rontgent',
+                'hasil_pemeriksaan_penunjang_histopatology'
+            ];
 
-        foreach ($fileFields as $field) {
-            if ($request->has("delete_$field")) {
-                if ($asesmenThtDataMasuk->$field) {
-                    Storage::disk('public')->delete(
-                        "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
-                    );
-                    $asesmenThtDataMasuk->$field = null;
-                }
-            } elseif ($request->hasFile($field)) {
-                try {
+            foreach ($fileFields as $field) {
+                if ($request->has("delete_$field")) {
                     if ($asesmenThtDataMasuk->$field) {
                         Storage::disk('public')->delete(
                             "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
                         );
+                        $asesmenThtDataMasuk->$field = null;
                     }
+                } elseif ($request->hasFile($field)) {
+                    try {
+                        if ($asesmenThtDataMasuk->$field) {
+                            Storage::disk('public')->delete(
+                                "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
+                            );
+                        }
 
-                    $path = $uploadFile($field);
-                    if ($path) {
-                        $asesmenThtDataMasuk->$field = basename($path);
-                        $uploadedFiles[$field] = $path;
+                        $path = $uploadFile($field);
+                        if ($path) {
+                            $asesmenThtDataMasuk->$field = basename($path);
+                            $uploadedFiles[$field] = $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
                     }
-                } catch (\Exception $e) {
-                    throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
                 }
             }
-        }
             $asesmenThtDataMasuk->save();
 
             $asesmenThtPemeriksaanFisik = RmeAsesmenThtPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmenTht->id]);
@@ -842,11 +841,11 @@ class AsesmenKepThtController extends Controller
             ])->where('id', $id)->first();
 
             $dataMedis = Kunjungan::with('pasien')
-                        ->where('kd_unit', $kd_unit)
-                        ->where('kd_pasien', $kd_pasien)
-                        ->where('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
 
             $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
                 'asesmen'    => $asesmenTht ?? null,
