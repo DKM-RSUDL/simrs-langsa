@@ -218,7 +218,7 @@
                 <th>Tindakan</th>
                 <td>
                     <ul>
-                        @if (!empty($labor))
+                        @if (count($labor) > 0)
                             <li>
                                 <p><strong>Lab Test</strong></p>
                                 <ol>
@@ -233,7 +233,7 @@
                             </li>
                         @endif
 
-                        @if (!empty($radiologi))
+                        @if (count($radiologi) > 0)
                             <li>
                                 <p><strong>Rad Test</strong></p>
                                 <ol>
@@ -248,7 +248,7 @@
                             </li>
                         @endif
 
-                        @if (!empty($tindakan))
+                        @if (count($tindakan) > 0)
                             <li>
                                 <p><strong>Lainnya</strong></p>
                                 <ol>
@@ -304,6 +304,53 @@
                 <tr>
                     <th>Kondisi Pulang</th>
                     <td>{{ kondisiPulangLabel($resume->rmeResumeDet->kondisi_pulang) }}</td>
+                </tr>
+            @endif
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 5)
+                <tr>
+                    <th>Tujuan Rujuk</th>
+                    <td>{{ $resume->rmeResumeDet->rs_rujuk }}</td>
+                </tr>
+                <tr>
+                    <th>Alasan Rujuk</th>
+                    <td>{{ alasanRujukLabel($resume->rmeResumeDet->alasan_rujuk) }}</td>
+                </tr>
+                <tr>
+                    <th>Transportasi Rujuk</th>
+                    <td>{{ transportasiRujukLabel($resume->rmeResumeDet->transportasi_rujuk) }}</td>
+                </tr>
+            @endif
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 8)
+                <tr>
+                    <th>Tanggal</th>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_rajal)) }}</td>
+                </tr>
+                <tr>
+                    <th>Poli</th>
+                    <td>{{ $resume->rmeResumeDet->unitRajal->nama_unit }}</td>
+                </tr>
+            @endif
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 9)
+                <tr>
+                    <th>Alasan</th>
+                    <td>{{ $resume->rmeResumeDet->alasan_menolak_inap }}</td>
+                </tr>
+            @endif
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 10)
+                <tr>
+                    <th>Waktu</th>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal)) . ' WIB' }}</td>
+                </tr>
+            @endif
+
+            @if ($resume->rmeResumeDet->tindak_lanjut_code == 11)
+                <tr>
+                    <th>Waktu</th>
+                    <td>{{ date('d/m/Y', strtotime($resume->rmeResumeDet->tgl_meninggal_doa)) . ' ' . date('H:i', strtotime($resume->rmeResumeDet->jam_meninggal_doa)) . ' WIB' }}</td>
                 </tr>
             @endif
         </table>

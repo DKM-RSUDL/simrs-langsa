@@ -46,4 +46,9 @@ class RmeResumeDtl extends Model
     {
         return $this->belongsTo(Unit::class, 'unit_rujuk_internal', 'kd_unit');
     }
+
+    public function unitRajal()
+    {
+        return $this->belongsTo(Unit::class, 'unit_rajal', 'kd_unit');
+    }
 }

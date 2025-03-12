@@ -226,7 +226,7 @@
 @push('js')
     <script>
         let pelayananUrl = "{{ url('unit-pelayanan/rawat-jalan/unit') }}/";
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
 
@@ -268,9 +268,9 @@
                                     <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm m-2">
                                         <i class="ti-pencil-alt"></i>
                                     </a>
-                                    
+
                                     <div class="dropdown ms-2">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
 
