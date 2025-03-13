@@ -29,6 +29,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as Gawa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -512,8 +513,13 @@ Route::middleware('auth')->group(function () {
                         // rujuk route
                         Route::prefix('{urut_masuk}/rujuk-antar-rs')->group(function () {
                             Route::name('rujuk-antar-rs')->group(function () {
-                                Route::controller(GawatDaruratController::class)->group(function () {
-                                    Route::get('/', 'rujukAntarRs');
+                                Route::controller(RujukController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
                                 });
                             });
                         });
