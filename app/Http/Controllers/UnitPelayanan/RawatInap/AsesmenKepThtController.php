@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenKepThtController extends Controller
 {
@@ -113,15 +114,14 @@ class AsesmenKepThtController extends Controller
         $uploadedFiles = [];
 
         // Fungsi helper untuk upload file
-        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles) {
+        $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
             if ($request->hasFile($fieldName)) {
                 try {
                     $file = $request->file($fieldName);
-                    $path = $file->store('uploads/gawat-inap/asesmen-tht', 'public');
+                    $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
 
                     if ($path) {
-                        $uploadedFiles[] = $path;
-                        return basename($path);
+                        return $path;
                     }
                 } catch (\Exception $e) {
                     throw new \Exception("Gagal mengupload file {$fieldName}");
@@ -416,12 +416,13 @@ class AsesmenKepThtController extends Controller
                 ->where('urut_masuk', $urut_masuk)
                 ->firstOrFail();
 
-            // dd($asesmen);
-            // dd($dataMedis);
+            $itemFisikIds = $asesmen->pemeriksaanFisik->pluck('id_item_fisik')->unique()->toArray();
+            $itemFisik = MrItemFisik::whereIn('id', $itemFisikIds)->orderBy('urut')->get();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.show', compact(
                 'asesmen',
-                'dataMedis'
+                'dataMedis',
+                'itemFisik'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -508,25 +509,54 @@ class AsesmenKepThtController extends Controller
                 'hasil_pemeriksaan_penunjang_histopatology'
             ];
 
-            foreach ($fileFields as $field) {
-                // Jika ada request hapus file
-                if ($request->has("delete_$field")) {
-                    if ($asesmenThtDataMasuk->$field) {
-                        Storage::disk('public')->delete('uploads/gawat-inap/asesmen-tht/' . $asesmenThtDataMasuk->$field);
-                        $asesmenThtDataMasuk->$field = null;
+            // Array untuk menyimpan path file yang berhasil diupload
+            $uploadedFiles = [];
+
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
                     }
                 }
-                // file baru diupload
-                elseif ($request->hasFile($field)) {
+                return null;
+            };
+
+            $fileFields = [
+                'hasil_pemeriksaan_penunjang_darah',
+                'hasil_pemeriksaan_penunjang_urine',
+                'hasil_pemeriksaan_penunjang_rontgent',
+                'hasil_pemeriksaan_penunjang_histopatology'
+            ];
+
+            foreach ($fileFields as $field) {
+                if ($request->has("delete_$field")) {
+                    if ($asesmenThtDataMasuk->$field) {
+                        Storage::disk('public')->delete(
+                            "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
+                        );
+                        $asesmenThtDataMasuk->$field = null;
+                    }
+                } elseif ($request->hasFile($field)) {
                     try {
-                        // Hapus file lama jika ada
                         if ($asesmenThtDataMasuk->$field) {
-                            Storage::disk('public')->delete('uploads/gawat-inap/asesmen-tht/' . $asesmenThtDataMasuk->$field);
+                            Storage::disk('public')->delete(
+                                "uploads/ranap/asesmen-tht/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $asesmenThtDataMasuk->$field
+                            );
                         }
 
-                        // Upload file baru menggunakan store()
-                        $path = $request->file($field)->store('uploads/gawat-inap/asesmen-tht', 'public');
-                        $asesmenThtDataMasuk->$field = basename($path);
+                        $path = $uploadFile($field);
+                        if ($path) {
+                            $asesmenThtDataMasuk->$field = basename($path);
+                            $uploadedFiles[$field] = $path;
+                        }
                     } catch (\Exception $e) {
                         throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
                     }
@@ -794,6 +824,55 @@ class AsesmenKepThtController extends Controller
             ])->with(['success' => 'Berhasil mengupdate asesmen THT!']);
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmenTht = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenTht',
+                'rmeAsesmenThtPemeriksaanFisik',
+                'pemeriksaanFisik',
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi',
+                'rmeAsesmenThtDischargePlanning',
+                'rmeAsesmenThtDiagnosisImplementasi',
+            ])->where('id', $id)->first();
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-tht.print', [
+                'asesmen'    => $asesmenTht ?? null,
+                'pasien' => optional($dataMedis)->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
+                // variabel lainnya sesuai kebutuhan
+                'rmeAsesmenTht'                     => optional($asesmenTht)->rmeAsesmenTht ?? null,
+                'rmeAsesmenThtPemeriksaanFisik'     => optional($asesmenTht)->rmeAsesmenThtPemeriksaanFisik ?? null,
+                'pemeriksaanFisik'                  => optional($asesmenTht)->pemeriksaanFisik ?? null,
+                'rmeAsesmenThtRiwayatKesehatanObatAlergi' => optional($asesmenTht)->rmeAsesmenThtRiwayatKesehatanObatAlergi ?? null,
+                'rmeAsesmenThtDischargePlanning'    => optional($asesmenTht)->rmeAsesmenThtDischargePlanning ?? null,
+                'rmeAsesmenThtDiagnosisImplementasi' => optional($asesmenTht)->rmeAsesmenThtDiagnosisImplementasi ?? null,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-tht-{$id}-print-pdf.pdf");
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

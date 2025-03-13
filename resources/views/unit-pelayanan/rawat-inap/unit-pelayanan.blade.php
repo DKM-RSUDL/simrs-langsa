@@ -93,6 +93,37 @@
                 text-decoration: none;
                 color: #000;
             }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu>.dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+            }
+
+            .dropdown-submenu:hover>.dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle {
+                position: relative;
+                padding-right: 30px;
+            }
+
+            .dropdown-submenu>a.dropdown-toggle::after {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .dropdown-submenu:hover>a.dropdown-toggle::after {
+                transform: translateY(-50%) rotate(-90deg);
+            }
         </style>
     @endpush
 
@@ -171,7 +202,7 @@
                                         </a>
 
                                         <div class="dropdown ms-1">
-                                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
                                                     <i class="bi bi-three-dots"></i>
                                                 </button>
 
@@ -285,6 +316,15 @@
                 autoWidth: false,
                 responsive: true,
             });
+
+            $('.dropdown-submenu').hover(
+                function() {
+                    $(this).find('.dropdown-menu').addClass('show');
+                },
+                function() {
+                    $(this).find('.dropdown-menu').removeClass('show');
+                }
+            );
         });
     </script>
 @endpush

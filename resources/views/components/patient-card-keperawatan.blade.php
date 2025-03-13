@@ -35,59 +35,60 @@
         <ol class="list-group list-group-flush assessment-list">
             <li class="list-group-item d-flex align-items-center">
                 <a href="#status-airway" class="text-decoration-none assessment-link">1. Status Air way</a>
-                <i class="ti-check-box text-success ms-auto"></i>
+                <!-- Ikon check akan ditambahkan secara dinamis jika section terisi -->
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-breathing" class="text-decoration-none assessment-link">2. Status Breathing</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-circulation" class="text-decoration-none assessment-link">3. Status Circulation</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-disability" class="text-decoration-none assessment-link">4. Status Disability</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-exposure" class="text-decoration-none assessment-link">5. Status Exposure</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#skala-nyeri" class="text-decoration-none assessment-link">6. Skala Nyeri</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#risiko-jatuh" class="text-decoration-none assessment-link">7. Risiko Jatuh</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-psikologis" class="text-decoration-none assessment-link">8. Status Psikologis</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-spiritual" class="text-decoration-none assessment-link">9. Status Spiritual</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-sosial" class="text-decoration-none assessment-link">10. Status Sosial Ekonomi</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-gizi" class="text-decoration-none assessment-link">11. Status Gizi</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#status-fungsional" class="text-decoration-none assessment-link">12. Status Fungsional</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#edukasi" class="text-decoration-none assessment-link">13. Edukasi</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#discharge-planning" class="text-decoration-none assessment-link">14. Discharge Planning</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#masalah-keperawatan" class="text-decoration-none assessment-link">15. Masalah Keperawatan</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#implementasi" class="text-decoration-none assessment-link">16. Implementasi</a>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex align-items-center">
                 <a href="#evaluasi" class="text-decoration-none assessment-link">17. Evaluasi</a>
             </li>
         </ol>
     </div>
 </div>
+
 
 @push('css')
     <style>

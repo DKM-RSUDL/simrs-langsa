@@ -282,4 +282,48 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenKepPerinatologyRencanaPulang::class, 'id_asesmen', 'id');
     }
+
+    // asesmenObstetri
+    public function asesmenObstetri()
+    {
+        return $this->hasOne(RmeAsesmenObstetri::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriPemeriksaanFisik()
+    {
+        return $this->hasOne(RmeAsesmenObstetriPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenObstetriStatusNyeri::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriRiwayatKesehatan()
+    {
+        return $this->hasOne(RmeAsesmenObstetriRiwayatKesehatan::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriDischargePlanning()
+    {
+        return $this->hasOne(RmeAsesmenObstetriDischargePlanning::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenObstetriDiagnosisImplementasi()
+    {
+        return $this->hasOne(RmeAsesmenObstetriDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
+
+    // asesmen neurologi
+    public function rmeAsesmenNeurologi()
+    {
+        return $this->hasOne(RmeAsesmenNeurologi::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenNeurologiSistemSyaraf()
+    {
+        return $this->hasOne(RmeAsesmenNeurologiSistemSyaraf::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenNeurologiIntensitasNyeri()
+    {
+        return $this->hasOne(RmeAsesmenNeurologiIntensitasNyeri::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenNeurologiDischargePlanning()
+    {
+        return $this->hasOne(RmeAsesmenNeurologiDischargePlanning::class, 'id_asesmen', 'id');
+    }
 }

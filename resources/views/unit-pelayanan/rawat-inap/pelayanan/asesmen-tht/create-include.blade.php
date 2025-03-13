@@ -148,16 +148,17 @@
             position: relative;
             display: inline-block;
         }
+
     </style>
 @endpush
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             //------------------------------------------------------------//
             // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
             document.querySelectorAll('.tambah-keterangan').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const keteranganDiv = document.getElementById(targetId);
                     const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
@@ -175,7 +176,7 @@
 
             // Event handler untuk checkbox normal
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                checkbox.addEventListener('change', function () {
+                checkbox.addEventListener('change', function() {
                     const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
                         '.keterangan');
                     if (this.checked) {
@@ -202,7 +203,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function () {
+                skalaSelect.addEventListener('change', function() {
                     const selectedValue = this.value;
                     console.log('Selected value:', selectedValue); // Debug log
 
@@ -276,7 +277,7 @@
                     form.style.display = 'none';
                 });
 
-                skalaSelect.addEventListener('change', function () {
+                skalaSelect.addEventListener('change', function() {
                     const selectedValue = this.value;
 
                     // Hide all forms
@@ -366,7 +367,7 @@
                     });
                 }
 
-                btnKondisiPsikologis.addEventListener('click', function (e) {
+                btnKondisiPsikologis.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -396,7 +397,7 @@
                 });
 
                 document.querySelectorAll('.kondisi-options .form-check-input').forEach(checkbox => {
-                    checkbox.addEventListener('change', function () {
+                    checkbox.addEventListener('change', function() {
                         if (this.checked) {
                             selectedItems.add(this.value);
                         } else {
@@ -406,7 +407,7 @@
                     });
                 });
 
-                selectedKondisiPsikologis.addEventListener('click', function (e) {
+                selectedKondisiPsikologis.addEventListener('click', function(e) {
                     if (e.target.classList.contains('remove-item')) {
                         const value = e.target.dataset.value;
                         selectedItems.delete(value);
@@ -416,7 +417,7 @@
                     }
                 });
 
-                document.addEventListener('click', function (e) {
+                document.addEventListener('click', function(e) {
                     if (!dropdownKondisiPsikologis.contains(e.target) && e.target !==
                         btnKondisiPsikologis) {
                         dropdownKondisiPsikologis.style.display = 'none';
@@ -493,7 +494,7 @@
 
 
         // 7. Hasil Pemeriksaan Penunjang
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const maxFileSize = 2 * 1024 * 1024; // 2MB
             const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 
@@ -565,13 +566,13 @@
 
             // Event listener untuk file inputs
             document.querySelectorAll('input[type="file"]').forEach(input => {
-                input.addEventListener('change', function () {
+                input.addEventListener('change', function() {
                     previewFile(this);
                 });
             });
 
             // Event listener untuk tombol clear
-            document.addEventListener('click', function (e) {
+            document.addEventListener('click', function(e) {
                 if (e.target.closest('.clear-file')) {
                     const btn = e.target.closest('.clear-file');
                     const inputId = btn.dataset.input;
@@ -587,7 +588,7 @@
         });
 
         // 8. Discharge Planning
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const lamaDirawatInput = document.getElementById('lamaDirawat');
             const rencanaPulangInput = document.getElementById('rencanaPulang');
 
@@ -602,7 +603,7 @@
             const dpKesimpulanHidden = document.getElementById('dp_kesimpulan_hidden');
 
             // Update rencana pulang date
-            lamaDirawatInput.addEventListener('change', function () {
+            lamaDirawatInput.addEventListener('change', function() {
                 updateRencanaPulang();
             });
 
@@ -617,7 +618,11 @@
                     const futureDate = new Date(today);
                     futureDate.setDate(today.getDate() + days);
 
-                    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                    const options = {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    };
                     rencanaPulangInput.value = futureDate.toLocaleDateString('id-ID', options);
                 }
             }
@@ -662,7 +667,8 @@
                     }
 
                     conclusionSection.style.backgroundColor = '#fff3cd';
-                    conclusionText.innerHTML = 'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
+                    conclusionText.innerHTML =
+                        'Pasien membutuhkan rencana pulang khusus. Rekomendasi: konsultasi dengan tim multidisiplin, edukasi keluarga, dan pengaturan kunjungan lanjutan.';
                 } else {
                     needSpecialPlanAlert.style.display = 'none';
                     noSpecialPlanAlert.style.display = 'block';
@@ -676,7 +682,8 @@
                     }
 
                     conclusionSection.style.backgroundColor = '#d1e7dd';
-                    conclusionText.innerHTML = 'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
+                    conclusionText.innerHTML =
+                        'Pasien tidak membutuhkan rencana pulang khusus. Pasien dapat menjalani prosedur pemulangan standar.';
                 }
             }
 
@@ -694,13 +701,13 @@
 
             function setupReadonlyRadios() {
                 // Mencegah perubahan manual pada radio button
-                needSpecialRadio.addEventListener('click', function (e) {
+                needSpecialRadio.addEventListener('click', function(e) {
                     if (!this.checked) {
                         e.preventDefault();
                     }
                 });
 
-                noSpecialRadio.addEventListener('click', function (e) {
+                noSpecialRadio.addEventListener('click', function(e) {
                     if (!this.checked) {
                         e.preventDefault();
                     }
@@ -712,7 +719,7 @@
         });
 
         // 9. Diagnosis Diagnosis Banding
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
             initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
 
@@ -754,7 +761,7 @@
                 }
 
                 // Input event listener for suggestions
-                inputField.addEventListener('input', function () {
+                inputField.addEventListener('input', function() {
                     const inputValue = this.value.trim().toLowerCase();
 
                     if (inputValue) {
@@ -816,7 +823,7 @@
                 }
 
                 // Add diagnosis when plus button is clicked
-                addButton.addEventListener('click', function () {
+                addButton.addEventListener('click', function() {
                     const diagnosisText = inputField.value.trim();
                     if (diagnosisText) {
                         addDiagnosis(diagnosisText);
@@ -824,7 +831,7 @@
                 });
 
                 // Add diagnosis when Enter key is pressed
-                inputField.addEventListener('keypress', function (e) {
+                inputField.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         const diagnosisText = this.value.trim();
@@ -835,7 +842,7 @@
                 });
 
                 // Close suggestions when clicking outside
-                document.addEventListener('click', function (e) {
+                document.addEventListener('click', function(e) {
                     if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
                         suggestionsList.style.display = 'none';
                     }
@@ -860,7 +867,8 @@
 
                     diagnosisList.forEach((diagnosis, index) => {
                         const diagnosisItem = document.createElement('div');
-                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+                        diagnosisItem.className =
+                            'diagnosis-item d-flex justify-content-between align-items-center mb-2';
 
                         const diagnosisSpan = document.createElement('span');
                         diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
@@ -869,7 +877,7 @@
                         deleteButton.className = 'btn btn-sm text-danger';
                         deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
                         deleteButton.type = 'button';
-                        deleteButton.addEventListener('click', function () {
+                        deleteButton.addEventListener('click', function() {
                             diagnosisList.splice(index, 1);
                             renderDiagnosisList();
                             updateHiddenInput();
@@ -928,8 +936,8 @@
                 if (rmeMasterImplementasi && rmeMasterImplementasi.length > 0) {
                     optionsFromDb = rmeMasterImplementasi
                         .filter(item => item[dbColumn] !== null &&
-                                    item[dbColumn] !== '(N/A)' &&
-                                    item[dbColumn] !== '(Null)')
+                            item[dbColumn] !== '(N/A)' &&
+                            item[dbColumn] !== '(Null)')
                         .map(item => item[dbColumn]);
                 }
 
@@ -1007,7 +1015,8 @@
                             const newOptionItem = document.createElement('div');
                             newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
                             newOptionItem.style.cursor = 'pointer';
-                            newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                            newOptionItem.innerHTML =
+                                `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
                             newOptionItem.addEventListener('click', () => {
                                 addItem(inputValue);
                                 suggestionsList.style.display = 'none';
@@ -1058,9 +1067,9 @@
                 });
 
                 /**
-                * Add item to the list
-                * @param {string} itemText - The text to add
-                */
+                 * Add item to the list
+                 * @param {string} itemText - The text to add
+                 */
                 function addItem(itemText) {
                     // Check for duplicates
                     if (!itemsList.includes(itemText)) {
@@ -1124,14 +1133,15 @@
                 }
 
                 /**
-                * Render items list in the container
-                */
+                 * Render items list in the container
+                 */
                 function renderItemsList() {
                     listContainer.innerHTML = '';
 
                     itemsList.forEach((item, index) => {
                         const itemElement = document.createElement('div');
-                        itemElement.className = 'list-group-item d-flex justify-content-between align-items-center border-0 ps-0';
+                        itemElement.className =
+                            'list-group-item d-flex justify-content-between align-items-center border-0 ps-0';
 
                         const itemSpan = document.createElement('span');
                         itemSpan.textContent = `${index + 1}. ${item}`;
@@ -1161,12 +1171,14 @@
                 }
 
                 /**
-                * Update hidden input with JSON data
-                */
+                 * Update hidden input with JSON data
+                 */
                 function updateHiddenInput() {
                     hiddenInput.value = JSON.stringify(itemsList);
                 }
             }
         });
+
+
     </script>
 @endpush

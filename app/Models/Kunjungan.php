@@ -60,7 +60,8 @@ class Kunjungan extends Model
         'rujukan_ket',
         'status_inap',
         'status_kunjungan',
-        'triase_id'
+        'triase_id',
+        'user_create'
     ];
 
     public function pasien()
@@ -91,8 +92,8 @@ class Kunjungan extends Model
     public function getVitalSign()
     {
         return $this->hasOne(DataTriase::class, 'kd_pasien_triase', 'kd_pasien')
-                    ->whereNull('id_asesmen')  
-                    ->latest('tanggal_triase'); 
+            ->whereNull('id_asesmen')
+            ->latest('tanggal_triase');
     }
 
     // public function resep()
