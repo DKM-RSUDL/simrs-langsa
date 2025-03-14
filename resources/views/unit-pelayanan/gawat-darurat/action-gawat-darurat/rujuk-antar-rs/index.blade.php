@@ -169,7 +169,7 @@
         // Konfirmasi hapus dengan SweetAlert
         $(document).on('click', '.delete-btn', function() {
             const form = $(this).closest('form');
-            const tanggal = form.closest('tr').find('td:first-child').text().trim(); // Ambil tanggal dari baris
+            const tanggal = form.closest('tr').find('td:first-child').text().trim();
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
@@ -180,10 +180,10 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, hapus!',
                 cancelButtonText: 'Batal',
-                reverseButtons: true // Membalikkan posisi tombol untuk UX yang lebih baik
+                reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit(); // Submit form jika dikonfirmasi
+                    form.submit();
                     Swal.fire({
                         title: 'Terhapus!',
                         text: 'Data rujukan telah berhasil dihapus.',
