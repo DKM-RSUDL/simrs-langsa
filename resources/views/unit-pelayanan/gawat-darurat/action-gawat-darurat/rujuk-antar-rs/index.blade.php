@@ -75,6 +75,8 @@
                         @forelse($rujukan ?? [] as $r)
                             <tr>
                                 <td>
+                                    {{-- {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
+                                    {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }} --}}
                                     {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
                                     {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }}
                                 </td>

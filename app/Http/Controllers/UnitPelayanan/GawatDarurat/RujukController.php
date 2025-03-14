@@ -27,10 +27,9 @@ class RujukController extends Controller
 
         // Get existing rujukan data for this patient
         $rujukan = RmeRujukKeluar::where('kd_pasien', $kd_pasien)
-                ->where('urut_masuk', $urut_masuk)
-                ->orderBy('tanggal', 'desc')
-                ->orderBy('jam', 'desc')
-                ->orderBy('id', 'desc')
+        ->where('urut_masuk', $urut_masuk)
+        ->orderBy('tanggal', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis', 'rujukan'));
