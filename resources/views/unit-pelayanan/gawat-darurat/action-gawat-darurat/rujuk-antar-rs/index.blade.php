@@ -75,8 +75,6 @@
                         @forelse($rujukan ?? [] as $r)
                             <tr>
                                 <td>
-                                    {{-- {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
-                                    {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }} --}}
                                     {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
                                     {{ $r->jam ? \Carbon\Carbon::parse($r->jam)->format('H:i') : '-' }}
                                 </td>
@@ -171,7 +169,7 @@
         // Konfirmasi hapus dengan SweetAlert
         $(document).on('click', '.delete-btn', function() {
             const form = $(this).closest('form');
-            const tanggal = form.closest('tr').find('td:first-child').text().trim();
+            const tanggal = form.closest('tr').find('td:first-child').text().trim(); // Ambil tanggal dari baris
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
@@ -182,10 +180,10 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, hapus!',
                 cancelButtonText: 'Batal',
-                reverseButtons: true
+                reverseButtons: true // Membalikkan posisi tombol untuk UX yang lebih baik
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    form.submit(); // Submit form jika dikonfirmasi
                     Swal.fire({
                         title: 'Terhapus!',
                         text: 'Data rujukan telah berhasil dihapus.',

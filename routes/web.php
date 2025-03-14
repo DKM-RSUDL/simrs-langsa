@@ -61,6 +61,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
@@ -108,11 +109,25 @@ Route::middleware('auth')->group(function () {
                             // rujuk route
                             Route::prefix('rujuk-antar-rs')->group(function () {
                                 Route::name('.rujuk-antar-rs')->group(function () {
-                                    Route::controller(RawatJalanController::class)->group(function () {
-                                        Route::get('/', 'rujukAntarRs');
+                                    Route::controller(RujukJalanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
+
+                            // rujuk route
+                            // Route::prefix('rujuk-antar-rs')->group(function () {
+                            //     Route::name('.rujuk-antar-rs')->group(function () {
+                            //         Route::controller(RawatJalanController::class)->group(function () {
+                            //             Route::get('/', 'rujukAntarRs');
+                            //         });
+                            //     });
+                            // });
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
