@@ -101,7 +101,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Jenis Kasus</label>
                                             <div class="d-flex flex-column gap-2">
-                                                <div class="d-flex gap-3">
+                                                <div class="d-flex flex-wrap gap-3">
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input" id="laka_lantas"
                                                             name="jenis_kasus" value="1">
@@ -127,13 +127,11 @@
                                                             name="jenis_kasus" value="5">
                                                         <label class="form-check-label" for="keracunan">Keracunan</label>
                                                     </div>
-                                                    <div class="d-flex gap-2 align-items-center">
-                                                        <div class="form-check">
-                                                            <input type="radio" class="form-check-input"
-                                                                id="kasus_lainnya" name="jenis_kasus" value="99">
-                                                            <label class="form-check-label"
-                                                                for="kasus_lainnya">Lainnya</label>
-                                                        </div>
+                                                    <div class="form-check">
+                                                        <input type="radio" class="form-check-input"
+                                                            id="kasus_lainnya" name="jenis_kasus" value="99">
+                                                        <label class="form-check-label"
+                                                            for="kasus_lainnya">Lainnya</label>
                                                     </div>
                                                 </div>
                                             </div>

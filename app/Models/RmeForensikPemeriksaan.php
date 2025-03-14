@@ -43,11 +43,29 @@ class RmeForensikPemeriksaan extends Model
         'user_create',
         'user_edit',
         'penatalaksanaan_lainnya',
+        'tgl_meninggal',
+        'jam_pemeriksaan_akhir',
+        'diagnosis_meninggal',
+        'jenis_kasus_patologi',
+        'label_jenazah',
+        'penutup_jenazah',
+        'pembungkus_jenazah',
+        'pakaian_jenazah',
+        'perhiasan_jenazah',
+        'benda_disamping_jenazah',
+        'identitas_umum',
+        'identitas_khusus',
+        'lebam_mayat',
+        'kaku_mayat',
+        'penurunan_suhu',
+        'pembusukan',
+        'lama_kematian',
     ];
 
     protected $casts = [
         'pemeriksaan'       => 'array',
-        'penatalaksanaan'   => 'array'
+        'penatalaksanaan'   => 'array',
+        'jenis_kasus_patologi'   => 'array'
     ];
 
     public function fisik()
