@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\RmeForensikPemeriksaan;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -89,7 +90,7 @@ class ForensikController extends Controller
     public function pelayanan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
@@ -106,21 +107,22 @@ class ForensikController extends Controller
             abort(404, 'Data not found');
         }
 
+        $pemeriksaan = RmeForensikPemeriksaan::with(['userCreate'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->get();
+
         if ($kd_unit == '228') {
             return view('unit-pelayanan.forensik.pelayanan.index-klinik', compact(
                 'dataMedis',
-                'kd_unit',
-                'kd_pasien',
-                'tgl_masuk',
-                'urut_masuk'
+                'pemeriksaan'
             ));
         } else if ($kd_unit == '76') {
             return view('unit-pelayanan.forensik.pelayanan.index-patologi', compact(
                 'dataMedis',
-                'kd_unit',
-                'kd_pasien',
-                'tgl_masuk',
-                'urut_masuk'
+                'pemeriksaan'
             ));
         }
     }

@@ -409,7 +409,6 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
@@ -668,11 +667,26 @@ Route::middleware('auth')->group(function () {
                                 // klinik
                                 Route::controller(ForensikKlinikController::class)->group(function () {
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
                                     Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
 
                                 // patologi
-                                Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
+                                Route::prefix('patologi')->group(function () {
+                                    Route::name('.patologi')->group(function () {
+                                        Route::controller(ForensikPatologiController::class)->group(function () {
+                                            Route::get('/create', 'index')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
                             });
                         });
                     });
