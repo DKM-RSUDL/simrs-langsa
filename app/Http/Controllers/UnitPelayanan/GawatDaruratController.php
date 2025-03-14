@@ -24,12 +24,14 @@ class GawatDaruratController extends Controller
     protected $roleService;
     public function index(Request $request)
     {
+        $tglBatasData = date('Y-m-d', strtotime('-2 days', strtotime(date('Y-m-d'))));
 
         if ($request->ajax()) {
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', 3);
+            // ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
             // Filte dokter
             if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);
@@ -94,15 +96,16 @@ class GawatDaruratController extends Controller
         }
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 3)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         return view('unit-pelayanan.gawat-darurat.index', compact('dokter',));
     }
 
     public function storeTriase(Request $request)
     {
+
         // validate data
         $messageErr = [
             'dokter_triase.required'    => 'Dokter harus dipilih!',
@@ -156,6 +159,18 @@ class GawatDaruratController extends Controller
             'disability'    => $request->disability ?? null,
         ];
 
+        $dataVitalSign = [
+            "sistole"   => $request->sistole,
+            "diastole"   => $request->diastole,
+            "nadi"   => $request->nadi,
+            "respiration"   => $request->respiration,
+            "suhu"   => $request->suhu,
+            "spo2_tanpa_o2"   => $request->spo2_tanpa_o2,
+            "spo2_dengan_o2"   => $request->spo2_dengan_o2,
+            "tinggi_badan"   => $request->tinggi_badan,
+            "berat_badan"   => $request->berat_badan,
+        ];
+
         // set new number
         $prefix = 'IGD-';
         $lastIgdNumber = Pasien::select('kd_pasien')
@@ -182,26 +197,46 @@ class GawatDaruratController extends Controller
 
 
         // insert ke tabel data_triase
-        $dataTriase = [
-            'nama_pasien'       => $nama_pasien,
-            'usia'              => $usia_tahun,
-            'usia_bulan'        => $usia_bulan,
-            'jenis_kelamin'     => $jenis_kelamin,
-            'tanggal_lahir'     => $tanggal_lahir,
-            'status'            => 1,
-            'kd_pasien'         => null,
-            'kd_pasien_triase'  => $lastIgdNumber,
-            'keterangan'        => null,
-            'tanggal_triase'    => "$tgl_masuk $jam_masuk",
-            'triase'            => json_encode($dataTriase),
-            'hasil_triase'      => $hasil_triase,
-            'dokter_triase'     => $dokter_triase,
-            'kode_triase'       => $kode_triase,
-            'foto_pasien'       => $pathFotoPasien
-        ];
+        // $dataTriase = [
+        //     'nama_pasien'       => $nama_pasien,
+        //     'usia'              => $usia_tahun,
+        //     'usia_bulan'        => $usia_bulan,
+        //     'jenis_kelamin'     => $jenis_kelamin,
+        //     'tanggal_lahir'     => $tanggal_lahir,
+        //     'status'            => 1,
+        //     'kd_pasien'         => null,
+        //     'kd_pasien_triase'  => $lastIgdNumber,
+        //     'keterangan'        => null,
+        //     'tanggal_triase'    => "$tgl_masuk $jam_masuk",
+        //     'triase'            => json_encode($dataTriase),
+        //     'hasil_triase'      => $hasil_triase,
+        //     'dokter_triase'     => $dokter_triase,
+        //     'kode_triase'       => $kode_triase,
+        //     'foto_pasien'       => $pathFotoPasien,
+        //     'vital_sign'        => json_encode($dataVitalSign)
+        // ];
 
-        DataTriase::create($dataTriase);
+        // DataTriase::create($dataTriase);
 
+        $triase = new DataTriase();
+
+        $triase->nama_pasien = $nama_pasien;
+        $triase->usia = $usia_tahun;
+        $triase->usia_bulan = $usia_bulan;
+        $triase->jenis_kelamin = $jenis_kelamin;
+        $triase->tanggal_lahir = $tanggal_lahir;
+        $triase->status = 1;
+        $triase->kd_pasien = null;
+        $triase->kd_pasien_triase = $lastIgdNumber;
+        $triase->keterangan = null;
+        $triase->tanggal_triase = "$tgl_masuk $jam_masuk";
+        $triase->triase = json_encode($dataTriase);
+        $triase->hasil_triase = $hasil_triase;
+        $triase->dokter_triase = $dokter_triase;
+        $triase->kode_triase = $kode_triase;
+        $triase->foto_pasien = $pathFotoPasien;
+        $triase->vital_sign = json_encode($dataVitalSign);
+        $triase->save();
 
         // insert ke tabel pasien
         if (empty($pasien)) {
@@ -286,7 +321,8 @@ class GawatDaruratController extends Controller
             'catatan'           => '',
             'kd_triase'         => $kode_triase,
             'is_rujukan'        => $rujukan,
-            'rujukan_ket'       => $rujukan_ket
+            'rujukan_ket'       => $rujukan_ket,
+            'triase_id'         => $triase->id
         ];
 
         Kunjungan::create($dataKunjungan);
@@ -438,12 +474,12 @@ class GawatDaruratController extends Controller
     public function rujukAntarRs($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.urut_masuk', $urut_masuk)

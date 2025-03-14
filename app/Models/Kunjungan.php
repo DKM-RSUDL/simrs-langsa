@@ -60,11 +60,13 @@ class Kunjungan extends Model
         'rujukan_ket',
         'status_inap',
         'status_kunjungan',
+        'triase_id',
+        'user_create'
     ];
 
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class,'kd_pasien', 'kd_pasien');
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
     }
 
     public function dokter()
@@ -87,6 +89,12 @@ class Kunjungan extends Model
         return $this->belongsTo(RegistrasrHasil::class, 'kd_pasien', 'kd_pasien');
     }
 
+    public function getVitalSign()
+    {
+        return $this->hasOne(DataTriase::class, 'kd_pasien_triase', 'kd_pasien')
+            ->whereNull('id_asesmen')
+            ->latest('tanggal_triase');
+    }
 
     // public function resep()
     // {

@@ -123,8 +123,12 @@
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    {{-- <a href="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $laborPK->kd_pasien . '/' . $laborPK->tgl_masuk . '/cetak') }}"
+                    {{-- <a href="{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . $dataMedis->tgl_masuk . '/cetak') }}"
                         class="btn btn-info" target="_blank">Print</a> --}}
+                    <button type="button" class="btn btn-info btn-print">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
 
@@ -133,12 +137,59 @@
     </div>
 </div>
 
-{{-- @push('js')
+@push('js')
     <script>
         $('#showLabor{{ $laborPK->id_labor_pk }}').on('shown.bs.modal', function() {
             window.open(
-                "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $laborPK->kd_pasien . '/' . $laborPK->tgl_masuk . '/cetak') }}",
+                "{{ url('unit-pelayanan/gawat-darurat/pelayanan/' . $dataMedis->kd_pasien . '/' . $dataMedis->tgl_masuk . '/cetak') }}",
                 '_blank');
         });
+
+        $('.btn-print').click(function() {
+            let $this = $(this);
+
+            $.ajax({
+                type: "post",
+                url: "{{ url('unit-pelayanan/gawat-darurat/pelayanan/'. $dataMedis->kd_pasien . '/'. $dataMedis->tgl_masuk . '/cetak') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    no_transaksi: "{{ $dataMedis->no_transaksi }}"
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    $this.prop('disabled', true);
+                },
+                success: function (res) {
+                    let status = res.status;
+                    let msg = res.message;
+                    let data = res.data;
+
+                    if(status == 'error') {
+                        Swal.fire({
+                            title: "Error",
+                            text: msg,
+                            icon: "error",
+                        });
+
+                        return false;
+                    }
+
+                    window.open(data.file_url, '_blank');
+
+                },
+                complete: function() {
+                    $this.html('<i class="fas fa-print"></i>Print');
+                    $this.prop('disabled', false);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Internal server error !",
+                        icon: "error",
+                    });
+                }
+            });
+        });
         </script>
-@endpush --}}
+@endpush

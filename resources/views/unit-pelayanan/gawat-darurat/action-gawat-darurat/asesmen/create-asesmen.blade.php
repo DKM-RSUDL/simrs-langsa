@@ -53,7 +53,7 @@
                                             </ul>
 
                                             <p style="margin-bottom: 5px;"><strong>Golongan Darah</strong></p>
-                                            <p style="margin-bottom: 5px;">A+</p>
+                                            <p style="margin-bottom: 5px;">-</p>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@
 
                                                 <div class="form-line">
                                                     <h6>Riwayat Pengobatan</h6>
-                                                    <textarea class="form-control mb-2" rows="3" name="riwayat_pengobatan"
+                                                    <textarea class="form-control mb-2" rows="2" name="riwayat_pengobatan"
                                                         placeholder="Isikan riwayat pengobatan pasien"></textarea>
                                                 </div>
 
@@ -238,7 +238,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-line">
+                                                <div class="form-line" data-triase-vital-sign="{{ $dataMedis->getVitalSign ? $dataMedis->getVitalSign->vital_sign : '' }}">
                                                     <h6>Vital Sign</h6>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -271,7 +271,7 @@
                                                         <div class="col-2 position-relative">
                                                             <label>GCS</label>
                                                             <input type="text" class="form-control" id="gcsValue"
-                                                                name="vital_sign[gcs_display]" value="15" readonly
+                                                                name="vital_sign[gcs_display]" value="0" readonly
                                                                 onclick="openGCSModal()">
                                                             <i class="bi bi-pencil position-absolute"
                                                                 style="top: 50%; right: 10px; transform: translateY(-50%);"
@@ -282,14 +282,14 @@
                                                         <div class="col-4">
                                                             <label>AVPU</label>
                                                             <select class="form-select" name="vital_sign[avpu]">
-                                                                <option selected disabled>Pilih</option>
-                                                                <option>Sadar Baik/Alert : 0</option>
-                                                                <option>Berespon dengan kata-kata/Voice: 1</option>
-                                                                <option>Hanya berespon jika dirangsang nyeri/pain: 2
+                                                                <option selected disabled>--Pilih--</option>
+                                                                <option>Sadar Baik/Alert</option>
+                                                                <option>Berespon dengan kata-kata/Voice</option>
+                                                                <option>Hanya berespon jika dirangsang nyeri/pain
                                                                 </option>
-                                                                <option>Pasien tidak sadar/unresponsive: 3</option>
-                                                                <option>Gelisah atau bingung: 4</option>
-                                                                <option>Acute Confusional States: 5</option>
+                                                                <option>Pasien tidak sadar/unresponsive</option>
+                                                                <option>Gelisah atau bingung</option>
+                                                                <option>Acute Confusional States</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-3">
@@ -303,9 +303,7 @@
                                                                 name="vital_sign[spo2_dengan_o2]">
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="form-line">
                                                     <h6>Antropometri</h6>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -329,6 +327,7 @@
                                                             <input type="number" class="form-control" name="antropometri[imt]" readonly>
                                                         </div>
                                                     </div>
+
                                                 </div>
 
                                                 <div class="form-line">
@@ -718,7 +717,11 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <!-- Data re-triase akan ditampilkan di sini -->
+                                                                <tr>
+                                                                    <td colspan="4" class="text-center text-muted">
+                                                                        Pasien perlu di observasi atau di re-triase jika kondisi dan kesadaran pasien berubah
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -754,9 +757,170 @@
                                                 <div class="form-line">
                                                     <div class="d-flex align-items-center mb-3">
                                                         <h6 class="mb-0 me-3">Tindak Lanjut Pelayanan</h6>
-                                                        @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.modal-tindaklanjut')
                                                     </div>
-                                                    <div id="tindakLanjutInfo"></div>
+
+                                                    <div class="mb-3">
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="rawatInap" id="rawatInap"> 
+                                                            <label for="rawatInap">Rawat Inap</label>
+                                                        </div>
+                                                        {{-- <div>
+                                                            <input type="radio" name="tindakLanjut" value="kamarOperasi" id="kamarOperasi">
+                                                            <label for="kamarOperasi">Kamar Operasi</label> 
+                                                        </div> --}}
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="rujukKeluar" id="rujukKeluar">
+                                                            <label for="rujukKeluar">Rujuk Keluar RS Lain</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="pulangSembuh" id="pulangSembuh">
+                                                            <label for="pulangSembuh">Pulang</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="berobatJalan" id="berobatJalan">
+                                                            <label for="berobatJalan">Berobat Jalan Ke Poli</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="menolakRawatInap" id="menolakRawatInap">
+                                                            <label for="menolakRawatInap">Menolak Rawat Inap</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="meninggalDunia" id="meninggalDunia">
+                                                            <label for="meninggalDunia">Meninggal Dunia</label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="tindakLanjut" value="deathoffarrival" id="deathoffarrival">
+                                                            <label for="deathoffarrival">DOA</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formMenolakRawatInap" style="display: none;">
+                                                        <label for="alasanMenolak" class="form-label">Alasan</label>
+                                                        <textarea class="form-control" id="alasanMenolak" name="alasanMenolak" rows="3"></textarea>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formRujukKeluar" style="display: none;">
+                                                        <div class="mb-3">
+                                                            <label for="tujuan_rujuk" class="form-label">Tujuan Rujuk</label>
+                                                            <input type="text" class="form-control" id="tujuan_rujuk" name="tujuan_rujuk">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="alasan_rujuk" class="form-label">Alasan Rujuk</label>
+                                                            <select class="form-select" id="alasan_rujuk" name="alasan_rujuk">
+                                                                <option selected disabled>Pilih Alasan Rujuk</option>
+                                                                <option value="1">Indikasi Medis</option>
+                                                                <option value="2">Kamar Penuh</option>
+                                                                <option value="3">Permintaan Pasien</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="transportasi_rujuk" class="form-label">Transportasi Rujuk</label>
+                                                            <select class="form-select" id="transportasi_rujuk" name="transportasi_rujuk">
+                                                                <option selected disabled>Pilih Transportasi Rujuk</option>
+                                                                <option value="1">Ambulance</option>
+                                                                <option value="2">Kendaraan Pribadi</option>
+                                                                <option value="3">Lainnya</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formpulangSembuh" style="display: none;">
+                                                        <label for="tanggalPulang" class="form-label">Tanggal Pulang</label>
+                                                        <input type="date" class="form-control" id="tanggalPulang" name="tanggalPulang">
+                                                        <label for="jamPulang" class="form-label mt-2">Jam Pulang</label>
+                                                        <input type="time" class="form-control" id="jamPulang" name="jamPulang">
+                                                        <div class="mb-3">
+                                                            <label for="alasn_pulang" class="form-label">Alasan Pulang</label>
+                                                            <select class="form-select" id="alasan_pulang" name="alasan_pulang">
+                                                                <option selected disabled>Pilih Alasan Pulang</option>
+                                                                <option value="1">Sembuh</option>
+                                                                <option value="2">Indikasi Medis</option>
+                                                                <option value="3">Permintaan Pasien</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="kondisi_pulang" class="form-label">Kondisi Pulang</label>
+                                                            <select class="form-select" id="kondisi_pulang" name="kondisi_pulang">
+                                                                <option selected disabled>Pilih Kondisi Pulang</option>
+                                                                <option value="1">Mandiri</option>
+                                                                <option value="2">Tidak Mandiri</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formberobatJalan" style="display: none;">
+                                                        <label for="tanggal_rajal" class="form-label">Tanggal Berobat</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggal_rajal" id="tanggal_rajal">
+                                                        <label for="poli_unit_tujuan" class="form-label">Poli</label>
+                                                        <select class="form-select" id="poli_unit_tujuan" name="poli_unit_tujuan">
+                                                            <option selected disabled>Pilih Poli</option>
+                                                            @foreach($unitPoli as $poli)
+                                                                <option value="{{ $poli->kd_unit }}">{{ $poli->nama_unit }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formmeninggalDunia" style="display: none;">
+                                                        <label for="tanggalMeninggal" class="form-label">Tanggal Meninggal</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggalMeninggal" id="tanggalMeninggal">
+                                                        <label for="jamMeninggal" class="form-label mt-2">Jam Meninggal</label>
+                                                        <input type="time" class="form-control" id="jamMeninggal" name="jamMeninggal">
+                                                    </div>
+
+                                                    <div class="mb-3" id="formDOA" style="display: none;">
+                                                        <label for="tanggalDoa" class="form-label">Tanggal Meninggal</label>
+                                                        <input type="date" class="form-control mb-2" name="tanggalDoa" id="tanggalDoa">
+                                                        <label for="jamDoa" class="form-label mt-2">Jam Meninggal</label>
+                                                        <input type="time" class="form-control" id="jamDoa" name="jamDoa">
+                                                    </div>
+
+                                                    <div class="mb-3" id="formRawatInap" style="display: none;">
+                                                        <div class="mb-3">
+                                                            <label for="tanggalRawatInap" class="form-label">Tanggal</label>
+                                                            <input type="date" class="form-control" id="tanggalRawatInap" name="tanggalRawatInap">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="jamRawatInap" class="form-label">Jam</label>
+                                                            <input type="time" class="form-control" id="jamRawatInap" name="jamRawatInap">
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="keluhanUtama_ranap" class="form-label">Keluhan Utama & Riwayat Penyakit </label>
+                                                            <textarea class="form-control" id="keluhanUtama_ranap" name="keluhanUtama_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="hasilPemeriksaan_ranap" class="form-label">Hasil Pemeriksaan Penunjang Klinis</label>
+                                                            <textarea class="form-control" id="hasilPemeriksaan_ranap" name="hasilPemeriksaan_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="jalannyaPenyakit_ranap" class="form-label">Jalannya Penyakit & Hasil Konsultasi</label>
+                                                            <textarea class="form-control" id="jalannyaPenyakit_ranap" name="jalannyaPenyakit_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="diagnosis_ranap" class="form-label">Diagnosis</label>
+                                                            <textarea class="form-control" id="diagnosis_ranap" name="diagnosis_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="tindakan_ranap" class="form-label">Tindakan yang Telah Dilakukan</label>
+                                                            <textarea class="form-control" id="tindakan_ranap" name="tindakan_ranap" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="anjuran_ranap" class="form-label">Anjuran</label>
+                                                            <textarea class="form-control" id="anjuran_ranap" name="anjuran_ranap" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3" id="formKamarOperasi" style="display: none;">
+                                                        <label for="kamarOperasi" class="form-label">Kamar Operasi</label>
+                                                        <input type="text" class="form-control" id="kamarOperasi" name="kamarOperasi">
+                                                    </div>
+
                                                 </div>
 
                                             </div>

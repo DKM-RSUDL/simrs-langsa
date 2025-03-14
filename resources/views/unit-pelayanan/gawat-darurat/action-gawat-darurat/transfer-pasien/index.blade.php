@@ -34,7 +34,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="#kd_spesial" class="form-label">Spesialisasi</label>
-                                <select name="kd_spesial" id="kd_spesial" class="form-select" required>
+                                <select name="kd_spesial" id="kd_spesial" class="form-select select2" required>
                                     <option value="">--Pilih Spesialisasi--</option>
                                     @foreach ($spesialisasi as $spesialis)
                                         <option value="{{ $spesialis->kd_spesial }}">{{ $spesialis->spesialisasi }}</option>
@@ -44,14 +44,14 @@
 
                             <div class="form-group mt-3">
                                 <label for="#kd_dokter" class="form-label">Dokter</label>
-                                <select name="kd_dokter" id="kd_dokter" class="form-select" required>
+                                <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
                                     <option value="">--Pilih Dokter--</option>
                                 </select>
                             </div>
 
                             <div class="form-group mt-3">
                                 <label for="#kd_kelas" class="form-label">Kelas</label>
-                                <select name="kd_kelas" id="kd_kelas" class="form-select" required>
+                                <select name="kd_kelas" id="kd_kelas" class="form-select select2" required>
                                     <option value="">--Pilih Kelas--</option>
                                 </select>
                             </div>
@@ -60,14 +60,14 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="#kd_unit" class="form-label">Ruang</label>
-                                <select name="kd_unit" id="kd_unit" class="form-select" required>
+                                <select name="kd_unit" id="kd_unit" class="form-select select2" required>
                                     <option value="">--Pilih Ruang--</option>
                                 </select>
                             </div>
 
                             <div class="form-group mt-3">
                                 <label for="#no_kamar" class="form-label">Kamar</label>
-                                <select name="no_kamar" id="no_kamar" class="form-select" required>
+                                <select name="no_kamar" id="no_kamar" class="form-select select2" required>
                                     <option value="">--Pilih Kamar--</option>
                                 </select>
                             </div>

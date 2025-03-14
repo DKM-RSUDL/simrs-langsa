@@ -26,7 +26,8 @@ if (!function_exists('getParentMenus')) {
 if (!function_exists('getRoles')) {
     function getRoles()
     {
-        return Role::where('name', '!=', 'admin')->get();
+        // return Role::where('name', '!=', 'admin')->get();
+        return Role::all();
     }
 }
 
@@ -73,4 +74,161 @@ if (!function_exists('getKategoriAsesmen')) {
     }
 }
 
+if (!function_exists('selisihHari')) {
+    function selisihHari($tanggalMulai, $tanggalAkhir)
+    {
+        $mulai = new DateTime($tanggalMulai);
+        $akhir = new DateTime($tanggalAkhir);
+        $selisih = $mulai->diff($akhir);
 
+        return $selisih->days; // Mengembalikan jumlah hari
+    }
+}
+
+if (!function_exists('tindakLanjutLabel')) {
+    function tindakLanjutLabel($tlCode)
+    {
+        $label = '-';
+
+        switch ($tlCode) {
+            case 1:
+                $label = 'Rawat Inap';
+                break;
+            case 2:
+                $label = 'Kontrol Ulang';
+                break;
+            case 3:
+                $label = 'Selesai di Unit';
+                break;
+            case 4:
+                $label = 'Rujuk Internal';
+                break;
+            case 5:
+                $label = 'Rujuk RS Lain';
+                break;
+            case 6:
+                $label = 'Pulang';
+                break;
+            case 7:
+                $label = 'Kamar Operasi';
+                break;
+            case 8:
+                $label = 'Berobat Jalan Ke Poli';
+                break;
+            case 9:
+                $label = 'Menolak Rawat Inap';
+                break;
+            case 10:
+                $label = 'Meninggal Dunia';
+                break;
+            case 11:
+                $label = 'Doa (Death On Arrive)';
+                break;
+        }
+
+
+        return $label;
+    }
+}
+
+if (!function_exists('alasanPulangLabel')) {
+    function alasanPulangLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Sembuh';
+                break;
+            case 2:
+                $label = 'Indikasi Medis';
+                break;
+            case 3:
+                $label = 'Atas Permintaan Sendiri';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('kondisiPulangLabel')) {
+    function kondisiPulangLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Mandiri';
+                break;
+            case 2:
+                $label = 'Tidak Mandiri';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('alasanRujukLabel')) {
+    function alasanRujukLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Indikasi Medis';
+                break;
+            case 2:
+                $label = 'Kamar Penuh';
+                break;
+            case 3:
+                $label = 'Permintaan Pasien';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('transportasiRujukLabel')) {
+    function transportasiRujukLabel($code)
+    {
+        $label = '-';
+
+        switch ($code) {
+            case 1:
+                $label = 'Ambulance';
+                break;
+            case 2:
+                $label = 'Kendaraan Pribadi';
+                break;
+            case 3:
+                $label = 'Lainnya';
+                break;
+        }
+
+        return $label;
+    }
+}
+
+if (!function_exists('kategoriAsesmenOKlabel')) {
+    function kategoriAsesmenOKlabel($kategori)
+    {
+        $kategoriLabel = '';
+
+        switch ($kategori) {
+            case 1:
+                $kategoriLabel = 'Pra Operatif Medis';
+                break;
+            case 2:
+                $kategoriLabel = 'Pra Operatif Perawat';
+                break;
+            case 3:
+                $kategoriLabel = 'Edukasi Anestesi';
+                break;
+        }
+
+        return $kategoriLabel;
+    }
+}

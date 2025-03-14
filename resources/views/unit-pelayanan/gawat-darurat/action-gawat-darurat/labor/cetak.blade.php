@@ -6,19 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cetak Hasil Pemeriksaan Laboratorium</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ public_path('assets/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <style>
-        @page {
-            size: A4;
-            margin: 0;
-        }
-
-        body {
-            margin: 2cm;
-            font-family: Arial, sans-serif;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
 
         .header {
             display: flex;
@@ -111,51 +100,51 @@
         }
 
         .info-container {
-    display: flex;
-    margin: 20px 0;
-}
+            display: flex;
+            margin: 20px 0;
+        }
 
-.info-left, .info-right {
-    flex: 1;
-}
+        .info-left, .info-right {
+            flex: 1;
+        }
 
-.info-row {
-    display: flex;
-    margin: 8px 0;
-    line-height: 1.2;
-}
+        .info-row {
+            display: flex;
+            margin: 8px 0;
+            line-height: 1.2;
+        }
 
-.info-label {
-    width: 140px;
-    margin-right: 5px;
-}
+        .info-label {
+            width: 140px;
+            margin-right: 5px;
+        }
 
-.info-colon {
-    width: 20px;
-    text-align: center;
-}
+        .info-colon {
+            width: 20px;
+            text-align: center;
+        }
 
-.info-value {
-    flex: 1;
-}
+        .info-value {
+            flex: 1;
+        }
 
-.info-text {
-    margin: 0;
-}
+        .info-text {
+            margin: 0;
+        }
 
-.info-italic {
-    font-style: italic;
-    color: #666;
-    font-size: 11px;
-    margin-top: 2px;
-}
+        .info-italic {
+            font-style: italic;
+            color: #666;
+            font-size: 11px;
+            margin-top: 2px;
+        }
     </style>
 </head>
 
-<body onload="window.print()">
+<body>
     <div class="container">
         <header class="header">
-            <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="logo">
+            <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD" class="logo">
             <div class="header-text">
                 <div class="hospital-name">
                     INSTALASI LABORATORIUM<br>
@@ -167,7 +156,7 @@
                     Email : rsudlangsa.aceh@gmail.com, rsud@langsakota.go.id, Website : www.rsud.langsakota.go.id
                 </div>
             </div>
-            <img src="{{ asset('assets/img/microscope.png') }}" alt="Logo Lab" class="logo logo-right">
+            <img src="{{ public_path('assets/img/microscope.png') }}" alt="Logo Lab" class="logo logo-right">
         </header>
 
         <div class="divider"></div>
@@ -186,94 +175,94 @@
             <div class="info-left">
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">No. Rekam Medis</div>
-                        <div class="info-italic">Medical Record Number</div>
+                        <p class="info-text">No. Rekam Medis</p>
+                        <i class="info-italic">Medical Record Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->kd_pasien }}</div>
+                    <p class="info-value">{{ $dataMedis->kd_pasien }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Pasien</div>
-                        <div class="info-italic">Patient</div>
+                        <p class="info-text">Pasien</p>
+                        <i class="info-italic">Patient</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->nama }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->nama }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">NIK</div>
-                        <div class="info-italic">Identity Number</div>
+                        <p class="info-text">NIK</p>
+                        <i class="info-italic">Identity Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->no_pengenal }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->no_pengenal }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Jenis Kelamin</div>
-                        <div class="info-italic">Sex</div>
+                        <p class="info-text">Jenis Kelamin</p>
+                        <i class="info-italic">Sex</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->jenis_kelamin }}</div>
+                    <p class="info-value">{{ $dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Laki-laki' }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Lahir/Umur</div>
-                        <div class="info-italic">Date Of Birth/Age</div>
+                        <p class="info-text">Tgl. Lahir/Umur</p>
+                        <i class="info-italic">Date Of Birth/Age</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->pasien->tgl_lahir }} / {{ $dataMedis->pasien->umur }}</div>
+                    <p class="info-value">{{ \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d-m-Y') }} / {{ $dataMedis->pasien->umur }}</p>
                 </div>
             </div>
 
             <div class="info-right">
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">No. Lab</div>
-                        <div class="info-italic">Lab. Number</div>
+                        <p class="info-text">No. Lab</p>
+                        <i class="info-italic">Lab. Number</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->no_lab }}</div>
+                    <p class="info-value">{{ $dataMedis->registrasiHasil->no_lab }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Reg</div>
-                        <div class="info-italic">Registration Date</div>
+                        <p class="info-text">Tgl. Reg</p>
+                        <i class="info-italic">Registration Date</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_reg }}</div>
+                    <p class="info-value">{{ $dataMedis->registrasiHasil->tgl_reg }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Periksa</div>
-                        <div class="info-italic">Check Date</div>
+                        <p class="info-text">Tgl. Periksa</p>
+                        <i class="info-italic">Check Date</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_periksa }}</div>
+                    <p class="info-value">{{ date('d-m-Y H:i', strtotime($dataMedis->registrasiHasil->tgl_periksa)) }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Tgl. Selesai</div>
-                        <div class="info-italic">Date Of Completion</div>
+                        <p class="info-text">Tgl. Selesai</p>
+                        <i class="info-italic">Date Of Completion</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->registrasiHasil->tgl_selesai }}</div>
+                    <p class="info-value">{{ date('d-m-Y H:i', strtotime($dataMedis->registrasiHasil->tgl_selesai)) }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Ruangan</div>
-                        <div class="info-italic">Room</div>
+                        <p class="info-text">Ruangan</p>
+                        <i class="info-italic">Room</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->unit->nama_unit }}</div>
+                    <p class="info-value">{{ $dataMedis->unit->nama_unit }}</p>
                 </div>
                 <div class="info-row">
                     <div class="info-label">
-                        <div class="info-text">Dokter Lab</div>
-                        <div class="info-italic">Lab Doctor</div>
+                        <p class="info-text">Dokter Lab</p>
+                        <i class="info-italic">Lab Doctor</i>
                     </div>
                     <div class="info-colon">:</div>
-                    <div class="info-value">{{ $dataMedis->dokter->nama_lengkap }}</div>
+                    <p class="info-value">{{ $dataMedis->dokter->nama_lengkap }}</p>
                 </div>
             </div>
         </div>

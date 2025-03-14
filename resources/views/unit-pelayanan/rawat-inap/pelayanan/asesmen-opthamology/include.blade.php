@@ -154,8 +154,31 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            //------------------------------------------------------------//
-            // Event handler untuk tombol tambah keterangan di pemeriksaan fisik //
+            //==================================================================================================//
+            // i. Inisialisasi LTP IMT
+            //==================================================================================================//
+            function hitungIMT_LPT() {
+                let tinggi = parseFloat(document.getElementById("tinggi_badan").value) / 100; // Konversi ke meter
+                let berat = parseFloat(document.getElementById("berat_badan").value);
+
+                if (!isNaN(tinggi) && !isNaN(berat) && tinggi > 0) {
+                    let imt = berat / (tinggi * tinggi);
+                    let lpt = (tinggi * 100 * berat) / 3600; // Tinggi dikonversi ke cm
+
+                    document.getElementById("imt").value = imt.toFixed(2); // Menampilkan 2 desimal
+                    document.getElementById("lpt").value = lpt.toFixed(2);
+                } else {
+                    document.getElementById("imt").value = "";
+                    document.getElementById("lpt").value = "";
+                }
+            }
+
+            document.getElementById("tinggi_badan").addEventListener("input", hitungIMT_LPT);
+            document.getElementById("berat_badan").addEventListener("input", hitungIMT_LPT);
+
+            //==================================================================================================//
+            // ii. Inisialisasi Pemeriksaan Fisik
+            //==================================================================================================//
             document.querySelectorAll('.tambah-keterangan').forEach(button => {
                 button.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
@@ -173,166 +196,875 @@
                 });
             });
 
-            // Event handler untuk checkbox normal
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
-                        '.keterangan');
-                    if (this.checked) {
-                        keteranganDiv.style.display = 'none';
-                        keteranganDiv.querySelector('input').value = ''; // Reset input value
+                    const pemeriksaanItem = this.closest('.pemeriksaan-item');
+                    if (pemeriksaanItem) {
+                        const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                        if (keteranganDiv) {
+                            if (this.checked) {
+                                keteranganDiv.style.display = 'none';
+                                const input = keteranganDiv.querySelector('input');
+                                if (input) input.value = '';
+                            }
+                        }
                     }
                 });
             });
 
-            // Inisialisasi semua checkbox sebagai checked dan sembunyikan keterangan
             document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                checkbox.checked = true;
-                const keteranganDiv = checkbox.closest('.pemeriksaan-item').querySelector('.keterangan');
-                if (keteranganDiv) {
-                    keteranganDiv.style.display = 'none';
-                    const input = keteranganDiv.querySelector('input');
-                    if (input) input.value = '';
+                const pemeriksaanItem = checkbox.closest('.pemeriksaan-item');
+                if (pemeriksaanItem) {
+                    checkbox.checked = true;
+                    const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
+                    if (keteranganDiv) {
+                        keteranganDiv.style.display = 'none';
+                        const input = keteranganDiv.querySelector('input');
+                        if (input) input.value = '';
+                    }
                 }
             });
-            //------------------------------------------------------------//
 
-            // Handle add diagnosis
-            // Inisialisasi array untuk menyimpan diagnosis
-            let diagnosisDiferensial = [];
-            let diagnosisKerja = [];
+            //==================================================================================================//
+            // iii. Inisialisasi Tanggal Jam Masuk
+            //==================================================================================================//
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            document.getElementById('tanggal_masuk').value = formattedDate;
+            
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            document.getElementById('jam_masuk').value = `${hours}:${minutes}`;
 
-            // Input Diagnosis Diferensial
-            const diagnosisDiferensialInput = document.getElementById('diagnosisDiferensialInput');
-            const btnDiagnosisDiferensial = document.getElementById('btnDiagnosisDiferensial');
 
-            // Input Diagnosis Kerja
-            const diagnosisKerjaInput = document.getElementById('diagnosisKerjaInput');
-            const btnDiagnosisKerja = document.getElementById('btnDiagnosisKerja');
+            //==================================================================================================//
+            // 4. Inisialisasi Status Nyeri
+            //==================================================================================================//
+            const skalaSelect = document.getElementById('jenis_skala_nyeri');
+            const nrsModal = document.getElementById('modalNRS');
+            const flaccModal = document.getElementById('modalFLACC');
+            const criesModal = document.getElementById('modalCRIES');
+            const nrsValue = document.getElementById('nrs_value');
+            const nrsKesimpulan = document.getElementById('nrs_kesimpulan');
+            const simpanNRS = document.getElementById('simpanNRS');
+            const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
+            const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+            const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
 
-            // Event Listener untuk Enter key di input Diferensial
-            if (diagnosisDiferensialInput) {
-                diagnosisDiferensialInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        tambahDiagnosisDiferensial();
+            if (skalaSelect) {
+                skalaSelect.addEventListener('change', function() {
+                    // Close any open modals first
+                    const openModals = document.querySelectorAll('.modal.show');
+                    openModals.forEach(modal => {
+                        const modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (modalInstance) modalInstance.hide();
+                    });
+
+                    // Show the selected modal
+                    if (this.value === 'NRS') {
+                        const modal = new bootstrap.Modal(nrsModal);
+                        modal.show();
+                    } else if (this.value === 'FLACC') {
+                        const modal = new bootstrap.Modal(flaccModal);
+                        modal.show();
+                    } else if (this.value === 'CRIES') {
+                        const modal = new bootstrap.Modal(criesModal);
+                        modal.show();
                     }
                 });
             }
 
-            // Event Listener untuk button Diferensial
-            if (btnDiagnosisDiferensial) {
-                btnDiagnosisDiferensial.addEventListener('click', function() {
-                    tambahDiagnosisDiferensial();
-                });
-            }
+            if (nrsValue) {
+                nrsValue.addEventListener('input', function() {
+                    let value = parseInt(this.value);
+                    
+                    // Validate range
+                    if (value < 0) this.value = 0;
+                    if (value > 10) this.value = 10;
+                    value = parseInt(this.value);
 
-            // Event Listener untuk Enter key di input Kerja
-            if (diagnosisKerjaInput) {
-                diagnosisKerjaInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        tambahDiagnosisKerja();
+                    // Set kesimpulan
+                    let kesimpulan = '';
+                    let alertClass = '';
+                    let emoji = '';
+                    
+                    if (value >= 0 && value <= 3) {
+                        kesimpulan = 'Nyeri Ringan';
+                        alertClass = 'alert-success';
+                        emoji = 'bi-emoji-smile';
+                    } else if (value >= 4 && value <= 6) {
+                        kesimpulan = 'Nyeri Sedang';
+                        alertClass = 'alert-warning';
+                        emoji = 'bi-emoji-neutral';
+                    } else if (value >= 7 && value <= 10) {
+                        kesimpulan = 'Nyeri Berat';
+                        alertClass = 'alert-danger';
+                        emoji = 'bi-emoji-frown';
+                    }
+
+                    if (nrsKesimpulan) {
+                        nrsKesimpulan.className = 'alert ' + alertClass;
+                        nrsKesimpulan.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
                     }
                 });
             }
 
-            // Event Listener untuk button Kerja
-            if (btnDiagnosisKerja) {
-                btnDiagnosisKerja.addEventListener('click', function() {
-                    tambahDiagnosisKerja();
+            if (simpanNRS) {
+                simpanNRS.addEventListener('click', function() {
+                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeri && kesimpulanNyeriAlert) {
+                        const value = parseInt(nrsValue.value);
+                        nilaiSkalaNyeri.value = value;
+                        
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (value >= 0 && value <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (value >= 4 && value <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else if (value >= 7 && value <= 10) {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        // Update both the input and alert
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        
+                        bootstrap.Modal.getInstance(nrsModal).hide();
+                    }
                 });
             }
 
-            // Fungsi untuk menambah diagnosis diferensial
-            function tambahDiagnosisDiferensial() {
-                const value = diagnosisDiferensialInput.value.trim();
-                if (value !== '') {
-                    diagnosisDiferensial.push(value);
-                    diagnosisDiferensialInput.value = '';
-                    updateDiagnosisDiferensialList();
-                    diagnosisDiferensialInput.focus();
-                }
+            if (nrsModal) {
+                nrsModal.addEventListener('hidden.bs.modal', function() {
+                    if (nrsValue && nrsKesimpulan) {
+                        nrsValue.value = '';
+                        nrsKesimpulan.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-emoji-smile fs-4"></i>
+                                <span>Pilih nilai nyeri terlebih dahulu</span>
+                            </div>
+                        `;
+                        nrsKesimpulan.className = 'alert alert-info';
+                    }
+                });
             }
 
-            // Fungsi untuk menambah diagnosis kerja
-            function tambahDiagnosisKerja() {
-                const value = diagnosisKerjaInput.value.trim();
-                if (value !== '') {
-                    diagnosisKerja.push(value);
-                    diagnosisKerjaInput.value = '';
-                    updateDiagnosisKerjaList();
-                    diagnosisKerjaInput.focus();
+            const updateFLACCTotal = () => {
+                const flaccChecks = document.querySelectorAll('.flacc-check:checked');
+                const flaccTotal = document.getElementById('flaccTotal');
+                const flaccKesimpulan = document.getElementById('flaccKesimpulan');
+                
+                let total = 0;
+                flaccChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                flaccTotal.value = total;
+
+                let kesimpulan = '';
+                let alertClass = '';
+                let emoji = '';
+                
+                if (total >= 0 && total <= 3) {
+                    kesimpulan = 'Nyeri Ringan';
+                    alertClass = 'alert-success';
+                    emoji = 'bi-emoji-smile';
+                } else if (total >= 4 && total <= 6) {
+                    kesimpulan = 'Nyeri Sedang';
+                    alertClass = 'alert-warning';
+                    emoji = 'bi-emoji-neutral';
+                } else {
+                    kesimpulan = 'Nyeri Berat';
+                    alertClass = 'alert-danger';
+                    emoji = 'bi-emoji-frown';
                 }
+
+                if (flaccKesimpulan) {
+                    flaccKesimpulan.textContent = kesimpulan;
+                    flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
+                }
+            };
+
+            document.querySelectorAll('.flacc-check').forEach(check => {
+                check.addEventListener('change', updateFLACCTotal);
+            });
+
+            const simpanFLACC = document.getElementById('simpanFLACC');
+            if (simpanFLACC) {
+                simpanFLACC.addEventListener('click', function() {
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    
+                    if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
+                        let total = parseInt(flaccTotal.value);
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (total >= 0 && total <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (total >= 4 && total <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        bootstrap.Modal.getInstance(flaccModal).hide();
+                    }
+                });
             }
 
-            // Fungsi untuk update list diagnosis diferensial
-            function updateDiagnosisDiferensialList() {
-                const listContainer = document.getElementById('diagnosisDiferensialList');
-                if (!listContainer) return;
+            const modalFLACC = document.getElementById('modalFLACC');
+            if (modalFLACC) {
+                modalFLACC.addEventListener('shown.bs.modal', function() {
+                    document.querySelectorAll('.flacc-check').forEach(check => {
+                        check.checked = false; // Pastikan tidak tercentang saat dibuka
+                    });
+                    const flaccTotal = document.getElementById('flaccTotal');
+                    if (flaccTotal) flaccTotal.value = '0';
+                    const flaccKesimpulan = document.getElementById('flaccKesimpulan');
+                    if (flaccKesimpulan) {
+                        flaccKesimpulan.textContent = 'Pilih kategori untuk melihat kesimpulan';
+                        flaccKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                    }
+                });
+            }
 
-                if (diagnosisDiferensial.length === 0) {
-                    listContainer.innerHTML = `
-                        <div class="text-center text-muted p-3">
-                            <i class="bi bi-clipboard-x"></i>
-                            <p class="mb-0">Belum ada diagnosis diferensial</p>
-                        </div>
-                    `;
+
+            const updateCRIESTotal = () => {
+                const criesChecks = document.querySelectorAll('.cries-check:checked');
+                const criesTotal = document.getElementById('criesTotal');
+                const criesKesimpulan = document.getElementById('criesKesimpulan');
+                
+                let total = 0;
+                criesChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                criesTotal.value = total;
+
+                let kesimpulan = '';
+                let alertClass = '';
+                let emoji = '';
+                
+                if (total >= 0 && total <= 3) {
+                    kesimpulan = 'Nyeri Ringan';
+                    alertClass = 'alert-success';
+                    emoji = 'bi-emoji-smile';
+            Serra} else if (total >= 4 && total <= 6) {
+                    kesimpulan = 'Nyeri Sedang';
+                    alertClass = 'alert-warning';
+                    emoji = 'bi-emoji-neutral';
+                } else {
+                    kesimpulan = 'Nyeri Berat';
+                    alertClass = 'alert-danger';
+                    emoji = 'bi-emoji-frown';
+                }
+
+                if (criesKesimpulan) {
+                    criesKesimpulan.textContent = kesimpulan;
+                    criesKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
+                }
+            };
+
+            document.querySelectorAll('.cries-check').forEach(check => {
+                check.addEventListener('change', updateCRIESTotal);
+            });
+
+            const simpanCRIES = document.getElementById('simpanCRIES');
+            if (simpanCRIES) {
+                simpanCRIES.addEventListener('click', function() {
+                    const criesTotal = document.getElementById('criesTotal');
+                    
+                    if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
+                        let total = criesTotal.value ? parseInt(criesTotal.value) : null;
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (total >= 0 && total <= 3) {
+                            kesimpulan = 'Ny oNyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (total >= 4 && total <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        bootstrap.Modal.getInstance(criesModal).hide();
+                    }
+                });
+            }
+
+            const modalCRIES = document.getElementById('modalCRIES');
+            if (modalCRIES) {
+                modalCRIES.addEventListener('shown.bs.modal', function() {
+                    document.querySelectorAll('.cries-check').forEach(check => {
+                        check.checked = false; // Pastikan tidak tercentang saat dibuka
+                    });
+                    const criesTotal = document.getElementById('criesTotal');
+                    if (criesTotal) criesTotal.value = '0';
+                    const criesKesimpulan = document.getElementById('criesKesimpulan');
+                    if (criesKesimpulan) {
+                        criesKesimpulan.textContent = 'Pilih semua kategori untuk melihat kesimpulan';
+                        criesKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                    }
+                });
+            }
+
+
+            //==================================================================================================//
+            // 5. Inisialisasi Discharge Planning
+            //==================================================================================================//
+            const dischargePlanningSection = document.getElementById('discharge-planning');
+            const allSelects = dischargePlanningSection.querySelectorAll('select');
+            const alertWarning = dischargePlanningSection.querySelector('.alert-warning');
+            const alertSuccess = dischargePlanningSection.querySelector('.alert-success');
+            const alertInfo = dischargePlanningSection.querySelector('.alert-info');
+
+            function updateDischargePlanningConclusion() {
+                let needsSpecialPlan = false;
+                let allSelected = true;
+                const kesimpulanInput = document.getElementById('kesimpulan');
+
+                // Cek semua select
+                allSelects.forEach(select => {
+                    if (!select.value) {
+                        allSelected = false;
+                    } else if (select.value === 'ya') {
+                        needsSpecialPlan = true;
+                    }
+                });
+
+                // Jika belum semua dipilih, sembunyikan kedua alert
+                if (!allSelected) {
+                    alertInfo.style.display = 'block';
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'none';
+                    kesimpulanInput.value = 'Pilih semua Planning';
                     return;
                 }
 
-                listContainer.innerHTML = diagnosisDiferensial.map((item, index) => `
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">${index + 1}. ${item}</span>
-                        <button class="btn btn-sm btn-outline-danger" onclick="hapusDiagnosisDiferensial(${index})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                `).join('');
+                // Update tampilan kesimpulan
+                if (needsSpecialPlan) {
+                    alertWarning.style.display = 'block';
+                    alertSuccess.style.display = 'none';
+                    alertInfo.style.display = 'none';
+                    kesimpulanInput.value = 'Mebutuhkan rencana pulang khusus';
+                } else {
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'block';
+                    alertInfo.style.display = 'none';
+                    kesimpulanInput.value = 'Tidak mebutuhkan rencana pulang khusus';
+                }
             }
 
-            // Fungsi untuk update list diagnosis kerja
-            function updateDiagnosisKerjaList() {
-                const listContainer = document.getElementById('diagnosisKerjaList');
-                if (!listContainer) return;
+            allSelects.forEach(select => {
+                select.addEventListener('change', updateDischargePlanningConclusion);
+            });
 
-                if (diagnosisKerja.length === 0) {
-                    listContainer.innerHTML = `
-                        <div class="text-center text-muted p-3">
-                            <i class="bi bi-clipboard-x"></i>
-                            <p class="mb-0">Belum ada diagnosis kerja</p>
-                        </div>
-                    `;
-                    return;
+            updateDischargePlanningConclusion();
+
+
+            //==================================================================================================//
+            // 6. Inisialisasi Diagnosis Banding dan Kerja
+            //==================================================================================================//
+            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
+            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
+
+            function initDiagnosisManagement(prefix, hiddenFieldId) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 30px)';
+                suggestionsList.style.display = 'none';
+                
+                // Insert suggestions list after input
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Database options
+                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+
+                // Prepare options array
+                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+                
+                // Load initial data if available
+                let diagnosisList = [];
+                try {
+                    diagnosisList = JSON.parse(hiddenInput.value) || [];
+                    renderDiagnosisList();
+                } catch (e) {
+                    diagnosisList = [];
+                    updateHiddenInput();
+                }
+                
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+                    
+                    if (inputValue) {
+                        // Filter database options
+                        const filteredOptions = diagnosisOptions.filter(option => 
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+                        
+                        // Show suggestions
+                        showSuggestions(filteredOptions, inputValue);
+                    } else {
+                        // Hide suggestions if input is empty
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                // Function to show suggestions
+                function showSuggestions(options, inputValue) {
+                    suggestionsList.innerHTML = '';
+                    
+                    if (options.length > 0) {
+                        // Render existing options
+                        options.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
+                            suggestionItem.textContent = option.text;
+                            suggestionItem.addEventListener('click', () => {
+                                addDiagnosis(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+                        
+                        // Add option to create new if no exact match
+                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.textContent = `Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addDiagnosis(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+                        
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.textContent = `Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addDiagnosis(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+                
+                // Add diagnosis when plus button is clicked
+                addButton.addEventListener('click', function() {
+                    const diagnosisText = inputField.value.trim();
+                    if (diagnosisText) {
+                        addDiagnosis(diagnosisText);
+                    }
+                });
+                
+                // Add diagnosis when Enter key is pressed
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const diagnosisText = this.value.trim();
+                        if (diagnosisText) {
+                            addDiagnosis(diagnosisText);
+                        }
+                    }
+                });
+                
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                function addDiagnosis(diagnosisText) {
+                    // Check for duplicates
+                    if (!diagnosisList.includes(diagnosisText)) {
+                        diagnosisList.push(diagnosisText);
+                        inputField.value = '';
+                        renderDiagnosisList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+                    } else {
+                        // Optional: Show feedback that it's a duplicate
+                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
+                    }
+                }
+                
+                function renderDiagnosisList() {
+                    listContainer.innerHTML = '';
+                    
+                    diagnosisList.forEach((diagnosis, index) => {
+                        const diagnosisItem = document.createElement('div');
+                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+                        
+                        const diagnosisSpan = document.createElement('span');
+                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm text-danger';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.type = 'button';
+                        deleteButton.addEventListener('click', function() {
+                            diagnosisList.splice(index, 1);
+                            renderDiagnosisList();
+                            updateHiddenInput();
+                        });
+                        
+                        diagnosisItem.appendChild(diagnosisSpan);
+                        diagnosisItem.appendChild(deleteButton);
+                        listContainer.appendChild(diagnosisItem);
+                    });
+                }
+                
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(diagnosisList);
+                }
+            }
+
+
+            //==================================================================================================//
+            // 7. Inisialisasi Implemntasi
+            //==================================================================================================//
+            initImplementationSection('rencana', 'rencana_penatalaksanaan', 'prognosis');
+            initImplementationSection('observasi', 'observasi', 'observasi');
+            initImplementationSection('terapeutik', 'terapeutik', 'terapeutik');
+            initImplementationSection('edukasi', 'edukasi', 'edukasi');
+            initImplementationSection('kolaborasi', 'kolaborasi', 'kolaborasi');
+
+            function initImplementationSection(prefix, hiddenFieldId, dbColumn) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded shadow';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 40px)';
+                suggestionsList.style.display = 'none';
+
+                // Insert
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Get database
+                const rmeMasterImplementasi = {!! json_encode($rmeMasterImplementasi) !!};
+
+                // Filter out non-null values
+                let optionsFromDb = [];
+                if (rmeMasterImplementasi && rmeMasterImplementasi.length > 0) {
+                    optionsFromDb = rmeMasterImplementasi
+                        .filter(item => item[dbColumn] !== null &&
+                                    item[dbColumn] !== '(N/A)' &&
+                                    item[dbColumn] !== '(Null)')
+                        .map(item => item[dbColumn]);
                 }
 
-                listContainer.innerHTML = diagnosisKerja.map((item, index) => `
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">${index + 1}. ${item}</span>
-                        <button class="btn btn-sm btn-outline-danger" onclick="hapusDiagnosisKerja(${index})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                `).join('');
+                // Remove duplicates
+                const uniqueOptions = [...new Set(optionsFromDb)];
+
+                // Prepare options array
+                const options = uniqueOptions.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+
+                // Load initial data if available
+                let itemsList = [];
+                try {
+                    itemsList = JSON.parse(hiddenInput.value) || [];
+                    renderItemsList();
+                } catch (e) {
+                    itemsList = [];
+                    updateHiddenInput();
+                }
+
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+
+                    if (inputValue) {
+                        const filteredOptions = options.filter(option =>
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+
+                        const exactMatch = options.some(opt =>
+                            opt.text.toLowerCase() === inputValue
+                        );
+
+                        showSuggestions(filteredOptions, inputValue, exactMatch);
+                    } else {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                // Function to show
+                function showSuggestions(filtered, inputValue, exactMatch) {
+                    suggestionsList.innerHTML = '';
+
+                    if (filtered.length > 0) {
+                        filtered.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer hover:bg-light';
+                            suggestionItem.style.cursor = 'pointer';
+
+                            const text = option.text;
+                            const lowerText = text.toLowerCase();
+                            const lowerInput = inputValue.toLowerCase();
+                            const index = lowerText.indexOf(lowerInput);
+
+                            if (index >= 0) {
+                                const before = text.substring(0, index);
+                                const match = text.substring(index, index + inputValue.length);
+                                const after = text.substring(index + inputValue.length);
+                                suggestionItem.innerHTML = `${before}<strong>${match}</strong>${after}`;
+                            } else {
+                                suggestionItem.textContent = text;
+                            }
+
+                            suggestionItem.addEventListener('click', () => {
+                                addItem(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+
+                        // Add option to create new if no exact match
+                        if (!exactMatch) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.style.cursor = 'pointer';
+                            newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addItem(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.style.cursor = 'pointer';
+                        newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addItem(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+
+                // Add item
+                addButton.addEventListener('click', function() {
+                    const itemText = inputField.value.trim();
+                    if (itemText) {
+                        addItem(itemText);
+                    }
+                });
+
+                // Add item when Enter
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const itemText = this.value.trim();
+                        if (itemText) {
+                            addItem(itemText);
+                        }
+                    }
+                });
+
+                // Close
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                /**
+                * Add item to the list
+                * @param {string} itemText - The text to add
+                */
+                function addItem(itemText) {
+                    // Check for duplicates
+                    if (!itemsList.includes(itemText)) {
+                        // Check if in database
+                        const existsInDb = optionsFromDb.includes(itemText);
+
+                        itemsList.push(itemText);
+                        inputField.value = '';
+                        renderItemsList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+
+                        if (existsInDb) {
+                            const notification = document.createElement('div');
+                            notification.className = 'alert alert-info alert-dismissible fade show mt-2';
+                            notification.innerHTML = `
+                                <small>Item "${itemText}" sudah ada di database dan akan digunakan.</small>
+                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                            `;
+                            listContainer.parentNode.insertBefore(notification, listContainer.nextSibling);
+
+                            // Auto-dismiss after 3 seconds
+                            setTimeout(() => {
+                                notification.classList.remove('show');
+                                setTimeout(() => notification.remove(), 150);
+                            }, 3000);
+                        }
+                    } else {
+                        // Show feedback that it's a duplicate
+                        const toastContainer = document.createElement('div');
+                        toastContainer.className = 'position-fixed top-0 end-0 p-3';
+                        toastContainer.style.zIndex = '1050';
+
+                        const toast = document.createElement('div');
+                        toast.className = 'toast align-items-center text-white bg-danger border-0';
+                        toast.setAttribute('role', 'alert');
+                        toast.innerHTML = `
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle me-2"></i>
+                                    "${itemText}" sudah ada dalam daftar
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        `;
+
+                        toastContainer.appendChild(toast);
+                        document.body.appendChild(toastContainer);
+
+                        // Show toast
+                        const bsToast = new bootstrap.Toast(toast, {
+                            delay: 3000
+                        });
+                        bsToast.show();
+
+                        // Remove container after toast is hidden
+                        toast.addEventListener('hidden.bs.toast', function() {
+                            document.body.removeChild(toastContainer);
+                        });
+                    }
+                }
+
+                /**
+                * Render items list in the container
+                */
+                function renderItemsList() {
+                    listContainer.innerHTML = '';
+
+                    itemsList.forEach((item, index) => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-light';
+
+                        const itemSpan = document.createElement('span');
+                        itemSpan.textContent = `${index + 1}. ${item}`;
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-link text-danger p-0';
+                        deleteButton.type = 'button';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.addEventListener('click', function() {
+                            itemsList.splice(index, 1);
+                            renderItemsList();
+                            updateHiddenInput();
+                        });
+
+                        itemElement.appendChild(itemSpan);
+                        itemElement.appendChild(deleteButton);
+                        listContainer.appendChild(itemElement);
+                    });
+
+                    // Show "Tidak ada data" message if the list is empty
+                    if (itemsList.length === 0) {
+                        const emptyMessage = document.createElement('div');
+                        emptyMessage.className = 'text-muted fst-italic small';
+                        emptyMessage.textContent = 'Belum ada data';
+                        listContainer.appendChild(emptyMessage);
+                    }
+                }
+
+                /**
+                * Update hidden input with JSON data
+                */
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(itemsList);
+                }
             }
 
-            // Fungsi untuk menghapus diagnosis
-            window.hapusDiagnosisDiferensial = function(index) {
-                diagnosisDiferensial.splice(index, 1);
-                updateDiagnosisDiferensialList();
-            }
-
-            window.hapusDiagnosisKerja = function(index) {
-                diagnosisKerja.splice(index, 1);
-                updateDiagnosisKerjaList();
-            }
-
-            // Initialize lists
-            updateDiagnosisDiferensialList();
-            updateDiagnosisKerjaList();
-
-  
-            //------------------------------------------------------------//
         });
     </script>
 @endpush

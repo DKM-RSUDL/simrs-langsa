@@ -12,6 +12,7 @@ use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -158,25 +159,38 @@ class FarmasiController extends Controller
     public function searchObat(Request $request)
     {
         $search = $request->get('term');
+        $cacheKey = 'obat_search_' . md5($search);
+
+        if (Cache::has($cacheKey)) {
+            return response()->json(Cache::get($cacheKey));
+        }
+
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
-            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
-                               FROM DATA_BATCH AS db
-                               WHERE TGL_MASUK = (
-                                   SELECT MAX(TGL_MASUK)
-                                   FROM DATA_BATCH
-                                   WHERE KD_PRD = db.KD_PRD
-                               )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-            ->where('APT_OBAT.nama_obat', 'LIKE', '%' . $search . '%')
-            ->select(
-                'APT_OBAT.KD_PRD as id',
-                'APT_OBAT.nama_obat as text',
-                'latest_price.HRG_BELI_OBT as harga',
-                'APT_SATUAN.SATUAN as satuan'
-            )
-            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-            ->take(10)
-            ->get();
+        ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+                           FROM DATA_BATCH AS db
+                           WHERE TGL_MASUK = (
+                               SELECT MAX(TGL_MASUK)
+                               FROM DATA_BATCH
+                               WHERE KD_PRD = db.KD_PRD
+                           )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
+        ->where(function ($query) use ($search) {
+            // Optimize search conditions
+            $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
+                ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
+        })
+        ->select(
+            'APT_OBAT.KD_PRD as id',
+            'APT_OBAT.nama_obat as text',
+            'latest_price.HRG_BELI_OBT as harga',
+            'APT_SATUAN.SATUAN as satuan'
+        )
+        ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
+        ->limit(10)
+        ->get();
+
+        // Simpan ke cache selama 5 menit
+        Cache::put($cacheKey, $obats, now()->addMinutes(5));
 
         return response()->json($obats);
     }

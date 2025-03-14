@@ -1,4 +1,5 @@
-<div class="modal fade" id="modal-daftar-input-diagnosis" tabindex="-1" aria-labelledby="smallModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-daftar-input-diagnosis" tabindex="-1" aria-labelledby="smallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,8 +19,10 @@
 </div>
 
 
-<script>
-    $('#btn-daftar-input-diagnosis').on('click', function() {
-        $('#modal-daftar-input-diagnosis').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-daftar-input-diagnosis').on('click', function() {
+            $('#modal-daftar-input-diagnosis').modal('show');
+        });
+    </script>
+@endpush

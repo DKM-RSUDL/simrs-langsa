@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         listContainer.innerHTML = html;
 
+        // Update hidden input value
+        document.getElementById('riwayat_alergi_hidden').value = JSON.stringify(alergiList);
+
         // Reinitialize delete buttons
         document.querySelectorAll('.remove-alergi').forEach(button => {
             button.addEventListener('click', handleDelete);
@@ -172,6 +175,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial display
     displayAlergi();
+
+    // Clear all form data after successful submission
+    @if(session('success'))
+        alergiList = [];
+        displayAlergi();
+        // Reset all form fields
+        document.querySelectorAll('form input:not([type=hidden]), form textarea, form select').forEach(input => {
+            input.value = '';
+        });
+        // Reset radio buttons
+        document.getElementById('tidak_ada').checked = true;
+        document.getElementById('ada').checked = false;
+        // Hide conditional sections
+        document.getElementById('detail_pengobatan').style.display = 'none';
+        // Clear localStorage
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('keluhan_') || key.startsWith('riwayat_')) {
+                localStorage.removeItem(key);
+            }
+        });
+    @endif
 });
 </script>
 @endpush

@@ -14,6 +14,7 @@ use App\Models\SegalaOrderDet;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RadiologiController extends Controller
@@ -33,9 +34,9 @@ class RadiologiController extends Controller
             ->first();
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 3)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         $produk = Produk::with(['klas'])
             ->distinct()
@@ -198,7 +199,8 @@ class RadiologiController extends Controller
             // 'puasa'                 => $request->puasa,
             'puasa'                 => 0,
             'jadwal_pemeriksaan'    => $jadwalPemeriksaan,
-            'diagnosis'             => $request->diagnosis
+            'diagnosis'             => $request->diagnosis,
+            'user_create' => Auth::id()
         ];
 
         SegalaOrder::create($segalaOrderData);
@@ -220,7 +222,7 @@ class RadiologiController extends Controller
             SegalaOrderDet::create($detailData);
             $noUrut++;
         }
-        
+
         $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
         return back()->with('success', 'Order berhasil');
     }
@@ -313,6 +315,7 @@ class RadiologiController extends Controller
         // $order->puasa = $request->puasa;
         $order->diagnosis = $request->diagnosis;
         $order->jadwal_pemeriksaan = $jadwalPemeriksaan;
+        $order->user_edit = Auth::id();
         $order->save();
 
         // update order detail
@@ -365,12 +368,12 @@ class RadiologiController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', 3)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => 3,
@@ -388,7 +391,6 @@ class RadiologiController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -396,7 +398,7 @@ class RadiologiController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

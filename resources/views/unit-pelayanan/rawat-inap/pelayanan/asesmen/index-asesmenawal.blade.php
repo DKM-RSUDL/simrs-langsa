@@ -46,77 +46,70 @@
                     <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
                             data-bs-target="#detailPasienModal">Umum Dewasa</a></li>
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                        <li><a class="custom__dropdown__item"
-                                href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
-                                    'kd_unit' => request()->route('kd_unit'),
-                                    'kd_pasien' => request()->route('kd_pasien'),
-                                    'tgl_masuk' => request()->route('tgl_masuk'),
-                                    'urut_masuk' => request()->route('urut_masuk'),
-                                ]) }}">Anak</a>
-                        </li>
+                                        <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
+                            'kd_unit' => request()->route('kd_unit'),
+                            'kd_pasien' => request()->route('kd_pasien'),
+                            'tgl_masuk' => request()->route('tgl_masuk'),
+                            'urut_masuk' => request()->route('urut_masuk'),
+                        ]) }}">Anak</a>
+                                        </li>
                     @endcanany
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.obstetri-maternitas.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Obstetri/Maternitas</a>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Obstetri/Maternitas</a>
                     </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Perinatology</a>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Perinatology</a>
                     </li>
                     <li><a class="custom__dropdown__item" href="#">Geriatri</a></li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.tht.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">THT</a>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.tht.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">THT</a>
                     </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Mata/Opthamologi</a>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Mata/Opthamologi</a>
                     </li>
                     <li><a class="custom__dropdown__item" href="#">Paru</a></li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.neurologi.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Neurologi</a>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.neurologi.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Neurologi</a>
                     </li>
                     <li><a class="custom__dropdown__item" href="#">Kulit dan Kelamin</a></li>
                 </ul>
             </div>
 
             {{-- @canany(['is-admin', 'is-dokter-umum', 'is-dokter-spesialis'])
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
-                    <i class="ti-plus"></i> Tambah
-                </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
+                <i class="ti-plus"></i> Tambah
+            </button>
             @endcanany
 
             @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                <a href="{{ route('rawat-inap.asesmen-anak.index', [
+            <a href="{{ route('rawat-inap.asesmen-anak.index', [
                     'kd_unit' => request()->route('kd_unit'),
                     'kd_pasien' => request()->route('kd_pasien'),
                     'tgl_masuk' => request()->route('tgl_masuk'),
                     'urut_masuk' => request()->route('urut_masuk'),
-                ]) }}"
-                    class="btn btn-primary">
-                    <i class="ti-plus"></i> Asesmen Anak
-                </a>
+                ]) }}" class="btn btn-primary">
+                <i class="ti-plus"></i> Asesmen Anak
+            </a>
             @endcanany --}}
         </div>
     </div>
@@ -124,29 +117,97 @@
 
 <ul class="list-group" id="asesmenList">
     @foreach ($asesmen as $item)
-        <li class="list-group-item d-flex justify-content-between align-items-center"
+        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $item->id }}"
+            data-date="{{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('Y-m-d') }}"
             data-name="{{ $item->user->name }}">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
-                    width="70" height="70">
-                <div>
-                    <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
-                    By: <span class="fw-bold">{{ $item->user->name }}</span>
+
+            <div class="d-flex align-items-center gap-4">
+
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('d') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('M-y') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('H:i') }}
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
+                        width="70" height="70">
+                    <div>
+                        <div class="text-primary fw-bold mb-1">
+                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}
+                        </div>
+                        <div class="text-muted">
+                            By: <span class="fw-semibold">{{ $item->user->name }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div>
-                <button type="button" onclick="showAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/medis/umum/' . $item->id) }}"
-                    class="btn btn-info btn-sm">
-                    <i class="fas fa-eye"></i> Lihat
-                </button>
-                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.show')
-                <button type="button" onclick="editAsesmen('{{ $item->id }}')"
-                    data-url="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/medis/umum/' . $item->id) }}"
-                    class="btn btn-secondary btn-sm">
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+                @if ($item->kategori == 1 && $item->sub_kategori == 5)
+                    <a href="{{ route('rawat-inap.asesmen.medis.tht.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.medis.tht.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if ($item->kategori == 2 && $item->sub_kategori == 7)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if ($item->kategori == 2 && $item->sub_kategori == 2)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if($item->kategori == 1 && $item->sub_kategori == 4)
+                <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-info">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </a>
+
+                <a href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-secondary">
                     <i class="fas fa-edit"></i> Edit
-                </button>
-                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.edit')
+                </a>
+                @elseif($item->kategori == 1 && $item->sub_kategori == 3)
+                <a href="{{ route('rawat-inap.asesmen.medis.neurologi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-info">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </a>
+
+                <a href="{{ route('rawat-inap.asesmen.medis.neurologi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                @endif
             </div>
         </li>
     @endforeach
@@ -154,7 +215,7 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Get all filter elements
         const startDateInput = document.getElementById('start_date');
         const endDateInput = document.getElementById('end_date');
@@ -205,3 +266,53 @@
         });
     }
 </script>
+
+<style>
+    #asesmenList .list-group-item:nth-child(even) {
+        background-color: #edf7ff;
+    }
+
+    /* Background putih untuk item ganjil */
+    #asesmenList .list-group-item:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    /* Efek hover tetap sama untuk konsistensi */
+    #asesmenList .list-group-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .list-group-item {
+        margin-bottom: 0.2rem;
+        border-radius: 0.5rem !important;
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+        background: white;
+        transition: all 0.2s;
+    }
+
+    .list-group-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .gap-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .gap-4 {
+        gap: 1.5rem !important;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn i {
+        font-size: 0.875rem;
+    }
+</style>

@@ -11,6 +11,5 @@ class RmeAsesmenKepAnakStatusNyeri extends Model
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_STATUS_NYERI';
     public $timestamps = false;
-
     protected $guarded = ['id'];
 }

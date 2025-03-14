@@ -681,8 +681,6 @@
                 var tbody = document.querySelector('#reTriaseTable tbody');
                 tbody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
 
-                console.log("Updating table with data:", reTriaseData); // Debugging line
-
                 reTriaseData.forEach(function(data, index) {
                     var row = `
                     <tr>

@@ -241,6 +241,182 @@
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
+            //STATUS FUNGSINOAL//
+
+            // Event handler untuk Status Fungsional
+            const statusFungsionalSelect = document.getElementById('skala_fungsional');
+            const adlTotal = document.getElementById('adl_total');
+            const adlKesimpulanAlert = document.getElementById('adl_kesimpulan');
+
+            if (statusFungsionalSelect) {
+                statusFungsionalSelect.addEventListener('change', function() {
+                    if (this.value === 'Pengkajian Aktivitas') {
+                        // Reset nilai sebelum menampilkan modal
+                        adlTotal.value = '';
+                        adlKesimpulanAlert.className = 'alert alert-info';
+                        adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('modalADL'));
+                        modal.show();
+                    } else if (this.value === 'Lainnya') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Skala pengukuran lainnya belum tersedia',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            // Reset pilihan setelah menampilkan alert
+                            this.value = '';
+                            adlTotal.value = '';
+                            adlKesimpulanAlert.className = 'alert alert-info';
+                            adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                        });
+                    }
+                });
+            }
+
+            // ADL Handler - Perhitungan total dan kesimpulan
+            const updateADLTotal = () => {
+                const adlChecks = document.querySelectorAll('.adl-check:checked');
+                const adlModalTotal = document.getElementById('adlTotal');
+                const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                
+                let total = 0;
+                adlChecks.forEach(check => {
+                    total += parseInt(check.value);
+                });
+                
+                // Update total di modal
+                if (adlModalTotal) {
+                    adlModalTotal.value = total;
+                }
+
+                // Hitung jumlah kategori yang sudah dipilih
+                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
+                const allCategoriesSelected = checkedCategories.size === 3; // 3 kategori: makan, berjalan, mandi
+
+                if (!allCategoriesSelected) {
+                    if (adlModalKesimpulan) {
+                        adlModalKesimpulan.className = 'alert alert-info py-1 px-3 mb-0';
+                        adlModalKesimpulan.textContent = 'Pilih semua kategori terlebih dahulu';
+                    }
+                    return;
+                }
+
+                // Update kesimpulan berdasarkan total skor
+                let kesimpulan = '';
+                let alertClass = '';
+                
+                if (total <= 4) {
+                    kesimpulan = 'Mandiri';
+                    alertClass = 'alert-success';
+                } else if (total <= 8) {
+                    kesimpulan = 'Ketergantungan Ringan';
+                    alertClass = 'alert-info';
+                } else if (total <= 11) {
+                    kesimpulan = 'Ketergantungan Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    kesimpulan = 'Ketergantungan Berat';
+                    alertClass = 'alert-danger';
+                }
+
+                // Update kesimpulan di modal
+                if (adlModalKesimpulan) {
+                    adlModalKesimpulan.className = `alert ${alertClass} py-1 px-3 mb-0`;
+                    adlModalKesimpulan.textContent = kesimpulan;
+                }
+            };
+
+            // Event listeners untuk ADL checkboxes
+            document.querySelectorAll('.adl-check').forEach(check => {
+                check.addEventListener('change', updateADLTotal);
+            });
+
+            // Handle ADL save button
+            const simpanADL = document.getElementById('simpanADL');
+            if (simpanADL) {
+                simpanADL.addEventListener('click', function() {
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                    
+                    if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
+                        // Update nilai total
+                        adlTotal.value = adlModalTotal.value;
+                        
+                        // Update kesimpulan di form utama
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
+                        
+                        // Tutup modal
+                        bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
+                    }
+                });
+            }
+
+            //Get Value
+            const getSelectedADLValues = () => {
+                const makanValue = document.querySelector('input[name="makan"]:checked')?.value || '';
+                const berjalanValue = document.querySelector('input[name="berjalan"]:checked')?.value || '';
+                const mandiValue = document.querySelector('input[name="mandi"]:checked')?.value || '';
+                
+                // Map nilai menjadi teks
+                const getTextValue = (value) => {
+                    switch (value) {
+                        case '1': return 'Mandiri';
+                        case '2': return '25% Dibantu';
+                        case '3': return '50% Dibantu';
+                        case '4': return '75% Dibantu';
+                        default: return '';
+                    }
+                };
+                
+                return {
+                    makan: getTextValue(makanValue),
+                    makanValue: makanValue,
+                    berjalan: getTextValue(berjalanValue),
+                    berjalanValue: berjalanValue,
+                    mandi: getTextValue(mandiValue),
+                    mandiValue: mandiValue
+                };
+            };
+
+            // Reset form ADL when modal is closed
+            const modalADL = document.getElementById('modalADL');
+            if (simpanADL) {
+                simpanADL.addEventListener('click', function() {
+                    const adlModalTotal = document.getElementById('adlTotal');
+                    const adlModalKesimpulan = document.getElementById('adlKesimpulan');
+                    
+                    if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
+                        // Update nilai total
+                        adlTotal.value = adlModalTotal.value;
+                        
+                        // Update kesimpulan di form utama
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
+                        
+                        // Simpan nilai-nilai tersembunyi
+                        const adlValues = getSelectedADLValues();
+                        document.getElementById('adl_makan').value = adlValues.makan;
+                        document.getElementById('adl_makan_value').value = adlValues.makanValue;
+                        document.getElementById('adl_berjalan').value = adlValues.berjalan;
+                        document.getElementById('adl_berjalan_value').value = adlValues.berjalanValue;
+                        document.getElementById('adl_mandi').value = adlValues.mandi;
+                        document.getElementById('adl_mandi_value').value = adlValues.mandiValue;
+                        document.getElementById('adl_kesimpulan_value').value = adlModalKesimpulan.textContent;
+                        document.getElementById('adl_jenis_skala').value = '1'; // 1 untuk ADL
+                        
+                        // Tutup modal
+                        bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
+                    }
+                });
+            }
+
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
             //JENIS SKALA//
 
             const skalaSelect = document.getElementById('jenis_skala_nyeri');
@@ -251,7 +427,8 @@
             const nrsKesimpulan = document.getElementById('nrs_kesimpulan');
             const simpanNRS = document.getElementById('simpanNRS');
             const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-            const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
+            const kesimpulanNyeri = document.getElementById('kesimpulan_nyeri');
+            const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
 
             if (skalaSelect) {
                 skalaSelect.addEventListener('change', function() {
@@ -320,12 +497,38 @@
             // Save NRS value
             if (simpanNRS) {
                 simpanNRS.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
-                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeriAlert) {
-                        nilaiSkalaNyeri.value = nrsValue.value;
-                        kesimpulanNyeriAlert.innerHTML = nrsKesimpulan.innerHTML;
-                        kesimpulanNyeriAlert.className = nrsKesimpulan.className;
+                    if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeri && kesimpulanNyeriAlert) {
+                        const value = parseInt(nrsValue.value);
+                        nilaiSkalaNyeri.value = value;
+                        
+                        let kesimpulan = '';
+                        let alertClass = '';
+                        let emoji = '';
+                        
+                        if (value >= 0 && value <= 3) {
+                            kesimpulan = 'Nyeri Ringan';
+                            alertClass = 'alert-success';
+                            emoji = 'bi-emoji-smile';
+                        } else if (value >= 4 && value <= 6) {
+                            kesimpulan = 'Nyeri Sedang';
+                            alertClass = 'alert-warning';
+                            emoji = 'bi-emoji-neutral';
+                        } else if (value >= 7 && value <= 10) {
+                            kesimpulan = 'Nyeri Berat';
+                            alertClass = 'alert-danger';
+                            emoji = 'bi-emoji-frown';
+                        }
+
+                        // Update both the input and alert
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
+                        
                         bootstrap.Modal.getInstance(nrsModal).hide();
                     }
                 });
@@ -352,8 +555,6 @@
                 const flaccChecks = document.querySelectorAll('.flacc-check:checked');
                 const flaccTotal = document.getElementById('flaccTotal');
                 const flaccKesimpulan = document.getElementById('flaccKesimpulan');
-                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                const kesimpulanNyeriAlert = document.querySelector('#status-nyeri .alert');
                 
                 let total = 0;
                 flaccChecks.forEach(check => {
@@ -361,7 +562,6 @@
                 });
                 
                 flaccTotal.value = total;
-                nilaiSkalaNyeri.value = total;
 
                 // Update kesimpulan
                 let kesimpulan = '';
@@ -384,19 +584,8 @@
 
                 // Update kesimpulan di modal FLACC
                 if (flaccKesimpulan) {
-                    flaccKesimpulan.textContent = kesimpulan.toUpperCase(); // FLACC tetap pakai uppercase
+                    flaccKesimpulan.textContent = kesimpulan;
                     flaccKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
-                }
-
-                // Update kesimpulan di form utama dengan format yang sama seperti NRS
-                if (kesimpulanNyeriAlert) {
-                    kesimpulanNyeriAlert.innerHTML = `
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi ${emoji} fs-4"></i>
-                            <span>${kesimpulan}</span>
-                        </div>
-                    `;
-                    kesimpulanNyeriAlert.className = `alert ${alertClass}`;
                 }
             };
 
@@ -409,8 +598,6 @@
             const simpanFLACC = document.getElementById('simpanFLACC');
             if (simpanFLACC) {
                 simpanFLACC.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                     const flaccTotal = document.getElementById('flaccTotal');
                     
                     if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
@@ -433,22 +620,18 @@
                             emoji = 'bi-emoji-frown';
                         }
 
-                        // Update nilai
+                        // Update all relevant fields
                         nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
 
-                        // Update kesimpulan
-                        if (kesimpulanNyeriAlert) {
-                            kesimpulanNyeriAlert.innerHTML = `
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi ${emoji} fs-4"></i>
-                                    <span>${kesimpulan}</span>
-                                </div>
-                            `;
-                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        }
-
-                        // Tutup modal
-                        bootstrap.Modal.getInstance(document.getElementById('modalFLACC')).hide();
+                        bootstrap.Modal.getInstance(flaccModal).hide();
                     }
                 });
             }
@@ -457,13 +640,13 @@
             const modalFLACC = document.getElementById('modalFLACC');
             if (modalFLACC) {
                 modalFLACC.addEventListener('hidden.bs.modal', function() {
-                    document.querySelectorAll('.flacc-check').forEach(check => {
-                        check.checked = false;
-                    });
-                    const flaccTotal = document.getElementById('flaccTotal');
-                    if (flaccTotal) {
-                        flaccTotal.value = '';
-                    }
+                    // document.querySelectorAll('.flacc-check').forEach(check => {
+                    //     check.checked = false;
+                    // });
+                    // const flaccTotal = document.getElementById('flaccTotal');
+                    // if (flaccTotal) {
+                    //     flaccTotal.value = '';
+                    // }
                     const flaccKesimpulan = document.getElementById('flaccKesimpulan');
                     if (flaccKesimpulan) {
                         flaccKesimpulan.textContent = 'Pilih kategori untuk melihat kesimpulan';
@@ -477,8 +660,6 @@
                 const criesChecks = document.querySelectorAll('.cries-check:checked');
                 const criesTotal = document.getElementById('criesTotal');
                 const criesKesimpulan = document.getElementById('criesKesimpulan');
-                const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                 
                 let total = 0;
                 criesChecks.forEach(check => {
@@ -486,7 +667,6 @@
                 });
                 
                 criesTotal.value = total;
-                nilaiSkalaNyeri.value = total;
 
                 // Update kesimpulan
                 let kesimpulan = '';
@@ -509,7 +689,7 @@
 
                 // Update kesimpulan di modal CRIES
                 if (criesKesimpulan) {
-                    criesKesimpulan.textContent = kesimpulan.toUpperCase();
+                    criesKesimpulan.textContent = kesimpulan;
                     criesKesimpulan.className = `alert py-1 px-3 mb-0 ${alertClass}`;
                 }
             };
@@ -523,12 +703,10 @@
             const simpanCRIES = document.getElementById('simpanCRIES');
             if (simpanCRIES) {
                 simpanCRIES.addEventListener('click', function() {
-                    const nilaiSkalaNyeri = document.getElementById('nilai_skala_nyeri');
-                    const kesimpulanNyeriAlert = document.getElementById('kesimpulan_nyeri_alert');
                     const criesTotal = document.getElementById('criesTotal');
                     
                     if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
-                        let total = parseInt(criesTotal.value);
+                        let total = criesTotal.value ? parseInt(criesTotal.value) : null;
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
@@ -547,28 +725,18 @@
                             emoji = 'bi-emoji-frown';
                         }
 
-                        // Update nilai
+                        // Update all relevant fields
                         nilaiSkalaNyeri.value = total;
+                        kesimpulanNyeri.value = kesimpulan;
+                        kesimpulanNyeriAlert.innerHTML = `
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${emoji} fs-4"></i>
+                                <span>${kesimpulan}</span>
+                            </div>
+                        `;
+                        kesimpulanNyeriAlert.className = `alert ${alertClass}`;
 
-                        // Update kesimpulan
-                        if (kesimpulanNyeriAlert) {
-                            kesimpulanNyeriAlert.innerHTML = `
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi ${emoji} fs-4"></i>
-                                    <span>${kesimpulan}</span>
-                                </div>
-                            `;
-                            kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        }
-
-                        // Tutup modal
-                        const modalCRIES = document.getElementById('modalCRIES');
-                        if (modalCRIES) {
-                            const modalInstance = bootstrap.Modal.getInstance(modalCRIES);
-                            if (modalInstance) {
-                                modalInstance.hide();
-                            }
-                        }
+                        bootstrap.Modal.getInstance(criesModal).hide();
                     }
                 });
             }
@@ -577,13 +745,13 @@
             const modalCRIES = document.getElementById('modalCRIES');
             if (modalCRIES) {
                 modalCRIES.addEventListener('hidden.bs.modal', function() {
-                    document.querySelectorAll('.cries-check').forEach(check => {
-                        check.checked = false;
-                    });
-                    const criesTotal = document.getElementById('criesTotal');
-                    if (criesTotal) {
-                        criesTotal.value = '';
-                    }
+                    // document.querySelectorAll('.cries-check').forEach(check => {
+                    //     check.checked = false;
+                    // });
+                    // const criesTotal = document.getElementById('criesTotal');
+                    // if (criesTotal) {
+                    //     criesTotal.value = '';
+                    // }
                     const criesKesimpulan = document.getElementById('criesKesimpulan');
                     if (criesKesimpulan) {
                         criesKesimpulan.textContent = 'Pilih semua kategori untuk melihat kesimpulan';
@@ -594,213 +762,69 @@
 
             //------------------------------------------------------------//
             //------------------------------------------------------------//
-            // Event handler untuk Modal penyakit di derita
 
 
-            //------------------------------------------------------------//
-            //------------------------------------------------------------//
-            // Event handler untuk skala risiko jatuh
-             // Fungsi untuk menampilkan form risiko jatuh
-            function showForm(selectedValue) {
-                // Sembunyikan semua form terlebih dahulu
-                document.querySelectorAll('.risk-form').forEach(form => {
-                    form.style.display = 'none';
-                });
-
-                // Tampilkan form yang dipilih
-                if (selectedValue) {
-                    const selectedForm = document.getElementById(selectedValue + 'Form');
-                    if (selectedForm) {
-                        selectedForm.style.display = 'block';
-                    }
-                }
-            }
-
+            // 6. Event handler untuk Risiko Jatuh
             // Event listener untuk perubahan select skala
-            const risikoJatuhSelect = document.getElementById('risikoJatuhSkala');
-            if (risikoJatuhSelect) {
-                risikoJatuhSelect.addEventListener('change', function() {
+            const forms = {
+                umum: {
+                    threshold: 1,
+                    type: 'boolean'
+                },
+                morse: {
+                    low: 0,
+                    medium: 25,
+                    high: 45,
+                    type: 'score'
+                },
+                ontario: {
+                    low: 0,
+                    medium: 4,
+                    high: 9,
+                    type: 'score'
+                },
+                humpty: {
+                    low: 0,
+                    high: 12,
+                    type: 'score'
+                }
+            };
+
+            const risikoJatuhSkala = document.getElementById('risikoJatuhSkala');
+            if (risikoJatuhSkala) {
+                risikoJatuhSkala.addEventListener('change', function() {
                     showForm(this.value);
                 });
-
-                // Sembunyikan semua form saat halaman dimuat
+                // Hide all forms initially
                 showForm('');
             }
-
-            // Fungsi untuk update kesimpulan berdasarkan jenis skala
-            function updateConclusion(type) {
-                let total = 0;
-                let conclusion = '';
-                let bgColor = '';
-
-                const form = document.getElementById('skala_' + type + 'Form');
-                if (!form) return;
-
-                switch(type) {
-                    case 'umum':
-                        const umumSelects = form.querySelectorAll('select');
-                        let yaCount = 0;
-                        umumSelects.forEach(select => {
-                            if (select.value === 'ya') yaCount++;
-                        });
-                        conclusion = yaCount > 0 ? 'Risiko Jatuh' : 'Tidak Berisiko Jatuh';
-                        bgColor = yaCount > 0 ? 'bg-warning' : 'bg-success';
-                        break;
-
-                    case 'morse':
-                        const morseSelects = form.querySelectorAll('select');
-                        morseSelects.forEach(select => {
-                            total += parseInt(select.value) || 0;
-                        });
-                        if (total >= 45) {
-                            conclusion = 'Risiko Tinggi';
-                            bgColor = 'bg-danger';
-                        } else if (total >= 25) {
-                            conclusion = 'Risiko Sedang';
-                            bgColor = 'bg-warning';
-                        } else {
-                            conclusion = 'Risiko Rendah';
-                            bgColor = 'bg-success';
-                        }
-                        break;
-
-                    case 'humpty':
-                        const humptySelects = form.querySelectorAll('select');
-                        humptySelects.forEach(select => {
-                            total += parseInt(select.value) || 0;
-                        });
-                        if (total >= 13) {
-                            conclusion = 'Risiko Tinggi';
-                            bgColor = 'bg-danger';
-                        } else {
-                            conclusion = 'Risiko Rendah';
-                            bgColor = 'bg-success';
-                        }
-                        break;
-
-                    case 'ontario':
-                        const ontarioSelects = form.querySelectorAll('select');
-                        ontarioSelects.forEach(select => {
-                            total += parseInt(select.value) || 0;
-                        });
-                        if (total >= 9) {
-                            conclusion = 'Risiko Tinggi';
-                            bgColor = 'bg-danger';
-                        } else if (total >= 5) {
-                            conclusion = 'Risiko Sedang';
-                            bgColor = 'bg-warning';
-                        } else {
-                            conclusion = 'Risiko Rendah';
-                            bgColor = 'bg-success';
-                        }
-                        break;
-                }
-
-                // Update tampilan kesimpulan
-                const conclusionDiv = form.querySelector('.conclusion');
-                if (conclusionDiv) {
-                    conclusionDiv.className = `conclusion ${bgColor}`;
-                    const conclusionSpan = conclusionDiv.querySelector('#kesimpulanTextForm');
-                    if (conclusionSpan) {
-                        conclusionSpan.textContent = conclusion;
-                    }
-                }
-            }
-
-            // Tambahkan event listeners untuk semua select di setiap form risiko jatuh
-            document.querySelectorAll('.risk-form select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const formId = this.closest('.risk-form').id;
-                    const type = formId.replace('Form', '').replace('skala_', '');
-                    updateConclusion(type);
-                });
-            });
-
-
-            //------------------------------------------------------------//
-            //------------------------------------------------------------//
-            // Handler untuk Risko Decubitus
-            function showDecubitusForm(selectedValue) {
-                // Sembunyikan semua form terlebih dahulu
-                document.querySelectorAll('.decubitus-form').forEach(form => {
-                    form.style.display = 'none';
-                });
-
-                // Tampilkan form yang dipilih
-                if (selectedValue) {
-                    const selectedForm = document.getElementById('form' + selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1));
-                    if (selectedForm) {
-                        selectedForm.style.display = 'block';
-                    }
-                }
-            }
-
-            // Event listener untuk perubahan select skala decubitus
-            const skalaRisikoDekubitus = document.getElementById('skalaRisikoDekubitus');
-            if (skalaRisikoDekubitus) {
-                skalaRisikoDekubitus.addEventListener('change', function() {
-                    showDecubitusForm(this.value);
-                    resetKesimpulanDecubitus(this.value);
-                });
-            }
-
-            // Fungsi untuk menghitung total skor Norton
-            function calculateNortonScore() {
-                let total = 0;
-                const nortonFields = ['kondisi_fisik', 'kondisi_mental', 'aktivitas', 'mobilitas', 'inkontinensia'];
-                
-                nortonFields.forEach(field => {
-                    const select = document.querySelector(`select[name="${field}"]`);
-                    if (select && select.value) {
-                        total += parseInt(select.value);
-                    }
-                });
-
-                // Update kesimpulan berdasarkan total skor
-                const kesimpulanNorton = document.getElementById('kesimpulanNorton');
-                if (kesimpulanNorton) {
-                    let conclusion = '';
-                    let alertClass = '';
-
-                    if (total <= 12) {
-                        conclusion = 'Risiko Tinggi';
-                        alertClass = 'alert-danger';
-                    } else if (total <= 14) {
-                        conclusion = 'Risiko Sedang';
-                        alertClass = 'alert-warning';
-                    } else {
-                        conclusion = 'Risiko Rendah';
-                        alertClass = 'alert-success';
-                    }
-
-                    kesimpulanNorton.className = `alert mb-0 flex-grow-1 ${alertClass}`;
-                    kesimpulanNorton.textContent = conclusion;
-                }
-            }
-
-            // Reset kesimpulan saat berganti skala
-            function resetKesimpulanDecubitus(scale) {
-                if (scale === 'norton') {
-                    const kesimpulanNorton = document.getElementById('kesimpulanNorton');
-                    if (kesimpulanNorton) {
-                        kesimpulanNorton.className = 'alert alert-info mb-0 flex-grow-1';
-                        kesimpulanNorton.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
-                    }
-                }
-                // Tambahkan reset untuk skala lain jika diperlukan
-            }
-
-            // Event listener untuk setiap select di form Norton
-            document.querySelectorAll('#formNorton select').forEach(select => {
-                select.addEventListener('change', calculateNortonScore);
-            });
-
-            // Sembunyikan semua form saat halaman dimuat
-            showDecubitusForm('');
             
             //------------------------------------------------------------//
             //------------------------------------------------------------//
 
+            // 7. Event handler untuk Decubitus
+
+            const formNorton = document.getElementById('formNorton');
+            if (formNorton) {
+                formNorton.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => updateDecubitusConclusion('norton'));
+                });
+            }
+            const formBraden = document.getElementById('formBraden');
+            if (formBraden) {
+                formBraden.querySelectorAll('select').forEach(select => {
+                    select.addEventListener('change', () => updateDecubitusConclusion('braden'));
+                });
+            }
+
+            const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
+            if (skalaDecubitusSelect) {
+                skalaDecubitusSelect.addEventListener('change', function() {
+                    showDecubitusForm(this.value);
+                });
+                // Sembunyikan semua form saat halaman dimuat
+                showDecubitusForm('');
+            }
 
 
             //------------------------------------------------------------//
@@ -824,6 +848,11 @@
                         </button>
                     </div>
                 `).join('');
+                if (type === 'kondisi') {
+                    document.getElementById('kondisi_psikologis_json').value = JSON.stringify(items);
+                } else if (type === 'perilaku') {
+                    document.getElementById('gangguan_perilaku_json').value = JSON.stringify(items);
+                }
             }
 
             // Fungsi untuk menangani checkbox Kondisi Psikologis
@@ -920,129 +949,1106 @@
             //------------------------------------------------------------//
             //------------------------------------------------------------//
 
-            // Event listeners untuk status gizi
-
+            // EVENT LISTENER UNTUK STATUS GIZI
             const nutritionSelect = document.getElementById('nutritionAssessment');
-            if (nutritionSelect) {
-                nutritionSelect.addEventListener('change', function() {
-                    showNutritionForm(this.value);
+            const allForms = document.querySelectorAll('.assessment-form');
+
+            // Event listener untuk perubahan select
+            nutritionSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+
+                // Sembunyikan semua form
+                allForms.forEach(form => {
+                    form.style.display = 'none';
                 });
+
+                if (selectedValue === '5') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Pasien tidak dapat dinilai status gizinya',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    });
+                    document.getElementById('cannot-assess').value = 'tidak ada status gizi';
+                    return;
+                }
+
+                // Mapping ID form sesuai value
+                const formMapping = {
+                    '1': 'mst',
+                    '2': 'mna',
+                    '3': 'strong-kids',
+                    '4': 'nrs'
+                };
+
+                // Tampilkan form yang dipilih
+                const formId = formMapping[selectedValue];
+                if (formId) {
+                    const selectedForm = document.getElementById(formId);
+                    if (selectedForm) {
+                        selectedForm.style.display = 'block';
+                        initializeFormListeners(formId);
+                    }
+                }
+            });
+
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+            // 16. Discharge PLANING
+            const dischargePlanningSection = document.getElementById('discharge-planning');
+            const allSelects = dischargePlanningSection.querySelectorAll('select');
+            const alertWarning = dischargePlanningSection.querySelector('.alert-warning');
+            const alertSuccess = dischargePlanningSection.querySelector('.alert-success');
+            const alertInfo = dischargePlanningSection.querySelector('.alert-info');
+
+            // Function untuk update kesimpulan
+            function updateDischargePlanningConclusion() {
+                let needsSpecialPlan = false;
+                let allSelected = true;
+                const kesimpulanInput = document.getElementById('kesimpulan');
+
+                // Cek semua select
+                allSelects.forEach(select => {
+                    if (!select.value) {
+                        allSelected = false;
+                    } else if (select.value === 'ya') {
+                        needsSpecialPlan = true;
+                    }
+                });
+
+                // Jika belum semua dipilih, sembunyikan kedua alert
+                if (!allSelected) {
+                    alertInfo.style.display = 'block';
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'none';
+                    kesimpulanInput.value = 'Pilih semua Planning';
+                    return;
+                }
+
+                // Update tampilan kesimpulan
+                if (needsSpecialPlan) {
+                    alertWarning.style.display = 'block';
+                    alertSuccess.style.display = 'none';
+                    alertInfo.style.display = 'none';
+                    kesimpulanInput.value = 'Mebutuhkan rencana pulang khusus';
+                } else {
+                    alertWarning.style.display = 'none';
+                    alertSuccess.style.display = 'block';
+                    alertInfo.style.display = 'none';
+                    kesimpulanInput.value = 'Tidak mebutuhkan rencana pulang khusus';
+                }
             }
 
-            // Event listeners untuk form MST
-            document.querySelectorAll('#mst select').forEach(select => {
-                select.addEventListener('change', updateMSTConclusion);
+            // Tambahkan event listener untuk setiap select
+            allSelects.forEach(select => {
+                select.addEventListener('change', updateDischargePlanningConclusion);
             });
 
-            // Event listeners untuk form MNA
-            document.querySelectorAll('#mna select').forEach(select => {
-                select.addEventListener('change', updateMNAConclusion);
-            });
+            // Inisialisasi awal
+            updateDischargePlanningConclusion();
+            
 
-            // Event listeners untuk BMI calculation di MNA
-            const mnaWeight = document.getElementById('mnaWeight');
-            const mnaHeight = document.getElementById('mnaHeight');
-            if (mnaWeight && mnaHeight) {
-                mnaWeight.addEventListener('input', calculateMNABMI);
-                mnaHeight.addEventListener('input', calculateMNABMI);
+            //------------------------------------------------------------//
+            //------------------------------------------------------------//
+            //15. HANDLER DIAGNOSIS BANDING DAN DIAGNOSIS KERJA
+            initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
+            initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
+
+            function initDiagnosisManagement(prefix, hiddenFieldId) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 30px)';
+                suggestionsList.style.display = 'none';
+                
+                // Insert suggestions list after input
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Database options
+                const dbMasterDiagnosis = {!! json_encode($rmeMasterDiagnosis->pluck('nama_diagnosis')) !!};
+
+                // Prepare options array
+                const diagnosisOptions = dbMasterDiagnosis.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+                
+                // Load initial data if available
+                let diagnosisList = [];
+                try {
+                    diagnosisList = JSON.parse(hiddenInput.value) || [];
+                    renderDiagnosisList();
+                } catch (e) {
+                    diagnosisList = [];
+                    updateHiddenInput();
+                }
+                
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+                    
+                    if (inputValue) {
+                        // Filter database options
+                        const filteredOptions = diagnosisOptions.filter(option => 
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+                        
+                        // Show suggestions
+                        showSuggestions(filteredOptions, inputValue);
+                    } else {
+                        // Hide suggestions if input is empty
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                // Function to show suggestions
+                function showSuggestions(options, inputValue) {
+                    suggestionsList.innerHTML = '';
+                    
+                    if (options.length > 0) {
+                        // Render existing options
+                        options.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer';
+                            suggestionItem.textContent = option.text;
+                            suggestionItem.addEventListener('click', () => {
+                                addDiagnosis(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+                        
+                        // Add option to create new if no exact match
+                        if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.textContent = `Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addDiagnosis(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+                        
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.textContent = `Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addDiagnosis(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+                
+                // Add diagnosis when plus button is clicked
+                addButton.addEventListener('click', function() {
+                    const diagnosisText = inputField.value.trim();
+                    if (diagnosisText) {
+                        addDiagnosis(diagnosisText);
+                    }
+                });
+                
+                // Add diagnosis when Enter key is pressed
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const diagnosisText = this.value.trim();
+                        if (diagnosisText) {
+                            addDiagnosis(diagnosisText);
+                        }
+                    }
+                });
+                
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+                
+                function addDiagnosis(diagnosisText) {
+                    // Check for duplicates
+                    if (!diagnosisList.includes(diagnosisText)) {
+                        diagnosisList.push(diagnosisText);
+                        inputField.value = '';
+                        renderDiagnosisList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+                    } else {
+                        // Optional: Show feedback that it's a duplicate
+                        alert(`"${diagnosisText}" sudah ada dalam daftar`);
+                    }
+                }
+                
+                function renderDiagnosisList() {
+                    listContainer.innerHTML = '';
+                    
+                    diagnosisList.forEach((diagnosis, index) => {
+                        const diagnosisItem = document.createElement('div');
+                        diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
+                        
+                        const diagnosisSpan = document.createElement('span');
+                        diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm text-danger';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.type = 'button';
+                        deleteButton.addEventListener('click', function() {
+                            diagnosisList.splice(index, 1);
+                            renderDiagnosisList();
+                            updateHiddenInput();
+                        });
+                        
+                        diagnosisItem.appendChild(diagnosisSpan);
+                        diagnosisItem.appendChild(deleteButton);
+                        listContainer.appendChild(diagnosisItem);
+                    });
+                }
+                
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(diagnosisList);
+                }
             }
-
-            // Event listeners untuk form Strong Kids
-            document.querySelectorAll('#strong-kids select').forEach(select => {
-                select.addEventListener('change', updateStrongKidsConclusion);
-            });
-
-            // Event listeners untuk form NRS 2002 (bisa ditambahkan jika diperlukan)
-
-            // Sembunyikan semua form saat halaman dimuat
-            showNutritionForm('');
 
         });
 
-        // Fungsi untuk menampilkan form penilaian gizi yang dipilih
-        function showNutritionForm(selectedValue) {
+        //#END EVENT HANDLER DECLARATION
+        // ------------------------------------------------------------//
+        // ------------------------------------------------------------//
+
+        // 10.Implementasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all sections
+            initImplementationSection('rencana', 'rencana_penatalaksanaan', 'prognosis');
+            initImplementationSection('observasi', 'observasi', 'observasi');
+            initImplementationSection('terapeutik', 'terapeutik', 'terapeutik');
+            initImplementationSection('edukasi', 'edukasi', 'edukasi');
+            initImplementationSection('kolaborasi', 'kolaborasi', 'kolaborasi');
+
+            /**
+             * Initialize implementation section with dynamic options
+             * @param {string} prefix - The prefix for element IDs
+             * @param {string} hiddenFieldId - The ID of the hidden input field
+             * @param {string} dbColumn - The column name in database
+             */
+            function initImplementationSection(prefix, hiddenFieldId, dbColumn) {
+                const inputField = document.getElementById(`${prefix}-input`);
+                const addButton = document.getElementById(`add-${prefix}`);
+                const listContainer = document.getElementById(`${prefix}-list`);
+                const hiddenInput = document.getElementById(hiddenFieldId);
+                const suggestionsList = document.createElement('div');
+
+                // Style suggestions list
+                suggestionsList.className = 'suggestions-list position-absolute bg-white border rounded shadow';
+                suggestionsList.style.zIndex = '1000';
+                suggestionsList.style.maxHeight = '200px';
+                suggestionsList.style.overflowY = 'auto';
+                suggestionsList.style.width = 'calc(100% - 40px)';
+                suggestionsList.style.display = 'none';
+
+                // Insert
+                inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
+
+                // Get database
+                const rmeMasterImplementasi = {!! json_encode($rmeMasterImplementasi) !!};
+
+                // Filter out non-null values
+                let optionsFromDb = [];
+                if (rmeMasterImplementasi && rmeMasterImplementasi.length > 0) {
+                    optionsFromDb = rmeMasterImplementasi
+                        .filter(item => item[dbColumn] !== null &&
+                                    item[dbColumn] !== '(N/A)' &&
+                                    item[dbColumn] !== '(Null)')
+                        .map(item => item[dbColumn]);
+                }
+
+                // Remove duplicates
+                const uniqueOptions = [...new Set(optionsFromDb)];
+
+                // Prepare options array
+                const options = uniqueOptions.map(text => ({
+                    id: text.toLowerCase().replace(/\s+/g, '_'),
+                    text: text
+                }));
+
+                // Load initial data if available
+                let itemsList = [];
+                try {
+                    itemsList = JSON.parse(hiddenInput.value) || [];
+                    renderItemsList();
+                } catch (e) {
+                    itemsList = [];
+                    updateHiddenInput();
+                }
+
+                // Input event listener for suggestions
+                inputField.addEventListener('input', function() {
+                    const inputValue = this.value.trim().toLowerCase();
+
+                    if (inputValue) {
+                        const filteredOptions = options.filter(option =>
+                            option.text.toLowerCase().includes(inputValue)
+                        );
+
+                        const exactMatch = options.some(opt =>
+                            opt.text.toLowerCase() === inputValue
+                        );
+
+                        showSuggestions(filteredOptions, inputValue, exactMatch);
+                    } else {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                // Function to show
+                function showSuggestions(filtered, inputValue, exactMatch) {
+                    suggestionsList.innerHTML = '';
+
+                    if (filtered.length > 0) {
+                        filtered.forEach(option => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'suggestion-item p-2 cursor-pointer hover:bg-light';
+                            suggestionItem.style.cursor = 'pointer';
+
+                            const text = option.text;
+                            const lowerText = text.toLowerCase();
+                            const lowerInput = inputValue.toLowerCase();
+                            const index = lowerText.indexOf(lowerInput);
+
+                            if (index >= 0) {
+                                const before = text.substring(0, index);
+                                const match = text.substring(index, index + inputValue.length);
+                                const after = text.substring(index + inputValue.length);
+                                suggestionItem.innerHTML = `${before}<strong>${match}</strong>${after}`;
+                            } else {
+                                suggestionItem.textContent = text;
+                            }
+
+                            suggestionItem.addEventListener('click', () => {
+                                addItem(option.text);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(suggestionItem);
+                        });
+
+                        // Add option to create new if no exact match
+                        if (!exactMatch) {
+                            const newOptionItem = document.createElement('div');
+                            newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                            newOptionItem.style.cursor = 'pointer';
+                            newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                            newOptionItem.addEventListener('click', () => {
+                                addItem(inputValue);
+                                suggestionsList.style.display = 'none';
+                            });
+                            suggestionsList.appendChild(newOptionItem);
+                        }
+
+                        suggestionsList.style.display = 'block';
+                    } else {
+                        // If no options, show add new option
+                        const newOptionItem = document.createElement('div');
+                        newOptionItem.className = 'suggestion-item p-2 cursor-pointer text-primary';
+                        newOptionItem.style.cursor = 'pointer';
+                        newOptionItem.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Tambah "${inputValue}"`;
+                        newOptionItem.addEventListener('click', () => {
+                            addItem(inputValue);
+                            suggestionsList.style.display = 'none';
+                        });
+                        suggestionsList.appendChild(newOptionItem);
+                        suggestionsList.style.display = 'block';
+                    }
+                }
+
+                // Add item
+                addButton.addEventListener('click', function() {
+                    const itemText = inputField.value.trim();
+                    if (itemText) {
+                        addItem(itemText);
+                    }
+                });
+
+                // Add item when Enter
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const itemText = this.value.trim();
+                        if (itemText) {
+                            addItem(itemText);
+                        }
+                    }
+                });
+
+                // Close
+                document.addEventListener('click', function(e) {
+                    if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
+                        suggestionsList.style.display = 'none';
+                    }
+                });
+
+                /**
+                * Add item to the list
+                * @param {string} itemText - The text to add
+                */
+                function addItem(itemText) {
+                    // Check for duplicates
+                    if (!itemsList.includes(itemText)) {
+                        // Check if in database
+                        const existsInDb = optionsFromDb.includes(itemText);
+
+                        itemsList.push(itemText);
+                        inputField.value = '';
+                        renderItemsList();
+                        updateHiddenInput();
+                        suggestionsList.style.display = 'none';
+
+                        if (existsInDb) {
+                            const notification = document.createElement('div');
+                            notification.className = 'alert alert-info alert-dismissible fade show mt-2';
+                            notification.innerHTML = `
+                                <small>Item "${itemText}" sudah ada di database dan akan digunakan.</small>
+                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                            `;
+                            listContainer.parentNode.insertBefore(notification, listContainer.nextSibling);
+
+                            // Auto-dismiss after 3 seconds
+                            setTimeout(() => {
+                                notification.classList.remove('show');
+                                setTimeout(() => notification.remove(), 150);
+                            }, 3000);
+                        }
+                    } else {
+                        // Show feedback that it's a duplicate
+                        const toastContainer = document.createElement('div');
+                        toastContainer.className = 'position-fixed top-0 end-0 p-3';
+                        toastContainer.style.zIndex = '1050';
+
+                        const toast = document.createElement('div');
+                        toast.className = 'toast align-items-center text-white bg-danger border-0';
+                        toast.setAttribute('role', 'alert');
+                        toast.innerHTML = `
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi bi-exclamation-circle me-2"></i>
+                                    "${itemText}" sudah ada dalam daftar
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        `;
+
+                        toastContainer.appendChild(toast);
+                        document.body.appendChild(toastContainer);
+
+                        // Show toast
+                        const bsToast = new bootstrap.Toast(toast, {
+                            delay: 3000
+                        });
+                        bsToast.show();
+
+                        // Remove container after toast is hidden
+                        toast.addEventListener('hidden.bs.toast', function() {
+                            document.body.removeChild(toastContainer);
+                        });
+                    }
+                }
+
+                /**
+                * Render items list in the container
+                */
+                function renderItemsList() {
+                    listContainer.innerHTML = '';
+
+                    itemsList.forEach((item, index) => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'list-group-item d-flex justify-content-between align-items-center border-0 ps-0 bg-light';
+
+                        const itemSpan = document.createElement('span');
+                        itemSpan.textContent = `${index + 1}. ${item}`;
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-link text-danger p-0';
+                        deleteButton.type = 'button';
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.addEventListener('click', function() {
+                            itemsList.splice(index, 1);
+                            renderItemsList();
+                            updateHiddenInput();
+                        });
+
+                        itemElement.appendChild(itemSpan);
+                        itemElement.appendChild(deleteButton);
+                        listContainer.appendChild(itemElement);
+                    });
+
+                    // Show "Tidak ada data" message if the list is empty
+                    if (itemsList.length === 0) {
+                        const emptyMessage = document.createElement('div');
+                        emptyMessage.className = 'text-muted fst-italic small';
+                        emptyMessage.textContent = 'Belum ada data';
+                        listContainer.appendChild(emptyMessage);
+                    }
+                }
+
+                /**
+                * Update hidden input with JSON data
+                */
+                function updateHiddenInput() {
+                    hiddenInput.value = JSON.stringify(itemsList);
+                }
+            }
+        });
+
+        // ------------------------------------------------------------//
+        // Event handler untuk skala risiko jatuh
+        // Fungsi untuk menampilkan form yang dipilih
+        function showForm(formType) {
             // Sembunyikan semua form terlebih dahulu
-            document.querySelectorAll('.assessment-form').forEach(form => {
+            document.querySelectorAll('.risk-form').forEach(form => {
                 form.style.display = 'none';
             });
 
+            // Handle untuk opsi "Lainnya"
+            if (formType === '5') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: 'Pasien tidak dapat dinilai status resiko jatuh',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        popup: 'animated fadeInDown faster'
+                    },
+                    backdrop: `
+                        rgba(244, 244, 244, 0.7)
+                    `
+                });
+                document.getElementById('skala_lainnya').value = 'resiko jatuh lainnya';
+                return;
+            }
+
+            // Mapping nilai select ke id form
+            const formMapping = {
+                '1': 'skala_umumForm',
+                '2': 'skala_morseForm',
+                '3': 'skala_humptyForm',
+                '4': 'skala_ontarioForm'
+            };
+
             // Tampilkan form yang dipilih
-            if (selectedValue) {
-                const selectedForm = document.getElementById(selectedValue);
+            if (formType && formMapping[formType]) {
+                const selectedForm = document.getElementById(formMapping[formType]);
                 if (selectedForm) {
                     selectedForm.style.display = 'block';
+                    resetForm(selectedForm);
                 }
             }
         }
 
-        // Fungsi untuk menghitung skor MST dan update kesimpulan
-        function updateMSTConclusion() {
-            let total = 0;
-            const mstSelects = document.querySelectorAll('#mst select');
-            
-            mstSelects.forEach(select => {
-                if (select.value) {
-                    total += parseInt(select.value);
+        // Reset form saat berganti
+        function resetForm(form) {
+            form.querySelectorAll('select').forEach(select => select.value = '');
+            const formType = form.id.replace('skala_', '').replace('Form', '');
+            const conclusionDiv = form.querySelector('.conclusion');
+            const defaultConclusion = formType === 'umum' ? 'Tidak berisiko jatuh' : 'Risiko Rendah';
+
+            // Reset kesimpulan ke default
+            if (conclusionDiv) {
+                conclusionDiv.className = 'conclusion bg-success';
+                conclusionDiv.querySelector('p span').textContent = defaultConclusion;
+
+                // Reset hidden input value
+                const hiddenInput = conclusionDiv.querySelector('input[type="hidden"]');
+                if (hiddenInput) {
+                    hiddenInput.value = defaultConclusion;
                 }
+            }
+        }
+
+        // Update kesimpulan berdasarkan pilihan
+        function updateConclusion(formType) {
+            const form = document.getElementById('skala_' + formType + 'Form');
+            const selects = form.querySelectorAll('select');
+            let score = 0;
+            let hasYes = false;
+
+            // Hitung skor
+            selects.forEach(select => {
+                if (select.value === '1') {
+                    hasYes = true;
+                }
+                score += parseInt(select.value) || 0;
             });
 
-            const conclusion = document.getElementById('mstConclusion');
-            if (conclusion) {
-                conclusion.querySelector('.alert-success').style.display = total < 2 ? 'block' : 'none';
-                conclusion.querySelector('.alert-warning').style.display = total >= 2 ? 'block' : 'none';
+            // Dapatkan div kesimpulan dari form yang aktif
+            const conclusionDiv = form.querySelector('.conclusion');
+            const conclusionSpan = conclusionDiv.querySelector('#kesimpulanTextForm');
+            const conclusionInput = conclusionDiv.querySelector('input[type="hidden"]');
+            let conclusion = '';
+            let bgClass = '';
+
+            // Tentukan kesimpulan berdasarkan tipe form
+            switch (formType) {
+                case 'umum':
+                    if (hasYes) {
+                        conclusion = 'Berisiko jatuh';
+                        bgClass = 'bg-danger';
+                    } else {
+                        conclusion = 'Tidak berisiko jatuh';
+                        bgClass = 'bg-success';
+                    }
+                    // Update hidden input untuk form umum
+                    if (conclusionInput) {
+                        conclusionInput.value = conclusion;
+                    }
+                    break;
+
+                case 'morse':
+                    if (score >= 45) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else if (score >= 25) {
+                        conclusion = 'Risiko Sedang';
+                        bgClass = 'bg-warning';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    conclusion += ' (Skor: ' + score + ')';
+                    // Update hidden input untuk form morse
+                    document.getElementById('risiko_jatuh_morse_kesimpulan').value = conclusion;
+                    break;
+
+                case 'humpty':
+                    if (score >= 12) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    conclusion += ' (Skor: ' + score + ')';
+                    document.getElementById('risiko_jatuh_pediatrik_kesimpulan').value = conclusion;
+                    break;
+
+                case 'ontario':
+                    if (score >= 9) {
+                        conclusion = 'Risiko Tinggi';
+                        bgClass = 'bg-danger';
+                    } else if (score >= 4) {
+                        conclusion = 'Risiko Sedang';
+                        bgClass = 'bg-warning';
+                    } else {
+                        conclusion = 'Risiko Rendah';
+                        bgClass = 'bg-success';
+                    }
+                    conclusion += ' (Skor: ' + score + ')';
+                    document.getElementById('risiko_jatuh_lansia_kesimpulan').value = conclusion;
+                    break;
+            }
+
+            // Update tampilan kesimpulan
+            if (conclusionDiv) {
+                conclusionDiv.className = 'conclusion ' + bgClass;
+                conclusionSpan.textContent = conclusion;
             }
         }
 
-        // Fungsi untuk menghitung skor MNA dan update kesimpulan
-        function updateMNAConclusion() {
-            let total = 0;
-            const mnaSelects = document.querySelectorAll('#mna select');
-            
-            mnaSelects.forEach(select => {
-                if (select.value) {
-                    total += parseInt(select.value);
-                }
+        // ------------------------------------------------------------//
+        // ------------------------------------------------------------//
+
+
+
+        // ------------------------------------------------------------//
+        // Event handler untuk Decuibitus
+
+        const decubitusScores = {
+            norton: {
+                low: 15,    // > 15 risiko rendah
+                medium: 13,  // 13-14 risiko sedang
+                high: 12     // < 12 risiko tinggi
+            },
+            braden: {
+                high: 12,    // ≤ 12 risiko tinggi
+                medium: 16,  // 13-16 risiko sedang
+                low: 17      // ≥ 17 risiko rendah
+            }
+        };
+
+        // Fungsi untuk menampilkan form decubitus yang dipilih
+        function showDecubitusForm(formType) {
+            document.querySelectorAll('.decubitus-form').forEach(form => {
+                form.style.display = 'none';
             });
 
-            const conclusion = document.getElementById('mnaConclusion');
-            if (conclusion) {
-                conclusion.querySelector('.alert-success').style.display = total >= 12 ? 'block' : 'none';
-                conclusion.querySelector('.alert-warning').style.display = total <= 11 ? 'block' : 'none';
+            let formElement = null;
+            if (formType === 'norton') {
+                formElement = document.getElementById('formNorton');
+            } else if (formType === 'braden') {
+                formElement = document.getElementById('formBraden');
+            }
+
+            // Tampilkan form yang dipilih
+            if (formElement) {
+                formElement.style.display = 'block';
+                resetDecubitusForm(formElement);
             }
         }
 
-        // Fungsi untuk menghitung BMI di form MNA
-        function calculateMNABMI() {
-            const weight = parseFloat(document.getElementById('mnaWeight').value);
-            const height = parseFloat(document.getElementById('mnaHeight').value) / 100; // Convert cm to meters
+        // Reset form saat berganti
+        function resetDecubitusForm(form) {
+            if (!form) return;
+            
+            form.querySelectorAll('select').forEach(select => select.value = '');
+            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
+            if (kesimpulanDiv) {
+                kesimpulanDiv.className = 'alert alert-success mb-0 flex-grow-1';
+                kesimpulanDiv.textContent = 'Risiko Rendah';
+            }
+        }
 
-            if (!isNaN(weight) && !isNaN(height) && height > 0) {
-                const bmi = weight / (height * height);
-                document.getElementById('mnaBMI').value = bmi.toFixed(2);
+        // Update kesimpulan berdasarkan pilihan
+        function updateDecubitusConclusion(formType) {
+            const form = document.getElementById('form' + formType.charAt(0).toUpperCase() + formType.slice(1));
+            if (!form) return;
+
+            const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
+            if (!kesimpulanDiv) return;
+
+            if (formType === 'norton') {
+                let total = 0;
+                let allFilled = true;
+                const fields = ['kondisi_fisik', 'kondisi_mental', 'norton_aktivitas', 'norton_mobilitas', 'inkontinensia'];
+
+                fields.forEach(field => {
+                    const select = form.querySelector(`select[name="${field}"]`);
+                    if (!select || !select.value) {
+                        allFilled = false;
+                        return;
+                    }
+                    total += parseInt(select.value);
+                });
+
+                // Debug untuk melihat nilai
+                console.log('Total Score:', total);
+                console.log('All Fields Filled:', allFilled);
+
+                if (!allFilled) {
+                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    return;
+                }
+
+                let conclusion = '';
+                let alertClass = '';
+
+                // Cek total skor dan tentukan kesimpulan
+                if (total <= decubitusScores.norton.high) {
+                    conclusion = 'Risiko Tinggi';
+                    alertClass = 'alert-danger';
+                } else if (total <= decubitusScores.norton.medium) {
+                    conclusion = 'Risiko Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    conclusion = 'Risiko Rendah';
+                    alertClass = 'alert-success';
+                }
+
+                conclusion += ` (Skor: ${total})`;
+                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                kesimpulanDiv.textContent = conclusion;
+            }
+            else if (formType === 'braden') {
+                let total = 0;
+                let allFilled = true;
+                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi', 'pergesekan'];
+
+                fields.forEach(field => {
+                    const select = form.querySelector(`select[name="${field}"]`);
+                    if (!select || !select.value) {
+                        allFilled = false;
+                        return;
+                    }
+                    total += parseInt(select.value);
+                });
+
+                // Debug untuk melihat nilai
+                console.log('Total Braden Score:', total);
+                console.log('All Braden Fields Filled:', allFilled);
+
+                if (!allFilled) {
+                    kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
+                    kesimpulanDiv.textContent = 'Pilih semua kriteria untuk melihat kesimpulan';
+                    return;
+                }
+
+                let conclusion = '';
+                let alertClass = '';
+
+                // Cek total skor dan tentukan kesimpulan
+                if (total <= 12) {
+                    conclusion = 'Risiko Tinggi';
+                    alertClass = 'alert-danger';
+                } else if (total <= 16) {
+                    conclusion = 'Risiko Sedang';
+                    alertClass = 'alert-warning';
+                } else {
+                    conclusion = 'Risiko Rendah';
+                    alertClass = 'alert-success';
+                }
+
+                conclusion += ` (Skor: ${total})`;
+                kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
+                kesimpulanDiv.textContent = conclusion;
+            }
+        }
+
+        // ------------------------------------------------------------//
+        // ------------------------------------------------------------//
+
+
+        // Fungsi untuk menampilkan form penilaian gizi yang dipilih
+        // Inisialisasi listener untuk setiap form
+        function initializeFormListeners(formId) {
+            const form = document.getElementById(formId);
+            const selects = form.querySelectorAll('select');
+
+            switch (formId) {
+                case 'mst':
+                    selects.forEach(select => {
+                        select.addEventListener('change', () => calculateMSTScore(form));
+                    });
+                    break;
+                case 'mna':
+                    selects.forEach(select => {
+                        select.addEventListener('change', () => calculateMNAScore(form));
+                    });
+                    initializeBMICalculation();
+                    break;
+                case 'strong-kids':
+                    selects.forEach(select => {
+                        select.addEventListener('change', () => calculateStrongKidsScore(form));
+                    });
+                    break;
+                case 'nrs':
+                    selects.forEach(select => {
+                        select.addEventListener('change', () => calculateNRSScore(form));
+                    });
+                    break;
+            }
+        }
+
+        // Fungsi perhitungan MST
+        function calculateMSTScore() {
+            const form = document.getElementById('mst');
+            const selects = form.querySelectorAll('select');
+            let total = 0;
+
+            selects.forEach(select => {
+                total += parseInt(select.value || 0);
+            });
+
+            const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
+            document.getElementById('gizi_mst_kesimpulan').value = kesimpulan;
+
+            const conclusions = form.querySelectorAll('.alert');
+            conclusions.forEach(alert => {
+                if ((total <= 1 && alert.classList.contains('alert-success')) ||
+                    (total >= 2 && alert.classList.contains('alert-warning'))) {
+                    alert.style.display = 'block';
+                } else {
+                    alert.style.display = 'none';
+                }
+            });
+        }
+
+        // Fungsi perhitungan BMI
+        function initializeBMICalculation() {
+            const weightInput = document.getElementById('mnaWeight');
+            const heightInput = document.getElementById('mnaHeight');
+            const bmiInput = document.getElementById('mnaBMI');
+
+            function calculateBMI() {
+                const weight = parseFloat(weightInput.value || 0);
+                const height = parseFloat(heightInput.value || 0);
+
+                if (weight > 0 && height > 0) {
+                    const heightInMeters = height / 100;
+                    const bmi = weight / (heightInMeters * heightInMeters);
+                    bmiInput.value = bmi.toFixed(2);
+                }
+            }
+
+            if (weightInput && heightInput) {
+                weightInput.addEventListener('input', calculateBMI);
+                heightInput.addEventListener('input', calculateBMI);
+            }
+        }
+
+        // Fungsi perhitungan MNA
+        function calculateMNAScore(form) {
+            const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
+            let total = 0;
+
+            // Hitung total skor
+            selects.forEach(select => {
+                const value = parseInt(select.value || 0);
+                total += value;
+            });
+
+            // Set kesimpulan berdasarkan total skor
+            const kesimpulan = total >= 12 ? '≥ 12 Tidak Beresiko' : '≤ 11 Beresiko malnutrisi';
+
+            // Update hidden input untuk kesimpulan
+            const kesimpulanInput = document.getElementById('gizi_mna_kesimpulan');
+            if (kesimpulanInput) {
+                kesimpulanInput.value = kesimpulan;
+            }
+
+            // Update UI untuk menampilkan kesimpulan
+            const conclusionDiv = document.getElementById('mnaConclusion');
+            if (conclusionDiv) {
+                const alertClass = total >= 12 ? 'alert-success' : 'alert-warning';
+                conclusionDiv.innerHTML = `
+                <div class="alert ${alertClass}">
+                    Kesimpulan: ${kesimpulan} (Total Score: ${total})
+                </div>
+                <input type="hidden" name="gizi_mna_kesimpulan" id="gizi_mna_kesimpulan" value="${kesimpulan}">
+                `;
+            }
+        }
+
+        // Fungsi perhitungan Strong Kids
+        function calculateStrongKidsScore(form) {
+            const selects = form.querySelectorAll('select');
+            let total = 0;
+
+            // Hitung total score
+            selects.forEach(select => {
+                total += parseInt(select.value || 0);
+            });
+
+            // Tentukan kesimpulan dan type alert
+            let kesimpulan, type, kesimpulanText;
+            if (total === 0) {
+                kesimpulan = 'Beresiko rendah';
+                kesimpulanText = '0 (Beresiko rendah)';
+                type = 'success';
+            } else if (total >= 1 && total <= 3) {
+                kesimpulan = 'Beresiko sedang';
+                kesimpulanText = '1-3 (Beresiko sedang)';
+                type = 'warning';
             } else {
-                document.getElementById('mnaBMI').value = '';
+                kesimpulan = 'Beresiko Tinggi';
+                kesimpulanText = '4-5 (Beresiko Tinggi)';
+                type = 'danger';
             }
+
+            // Update hidden input untuk kesimpulan
+            const kesimpulanInput = document.getElementById('gizi_strong_kesimpulan');
+            if (kesimpulanInput) {
+                kesimpulanInput.value = kesimpulanText;
+            }
+
+            // Update UI untuk menampilkan kesimpulan
+            const conclusionDiv = document.getElementById('strongKidsConclusion');
+            if (conclusionDiv) {
+                conclusionDiv.innerHTML = `
+                <div class="alert alert-${type}">
+                    Kesimpulan: ${kesimpulanText} (Total Score: ${total})
+                </div>
+                <input type="hidden" name="gizi_strong_kesimpulan" id="gizi_strong_kesimpulan" value="${kesimpulanText}">
+                `;
+            }
+
+            // Update tampilan form conclusion
+            updateFormConclusion(form, kesimpulan, type);
         }
 
-        // Fungsi untuk menghitung skor Strong Kids dan update kesimpulan
-        function updateStrongKidsConclusion() {
+        // Fungsi perhitungan NRS
+        function calculateNRSScore(form) {
+            const selects = form.querySelectorAll('select');
             let total = 0;
-            const strongKidsSelects = document.querySelectorAll('#strong-kids select');
-            
-            strongKidsSelects.forEach(select => {
-                if (select.value) {
-                    total += parseInt(select.value);
+
+            // Hitung total score
+            selects.forEach(select => {
+                total += parseInt(select.value || 0);
+            });
+
+            // Tentukan kesimpulan dan type alert
+            let kesimpulan, type, kesimpulanText;
+            if (total <= 5) {
+                kesimpulan = 'Beresiko rendah';
+                kesimpulanText = '≤ 5 (Beresiko rendah)';
+                type = 'success';
+            } else if (total <= 10) {
+                kesimpulan = 'Beresiko sedang';
+                kesimpulanText = '6-10 (Beresiko sedang)';
+                type = 'warning';
+            } else {
+                kesimpulan = 'Beresiko Tinggi';
+                kesimpulanText = '> 10 (Beresiko Tinggi)';
+                type = 'danger';
+            }
+
+            // Update hidden input untuk kesimpulan
+            const kesimpulanInput = document.getElementById('gizi_nrs_kesimpulan');
+            if (kesimpulanInput) {
+                kesimpulanInput.value = kesimpulanText;
+            }
+
+            // Update UI untuk menampilkan kesimpulan
+            const conclusionDiv = document.getElementById('nrsConclusion');
+            if (conclusionDiv) {
+                conclusionDiv.innerHTML = `
+                <div class="alert alert-${type}">
+                    Kesimpulan: ${kesimpulanText} (Total Score: ${total})
+                </div>
+                <input type="hidden" name="gizi_nrs_kesimpulan" id="gizi_nrs_kesimpulan" value="${kesimpulanText}">
+                `;
+            }
+
+            // Update tampilan form conclusion
+            updateFormConclusion(form, kesimpulan, type);
+        }
+
+        // Fungsi untuk update tampilan kesimpulan
+        function updateFormConclusion(form, text, type) {
+            const conclusions = form.querySelectorAll('.alert');
+            conclusions.forEach(alert => {
+                if (alert.classList.contains(`alert-${type}`)) {
+                    alert.style.display = 'block';
+                } else {
+                    alert.style.display = 'none';
                 }
             });
 
-            const conclusion = document.getElementById('strongKidsConclusion');
-            if (conclusion) {
-                conclusion.querySelector('.alert-success:first-child').style.display = total === 0 ? 'block' : 'none';
-                conclusion.querySelector('.alert-warning').style.display = total >= 1 && total <= 3 ? 'block' : 'none';
-                conclusion.querySelector('.alert-success:last-child').style.display = total >= 4 ? 'block' : 'none';
+            // Update hidden input if exists
+            const hiddenInput = form.querySelector('input[type="hidden"]');
+            if (hiddenInput) {
+                hiddenInput.value = text;
             }
         }
 
+
+        //------------------------------------------------------------//
         // Fungsi global untuk menghapus item yang dipilih
         function removeItem(containerId, item) {
             const container = document.getElementById(containerId);

@@ -37,9 +37,10 @@ class AsesmenController extends Controller
             $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
             $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
         })
-        ->where('kunjungan.kd_pasien', $kd_pasien)
+        ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+        ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -77,12 +78,19 @@ class AsesmenController extends Controller
         $efeknyeri = RmeEfekNyeri::all();
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
-        $asesmen = RmeAsesmen::with(['user']) // Pastikan relasi user tersedia
-        ->join('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+        $asesmen = RmeAsesmen::with(['user'])
+        ->leftJoin('data_triase', 'RME_ASESMEN.id', '=',
+            'data_triase.id_asesmen'
+        )
         ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
-            ->select('RME_ASESMEN.*', 'data_triase.tanggal_triase') // Pilih kolom yang dibutuhkan, termasuk tanggal_triase
-            ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
-            ->get();
+        ->where('RME_ASESMEN.kd_unit', $kd_unit)
+        ->select(
+            'RME_ASESMEN.*',
+            'data_triase.tanggal_triase',
+            'data_triase.id as id_triase'
+        )
+        ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc')
+        ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
             'dataMedis',

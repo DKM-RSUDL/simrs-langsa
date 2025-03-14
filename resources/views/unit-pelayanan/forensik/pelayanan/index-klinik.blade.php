@@ -54,12 +54,7 @@
 
                     <!-- Add Button -->
                     <div class="col-md-2">
-                        <a href="{{ route('forensik.unit.pelayanan.create', [
-                            'kd_unit' => $kd_unit,
-                            'kd_pasien' => $kd_pasien,
-                            'tgl_masuk' => $tgl_masuk,
-                            'urut_masuk' => $urut_masuk,
-                        ]) }}"
+                        <a href="{{ route('forensik.unit.pelayanan.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                             class="btn btn-primary">
                             <i class="bi bi-plus"></i> Tambah
                         </a>
@@ -70,48 +65,109 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="table-primary">
-                        <tr>
+                        <tr align="middle">
                             <th>Tanggal & Jam</th>
                             <th>Petugas</th>
-                            <th>Jenis Pelayanan</th>
-                            <th>Status</th>
+                            <th>Asal Rujukan</th>
+                            <th>Diagnosos</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>05 Des 2024 14:30</td>
-                            <td>dr. Budi Santoso (Dokter Forensik)</td>
-                            <td>
-                                <p class="text-primary fw-bold m-0">Visum et Repertum</p>
-                                <p class="m-0">Pemeriksaan Luka Akibat Kekerasan Tumpul</p>
-                            </td>
-                            <td>
-                                <span class="badge bg-success">Selesai</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i></button>
-                                <button class="btn btn-sm"><i class="bi bi-x-circle-fill text-danger"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>04 Des 2024 09:15</td>
-                            <td>Ns. Siti Aminah (Perawat Forensik)</td>
-                            <td>
-                                <p class="text-primary fw-bold m-0">Pemeriksaan Forensik</p>
-                                <p class="m-0">Pengambilan Sampel DNA</p>
-                            </td>
-                            <td>
-                                <span class="badge bg-warning text-dark">Dalam Proses</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i></button>
-                                <button class="btn btn-sm"><i class="bi bi-x-circle-fill text-danger"></i></button>
-                            </td>
-                        </tr>
+                        @foreach ($pemeriksaan as $item)
+                            <tr>
+                                <td align="middle">{{ date('d M Y', strtotime($item->tgl_pemeriksaan)) . ' ' . date('H:i', strtotime($item->jam_pemeriksaan)) }}</td>
+                                <td>{{ str()->title($item->userCreate->name) }}</td>
+                                <td>{{ $item->asal_rujukan }}</td>
+                                <td>{{ $item->diagnosos }}</td>
+                                <td align="middle">
+                                    <a href="{{ route('forensik.unit.pelayanan.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('forensik.unit.pelayanan.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-warning mx-2"><i class="bi bi-pencil-square"></i></a>
+                                    <button class="btn btn-sm btn-del-pemeriksaan" data-pemeriksaan="{{ encrypt($item->id) }}"><i class="bi bi-x-circle-fill text-danger"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $('.btn-del-pemeriksaan').click(function(e) {
+            let $this = $(this);
+            let pemeriksaan = $this.attr('data-pemeriksaan');
+
+
+            Swal.fire({
+                title: "Anda yakin ingin menghapus?",
+                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('forensik.unit.pelayanan.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            _method: "delete",
+                            pemeriksaan: pemeriksaan
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Sedang Memproses',
+                                html: 'Mohon tunggu sebentar...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
+
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Gagal!",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false,
+                                });
+
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: "Data pemeriksaan berhasil dihapus !",
+                                icon: "success",
+                                allowOutsideClick: false,
+                            });
+
+                            location.reload();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Gagal!",
+                                text: "Internal Server Error",
+                                icon: "error",
+                                allowOutsideClick: false,
+                            });
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+@endpush

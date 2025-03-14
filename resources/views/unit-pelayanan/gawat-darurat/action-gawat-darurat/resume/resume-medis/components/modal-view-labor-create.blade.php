@@ -23,6 +23,7 @@
                             <th>Hasil</th>
                             <th>Satuan</th>
                             <th>Nilai Normal</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                     <tbody id="modal-hasil-content">
@@ -31,84 +32,110 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-primary" id="saveLabDataPrint">Simpan Pilihan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        $(document).on('click', '.btn-view-labor-create', function() {
-            const kdOrder = $(this).data('kd-order');
-            const namaPemeriksaan = $(this).data('nama-pemeriksaan');
-            const klasifikasi = $(this).data('klasifikasi');
-            const nomorPemeriksaan = $(this).data('nomor');
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.btn-view-labor-create', function() {
+                const kdOrder = $(this).data('kd-order');
+                const namaPemeriksaan = $(this).data('nama-pemeriksaan');
+                const klasifikasi = $(this).data('klasifikasi');
+                const nomorPemeriksaan = $(this).data('nomor');
 
-            $('#nomor-pemeriksaan').text(nomorPemeriksaan);
-            $('#nama-pemeriksaan').text(namaPemeriksaan);
-            $('#nama-klasifikasi').text(` (${klasifikasi})`);
+                $('#nomor-pemeriksaan').text(nomorPemeriksaan);
+                $('#nama-pemeriksaan').text(namaPemeriksaan);
+                $('#nama-klasifikasi').text(` (${klasifikasi})`);
 
-            $('#modal-hasil-content').empty();
+                $('#modal-hasil-content').empty();
 
-            // Ambil data yang sudah di-transform di controller
-            const labResults = {!! json_encode($dataLabor) !!};
-            const orderData = labResults.find(order => order.kd_order === kdOrder);
+                // Ambil data yang sudah di-transform di controller
+                const labResults = {!! json_encode($dataLabor) !!};
+                const orderData = labResults.find(order => order.kd_order === kdOrder);
 
-            if (orderData && orderData.details) {
-                const detail = orderData.details.find(d =>
-                    (d.produk?.deskripsi ?? 'Pemeriksaan') === namaPemeriksaan
-                );
+                if (orderData && orderData.details) {
+                    const detail = orderData.details.find(d =>
+                        (d.produk?.deskripsi ?? 'Pemeriksaan') === namaPemeriksaan
+                    );
 
-                if (detail && detail.labResults && detail.labResults[namaPemeriksaan]) {
-                    const results = detail.labResults[namaPemeriksaan];
-                    let counter = 1;
+                    if (detail && detail.labResults && detail.labResults[namaPemeriksaan]) {
+                        const results = detail.labResults[namaPemeriksaan];
+                        let counter = 1;
 
-                    // Header klasifikasi
-                    $('#modal-hasil-content').append(`
-                        <tr class="table-secondary">
-                            <td colspan="5" class="fw-bold">${klasifikasi}</td>
-                        </tr>
-                    `);
-
-                    // Tampilkan hasil tests
-                    results.tests.forEach(test => {
-                        const row = `
-                            <tr>
-                                <td>${counter++}</td>
-                                <td>${test.item_test || '-'}</td>
-                                <td>${test.hasil || '-'}</td>
-                                <td>${test.satuan || '-'}</td>
-                                <td>${test.nilai_normal || '-'}</td>
+                        // Header klasifikasi
+                        $('#modal-hasil-content').append(`
+                            <tr class="table-secondary">
+                                <td colspan="6" class="fw-bold">${klasifikasi}</td>
                             </tr>
-                        `;
-                        $('#modal-hasil-content').append(row);
-                    });
+                        `);
 
-                    if (counter === 1) {
+                        // Tampilkan hasil tests
+                        results.tests.forEach(test => {
+                            const row = `
+                                <tr>
+                                    <td>${counter++}</td>
+                                    <td>${test.item_test || '-'}</td>
+                                    <td>${test.hasil || '-'}</td>
+                                    <td>${test.satuan || '-'}</td>
+                                    <td>${test.nilai_normal || '-'}</td>
+                                    <td>
+                                        <input type="checkbox" name="labdata_print[]" value="${test.item_test + ' = ' + test.hasil + ' ' + test.satuan}" class="addLabDataPrint">
+                                    </td>
+                                </tr>
+                            `;
+                            $('#modal-hasil-content').append(row);
+                        });
+
+                        if (counter === 1) {
+                            $('#modal-hasil-content').append(`
+                                <tr>
+                                    <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan detail untuk ${namaPemeriksaan}</td>
+                                </tr>
+                            `);
+                        }
+                    } else {
                         $('#modal-hasil-content').append(`
                             <tr>
-                                <td colspan="5" class="text-center">Tidak ada hasil pemeriksaan detail untuk ${namaPemeriksaan}</td>
+                                <td colspan="5" class="text-center">Tidak ada data hasil laboratorium</td>
                             </tr>
                         `);
                     }
                 } else {
                     $('#modal-hasil-content').append(`
                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada data hasil laboratorium</td>
+                            <td colspan="5" class="text-center">Data tidak ditemukan</td>
                         </tr>
                     `);
                 }
-            } else {
-                $('#modal-hasil-content').append(`
-                    <tr>
-                        <td colspan="5" class="text-center">Data tidak ditemukan</td>
-                    </tr>
-                `);
-            }
 
-            // Tampilkan modal
-            $('#modal-view-labor-create').modal('show');
+                // Tampilkan modal
+                $('#modal-view-labor-create').modal('show');
+            });
+
+
+            $('#saveLabDataPrint').click(function() {
+                let $this = $(this);
+                let $modal = $this.closest('.modal');
+                let hasilPemeriksaanInputEl = $('#pemeriksaan_penunjang');
+                let hasilPemeriksaanVal = $(hasilPemeriksaanInputEl).val();
+
+                let hasilSelected = $('input[name="labdata_print[]"]:checked');
+                let hasilVal = '';
+
+                $(hasilSelected).each((i, e) => {
+                    if($(e).val().trim() != '') hasilVal += $(e).val().trim() + ', ';
+                });
+
+                let valResult = hasilPemeriksaanVal + hasilVal;
+                $(hasilPemeriksaanInputEl).val(valResult);
+
+                $modal.modal('hide');
+            });
         });
-    });
     </script>
+@endpush

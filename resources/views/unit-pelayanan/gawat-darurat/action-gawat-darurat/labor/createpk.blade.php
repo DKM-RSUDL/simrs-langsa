@@ -99,7 +99,7 @@
                                             & Jam Pemeriksaan:</label>
                                         <input type="datetime-local" id="jadwal_pemeriksaan"
                                             name="jadwal_pemeriksaan" class="form-control"
-                                            value="{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d H:i:s') }}">
+                                            value="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -280,9 +280,15 @@
         $('#addLaborModal').on('shown.bs.modal', function(e) {
             let $this = $(this);
 
-            $this.find('#kd_dokter').mousedown(function(e) {
-                e.preventDefault();
-            });
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#kd_dokter').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
         });
 
         // $(document).ready(function() {

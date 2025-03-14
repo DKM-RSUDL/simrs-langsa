@@ -27,7 +27,10 @@ class RMEResume extends Model
         'icd_9',
         'alergi',
         'status',
-        'user_validasi'
+        'user_validasi',
+        'alergi',
+        'anjuran_diet',
+        'anjuran_edukasi',
     ];
 
     protected $casts = [
@@ -37,6 +40,11 @@ class RMEResume extends Model
         'icd_9' => 'array',
         'alergi' => 'array',
     ];
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
+    }
 
     public function rmeResumeDet()
     {
@@ -66,7 +74,7 @@ class RMEResume extends Model
     {
         return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
     }
-public function konsultasi()
+    public function konsultasi()
     {
         return $this->belongsTo(Konsultasi::class, 'kd_pasien', 'kd_pasien');
     }

@@ -8,16 +8,22 @@ use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\LabHasil;
 use App\Models\LapLisItemPemeriksaan;
+use App\Models\Otoritas;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
 use App\Models\Transaksi;
+use App\Models\UnitAsal;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 
 class LaborController extends Controller
 {
@@ -226,6 +232,7 @@ class LaborController extends Controller
 
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
             // Field untuk SegalaOrder
             'kd_pasien' => 'required|string|max:12',
@@ -315,6 +322,7 @@ class LaborController extends Controller
             'kd_kasir' => $validatedData['kd_kasir'] ?? null,
             'status_order' => 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
+            'user_create' => Auth::id()
         ]);
 
         foreach ($validatedData['kd_produk'] as $index => $kd_produk) {
@@ -359,7 +367,7 @@ class LaborController extends Controller
             'transaksi_penunjang' => 'nullable|string|max:255',
             'cyto' => 'required|string|max:2',
             'puasa' => 'required|string|max:2',
-            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:tgl_order',
+            'jadwal_pemeriksaan' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:tgl_order',
             'diagnosis' => 'nullable|string|max:255',
 
             // Field untuk SegalaOrderDet (ubah menjadi array)
@@ -413,6 +421,7 @@ class LaborController extends Controller
             'status_order' => 1,
             'transaksi_penunjang' => $validatedData['transaksi_penunjang'] ?? null,
             'kd_dokter' => $validatedData['kd_dokter'],
+            'user_edit' => Auth::id()
         ]);
 
         // Delete existing order details
@@ -502,126 +511,58 @@ class LaborController extends Controller
 
     public function cetak(Request $request, $kd_pasien, $tgl_masuk)
     {
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_unit', 3)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+
+        $validator = Validator::make($request->all(), [
+            'no_transaksi'    => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'No Transaksi kosong !',
+                'data'      => []
+            ]);
+        }
+
+        $no_transaksi = $request->no_transaksi;
+        $unitAsal = UnitAsal::where('no_transaksi_asal', $no_transaksi)->first();
+
+        if (empty($unitAsal)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data tidak ditemukan !',
+                'data'      => []
+            ]);
+        }
+
+        $otoritas = Otoritas::where('no_transaksi', $unitAsal->no_transaksi)
+            ->where('kd_kasir', $unitAsal->kd_kasir)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('status', 1)
             ->first();
 
-        $DataLapPemeriksaan = LapLisItemPemeriksaan::with('produk')
-            ->select('kategori', 'kd_produk')
-            ->get()
-            ->groupBy('kategori');
-
-
-        // $dataDokter = Dokter::where('status', 1)->get();
-
-        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
-            ->where('kd_unit', 3)
-            ->whereRelation('dokter', 'status', 1)
-            ->get();
-
-        // ambil Diagnosis dari emr_resume
-        $dataDiagnosis = RMEResume::with(['kunjungan'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $dataMedis->urut_masuk)
-            ->where('kd_unit', 3)
-            ->orderBy('tgl_masuk', 'desc')
-            ->first();
-
-        // Jika data ada, ambil nilai array diagnosis
-        $diagnosisList = [];
-        if ($dataDiagnosis && is_array($dataDiagnosis->diagnosis)) {
-            $diagnosisList = array_map(function ($item) {
-                return trim($item, '"[]');
-            }, $dataDiagnosis->diagnosis);
+        if (empty($otoritas)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data Otoritas tidak ditemukan !',
+                'data'      => []
+            ]);
         }
 
-        $search = $request->input('search');
-        $periode = $request->input('periode');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        // Get main data
-        $dataLabor = SegalaOrder::with(['details', 'laplisitempemeriksaan', 'dokter', 'produk', 'unit'])
-            ->when($periode, function ($query) use ($periode) {
-                $now = now();
-                switch ($periode) {
-                    case 'option1':
-                        return $query->whereYear('tgl_order', $now->year)
-                            ->whereMonth('tgl_order', $now->month);
-                    case 'option2':
-                        return $query->where('tgl_order', '>=', $now->subMonth(1));
-                    case 'option3':
-                        return $query->where('tgl_order', '>=', $now->subMonths(3));
-                    case 'option4':
-                        return $query->where('tgl_order', '>=', $now->subMonths(6));
-                    case 'option5':
-                        return $query->where('tgl_order', '>=', $now->subMonths(9));
-                    default:
-                        return $query;
-                }
-            })
-            ->when($startDate, function ($query) use ($startDate) {
-                return $query->whereDate('tgl_order', '>=', $startDate);
-            })
-            ->when($endDate, function ($query) use ($endDate) {
-                return $query->whereDate('tgl_order', '<=', $endDate);
-            })
-            ->when($search, function ($query, $search) {
-                $search = strtolower($search);
-                if (is_numeric($search) && strlen($search) > 3) {
-                    return $query->where('kd_order', $search);
-                }
-                return $query->whereRaw('LOWER(kd_order) like ?', ["%$search%"])
-                    ->orWhereHas('dokter', function ($q) use ($search) {
-                        $q->whereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
-                    });
-            })
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $dataMedis->tgl_masuk)
-            ->where('urut_masuk', $dataMedis->urut_masuk)
-            ->where('kd_unit', $dataMedis->kd_unit)
-            ->orderBy('tgl_order', 'desc')
-            ->paginate(10);
-
-        // Transform the data to include lab results
-        $dataLabor->getCollection()->transform(function ($item) {
-            $labResults = $this->getLabData(
-                $item->kd_order,
-                $item->kd_pasien,
-                $item->tgl_masuk,
-                $item->urut_masuk
-            );
-
-            $item->labResults = $labResults;
-            return $item;
-        });
-
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        if (empty($otoritas->file)) {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'File tidak ditemukan !',
+                'data'      => []
+            ]);
         }
 
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.labor.cetak', compact(
-            'dataMedis',
-            'DataLapPemeriksaan',
-            'dataDokter',
-            'dataLabor',
-            'dataDiagnosis',
-            'diagnosisList'
-        ));
+        return response()->json([
+            'status'    => 'success',
+            'message'   => 'OK',
+            'data'      => [
+                'file_url'  => "https://e-rsudlangsa.id/dokumen/lab_pk/$otoritas->file"
+            ]
+        ]);
     }
 }

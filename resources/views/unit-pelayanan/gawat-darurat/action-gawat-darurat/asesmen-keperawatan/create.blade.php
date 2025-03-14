@@ -1,3 +1,4 @@
+<!-- create -->
 @extends('layouts.administrator.master')
 
 @section('content')
@@ -714,7 +715,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_aktual_4"
                                                                         name="disability_diagnosis_kesadaran_type"
-                                                                        value="aktual">
+                                                                        value="1">
                                                                     <label class="form-check-label"
                                                                         for="disability_aktual_4">Aktual</label>
                                                                 </div>
@@ -722,7 +723,7 @@
                                                                     <input type="radio" class="form-check-input"
                                                                         id="disability_risiko_4"
                                                                         name="disability_diagnosis_kesadaran_type"
-                                                                        value="risiko">
+                                                                        value="2">
                                                                     <label class="form-check-label"
                                                                         for="disability_risiko_4">Risiko</label>
                                                                 </div>
@@ -898,7 +899,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kedalaman luka (cm)</label>
-                                            <input type="text" class="form-control" name="exposure_kedalaman_luka">
+                                            <input type="number" class="form-control" name="exposure_kedalaman_luka">
                                         </div>
 
                                         <div class="form-group">
@@ -1527,7 +1528,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Memerlukan sedikit bantuan (1 orang) / dalam
                                                     pengawasan</label>
-                                                <select class="form-select" onchange="updateConclusion('ontario')">
+                                                <select class="form-select" name="risiko_jatuh_lansia_transfer_bantuan_sedikit" onchange="updateConclusion('ontario')">
                                                     <option value="">pilih</option>
                                                     <option value="1">Ya</option>
                                                     <option value="0">Tidak</option>
@@ -1664,12 +1665,9 @@
                                             <label style="min-width: 300px;">Agama/Kepercayaan</label>
                                             <select class="form-select" name="spiritual_agama">
                                                 <option value="">--Pilih--</option>
-                                                <option value="islam">Islam</option>
-                                                <option value="kristen">Kristen</option>
-                                                <option value="katolik">Katolik</option>
-                                                <option value="hindu">Hindu</option>
-                                                <option value="buddha">Buddha</option>
-                                                <option value="konghucu">Konghucu</option>
+                                                @foreach ($agama as $agam)
+                                                    <option value="{{ $agam->kd_agama }}">{{ $agam->agama }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -1683,12 +1681,12 @@
                                         <h5 class="section-title">10. Status Sosial Ekonomi</h5>
 
                                         <div class="form-group mb-3">
-                                            <label class="form-label" style="min-width: 200px;">Pekerjaan</label>
+                                            <label style="min-width: 200px;">Pekerjaan</label>
                                             <select class="form-select" name="sosial_ekonomi_pekerjaan"
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
                                                 @foreach ($pekerjaan as $kerjaan)
-                                                    <option value="{{ $kerjaan->id }}">
+                                                    <option value="{{ $kerjaan->kd_pekerjaan }}">
                                                         {{ $kerjaan->pekerjaan }}
                                                     </option>
                                                 @endforeach
@@ -1721,20 +1719,11 @@
                                             <label style="min-width: 200px;">Status pendidikan</label>
                                             <select class="form-select" name="sosial_ekonomi_status_pendidikan">
                                                 <option value="">--Pilih--</option>
-                                                <option value="1">TK</option>
-                                                <option value="2">SD/MIN</option>
-                                                <option value="3">SLTP/SMP/MTSN/SLP</option>
-                                                <option value="4">SLTA/SMA/SMU/SMK/MAN/SLA</option>
-                                                <option value="5">D2</option>
-                                                <option value="6">D3</option>
-                                                <option value="7">S1</option>
-                                                <option value="8">S2</option>
-                                                <option value="9">S3</option>
-                                                <option value="10">TIDAK SEKOLAH</option>
-                                                <option value="13">BELUM SEKOLAH</option>
-                                                <option value="14">PAUD</option>
-                                                <option value="15">D4</option>
-                                                <option value="16">D1</option>
+                                                @foreach ($pendidikan as $didikan)
+                                                    <option value="{{ $didikan->kd_pendidikan}}">
+                                                        {{ $didikan->pendidikan }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -2256,9 +2245,27 @@
                                             <label style="min-width: 200px;">Bahasa sehari-hari</label>
                                             <select class="form-select" name="kebutuhan_edukasi_bahasa_sehari_hari">
                                                 <option value="">--Pilih--</option>
+                                                <option value="Indonesia">Indonesia</option>
                                                 <option value="aceh">Aceh</option>
+                                                <option value="batak">Batak</option>
+                                                <option value="minangkabau">Minangkabau</option>
                                                 <option value="melayu">Melayu</option>
+                                                <option value="sunda">Sunda</option>
                                                 <option value="jawa">Jawa</option>
+                                                <option value="madura">Madura</option>
+                                                <option value="bali">Bali</option>
+                                                <option value="sasak">Sasak</option>
+                                                <option value="banjar">Banjar</option>
+                                                <option value="bugis">Bugis</option>
+                                                <option value="toraja">Toraja</option>
+                                                <option value="makassar">Makassar</option>
+                                                <option value="dayak">Dayak</option>
+                                                <option value="tidung">Tidung</option>
+                                                <option value="ambon">Ambon</option>
+                                                <option value="ternate">Ternate</option>
+                                                <option value="tidore">Tidore</option>
+                                                <option value="papua">Papua</option>
+                                                <option value="asmat">Asmat</option>
                                             </select>
                                         </div>
 
@@ -2359,7 +2366,6 @@
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_pelayanan_medis"
                                                 id="pelayanan_medis_berkelanjutan">
-                                                id="pelayanan_medis_berkelanjutan">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -2371,7 +2377,6 @@
                                                 aktivitas harian</label>
                                             <select class="form-select discharge-select"
                                                 name="discharge_planning_ketergantungan_aktivitas"
-                                                id="ketergantungan_aktivitas">
                                                 id="ketergantungan_aktivitas">
                                                 <option value="" selected disabled>pilih</option>
                                                 <option value="ya">Ya</option>

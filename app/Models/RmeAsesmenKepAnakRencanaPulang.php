@@ -10,5 +10,6 @@ class RmeAsesmenKepAnakRencanaPulang extends Model
     use HasFactory;
 
     protected $table = 'RME_ASESMEN_KEP_ANAK_RENCANA_PULANG';
+    public $timestamps = false;
     protected $guarded = ['id'];
 }

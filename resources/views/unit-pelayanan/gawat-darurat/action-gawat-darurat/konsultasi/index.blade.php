@@ -120,19 +120,16 @@
 @endsection
 
 @push('js')
-    {{-- Filter data to anas --}}
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#SelectOption').change(function() {
                 var periode = $(this).val();
                 var queryString = '?periode=' + periode;
                 window.location.href =
-                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
-        });
 
-        $(document).ready(function() {
             $('#filterButton').click(function(e) {
                 e.preventDefault();
 
@@ -147,27 +144,9 @@
                 var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
 
                 window.location.href =
-                    "{{ route('konsultasi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
+                    "{{ route('konsultasi.index', [$dataMedis->kd_pasien,$dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" +
                     queryString;
             });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            initSelect2();
-        });
-
-        // Reinisialisasi Select2 ketika modal dibuka
-        $('#addKonsulModal').on('shown.bs.modal', function() {
-            let $this = $(this);
-
-            $this.find('#dokter_pengirim').mousedown(function(e) {
-                e.preventDefault();
-            });
-
-            // Destroy existing Select2 instance before reinitializing
-            initSelect2();
         });
 
         function initSelect2() {
@@ -177,47 +156,47 @@
             });
         }
 
-        // unit di pilih / diubah
-        $('#addKonsulModal #unit_tujuan').on('select2:select', function(e) {
-            let $selectedOption = $(e.currentTarget).find("option:selected");
-            let optVal = $selectedOption.val();
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('konsultasi.get-dokter-unit', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "kd_unit": optVal
-                },
-                dataType: "json",
-                beforeSend: function() {
-                    $('#addKonsulModal #dokter_unit_tujuan').prop('disabled', true);
-                },
-                complete: function() {
-                    $('#addKonsulModal #dokter_unit_tujuan').prop('disabled', false);
-                },
-                success: function(res) {
-
-                    if (res.status == 'success') {
-                        let data = res.data;
-                        let optHtml = '<option value="">--Pilih Dokter--</option>';
-
-                        data.forEach(e => {
-                            optHtml +=
-                                `<option value="${e.dokter.kd_dokter}">${e.dokter.nama_lengkap}</option>`;
-                        });
-
-                        $('#addKonsulModal #dokter_unit_tujuan').html(optHtml);
-                    } else {
-                        showToast('error', 'Internet server error');
-                    }
-
-                },
-                error: function(xhr, status, error) {
-                    showToast('error', 'Internal server error');
-                }
+        function initSelect2Edit() {
+            $('#editKonsulModal .select2').select2({
+                dropdownParent: $('#editKonsulModal'),
+                width: '100%'
             });
+        }
 
+        // Reinisialisasi Select2 ketika modal dibuka
+        $('#addKonsulModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#dokter_pengirim').removeClass('select2');
+                        $this.find('#dokter_pengirim').removeClass('select2-hidden-accessible');
+                        $this.find('#dokter_pengirim').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
+
+            // Destroy existing Select2 instance before reinitializing
+            initSelect2();
+        });
+
+        $('#addKonsulModal form').submit(function(e) {
+            let $this = $(this);
+            let btnSubmit = $this.find('button[type="submit"]');
+
+            $(btnSubmit).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $(btnSubmit).prop('disabled', true);
+
+        });
+
+        // mencegah menekan enter agar tidak mengirim data form
+        $('#addKonsulModal form').keypress(function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
         });
 
 
@@ -229,24 +208,37 @@
             return `${hours}:${minutes}`;
         }
 
+        $('#editKonsulModal').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#dokter_pengirim').removeClass('select2');
+                        $this.find('#dokter_pengirim').removeClass('select2-hidden-accessible');
+                        $this.find('#dokter_pengirim').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
+
+            // Destroy existing Select2 instance before reinitializing
+            initSelect2Edit();
+        });
+
         $('.btn-edit-konsultasi').click(function(e) {
             let $this = $(this);
             let $modal = $($this.attr('data-bs-target'));
-            let unitTujuan = $this.attr('data-unittujuan');
-            let tglKonsul = $this.attr('data-tglkonsul');
-            let jamKonsul = $this.attr('data-jamkonsul');
-            let urutKonsul = $this.attr('data-urutkonsul');
+            let dataKonsul = $this.attr('data-konsul');
 
             $.ajax({
                 type: "post",
-                url: "{{ route('konsultasi.get-konsul-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                url: "{{ route('konsultasi.get-konsul-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                 data: {
                     '_token': "{{ csrf_token() }}",
-                    'kd_unit_tujuan': unitTujuan,
-                    'tgl_masuk_tujuan': tglKonsul,
-                    'jam_masuk_tujuan': jamKonsul,
-                    'urut_konsul': urutKonsul,
-                    'urut_masuk': "{{ $dataMedis->urut_masuk }}"
+                    'data_konsul': dataKonsul
                 },
                 dataType: "json",
                 beforeSend: function() {
@@ -265,33 +257,19 @@
 
                     if (res.status == 'success') {
                         let data = res.data;
+                        let konsultasi = data.konsultasi;
 
-                        let optEl = '<option value="">--Pilih Dokter--</option>';
-                        data.dokter.forEach(e => {
-                            optEl +=
-                                `<option value="${e.dokter.kd_dokter}">${e.dokter.nama_lengkap}</option>`;
-                        });
-
-                        $modal.find('#dokter_unit_tujuan').html(optEl);
-
-                        $modal.find('#old_kd_unit_tujuan').val(data.konsultasi.kd_unit_tujuan);
-                        $modal.find('#old_tgl_konsul').val(data.konsultasi.tgl_masuk_tujuan);
-                        $modal.find('#old_jam_konsul').val(data.konsultasi.jam_masuk_tujuan);
-                        $modal.find('#urut_konsul').val(data.konsultasi.urut_konsul);
-
-                        $modal.find('#dokter_pengirim').val(data.konsultasi.kd_dokter).trigger(
-                            'change');
-                        $modal.find('#tgl_konsul').val(data.konsultasi.tgl_masuk_tujuan.split(' ')[0]);
-                        $modal.find('#jam_konsul').val(formatTime(data.konsultasi.jam_masuk_tujuan));
-                        $modal.find('#unit_tujuan').val(data.konsultasi.kd_unit_tujuan).trigger(
-                            'change');
-                        $modal.find('#dokter_unit_tujuan').val(data.konsultasi.kd_dokter_tujuan)
-                            .trigger('change');
-                        $modal.find(
-                            `input[name="konsulen_harap"][value="${data.konsultasi.kd_konsulen_diharapkan}"]`
-                        ).prop('checked', true);
-                        $modal.find('#catatan').val(data.konsultasi.catatan);
-                        $modal.find('#konsul').val(data.konsultasi.konsul);
+                        $modal.find('#id_konsul').val(konsultasi.id);
+                        $modal.find('#subjective').val(konsultasi.subjective);
+                        $modal.find('#background').val(konsultasi.background);
+                        $modal.find('#assesment').val(konsultasi.assesment);
+                        $modal.find('#recomendation').val(konsultasi.recomendation);
+                        $modal.find('#dokter_pengirim').val(konsultasi.kd_dokter).trigger('change');
+                        $modal.find('#tgl_konsul').val(konsultasi.tgl_konsul);
+                        $modal.find('#jam_konsul').val(konsultasi.jam_konsul.split('.')[0]);
+                        $modal.find('#dokter_tujuan').val(konsultasi.kd_dokter_tujuan).trigger('change');
+                        $modal.find('#konsultasi').val(konsultasi.konsultasi);
+                        $modal.find('#instruksi').val(konsultasi.instruksi);
 
                         $modal.modal('show');
                     } else {
@@ -307,14 +285,27 @@
 
         })
 
+        $('#editKonsulModal form').submit(function(e) {
+            let $this = $(this);
+            let btnSubmit = $this.find('button[type="submit"]');
+
+            $(btnSubmit).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $(btnSubmit).prop('disabled', true);
+
+        });
+
+        // mencegah menekan enter agar tidak mengirim data form
+        $('#editKonsulModal form').keypress(function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
+        });
+
 
         // delete
         $('.btn-delete-konsultasi').click(function(e) {
             let $this = $(this);
-            let unitTujuan = $this.attr('data-unittujuan');
-            let tglKonsul = $this.attr('data-tglkonsul');
-            let jamKonsul = $this.attr('data-jamkonsul');
-            let urutKonsul = $this.attr('data-urutkonsul');
+            let dataKonsul = $this.attr('data-konsul');
 
             Swal.fire({
                 title: "Apakah anda yakin ingin menghapus?",
@@ -329,16 +320,11 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('konsultasi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('konsultasi.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
                         data: {
                             '_method': 'delete',
                             '_token': "{{ csrf_token() }}",
-                            'kd_unit_tujuan': unitTujuan,
-                            'tgl_masuk_tujuan': tglKonsul,
-                            'jam_masuk_tujuan': jamKonsul,
-                            'urut_konsul': urutKonsul,
-                            'urut_masuk': "{{ $dataMedis->urut_masuk }}",
-                            'no_transaksi': "{{ $dataMedis->no_transaksi }}"
+                            'data_konsul': dataKonsul
                         },
                         dataType: "json",
                         beforeSend: function() {
@@ -347,6 +333,16 @@
                                 '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
                             );
                             $this.prop('disabled', true);
+
+                            // Show loading alert
+                            Swal.fire({
+                                title: 'Sedang Memproses',
+                                html: 'Mohon tunggu sebentar...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
                         },
                         complete: function() {
                             // Ubah teks tombol jadi icon search dan disable nonaktif

@@ -153,8 +153,7 @@
                                                                 {!! $statusLabel !!}
                                                             </td>
                                                             <td>
-                                                                <a href="javascript:void(0);"
-                                                                    class="btn-view-labor"
+                                                                <a href="javascript:void(0);" class="btn-view-labor"
                                                                     data-kd-order="{{ $order->kd_order }}"
                                                                     data-nomor="{{ $counter }}"
                                                                     data-nama-pemeriksaan="{{ $detail->produk->deskripsi ?? 'Pemeriksaan' }}"
@@ -368,8 +367,10 @@
 </div>
 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.resume.resume-medis.components.modal-view-labor')
 
-<script>
-    $('#btn-view-resume').on('click', function() {
-        $('#modal-view-resume').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-view-resume').on('click', function() {
+            $('#modal-view-resume').modal('show');
+        });
+    </script>
+@endpush

@@ -61,18 +61,40 @@
         var listAlergi = document.getElementById('listAlergi');
         var alergis = []; // Array untuk menyimpan daftar alergi
 
-        function updateMainView() {
-            alergiTable.innerHTML = alergis.map((a, index) => `
-            <tr>
-                <td>${a.jenis}</td>
-                <td>${a.alergen}</td>
-                <td>${a.reaksi}</td>
-                <td>${a.keparahan}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-link delete-main-alergi" data-index="${index}"><i class="bi bi-trash-fill text-danger"></i></button>
-                </td>
-            </tr>
-        `).join('');
+        initializeAlergiTable();
+
+        function initializeAlergiTable() {
+                updateMainView();
+            }
+
+            function updateMainView() {
+            var alergiTable = document.querySelector('#createAlergiTable tbody');
+
+            if (!alergis.length) {
+                // Tampilkan pesan jika tidak ada data
+                alergiTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <em>Tidak ada data alergi</em>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Tampilkan data jika ada
+                alergiTable.innerHTML = alergis.map((a, index) => `
+                    <tr>
+                        <td>${a.jenis}</td>
+                        <td>${a.alergen}</td>
+                        <td>${a.reaksi}</td>
+                        <td>${a.keparahan}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-main-alergi" data-index="${index}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
         }
 
         function updateModalView() {

@@ -44,7 +44,7 @@
 
     {{-- vite --}}
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script> --}}
 
 </head>
 
@@ -62,6 +62,8 @@
 
         @include('layouts.administrator.footer')
     </div>
+
+    @stack('modals')
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
