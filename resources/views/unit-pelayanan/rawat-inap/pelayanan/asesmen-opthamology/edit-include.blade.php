@@ -629,7 +629,7 @@
             //==================================================================================================//
             const dbMasterDiagnosis = @json($rmeMasterDiagnosis->pluck('nama_diagnosis'));
 
-            // Initialize both diagnosis sections
+            // Inisialisasi kedua bagian diagnosis
             initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
             initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
 
@@ -638,6 +638,9 @@
                 const addButton = document.getElementById(`add-${prefix}`);
                 const listContainer = document.getElementById(`${prefix}-list`);
                 const hiddenInput = document.getElementById(hiddenFieldId);
+
+                // Debugging: Log elemen untuk memastikan ada
+                console.log(`Initializing ${prefix}:`, { inputField, addButton, listContainer, hiddenInput });
 
                 // Create suggestions container
                 const suggestionsList = document.createElement('div');
@@ -649,9 +652,10 @@
                 let diagnosisList = [];
                 try {
                     diagnosisList = JSON.parse(hiddenInput.value) || [];
-                    renderDiagnosisList();
+                    console.log(`Initial ${prefix} data:`, diagnosisList); // Debugging: Cek data awal
+                    renderDiagnosisList(); // Render daftar awal
                 } catch (e) {
-                    console.error('Error parsing initial diagnosis data:', e);
+                    console.error(`Error parsing initial ${prefix} data:`, e);
                     diagnosisList = [];
                     updateHiddenInput();
                 }
@@ -664,20 +668,15 @@
                         return;
                     }
 
-                    // Filter suggestions from master data
                     const matches = dbMasterDiagnosis.filter(diagnosis =>
                         diagnosis.toLowerCase().includes(searchTerm)
                     );
-
-                    // Show suggestions
                     showSuggestions(matches, searchTerm);
                 });
 
                 // Handle suggestion display
                 function showSuggestions(matches, searchTerm) {
                     suggestionsList.innerHTML = '';
-
-                    // Add matching items
                     matches.forEach(match => {
                         const div = document.createElement('div');
                         div.className = 'suggestion-item p-2 cursor-pointer hover:bg-gray-100';
@@ -689,7 +688,6 @@
                         suggestionsList.appendChild(div);
                     });
 
-                    // Add option to create new if no exact match
                     if (!matches.some(m => m.toLowerCase() === searchTerm)) {
                         const newOption = document.createElement('div');
                         newOption.className = 'suggestion-item p-2 cursor-pointer text-primary hover:bg-gray-100';
@@ -725,6 +723,7 @@
                 // Render diagnosis list
                 function renderDiagnosisList() {
                     listContainer.innerHTML = '';
+                    console.log(`Rendering ${prefix} list:`, diagnosisList); // Debugging: Cek data sebelum render
                     diagnosisList.forEach((diagnosis, index) => {
                         const item = document.createElement('div');
                         item.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
@@ -751,6 +750,7 @@
                 // Update hidden input
                 function updateHiddenInput() {
                     hiddenInput.value = JSON.stringify(diagnosisList);
+                    console.log(`Updated ${prefix} hidden input:`, hiddenInput.value); // Debugging: Cek nilai tersimpan
                 }
 
                 // Event listeners for add button and enter key

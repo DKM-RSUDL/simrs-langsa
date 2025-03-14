@@ -1107,34 +1107,25 @@
                                     <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                     @php
-                                    // Parse existing diagnosis data from database
-                                    $diagnosisBanding =
-                                    !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding)
-                                    ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding,
-                                    true)
-                                    : [];
-                                    $diagnosisKerja =
-                                    !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja)
-                                    ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja,
-                                    true)
-                                    : [];
+                                        // Parse existing diagnosis data from database
+                                        $diagnosisBanding = !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding)
+                                            ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_banding, true)
+                                            : [];
+                                        $diagnosisKerja = !empty($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja)
+                                            ? json_decode($asesmen->rmeAsesmenKepOphtamology[0]->diagnosis_kerja, true)
+                                            : [];
                                     @endphp
 
                                     <!-- Diagnosis Banding -->
                                     <div class="mb-4">
                                         <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            diagnosis banding,
-                                            apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis
-                                            banding yang tidak ditemukan.</small>
+                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis banding, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis banding yang tidak ditemukan.</small>
 
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-white border-end-0">
                                                 <i class="bi bi-search text-secondary"></i>
                                             </span>
-                                            <input type="text" id="diagnosis-banding-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Banding">
+                                            <input type="text" id="diagnosis-banding-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Diagnosis Banding">
                                             <span class="input-group-text bg-white" id="add-diagnosis-banding">
                                                 <i class="bi bi-plus-circle text-primary"></i>
                                             </span>
@@ -1144,26 +1135,19 @@
                                             <!-- Existing diagnosis will be loaded here -->
                                         </div>
 
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                            value="{{ json_encode($diagnosisBanding) }}">
+                                        <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="{{ json_encode($diagnosisBanding) }}">
                                     </div>
 
                                     <!-- Diagnosis Kerja -->
                                     <div class="mb-4">
                                         <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
-                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                            diagnosis kerja,
-                                            apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis
-                                            kerja yang tidak ditemukan.</small>
+                                        <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan diagnosis kerja yang tidak ditemukan.</small>
 
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-white border-end-0">
                                                 <i class="bi bi-search text-secondary"></i>
                                             </span>
-                                            <input type="text" id="diagnosis-kerja-input"
-                                                class="form-control border-start-0 ps-0"
-                                                placeholder="Cari dan tambah Diagnosis Kerja">
+                                            <input type="text" id="diagnosis-kerja-input" class="form-control border-start-0 ps-0" placeholder="Cari dan tambah Diagnosis Kerja">
                                             <span class="input-group-text bg-white" id="add-diagnosis-kerja">
                                                 <i class="bi bi-plus-circle text-primary"></i>
                                             </span>
@@ -1173,10 +1157,9 @@
                                             <!-- Existing diagnosis will be loaded here -->
                                         </div>
 
-                                        <!-- Hidden input for form submission -->
-                                        <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                            value="{{ json_encode($diagnosisKerja) }}">
+                                        <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="{{ json_encode($diagnosisKerja) }}">
                                     </div>
+
                                 </div>
 
                                 <!-- 17. Implementasi -->
