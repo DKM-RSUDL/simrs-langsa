@@ -2189,7 +2189,7 @@
                                             <label class="form-label">KESIMPULAN</label>
                                             <div class="d-flex flex-column gap-2">
                                                 <div class="alert alert-info">
-                                                    Pilih semua Planning
+                                                    
                                                 </div>
                                                 <div class="alert alert-warning">
                                                     Mebutuhkan rencana pulang khusus

@@ -2259,6 +2259,7 @@
                                 </div>
 
                                 <!-- 15. Plan -->
+
                                 <div class="section-separator" id="discharge-planning">
                                     <h5 class="section-title">15. Discharge Planning</h5>
 
@@ -2272,13 +2273,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Usia lanjut</label>
                                         <select class="form-select" name="usia_lanjut">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="0" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->usia_lanjut == '0' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="1" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->usia_lanjut == '1' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->usia_lanjut === '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2287,13 +2288,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Hambatan mobilisasi</label>
                                         <select class="form-select" name="hambatan_mobilisasi">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="0" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->hambatan_mobilisasi == '0' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="1" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->hambatan_mobilisasi == '1' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->hambatan_mobilisasi === '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2302,13 +2303,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
                                         <select class="form-select" name="penggunaan_media_berkelanjutan">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="ya" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->membutuhkan_pelayanan_medis == 'ya' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="tidak" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->membutuhkan_pelayanan_medis == 'tidak' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->membutuhkan_pelayanan_medis === 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2317,7 +2318,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Ketergantungan dengan orang lain dalam aktivitas harian</label>
                                         <select class="form-select" name="ketergantungan_aktivitas">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="ya">Ya</option>
                                             <option value="tidak">Tidak</option>
                                         </select>
@@ -2326,13 +2327,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah Pulang</label>
                                         <select class="form-select" name="keterampilan_khusus">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="ya" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memerlukan_keterampilan_khusus == 'ya' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="tidak" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memerlukan_keterampilan_khusus == 'tidak' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_keterampilan_khusus === 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2341,13 +2342,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit</label>
                                         <select class="form-select" name="alat_bantu">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="ya" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memerlukan_alat_bantu == 'ya' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="tidak" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memerlukan_alat_bantu == 'tidak' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memerlukan_alat_bantu === 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2356,13 +2357,13 @@
                                     <div class="mb-4">
                                         <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah Pulang</label>
                                         <select class="form-select" name="nyeri_kronis">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option selected disabled>--Pilih--</option>
                                             <option value="ya" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memiliki_nyeri_kronis == 'ya' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
                                             <option value="tidak" 
-                                                {{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->memiliki_nyeri_kronis == 'tidak' ? 'selected' : '' }}>
+                                                {{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) && $asesmen->rmeAsesmenKepAnakRencanaPulang->memiliki_nyeri_kronis === 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
                                         </select>
@@ -2373,13 +2374,13 @@
                                             <label class="form-label">Perkiraan lama hari dirawat</label>
                                             <input type="text" class="form-control" name="perkiraan_hari" 
                                                 placeholder="hari"
-                                                value="{{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->perkiraan_lama_dirawat ?? '' }}">
+                                                value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->perkiraan_lama_dirawat : '' }}">
                                         </div>
                                         
                                         <div class="col-md-6">
                                             <label class="form-label">Rencana Tanggal Pulang</label>
                                             <input type="date" class="form-control" name="tanggal_pulang"
-                                                value="{{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->rencana_pulang ?? '' }}">
+                                                value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->rencana_pulang : '' }}">
                                         </div>
                                     </div>
 
@@ -2387,7 +2388,7 @@
                                         <label class="form-label">KESIMPULAN</label>
                                         <div class="d-flex flex-column gap-2">
                                             <div class="alert alert-info">
-                                                Pilih semua Planning
+                                                
                                             </div>
                                             <div class="alert alert-warning">
                                                 Mebutuhkan rencana pulang khusus
@@ -2397,7 +2398,7 @@
                                             </div>
                                         </div>
                                         <input type="hidden" id="kesimpulan" name="kesimpulan_planing" 
-                                            value="{{ optional($asesmen->rmeAsesmenKepAnakRencanaPulang)->kesimpulan ?? 'Tidak mebutuhkan rencana pulang khusus' }}">
+                                            value="{{ isset($asesmen->rmeAsesmenKepAnakRencanaPulang) ? $asesmen->rmeAsesmenKepAnakRencanaPulang->kesimpulan : 'Tidak mebutuhkan rencana pulang khusus' }}">
                                     </div>
                                 </div>
 

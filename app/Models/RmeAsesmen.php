@@ -326,4 +326,31 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenNeurologiDischargePlanning::class, 'id_asesmen', 'id');
     }
+
+    // Relation for Ophthalmology assessment
+    public function rmeAsesmenKepOphtamology()
+    {
+        return $this->hasOne(RmeAsesmenKepOphtamology::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepOphtamologyFisik()
+    {
+        return $this->hasOne(RmeAsesmenKepOphtamologyFisik::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepOphtamologyKomprehensif()
+    {
+        return $this->hasOne(RmeAsesmenKepOphtamologyKomprehensif::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepOphtamologyStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKepOphtamologyStatusNyeri::class, 'id_asesmen', 'id');
+    }
+
+    public function rmeAsesmenKepOphtamologyRencanaPulang()
+    {
+        return $this->hasOne(RmeAsesmenKepOphtamologyRencanaPulang::class, 'id_asesmen', 'id');
+    }
+
 }
