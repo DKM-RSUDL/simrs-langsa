@@ -513,6 +513,16 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+                        // serah terima route
+                        Route::prefix('{urut_masuk}/serah-terima-pasien')->group(function () {
+                            Route::name('serah-terima-pasien')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
+                                    Route::get('/', 'serahTerimaPasien');
+                                    Route::post('/', 'serahTerimaPasienCreate')->name('.store');
+                                    Route::post('/get-petugas-unit-ajax', 'getPetugasByUnit')->name('.get-petugas-unit-ajax');
+                                });
+                            });
+                        });
 
                         // transfer ke RWI
                         Route::prefix('{urut_masuk}/transfer-rwi')->group(function () {
