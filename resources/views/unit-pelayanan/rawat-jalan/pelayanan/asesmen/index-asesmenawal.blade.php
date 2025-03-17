@@ -23,7 +23,7 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
@@ -33,10 +33,17 @@
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 text-end ms-auto">
+        <div class="col-md-4 text-end ms-auto">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                 <i class="ti-plus"></i> Tambah
             </button>
+
+            {{-- @canany(['is-admin', 'is-perawat', 'is-bidan']) --}}
+                <a href="{{ route('rawat-jalan.asesmen-keperawatan.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}"
+                    class="btn btn-primary">
+                    <i class="ti-plus"></i> Keperawatan
+                </a>
+                {{-- @endcanany --}}
         </div>
     </div>
 </div>
@@ -65,6 +72,24 @@
                     <i class="fas fa-edit"></i> Edit
                 </button>
                 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit')
+
+                @if($item->kategori == 2)
+                <button type="button"
+                    onclick="showAsesmenKeperawatan('{{ $item->id }}', '{{ $dataMedis->kd_unit }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}, '{{ $dataMedis->urut_masuk }}'')"
+                    class="btn btn-info btn-sm px-3">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </button>
+
+                <a href="{{ route('asesmen-keperawatan.edit', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => $item->id
+                ]) }}" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                @endif
             </div>
         </li>
     @endforeach
