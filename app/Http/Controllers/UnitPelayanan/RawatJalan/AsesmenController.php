@@ -77,11 +77,22 @@ class AsesmenController extends Controller
         $efeknyeri = RmeEfekNyeri::all();
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
-        $asesmen = RmeAsesmen::with(['user']) // Pastikan relasi user tersedia
-        ->join('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
-        ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
-            ->select('RME_ASESMEN.*', 'data_triase.tanggal_triase') // Pilih kolom yang dibutuhkan, termasuk tanggal_triase
-            ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
+        // $asesmen = RmeAsesmen::with(['user']) // Pastikan relasi user tersedia
+        // ->join('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+        // ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+        //     ->select('RME_ASESMEN.*', 'data_triase.tanggal_triase') // Pilih kolom yang dibutuhkan, termasuk tanggal_triase
+        //     ->orderBy('data_triase.tanggal_triase', 'desc') // Urutkan berdasarkan tanggal triase terbaru
+        //     ->get();
+
+            $asesmen = RmeAsesmen::with(['user'])
+            ->leftJoin('data_triase', 'RME_ASESMEN.id', '=', 'data_triase.id_asesmen')
+            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+            ->select(
+                'RME_ASESMEN.*',
+                'data_triase.tanggal_triase',
+                'data_triase.id as id_triase'
+            )
+            ->orderBy('data_triase.tanggal_triase', 'desc')
             ->get();
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen.index', compact(

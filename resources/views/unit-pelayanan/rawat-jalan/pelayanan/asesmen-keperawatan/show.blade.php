@@ -1117,10 +1117,12 @@
     <script>
         function printPDF(element) {
             const id = element.dataset.id;
+            const kdUnit = element.dataset.kdUnit;
             const kdPasien = element.dataset.kdPasien;
             const tglMasuk = element.dataset.tglMasuk;
+            const urutMasuk = element.dataset.urutMasuk;
 
-            if (!id || !kdPasien || !tglMasuk) {
+            if (!id || !kdUnit || !kdPasien || !tglMasuk || !urutMasuk) {
                 Swal.fire('Error', 'Data tidak lengkap untuk generate PDF', 'error');
                 return;
             }
@@ -1133,7 +1135,7 @@
                     Swal.showLoading();
 
                     // Generate URL PDF dengan data yang benar
-                    const url = `/unit-pelayanan/gawat-darurat/pelayanan/${kdPasien}/${tglMasuk}/asesmen-keperawatan/${id}/print-pdf`;
+                    const url = `/unit-pelayanan/rawat-jalan/unit/${kdUnit}/pelayanan/${kdPasien}/${tglMasuk}/${urutMasuk}/asesmen-keperawatan/${id}/print-pdf`;
 
                     // Buka PDF di tab baru
                     window.open(url, '_blank');
@@ -1165,8 +1167,8 @@
         });
 
 
-        function showAsesmenKeperawatan(id, kdUnit, kdPasien, tglMasuk, urutMasuk) {
-            const url = `/unit-pelayanan/rawat-jalan/pelayanan/unit/${kdUnit}/pelayanan/${kdPasien}/${tglMasuk}/${urutMasuk}/asesmen-keperawatan/${id}`;
+        function showAsesmenKeperawatanJalan(id, kdUnit, kdPasien, tglMasuk, urutMasuk) {
+            const url = `/unit-pelayanan/rawat-jalan/unit/${kdUnit}/pelayanan/${kdPasien}/${tglMasuk}/${urutMasuk}/asesmen-keperawatan/${id}`;
 
             Swal.fire({
                 title: 'Loading...',
