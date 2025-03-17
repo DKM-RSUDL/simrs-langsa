@@ -467,12 +467,16 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // asuran keperawatan
-                            Route::prefix('asuran-keperawatan')->group(function () {
-                                Route::name('.asuran-keperawatan')->group(function () {
+                            Route::prefix('asuhan-keperawatan')->group(function () {
+                                Route::name('.asuhan-keperawatan')->group(function () {
                                     Route::controller(AsuhanKeperawatanRawatInapController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::get('/{data}/show', 'show')->name('.show');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/edit/{data}', 'edit')->name('.edit');
                                         Route::post('/', 'store')->name('.store');
-                                        Route::put('/', 'update')->name('.update');
+                                        Route::delete('/', 'destroy')->name('.destroy');
+                                        Route::put('/{data}', 'update')->name('.update');
                                     });
                                 });
                             });

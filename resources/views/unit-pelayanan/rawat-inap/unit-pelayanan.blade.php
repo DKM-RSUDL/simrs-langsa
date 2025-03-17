@@ -239,7 +239,7 @@
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuran-keperawatan'}">Asuhan Keperawatan</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuhan-keperawatan'}">Asuhan Keperawatan</a></li>
                                                 </ul>
                                             </div>
                                         </div>
