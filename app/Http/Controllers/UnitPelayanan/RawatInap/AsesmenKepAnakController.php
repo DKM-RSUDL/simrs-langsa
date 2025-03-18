@@ -550,8 +550,9 @@ class AsesmenKepAnakController extends Controller
                 $statusFungsional->kesimpulan = $request->adl_kesimpulan_value;
                 $statusFungsional->nilai_skala_adl = $request->filled('adl_total') ? (int)$request->adl_total : null;
                 $statusFungsional->kesimpulan_fungsional = $request->adl_kesimpulan_value;
-                $statusFungsional->save();
             }
+            $statusFungsional->save();
+
 
             // Simpan ke table RmeAsesmenKepAnakRencana
             $asesmenRencana = new RmeAsesmenKepAnakRencanaPulang();

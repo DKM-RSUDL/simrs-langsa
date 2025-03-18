@@ -75,6 +75,7 @@
     </div>
 @endsection
 
+
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
@@ -82,27 +83,49 @@
 
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
-            let selectedDokter = "{{ auth()->user()->kd_karyawan }}";
             let activeTab = 'Non Racikan';
+            let selectedDokter;
 
-            const dokterSelect = document.getElementById('dokterPengirim');
-            selectedDokter = $('[selected]', dokterSelect).val();
+            const dokterSelect = $('#dokterPengirim');
+
+            @can('is-admin')
+                // Enable the select field for admins
+                dokterSelect
+                    .prop('disabled', false)
+                    .css({
+                        'pointer-events': 'auto',
+                        'background-color': '#ffffff',
+                        'cursor': 'pointer'
+                    })
+                    .removeAttr('tabindex');
+                
+                // Update selectedDokter when admin changes the selection
+                dokterSelect.on('change', function() {
+                    selectedDokter = $(this).val();
+                });
+            @else
+                // Keep disabled state for non-admin users
+                dokterSelect
+                    .prop('disabled', true)
+                    .css({
+                        'pointer-events': 'none',
+                        'background-color': '#e9ecef',
+                        'cursor': 'not-allowed'
+                    })
+                    .attr('tabindex', '-1');
+            @endcan
+
+            // Initialize selectedDokter with the current value
+            selectedDokter = dokterSelect.val();
 
             $('#tambahResep').on('show.bs.modal', function () {
-                selectedDokter = $('[selected]', dokterSelect).val();
+                selectedDokter = dokterSelect.val();
             });
 
             // ------------ 2. Event Listener untuk Pengguna ------------ //
             $('#obatTabs .nav-link').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).text().trim();
             });
-
-            $('#dokterPengirim').prop('disabled', true);
-
-            $('#dokterPengirim')
-                .css('pointer-events', 'none')
-                .css('background-color', '#e9ecef')
-                .attr('tabindex', '-1');
 
             // Fungsi untuk menambahkan obat ke daftar dan menampilkan di tabel
             $('#tambahObatNonRacikan, #tambahObatRacikan').on('click', function() {
@@ -167,7 +190,6 @@
 
 
             $(document).on('click', '.copy-obat', function() {
-
                 var obatData = $(this).data('obat');
                 $('#modal-overlay').show();
 
@@ -317,8 +339,10 @@
 
 
                 var formData = {
+                    urut_masuk: "{{ $dataMedis->urut_masuk }}",
                     kd_dokter: selectedDokter,
-                    tgl_order: tglOrder,
+                    tgl_order: tanggal,
+                    jam_order: waktu,
                     cat_racikan: catRacikan,
                     obat: daftarObat.map(obat => ({
                         id: obat.id,
@@ -390,73 +414,134 @@
             const obatList = $('#obatList');
             const selectedObatId = $('#selectedObatId');
             const satuanObat = $('#satuanObat');
-            var timer;
 
-            cariObat.on('keyup', function() {
-                clearTimeout(timer);
-                var query = $(this).val();
+            let searchTimeout;
+            let lastQuery = '';
+            let isSearching = false;
 
-                timer = setTimeout(function() {
-                    if (query.length >= 2) {
-                        $.ajax({
-                            url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
-                            method: 'GET',
-                            data: {
-                                term: query
-                            },
-                            success: function(data) {
-                                var html = '';
-                                if (data.length > 0) {
-
-                                    data.forEach(function(obat) {
-
-                                        html +=
-                                            '<a href="#" class="list-group-item list-group-item-action" ' +
-                                            'data-id="' + obat.id + '" ' +
-                                            'data-harga="' + obat.harga + '" ' + 
-                                            'data-satuan="' + obat.satuan + '">' +
-                                            obat.text + '</a>';
-                                    });
-                                } else {
-                                    html =
-                                        '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
-                                }
-                                obatList.html(html);
-                            },
-                            error: function() {
-                                obatList.html(
-                                    '<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>'
-                                );
+            cariObat.on('input', function() {
+                const query = $(this).val().trim();
+                
+                clearTimeout(searchTimeout);
+                
+                if (query.length === 0) {
+                    obatList.empty();
+                    return;
+                }
+                
+                if (query.length < 2) {
+                    obatList.html('<div class="list-group-item text-muted">Ketik minimal 2 karakter...</div>');
+                    return;
+                }
+                
+                if (query === lastQuery) return;
+                
+                if (!isSearching) {
+                    obatList.html(`
+                        <div class="list-group-item text-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
+                }
+                
+                searchTimeout = setTimeout(() => {
+                    lastQuery = query;
+                    isSearching = true;
+                    
+                    $.ajax({
+                        url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
+                        method: 'GET',
+                        data: { term: query },
+                        success: function(data) {
+                            isSearching = false;
+                            
+                            if (query !== cariObat.val().trim()) return;
+                            
+                            let html = '';
+                            if (data.length > 0) {
+                                data.forEach(function(obat) {
+                                    html += `
+                                        <a href="#" class="list-group-item list-group-item-action py-2" 
+                                        data-id="${obat.id}" 
+                                        data-harga="${obat.harga}" 
+                                        data-satuan="${obat.satuan}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text}</div>
+                                                <small class="text-muted">Satuan: ${obat.satuan}</small>
+                                            </div>
+                                        </a>`;
+                                });
+                            } else {
+                                html = '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
                             }
-                        });
-                    } else {
-                        obatList.html('');
-                    }
+                            obatList.html(html);
+                        },
+                        error: function() {
+                            isSearching = false;
+                            if (query === cariObat.val().trim()) {
+                                obatList.html('<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>');
+                            }
+                        }
+                    });
                 }, 300);
             });
 
+            // Item selection dengan update satuan otomatis
             $(document).on('click', '#obatList a', function(e) {
                 e.preventDefault();
-                var $this = $(this);
-                var obatName = $(this).text();
-                var obatId = $(this).data('id');
-                var obatSatuan = $(this).data('satuan');
-                var obatHarga = $this.attr('data-harga');
+                const $this = $(this);
+                const obatSatuan = $this.data('satuan').toLowerCase();
+                
+                cariObat.val($this.find('.fw-medium').text()).prop('readonly', true);
+                selectedObatId.val($this.data('id'));
+                $('#hargaObat').val($this.data('harga'));
+                
+                // Update satuan obat berdasarkan data dari database
+                const satuanMapping = {
+                    'tablet': 'tablet',
+                    'tab': 'tablet',
+                    'kapsul': 'kapsul',
+                    'caps': 'kapsul',
+                    'botol': 'cc',
+                    'btl': 'cc',
+                    'bungkus': 'bungkus',
+                    'bks': 'bungkus',
+                    'ampul': 'ampul',
+                    'amp': 'ampul',
+                    'pcs': 'unit',
+                    'unit': 'unit',
+                    'tetes': 'tetes',
+                    'cc': 'cc',
+                    'ml': 'cc'
+                };
 
-
-                cariObat.val(obatName).prop('readonly', true);
-                selectedObatId.val(obatId);
-                // $('#satuanObat').val(obatSatuan);
-                $('#hargaObat').val(obatHarga);
-                obatList.html('');
+                const matchedSatuan = satuanMapping[obatSatuan] || 'tablet';
+                satuanObat.val(matchedSatuan);
+                
+                obatList.empty();
                 clearObat.show();
             });
 
             clearObat.on('click', function() {
+                cariObat.val('').prop('readonly', false).focus();
+                selectedObatId.val('');
+                $('#hargaObat').val('');
+                clearObat.hide();
+                obatList.empty();
+            });
+
+            function resetInputObat() {
                 cariObat.val('').prop('readonly', false);
                 selectedObatId.val('');
+                $('#jumlah').val('12');
+                $('#aturanTambahan').val('');
+                $('#jumlahHari').val('');
+                $('#hargaObat').val('');
                 clearObat.hide();
-            });
+                obatList.empty();
+            }
 
             function resetInputObat() {
                 $('#cariObat').val('').prop('readonly', false);
@@ -511,6 +596,208 @@
                 return `${formattedDate} ${formattedTime}`;
             }
 
+
+
+            //===================================================//
+            // CATATAN PEMBERIAN OBAT
+            //===================================================//
+
+            $('#tambahObatCatatan').on('show.bs.modal', function() {
+                console.log('Catatan Obat - Modal dibuka');
+
+                const modal = $('#tambahObatCatatan');
+                const cariObatCatatan = modal.find('#cariObat');
+                const clearObatCatatan = modal.find('#clearObat');
+                const obatListCatatan = modal.find('#obatList');
+                const selectedObatIdCatatan = modal.find('#selectedObatId');
+
+
+                cariObatCatatan.off('input').on('input', function() {
+                    const query = $(this).val().trim();
+
+                    if (query.length === 0) {
+                        obatListCatatan.empty();
+                        clearObatCatatan.hide();
+                        return;
+                    }
+
+                    if (query.length < 2) {
+                        obatListCatatan.html('<div class="list-group-item text-muted">Ketik minimal 2 karakter...</div>');
+                        clearObatCatatan.hide();
+                        return;
+                    }
+
+                    obatListCatatan.html(`
+                        <div class="list-group-item text-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
+
+                    const url = '{{ route("farmasi.searchObat", [$dataMedis->kd_unit, $dataMedis->kd_pasien, date("Y-m-d", strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}';
+
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        data: { term: query },
+                        success: function(data) {
+                            console.log('Catatan Obat - AJAX success, data:', data);
+                            let html = '';
+                            if (data.length > 0) {
+                                data.forEach(function(obat) {
+                                    html += `
+                                        <a href="#" class="list-group-item list-group-item-action py-2" 
+                                           data-id="${obat.id}" 
+                                           data-satuan="${obat.satuan}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text}</div>
+                                                <small class="text-muted">Satuan: ${obat.satuan}</small>
+                                            </div>
+                                        </a>`;
+                                });
+                            } else {
+                                html = '<div class="list-group-item text-muted">Tidak ada hasil yang ditemukan</div>';
+                            }
+                            obatListCatatan.html(html);
+                        },
+                        error: function(xhr, status, error) {
+                            obatListCatatan.html('<div class="list-group-item text-danger">Terjadi kesalahan saat mencari obat</div>');
+                        }
+                    });
+                });
+
+                $(document).off('click', '#tambahObatCatatan #obatList a').on('click', '#tambahObatCatatan #obatList a', function(e) {
+                    e.preventDefault();
+                    const $this = $(this);
+                    const obatId = $this.data('id');
+                    const obatNama = $this.find('.fw-medium').text();
+                    const obatSatuan = $this.data('satuan').toLowerCase();
+
+                    cariObatCatatan.val(obatNama).prop('readonly', true);
+                    selectedObatIdCatatan.val(obatId);
+
+                    const satuanMapping = {
+                        'tablet': 'Tablet',
+                        'tab': 'Tablet',
+                        'kapsul': 'Kapsul',
+                        'caps': 'Kapsul',
+                        'botol': 'cc',
+                        'btl': 'cc',
+                        'bungkus': 'Bungkus',
+                        'bks': 'Bungkus',
+                        'ampul': 'Ampul',
+                        'amp': 'Ampul',
+                        'pcs': 'Unit',
+                        'unit': 'Unit',
+                        'tetes': 'Tetes',
+                        'cc': 'cc',
+                        'ml': 'cc'
+                    };
+
+                    const matchedSatuan = satuanMapping[obatSatuan] || 'Tablet';
+                    modal.find('#satuan').val(matchedSatuan);
+
+                    obatListCatatan.empty();
+                    clearObatCatatan.show();
+                });
+
+                clearObatCatatan.off('click').on('click', function() {
+                    console.log('Catatan Obat - Tombol clear diklik');
+                    cariObatCatatan.val('').prop('readonly', false).focus();
+                    selectedObatIdCatatan.val('');
+                    modal.find('#satuan').val('Tablet');
+                    clearObatCatatan.hide();
+                    obatListCatatan.empty();
+                });
+
+                // Event untuk tombol Simpan
+                modal.find('#btnSaveObat').off('click').on('click', function(e) {
+                    e.preventDefault();
+
+                    const form = $('#catatanObatForm');
+
+                    // Validasi sederhana
+                    const namaObat = cariObatCatatan.val();
+                    const frekuensi = modal.find('#frekuensi').val();
+                    const dosis = modal.find('#dosis').val();
+                    const tanggal = modal.find('#tanggal').val();
+                    const jam = modal.find('#jam').val();
+
+                    if (!namaObat || !frekuensi || !dosis || !tanggal || !jam) {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Semua field wajib diisi.',
+                            position: 'topRight'
+                        });
+                        return;
+                    }
+
+                    // Submit form via AJAX
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: 'POST',
+                        data: form.serialize(), // Mengirim semua data form
+                        success: function(response) {
+                            console.log('Catatan Obat - Simpan berhasil:', response);
+                            iziToast.success({
+                                title: 'Sukses',
+                                message: 'Catatan pemberian obat berhasil disimpan.',
+                                position: 'topRight'
+                            });
+                            modal.modal('hide');
+                            $('#catatanObatForm')[0].reset();
+                            // Refresh halaman untuk update tabel
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Catatan Obat - Simpan gagal:', status, error);
+                            console.log('Catatan Obat - Response:', xhr.responseText);
+                            let errorMessage = 'Gagal menyimpan catatan.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage += ' ' + xhr.responseJSON.message;
+                            }
+                            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                errorMessage = 'Validasi gagal:\n';
+                                for (let field in xhr.responseJSON.errors) {
+                                    errorMessage += `${field}: ${xhr.responseJSON.errors[field].join(', ')}\n`;
+                                }
+                            }
+                            iziToast.error({
+                                title: 'Error',
+                                message: errorMessage,
+                                position: 'topRight'
+                            });
+                        }
+                    });
+                });
+
+                document.getElementById('tanggal').valueAsDate = new Date();
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                                now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('jam').value = timeString;
+            });
+
+            $('#tambahObatCatatan').on('hidden.bs.modal', function() {
+                console.log('Catatan Obat - Modal ditutup, reset form');
+                $('#catatanObatForm')[0].reset();
+                $('#tambahObatCatatan').find('#cariObat').val('').prop('readonly', false);
+                $('#tambahObatCatatan').find('#selectedObatId').val('');
+                $('#tambahObatCatatan').find('#clearObat').hide();
+                $('#tambahObatCatatan').find('#obatList').empty();
+                document.getElementById('tanggal').valueAsDate = new Date();
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                                now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('jam').value = timeString;
+            });
+
+
+
         });
+
+
+
     </script>
 @endpush

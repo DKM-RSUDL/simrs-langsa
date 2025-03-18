@@ -44,6 +44,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -338,6 +339,8 @@ Route::middleware('auth')->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
+                                        Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                                     });
                                 });
                             });
@@ -414,6 +417,19 @@ Route::middleware('auth')->group(function () {
 
                                     Route::prefix('keperawatan')->group(function () {
                                         Route::name('.keperawatan')->group(function () {
+
+
+                                            Route::prefix('umum')->group(function () {
+                                                Route::name('.umum')->group(function () {
+                                                    Route::controller(AsesmenKepUmumController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
 
                                             Route::prefix('anak')->group(function () {
                                                 Route::name('.anak')->group(function () {

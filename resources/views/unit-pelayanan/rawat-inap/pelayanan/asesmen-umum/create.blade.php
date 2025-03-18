@@ -2,11 +2,11 @@
 
 
 @section('content')
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.include')
+    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.include')
 
     <div class="row">
         <div class="col-md-3">
-            @include('components.patient-card-kep-anak')
+            @include('components.patient-card-keperawatan')
         </div>
 
         <div class="col-md-9">
@@ -19,7 +19,7 @@
                         <div class="px-3">
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <h4 class="header-asesmen">Asesmen Awal Keperawatan Anak</h4>
+                                    <h4 class="header-asesmen">Asesmen Awal Keperawatan Umum</h4>
                                     <p>
                                         Isikan Asesmen awal dalam 24 jam sejak pasien masuk ke unit pelayanan
                                     </p>
@@ -29,7 +29,7 @@
 
                         {{-- FORM ASESMEN AWAL KEPERATAWAN --}}
                         <form method="POST"
-                            action="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
+                            action="{{ route('rawat-inap.asesmen.keperawatan.umum.index', [
                                 'kd_unit' => $kd_unit,
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,
@@ -62,13 +62,23 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Kasus Trauma</label>
-                                            <select class="form-select" name="kasus_trauma">
+                                            <label style="min-width: 200px;">Diagnosa Masuk</label>
+                                            <input type="text" class="form-control" name="diagnosa_masuk">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Barang Berharga</label>
+                                            <input type="text" class="form-control" name="barang_berharga">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Alat Bantu Yang Digunakan</label>
+                                            <select class="form-select" name="alat_bantu">
                                                 <option selected disabled>--Pilih--</option>
-                                                <option value="Kecelakaan Lalu Lintas">Kecelakaan Lalu Lintas</option>
-                                                <option value="Kecelakaan Anak">Kecelakaan Anak</option>
-                                                <option value="Kecelakaan Rumah Tangga">Kecelakaan Rumah Tangga</option>
-                                                <option value="Non Trauma">Non Trauma</option>
+                                                <option value="Kacamata">Kacamata</option>
+                                                <option value="Lensa Kontak">Lensa Kontak</option>
+                                                <option value="Gigi Palsu">Gigi Palsu</option>
+                                                <option value="Alat Bantu Dengar">Alat Bantu Dengar</option>
                                             </select>
                                         </div>
                                     </div>
@@ -127,27 +137,15 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Tanpa Bantuan O2</label>
-                                                    <input type="number" class="form-control" name="saturasi_o2_tanpa"
+                                                    <input type="number" class="form-control" name="spo_tanpa_o2"
                                                             placeholder="Tanpa bantuan O2">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Bantuan O2</label>
-                                                    <input type="number" class="form-control" name="saturasi_o2_dengan"
+                                                    <input type="number" class="form-control" name="spo_dengan_o2"
                                                         placeholder="Dengan bantuan O2">
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Kesadaran</label>
-                                            <select class="form-select" name="kesadaran">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Compos Mentis">Compos Mentis</option>
-                                                <option value="Apatis">Apatis</option>
-                                                <option value="Sopor">Sopor</option>
-                                                <option value="Coma">Coma</option>
-                                                <option value="Somnolen">Somnolen</option>
-                                            </select>
                                         </div>
 
                                         <div class="form-group">
@@ -165,144 +163,16 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Penglihatan</label>
-                                            <select class="form-select" name="penglihatan">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Baik</option>
-                                                <option value="2">Rusak</option>
-                                                <option value="3">Alat Bantu</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Pendengaran</label>
-                                            <select class="form-select" name="pendengaran">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Baik</option>
-                                                <option value="2">Rusak</option>
-                                                <option value="3">Alat Bantu</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Bicara</label>
-                                            <select class="form-select" name="bicara">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Gangguan</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Refleks Menelan</label>
-                                            <select class="form-select" name="refleks_menelan">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="3">Rusak</option>
-                                                <option value="2">Sulit</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Pola Tidur</label>
-                                            <select class="form-select" name="pola_tidur">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Masalah</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Luka</label>
-                                            <select class="form-select" name="luka">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Gangguan</option>
-                                                <option value="3">Tidak Ada Luka</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Defekasi</label>
-                                            <select class="form-select" name="defekasi">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Tidak Ada</option>
-                                                <option value="2">Ada, Normal</option>
-                                                <option value="3">Konsitipasi</option>
-                                                <option value="4">Inkontinesia Alvi</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Miksi</label>
-                                            <select class="form-select" name="miksi">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Retensio</option>
-                                                <option value="3">Inkontinesia Urine</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Gastrointestinal</label>
-                                            <select class="form-select" name="gastrointestinal">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Nausea</option>
-                                                <option value="3">Muntah</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Lahir Umur Kehamilan</label>
-                                            <input type="text" class="form-control" name="umur_kehamilan"
-                                                placeholder="minggu/bulan">
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <h6>Pemeriksaan Lanjutan</h6>
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">ASI Sampai Umur</label>
-                                                <input type="text" class="form-control" name="Asi_Sampai_Umur"
-                                                    placeholder="minggu/bulan">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Alasan Berhenti Menyusui</label>
-                                                <input type="text" class="form-control"
-                                                    name="alasan_berhenti_menyusui">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Masalah Neonatus</label>
-                                                <input type="text" class="form-control" name="masalah_neonatus">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Kelainan Kongenital</label>
-                                                <input type="text" class="form-control" name="kelainan_kongenital">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Tengkurap</label>
-                                                <input type="text" class="form-control" name="tengkurap">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Merangkak</label>
-                                                <input type="text" class="form-control" name="merangkak">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Duduk</label>
-                                                <input type="text" class="form-control" name="duduk">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Berdiri</label>
-                                                <input type="text" class="form-control" name="berdiri">
+                                            <label style="min-width: 200px;">Glasgow Coma Scale</label>
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-primary me-2" id="btnGcs"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#gcsModal">Skor</button>
+                                                <input type="number" class="form-control" name="gcs_score"
+                                                    id="gcs_score" readonly>
                                             </div>
                                         </div>
+                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-gcs')
 
                                         <div class="mt-4">
                                             <h6>Antropometri</h6>
@@ -401,19 +271,23 @@
                                             <select class="form-select" name="jenis_skala_nyeri" id="jenis_skala_nyeri">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="NRS">Numeric Rating Scale (NRS)</option>
-                                                <option value="FLACC">Face, Legs, Activity, Cry, Consolability (FLACC)</option>
-                                                <option value="CRIES">Crying, Requires, Increased, Expression, Sleepless (CRIES)</option>
+                                                <option value="FLACC">Face, Legs, Activity, Cry, Consolability (FLACC)
+                                                </option>
+                                                <option value="CRIES">Crying, Requires, Increased, Expression, Sleepless
+                                                    (CRIES)</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Nilai Skala Nyeri</label>
-                                            <input type="text" class="form-control" id="nilai_skala_nyeri" name="nilai_skala_nyeri" readonly>
+                                            <input type="text" class="form-control" id="nilai_skala_nyeri"
+                                                name="nilai_skala_nyeri" readonly>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kesimpulan Nyeri</label>
-                                            <input type="hidden" class="form-control" id="kesimpulan_nyeri" name="kesimpulan_nyeri">
+                                            <input type="hidden" class="form-control" id="kesimpulan_nyeri"
+                                                name="kesimpulan_nyeri">
                                             <div class="alert alert-success" id="kesimpulan_nyeri_alert">
                                                 Pilih skala nyeri terlebih dahulu
                                             </div>
@@ -425,13 +299,11 @@
                                             <div class="mb-3 row">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Lokasi</label>
-                                                    <input type="text" class="form-control"
-                                                        name="lokasi_nyeri">
+                                                    <input type="text" class="form-control" name="lokasi_nyeri">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Durasi</label>
-                                                    <input type="text" class="form-control"
-                                                        name="durasi_nyeri">
+                                                    <input type="text" class="form-control" name="durasi_nyeri">
                                                 </div>
                                             </div>
 
@@ -440,8 +312,9 @@
                                                     <label class="form-label">Jenis nyeri</label>
                                                     <select class="form-select" name="jenis_nyeri">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach ($jenisnyeri as $jenis )
-                                                            <option value="{{ $jenis->id }}">{{ $jenis->name }}</option>
+                                                        @foreach ($jenisnyeri as $jenis)
+                                                            <option value="{{ $jenis->id }}">{{ $jenis->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -449,8 +322,9 @@
                                                     <label class="form-label">Frekuensi</label>
                                                     <select class="form-select" name="frekuensi_nyeri">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($frekuensinyeri as $frekuensi)
-                                                            <option value="{{ $frekuensi->id }}">{{ $frekuensi->name }}</option>
+                                                        @foreach ($frekuensinyeri as $frekuensi)
+                                                            <option value="{{ $frekuensi->id }}">{{ $frekuensi->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -461,8 +335,9 @@
                                                     <label class="form-label">Menjalar?</label>
                                                     <select class="form-select" name="nyeri_menjalar">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($menjalar as $menjalar)
-                                                            <option value="{{ $menjalar->id }}">{{ $menjalar->name }}</option>
+                                                        @foreach ($menjalar as $menjalar)
+                                                            <option value="{{ $menjalar->id }}">{{ $menjalar->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -470,8 +345,9 @@
                                                     <label class="form-label">Kualitas</label>
                                                     <select class="form-select" name="kualitas_nyeri">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($kualitasnyeri as $kualitas)
-                                                            <option value="{{ $kualitas->id }}">{{ $kualitas->name }}</option>
+                                                        @foreach ($kualitasnyeri as $kualitas)
+                                                            <option value="{{ $kualitas->id }}">{{ $kualitas->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -482,8 +358,9 @@
                                                     <label class="form-label">Faktor pemberat</label>
                                                     <select class="form-select" name="faktor_pemberat">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($faktorpemberat as $pemberat)
-                                                            <option value="{{ $pemberat->id }}">{{ $pemberat->name }}</option>
+                                                        @foreach ($faktorpemberat as $pemberat)
+                                                            <option value="{{ $pemberat->id }}">{{ $pemberat->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -491,8 +368,9 @@
                                                     <label class="form-label">Faktor peringan</label>
                                                     <select class="form-select" name="faktor_peringan">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($faktorperingan as $peringan)
-                                                            <option value="{{ $peringan->id }}">{{ $peringan->name }}</option>
+                                                        @foreach ($faktorperingan as $peringan)
+                                                            <option value="{{ $peringan->id }}">{{ $peringan->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -503,8 +381,9 @@
                                                     <label class="form-label">Efek Nyeri</label>
                                                     <select class="form-select" name="efek_nyeri">
                                                         <option value="" selected disabled>--Pilih--</option>
-                                                        @foreach($efeknyeri as $efek)
-                                                            <option value="{{ $efek->id }}">{{ $efek->name }}</option>
+                                                        @foreach ($efeknyeri as $efek)
+                                                            <option value="{{ $efek->id }}">{{ $efek->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -587,6 +466,32 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Konsumsi Obat-Obatan (Jika Ada)</label>
+                                            <select class="form-select" name="konsumsi_obat">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="Ya">Ya</option>
+                                                <option value="Tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Merokok ?</label>
+                                            <select class="form-select" name="merokok">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="Ya">Ya</option>
+                                                <option value="Tidak">Tidak</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Alkohol</label>
+                                            <select class="form-select" name="alkohol">
+                                                <option value="" selected disabled>--Pilih--</option>
+                                                <option value="Ya">Ya</option>
+                                                <option value="Tidak">Tidak</option>
+                                            </select>
+                                        </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Riwayat Penyakit Keluarga</label>
@@ -605,26 +510,34 @@
                                                 <input type="hidden" name="riwayat_kesehatan_keluarga" id="riwayatKesehatanInput">
                                             </div>
                                         </div>
-                                        
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Konsumsi Obat-Obatan</label>
-                                            <input type="text" class="form-control" name="konsumsi_obat">
-                                        </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Tumbuh Kembang Dibanding
-                                                Saudara-Saudaranya</label>
-                                            <select class="form-select" name="tumbuh_kembang">
-                                                <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Sama">Sama</option>
-                                                <option value="Cepat">Cepat</option>
-                                                <option value="Lambat">Lambat</option>
-                                            </select>
+                                    <div class="section-separator" id="riwayatObat">
+                                        <h5 class="section-title">6. Riwayat Penggunaan Obat</h5>
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
+                                            <i class="ti-plus"></i> Tambah
+                                        </button>
+                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" value="[]">
+                                        <div class="table-responsive">
+                                            <table class="table" id="createRiwayatObatTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Obat</th>
+                                                        <th>Dosis</th>
+                                                        <th>Aturan Pakai</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Table content will be dynamically populated -->
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">6. Alergi</h5>
+                                        <h5 class="section-title">7. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
                                             id="openAlergiModal">
@@ -650,7 +563,7 @@
                                     </div>
 
                                     <div class="section-separator" id="risiko_jatuh">
-                                        <h5 class="section-title">7. Risiko Jatuh</h5>
+                                        <h5 class="section-title">8. Risiko Jatuh</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Pilih jenis penilaian risiko jatuh sesuai dengan
@@ -1125,13 +1038,12 @@
                                             </button>
                                             <div id="selectedTindakanList-risikojatuh" class="d-flex flex-column gap-2">
                                             </div>
-                                            <input type="hidden" name="intervensi_risiko_jatuh_json" id="intervensi_risiko_jatuh_json" value="[]">
+                                            <input type="hidden" name="risikojatuh_tindakan_keperawatan" id="intervensi_risiko_jatuh_json" value="[]">
                                         </div>
                                     </div>
 
-
                                     <div class="section-separator" id="decubitus">
-                                        <h5 class="section-title">8. Risiko dekubitus</h5>
+                                        <h5 class="section-title">9. Risiko dekubitus</h5>
                                         <p class="text-muted">Pilih jenis Skala Risiko Dekubitus sesuai kondisi pasien</p>
 
                                         <div class="form-group mb-4">
@@ -1296,7 +1208,7 @@
                                     </div>
 
                                     <div class="section-separator" id="statusPsikologis">
-                                        <h5 class="section-title">9. Status Psikologis</h5>
+                                        <h5 class="section-title">10. Status Psikologis</h5>
 
                                         <div class="mb-4">
                                             <div class="d-flex align-items-center gap-2 mb-2">
@@ -1451,7 +1363,7 @@
                                     </div>
 
                                     <div class="section-separator" id="status_spiritual">
-                                        <h5 class="section-title">10. Status Spiritual</h5>
+                                        <h5 class="section-title">11. Status Spiritual</h5>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Keyakinan Agama</label>
                                             <select class="form-select" name="keyakinan_agama">
@@ -1478,7 +1390,7 @@
                                     </div>
 
                                     <div class="section-separator" id="status_sosial_ekonomi">
-                                        <h5 class="section-title">11. Status Sosial Ekonomi</h5>
+                                        <h5 class="section-title">12. Status Sosial Ekonomi</h5>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pekerjaan</label>
@@ -2375,15 +2287,6 @@
                                             <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                         </div>
                                     </div>
-                                
-
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-create-alergi')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skalanyeri')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-penyakitdiderita')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-jenisoperasi')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-riwayatkeluarga')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-intervensirisikojatuh')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-anak.modal-skala-adl')
 
                                     <div class="section-separator" id="evaluasi">
                                         <h5 class="section-title">18. Evaluasi</h5>
@@ -2403,7 +2306,14 @@
                                 </div>
                             </div>
 
-
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-skalanyeri')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-penyakitdiderita')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-riwayatkeluarga')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-jenisoperasi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-create-obat')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-create-alergi')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-skala-adl')
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-intervensirisikojatuh')
 
                         </form>
                     </div>
