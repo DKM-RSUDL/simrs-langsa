@@ -29,6 +29,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as Gawa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -55,11 +56,13 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
@@ -107,11 +110,25 @@ Route::middleware('auth')->group(function () {
                             // rujuk route
                             Route::prefix('rujuk-antar-rs')->group(function () {
                                 Route::name('.rujuk-antar-rs')->group(function () {
-                                    Route::controller(RawatJalanController::class)->group(function () {
-                                        Route::get('/', 'rujukAntarRs');
+                                    Route::controller(RujukJalanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
+
+                            // rujuk route
+                            // Route::prefix('rujuk-antar-rs')->group(function () {
+                            //     Route::name('.rujuk-antar-rs')->group(function () {
+                            //         Route::controller(RawatJalanController::class)->group(function () {
+                            //             Route::get('/', 'rujukAntarRs');
+                            //         });
+                            //     });
+                            // });
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
@@ -223,6 +240,19 @@ Route::middleware('auth')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/{id}', 'show')->name('.show');
                                         Route::put('/{id}', 'update')->name('.update');
+                                    });
+                                });
+                            });
+
+                            Route::prefix('asesmen-keperawatan')->group(function () {
+                                Route::name('.asesmen-keperawatan')->group(function () {
+                                    Route::controller(AsesmenKeperawatanRajalController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
@@ -515,8 +545,13 @@ Route::middleware('auth')->group(function () {
                         // rujuk route
                         Route::prefix('{urut_masuk}/rujuk-antar-rs')->group(function () {
                             Route::name('rujuk-antar-rs')->group(function () {
-                                Route::controller(GawatDaruratController::class)->group(function () {
-                                    Route::get('/', 'rujukAntarRs');
+                                Route::controller(RujukController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
                                 });
                             });
                         });
