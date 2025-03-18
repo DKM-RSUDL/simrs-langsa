@@ -498,12 +498,16 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // asuran keperawatan
-                            Route::prefix('asuran-keperawatan')->group(function () {
-                                Route::name('.asuran-keperawatan')->group(function () {
+                            Route::prefix('asuhan-keperawatan')->group(function () {
+                                Route::name('.asuhan-keperawatan')->group(function () {
                                     Route::controller(AsuhanKeperawatanRawatInapController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::get('/{data}/show', 'show')->name('.show');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/edit/{data}', 'edit')->name('.edit');
                                         Route::post('/', 'store')->name('.store');
-                                        Route::put('/', 'update')->name('.update');
+                                        Route::delete('/', 'destroy')->name('.destroy');
+                                        Route::put('/{data}', 'update')->name('.update');
                                     });
                                 });
                             });
@@ -549,6 +553,16 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/{id}/edit', 'edit')->name('.edit');
                                     Route::put('/{id}', 'update')->name('.update');
                                     Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+                        // serah terima route
+                        Route::prefix('{urut_masuk}/serah-terima-pasien')->group(function () {
+                            Route::name('serah-terima-pasien')->group(function () {
+                                Route::controller(GawatDaruratController::class)->group(function () {
+                                    Route::get('/', 'serahTerimaPasien');
+                                    Route::post('/', 'serahTerimaPasienCreate')->name('.store');
+                                    Route::post('/get-petugas-unit-ajax', 'getPetugasByUnit')->name('.get-petugas-unit-ajax');
                                 });
                             });
                         });
@@ -697,11 +711,26 @@ Route::middleware('auth')->group(function () {
                                 // klinik
                                 Route::controller(ForensikKlinikController::class)->group(function () {
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
                                     Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
 
                                 // patologi
-                                Route::get('/create-patologi', [ForensikPatologiController::class, 'createpatologi'])->name('.create-patologi');
+                                Route::prefix('patologi')->group(function () {
+                                    Route::name('.patologi')->group(function () {
+                                        Route::controller(ForensikPatologiController::class)->group(function () {
+                                            Route::get('/create', 'index')->name('.create');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::delete('/', 'destroy')->name('.destroy');
+                                        });
+                                    });
+                                });
                             });
                         });
                     });
@@ -800,3 +829,4 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
+
