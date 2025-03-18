@@ -48,6 +48,7 @@
             'link' => route('rehab-medis.pelayanan.layanan', [
                 'kd_pasien' => $dataMedis->kd_pasien,
                 'tgl_masuk' => $tglMasukData,
+                'urut_masuk' => $dataMedis->urut_masuk,
             ]),
         ],
         [
@@ -56,6 +57,7 @@
             'link' => route('rehab-medis.pelayanan.tindakan.index', [
                 'kd_pasien' => $dataMedis->kd_pasien,
                 'tgl_masuk' => $tglMasukData,
+                'urut_masuk' => $dataMedis->urut_masuk,
             ]),
         ],
     ];

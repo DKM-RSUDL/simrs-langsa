@@ -84,20 +84,21 @@ class RehabMedisController extends Controller
         }
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 214)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 214)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         return view('unit-pelayanan.rehab-medis.index', compact('dokter',));
     }
 
-    public function pelayanan($kd_pasien, $tgl_masuk)
+    public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->where('kd_unit', 214)
             ->where('kd_pasien', $kd_pasien)
             ->whereDate('tgl_masuk', $tgl_masuk)
-            ->firstOrFail();
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {

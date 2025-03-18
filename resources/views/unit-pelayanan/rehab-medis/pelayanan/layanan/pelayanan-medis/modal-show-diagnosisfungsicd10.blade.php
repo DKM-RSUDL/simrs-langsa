@@ -72,9 +72,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
                     <span class="diagnosis-text">${diagnosis}</span>
                         <input type="hidden" name="diagnosis_fungsi[]" value="${diagnosis}">
-                    <a href="javascript:void(0)" class="remove-main-diagnosis-fungsi text-danger" data-id="${uniqueId}">
-                        <i class="bi bi-trash"></i>
-                    </a>
                 </div>
             `;
                 });

@@ -746,12 +746,35 @@ Route::middleware('auth')->group(function () {
             Route::name('rehab-medis')->group(function () {
                 Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
 
-                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}')->group(function () {
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                     Route::name('.pelayanan')->group(function () {
                         Route::get('/', [RehabMedisController::class, 'pelayanan']);
 
                         // Pelayanan
-                        Route::get('layanan', [LayananController::class, 'index'])->name('.layanan');
+                        Route::prefix('layanan')->group(function () {
+                            Route::name('.layanan')->group(function () {
+                                Route::controller(LayananController::class)->group(function () {
+                                    Route::get('/', 'index');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
+
+                                    // PROGRAM
+                                    Route::prefix('program')->group(function () {
+                                        Route::name('.program')->group(function () {
+                                            Route::get('/create', 'createProgram')->name('.create');
+                                            Route::get('/{data}/edit', 'editProgram')->name('.edit');
+                                            Route::post('/', 'storeProgram')->name('.store');
+                                            Route::put('/{data}', 'updateProgram')->name('.update');
+                                            Route::delete('/', 'destroyProgram')->name('.destroy');
+                                        });
+                                    });
+                                });
+                            });
+                        });
 
                         // Tindakan
                         Route::prefix('tindakan')->group(function () {
