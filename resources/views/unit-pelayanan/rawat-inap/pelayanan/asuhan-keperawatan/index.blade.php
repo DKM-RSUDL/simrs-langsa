@@ -1,9 +1,6 @@
 @extends('layouts.administrator.master')
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    <style>
-
-    </style>
 @endpush
 
 @section('content')
@@ -59,7 +56,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <a href="javascript:void(0)" class="btn btn-primary" id="btn-asuhan-create">
+                                <a href="{{ route('rawat-inap.asuhan-keperawatan.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
                                     <i class="bi bi-plus-square"></i> Tambah
                                 </a>
                             </div>
@@ -77,57 +74,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>04 Des 2024</td>
-                                    <td>Pagi</td>
-                                    <td>Haris Yunanda</td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="btn-asuhan-show" class="mb-2 btn btn-sm btn-info">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" id="btn-asuhan-edit"
-                                            class="mb-2 btn btn-sm btn-warning">
-                                            <i class="ti-pencil"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>05 Des 2024</td>
-                                    <td>Sore</td>
-                                    <td>Nasruddin</td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="btn-asuhan-show" class="mb-2 btn btn-sm btn-info">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" id="btn-asuhan-edit"
-                                            class="mb-2 btn btn-sm btn-warning">
-                                            <i class="ti-pencil"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>06 Des 2024</td>
-                                    <td>Malam</td>
-                                    <td>Rizaldi</td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="btn-asuhan-show" class="mb-2 btn btn-sm btn-info">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" id="btn-asuhan-edit"
-                                            class="mb-2 btn btn-sm btn-warning">
-                                            <i class="ti-pencil"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($asuhan as $item)
+                                    <tr>
+                                        <td>{{ date('d M Y', strtotime($item->tgl_implementasi)) }}</td>
+                                        <td>
+                                            @if ($item->waktu == 1)
+                                                Pagi
+                                            @endif
+
+                                            @if ($item->waktu == 2)
+                                                Sore
+                                            @endif
+
+                                            @if ($item->waktu == 3)
+                                                Malam
+                                            @endif
+                                        </td>
+                                        <td>{{ str()->title($item->userCreate->name) }}</td>
+                                        <td>
+                                            <a href="{{ route('rawat-inap.asuhan-keperawatan.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="mb-2 btn btn-sm btn-info">
+                                                <i class="ti-eye"></i>
+                                            </a>
+                                            <a href="{{ route('rawat-inap.asuhan-keperawatan.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="mb-2 btn btn-sm btn-warning">
+                                                <i class="ti-pencil"></i>
+                                            </a>
+                                            <button class="mb-2 btn btn-sm btn-danger btn-delete" data-asuhan="{{ encrypt($item->id) }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -138,7 +114,80 @@
 @endsection
 
 
-@include('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.modal-asuhan-create')
-@include('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.modal-show')
-@include('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.modal-edit')
-@include('unit-pelayanan.rawat-inap.pelayanan.asuhan-keperawatan.modal-delete')
+@push('js')
+    <script>
+        $('.btn-delete').click(function(e) {
+            let $this = $(this);
+            let asuhan = $this.attr('data-asuhan');
+
+
+            Swal.fire({
+                title: "Anda yakin ingin menghapus?",
+                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('rawat-inap.asuhan-keperawatan.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            _method: "delete",
+                            asuhan: asuhan
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Sedang Memproses',
+                                html: 'Mohon tunggu sebentar...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
+
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Gagal!",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false,
+                                });
+
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: "Data asuhan berhasil dihapus !",
+                                icon: "success",
+                                allowOutsideClick: false,
+                            });
+
+                            location.reload();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Gagal!",
+                                text: "Internal Server Error",
+                                icon: "error",
+                                allowOutsideClick: false,
+                            });
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+@endpush
