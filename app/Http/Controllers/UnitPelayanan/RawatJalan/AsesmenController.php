@@ -92,7 +92,7 @@ class AsesmenController extends Controller
                 'data_triase.tanggal_triase',
                 'data_triase.id as id_triase'
             )
-            ->orderBy('data_triase.tanggal_triase', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.asesmen.index', compact(
