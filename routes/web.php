@@ -510,12 +510,18 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            Route::prefix('serah-terima')->group(function () {
+                                Route::name('.serah-terima')->group(function () {
+                                    Route::controller(RawatInapController::class)->group(function () {
+                                        Route::get('/', 'serahTerimaPasien');
+                                        Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
-
-                // sementara dari anas
-                Route::get('asuhan-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuhan-keperawatan.index');
             });
         });
 
@@ -560,8 +566,7 @@ Route::middleware('auth')->group(function () {
                             Route::name('serah-terima-pasien')->group(function () {
                                 Route::controller(GawatDaruratController::class)->group(function () {
                                     Route::get('/', 'serahTerimaPasien');
-                                    Route::post('/', 'serahTerimaPasienCreate')->name('.store');
-                                    Route::post('/get-petugas-unit-ajax', 'getPetugasByUnit')->name('.get-petugas-unit-ajax');
+                                    Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
                                 });
                             });
                         });

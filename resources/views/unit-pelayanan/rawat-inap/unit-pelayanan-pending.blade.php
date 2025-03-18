@@ -208,39 +208,8 @@
                                                 </button>
 
                                                 <ul class="dropdown-menu shadow-lg">
-                                                    <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/informed-consent'}">Informed Concent</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
-                                                        <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima-pasien'}">Pindah Ruangan / Rawat Inap</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
-                                                        <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
-                                                    <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuran-keperawatan'}">Asuhan Keperawatan</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima'}">Serah Terima / Handover</a></li>
+                                                    <li><a class="dropdown-item m-1" href="#">Batalkan Serah Terima</a></li>
                                                 </ul>
                                             </div>
                                         </div>

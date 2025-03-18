@@ -4,9 +4,13 @@ namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
+use App\Models\RmeSerahTerima;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class RawatInapController extends Controller
@@ -166,5 +170,108 @@ class RawatInapController extends Controller
         }
 
         return view('unit-pelayanan.rawat-inap.unit-pelayanan-pending', compact('unit'));
+    }
+
+    public function serahTerimaPasien($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+
+        $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit_tujuan', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk_tujuan', $urut_masuk)
+            ->first();
+
+        if (empty($serahTerimaData)) abort(404, 'Data serah terima tidak ditemukan !');
+
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
+
+        $petugas = User::with('karyawan')
+            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
+            ->whereRelation('karyawan', 'kd_detail_jenis_tenaga', 1)
+            ->whereRelation('karyawan.ruangan', 'kd_unit', $kd_unit)
+            ->get();
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.serah-terima.index', compact('dataMedis', 'serahTerimaData', 'unit', 'unitTujuan', 'petugas'));
+    }
+
+    public function serahTerimaPasienCreate($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (empty($dataMedis)) return back()->with('error', 'Data kunjungan pasien tidak ditemukan !');
+
+            // validasi
+            $request->validate([
+                'petugas_terima'   => 'required',
+                'tanggal_terima'   => 'required|date_format:Y-m-d',
+                'jam_terima'       => 'required|date_format:H:i',
+            ]);
+
+
+            // update serah terima data
+            $data = [
+                'petugas_terima'   => $request->petugas_terima,
+                'tanggal_terima'   => $request->tanggal_terima,
+                'jam_terima'       => $request->jam_terima,
+                'status'            => 2
+            ];
+
+            $id = decrypt($idEncrypt);
+            RmeSerahTerima::where('id', $id)->update($data);
+
+            // update status inap kunjungan jadi aktif
+            Kunjungan::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->where('urut_masuk', $urut_masuk)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->update(['status_inap' => 1]);
+
+            DB::commit();
+            return to_route('rawat-inap.unit.pending', [$kd_unit])->with('success', 'Pasien berhasil di terima !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
