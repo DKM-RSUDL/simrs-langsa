@@ -512,7 +512,7 @@ class GawatDaruratController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
-        dd($dataMedis);
+        // dd($dataMedis);
         $no_transaksi = Transaksi::where('kd_pasien', $kd_pasien)
             ->where('kd_kasir', 02)
             ->value('no_transaksi'); // Sudah berupa string, tidak perlu akses no_transaksi lagi
@@ -547,10 +547,10 @@ class GawatDaruratController extends Controller
         }
 
         // $serahTerimaData = RmeSerahTerima::where('kd_pasien', $kd_pasien)->first();
-        $serahTerimaData = DB::table('rsudlangsa_2024.dbo.rme_serah_terima as serah')
+        $serahTerimaData = DB::table('rslangsa.dbo.rme_serah_terima as serah')
             ->leftJoin('HRD.dbo.rme_users as user_menyerahkan', 'serah.petugas_menyerahkan', '=', 'user_menyerahkan.kd_karyawan')
             ->leftJoin('HRD.dbo.rme_users as user_menerima', 'serah.petugas_terima', '=', 'user_menerima.kd_karyawan')
-            ->leftJoin('rsudlangsa_2024.dbo.unit as unit', 'serah.kd_unit_tujuan', '=', 'unit.kd_unit')
+            ->leftJoin('rslangsa.dbo.unit as unit', 'serah.kd_unit_tujuan', '=', 'unit.kd_unit')
             ->where('serah.kd_pasien', $kd_pasien)
             ->select(
                 'serah.*',
