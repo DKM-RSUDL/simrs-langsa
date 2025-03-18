@@ -11,13 +11,21 @@ use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\PasienInap;
 use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
+use App\Models\Unit;
+use App\Models\User;
+use App\Models\HrdKaryawan;
+use App\Models\HrdRuangan;
+use App\Models\RmeSerahTerima;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+
 
 class GawatDaruratController extends Controller
 {
@@ -487,5 +495,187 @@ class GawatDaruratController extends Controller
             ->first();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis'));
+    }
+    public function serahTerimaPasien($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // dd($kd_pasien, $tgl_masuk, $urut_masuk);
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+        dd($dataMedis);
+        $no_transaksi = Transaksi::where('kd_pasien', $kd_pasien)
+            ->where('kd_kasir', 02)
+            ->value('no_transaksi'); // Sudah berupa string, tidak perlu akses no_transaksi lagi
+
+        $tujuanUnit = PasienInap::where('no_transaksi', $no_transaksi)
+            ->join('unit', 'pasien_inap.kd_unit', '=', 'unit.kd_unit')
+            ->select('pasien_inap.kd_unit', 'unit.nama_unit')
+            ->first();
+
+
+        $selectedUnit = $tujuanUnit ? $tujuanUnit->kd_unit : old('kd_unit');
+
+        $unit = Unit::where('kd_bagian', 1)
+            ->where('aktif', 1)
+            ->select('kd_unit', 'nama_unit')
+            ->get();
+
+
+        $validateForm = RmeSerahTerima::where('kd_pasien', $kd_pasien)
+            ->whereNull('petugas_menyerahkan')
+            ->exists();
+        $validateForm = $validateForm ? 'yes' : 'no';
+
+        $statusRecord = RmeSerahTerima::where('kd_pasien', $kd_pasien)->first();
+
+        if (!$statusRecord) {
+            $status = 0; // Data tidak ditemukan, anggap status generate (opsional)
+        } elseif (is_null($statusRecord->petugas_menyerahkan)) {
+            $status = 1; // Belum diserahkan
+        } elseif (!is_null($statusRecord->petugas_menyerahkan) && is_null($statusRecord->petugas_menerima)) {
+            $status = 2; // Sudah diserahkan, belum diterima
+        }
+
+        // $serahTerimaData = RmeSerahTerima::where('kd_pasien', $kd_pasien)->first();
+        $serahTerimaData = DB::table('rsudlangsa_2024.dbo.rme_serah_terima as serah')
+            ->leftJoin('HRD.dbo.rme_users as user_menyerahkan', 'serah.petugas_menyerahkan', '=', 'user_menyerahkan.kd_karyawan')
+            ->leftJoin('HRD.dbo.rme_users as user_menerima', 'serah.petugas_terima', '=', 'user_menerima.kd_karyawan')
+            ->leftJoin('rsudlangsa_2024.dbo.unit as unit', 'serah.kd_unit_tujuan', '=', 'unit.kd_unit')
+            ->where('serah.kd_pasien', $kd_pasien)
+            ->select(
+                'serah.*',
+                'user_menyerahkan.name as nama_menyerahkan',
+                'user_menerima.name as nama_menerima',
+                'unit.nama_unit'
+            )
+            ->first();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.serah-terima-pasien.index', compact('dataMedis', 'tujuanUnit', 'unit', 'validateForm', 'status', 'serahTerimaData'));
+    }
+
+    public function getPetugasByUnit(Request $request)
+    {
+        // dd($request);
+        $kdUnit = $request->kd_unit;
+
+        if (!$kdUnit) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kode unit tidak ditemukan!',
+                'data' => []
+            ]);
+        }
+
+        $users = User::join('hrd_karyawan', 'rme_users.kd_karyawan', '=', 'hrd_karyawan.kd_karyawan')
+            ->join('hrd_ruangan', 'hrd_karyawan.kd_ruangan', '=', 'hrd_ruangan.kd_ruangan')
+            ->select('rme_users.id', 'rme_users.name')
+            ->where('hrd_ruangan.kd_unit', $kdUnit)
+            ->get();
+
+        // if ($users->isEmpty()) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Tidak ada petugas di unit ini!',
+        //         'data' => []
+        //     ]);
+        // }
+
+        $petugasOptions = '<option value="">--pilih petugas--</option>';
+        foreach ($users as $user) {
+            $petugasOptions .= "<option value='{$user->id}'>{$user->name}</option>";
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data petugas berhasil diambil.',
+            'data' => [
+                'petugasOption' => $petugasOptions
+            ]
+        ]);
+    }
+
+    public function serahTerimaPasienCreate(Request $request)
+    {
+        $validateForm = $request->input('validateForm');
+        $messageErr = [
+            'kd_pasien.required' => 'Pasien tidak ditemukan!',
+            'kd_unit.required' => 'Unit harus dipilih!',
+            'petugas_menyerahkan.required' => 'Petugas harus dipilih!',
+            'tanggal_menyerahkan.required' => 'Tanggal harus diisi!',
+            'jam_menyerahkan.required' => 'Jam harus diisi!',
+            'status.required' => 'Status harus diisi!',
+            'petugas_terima.required' => 'Petugas harus dipilih!',
+            'tanggal_terima.required' => 'Tanggal terima harus diisi!',
+            'jam_terima.required' => 'Jam terima harus diisi!',
+        ];
+
+        if ($validateForm === 'yes') {
+            $request->validate([
+                'kd_pasien' => 'required',
+                'kd_unit' => 'required',
+                'petugas_menyerahkan' => 'required',
+                'tanggal_menyerahkan' => 'required|date',
+                'jam_menyerahkan' => 'required|date_format:H:i:s',
+                'status' => 'required|in:0,1,2',
+            ], $messageErr);
+        } elseif ($validateForm === 'no') {
+            $request->validate([
+                'kd_pasien' => 'required',
+                'petugas_terima' => 'required',
+                'tanggal_terima' => 'required|date',
+                'jam_terima' => 'required|date_format:H:i:s',
+                'status' => 'required|in:0,1,2',
+            ], $messageErr);
+        } else {
+            return back()->with('error', 'Form tidak valid!');
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $updateData = $validateForm === 'yes'
+                ? [
+                    'subjective' => $request->input('subjective'),
+                    'background' => $request->input('background'),
+                    'assessment' => $request->input('assessment'),
+                    'recomendation' => $request->input('recomendation'),
+                    'kd_unit_tujuan' => $request->input('kd_unit'),
+                    'petugas_menyerahkan' => $request->input('petugas_menyerahkan'),
+                    'tanggal_menyerahkan' => $request->input('tanggal_menyerahkan'),
+                    'jam_menyerahkan' => $request->input('jam_menyerahkan'),
+                    'status' => $request->input('status'),
+                ]
+                : [
+                    'tanggal_terima' => $request->input('tanggal_terima'),
+                    'jam_terima' => $request->input('jam_terima'),
+                    'petugas_terima' => $request->input('petugas_terima'),
+                    'status' => $request->input('status'),
+                ];
+
+
+            // Update data
+            $updated = RmeSerahTerima::where('kd_pasien', $request->kd_pasien)->update($updateData);
+
+            if (!$updated) {
+                throw new \Exception('Data serah terima tidak ditemukan atau tidak berhasil diperbarui.');
+            }
+
+            DB::commit();
+            return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil diperbarui!');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
