@@ -553,7 +553,6 @@ class AsesmenKepAnakController extends Controller
             }
             $statusFungsional->save();
 
-
             // Simpan ke table RmeAsesmenKepAnakRencana
             $asesmenRencana = new RmeAsesmenKepAnakRencanaPulang();
             $asesmenRencana->id_asesmen = $dataAsesmen->id;

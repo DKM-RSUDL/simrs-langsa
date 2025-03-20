@@ -103,7 +103,7 @@ class RmeAsesmen extends Model
     }
 
 
-    // aesmen keperawatan
+    // aesmen keperawatan IGD
     public function asesmenKepUmum()
     {
         return $this->hasOne(RmeAsesmenKepUmum::class, 'id_asesmen', 'id');
@@ -151,6 +151,42 @@ class RmeAsesmen extends Model
     public function pemeriksaanFisik()
     {
         return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumDetail()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumDtl::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumStatusNyeri()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumStatusNyeri::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumRiwayatKesehatan()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumRiwayatKesehatan::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumRencanaPulang()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumRencanaPulang::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumRisikoDekubitus()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumRisikoDekubitus::class, 'id_asesmen', 'id');
+    }
+
+
+    public function asesmenKepUmumStatusPsikologis()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumStatusPsikologis::class, 'id_asesmen', 'id');
+    }
+
+    public function asesmenKepUmumStatusFungsional()
+    {
+        return $this->hasOne(RmeAsesmenKepUmumStatusFungsional::class, 'id_asesmen', 'id');
     }
 
     // asesmen tht

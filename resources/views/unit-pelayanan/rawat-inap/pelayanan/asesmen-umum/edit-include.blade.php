@@ -159,14 +159,12 @@
             //1. FUNGSI HITUNG IMT dan LPT
             //============================================================//
             function hitungIMT_LPT() {
-                let tinggi = parseFloat(document.getElementById("tinggi_badan").value) / 100; // Konversi ke meter
+                let tinggi = parseFloat(document.getElementById("tinggi_badan").value) / 100;
                 let berat = parseFloat(document.getElementById("berat_badan").value);
-
                 if (!isNaN(tinggi) && !isNaN(berat) && tinggi > 0) {
                     let imt = berat / (tinggi * tinggi);
-                    let lpt = (tinggi * 100 * berat) / 3600; // Tinggi dikonversi ke cm
-                    
-                    document.getElementById("imt").value = imt.toFixed(2); // Menampilkan 2 desimal
+                    let lpt = (tinggi * 100 * berat) / 3600;
+                    document.getElementById("imt").value = imt.toFixed(2);
                     document.getElementById("lpt").value = lpt.toFixed(2);
                 } else {
                     document.getElementById("imt").value = "";
@@ -174,8 +172,8 @@
                 }
             }
 
-            document.getElementById("tinggi_badan").addEventListener("input", hitungIMT_LPT);
-            document.getElementById("berat_badan").addEventListener("input", hitungIMT_LPT);
+            document.getElementById("tinggi_badan")?.addEventListener("input", hitungIMT_LPT);
+            document.getElementById("berat_badan")?.addEventListener("input", hitungIMT_LPT);
 
             //============================================================//
             // FUNGSI Tambah keterangan di pemeriksaan fisik //
@@ -184,15 +182,17 @@
                 button.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const keteranganDiv = document.getElementById(targetId);
-                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
-                        '.form-check-input');
+                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector('.form-check-input');
 
-                    // Toggle tampilan keterangan
-                    if (keteranganDiv.style.display === 'none') {
-                        keteranganDiv.style.display = 'block';
-                        normalCheckbox.checked = false; // Uncheck normal checkbox
+                    if (keteranganDiv) { // Null check
+                        if (keteranganDiv.style.display === 'none') {
+                            keteranganDiv.style.display = 'block';
+                            normalCheckbox.checked = false;
+                        } else {
+                            keteranganDiv.style.display = 'block';
+                        }
                     } else {
-                        keteranganDiv.style.display = 'block';
+                        console.error(`Element with ID ${targetId} not found`);
                     }
                 });
             });
@@ -202,7 +202,7 @@
                     const pemeriksaanItem = this.closest('.pemeriksaan-item');
                     if (pemeriksaanItem) {
                         const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
-                        if (keteranganDiv) {
+                        if (keteranganDiv) { // Null check
                             if (this.checked) {
                                 keteranganDiv.style.display = 'none';
                                 const input = keteranganDiv.querySelector('input');
@@ -213,17 +213,18 @@
                 });
             });
 
-            document.querySelectorAll('.form-check-input').forEach(checkbox => {
-                const pemeriksaanItem = checkbox.closest('.pemeriksaan-item');
-                if (pemeriksaanItem) {
-                    checkbox.checked = true;
-                    const keteranganDiv = pemeriksaanItem.querySelector('.keterangan');
-                    if (keteranganDiv) {
-                        keteranganDiv.style.display = 'none';
-                        const input = keteranganDiv.querySelector('input');
-                        if (input) input.value = '';
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.pemeriksaan-item').forEach(item => {
+                    const keteranganInput = item.querySelector('.keterangan input');
+                    const normalCheckbox = item.querySelector('.form-check-input');
+                    const keteranganDiv = item.querySelector('.keterangan');
+
+                    // Jika ada nilai keterangan
+                    if (keteranganInput && keteranganInput.value) {
+                        normalCheckbox.checked = false;
+                        keteranganDiv.style.display = 'block';
                     }
-                }
+                });
             });
 
 
@@ -253,6 +254,52 @@
             const downScoreInput = document.getElementById('gcs_score');
             const simpanBtn = document.getElementById('btnSimpanScore');
 
+            // Store components of GCS score (for edit mode)
+            let currentEyeScore = 0;
+            let currentVerbalScore = 0;
+            let currentMotoricScore = 0;
+            
+            // For edit mode - initialize with existing GCS score
+            const existingGcsScore = {{ $asesmen->asesmenKepUmumDetail->gcs ?? 0 }};
+            
+            if (existingGcsScore > 0) {
+                downScoreInput.value = existingGcsScore;
+                
+                // You'll need to add these hidden fields to store the component values
+                // or retrieve them from the database if you store them separately
+                currentEyeScore = {{ $asesmen->asesmenKepUmumDetail->gcs_eye ?? 0 }};
+                currentVerbalScore = {{ $asesmen->asesmenKepUmumDetail->gcs_verbal ?? 0 }};
+                currentMotoricScore = {{ $asesmen->asesmenKepUmumDetail->gcs_motoric ?? 0 }};
+                
+                // Pre-select the radio buttons based on existing values
+                if (currentEyeScore > 0) {
+                    const eyeRadio = document.getElementById(`eye_${currentEyeScore}`);
+                    if (eyeRadio) {
+                        eyeRadio.checked = true;
+                        eyeValueDisplay.textContent = `Eye: ${eyeRadio.dataset.text} (${currentEyeScore})`;
+                    }
+                }
+                
+                if (currentVerbalScore > 0) {
+                    const verbalRadio = document.getElementById(`verbal_${currentVerbalScore}`);
+                    if (verbalRadio) {
+                        verbalRadio.checked = true;
+                        verbalValueDisplay.textContent = `Verbal: ${verbalRadio.dataset.text} (${currentVerbalScore})`;
+                    }
+                }
+                
+                if (currentMotoricScore > 0) {
+                    const motoricRadio = document.getElementById(`motoric_${currentMotoricScore}`);
+                    if (motoricRadio) {
+                        motoricRadio.checked = true;
+                        motoricValueDisplay.textContent = `Motoric: ${motoricRadio.dataset.text} (${currentMotoricScore})`;
+                    }
+                }
+                
+                // Update total display
+                totalGCSDisplay.textContent = existingGcsScore;
+            }
+
             function hitungSkor() {
                 let eyeScore = 0;
                 let verbalScore = 0;
@@ -281,6 +328,11 @@
 
                 const total = eyeScore + verbalScore + motoricScore;
                 totalGCSDisplay.textContent = total;
+                
+                // Update the current scores
+                currentEyeScore = eyeScore;
+                currentVerbalScore = verbalScore;
+                currentMotoricScore = motoricScore;
             }
 
             [eyeRadios, verbalRadios, motoricRadios].forEach(radioGroup => {
@@ -292,28 +344,34 @@
             simpanBtn.addEventListener('click', function() {
                 const skor = parseInt(totalGCSDisplay.textContent) || 0;
                 downScoreInput.value = skor;
-                const modal = bootstrap.Modal.getInstance(gcsModal);
-                if (modal) {
-                    modal.hide();
-                } else {
-                    gcsModal.style.display = 'none';
+            
+                const modal = bootstrap.Modal.getOrCreateInstance(gcsModal);
+                modal.hide();
+                
+                // Manual fallback if Bootstrap's method fails
+                if (document.body.classList.contains('modal-open')) {
                     document.body.classList.remove('modal-open');
+                    gcsModal.style.display = 'none';
                     const backdrop = document.querySelector('.modal-backdrop');
                     if (backdrop) backdrop.remove();
                 }
             });
 
+            // For edit - we'll modified this to not reset if there are existing values
             gcsModal.addEventListener('shown.bs.modal', function() {
-                [eyeRadios, verbalRadios, motoricRadios].forEach(radioGroup => {
-                    radioGroup.forEach(radio => {
-                        radio.checked = false;
+                // Only reset if there's no existing GCS score
+                if (!existingGcsScore) {
+                    [eyeRadios, verbalRadios, motoricRadios].forEach(radioGroup => {
+                        radioGroup.forEach(radio => {
+                            radio.checked = false;
+                        });
                     });
-                });
-                
-                eyeValueDisplay.textContent = 'Eye: -';
-                verbalValueDisplay.textContent = 'Verbal: -';
-                motoricValueDisplay.textContent = 'Motoric: -';
-                totalGCSDisplay.textContent = '0';
+                    
+                    eyeValueDisplay.textContent = 'Eye: -';
+                    verbalValueDisplay.textContent = 'Verbal: -';
+                    motoricValueDisplay.textContent = 'Motoric: -';
+                    totalGCSDisplay.textContent = '0';
+                }
             });
             
             hitungSkor();
@@ -656,7 +714,7 @@
                         adlTotal.value = '';
                         adlKesimpulanAlert.className = 'alert alert-info';
                         adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
-                        
+
                         const modal = new bootstrap.Modal(document.getElementById('modalADL'));
                         modal.show();
                     } else if (this.value === 'Lainnya') {
@@ -671,30 +729,34 @@
                             this.value = '';
                             adlTotal.value = '';
                             adlKesimpulanAlert.className = 'alert alert-info';
-                            adlKesimpulanAlert.textContent = 'Pilih skala aktivitas harian terlebih dahulu';
+                            adlKesimpulanAlert.textContent =
+                                'Pilih skala aktivitas harian terlebih dahulu';
                         });
                     }
                 });
             }
 
+            // ADL Handler - Perhitungan total dan kesimpulan
             const updateADLTotal = () => {
                 const adlChecks = document.querySelectorAll('.adl-check:checked');
                 const adlModalTotal = document.getElementById('adlTotal');
                 const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                
+
                 let total = 0;
                 adlChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 // Update total di modal
                 if (adlModalTotal) {
                     adlModalTotal.value = total;
                 }
 
                 // Hitung jumlah kategori yang sudah dipilih
-                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute('data-category')));
-                const allCategoriesSelected = checkedCategories.size === 3; // 3 kategori: makan, berjalan, mandi
+                const checkedCategories = new Set(Array.from(adlChecks).map(check => check.getAttribute(
+                    'data-category')));
+                const allCategoriesSelected = checkedCategories.size ===
+                    3; // 3 kategori: makan, berjalan, mandi
 
                 if (!allCategoriesSelected) {
                     if (adlModalKesimpulan) {
@@ -707,7 +769,7 @@
                 // Update kesimpulan berdasarkan total skor
                 let kesimpulan = '';
                 let alertClass = '';
-                
+
                 if (total <= 4) {
                     kesimpulan = 'Mandiri';
                     alertClass = 'alert-success';
@@ -729,46 +791,55 @@
                 }
             };
 
+            // Event listeners untuk ADL checkboxes
             document.querySelectorAll('.adl-check').forEach(check => {
                 check.addEventListener('change', updateADLTotal);
             });
 
+            // Handle ADL save button
             const simpanADL = document.getElementById('simpanADL');
             if (simpanADL) {
                 simpanADL.addEventListener('click', function() {
                     const adlModalTotal = document.getElementById('adlTotal');
                     const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                    
+
                     if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
                         // Update nilai total
                         adlTotal.value = adlModalTotal.value;
-                        
+
                         // Update kesimpulan di form utama
-                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace(
+                            'py-1 px-3 mb-0', '');
                         adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
-                        
+
                         // Tutup modal
                         bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
                     }
                 });
             }
 
+            //Get Value
             const getSelectedADLValues = () => {
                 const makanValue = document.querySelector('input[name="makan"]:checked')?.value || '';
                 const berjalanValue = document.querySelector('input[name="berjalan"]:checked')?.value || '';
                 const mandiValue = document.querySelector('input[name="mandi"]:checked')?.value || '';
-                
+
                 // Map nilai menjadi teks
                 const getTextValue = (value) => {
                     switch (value) {
-                        case '1': return 'Mandiri';
-                        case '2': return '25% Dibantu';
-                        case '3': return '50% Dibantu';
-                        case '4': return '75% Dibantu';
-                        default: return '';
+                        case '1':
+                            return 'Mandiri';
+                        case '2':
+                            return '25% Dibantu';
+                        case '3':
+                            return '50% Dibantu';
+                        case '4':
+                            return '75% Dibantu';
+                        default:
+                            return '';
                     }
                 };
-                
+
                 return {
                     makan: getTextValue(makanValue),
                     makanValue: makanValue,
@@ -779,20 +850,22 @@
                 };
             };
 
+            // Reset form ADL when modal is closed
             const modalADL = document.getElementById('modalADL');
             if (simpanADL) {
                 simpanADL.addEventListener('click', function() {
                     const adlModalTotal = document.getElementById('adlTotal');
                     const adlModalKesimpulan = document.getElementById('adlKesimpulan');
-                    
+
                     if (adlModalTotal && adlModalTotal.value !== '' && adlKesimpulanAlert) {
                         // Update nilai total
                         adlTotal.value = adlModalTotal.value;
-                        
+
                         // Update kesimpulan di form utama
-                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace('py-1 px-3 mb-0', '');
+                        adlKesimpulanAlert.className = adlModalKesimpulan.className.replace(
+                            'py-1 px-3 mb-0', '');
                         adlKesimpulanAlert.textContent = adlModalKesimpulan.textContent;
-                        
+
                         // Simpan nilai-nilai tersembunyi
                         const adlValues = getSelectedADLValues();
                         document.getElementById('adl_makan').value = adlValues.makan;
@@ -801,9 +874,10 @@
                         document.getElementById('adl_berjalan_value').value = adlValues.berjalanValue;
                         document.getElementById('adl_mandi').value = adlValues.mandi;
                         document.getElementById('adl_mandi_value').value = adlValues.mandiValue;
-                        document.getElementById('adl_kesimpulan_value').value = adlModalKesimpulan.textContent;
+                        document.getElementById('adl_kesimpulan_value').value = adlModalKesimpulan
+                            .textContent;
                         document.getElementById('adl_jenis_skala').value = '1'; // 1 untuk ADL
-                        
+
                         // Tutup modal
                         bootstrap.Modal.getInstance(document.getElementById('modalADL')).hide();
                     }
@@ -864,12 +938,8 @@
             }
 
             const skalaDecubitusSelect = document.getElementById('skalaRisikoDekubitus');
-            if (skalaDecubitusSelect) {
-                skalaDecubitusSelect.addEventListener('change', function() {
-                    showDecubitusForm(this.value);
-                });
-                // Sembunyikan semua form saat halaman dimuat
-                showDecubitusForm('');
+            if (skalaDecubitusSelect && skalaDecubitusSelect.value) {
+                showDecubitusForm(skalaDecubitusSelect.value);
             }
 
 
@@ -994,8 +1064,17 @@
             const nutritionSelect = document.getElementById('nutritionAssessment');
             const allForms = document.querySelectorAll('.assessment-form');
 
-            nutritionSelect.addEventListener('change', function() {
-                const selectedValue = this.value;
+            if (nutritionSelect) {
+                const initialValue = nutritionSelect.value;
+                if (initialValue) {
+                    // Tampilkan form yang sesuai dengan nilai yang sudah dipilih
+                    showSelectedNutritionForm();
+                }
+            }
+
+            // Tampilkan form yang dipilih saat halaman dimuat
+            function showSelectedNutritionForm() {
+                const selectedValue = nutritionSelect.value;
 
                 // Sembunyikan semua form
                 allForms.forEach(form => {
@@ -1003,14 +1082,6 @@
                 });
 
                 if (selectedValue === '5') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Pasien tidak dapat dinilai status gizinya',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    });
-                    document.getElementById('cannot-assess').value = 'tidak ada status gizi';
                     return;
                 }
 
@@ -1031,7 +1102,9 @@
                         initializeFormListeners(formId);
                     }
                 }
-            });
+            }
+
+            nutritionSelect.addEventListener('change', showSelectedNutritionForm);
 
 
             //============================================================//
@@ -1562,34 +1635,23 @@
         // Event handler untuk skala risiko jatuh
         //============================================================//
         function showForm(formType) {
-            // Sembunyikan semua form terlebih dahulu
             document.querySelectorAll('.risk-form').forEach(form => {
-                form.style.display = 'none';
+                if (form) form.style.display = 'none'; // Cek null sebelum akses style
             });
 
-            // Handle untuk opsi "Lainnya"
             if (formType === '5') {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Perhatian',
                     text: 'Pasien tidak dapat dinilai status resiko jatuh',
                     confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok',
-                    showCancelButton: false,
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-primary',
-                        popup: 'animated fadeInDown faster'
-                    },
-                    backdrop: `
-                        rgba(244, 244, 244, 0.7)
-                    `
+                    confirmButtonText: 'Ok'
                 });
-                document.getElementById('skala_lainnya').value = 'resiko jatuh lainnya';
+                const skalaLainnya = document.getElementById('skala_lainnya');
+                if (skalaLainnya) skalaLainnya.value = 'resiko jatuh lainnya';
                 return;
             }
 
-            // Mapping nilai select ke id form
             const formMapping = {
                 '1': 'skala_umumForm',
                 '2': 'skala_morseForm',
@@ -1597,12 +1659,13 @@
                 '4': 'skala_ontarioForm'
             };
 
-            // Tampilkan form yang dipilih
             if (formType && formMapping[formType]) {
                 const selectedForm = document.getElementById(formMapping[formType]);
                 if (selectedForm) {
                     selectedForm.style.display = 'block';
                     resetForm(selectedForm);
+                } else {
+                    console.error(`Form dengan ID ${formMapping[formType]} tidak ditemukan`);
                 }
             }
         }
@@ -1720,17 +1783,18 @@
         //===============================================================//
         const decubitusScores = {
             norton: {
-                low: 15,    // > 15 risiko rendah
-                medium: 13,  // 13-14 risiko sedang
-                high: 12     // < 12 risiko tinggi
+                low: 15, // > 15 risiko rendah
+                medium: 13, // 13-14 risiko sedang
+                high: 12 // < 12 risiko tinggi
             },
             braden: {
-                high: 12,    // ≤ 12 risiko tinggi
-                medium: 16,  // 13-16 risiko sedang
-                low: 17      // ≥ 17 risiko rendah
+                high: 12, // ≤ 12 risiko tinggi
+                medium: 16, // 13-16 risiko sedang
+                low: 17 // ≥ 17 risiko rendah
             }
         };
 
+        // Fungsi untuk menampilkan form decubitus yang dipilih
         function showDecubitusForm(formType) {
             document.querySelectorAll('.decubitus-form').forEach(form => {
                 form.style.display = 'none';
@@ -1746,13 +1810,25 @@
             // Tampilkan form yang dipilih
             if (formElement) {
                 formElement.style.display = 'block';
-                resetDecubitusForm(formElement);
+
+                // Cek apakah form sudah memiliki nilai
+                const hasValues = Array.from(formElement.querySelectorAll('select')).some(select => select.value);
+
+                // Hanya reset jika tidak ada nilai
+                if (!hasValues) {
+                    resetDecubitusForm(formElement);
+                } else {
+                    // Jika sudah ada nilai, update kesimpulan
+                    updateDecubitusConclusion(formType);
+                }
             }
         }
 
+
+        // Reset form saat berganti
         function resetDecubitusForm(form) {
             if (!form) return;
-            
+
             form.querySelectorAll('select').forEach(select => select.value = '');
             const kesimpulanDiv = form.querySelector('#kesimpulanNorton');
             if (kesimpulanDiv) {
@@ -1761,6 +1837,7 @@
             }
         }
 
+        // Update kesimpulan berdasarkan pilihan
         function updateDecubitusConclusion(formType) {
             const form = document.getElementById('form' + formType.charAt(0).toUpperCase() + formType.slice(1));
             if (!form) return;
@@ -1781,6 +1858,10 @@
                     }
                     total += parseInt(select.value);
                 });
+
+                // Debug untuk melihat nilai
+                console.log('Total Score:', total);
+                console.log('All Fields Filled:', allFilled);
 
                 if (!allFilled) {
                     kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
@@ -1806,11 +1887,12 @@
                 conclusion += ` (Skor: ${total})`;
                 kesimpulanDiv.className = `alert ${alertClass} mb-0 flex-grow-1`;
                 kesimpulanDiv.textContent = conclusion;
-            }
-            else if (formType === 'braden') {
+            } else if (formType === 'braden') {
                 let total = 0;
                 let allFilled = true;
-                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi', 'pergesekan'];
+                const fields = ['persepsi_sensori', 'kelembapan', 'braden_aktivitas', 'braden_mobilitas', 'nutrisi',
+                    'pergesekan'
+                ];
 
                 fields.forEach(field => {
                     const select = form.querySelector(`select[name="${field}"]`);
@@ -1820,6 +1902,10 @@
                     }
                     total += parseInt(select.value);
                 });
+
+                // Debug untuk melihat nilai
+                console.log('Total Braden Score:', total);
+                console.log('All Braden Fields Filled:', allFilled);
 
                 if (!allFilled) {
                     kesimpulanDiv.className = 'alert alert-info mb-0 flex-grow-1';
@@ -1854,7 +1940,7 @@
         //========================================================================//
         // Event Listener untuk form status gizi
         //=======================================================================//
-        function initializeFormListeners(formId) {
+                function initializeFormListeners(formId) {
             const form = document.getElementById(formId);
             const selects = form.querySelectorAll('select');
 
@@ -1863,39 +1949,55 @@
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateMSTScore(form));
                     });
+                    calculateMSTScore(form);
                     break;
                 case 'mna':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateMNAScore(form));
                     });
                     initializeBMICalculation();
+                    calculateMNAScore(form);
                     break;
                 case 'strong-kids':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateStrongKidsScore(form));
                     });
+                    calculateStrongKidsScore(form);
                     break;
                 case 'nrs':
                     selects.forEach(select => {
                         select.addEventListener('change', () => calculateNRSScore(form));
                     });
+                    calculateNRSScore(form);
                     break;
             }
         }
 
-        function calculateMSTScore() {
-            const form = document.getElementById('mst');
+        // Fungsi perhitungan MST
+        function calculateMSTScore(form) {
+            // Periksa jika form ada
+            if (!form) return;
+
             const selects = form.querySelectorAll('select');
             let total = 0;
+            let allSelected = true;
 
+            // Hitung total skor
             selects.forEach(select => {
-                total += parseInt(select.value || 0);
+                if (select.value === '') {
+                    allSelected = false;
+                } else {
+                    total += parseInt(select.value || 0);
+                }
             });
+
+            // Jika tidak semua field dipilih, jangan update kesimpulan
+            if (!allSelected) return;
 
             const kesimpulan = total <= 1 ? 'Tidak berisiko malnutrisi' : 'Berisiko malnutrisi';
             document.getElementById('gizi_mst_kesimpulan').value = kesimpulan;
 
-            const conclusions = form.querySelectorAll('.alert');
+            const conclusions = form.querySelectorAll('.risk-indicators .alert');
             conclusions.forEach(alert => {
                 if ((total <= 1 && alert.classList.contains('alert-success')) ||
                     (total >= 2 && alert.classList.contains('alert-warning'))) {
@@ -1906,6 +2008,7 @@
             });
         }
 
+        // Fungsi perhitungan BMI
         function initializeBMICalculation() {
             const weightInput = document.getElementById('mnaWeight');
             const heightInput = document.getElementById('mnaHeight');
@@ -1928,6 +2031,7 @@
             }
         }
 
+        // Fungsi perhitungan MNA
         function calculateMNAScore(form) {
             const selects = form.querySelectorAll('select[name^="gizi_mna_"]');
             let total = 0;
@@ -1960,6 +2064,7 @@
             }
         }
 
+        // Fungsi perhitungan Strong Kids
         function calculateStrongKidsScore(form) {
             const selects = form.querySelectorAll('select');
             let total = 0;
@@ -2006,6 +2111,7 @@
             updateFormConclusion(form, kesimpulan, type);
         }
 
+        // Fungsi perhitungan NRS
         function calculateNRSScore(form) {
             const selects = form.querySelectorAll('select');
             let total = 0;
@@ -2052,6 +2158,7 @@
             updateFormConclusion(form, kesimpulan, type);
         }
 
+        // Fungsi untuk update tampilan kesimpulan
         function updateFormConclusion(form, text, type) {
             const conclusions = form.querySelectorAll('.alert');
             conclusions.forEach(alert => {

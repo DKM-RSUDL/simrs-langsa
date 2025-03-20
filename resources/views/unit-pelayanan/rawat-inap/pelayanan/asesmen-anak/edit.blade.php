@@ -56,7 +56,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tiba Di Ruang Rawat Dengan Cara</label>
                                         <select class="form-select" name="cara_masuk">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnak->cara_masuk) ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Mandiri"
                                                 {{ $asesmen->rmeAsesmenKepAnak->cara_masuk == 'Mandiri' ? 'selected' : '' }}>
                                                 Mandiri</option>
@@ -78,7 +78,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kasus Trauma</label>
                                         <select class="form-select" name="kasus_trauma">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnak->kasus_trauma) ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Kecelakaan Lalu Lintas"
                                                 {{ $asesmen->rmeAsesmenKepAnak->kasus_trauma == 'Kecelakaan Lalu Lintas' ? 'selected' : '' }}>
                                                 Kecelakaan Lalu Lintas</option>
@@ -170,7 +170,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesadaran</label>
                                         <select class="form-select" name="kesadaran">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->kesadaran == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Compos Mentis"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->kesadaran == 'Compos Mentis' ? 'selected' : '' }}>
                                                 Compos Mentis</option>
@@ -192,7 +192,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">AVPU</label>
                                         <select class="form-select" name="avpu">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="0"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->avpu == '0' ? 'selected' : '' }}>Sadar
                                                 Baik/Alert</option>
@@ -217,7 +217,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Penglihatan</label>
                                         <select class="form-select" name="penglihatan">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->penglihatan == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->penglihatan == '1' ? 'selected' : '' }}>
                                                 Baik</option>
@@ -233,7 +233,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pendengaran</label>
                                         <select class="form-select" name="pendengaran">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->pendengaran == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->pendengaran == '1' ? 'selected' : '' }}>
                                                 Baik</option>
@@ -249,7 +249,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Bicara</label>
                                         <select class="form-select" name="bicara">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->bicara == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->bicara == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -262,7 +262,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Refleks Menelan</label>
                                         <select class="form-select" name="refleks_menelan">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->refleksi_menelan == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -278,7 +278,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pola Tidur</label>
                                         <select class="form-select" name="pola_tidur">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->pola_tidur == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->pola_tidur == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -291,7 +291,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Luka</label>
                                         <select class="form-select" name="luka">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->luka == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->luka == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -307,7 +307,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Defekasi</label>
                                         <select class="form-select" name="defekasi">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->defekasi == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->defekasi == '1' ? 'selected' : '' }}>
                                                 Tidak Ada</option>
@@ -326,7 +326,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Miksi</label>
                                         <select class="form-select" name="miksi">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->miksi == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->miksi == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -342,7 +342,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Gastrointestinal</label>
                                         <select class="form-select" name="gastrointestinal">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="1"
                                                 {{ $asesmen->rmeAsesmenKepAnakFisik->gastrointestinal == '1' ? 'selected' : '' }}>
                                                 Normal</option>
@@ -536,7 +536,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Jenis Skala NYERI</label>
                                         <select class="form-select" name="jenis_skala_nyeri" id="jenis_skala_nyeri">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri) ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="NRS" {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_skala_nyeri == 1 ? 'selected' : '' }}>
                                                 Numeric Rating Scale (NRS)
                                             </option>
@@ -584,7 +584,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Jenis nyeri</label>
                                                 <select class="form-select" name="jenis_nyeri">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($jenisnyeri as $jenis)
                                                         <option value="{{ $jenis->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->jenis_nyeri == $jenis->id ? 'selected' : '' }}>
@@ -596,7 +596,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Frekuensi</label>
                                                 <select class="form-select" name="frekuensi_nyeri">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($frekuensinyeri as $frekuensi)
                                                         <option value="{{ $frekuensi->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->frekuensi == $frekuensi->id ? 'selected' : '' }}>
@@ -611,7 +611,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Menjalar?</label>
                                                 <select class="form-select" name="nyeri_menjalar">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($menjalar as $menjalarItem)
                                                         <option value="{{ $menjalarItem->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->menjalar == $menjalarItem->id ? 'selected' : '' }}>
@@ -623,7 +623,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Kualitas</label>
                                                 <select class="form-select" name="kualitas_nyeri">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($kualitasnyeri as $kualitas)
                                                         <option value="{{ $kualitas->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->kualitas == $kualitas->id ? 'selected' : '' }}>
@@ -638,7 +638,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Faktor pemberat</label>
                                                 <select class="form-select" name="faktor_pemberat">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($faktorpemberat as $pemberat)
                                                         <option value="{{ $pemberat->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_pemberat == $pemberat->id ? 'selected' : '' }}>
@@ -650,7 +650,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Faktor peringan</label>
                                                 <select class="form-select" name="faktor_peringan">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($faktorperingan as $peringan)
                                                         <option value="{{ $peringan->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->faktor_peringan == $peringan->id ? 'selected' : '' }}>
@@ -665,7 +665,7 @@
                                             <div class="col-12">
                                                 <label class="form-label">Efek Nyeri</label>
                                                 <select class="form-select" name="efek_nyeri">
-                                                    <option disabled>--Pilih--</option>
+                                                    <option disabled {{ empty($asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri) ? 'selected' : '' }}>--Pilih--</option>
                                                     @foreach ($efeknyeri as $efek)
                                                         <option value="{{ $efek->id }}"
                                                             {{ $asesmen->rmeAsesmenKepAnakStatusNyeri?->efek_nyeri == $efek->id ? 'selected' : '' }}>
@@ -705,7 +705,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Riwayat Kecelakaan</label>
                                         <select class="form-select" name="riwayat_kecelakaan">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_kecelakaan) ? 'selected' : '' }}>--Pilih--</option>
                                             @php $riwayatKecelakaan = $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_kecelakaan; @endphp
                                             <option value="Kecelakaan Lalu Lintas"
                                                 {{ $riwayatKecelakaan == 'Kecelakaan Lalu Lintas' ? 'selected' : '' }}>
@@ -732,7 +732,7 @@
                                         <label style="min-width: 200px;">Riwayat Rawat Inap</label>
                                         <div class="d-flex gap-3" style="width: 100%;">
                                             <select class="form-select flex-grow-1" name="riwayat_rawat_inap">
-                                                <option disabled>--Pilih--</option>
+                                                <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap) ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="Ya"
                                                     {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_rawat_inap == 'Ya' ? 'selected' : '' }}>
                                                     Ya</option>
@@ -749,7 +749,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Riwayat Operasi</label>
                                         <select class="form-select" name="riwayat_operasi">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi) ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Ya"
                                                 {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->riwayat_operasi == 'Ya' ? 'selected' : '' }}>
                                                 Ya</option>
@@ -813,7 +813,7 @@
                                         <label style="min-width: 200px;">Tumbuh Kembang Dibanding
                                             Saudara-Saudaranya</label>
                                         <select class="form-select" name="tumbuh_kembang">
-                                            <option disabled>--Pilih--</option>
+                                            <option disabled {{ empty($asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang) ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Sama"
                                                 {{ $asesmen->rmeAsesmenKepAnakRiwayatKesehatan->tumbuh_kembang == 'Sama' ? 'selected' : '' }}>
                                                 Sama</option>
@@ -1513,7 +1513,7 @@
 
                                     <div class="form-group mb-4">
                                         <select class="form-select" id="skalaRisikoDekubitus" name="jenis_skala_dekubitus">
-                                            <option value="" disabled>--Pilih Skala--</option>
+                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == null ? 'selected' : '' }}>--Pilih Skala--</option>
                                             <option value="norton" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 1 ? 'selected' : '' }}>Skala Norton</option>
                                             <option value="braden" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->jenis_skala == 2 ? 'selected' : '' }}>Skala Braden</option>
                                         </select>
@@ -1526,7 +1526,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Kondisi Fisik</label>
                                             <select class="form-select bg-light" name="kondisi_fisik">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '4' ? 'selected' : '' }}>Baik</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '3' ? 'selected' : '' }}>Sedang</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_fisik == '2' ? 'selected' : '' }}>Buruk</option>
@@ -1537,7 +1537,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Kondisi mental</label>
                                             <select class="form-select bg-light" name="kondisi_mental">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '4' ? 'selected' : '' }}>Sadar</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '3' ? 'selected' : '' }}>Apatis</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_kondisi_mental == '2' ? 'selected' : '' }}>Bingung</option>
@@ -1548,7 +1548,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Aktivitas</label>
                                             <select class="form-select bg-light" name="norton_aktivitas">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '4' ? 'selected' : '' }}>Aktif</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '3' ? 'selected' : '' }}>Jalan dengan bantuan</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_aktivitas == '2' ? 'selected' : '' }}>Terbatas di kursi</option>
@@ -1559,7 +1559,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Mobilitas</label>
                                             <select class="form-select bg-light" name="norton_mobilitas">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '4' ? 'selected' : '' }}>Bebas bergerak</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '3' ? 'selected' : '' }}>Agak terbatas</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_mobilitas == '2' ? 'selected' : '' }}>Sangat terbatas</option>
@@ -1570,7 +1570,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Inkontinensia</label>
                                             <select class="form-select bg-light" name="inkontinensia">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="4" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '4' ? 'selected' : '' }}>Tidak ada</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '3' ? 'selected' : '' }}>Kadang-kadang</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->norton_inkontenesia == '2' ? 'selected' : '' }}>Biasanya urin</option>
@@ -1595,7 +1595,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Persepsi Sensori</label>
                                             <select class="form-select bg-light" name="persepsi_sensori">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '1' ? 'selected' : '' }}>Keterbatasan Penuh</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_persepsi == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
@@ -1606,7 +1606,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Kelembapan</label>
                                             <select class="form-select bg-light" name="kelembapan">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '1' ? 'selected' : '' }}>Selalu Lembap</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '2' ? 'selected' : '' }}>Umumnya Lembap</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_kelembapan == '3' ? 'selected' : '' }}>Kadang-Kadang Lembap</option>
@@ -1617,7 +1617,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Aktivitas</label>
                                             <select class="form-select bg-light" name="braden_aktivitas">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '1' ? 'selected' : '' }}>Total di Tempat Tidur</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '2' ? 'selected' : '' }}>Dapat Duduk</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_aktivitas == '3' ? 'selected' : '' }}>Berjalan Kadang-kadang</option>
@@ -1628,7 +1628,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Mobilitas</label>
                                             <select class="form-select bg-light" name="braden_mobilitas">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '1' ? 'selected' : '' }}>Tidak Mampu Bergerak Sama sekali</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '2' ? 'selected' : '' }}>Sangat Terbatas</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_mobilitas == '3' ? 'selected' : '' }}>Tidak Ada Masalah</option>
@@ -1639,7 +1639,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Nutrisi</label>
                                             <select class="form-select bg-light" name="nutrisi">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '1' ? 'selected' : '' }}>Sangat Buruk</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '2' ? 'selected' : '' }}>Kurang Menucukup</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_nutrisi == '3' ? 'selected' : '' }}>Mencukupi</option>
@@ -1650,7 +1650,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Pergesekan dan Pergeseran</label>
                                             <select class="form-select bg-light" name="pergesekan">
-                                                <option value="" disabled>--Pilih--</option>
+                                                <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == null ? 'selected' : '' }}>--Pilih--</option>
                                                 <option value="1" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '1' ? 'selected' : '' }}>Bermasalah</option>
                                                 <option value="2" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '2' ? 'selected' : '' }}>Potensial Bermasalah</option>
                                                 <option value="3" {{ $asesmen->rmeAsesmenKepAnakResikoDekubitus->braden_pergesekan == '3' ? 'selected' : '' }}>Keterbatasan Ringan</option>
@@ -1801,7 +1801,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Anggota Keluarga Gangguan Jiwa</label>
                                         <select class="form-select" name="anggota_keluarga_gangguan_jiwa">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->anggota_keluarga_gangguan_jiwa == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="0" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 0 ? 'selected' : '' }}>Ya</option>
                                             <option value="1" {{ $asesmen->rmeAsesmenKepAnakStatusPsikologis->keluarga_gangguan_jiwa == 1 ? 'selected' : '' }}>Tidak</option>
                                         </select>
@@ -1819,7 +1819,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Keyakinan Agama</label>
                                         <select class="form-select" name="keyakinan_agama">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnak->keyakinan_agama == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Islam" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
                                             <option value="Protestan" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Protestan' ? 'selected' : '' }}>Protestan</option>
                                             <option value="Khatolik" {{ $asesmen->rmeAsesmenKepAnak->agama == 'Khatolik' ? 'selected' : '' }}>Khatolik</option>
@@ -1832,7 +1832,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Pandangan Pasien Terhadap Penyakit Nya</label>
                                         <select class="form-select" name="pandangan_terhadap_penyakit">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == null ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Takdir" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Takdir' ? 'selected' : '' }}>Takdir</option>
                                             <option value="Hukuman" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Hukuman' ? 'selected' : '' }}>Hukuman</option>
                                             <option value="Tidak Ada" {{ $asesmen->rmeAsesmenKepAnak->pandangan_terhadap_penyakit == 'Tidak Ada' ? 'selected' : '' }}>Tidak Ada</option>
@@ -1903,7 +1903,7 @@
                                     <h5 class="section-title">12. Status Gizi</h5>
                                     <div class="form-group mb-4">
                                         <select class="form-select" name="gizi_jenis" id="nutritionAssessment">
-                                            <option value="">--Pilih--</option>
+                                            <option value="" >--Pilih--</option>
                                             <option value="1" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 1 ? 'selected' : '' }}>Malnutrition Screening Tool (MST)</option>
                                             <option value="2" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 2 ? 'selected' : '' }}>The Mini Nutritional Assessment (MNA)</option>
                                             <option value="3" {{ $asesmen->rmeAsesmenKepAnakGizi->gizi_jenis == 3 ? 'selected' : '' }}>Strong Kids (1 bln - 18 Tahun)</option>
@@ -2187,7 +2187,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Gaya Bicara</label>
                                         <select class="form-select" name="gaya_bicara">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->gaya_bicara ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="normal" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'normal' ? 'selected' : '' }}>Normal</option>
                                             <option value="lambat" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'lambat' ? 'selected' : '' }}>Lambat</option>
                                             <option value="cepat" {{ $asesmen->rmeAsesmenKepAnak->gaya_bicara == 'cepat' ? 'selected' : '' }}>Cepat</option>
@@ -2197,7 +2197,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
                                         <select class="form-select" name="bahasa_sehari_hari">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->bahasa ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="Bahasa Indonesia" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Bahasa Indonesia' ? 'selected' : '' }}>Bahasa Indonesia</option>
                                             <option value="Aceh" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Aceh' ? 'selected' : '' }}>Aceh</option>
                                             <option value="Batak" {{ $asesmen->rmeAsesmenKepAnak->bahasa == 'Batak' ? 'selected' : '' }}>Batak</option>
@@ -2216,7 +2216,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Perlu Penerjemah</label>
                                         <select class="form-select" name="perlu_penerjemah">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->perlu_penerjemahan ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="ya" {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ $asesmen->rmeAsesmenKepAnak->perlu_penerjemahan == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
@@ -2236,7 +2236,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Media Disukai</label>
                                         <select class="form-select" name="media_disukai">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->media_disukai ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="cetak" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'cetak' ? 'selected' : '' }}>Media Cetak</option>
                                             <option value="video" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'video' ? 'selected' : '' }}>Video</option>
                                             <option value="diskusi" {{ $asesmen->rmeAsesmenKepAnak->media_disukai == 'diskusi' ? 'selected' : '' }}>Diskusi Langsung</option>
@@ -2247,7 +2247,7 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tingkat Pendidikan</label>
                                         <select class="form-select" name="tingkat_pendidikan">
-                                            <option value="" disabled>--Pilih--</option>
+                                            <option value="" disabled {{ !$asesmen->rmeAsesmenKepAnak || !$asesmen->rmeAsesmenKepAnak->tingkat_pendidikan ? 'selected' : '' }}>--Pilih--</option>
                                             <option value="SD" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SD' ? 'selected' : '' }}>SD</option>
                                             <option value="SMP" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMP' ? 'selected' : '' }}>SMP</option>
                                             <option value="SMA" {{ $asesmen->rmeAsesmenKepAnak->tingkat_pendidikan == 'SMA' ? 'selected' : '' }}>SMA</option>

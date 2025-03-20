@@ -172,7 +172,6 @@
                                                     id="gcs_score" readonly>
                                             </div>
                                         </div>
-                                        @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-gcs')
 
                                         <div class="mt-4">
                                             <h6>Antropometri</h6>
@@ -408,7 +407,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- Hidden input to store the JSON data -->
-                                                <input type="hidden" name="penyakit_diderita" id="penyakitDideritaInput">
+                                                <input type="hidden" name="penyakit_yang_diderita" id="penyakitDideritaInput">
                                             </div>
                                         </div>
 
@@ -431,8 +430,8 @@
                                                 <select class="form-select flex-grow-1"
                                                     name="riwayat_rawat_inap">
                                                     <option value="" selected disabled>--Pilih--</option>
-                                                    <option value="Ya">Ya</option>
-                                                    <option value="Tidak">Tidak</option>
+                                                    <option value="1">Ya</option>
+                                                    <option value="0">Tidak</option>
                                                 </select>
                                                 <input type="date" class="form-control"
                                                     name="tanggal_rawat_inap" style="width: 200px;">
@@ -1396,10 +1395,11 @@
                                             <label style="min-width: 200px;">Pekerjaan</label>
                                             <select class="form-select" name="pekerjaan_pasien">
                                                 <option value="" selected disabled>--Pilih--</option>
-                                                <option value="Belum Bekerja">Belum Bekerja</option>
-                                                <option value="Purnawaktu">Purnawaktu</option>
-                                                <option value="Paruh Waktu">Paruh Waktu</option>
-                                                <option value="Pensiunan">Pensiunan</option>
+                                                @foreach ($pekerjaan as $kerjaan)
+                                                    <option value="{{ $kerjaan->kd_pekerjaan }}">
+                                                        {{ $kerjaan->pekerjaan }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -1936,7 +1936,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Gaya Bicara</label>
-                                            <select class="form-select" name="gaya_bicara">
+                                            <select class="form-select" name="kebutuhan_edukasi_gaya_bicara">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="normal">Normal</option>
                                                 <option value="lambat">Lambat</option>
@@ -1946,7 +1946,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Bahasa Sehari-Hari</label>
-                                            <select class="form-select" name="bahasa_sehari_hari">
+                                            <select class="form-select" name="kebutuhan_edukasi_bahasa_sehari_hari">
                                                 <option value="" disabled>--Pilih--</option>
                                                 <option value="Bahasa Indoneisa" selected>Bahasa Indonesia</option>
                                                 <option value="Aceh">Aceh</option>
@@ -1965,7 +1965,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Perlu Penerjemah</label>
-                                            <select class="form-select" name="perlu_penerjemah">
+                                            <select class="form-select" name="kebutuhan_edukasi_perlu_penerjemah">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="ya">Ya</option>
                                                 <option value="tidak">Tidak</option>
@@ -1974,7 +1974,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hambatan Komunikasi</label>
-                                            <select class="form-select" name="hambatan_komunikasi">
+                                            <select class="form-select" name="kebutuhan_edukasi_hambatan_komunikasi">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="tidak_ada">Tidak Ada</option>
                                                 <option value="pendengaran">Gangguan Pendengaran</option>
@@ -1985,7 +1985,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Media Disukai</label>
-                                            <select class="form-select" name="media_disukai">
+                                            <select class="form-select" name="kebutuhan_edukasi_media_belajar">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="cetak">Media Cetak</option>
                                                 <option value="video">Video</option>
@@ -1996,7 +1996,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tingkat Pendidikan</label>
-                                            <select class="form-select" name="tingkat_pendidikan">
+                                            <select class="form-select" name="kebutuhan_edukasi_tingkat_pendidikan">
                                                 <option value="" selected disabled>--Pilih--</option>
                                                 <option value="SD">SD</option>
                                                 <option value="SMP">SMP</option>
@@ -2306,6 +2306,7 @@
                                 </div>
                             </div>
 
+                            @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-gcs')
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-skalanyeri')
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-penyakitdiderita')
                             @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-riwayatkeluarga')
