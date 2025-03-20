@@ -57,11 +57,13 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
@@ -109,11 +111,25 @@ Route::middleware('auth')->group(function () {
                             // rujuk route
                             Route::prefix('rujuk-antar-rs')->group(function () {
                                 Route::name('.rujuk-antar-rs')->group(function () {
-                                    Route::controller(RawatJalanController::class)->group(function () {
-                                        Route::get('/', 'rujukAntarRs');
+                                    Route::controller(RujukJalanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
+
+                            // rujuk route
+                            // Route::prefix('rujuk-antar-rs')->group(function () {
+                            //     Route::name('.rujuk-antar-rs')->group(function () {
+                            //         Route::controller(RawatJalanController::class)->group(function () {
+                            //             Route::get('/', 'rujukAntarRs');
+                            //         });
+                            //     });
+                            // });
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
@@ -225,6 +241,19 @@ Route::middleware('auth')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/{id}', 'show')->name('.show');
                                         Route::put('/{id}', 'update')->name('.update');
+                                    });
+                                });
+                            });
+
+                            Route::prefix('asesmen-keperawatan')->group(function () {
+                                Route::name('.asesmen-keperawatan')->group(function () {
+                                    Route::controller(AsesmenKeperawatanRajalController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
@@ -497,12 +526,18 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            Route::prefix('serah-terima')->group(function () {
+                                Route::name('.serah-terima')->group(function () {
+                                    Route::controller(RawatInapController::class)->group(function () {
+                                        Route::get('/', 'serahTerimaPasien');
+                                        Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
-
-                // sementara dari anas
-                Route::get('asuhan-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuhan-keperawatan.index');
             });
         });
 
@@ -547,8 +582,7 @@ Route::middleware('auth')->group(function () {
                             Route::name('serah-terima-pasien')->group(function () {
                                 Route::controller(GawatDaruratController::class)->group(function () {
                                     Route::get('/', 'serahTerimaPasien');
-                                    Route::post('/', 'serahTerimaPasienCreate')->name('.store');
-                                    Route::post('/get-petugas-unit-ajax', 'getPetugasByUnit')->name('.get-petugas-unit-ajax');
+                                    Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
                                 });
                             });
                         });
@@ -728,12 +762,35 @@ Route::middleware('auth')->group(function () {
             Route::name('rehab-medis')->group(function () {
                 Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
 
-                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}')->group(function () {
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                     Route::name('.pelayanan')->group(function () {
                         Route::get('/', [RehabMedisController::class, 'pelayanan']);
 
                         // Pelayanan
-                        Route::get('layanan', [LayananController::class, 'index'])->name('.layanan');
+                        Route::prefix('layanan')->group(function () {
+                            Route::name('.layanan')->group(function () {
+                                Route::controller(LayananController::class)->group(function () {
+                                    Route::get('/', 'index');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
+
+                                    // PROGRAM
+                                    Route::prefix('program')->group(function () {
+                                        Route::name('.program')->group(function () {
+                                            Route::get('/create', 'createProgram')->name('.create');
+                                            Route::get('/{data}/edit', 'editProgram')->name('.edit');
+                                            Route::post('/', 'storeProgram')->name('.store');
+                                            Route::put('/{data}', 'updateProgram')->name('.update');
+                                            Route::delete('/', 'destroyProgram')->name('.destroy');
+                                        });
+                                    });
+                                });
+                            });
+                        });
 
                         // Tindakan
                         Route::prefix('tindakan')->group(function () {

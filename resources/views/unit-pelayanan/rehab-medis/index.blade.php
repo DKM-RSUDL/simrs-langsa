@@ -884,7 +884,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex justify-content-center">
-                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
                                                 <i class="ti-pencil-alt"></i>
                                         </a>
 

@@ -47,8 +47,8 @@ class TindakanController extends Controller
             ->join('tarif', 'produk.kd_produk', '=', 'tarif.kd_produk')
             ->join('tarif_cust', 'tarif.kd_tarif', '=', 'tarif_cust.kd_tarif')
             ->join('klas_produk', 'klas_produk.kd_klas', '=', 'produk.kd_klas')
-            ->whereIn('tarif.kd_unit', [214])
-            ->where('klas_produk.kd_klas', '63')
+            ->whereIn('tarif.kd_unit', [74])
+            // ->where('klas_produk.kd_klas', '63')
             ->where('tarif.kd_tarif', 'TU')
             ->where(function ($query) {
                 $query->whereNull('tarif.Tgl_Berakhir')
@@ -68,6 +68,7 @@ class TindakanController extends Controller
                     ->orderBy('t.tgl_berlaku', 'asc')
                     ->limit(1);
             })
+            ->whereRaw('LEFT(produk.kd_klas, 2) = ?', ['74'])
             ->orderBy('tarif.TGL_BERLAKU', 'desc')
             ->distinct()
             ->get();
@@ -126,9 +127,9 @@ class TindakanController extends Controller
             ->get();
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 214)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 214)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -437,12 +438,12 @@ class TindakanController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', 3)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => 3,
@@ -460,7 +461,6 @@ class TindakanController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -468,7 +468,7 @@ class TindakanController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

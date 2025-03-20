@@ -23,11 +23,31 @@ class RmeSerahTerima extends Model
         'recomendation',
         'tanggal_menyerahkan',
         'jam_menyerahkan',
-        'petugas_terima',
+        'petugas_menyerahkan',
         'tanggal_terima',
         'jam_terima',
         'petugas_terima',
         'status',
         'urut_masuk_tujuan',
     ];
+
+    public function unitAsal()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit_asal', 'kd_unit');
+    }
+
+    public function unitTujuan()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit_tujuan', 'kd_unit');
+    }
+
+    public function petugasAsal()
+    {
+        return $this->belongsTo(User::class, 'petugas_menyerahkan', 'id');
+    }
+
+    public function petugasTerima()
+    {
+        return $this->belongsTo(User::class, 'petugas_terima', 'id');
+    }
 }

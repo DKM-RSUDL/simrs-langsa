@@ -45,8 +45,8 @@
                 <a href="{{ route('asesmen-keperawatan.index', ['kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk')]) }}"
                     class="btn btn-primary">
                     <i class="ti-plus"></i> Keperawatan
+                </a>
                 @endcanany
-            </a>
         </div>
     </div>
 </div>

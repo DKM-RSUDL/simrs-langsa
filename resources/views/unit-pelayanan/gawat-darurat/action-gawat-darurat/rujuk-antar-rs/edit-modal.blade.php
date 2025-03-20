@@ -193,12 +193,6 @@
                             <p class="fs-5 fw-bold">Diagnosis</p>
                             <div class="mb-3">
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="edit_diagnosis_code" class="form-label">Kode ICD</label>
-                                            <input type="text" id="edit_diagnosis_code" class="form-control" placeholder="Contoh: J45">
-                                        </div>
-                                    </div>
                                     <div class="col-md-7">
                                         <div class="form-group">
                                             <label for="edit_diagnosis_name" class="form-label">Diagnosis</label>
@@ -251,204 +245,242 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        $(document).on('click', '.edit-btn', function() {
-            const id = $(this).data('id');
-            const modal = $('#editRujukAntarRs');
-            modal.find('form')[0].reset();
-            const formAction = `/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/${id}`;
-            modal.find('form').attr('action', formAction);
-            modal.find('.modal-title').after('<div id="editLoadingIndicator" class="alert alert-info">Memuat data...</div>');
+    // Handling edit button click
+    $(document).on('click', '.edit-btn', function() {
+        const id = $(this).data('id');
+        const modal = $('#editRujukAntarRs');
+        modal.find('form')[0].reset();
+        const formAction = `/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/${id}`;
+        modal.find('form').attr('action', formAction);
+        modal.find('.modal-title').after('<div id="editLoadingIndicator" class="alert alert-info">Memuat data...</div>');
 
-            $.ajax({
-                url: `/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/${id}/edit`,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#editLoadingIndicator').remove();
-                    console.log("Edit data received:", data);
-                    fillFormWithData(data);
-                    initializeFormState();
-                },
-                error: function(xhr) {
-                    console.error("Error AJAX:", xhr);
-                    $('#editLoadingIndicator').remove();
-                    modal.find('.modal-title').after(`<div class="alert alert-danger">Error: ${xhr.status} - ${xhr.statusText}</div>`);
-                }
-            });
-        });
-
-        function fillFormWithData(data) {
-            setInputValue('edit_tanggal', data.tanggal);
-            setInputValue('edit_jam', data.jam);
-            document.getElementById('edit_transportasi_ambulans').checked = data.transportasi === 'ambulans';
-            document.getElementById('edit_transportasi_lainnya').checked = data.transportasi === 'lainnya';
-            setInputValue('edit_detail_kendaraan', data.detail_kendaraan);
-            setInputValue('edit_nomor_polisi', data.nomor_polisi);
-
-            // Pendamping checkboxes
-            document.getElementById('edit_pendamping_dokter').checked = data.pendamping_dokter === '1';
-            document.getElementById('edit_pendamping_perawat').checked = data.pendamping_perawat === '1';
-            document.getElementById('edit_pendamping_keluarga').checked = data.pendamping_keluarga === '1';
-            document.getElementById('edit_pendamping_tidak_ada').checked = data.pendamping_tidak_ada === '1';
-            setInputValue('edit_detail_keluarga', data.detail_keluarga);
-
-            // Tanda vital
-            setInputValue('edit_suhu', data.suhu);
-            setInputValue('edit_sistole', data.sistole);
-            setInputValue('edit_diastole', data.diastole);
-            setInputValue('edit_nadi', data.nadi);
-            setInputValue('edit_respirasi', data.respirasi);
-            setInputValue('edit_status_nyeri', data.status_nyeri);
-
-            // Alasan checkboxes
-            document.getElementById('edit_alasan_tempat_penuh').checked = data.alasan_tempat_penuh === '1';
-            document.getElementById('edit_alasan_permintaan_keluarga').checked = data.alasan_permintaan_keluarga === '1';
-            document.getElementById('edit_alasan_perawatan_khusus').checked = data.alasan_perawatan_khusus === '1';
-            document.getElementById('edit_alasan_lainnya').checked = data.alasan_lainnya === '1';
-            setInputValue('edit_detail_alasan_lainnya', data.detail_alasan_lainnya);
-
-            // Text areas
-            setTextareaValue('edit_alasan_masuk_dirujuk', data.alasan_masuk_dirujuk);
-            setTextareaValue('edit_hasil_pemeriksaan_penunjang', data.hasil_pemeriksaan_penunjang);
-            setTextareaValue('edit_terapi', data.terapi);
-            setTextareaValue('edit_tindakan', data.tindakan);
-            setTextareaValue('edit_edukasi_pasien', data.edukasi_pasien);
-
-            // Trigger change events
-            setTimeout(function() {
-                $('input[name="transportasi"]').trigger('change');
-                $('#edit_pendamping_keluarga').trigger('change');
-                $('#edit_alasan_lainnya').trigger('change');
-            }, 50);
-
-            // Alergi
-            $('#edit_alergiListDisplay').empty();
-            if (data.alergi) {
-                try {
-                    let alergiData = typeof data.alergi === 'string' ? JSON.parse(data.alergi) : data.alergi;
-                    alergiData.forEach(item => addEditAlergiToList(item.name, item.reaction));
-                    $('#edit_alergiInput').val(typeof data.alergi === 'string' ? data.alergi : JSON.stringify(alergiData));
-                } catch (e) {
-                    console.error('Error parsing alergi data:', e);
-                }
+        $.ajax({
+            url: `/unit-pelayanan/gawat-darurat/pelayanan/{{ $dataMedis->kd_pasien }}/{{ $dataMedis->tgl_masuk }}/{{ $dataMedis->urut_masuk }}/rujuk-antar-rs/${id}/edit`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#editLoadingIndicator').remove();
+                console.log("Edit data received:", data);
+                fillFormWithData(data);
+                initializeFormState();
+            },
+            error: function(xhr) {
+                console.error("Error AJAX:", xhr);
+                $('#editLoadingIndicator').remove();
+                modal.find('.modal-title').after(`<div class="alert alert-danger">Error: ${xhr.status} - ${xhr.statusText}</div>`);
             }
-
-            // Diagnosis
-            $('#edit_diagnoseListDisplay').empty();
-            if (data.diagnosis) {
-                try {
-                    let diagnosisData = typeof data.diagnosis === 'string' ? JSON.parse(data.diagnosis) : data.diagnosis;
-                    diagnosisData.forEach(item => addEditDiagnosisToList(item.code, item.name));
-                    $('#edit_diagnosisInput').val(typeof data.diagnosis === 'string' ? data.diagnosis : JSON.stringify(diagnosisData));
-                } catch (e) {
-                    console.error('Error parsing diagnosis data:', e);
-                }
-            }
-        }
-
-        function setInputValue(id, value) { document.getElementById(id).value = value || ''; }
-        function setTextareaValue(id, value) { document.getElementById(id).value = value || ''; }
-
-        function initializeFormState() {
-            if (document.getElementById('edit_transportasi_lainnya').checked) $('#edit_detail_kendaraan').prop('disabled', false);
-            else $('#edit_detail_kendaraan').prop('disabled', true).val('');
-            if (document.getElementById('edit_pendamping_keluarga').checked) $('#edit_detail_keluarga').prop('disabled', false);
-            else $('#edit_detail_keluarga').prop('disabled', true).val('');
-            if (document.getElementById('edit_alasan_lainnya').checked) $('#edit_detail_alasan_lainnya').prop('disabled', false);
-            else $('#edit_detail_alasan_lainnya').prop('disabled', true).val('');
-        }
-
-        $('input[name="transportasi"]').change(function() {
-            if ($(this).val() === 'lainnya') $('#edit_detail_kendaraan').prop('disabled', false).focus();
-            else $('#edit_detail_kendaraan').prop('disabled', true).val('');
-        });
-
-        $('#edit_pendamping_keluarga').change(function() {
-            if ($(this).is(':checked')) $('#edit_detail_keluarga').prop('disabled', false).focus();
-            else $('#edit_detail_keluarga').prop('disabled', true).val('');
-        });
-
-        $('#edit_alasan_lainnya').change(function() {
-            if ($(this).is(':checked')) $('#edit_detail_alasan_lainnya').prop('disabled', false).focus();
-            else $('#edit_detail_alasan_lainnya').prop('disabled', true).val('');
-        });
-
-        $('#edit_pendamping_tidak_ada').change(function() {
-            if ($(this).is(':checked')) $('.edit-pendamping-option').prop('checked', false).trigger('change');
-        });
-
-        $('.edit-pendamping-option').change(function() {
-            if ($(this).is(':checked')) $('#edit_pendamping_tidak_ada').prop('checked', false);
-        });
-
-        $('#editRujukAntarRs form').submit(function() {
-            let alergiData = [];
-            $('#edit_alergiListDisplay .alergi-item').each(function() {
-                const name = $(this).data('name');
-                const reaction = $(this).data('reaction');
-                if (name) alergiData.push({ name: name, reaction: reaction });
-            });
-            $('#edit_alergiInput').val(JSON.stringify(alergiData));
-
-            let diagnosisData = [];
-            $('#edit_diagnoseListDisplay .diagnosis-item').each(function() {
-                const code = $(this).data('code');
-                const name = $(this).data('name');
-                if (code && name) diagnosisData.push({ code: code, name: name });
-            });
-            $('#edit_diagnosisInput').val(JSON.stringify(diagnosisData));
-            return true;
-        });
-
-        function addEditAlergiToList(name, reaction) {
-            const alergiItem = `
-                <div class="alergi-item card mb-2" data-name="${name}" data-reaction="${reaction}">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between">
-                            <div><strong>${name}</strong><p class="m-0 text-muted">${reaction}</p></div>
-                            <button type="button" class="btn btn-sm btn-danger remove-alergi"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </div>
-                </div>`;
-            $('#edit_alergiListDisplay').append(alergiItem);
-        }
-
-        function addEditDiagnosisToList(code, name) {
-            const diagnosisItem = `
-                <div class="diagnosis-item card mb-2" data-code="${code}" data-name="${name}">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between">
-                            <div><strong>${code}</strong><p class="m-0 text-muted">${name}</p></div>
-                            <button type="button" class="btn btn-sm btn-danger remove-diagnosis"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </div>
-                </div>`;
-            $('#edit_diagnoseListDisplay').append(diagnosisItem);
-        }
-
-        $(document).on('click', '.edit-add-alergi-btn', function() {
-            const name = $('#edit_alergi_name').val();
-            const reaction = $('#edit_alergi_reaction').val();
-            if (name && reaction) {
-                addEditAlergiToList(name, reaction);
-                $('#edit_alergi_name').val('').focus();
-                $('#edit_alergi_reaction').val('');
-            }
-        });
-
-        $(document).on('click', '.edit-add-diagnosis-btn', function() {
-            const code = $('#edit_diagnosis_code').val();
-            const name = $('#edit_diagnosis_name').val();
-            if (code && name) {
-                addEditDiagnosisToList(code, name);
-                $('#edit_diagnosis_code').val('').focus();
-                $('#edit_diagnosis_name').val('');
-            }
-        });
-
-        $(document).on('click', '.remove-alergi, .remove-diagnosis', function() {
-            $(this).closest('.card').remove();
         });
     });
+
+    // Fill form with retrieved data
+    function fillFormWithData(data) {
+        setInputValue('edit_tanggal', data.tanggal);
+        setInputValue('edit_jam', data.jam);
+        document.getElementById('edit_transportasi_ambulans').checked = data.transportasi === 'ambulans';
+        document.getElementById('edit_transportasi_lainnya').checked = data.transportasi === 'lainnya';
+        setInputValue('edit_detail_kendaraan', data.detail_kendaraan);
+        setInputValue('edit_nomor_polisi', data.nomor_polisi);
+
+        // Pendamping checkboxes
+        document.getElementById('edit_pendamping_dokter').checked = data.pendamping_dokter === '1';
+        document.getElementById('edit_pendamping_perawat').checked = data.pendamping_perawat === '1';
+        document.getElementById('edit_pendamping_keluarga').checked = data.pendamping_keluarga === '1';
+        document.getElementById('edit_pendamping_tidak_ada').checked = data.pendamping_tidak_ada === '1';
+        setInputValue('edit_detail_keluarga', data.detail_keluarga);
+
+        // Tanda vital
+        setInputValue('edit_suhu', data.suhu);
+        setInputValue('edit_sistole', data.sistole);
+        setInputValue('edit_diastole', data.diastole);
+        setInputValue('edit_nadi', data.nadi);
+        setInputValue('edit_respirasi', data.respirasi);
+        setInputValue('edit_status_nyeri', data.status_nyeri);
+
+        // Alasan checkboxes
+        document.getElementById('edit_alasan_tempat_penuh').checked = data.alasan_tempat_penuh === '1';
+        document.getElementById('edit_alasan_permintaan_keluarga').checked = data.alasan_permintaan_keluarga === '1';
+        document.getElementById('edit_alasan_perawatan_khusus').checked = data.alasan_perawatan_khusus === '1';
+        document.getElementById('edit_alasan_lainnya').checked = data.alasan_lainnya === '1';
+        setInputValue('edit_detail_alasan_lainnya', data.detail_alasan_lainnya);
+
+        // Text areas
+        setTextareaValue('edit_alasan_masuk_dirujuk', data.alasan_masuk_dirujuk);
+        setTextareaValue('edit_hasil_pemeriksaan_penunjang', data.hasil_pemeriksaan_penunjang);
+        setTextareaValue('edit_terapi', data.terapi);
+        setTextareaValue('edit_tindakan', data.tindakan);
+        setTextareaValue('edit_edukasi_pasien', data.edukasi_pasien);
+
+        // Trigger change events
+        setTimeout(function() {
+            $('input[name="transportasi"]').trigger('change');
+            $('#edit_pendamping_keluarga').trigger('change');
+            $('#edit_alasan_lainnya').trigger('change');
+        }, 50);
+
+        // Alergi
+        $('#edit_alergiListDisplay').empty();
+        if (data.alergi) {
+            try {
+                let alergiData = typeof data.alergi === 'string' ? JSON.parse(data.alergi) : data.alergi;
+                alergiData.forEach(item => addEditAlergiToList(item.name, item.reaction));
+                $('#edit_alergiInput').val(typeof data.alergi === 'string' ? data.alergi : JSON.stringify(alergiData));
+            } catch (e) {
+                console.error('Error parsing alergi data:', e);
+            }
+        }
+
+        // Diagnosis - Modified to remove ICD codes
+        $('#edit_diagnoseListDisplay').empty();
+        if (data.diagnosis) {
+            try {
+                let diagnosisData = typeof data.diagnosis === 'string' ? JSON.parse(data.diagnosis) : data.diagnosis;
+                diagnosisData.forEach(item => {
+                    // Only use the diagnosis name, ignore the code
+                    addEditDiagnosisToList(item.name);
+                });
+
+                // Convert existing data to the new format (without codes)
+                const updatedDiagnosisData = diagnosisData.map(item => ({ name: item.name }));
+                $('#edit_diagnosisInput').val(JSON.stringify(updatedDiagnosisData));
+            } catch (e) {
+                console.error('Error parsing diagnosis data:', e);
+            }
+        }
+    }
+
+    // Helper functions
+    function setInputValue(id, value) {
+        document.getElementById(id).value = value || '';
+    }
+
+    function setTextareaValue(id, value) {
+        document.getElementById(id).value = value || '';
+    }
+
+    // Initialize form state based on current values
+    function initializeFormState() {
+        if (document.getElementById('edit_transportasi_lainnya').checked)
+            $('#edit_detail_kendaraan').prop('disabled', false);
+        else
+            $('#edit_detail_kendaraan').prop('disabled', true).val('');
+
+        if (document.getElementById('edit_pendamping_keluarga').checked)
+            $('#edit_detail_keluarga').prop('disabled', false);
+        else
+            $('#edit_detail_keluarga').prop('disabled', true).val('');
+
+        if (document.getElementById('edit_alasan_lainnya').checked)
+            $('#edit_detail_alasan_lainnya').prop('disabled', false);
+        else
+            $('#edit_detail_alasan_lainnya').prop('disabled', true).val('');
+    }
+
+    // Event handlers for form elements
+    $('input[name="transportasi"]').change(function() {
+        if ($(this).val() === 'lainnya')
+            $('#edit_detail_kendaraan').prop('disabled', false).focus();
+        else
+            $('#edit_detail_kendaraan').prop('disabled', true).val('');
+    });
+
+    $('#edit_pendamping_keluarga').change(function() {
+        if ($(this).is(':checked'))
+            $('#edit_detail_keluarga').prop('disabled', false).focus();
+        else
+            $('#edit_detail_keluarga').prop('disabled', true).val('');
+    });
+
+    $('#edit_alasan_lainnya').change(function() {
+        if ($(this).is(':checked'))
+            $('#edit_detail_alasan_lainnya').prop('disabled', false).focus();
+        else
+            $('#edit_detail_alasan_lainnya').prop('disabled', true).val('');
+    });
+
+    $('#edit_pendamping_tidak_ada').change(function() {
+        if ($(this).is(':checked'))
+            $('.edit-pendamping-option').prop('checked', false).trigger('change');
+    });
+
+    $('.edit-pendamping-option').change(function() {
+        if ($(this).is(':checked'))
+            $('#edit_pendamping_tidak_ada').prop('checked', false);
+    });
+
+    // Form submission handler
+    $('#editRujukAntarRs form').submit(function() {
+        // Process alergi data
+        let alergiData = [];
+        $('#edit_alergiListDisplay .alergi-item').each(function() {
+            const name = $(this).data('name');
+            const reaction = $(this).data('reaction');
+            if (name) alergiData.push({ name: name, reaction: reaction });
+        });
+        $('#edit_alergiInput').val(JSON.stringify(alergiData));
+
+        // Process diagnosis data - Modified to remove ICD codes
+        let diagnosisData = [];
+        $('#edit_diagnoseListDisplay .diagnosis-item').each(function() {
+            const name = $(this).data('name');
+            if (name) diagnosisData.push({ name: name });
+        });
+        $('#edit_diagnosisInput').val(JSON.stringify(diagnosisData));
+
+        return true;
+    });
+
+    // Alergi handlers
+    function addEditAlergiToList(name, reaction) {
+        const alergiItem = `
+            <div class="alergi-item card mb-2" data-name="${name}" data-reaction="${reaction}">
+                <div class="card-body p-2">
+                    <div class="d-flex justify-content-between">
+                        <div><strong>${name}</strong><p class="m-0 text-muted">${reaction}</p></div>
+                        <button type="button" class="btn btn-sm btn-danger remove-alergi"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        $('#edit_alergiListDisplay').append(alergiItem);
+    }
+
+    // Modified: Diagnosis handlers (removed code parameter)
+    function addEditDiagnosisToList(name) {
+        const diagnosisItem = `
+            <div class="diagnosis-item card mb-2" data-name="${name}">
+                <div class="card-body p-2">
+                    <div class="d-flex justify-content-between">
+                        <div><p class="m-0">${name}</p></div>
+                        <button type="button" class="btn btn-sm btn-danger remove-diagnosis"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        $('#edit_diagnoseListDisplay').append(diagnosisItem);
+    }
+
+    // Alergi add button handler
+    $(document).on('click', '.edit-add-alergi-btn', function() {
+        const name = $('#edit_alergi_name').val();
+        const reaction = $('#edit_alergi_reaction').val();
+        if (name && reaction) {
+            addEditAlergiToList(name, reaction);
+            $('#edit_alergi_name').val('').focus();
+            $('#edit_alergi_reaction').val('');
+        }
+    });
+
+    // Modified: Diagnosis add button handler (removed code input)
+    $(document).on('click', '.edit-add-diagnosis-btn', function() {
+        const name = $('#edit_diagnosis_name').val();
+        if (name) {
+            addEditDiagnosisToList(name);
+            $('#edit_diagnosis_name').val('').focus();
+        }
+    });
+
+    // Remove button handlers
+    $(document).on('click', '.remove-alergi, .remove-diagnosis', function() {
+        $(this).closest('.card').remove();
+    });
+});
 </script>
 @endpush

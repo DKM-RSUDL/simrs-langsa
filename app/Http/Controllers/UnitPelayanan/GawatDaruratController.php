@@ -481,7 +481,6 @@ class GawatDaruratController extends Controller
 
     public function serahTerimaPasien($kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        // dd($kd_pasien, $tgl_masuk, $urut_masuk);
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -495,55 +494,38 @@ class GawatDaruratController extends Controller
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
-        // dd($dataMedis);
-        $no_transaksi = Transaksi::where('kd_pasien', $kd_pasien)
-            ->where('kd_kasir', 02)
-            ->value('no_transaksi'); // Sudah berupa string, tidak perlu akses no_transaksi lagi
 
-        $tujuanUnit = PasienInap::where('no_transaksi', $no_transaksi)
-            ->join('unit', 'pasien_inap.kd_unit', '=', 'unit.kd_unit')
-            ->select('pasien_inap.kd_unit', 'unit.nama_unit')
-            ->first();
-
-
-        $selectedUnit = $tujuanUnit ? $tujuanUnit->kd_unit : old('kd_unit');
-
-        $unit = Unit::where('kd_bagian', 1)
-            ->where('aktif', 1)
-            ->select('kd_unit', 'nama_unit')
-            ->get();
-
-
-        $validateForm = RmeSerahTerima::where('kd_pasien', $kd_pasien)
-            ->whereNull('petugas_menyerahkan')
-            ->exists();
-        $validateForm = $validateForm ? 'yes' : 'no';
-
-        $statusRecord = RmeSerahTerima::where('kd_pasien', $kd_pasien)->first();
-
-        if (!$statusRecord) {
-            $status = 0; // Data tidak ditemukan, anggap status generate (opsional)
-        } elseif (is_null($statusRecord->petugas_menyerahkan)) {
-            $status = 1; // Belum diserahkan
-        } elseif (!is_null($statusRecord->petugas_menyerahkan) && is_null($statusRecord->petugas_menerima)) {
-            $status = 2; // Sudah diserahkan, belum diterima
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // $serahTerimaData = RmeSerahTerima::where('kd_pasien', $kd_pasien)->first();
-        $serahTerimaData = DB::table('rslangsa.dbo.rme_serah_terima as serah')
-            ->leftJoin('HRD.dbo.rme_users as user_menyerahkan', 'serah.petugas_menyerahkan', '=', 'user_menyerahkan.kd_karyawan')
-            ->leftJoin('HRD.dbo.rme_users as user_menerima', 'serah.petugas_terima', '=', 'user_menerima.kd_karyawan')
-            ->leftJoin('rslangsa.dbo.unit as unit', 'serah.kd_unit_tujuan', '=', 'unit.kd_unit')
-            ->where('serah.kd_pasien', $kd_pasien)
-            ->select(
-                'serah.*',
-                'user_menyerahkan.name as nama_menyerahkan',
-                'user_menerima.name as nama_menerima',
-                'unit.nama_unit'
-            )
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+
+        $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit_asal', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
             ->first();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.serah-terima-pasien.index', compact('dataMedis', 'tujuanUnit', 'unit', 'validateForm', 'status', 'serahTerimaData'));
+        if (empty($serahTerimaData)) abort(404, 'Data serah terima tidak ditemukan !');
+
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
+
+        $petugasIGD = User::with('karyawan')
+            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
+            ->whereRelation('karyawan', 'kd_detail_jenis_tenaga', 1)
+            ->whereRelation('karyawan', 'kd_ruangan', 36)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.serah-terima-pasien.index', compact('dataMedis', 'serahTerimaData', 'unit', 'unitTujuan', 'petugasIGD'));
     }
 
     public function getPetugasByUnit(Request $request)
@@ -587,75 +569,42 @@ class GawatDaruratController extends Controller
         ]);
     }
 
-    public function serahTerimaPasienCreate(Request $request)
+    public function serahTerimaPasienCreate($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
     {
-        $validateForm = $request->input('validateForm');
-        $messageErr = [
-            'kd_pasien.required' => 'Pasien tidak ditemukan!',
-            'kd_unit.required' => 'Unit harus dipilih!',
-            'petugas_menyerahkan.required' => 'Petugas harus dipilih!',
-            'tanggal_menyerahkan.required' => 'Tanggal harus diisi!',
-            'jam_menyerahkan.required' => 'Jam harus diisi!',
-            'status.required' => 'Status harus diisi!',
-            'petugas_terima.required' => 'Petugas harus dipilih!',
-            'tanggal_terima.required' => 'Tanggal terima harus diisi!',
-            'jam_terima.required' => 'Jam terima harus diisi!',
-        ];
-
-        if ($validateForm === 'yes') {
-            $request->validate([
-                'kd_pasien' => 'required',
-                'kd_unit' => 'required',
-                'petugas_menyerahkan' => 'required',
-                'tanggal_menyerahkan' => 'required|date',
-                'jam_menyerahkan' => 'required|date_format:H:i:s',
-                'status' => 'required|in:0,1,2',
-            ], $messageErr);
-        } elseif ($validateForm === 'no') {
-            $request->validate([
-                'kd_pasien' => 'required',
-                'petugas_terima' => 'required',
-                'tanggal_terima' => 'required|date',
-                'jam_terima' => 'required|date_format:H:i:s',
-                'status' => 'required|in:0,1,2',
-            ], $messageErr);
-        } else {
-            return back()->with('error', 'Form tidak valid!');
-        }
-
         DB::beginTransaction();
 
         try {
 
-            $updateData = $validateForm === 'yes'
-                ? [
-                    'subjective' => $request->input('subjective'),
-                    'background' => $request->input('background'),
-                    'assessment' => $request->input('assessment'),
-                    'recomendation' => $request->input('recomendation'),
-                    'kd_unit_tujuan' => $request->input('kd_unit'),
-                    'petugas_menyerahkan' => $request->input('petugas_menyerahkan'),
-                    'tanggal_menyerahkan' => $request->input('tanggal_menyerahkan'),
-                    'jam_menyerahkan' => $request->input('jam_menyerahkan'),
-                    'status' => $request->input('status'),
-                ]
-                : [
-                    'tanggal_terima' => $request->input('tanggal_terima'),
-                    'jam_terima' => $request->input('jam_terima'),
-                    'petugas_terima' => $request->input('petugas_terima'),
-                    'status' => $request->input('status'),
-                ];
+            // validasi
+            $request->validate([
+                'subjective'            => 'required',
+                'background'            => 'required',
+                'assessment'            => 'required',
+                'recomendation'         => 'required',
+                'petugas_menyerahkan'   => 'required',
+                'tanggal_menyerahkan'   => 'required|date_format:Y-m-d',
+                'jam_menyerahkan'       => 'required|date_format:H:i',
+            ]);
 
 
-            // Update data
-            $updated = RmeSerahTerima::where('kd_pasien', $request->kd_pasien)->update($updateData);
 
-            if (!$updated) {
-                throw new \Exception('Data serah terima tidak ditemukan atau tidak berhasil diperbarui.');
-            }
+            // data
+            $data = [
+                'subjective'            => $request->subjective,
+                'background'            => $request->background,
+                'assessment'            => $request->assessment,
+                'recomendation'         => $request->recomendation,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'status'                => 1
+            ];
+
+            $id = decrypt($idEncrypt);
+            RmeSerahTerima::where('id', $id)->update($data);
 
             DB::commit();
-            return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil diperbarui!');
+            return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil diserahkan ke rawat inap!');
         } catch (\Throwable $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());

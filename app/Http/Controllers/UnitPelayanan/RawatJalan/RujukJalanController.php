@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatJalan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
@@ -8,10 +8,15 @@ use App\Models\RmeRujukKeluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RujukController extends Controller
+class RujukJalanController extends Controller
 {
-    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        // Format tanggal jika mengandung timestamp
+        if (strpos($tgl_masuk, ' ') !== false) {
+            $tgl_masuk = date('Y-m-d', strtotime($tgl_masuk));
+        }
+
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -20,31 +25,34 @@ class RujukController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if ($dataMedis && $dataMedis->tgl_masuk) {
+            $dataMedis->tgl_masuk = date('Y-m-d', strtotime($dataMedis->tgl_masuk));
+        }
         // Get existing rujukan data for this patient
         $rujukan = RmeRujukKeluar::where('kd_pasien', $kd_pasien)
-        ->where('urut_masuk', $urut_masuk)
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('id', 'desc')
-        ->get();
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis', 'rujukan'));
+        return view('unit-pelayanan.rawat-jalan.pelayanan.rujuk-antar-rs.index', compact('dataMedis', 'rujukan'));
     }
 
-    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             $rujukan = new RmeRujukKeluar();
-            $rujukan->kd_pasien = $request->kd_pasien;
-            $rujukan->kd_unit = $request->kd_unit;
-            $rujukan->tgl_masuk = $request->tgl_masuk;
-            $rujukan->urut_masuk = $request->urut_masuk;
+            $rujukan->kd_pasien = $kd_pasien;
+            $rujukan->kd_unit = $kd_unit;
+            $rujukan->tgl_masuk = $tgl_masuk;
+            $rujukan->urut_masuk = $urut_masuk;
             $rujukan->tanggal = $request->tanggal;
             $rujukan->jam = $request->jam;
             $rujukan->transportasi = $request->transportasi;
@@ -86,33 +94,39 @@ class RujukController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rujuk-antar-rs.index', [
-                'kd_pasien' => $kd_pasien,
-                'tgl_masuk' => $tgl_masuk,
-                'urut_masuk' => $urut_masuk
-            ])->with('success', 'Data rujukan berhasil disimpan');
+            return redirect()->route('rawat-jalan.rujuk-antar-rs.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Data rujukan berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage())->withInput();
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
-    {
-        $rujukan = RmeRujukKeluar::findOrFail($id);
-        return response()->json($rujukan);
-    }
-
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
-    {
-        $rujukan = RmeRujukKeluar::findOrFail($id);
-        return response()->json($rujukan);
-    }
-
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            DB::beginTransaction();
+            $rujukan = RmeRujukKeluar::where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            return response()->json($rujukan);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
+        }
+    }
+
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $rujukan = RmeRujukKeluar::findOrFail($id);
+        return response()->json($rujukan);
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+        try {
 
             $rujukan = RmeRujukKeluar::findOrFail($id);
             $rujukan->kd_pasien = $request->kd_pasien;
@@ -160,8 +174,9 @@ class RujukController extends Controller
 
             DB::commit();
 
-            return redirect()->route('rujuk-antar-rs.index', [
+            return redirect()->route('rawat-jalan.rujuk-antar-rs.index', [
                 'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
             ])->with('success', 'Data rujukan berhasil diperbarui');
@@ -171,23 +186,19 @@ class RujukController extends Controller
         }
     }
 
-    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
-            DB::beginTransaction();
-
             $rujukan = RmeRujukKeluar::findOrFail($id);
             $rujukan->delete();
 
-            DB::commit();
-
-            return redirect()->route('rujuk-antar-rs.index', [
+            return redirect()->route('rawat-jalan.rujuk-antar-rs.index', [
+                'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
             ])->with('success', 'Data rujukan berhasil dihapus');
         } catch (\Exception $e) {
-            DB::rollBack();
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }
     }

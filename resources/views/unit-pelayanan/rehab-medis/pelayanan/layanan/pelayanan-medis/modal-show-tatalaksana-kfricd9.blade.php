@@ -70,10 +70,6 @@
                         <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
                             <span class="tatalaksana-text">${tatalaksana}</span>
                             <input type="hidden" name="tatalaksana[]" value="${tatalaksana}">
-
-                            <a href="javascript:void(0)" class="remove-main-tatalaksana text-danger" data-id="${uniqueId}">
-                                <i class="bi bi-trash"></i>
-                            </a>
                         </div>
                     `;
                 });

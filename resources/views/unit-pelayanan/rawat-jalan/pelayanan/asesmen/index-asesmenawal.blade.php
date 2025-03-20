@@ -23,7 +23,7 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-search"></i>
@@ -33,26 +33,55 @@
         </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
-        <div class="col-md-2 text-end ms-auto">
+        <div class="col-md-4 text-end ms-auto">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailPasienModal" type="button">
                 <i class="ti-plus"></i> Tambah
             </button>
+
+            {{-- @canany(['is-admin', 'is-perawat', 'is-bidan']) --}}
+                <a href="{{ route('rawat-jalan.asesmen-keperawatan.index', ['kd_unit' => request()->route('kd_unit'),'kd_pasien' => request()->route('kd_pasien'), 'tgl_masuk' => request()->route('tgl_masuk'), 'urut_masuk' => request()->route('urut_masuk')]) }}"
+                    class="btn btn-primary">
+                    <i class="ti-plus"></i> Keperawatan
+                </a>
+                {{-- @endcanany --}}
         </div>
     </div>
 </div>
 
 <ul class="list-group" id="asesmenList">
+    {{-- {{ $asesmen }} --}}
     @foreach ($asesmen as $item)
         <li class="list-group-item d-flex justify-content-between align-items-center"
             data-name="{{ $item->user->name }}">
             <div class="d-flex align-items-center">
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien" width="70" height="70">
-                <div>
-                    <span class="text-primary fw-bold">Asesmen Medis-Pasien Umum/Dewasa</span> <br>
-                    By: <span class="fw-bold">{{ $item->user->name }}</span>
+                <!-- Tanggal -->
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('d') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('M-y') }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ \Carbon\Carbon::parse($item->waktu_asesmen)->format('H:i') }}
+                    </div>
+                </div>
+                <!-- Avatar dan Info -->
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle border border-2"
+                        alt="Foto Pasien" width="60" height="60">
+                    <div>
+                        <div class="text-primary fw-bold mb-1">
+                            Asesmen {{ getKategoriAsesmen($item->kategori, $item->sub_kategori) }}
+                        </div>
+                        <div class="text-muted">
+                            By: <span class="fw-semibold">{{ $item->user->name }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div>
+                @if ($item->kategori == 1)
                 <button type="button" onclick="showAsesmen('{{ $item->id }}')"
                     data-url="{{ url('unit-pelayanan/rawat-jalan/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') . '/' . $dataMedis->urut_masuk . '/asesmen/' . $item->id) }}"
                     class="btn btn-info btn-sm">
@@ -65,11 +94,29 @@
                     <i class="fas fa-edit"></i> Edit
                 </button>
                 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.edit')
+                @elseif($item->kategori == 2)
+                <button type="button"
+                    onclick="showAsesmenKeperawatanJalan('{{ $item->id }}', '{{ $dataMedis->kd_unit }}', '{{ $dataMedis->kd_pasien }}', '{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}', '{{ $dataMedis->urut_masuk }}')"
+                    class="btn btn-info btn-sm px-3">
+                    <i class="fas fa-eye me-1"></i> Lihat
+                </button>
+
+                    <a href="{{ route('rawat-jalan.asesmen-keperawatan.edit', [
+                        'kd_unit' => $dataMedis->kd_unit,
+                        'kd_pasien' => $dataMedis->kd_pasien,
+                        'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'),
+                        'urut_masuk' => $dataMedis->urut_masuk,
+                        'id' => $item->id
+                    ]) }}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
             </div>
         </li>
     @endforeach
 </ul>
 @include('unit-pelayanan.rawat-jalan.pelayanan.asesmen.create-asesmen')
+@include('unit-pelayanan.rawat-jalan.pelayanan.asesmen-keperawatan.show')
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
