@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\Operasi\PraInduksitController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CpptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -821,6 +822,19 @@ Route::middleware('auth')->group(function () {
                                         });
                                     });
                                 });
+
+                                Route::prefix('pra-induksi')->group(function () {
+                                    Route::name('.pra-induksi')->group(function () {
+                                        Route::controller(PraInduksitController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                        });
+                                    });
+                                });
+
                             });
                         });
                     });
