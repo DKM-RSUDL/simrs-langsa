@@ -34,7 +34,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
@@ -845,6 +847,24 @@ Route::middleware('auth')->group(function () {
                                                     Route::get('/{data}', 'show')->name('.show');
                                                 });
                                             });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                        //LAPORAN OPERASI
+                        Route::prefix('laporan-operatif')->group(function () {
+                            Route::name('.laporan-operatif')->group(function () {
+                                Route::controller(LaporanOperatifController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                });
+
+                                Route::prefix('laporan-operasi')->group(function () {
+                                    Route::name('.laporan-operasi')->group(function () {
+                                        Route::controller(LaporanOperasiController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::get('/{data}', 'show')->name('.show');
                                         });
                                     });
                                 });

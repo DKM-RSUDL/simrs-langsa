@@ -60,7 +60,7 @@
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Operatif',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.laporan-operatif.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'check.svg',
