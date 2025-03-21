@@ -34,6 +34,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
@@ -866,6 +867,22 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+
+                        //LAPORAN ANASTESI
+                        Route::prefix('laporan-anastesi')->group(function () {
+                            Route::name('.laporan-anastesi')->group(function () {
+                                Route::controller(LaporanAnastesiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                });
+                            });
+                        });
+
                     });
                 });
             });
