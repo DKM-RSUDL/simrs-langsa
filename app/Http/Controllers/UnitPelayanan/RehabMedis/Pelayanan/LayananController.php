@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\RmeRehabMedikLayanan;
 use App\Models\RmeRehabMedikProgram;
 use App\Models\RmeRehabMedikProgramDetail;
+use App\Models\RmeRehabMedikTindakan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,7 +59,14 @@ class LayananController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.index', compact('dataMedis', 'layanan', 'programs'));
+        $tindakan = RmeRehabMedikTindakan::with(['karyawan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 214)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->get();
+
+        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.index', compact('dataMedis', 'layanan', 'programs', 'tindakan'));
     }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
@@ -440,7 +448,8 @@ class LayananController extends Controller
                 $programDetailData = [
                     'id_program'    => $program->id,
                     'kd_produk'     => $pr['kd_produk'],
-                    'tarif'         => intval($pr['tarif'])
+                    'tarif'         => intval($pr['tarif']),
+                    'tgl_berlaku'   => $pr['tgl_berlaku']
                 ];
                 RmeRehabMedikProgramDetail::create($programDetailData);
             }
@@ -577,7 +586,8 @@ class LayananController extends Controller
                 $programDetailData = [
                     'id_program'    => $id,
                     'kd_produk'     => $pr['kd_produk'],
-                    'tarif'         => intval($pr['tarif'])
+                    'tarif'         => intval($pr['tarif']),
+                    'tgl_berlaku'   => $pr['tgl_berlaku']
                 ];
                 RmeRehabMedikProgramDetail::create($programDetailData);
             }

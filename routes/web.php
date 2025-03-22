@@ -781,10 +781,12 @@ Route::middleware('auth')->group(function () {
                             Route::name('.tindakan')->group(function () {
                                 Route::controller(RehamMedisTindakanController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
-                                    Route::post('/', 'storeTindakan')->name('.store');
-                                    Route::put('/', 'updateTindakan')->name('.update');
-                                    Route::delete('/', 'deleteTindakan')->name('.delete');
-                                    Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
                             });
                         });

@@ -138,12 +138,13 @@
                         <!-- Add Button -->
                         <!-- Include the modal file -->
                         <div class="col-md-2">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTindakanModal"
-                                    type="button">
-                                    <i class="ti-plus"></i> Tambah
-                                </button>
-                            </div>
+                            @if (count($tindakan) < 1)
+                                <div class="d-grid gap-2">
+                                    <a href="{{ route('rehab-medis.pelayanan.tindakan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                        <i class="ti-plus"></i> Tambah
+                                    </a>
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -154,40 +155,24 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>Tanggal</th>
-                                <th>Nama Tindakan</th>
-                                <th>Unit Pelayanan</th>
                                 <th>PPA</th>
-                                <th>Keterangan</th>
-                                <th>Gambar</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($tindakan as $tdk)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($tdk->tgl_tindakan)->format('d M Y') }}
-                                        {{ \Carbon\Carbon::parse($tdk->jam_tindakan)->format('H:i') }}</td>
                                     <td>
-                                        <span class="text-primary fw-bold text-decoration-underline">
-                                            {{ $tdk->produk->deskripsi }}
-                                        </span>
+                                        {{ date('d M Y', strtotime($tdk->tgl_tindakan)) .' '. date('H:i', strtotime($tdk->jam_tindakan)) }}
+                                        WIB
                                     </td>
-                                    <td>{{ $tdk->unit->nama_unit }} / {{ $tdk->produk->klas->klasifikasi }}</td>
-                                    <td>{{ $tdk->ppa->nama_lengkap }}</td>
-                                    <td>{{ $tdk->keterangan }}</td>
+                                    <td>{{ $tdk->karyawan->gelar_depan .' '. str()->title($tdk->karyawan->nama) .' '. $tdk->karyawan->gelar_belakang }}</td>
                                     <td>
-                                        <img src="{{ asset("storage/$tdk->gambar") }}" alt="" width="50">
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success btn-show-tindakan"
-                                            data-bs-target="#showTindakanModal" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i class="bi bi-eye"></i></button>
-                                        <button class="btn btn-sm btn-warning btn-edit-tindakan"
-                                            data-bs-target="#editTindakanModal" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-delete-tindakan" data-produk="{{ $tdk->kd_produk }}"
-                                            data-urut="{{ $tdk->urut_list }}"><i
-                                                class="bi bi-x-circle-fill text-danger"></i></button>
+                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('rehab-medis.pelayanan.tindakan.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $tdk->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-pencil"></i></a>
+                                        <button class="btn btn-sm btn-danger btn-delete-tindakan" data-tindakan="{{ encrypt($tdk->id) }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -196,370 +181,85 @@
                 </div>
             </div>
         </div>
-
-        @include('unit-pelayanan.rehab-medis.pelayanan.tindakan.modal')
     </div>
 @endsection
 
+
+
 @push('js')
-    {{-- Filter data to anas --}}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#SelectOption').change(function() {
-                var periode = $(this).val();
-                var queryString = '?periode=' + periode;
-                window.location.href =
-                    "{{ route('tindakan.index', [$dataMedis->kd_pasien, \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
-                    queryString;
-            });
-        });
-
-        $(document).ready(function() {
-            $('#filterButton').click(function(e) {
-                e.preventDefault();
-
-                var startDate = $('#start_date').val();
-                var endDate = $('#end_date').val();
-
-                if (!startDate || !endDate) {
-                    alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
-                    return;
-                }
-
-                var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
-
-                window.location.href =
-                    "{{ route('tindakan.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}" +
-                    queryString;
-            });
-        });
-    </script>
-
     <script>
-        $(document).ready(function() {
-            initSelect2();
-            editInitSelect2();
-        });
-
-        // Reinisialisasi Select2 ketika modal dibuka
-        $('#addTindakanModal').on('shown.bs.modal', function() {
-            let $this = $(this);
-
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            });
-            // Destroy existing Select2 instance before reinitializing
-            initSelect2();
-        });
-
-        function initSelect2() {
-            $('#addTindakanModal .select2').select2({
-                dropdownParent: $('#addTindakanModal'),
-                width: '100%'
-            });
-        }
-
-
-        // Foto Upload
-        $('#addTindakanModal #gambarTindakanLabel').click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $('#addTindakanModal #gambar_tindakan').trigger('click');
-        });
-
-        $('#addTindakanModal #gambar_tindakan').on('change', function(e) {
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    if (e.target && e.target.result) {
-                        $('#addTindakanModal #gambarTindakanLabel .img-tindakan-wrap').html(
-                            `<img src="${e.target.result}" width="70">`);
-                    } else {
-                        showToast('error', 'Terjadi kesalahan server saat memilih file gambar!');
-                    }
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-
-        // Add Form
-        $('#addTindakanForm').submit(function(e) {
-            let $this = $(this);
-            let gambarVal = $this.find('#gambar_tindakan').val();
-
-            if (gambarVal == '') {
-                showToast('error', 'Gambar tindakan harus dipilih!');
-                return false;
-            }
-        });
-
-        // Tindakan di pilih / diubah
-        $('#addTindakanModal #tindakan').on('select2:select', function(e) {
-            var $selectedOption = $(e.currentTarget).find("option:selected");
-            var tarif = $selectedOption.data('tarif');
-            var tglBerlaku = $selectedOption.data('tgl');
-            $('#addTindakanModal #tarif_tindakan').val(parseInt(tarif));
-            $('#addTindakanModal #tgl_berlaku').val(tglBerlaku);
-        });
-
-
-        // Edit
-        function formatTime(dateString) {
-            const date = new Date(dateString);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        }
-
-        $('.btn-edit-tindakan').click(function(e) {
-            let $this = $(this);
-            let kdProduk = $this.attr('data-produk');
-            let urut = $this.attr('data-urut');
-            let target = $this.attr('data-bs-target');
-            let $modal = $(target);
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "kd_produk": kdProduk,
-                    "urut_list": urut,
-                    "urut_masuk": {{ $dataMedis->urut_masuk }},
-                    "no_transaksi": "{{ $dataMedis->no_transaksi }}"
-                },
-                dataType: "json",
-                beforeSend: function() {
-                    // Ubah teks tombol dan tambahkan spinner
-                    $this.html(
-                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
-                    );
-                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
-                },
-                complete: function() {
-                    // Ubah teks tombol jadi icon search dan disable nonaktif
-                    $this.html('<i class="bi bi-pencil-square"></i>');
-                    $this.prop('disabled', false);
-                },
-                success: function(res) {
-
-                    if (res.status == 'success') {
-                        let data = res.data;
-
-                        // set value
-                        $modal.find('#old_kd_produk').val(data.kd_produk);
-                        $modal.find('#urut_list').val(data.urut_list);
-                        $modal.find('#tarif_tindakan').val(parseInt(data.harga));
-                        $modal.find('#tgl_berlaku').val(data.tgl_berlaku);
-                        $modal.find('#tgl_tindakan').val(data.tgl_tindakan.split(' ')[0]);
-                        $modal.find('#jam_tindakan').val(formatTime(data.jam_tindakan));
-                        $modal.find('#laporan').val(data.laporan_hasil);
-                        $modal.find('#kesimpulan').val(data.kesimpulan);
-                        $modal.find('.img-tindakan-wrap img').attr('src', "{{ url('/') }}/" +
-                            `storage/${data.gambar}`);
-                        $modal.find('#tindakan').val(data.kd_produk).trigger('change');
-                        $modal.find('#ppa').val(data.kd_dokter).trigger('change');
-
-                        $modal.modal('show');
-                    } else {
-                        showToast(res.status, res.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    showToast('error', 'Internal server error');
-                }
-            });
-
-        });
-
-        // Reinisialisasi Select2 ketika modal dibuka
-        $('#editTindakanModal').on('shown.bs.modal', function() {
-            let $this = $(this);
-
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            });
-
-            // Destroy existing Select2 instance before reinitializing
-            editInitSelect2();
-        });
-
-        function editInitSelect2() {
-            $('#editTindakanModal .select2').select2({
-                dropdownParent: $('#editTindakanModal'),
-                width: '100%'
-            });
-        }
-
-        // Foto Upload
-        $('#editTindakanModal #gambarTindakanLabel').click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $('#editTindakanModal #gambar_tindakan').trigger('click');
-        });
-
-        $('#editTindakanModal #gambar_tindakan').on('change', function(e) {
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    if (e.target && e.target.result) {
-                        $('#editTindakanModal #gambarTindakanLabel .img-tindakan-wrap').html(
-                            `<img src="${e.target.result}" width="70">`);
-                    } else {
-                        showToast('error', 'Terjadi kesalahan server saat memilih file gambar!');
-                    }
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        // Tindakan di pilih / diubah
-        $('#editTindakanModal #tindakan').on('select2:select', function(e) {
-            var $selectedOption = $(e.currentTarget).find("option:selected");
-            var tarif = $selectedOption.data('tarif');
-            var tglBerlaku = $selectedOption.data('tgl');
-
-            $('#editTindakanModal #tarif_tindakan').val(parseInt(tarif));
-            $('#editTindakanModal #tgl_berlaku').val(tglBerlaku);
-        });
-
-
-        // Show
-        $('.btn-show-tindakan').click(function(e) {
-            let $this = $(this);
-            let kdProduk = $this.attr('data-produk');
-            let urut = $this.attr('data-urut');
-            let target = $this.attr('data-bs-target');
-            let $modal = $(target);
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('tindakan.get-tindakan-ajax', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "kd_produk": kdProduk,
-                    "urut_list": urut,
-                    "urut_masuk": {{ $dataMedis->urut_masuk }},
-                    "no_transaksi": "{{ $dataMedis->no_transaksi }}"
-                },
-                dataType: "json",
-                beforeSend: function() {
-                    // Ubah teks tombol dan tambahkan spinner
-                    $this.html(
-                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
-                    );
-                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
-                },
-                complete: function() {
-                    // Ubah teks tombol jadi icon search dan disable nonaktif
-                    $this.html('<i class="bi bi-eye"></i>');
-                    $this.prop('disabled', false);
-                },
-                success: function(res) {
-
-                    if (res.status == 'success') {
-                        let data = res.data;
-                        console.log(data);
-
-                        // set value
-                        // format jadwal tindakan
-                        let tglTindakan = data.tgl_tindakan;
-                        let tglTindakanDateTime = new Date(tglTindakan);
-                        let tindakanOptionDate = {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric'
-                        };
-                        let tglTindakanFormatted = tglTindakanDateTime.toLocaleDateString('id-ID',
-                            tindakanOptionDate);
-
-                        // format jadwal pemeriksaan
-                        let jamTindakan = data.jam_tindakan;
-                        let jamTindakanDateTime = new Date(jamTindakan);
-                        let tindakanOptionTime = {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                        };
-                        let jamTindakanFormatted = jamTindakanDateTime.toLocaleTimeString('id-ID',
-                            tindakanOptionTime);
-
-                        $modal.find('#tindakan').text(data.produk.deskripsi);
-                        $modal.find('#ppa').text(data.ppa.nama_lengkap);
-                        $modal.find('#laporan').text(data.laporan_hasil);
-                        $modal.find('#kesimpulan').text(data.kesimpulan);
-                        $modal.find('#gambar_tindakan').attr('src',
-                            `{{ url('/') }}/storage/${data.gambar}`);
-                        $modal.find('#waktu_tindakan').text(
-                            `${tglTindakanFormatted} ${jamTindakanFormatted}`);
-
-                        $modal.modal('show');
-                    } else {
-                        showToast(res.status, res.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    showToast('error', 'Internal server error');
-                }
-            });
-
-        });
-
-
-        // delete
         $('.btn-delete-tindakan').click(function(e) {
             let $this = $(this);
-            let kdProduk = $this.attr('data-produk');
-            let urut = $this.attr('data-urut');
+            let tindakan = $this.attr('data-tindakan');
+
 
             Swal.fire({
-                title: "Apakah anda yakin ingin menghapus?",
-                text: "Anda tidak akan dapat mengembalikannya!",
+                title: "Anda yakin ingin menghapus?",
+                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Ya",
+                confirmButtonText: "Ya, hapus!",
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "post",
-                        url: "{{ route('tindakan.delete', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk]) }}",
+                        url: "{{ route('rehab-medis.pelayanan.tindakan.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
                         data: {
-                            '_method': 'delete',
-                            '_token': "{{ csrf_token() }}",
-                            "kd_produk": kdProduk,
-                            "urut_list": urut,
-                            "urut_masuk": {{ $dataMedis->urut_masuk }},
-                            "no_transaksi": "{{ $dataMedis->no_transaksi }}"
+                            _token: "{{ csrf_token() }}",
+                            _method: "delete",
+                            tindakan: tindakan
                         },
                         dataType: "json",
                         beforeSend: function() {
-                            // Ubah teks tombol dan tambahkan spinner
-                            $this.html(
-                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
-                            );
-                            $this.prop('disabled', true);
+                            Swal.fire({
+                                title: 'Sedang Memproses',
+                                html: 'Mohon tunggu sebentar...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
                         },
-                        complete: function() {
-                            // Ubah teks tombol jadi icon search dan disable nonaktif
-                            $this.html('<i class="bi bi-x-circle-fill text-danger"></i>');
-                            $this.prop('disabled', false);
-                        },
-                        success: function(res) {
-                            showToast(res.status, res.message);
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
 
-                            if (res.status == 'success') {
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Gagal!",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false,
+                                });
+
+                                return false;
                             }
+
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: "Data Tindakan berhasil dihapus !",
+                                icon: "success",
+                                allowOutsideClick: false,
+                            });
+
+                            location.reload();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Gagal!",
+                                text: "Internal Server Error",
+                                icon: "error",
+                                allowOutsideClick: false,
+                            });
                         }
                     });
                 }
             });
+
         });
     </script>
 @endpush

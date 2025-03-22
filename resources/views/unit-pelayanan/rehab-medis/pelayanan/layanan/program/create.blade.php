@@ -45,7 +45,7 @@
                                 <select id="program" class="form-select select2">
                                     <option value="">--Pilih Tindakan--</option>
                                     @foreach ($produk as $item)
-                                        <option value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}"}'>{{ $item->deskripsi }}</option>
+                                        <option value='{"kd_produk" : "{{ $item->kd_produk }}", "tarif" : "{{ $item->tarif }}", "tgl_berlaku" : "{{ date('Y-m-d', strtotime($item->tgl_berlaku)) }}"}'>{{ $item->deskripsi }}</option>
                                     @endforeach
                                 </select>
                             </div>
