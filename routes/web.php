@@ -854,21 +854,18 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
-                        //LAPORAN OPERASI
-                        Route::prefix('laporan-operatif')->group(function () {
-                            Route::name('.laporan-operatif')->group(function () {
-                                Route::controller(LaporanOperatifController::class)->group(function () {
-                                    Route::get('/', 'index')->name('.index');
-                                });
 
-                                Route::prefix('laporan-operasi')->group(function () {
-                                    Route::name('.laporan-operasi')->group(function () {
-                                        Route::controller(LaporanOperasiController::class)->group(function () {
-                                            Route::get('/create', 'create')->name('.create');
-                                            Route::get('/edit/{data}', 'edit')->name('.edit');
-                                            Route::get('/{data}', 'show')->name('.show');
-                                        });
-                                    });
+
+                        //LAPORAN OPERASI
+                        Route::prefix('laporan-operasi')->group(function () {
+                            Route::name('.laporan-operasi')->group(function () {
+                                Route::controller(LaporanOperasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/edit', 'edit')->name('.edit');
+                                    Route::get('/show', 'show')->name('.show');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
                                 });
                             });
                         });

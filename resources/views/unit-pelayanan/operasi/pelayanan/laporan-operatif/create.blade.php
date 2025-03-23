@@ -6,12 +6,12 @@
 
     <div class="row">
         <div class="col-md-3">
-            @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.laporan-operasi.patient-card')
+            @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.patient-card')
         </div>
 
         <div class="col-md-9">
 
-            <form method="POST" action="" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('operasi.pelayanan.laporan-operasi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                 @csrf
 
                 <div class="d-flex justify-content-center">
@@ -24,31 +24,20 @@
                                         <i class="ti-arrow-left"></i> Kembali
                                     </a>
 
-                                    <div class="section-separator" id="dataMasuk">
-                                        <h5 class="section-title">1. Data Masuk</h5>
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-form-label" style="min-width: 200px;">Tanggal dan Jam Masuk</label>
-                                            <div class="col-md-4">
-                                                <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="time" name="jam_masuk" id="jam_masuk" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="section-separator" id="jenisAnestesi">
-                                        <h5 class="section-title">2. Informasi Operasi</h5>
+                                        <h5 class="section-title">1. Informasi Operasi</h5>
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" for="nama_tindakan_operasi" style="min-width: 200px;">Nama Tindakan Operasi</label>
                                             <input placeholder="Nama Tindakan Operasi" type="text" class="form-control" name="nama_tindakan_operasi" id="nama_tindakan_operasi">
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="jenis_anestesi" style="min-width: 200px;">Jenis Anestesi Yang Digunakan</label>
-                                            <select name="jenis_anestesi" id="jenis_anestesi" class="form-select">
+                                            <label class="col-md-3 col-form-label" for="kd_jenis_anastesi" style="min-width: 200px;">Jenis Anestesi Yang Digunakan</label>
+                                            <select name="kd_jenis_anastesi" id="kd_jenis_anastesi" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="">contoh</option>
+                                                @foreach ($jenisAnastesi as $item)
+                                                    <option value="{{ $item->kd_jenis_anastesi }}">{{ $item->jenis_anastesi }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -59,96 +48,116 @@
                                             <label class="col-md-3 col-form-label" for="kompleksitas" style="min-width: 200px;">kompleksitas</label>
                                             <select name="kompleksitas" id="kompleksitas" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="Besar">Besar</option>
-                                                <option value="Sedang">Sedang</option>
-                                                <option value="Kecil">Kecil</option>
-                                                <option value="Khusus">Khusus</option>
+                                                <option value="1">Besar</option>
+                                                <option value="2">Sedang</option>
+                                                <option value="3">Kecil</option>
+                                                <option value="4">Khusus</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" for="urgensi" style="min-width: 200px;">Urgensi</label>
                                             <select name="urgensi" id="urgensi" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="cito">Cito (Darurat)</option>
-                                                <option value="Elecive">Elecive (Terjadwal)</option>
+                                                <option value="1">Cito (Darurat)</option>
+                                                <option value="2">Elective (Terjadwal)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="kebersihan_area_operasi" style="min-width: 200px;">Kebersihan Area Operasi</label>
-                                            <select name="kebersihan_area_operasi" id="kebersihan_area_operasi" class="form-select">
+                                            <label class="col-md-3 col-form-label" for="kebersihan" style="min-width: 200px;">Kebersihan Area Operasi</label>
+                                            <select name="kebersihan" id="kebersihan" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="bersih">Bersih</option>
-                                                <option value="tercemar">Tercemar</option>
-                                                <option value="kotor">Kotor</option>
+                                                <option value="1">Bersih</option>
+                                                <option value="2">Tercemar</option>
+                                                <option value="3">Kotor</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="edukasiPasien">
-                                        <h5 class="section-title">3. Diagnosa dan Komplikasi</h5>
+                                        <h5 class="section-title">2. Diagnosa dan Komplikasi</h5>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="diagnosa_praoperasi" style="min-width: 200px;">Diagnosa Pra-Operasi</label>
-                                            <input placeholder="isi Diagnosa Pra-Operasi" type="text" class="form-control" name="diagnosa_praoperasi" id="diagnosa_praoperasi">
+                                            <label class="col-md-3 col-form-label" for="diagnosa_pra_operasi" style="min-width: 200px;">Diagnosa Pra-Operasi</label>
+                                            <input placeholder="isi Diagnosa Pra-Operasi" type="text" class="form-control" name="diagnosa_pra_operasi" id="diagnosa_pra_operasi">
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="diagnosa_pascaoperasi" style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
-                                            <input placeholder="isi Diagnosa Pasca-Operasi" type="text" class="form-control" name="diagnosa_pascaoperasi" id="diagnosa_pascaoperasi">
+                                            <label class="col-md-3 col-form-label" for="diagnosa_pasca_operasi" style="min-width: 200px;">Diagnosa Pasca-Operasi</label>
+                                            <input placeholder="isi Diagnosa Pasca-Operasi" type="text" class="form-control" name="diagnosa_pasca_operasi" id="diagnosa_pasca_operasi">
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="Kompilkasi" style="min-width: 200px;">Bila Ada Kompilkasi Selama Pembedahan</label>
-                                            <input placeholder="isi Kompilkasi Selama Pembedahan" type="text" class="form-control" name="Kompilkasi" id="Kompilkasi">
+                                            <label class="col-md-3 col-form-label" for="komplikasi" style="min-width: 200px;">Bila Ada Komplikasi Selama Pembedahan</label>
+                                            <input placeholder="isi Komplikasi Selama Pembedahan" type="text" class="form-control" name="komplikasi" id="komplikasi">
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="persetujuanPasien">
-                                        <h5 class="section-title">4. Pemeriksaan Laboratorium & Patologi Anatomi (PA)</h5>
+                                        <h5 class="section-title">3. Pemeriksaan Laboratorium & Patologi Anatomi (PA)</h5>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="pemeriksaan_pa" style="min-width: 200px;">Dikirim Untuk Pemeriksaan PA</label>
-                                            <select name="pemeriksaan_pa" id="pemeriksaan_pa" class="form-select">
+                                            <label class="col-md-3 col-form-label" for="pa" style="min-width: 200px;">Dikirim Untuk Pemeriksaan PA</label>
+                                            <select name="pa" id="pa" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="1">Ya</option>
+                                                <option value="0">Tidak</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="pemeriksaan_kultur" style="max-width: 200px;">Dikirim Untuk kultur</label>
-                                            <select name="pemeriksaan_kultur" id="pemeriksaan_kultur" class="form-select">
+                                            <label class="col-md-3 col-form-label" for="kultur" style="max-width: 200px;">Dikirim Untuk kultur</label>
+                                            <select name="kultur" id="kultur" class="form-select">
                                                 <option value="">--Pilih--</option>
-                                                <option value="ya">Ya</option>
-                                                <option value="tidak">Tidak</option>
+                                                <option value="1">Ya</option>
+                                                <option value="0">Tidak</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="section-separator" id="persetujuanPasien">
-                                        <h5 class="section-title">5. Tim Medis Yang Bertanggung Jawab</h5>
+                                        <h5 class="section-title">4. Tim Medis Yang Bertanggung Jawab</h5>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="dokter_bedah" style="min-width: 200px;">Dokter Ahli Bedah</label>
-                                            <input placeholder="isi nama Dokter Ahli Bedah" type="text" class="form-control" name="dokter_bedah" id="dokter_bedah">
+                                            <label class="col-md-3 col-form-label" for="kd_dokter_bedah" style="min-width: 200px;">Dokter Ahli Bedah</label>
+                                            <select name="kd_dokter_bedah" id="kd_dokter_bedah" class="form-select select2">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($dokter as $dok)
+                                                    <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="perawat_bedah" style="min-width: 200px;">Perawat Bedah</label>
-                                            <input placeholder="isi nama Perawat Bedah" type="text" class="form-control" name="perawat_bedah" id="perawat_bedah">
+                                            <label class="col-md-3 col-form-label" for="kd_perawat_bedah" style="min-width: 200px;">Perawat Bedah</label>
+                                            <select name="kd_perawat_bedah" id="kd_perawat_bedah" class="form-select select2">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($perawat as $prw)
+                                                    <option value="{{ $prw->kd_perawat }}">{{ $prw->nama }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="dokter_anestesi" style="min-width: 200px;">Dokter Ahli Anestesi</label>
-                                            <input placeholder="isi nama Dokter Ahli Anestesi" type="text" class="form-control" name="dokter_anestesi" id="dokter_anestesi">
+                                            <label class="col-md-3 col-form-label" for="kd_dokter_anastesi" style="min-width: 200px;">Dokter Ahli Anestesi</label>
+                                            <select name="kd_dokter_anastesi" id="kd_dokter_anastesi" class="form-select select2">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($dokterAnastesi as $da)
+                                                    <option value="{{ $da->kd_dokter }}">{{ $da->dokter->nama_lengkap }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="penata_anestesi" style="min-width: 200px;">Penata Anestesi</label>
-                                            <input placeholder="isi nama Penata Anestesi" type="text" class="form-control" name="penata_anestesi" id="penata_anestesi">
+                                            <label class="col-md-3 col-form-label" for="kd_penata_anastesi" style="min-width: 200px;">Penata Anestesi</label>
+                                            <select name="kd_penata_anastesi" id="kd_penata_anastesi" class="form-select select2">
+                                                <option value="">--Pilih--</option>
+                                                @foreach ($perawat as $prw)
+                                                    <option value="{{ $prw->kd_perawat }}">{{ $prw->nama }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="section-separator" id="persetujuanPasien">
-                                        <h5 class="section-title">6. Pendarahan dan Transfusi</h5>
+                                        <h5 class="section-title">5. Pendarahan dan Transfusi</h5>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="pendarahan_selama_operasi" style="min-width: 200px;">Pendarahan Selama Operasi</label>
+                                            <label class="col-md-3 col-form-label" for="pendarahan" style="min-width: 200px;">Pendarahan Selama Operasi</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">+-</span>
-                                                <input placeholder="isi seberapa banyak pendarahan selama operasi" type="number" class="form-control" name="pendarahan_selama_operasi" id="pendarahan_selama_operasi">
+                                                <input placeholder="isi seberapa banyak pendarahan selama operasi" type="number" class="form-control" name="pendarahan" id="pendarahan">
                                                 <span class="input-group-text">cc</span>
                                             </div>
                                         </div>
@@ -162,7 +171,7 @@
                                                 <span class="input-group-text">cc</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" for="prc" style="min-width: 200px;">PRC (Packed Red Cells)</label>
                                             <div class="input-group">
@@ -170,17 +179,17 @@
                                                 <span class="input-group-text">cc</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" for="cryo" style="min-width: 200px;">Cryo (Cryoprecipitate)</label>
                                             <div class="input-group">
                                                 <input placeholder="Isi seberapa banyak Cryo (Cryoprecipitate)" type="number" class="form-control" name="cryo" id="cryo">
                                                 <span class="input-group-text">cc</span>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                     <div class="section-separator" id="dataMasuk">
-                                        <h5 class="section-title">7. Waktu Pelaksanaan Operasi</h5>
+                                        <h5 class="section-title">6. Waktu Pelaksanaan Operasi</h5>
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" style="min-width: 200px;">Waktu Mulai Operasi</label>
 
@@ -195,34 +204,14 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 col-form-label" style="min-width: 200px;">Lama Operasi</label>
-                                            <input type="time" name="lama_operasi" id="lama_operasi" class="form-control">
+                                            <input type="text" name="lama_operasi" id="lama_operasi" class="form-control" placeholder="Cth : 1 jam">
                                         </div>
                                     </div>
                                     <div class="section-separator" id="dataMasuk">
-                                        <h5 class="section-title">8. Laporan Prosedur Operasi</h5>
+                                        <h5 class="section-title">7. Laporan Prosedur Operasi</h5>
                                         <div class="form-group">
-                                            <label class="col-md-3 col-form-label" style="min-width: 200px;">Laporan Prosedur Operasi</label>
+                                            <label for="laporan_prosedur_operasi" class="col-md-3 col-form-label" style="min-width: 200px;">Laporan Prosedur Operasi</label>
                                             <textarea placeholder="Jelaskan deskripsilengkap tentang prosedur bedah yang dilakukan " name="laporan_prosedur_operasi" id="laporan_prosedur_operasi" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-separator" id="persetujuanPasien">
-                                        <h5 class="section-title">9. Tanda Tangan Verifikasi</h5>
-
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="dokter_bedah" style="max-width: 200px;">Signature Dokter Bedah</label>
-                                            <select name="dokter_bedah" id="dokter_bedah" class="form-select select2">
-                                                <option value="">--Pilih--</option>
-                                                <option value="">ADAM YORDAN</option>
-                                               
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-form-label" for="dokter_anestesi" style="max-width: 200px;">Signature Dokter Anestesi</label>
-                                            <select name="dokter_anestesi" id="dokter_anestesi" class="form-select select2">
-                                                <option value="">--Pilih--</option>
-                                                <option value="">ADAM YORDAN</option>
-                                            </select>
                                         </div>
                                     </div>
 

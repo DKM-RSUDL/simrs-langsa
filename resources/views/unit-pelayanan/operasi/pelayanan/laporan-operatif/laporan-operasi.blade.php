@@ -52,72 +52,33 @@
 
 <div class="d-flex justify-content-start align-items-center m-3">
     <div class="row g-3 w-100">
-        <!-- Select PPA Option -->
-        <div class="col-md-2">
-            <select class="form-select" id="SelectPPA" aria-label="Pilih...">
-                <option value="semua" selected>Semua PPA</option>
-                <option value="Episode1">Dokter Spesialis</option>
-                <option value="Episode2">Dokter Umum</option>
-                <option value="Episode3">Perawat / Bidan</option>
-                <option value="Episode4">Nutrisionis</option>
-                <option value="Episode5">Apoteker</option>
-            </select>
-        </div>
-        <!-- Select Episode Option -->
-        <div class="col-md-2">
-            <select class="form-select" id="SelectEpisode" aria-label="Pilih...">
-                <option value="semua" selected>Semua Episode</option>
-                <option value="Episode1">Episode Sekarang</option>
-                <option value="Episode2">1 Bulan</option>
-                <option value="Episode3">3 Bulan</option>
-                <option value="Episode4">6 Bulan</option>
-                <option value="Episode5">9 Bulan</option>
-            </select>
-        </div>
-        <!-- Start Date -->
-        <div class="col-md-2">
-            <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
-        </div>
-
-        <!-- End Date -->
-        <div class="col-md-2">
-            <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
-        </div>
-
-        <!-- Search Bar -->
-        <div class="col-md-2">
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control" placeholder="Cari" aria-label="Cari"
-                    aria-describedby="basic-addon1" id="searchInput">
-            </div>
-        </div>
 
         <!-- Button "Tambah" di sebelah kanan -->
         <div class="col-md-2 text-end ms-auto">
-            <a href="{{ route('operasi.pelayanan.laporan-operatif.laporan-operasi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}" 
-               class="btn btn-primary">
-               <i class="fas fa-plus"></i> Tambah
-            </a>
-        </div>        
+            @if (empty($laporan))
+                <a href="{{ route('operasi.pelayanan.laporan-operasi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}"
+                class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah
+                </a>
+            @endif
+        </div>
     </div>
 </div>
 
-<ul class="list-group" id="laporan-oprasi-list">
+@if(!empty($laporan))
+    <ul class="list-group" id="laporan-oprasi-list">
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-4">
                 <!-- Tanggal -->
                 <div class="text-center px-3">
                     <div class="fw-bold fs-4 mb-0 text-primary">
-                        {{ date('d', strtotime(now())) }}
+                        {{ date('d', strtotime($laporan->created_at)) }}
                     </div>
                     <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('M-y', strtotime(now())) }}
+                        {{ date('M-y', strtotime($laporan->created_at)) }}
                     </div>
                     <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('H:i', strtotime(now())) }}
+                        {{ date('H:i', strtotime($laporan->created_at)) }}
                     </div>
                 </div>
 
@@ -130,7 +91,7 @@
                             Laporan Operasi
                         </div>
                         <div class="text-muted">
-                            By: ADAM YORDAN
+                            By: {{ $laporan->userCreate->karyawan->gelar_depan . ' ' . str()->title($laporan->userCreate->karyawan->nama) . ' ' . $laporan->userCreate->karyawan->gelar_belakang }}
                         </div>
                     </div>
                 </div>
@@ -138,15 +99,16 @@
 
             <!-- Action Buttons -->
             <div class="d-flex gap-2">
-                <a href="#" class="btn btn-info btn-sm px-3">
+                <a href="{{ route('operasi.pelayanan.laporan-operasi.show', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}" class="btn btn-info btn-sm px-3">
                     <i class="fas fa-eye me-1"></i>
                     Lihat
                 </a>
 
-                <a href="#" class="btn btn-sm btn-secondary">
+                <a href="{{ route('operasi.pelayanan.laporan-operasi.edit', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}" class="btn btn-sm btn-secondary">
                     <i class="fas fa-edit"></i>
                     Edit
                 </a>
             </div>
         </li>
-</ul>
+    </ul>
+@endif

@@ -20,7 +20,7 @@
                             <div class="tab-pane fade show active" id="pra-anestesi" role="tabpanel"
                                 aria-labelledby="pra-anestesi-tab">
                                 {{-- TAB 1. buatlah list disini --}}
-                                @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.laporan-operasi.laporan-operasi')
+                                @include('unit-pelayanan.operasi.pelayanan.laporan-operatif.laporan-operasi')
                             </div>
                         </div>
                     </div>
