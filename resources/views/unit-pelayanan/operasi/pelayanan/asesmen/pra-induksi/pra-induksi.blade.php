@@ -90,7 +90,7 @@
             <div class="btn-group">
                 <a href="{{ route('operasi.pelayanan.asesmen.pra-induksi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah
-                </a>                
+                </a>
             </div>
         </div>
     </div>
@@ -104,13 +104,13 @@
                 <!-- Tanggal -->
                 <div class="text-center px-3">
                     <div class="fw-bold fs-4 mb-0 text-primary">
-                        {{ date('d', strtotime($item->waktu_asesmen)) }}
+                        {{ date('d', strtotime($item->tgl_masuk_pra_induksi)) }}
                     </div>
                     <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('M-y', strtotime($item->waktu_asesmen)) }}
+                        {{ date('M-y', strtotime($item->tgl_masuk_pra_induksi)) }}
                     </div>
                     <div class="text-muted" style="font-size: 0.85rem;">
-                        {{ date('H:i', strtotime($item->waktu_asesmen)) }}
+                        {{ date('H:i', strtotime($item->jam_masuk)) }}
                     </div>
                 </div>
 
@@ -120,10 +120,10 @@
                         alt="Foto Pasien" width="60" height="60">
                     <div>
                         <div class="text-primary fw-bold mb-1">
-                            Asesmen
+                            Operasi Pra Induksi
                         </div>
                         <div class="text-muted">
-                            By: <span class="fw-semibold"></span>
+                            By: <span class="fw-semibold">{{ auth()->user()->name }}</span>
                         </div>
                     </div>
                 </div>
