@@ -12,6 +12,8 @@ use App\Models\OkPraInduksiCtkp;
 use App\Models\OkPraInduksiEpas;
 use App\Models\OkPraInduksiIpb;
 use App\Models\OkPraInduksiPsas;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -109,7 +111,7 @@ class PraInduksitController extends Controller
         $praInduksitPsas->kedalaman_anestesi = $request->kedalaman_anestesi;
         $praInduksitPsas->respon_anestesi = $request->respon_anestesi;
         $praInduksitPsas->save();
-        
+
         $praInduksitCtkp = new OkPraInduksiCtkp();
         $praInduksitCtkp->id_pra_induksi = $praInduksit->id;
         $praInduksitCtkp->jam_masuk_pemulihan_ckp = $request->jam_masuk_pemulihan_ckp;
@@ -119,10 +121,14 @@ class PraInduksitController extends Controller
         $praInduksitCtkp->all_observasi_data_ckp = $request->all_observasi_data_ckp;
         $praInduksitCtkp->pain_scale_data_json = $request->pain_scale_data_json;
         $praInduksitCtkp->patient_score_data_json = $request->patient_score_data_json;
+        $praInduksitCtkp->jam_keluar = $request->jam_keluar;
+        $praInduksitCtkp->nilai_skala_vas = $request->nilai_skala_vas;
+        $praInduksitCtkp->lanjut_ruang = $request->lanjut_ruang;
+        $praInduksitCtkp->catatan_pemulihan = $request->catatan_pemulihan;
         $praInduksitCtkp->save();
-        
+
         $request->validate([
-            'hardcopyform' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',            
+            'hardcopyform' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
         $praInduksitIpb = new OkPraInduksiIpb();
         $praInduksitIpb->id_pra_induksi = $praInduksit->id;
@@ -136,18 +142,92 @@ class PraInduksitController extends Controller
         $praInduksitIpb->durasi_pemantauan = $request->durasi_pemantauan;
         $praInduksitIpb->dokter_edukasi = $request->dokter_edukasi;
         $praInduksitIpb->lain_lain = $request->lain_lain;
-                
+
         if ($request->hasFile('hardcopyform')) {
             try {
                 $praInduksitIpb->hardcopyform = $request->file('hardcopyform')->store(
                     "uploads/operasi/pra-induksi/71/{$kd_pasien}/{$tgl_masuk}/{$urut_masuk}"
                 );
-            } catch (\Exception $e) {                
+            } catch (\Exception $e) {
                 $praInduksitIpb->hardcopyform = null;
             }
         }
         $praInduksitIpb->save();
 
         return to_route('operasi.pelayanan.asesmen.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pra Induksit berhasil di tambah !');
+    }
+
+    // public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    // {
+    //     try {
+    //         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+    //             ->join('transaksi as t', function ($join) {
+    //                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+    //                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+    //                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+    //                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+    //             })
+    //             ->where('kunjungan.kd_pasien', $kd_pasien)
+    //             ->where('kunjungan.kd_unit', 71)
+    //             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+    //             ->where('kunjungan.urut_masuk', $urut_masuk)
+    //             ->first();
+
+    //         if (!$dataMedis) {
+    //             abort(404, 'Data not found');
+    //         }
+
+    //         // Menghitung umur berdasarkan tgl_lahir jika ada
+    //         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+    //             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+    //         } else {
+    //             $dataMedis->pasien->umur = 'Tidak Diketahui';
+    //         }
+
+    //         // Get OkPraInduksi with all related models
+    //         $okPraInduksi = OkPraInduksi::with([
+    //             'okPraInduksiEpas',
+    //             'okPraInduksiPsas',
+    //             'okPraInduksiCtkp',
+    //             'okPraInduksiIpb'
+    //         ])->find($id);
+
+    //         if (!$okPraInduksi) {
+    //             abort(404, 'Data Pra Induksi not found');
+    //         }
+
+    //         // Pass the correct variable name to the view
+    //         return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.show', compact('dataMedis', 'okPraInduksi'));
+    //     } catch (Exception $e) {
+    //         return back()->with('error', $e->getMessage());
+    //     }
+    // }
+
+    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $okPraInduksi = OkPraInduksi::with([
+                'okPraInduksiEpas',
+                'okPraInduksiPsas',
+                'okPraInduksiCtkp',
+                'okPraInduksiIpb'
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 71)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            return view('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.show', compact(
+                'okPraInduksi',
+                'dataMedis'
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

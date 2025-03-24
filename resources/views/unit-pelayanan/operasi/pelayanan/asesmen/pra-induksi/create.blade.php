@@ -315,7 +315,7 @@
 
                                         <form id="monitoringFormPAS" class="pas-form">
                                             <!-- Hidden input to store all data in JSON format -->
-                                            <input type="hidden" name="all_monitoring_data_pas" id="all_monitoring_data_pas"
+                                            <input type="hidden" name="all_monitoring_data" id="all_monitoring_data_pas"
                                                 value="[]">
 
                                             <div class="form-group row">
@@ -408,14 +408,14 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Hal Penting Yang Terjadi Selama Anestesi Dan
                                                 Sedasi :</label>
-                                            <textarea name="hal_penting_pas" id="hal_penting_pas"
+                                            <textarea name="hal_penting" id="hal_penting_pas"
                                                 class="form-control pas-textarea" rows="3"
                                                 placeholder="jelaskan komplikasi yang sampang: intervensi jalan nafas, pemberian antidotum, resusitasi, dll"></textarea>
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Kedalaman Anestesi Dan Sedasi</label>
-                                            <select name="kedalaman_anestesi_pas" id="kedalaman_anestesi_pas"
+                                            <select name="kedalaman_anestesi" id="kedalaman_anestesi_pas"
                                                 class="form-control pas-select">
                                                 <option value="" disabled selected>pilih</option>
                                                 <option value="Tak Tersedia">Tak Tersedia (typical response/ cooperation for
@@ -431,7 +431,7 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Respon Terhadap Anestesi Dan Sedasi</label>
-                                            <select name="respon_anestesi_pas" id="respon_anestesi_pas"
+                                            <select name="respon_anestesi" id="respon_anestesi_pas"
                                                 class="form-control pas-select">
                                                 <option value="" disabled selected>pilih</option>
                                                 <option value="Sangat baik">Sangat baik, tenang dan kooperatif</option>
@@ -447,7 +447,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- HTML Form Section -->
                                     <div class="section-separator" id="catatanKamarPemulihanCKP">
                                         <h5 class="section-title">6. Catatan Kamar Pemulihan (CKP)</h5>
 

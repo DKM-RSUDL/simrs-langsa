@@ -90,17 +90,7 @@
             <div class="btn-group">
                 <a href="{{ route('operasi.pelayanan.asesmen.pra-induksi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah
-                </a>
-                {{-- <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-plus"></i> Tambah
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.medis.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Pra Operatif Medis</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.perawat.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Pra Operatif Perawat</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ route('operasi.pelayanan.asesmen.pra-anestesi.edukasi.create', [$dataMedis->kd_pasien,date('Y-m-d', strtotime($dataMedis->tgl_masuk)),$dataMedis->urut_masuk]) }}">Edukasi Anestesi</a></li>
-                </ul> --}}
+                </a>                
             </div>
         </div>
     </div>
