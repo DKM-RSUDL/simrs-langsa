@@ -84,24 +84,160 @@
             <div class="col-md-8">
                 <div class="card mb-3 p-4">
                     <div class="row">
-                        @foreach ([['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23], ['route' => route('rawat-inap.index'), 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11], ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23], ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4], ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23], ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31], ['route' => 'unit-pelayanan/forensik', 'icon' => 'magnifying-glass', 'title' => 'Forensik', 'patients' => 31], ['route' => '#', 'icon' => 'notes-medical', 'title' => 'Rehab Medis', 'patients' => 31], ['route' => '#', 'icon' => 'mortar-pestle', 'title' => 'Gizi Klinis', 'patients' => 31]] as $card)
-                            <div class="col-md-4 p-2">
-                                <a href="{{ $card['route'] }}" class="text-decoration-none card-hover">
-                                    <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
-                                        <div class="card-body d-flex align-items-center">
-                                            <div class="me-2">
-                                                <i class="fa fa-{{ $card['icon'] }} fa-2x"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fs-6 fw-bold text-primary">{{ $card['title'] }}</div>
-                                                <div class="fs-6 text-muted">Pasien: <span
-                                                        class="fw-bold text-black">{{ $card['patients'] }}</span></div>
-                                            </div>
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rawat-jalan.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-wheelchair fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rawat Jalan</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
                                         </div>
                                     </div>
-                                </a>
-                            </div>
-                        @endforeach
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rawat-inap.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-procedures fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rawat Inap</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('gawat-darurat.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-truck-medical fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Gawat Darurat</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('operasi.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-person-dots-from-line fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Bedah Sentral</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-lungs fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Hemodialisa</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-flask fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Cathlab</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('forensik.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-magnifying-glass fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Forensik</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rehab-medis.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-notes-medical fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rehab Medik</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-mortar-pestle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Gizi Klinis</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>

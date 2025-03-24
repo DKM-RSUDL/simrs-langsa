@@ -245,7 +245,7 @@
             $('#patientUnitDatatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('rawat-jalan.unit', $unit->kd_unit) }}",
+                ajax: "{{ route('rawat-jalan.unit.selesai', $unit->kd_unit) }}",
                 columns: [{
                         data: 'antrian',
                         name: 'no',

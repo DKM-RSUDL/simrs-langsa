@@ -38,7 +38,17 @@ class GawatDaruratController extends Controller
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', 3);
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', 3)
+                ->where('t.Dilayani', 0)
+                ->where('t.co_status', 0)
+                ->whereNull('kunjungan.tgl_keluar')
+                ->whereNull('kunjungan.jam_keluar');
             // ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
             // Filte dokter
@@ -72,9 +82,9 @@ class GawatDaruratController extends Controller
                 })
 
                 ->order(function ($query) {
-                    $query->orderBy('tgl_masuk', 'desc')
-                        ->orderBy('antrian', 'desc')
-                        ->orderBy('urut_masuk', 'desc');
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.antrian', 'desc')
+                        ->orderBy('kunjungan.urut_masuk', 'desc');
                 })
                 ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
                 ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')

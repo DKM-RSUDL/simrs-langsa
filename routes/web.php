@@ -99,8 +99,8 @@ Route::middleware('auth')->group(function () {
                     Route::prefix('unit/{kd_unit}')->group(function () {
                         Route::name('.unit')->group(function () {
                             Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
-                            Route::get('/belum-selesai', [RawatJalanController::class, 'unitPelayanan'])->name('.belum-selesai');
-                            Route::get('/selesai', [RawatJalanController::class, 'unitPelayanan'])->name('.selesai');
+                            Route::get('/belum-selesai', [RawatJalanController::class, 'belumSelesai'])->name('.belum-selesai');
+                            Route::get('/selesai', [RawatJalanController::class, 'selesai'])->name('.selesai');
                         });
 
                         // Pelayanan
