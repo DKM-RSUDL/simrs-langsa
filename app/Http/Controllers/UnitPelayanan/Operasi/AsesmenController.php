@@ -49,7 +49,7 @@ class AsesmenController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->latest('id')
-            ->get();
+            ->paginate(10);
 
         return view('unit-pelayanan.operasi.pelayanan.asesmen.index', compact('dataMedis', 'asesmen', 'okPraInduksi'));
     }
