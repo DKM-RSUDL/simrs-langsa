@@ -26,6 +26,13 @@ use Illuminate\Support\Facades\Storage;
 
 class TindakanController extends Controller
 {
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->kdUnitDef_ = 74;
+    }
+
     public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -36,7 +43,7 @@ class TindakanController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
@@ -64,7 +71,7 @@ class TindakanController extends Controller
 
         $tindakan = RmeRehabMedikTindakan::with(['karyawan'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 214)
+            ->where('kd_unit', $this->kdUnitDef_)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
@@ -85,7 +92,7 @@ class TindakanController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -105,7 +112,7 @@ class TindakanController extends Controller
         $programs = RmeRehabMedikProgramDetail::with(['program', 'produk'])
             ->whereRelation('program', function ($q) use ($kd_pasien, $tgl_masuk, $urut_masuk) {
                 $q->where('kd_pasien', $kd_pasien);
-                $q->where('kd_unit', 214);
+                $q->where('kd_unit', $this->kdUnitDef_);
                 $q->whereDate('tgl_masuk', $tgl_masuk);
                 $q->where('urut_masuk', $urut_masuk);
             })->get();
@@ -141,7 +148,7 @@ class TindakanController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -162,7 +169,7 @@ class TindakanController extends Controller
             // store tindakan
             $tindakanData = [
                 'kd_pasien'     => $kd_pasien,
-                'kd_unit'       => 214,
+                'kd_unit'       => $this->kdUnitDef_,
                 'tgl_masuk'     => $tgl_masuk,
                 'urut_masuk'    => $urut_masuk,
                 'tgl_tindakan'  => $request->tgl_tindakan,
@@ -180,7 +187,7 @@ class TindakanController extends Controller
             $programs = RmeRehabMedikProgramDetail::with(['program'])
                 ->whereRelation('program', function ($q) use ($kd_pasien, $tgl_masuk, $urut_masuk) {
                     $q->where('kd_pasien', $kd_pasien);
-                    $q->where('kd_unit', 214);
+                    $q->where('kd_unit', $this->kdUnitDef_);
                     $q->whereDate('tgl_masuk', $tgl_masuk);
                     $q->where('urut_masuk', $urut_masuk);
                 })->get();
@@ -201,7 +208,7 @@ class TindakanController extends Controller
                     'kd_tarif'      => 'TU',
                     'kd_produk'     => $program->kd_produk,
                     'kd_unit'       => 74,
-                    'kd_unit_tr'    => 214,
+                    'kd_unit_tr'    => $this->kdUnitDef_,
                     'tgl_berlaku'   => $program->tgl_berlaku,
                     'shift'         => 0,
                     'harga'         => $program->tarif,
@@ -232,7 +239,7 @@ class TindakanController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -252,7 +259,7 @@ class TindakanController extends Controller
         $programs = RmeRehabMedikProgramDetail::with(['program', 'produk'])
             ->whereRelation('program', function ($q) use ($kd_pasien, $tgl_masuk, $urut_masuk) {
                 $q->where('kd_pasien', $kd_pasien);
-                $q->where('kd_unit', 214);
+                $q->where('kd_unit', $this->kdUnitDef_);
                 $q->whereDate('tgl_masuk', $tgl_masuk);
                 $q->where('urut_masuk', $urut_masuk);
             })->get();
@@ -290,7 +297,7 @@ class TindakanController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -338,7 +345,7 @@ class TindakanController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -358,7 +365,7 @@ class TindakanController extends Controller
         $programs = RmeRehabMedikProgramDetail::with(['program', 'produk'])
             ->whereRelation('program', function ($q) use ($kd_pasien, $tgl_masuk, $urut_masuk) {
                 $q->where('kd_pasien', $kd_pasien);
-                $q->where('kd_unit', 214);
+                $q->where('kd_unit', $this->kdUnitDef_);
                 $q->whereDate('tgl_masuk', $tgl_masuk);
                 $q->where('urut_masuk', $urut_masuk);
             })->get();
@@ -386,7 +393,7 @@ class TindakanController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -420,7 +427,7 @@ class TindakanController extends Controller
             $programs = RmeRehabMedikProgramDetail::with(['program'])
                 ->whereRelation('program', function ($q) use ($kd_pasien, $tgl_masuk, $urut_masuk) {
                     $q->where('kd_pasien', $kd_pasien);
-                    $q->where('kd_unit', 214);
+                    $q->where('kd_unit', $this->kdUnitDef_);
                     $q->whereDate('tgl_masuk', $tgl_masuk);
                     $q->where('urut_masuk', $urut_masuk);
                 })->get();

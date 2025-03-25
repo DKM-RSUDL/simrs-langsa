@@ -184,7 +184,7 @@
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
                     <div class="text-center">
                         <p class="m-0 p-0">Aktif</p>
-                        <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                        <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(74) }}</p>
                     </div>
                 </div>
             </div>
