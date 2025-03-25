@@ -179,12 +179,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
-                <h4 class="fw-bold">Rehabilitasi Medik</h4>
+                <h4 class="fw-bold">Hemodialisa</h4>
                 <div class="custom__card">
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
                     <div class="text-center">
                         <p class="m-0 p-0">Aktif</p>
-                        <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(74) }}</p>
+                        <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientWithTglKeluar(72) }}</p>
                     </div>
                 </div>
             </div>
@@ -206,12 +206,11 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive text-left">
-                <table class="table table-bordered dataTable" id="rawatDaruratTable">
+                <table class="table table-bordered dataTable" id="hemodialisaTable">
                     <thead>
                         <tr>
                             <th width="100px">Aksi</th>
                             <th>Pasien</th>
-                            <th>Triase</th>
                             <th>Bed</th>
                             <th>No RM / Reg</th>
                             <th>Alamat</th>
@@ -233,15 +232,15 @@
 
 @push('js')
     <script>
-        var gawatDaruratIndexUrl = "{{ route('rehab-medis.index') }}";
-        var medisGawatDaruratIndexUrl = "{{ url('unit-pelayanan/rehab-medis/pelayanan/') }}/";
+        var hdIndexUrl = "{{ route('hemodialisa.index') }}";
+        var hdPelayananUrl = "{{ url('unit-pelayanan/hemodialisa/pelayanan/') }}/";
 
         $(document).ready(function() {
-            $('#rawatDaruratTable').DataTable({
+            $('#hemodialisaTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: gawatDaruratIndexUrl,
+                    url: hdIndexUrl,
                     data: function(d) {
                         d.dokter = $('#dokterSelect').val();
                     }
@@ -253,29 +252,29 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex justify-content-center">
-                                        <a href="${medisGawatDaruratIndexUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                        <a href="${hdPelayananUrl + row.kd_pasien}/${row.tgl_masuk}/${row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
                                                 <i class="ti-pencil-alt"></i>
                                         </a>
 
-                                        <div class="dropdown ms-1">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" onclick="$(this).dropdown('toggle')">
+                                        <div class="dropdown mx-1">
+                                            <button class="btn btn-outline-secondary btn-sm btn-dropdown disabled" type="button" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
 
                                             <ul class="dropdown-menu shadow-lg">
                                                 <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
-                                                <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
+                                                <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/general-consent'}">General Concent</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
                                                 <li class="dropdown-submenu">
                                                     <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
                                                     <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima-pasien'}">Pindah Ruangan / Rawat Inap</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujuk Keluar RS</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${hdPelayananUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs'}">Rujuk Keluar RS</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Meninggal Dunia</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Batal Berobat</a></li>
                                                     </ul>
@@ -321,22 +320,6 @@
                         },
                         orderable: false,
                         searchable: false
-                    },
-                    {
-                        data: 'triase',
-                        name: 'triase',
-                        render: function(data, type, row) {
-                            let kdTriase = row.kd_triase;
-                            let classEl = '';
-
-                            if (kdTriase == 5) classEl = 'bg-dark';
-                            if (kdTriase == 4 || kdTriase == 3) classEl = 'bg-danger';
-                            if (kdTriase == 2) classEl = 'bg-warning';
-                            if (kdTriase == 1) classEl = 'bg-success';
-
-                            return `<div class="rounded-circle ${classEl}" style="width: 35px; height: 35px;"></div>`;
-                        },
-                        defaultContent: 'null'
                     },
                     {
                         data: 'bed',
@@ -406,25 +389,271 @@
 
             let rujukanVal = $('#addPatientTriage input[name="rujukan"]').val();
             if (rujukanVal == '1') $('#addPatientTriage #rujukan_ket').prop('required', true);
+
+
+            $('.dropdown-submenu').hover(
+                function() {
+                    $(this).find('.dropdown-menu').addClass('show');
+                },
+                function() {
+                    $(this).find('.dropdown-menu').removeClass('show');
+                }
+            );
         });
 
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+        // Foto Upload
+        $('#fotoPasienlabel').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('#foto_pasien').trigger('click');
+        });
 
-            dropdownSubmenus.forEach(function(submenu) {
-                submenu.addEventListener('mouseover', function() {
-                    submenu.querySelector('.dropdown-menu').classList.add('show');
-                });
+        $('#foto_pasien').on('change', function(e) {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    if (e.target && e.target.result) {
+                        $('#fotoPasienlabel .text-center').html(`<img src="${e.target.result}" width="200">`);
+                    } else {
+                        showToast('error', 'Terjadi kesalahan server saat memilih file gambar!');
+                    }
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
 
-                submenu.addEventListener('mouseout', function() {
-                    submenu.querySelector('.dropdown-menu').classList.remove('show');
-                });
+        // Triase Item Check
+        // Perubahan pada checkbox DOA
+        $('#addPatientTriage .doa-check').change(function(e) {
+            // kalau ada checkbox doa yang di check disable semua checkbox non DOA
+            let doaChecked = $('#addPatientTriage .doa-check:checked').length > 0;
+            $('#addPatientTriage input[type="checkbox"]').not('.doa-check').prop('disabled', doaChecked);
+
+            updateTriaseStatus();
+        });
+
+        // perubahan pada checkbox non DOA
+        $('#addPatientTriage input[type="checkbox"]').not('.doa-check').change(function(e) {
+            // kalau ada checkbox non doa di check maka disable semua checkbox doa
+            let nonDoaChecked = $('#addPatientTriage input[type="checkbox"]:checked').not('.doa-check').length > 0;
+            $('#addPatientTriage input[type="checkbox"].doa-check').prop('disabled', nonDoaChecked);
+
+            updateTriaseStatus();
+        });
+
+        function updateTriaseStatus() {
+            var status = '';
+            var kode_triase = '';
+
+            // Menetapkan prioritas dari tinggi ke rendah
+            if ($('#addPatientTriage .doa-check:checked').length > 0) {
+                status = 'DOA';
+                kode_triase = 5;
+            } else if ($('#addPatientTriage .resusitasi-check:checked').length > 0) {
+                status = 'RESUSITASI (segera)';
+                kode_triase = 4;
+            } else if ($('#addPatientTriage .emergency-check:checked').length > 0) {
+                status = 'EMERGENCY (10 menit)';
+                kode_triase = 3;
+            } else if ($('#addPatientTriage .urgent-check:checked').length > 0) {
+                status = 'URGENT (30 menit)';
+                kode_triase = 2;
+            } else if ($('#addPatientTriage .false-emergency-check:checked').length > 0) {
+                status = 'FALSE EMERGENCY (60 menit)';
+                kode_triase = 1;
+            }
+
+            $('#addPatientTriage #triaseStatusLabel').text(status).attr('class', determineClass(status));
+            $('#addPatientTriage #kd_triase').val(kode_triase);
+            $('#addPatientTriage #ket_triase').val(status);
+        }
+
+        function determineClass(status) {
+            switch (status) {
+                case 'RESUSITASI (segera)':
+                    return 'btn btn-block btn-danger ms-3 w-100';
+                case 'EMERGENCY (10 menit)':
+                    return 'btn btn-block btn-danger ms-3 w-100';
+                case 'URGENT (30 menit)':
+                    return 'btn btn-block btn-warning ms-3 w-100';
+                case 'FALSE EMERGENCY (60 menit)':
+                    return 'btn btn-block btn-success ms-3 w-100';
+                case 'DOA':
+                    return 'btn btn-block btn-dark ms-3 w-100';
+                default:
+                    return 'btn btn-block ms-3 w-100';
+            }
+        }
+
+        // Input Rujukan Change
+        $('#addPatientTriage input[name="rujukan"]').change(function(e) {
+            let $this = $(this);
+            let rujukanValue = $this.val();
+
+
+            // kalau value y input rujukan ket required, kalau n input rujukan ket disabled
+            if (rujukanValue == '1') {
+                $('#addPatientTriage #rujukan_ket').prop('required', true);
+                $('#addPatientTriage #rujukan_ket').prop('readonly', false);
+            } else {
+                $('#addPatientTriage #rujukan_ket').val('');
+                $('#addPatientTriage #rujukan_ket').prop('required', false);
+                $('#addPatientTriage #rujukan_ket').prop('readonly', true);
+            }
+        });
+
+        // Reinisialisasi Select2 ketika modal dibuka
+        $('#addPatientTriage').on('shown.bs.modal', function() {
+            let $this = $(this);
+
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#dokter_triase').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
+
+            // Destroy existing Select2 instance before reinitializing
+            initSelect2();
+        });
+
+        function initSelect2() {
+            $('#addPatientTriage .select2').select2({
+                dropdownParent: $('#addPatientTriage'),
+                width: '100%'
             });
+        }
+
+        function isNumber(value) {
+            return !isNaN(parseFloat(value)) && isFinite(value);
+        }
+
+        function hitungUmur(tanggalLahir) {
+            // Parsing tanggal lahir
+            const tglLahir = new Date(tanggalLahir);
+
+            // Tanggal hari ini
+            const hariIni = new Date();
+
+            // Menghitung selisih tahun
+            let tahun = hariIni.getFullYear() - tglLahir.getFullYear();
+            let bulan = hariIni.getMonth() - tglLahir.getMonth();
+
+            // Menyesuaikan jika bulan lahir belum terlewati tahun ini
+            if (bulan < 0 || (bulan === 0 && hariIni.getDate() < tglLahir.getDate())) {
+                tahun--;
+                bulan += 12;
+            }
+
+            // Menghitung sisa bulan
+            bulan = bulan % 12;
+
+            return {
+                tahun,
+                bulan
+            };
+        }
+
+        function getWaktuSekarang() {
+            const sekarang = new Date();
+
+            // Format tanggal (Y-m-d)
+            const tahun = sekarang.getFullYear();
+            const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
+            const tanggal = String(sekarang.getDate()).padStart(2, '0');
+            const formatTanggal = `${tahun}-${bulan}-${tanggal}`;
+
+            // Format waktu (H:i)
+            const jam = String(sekarang.getHours()).padStart(2, '0');
+            const menit = String(sekarang.getMinutes()).padStart(2, '0');
+            const formatWaktu = `${jam}:${menit}`;
+
+            return {
+                formatTanggal,
+                formatWaktu
+            };
+        }
+
+        // Search Nik
+        $('#addPatientTriage #button-nik-pasien').click(function(e) {
+            let $this = $(this);
+            let $nikEl = $('#addPatientTriage #nik_pasien');
+            let nikPasien = $nikEl.val();
+
+            if (nikPasien == '' || nikPasien.length != 16 || !isNumber(nikPasien)) {
+                showToast('error', 'NIK pasien harus di isi 16 angka!');
+
+                $('#addPatientTriage #no_rm_label').text('');
+                $('#addPatientTriage input, select').not('input[name="rujukan"], input[type="checkbox"]').val('');
+                $('#addPatientTriage input, select').prop('readonly', false);
+
+                let nowDate = getWaktuSekarang();
+                $('#addPatientTriage #nik_pasien').val(nikPasien);
+                $('#addPatientTriage #tgl_masuk').val(nowDate.formatTanggal);
+                $('#addPatientTriage #jam_masuk').val(nowDate.formatWaktu);
+                return false;
+            }
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('gawat-darurat.get-patient-bynik-ajax') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'nik': nikPasien
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    // Ubah teks tombol dan tambahkan spinner
+                    $nikEl.prop('disabled', true);
+                    $this.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                    );
+                    $this.prop('disabled', true); // Nonaktifkan tombol selama proses berlangsung
+                },
+                complete: function() {
+                    // Ubah teks tombol jadi icon search dan disable nonaktif
+                    $nikEl.prop('disabled', false);
+                    $this.html('<i class="ti ti-search"></i>');
+                    $this.prop('disabled', false);
+                },
+                success: function(res) {
+                    showToast(res.status, res.message);
+
+                    if (res.status == 'success') {
+                        let data = res.data;
+                        console.log(data);
+
+                        // set value
+                        $('#addPatientTriage #no_rm_label').text(data.kd_pasien);
+                        $('#addPatientTriage #no_rm').val(data.kd_pasien);
+
+                        $('#addPatientTriage #nama_pasien').val(data.nama);
+                        $('#addPatientTriage #nama_pasien').prop('readonly', true);
+
+                        $('#addPatientTriage #jenis_kelamin').val(data.jenis_kelamin);
+                        $('#addPatientTriage #jenis_kelamin').prop('readonly', true);
+
+                        let umur = hitungUmur(data.tgl_lahir);
+                        $('#addPatientTriage #usia_tahun').val(umur.tahun);
+                        $('#addPatientTriage #usia_bulan').val(umur.bulan);
+                        $('#addPatientTriage #usia_tahun').prop('readonly', true);
+                        $('#addPatientTriage #usia_bulan').prop('readonly', true);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showToast('error', 'Internal server error');
+                }
+            });
+
+
         });
 
         $('#dokterSelect').on('change', function() {
-            $('#rawatDaruratTable').DataTable().ajax.reload();
+            $('#hemodialisaTable').DataTable().ajax.reload();
         });
     </script>
 @endpush

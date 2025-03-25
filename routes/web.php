@@ -32,6 +32,8 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
@@ -744,6 +746,8 @@ Route::middleware('auth')->group(function () {
             });
         });
 
+
+        // REHAB MEDIK
         Route::prefix('rehab-medis')->group(function () {
             Route::name('rehab-medis')->group(function () {
                 Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
@@ -797,6 +801,7 @@ Route::middleware('auth')->group(function () {
             });
         });
 
+        // BEDAH SENTRAL (OPERASI)
         Route::prefix('operasi')->group(function () {
             Route::name('operasi')->group(function () {
                 Route::get('/', [OperasiController::class, 'index'])->name('.index');
@@ -866,6 +871,36 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/show', 'show')->name('.show');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/', 'update')->name('.update');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        // HEMODIALISA
+        Route::prefix('hemodialisa')->group(function () {
+            Route::name('hemodialisa')->group(function () {
+                Route::get('/', [HemodialisaController::class, 'index'])->name('.index');
+
+                // Pelayanan
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                    Route::name('.pelayanan')->group(function () {
+                        Route::get('/', [HemodialisaController::class, 'pelayanan']);
+
+                        // Asesmen
+                        Route::prefix('asesmen')->group(function () {
+                            Route::name('.asesmen')->group(function () {
+                                Route::get('/', [AsesmenMedisController::class, 'index'])->name('.index');
+
+                                //MEDIS
+                                Route::prefix('medis')->group(function () {
+                                    Route::name('.medis')->group(function () {
+                                        Route::controller(AsesmenMedisController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                        });
+                                    });
                                 });
                             });
                         });
