@@ -120,7 +120,7 @@
                                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#penyakitSekarangModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
                                                     <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitsekarang-list">
-                                                        @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang as $ps)
+                                                        @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang ?? [] as $ps)
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $ps }}</p>
                                                                 <input type="hidden" name="penyakitsekarang[]" value="{{ $ps }}">
@@ -142,7 +142,7 @@
                                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#penyakitDahuluModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
                                                     <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitdahulu-list">
-                                                        @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu as $pd)
+                                                        @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu ?? [] as $pd)
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $pd }}</p>
                                                                 <input type="hidden" name="penyakitdahulu[]" value="{{ $pd }}">
@@ -176,7 +176,7 @@
                                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#jenisOperasiModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
                                                     <div class="bg-secondary-subtle rounded-2 p-3" id="jenisoperasi-list">
-                                                        @foreach ($asesmen->praOperatifPerawat->jenis_operasi as $jo)
+                                                        @foreach ($asesmen->praOperatifPerawat->jenis_operasi ?? [] as $jo)
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $jo }}</p>
                                                                 <input type="hidden" name="jenisoperasi[]" value="{{ $jo }}">
@@ -214,7 +214,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach ($asesmen->praOperatifPerawat->alergi as $alergi)
+                                                            @foreach ($asesmen->praOperatifPerawat->alergi ?? [] as $alergi)
                                                             @php
                                                                 $alergi = json_decode($alergi, true);
                                                             @endphp
@@ -532,7 +532,9 @@
 
                     <h6 class="fw-bold mt-5">Daftar Penyakit</h6>
                     <ol type="1" class="list-data">
-                        {{-- <li>HYPERTENSI KRONIS</li> --}}
+                        @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang ??[] as $ps)
+                            <li>{{ $ps }}</li>
+                        @endforeach
                     </ol>
 
                 </div>
@@ -559,7 +561,9 @@
 
                     <h6 class="fw-bold mt-5">Daftar Penyakit</h6>
                     <ol type="1" class="list-data">
-                        {{-- <li>HYPERTENSI KRONIS</li> --}}
+                        @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu ?? [] as $pd)
+                            <li>{{ $pd }}</li>
+                        @endforeach
                     </ol>
 
                 </div>
@@ -590,7 +594,7 @@
 
                     <h6 class="fw-bold mt-5">Daftar Operasi</h6>
                     <ol type="1" class="list-data">
-                        {{-- <li>HYPERTENSI KRONIS</li> --}}
+
                     </ol>
 
                 </div>

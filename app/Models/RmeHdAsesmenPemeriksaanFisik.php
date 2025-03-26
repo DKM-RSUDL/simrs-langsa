@@ -5,13 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RmeMasterDiagnosis extends Model
+class RmeHdAsesmenPemeriksaanFisik extends Model
 {
     use HasFactory;
-    protected $table = 'RME_MASTER_DIAGNOSIS';
+
+    protected $table = 'rme_hd_asesmen_pemeriksaan_fisik';
     public $timestamps = false;
 
     protected $fillable = [
-        'nama_diagnosis'
+        'id_asesmen',
+        'id_item_fisik',
+        'is_normal',
+        'keterangan'
     ];
 }

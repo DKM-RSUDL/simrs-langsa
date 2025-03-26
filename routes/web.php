@@ -899,6 +899,10 @@ Route::middleware('auth')->group(function () {
                                     Route::name('.medis')->group(function () {
                                         Route::controller(AsesmenMedisController::class)->group(function () {
                                             Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::get('/{data}/show', 'show')->name('.show');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{data}', 'update')->name('.update');
                                         });
                                     });
                                 });
