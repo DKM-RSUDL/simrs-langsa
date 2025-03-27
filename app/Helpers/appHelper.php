@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Kunjungan;
 use App\Models\Navigation;
 use App\Models\Role;
 
@@ -230,5 +231,137 @@ if (!function_exists('kategoriAsesmenOKlabel')) {
         }
 
         return $kategoriLabel;
+    }
+}
+
+if (!function_exists('countAktivePatientRanap')) {
+    function countAktivePatientRanap($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where(function ($q) {
+                $q->whereNull('kunjungan.status_inap');
+                $q->orWhere('kunjungan.status_inap', 1);
+            })
+            ->whereNull('kunjungan.tgl_pulang')
+            ->whereNull('kunjungan.jam_pulang')
+            ->count();
+
+
+        return $result;
+    }
+}
+
+if (!function_exists('countPendingPatientRanap')) {
+    function countPendingPatientRanap($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.status_inap', 0)
+            ->count();
+
+        return $result;
+    }
+}
+
+if (!function_exists('countActivePatientRajal')) {
+    function countActivePatientRajal($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->count();
+
+        return $result;
+    }
+}
+
+if (!function_exists('countUnfinishedPatientRajal')) {
+    function countUnfinishedPatientRajal($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('t.Dilayani', 0)
+            ->count();
+
+        return $result;
+    }
+}
+
+if (!function_exists('countFinishedPatientRajal')) {
+    function countFinishedPatientRajal($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('t.Dilayani', 1)
+            ->count();
+
+        return $result;
+    }
+}
+
+if (!function_exists('countUnfinishedPatientWithTglKeluar')) {
+    function countUnfinishedPatientWithTglKeluar($kd_unit)
+    {
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->whereNull('kunjungan.tgl_keluar')
+            ->whereNull('kunjungan.jam_keluar')
+            ->count();
+
+        return $result;
+    }
+}
+
+
+if (!function_exists('countActivePatientIGD')) {
+    function countActivePatientIGD()
+    {
+        $tglBatasData = date('Y-m-d', strtotime('-2 days', strtotime(date('Y-m-d'))));
+
+        $result = Kunjungan::join('transaksi as t', function ($join) {
+            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+        })
+            ->where('kunjungan.kd_unit', 3)
+            // ->where('t.Dilayani', 0)
+            ->where('t.co_status', 0)
+            ->whereNull('kunjungan.tgl_keluar')
+            ->whereNull('kunjungan.jam_keluar')
+            ->whereDate('kunjungan.tgl_masuk', '>=', $tglBatasData)
+            ->count();
+
+        return $result;
     }
 }

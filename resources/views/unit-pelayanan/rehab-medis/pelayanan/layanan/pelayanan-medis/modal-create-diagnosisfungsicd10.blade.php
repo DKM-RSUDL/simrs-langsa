@@ -33,122 +33,123 @@
     </div>
 </div>
 
-@include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-edit-diagnosisfungsiicd10')
-
-<script>
-    $('#btn-diagnosis-fungsi-icd10').on('click', function() {
-        $('#modal-diagnosis-fungsi-icd10').modal('show');
-    });
-
-    $(document).ready(function() {
-        // Initialize dataDiagnosisFungsi from server data or empty array
-        let dataDiagnosisFungsi = @json($dataResume->diagnosisFungsi ?? []);
-
-        // Function to display function diagnoses in both modal and main view
-        // Function to display function diagnoses in both modal and main view
-        function displayDiagnosisFungsi() {
-            let diagnosisList = '';
-            let diagnoseDisplay = '';
-
-            dataDiagnosisFungsi.forEach((diagnosis, index) => {
-                const uniqueId = `diagnosis-fungsi-${index}`;
-
-                // Modal list item
-                diagnosisList += `
-            <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                <span class="diagnosis-text">${diagnosis}</span>
-                <div>
-                    <a href="javascript:void(0)" class="edit-diagnosis-fungsi me-2" data-id="${uniqueId}">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="remove-diagnosis-fungsi text-danger" data-id="${uniqueId}">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </div>
-            </li>
-        `;
-
-                // Main view display
-                diagnoseDisplay += `
-            <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
-                <span class="diagnosis-text">${diagnosis}</span>
-                <a href="javascript:void(0)" class="remove-main-diagnosis-fungsi text-danger" data-id="${uniqueId}">
-                    <i class="bi bi-trash"></i>
-                </a>
-            </div>
-        `;
-            });
-
-            $('#diagnosisListFungsi').html(diagnosisList ||
-                '<p class="text-muted text-center my-3">Belum ada diagnosis fungsi</p>');
-            $('#diagnoseDisplayFungsi').html(diagnoseDisplay ||
-                '<p class="text-muted text-center my-3">Belum ada diagnosis fungsi</p>');
-        }
-
-        // Open main modal
+@push('js')
+    <script>
         $('#btn-diagnosis-fungsi-icd10').on('click', function() {
-            displayDiagnosisFungsi();
             $('#modal-diagnosis-fungsi-icd10').modal('show');
         });
 
-        // Add new diagnosis
-        $('#btnAddDiagnosisFungsi').click(function() {
-            const diagnosis = $('#searchDiagnosisInputFungsi').val().trim();
+        $(document).ready(function() {
+            // Initialize dataDiagnosisFungsi from server data or empty array
+            let dataDiagnosisFungsi = @json($layanan->diagnosis_fungsi ?? []);
 
-            if (diagnosis) {
-                dataDiagnosisFungsi.push(diagnosis);
+            // Function to display function diagnoses in both modal and main view
+            // Function to display function diagnoses in both modal and main view
+            function displayDiagnosisFungsi() {
+                let diagnosisList = '';
+                let diagnoseDisplay = '';
+
+                dataDiagnosisFungsi.forEach((diagnosis, index) => {
+                    const uniqueId = `diagnosis-fungsi-${index}`;
+
+                    // Modal list item
+                    diagnosisList += `
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                    <span class="diagnosis-text">${diagnosis}</span>
+                    <div>
+                        <a href="javascript:void(0)" class="edit-diagnosis-fungsi me-2" data-id="${uniqueId}">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="remove-diagnosis-fungsi text-danger" data-id="${uniqueId}">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </li>
+            `;
+
+                    // Main view display
+                    diagnoseDisplay += `
+                <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
+                    <span class="diagnosis-text">${diagnosis}</span>
+                        <input type="hidden" name="diagnosis_fungsi[]" value="${diagnosis}">
+                    <a href="javascript:void(0)" class="remove-main-diagnosis-fungsi text-danger" data-id="${uniqueId}">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            `;
+                });
+
+                $('#diagnosisListFungsi').html(diagnosisList ||
+                    '<p class="text-muted text-center my-3">Belum ada diagnosis fungsi</p>');
+                $('#diagnoseDisplayFungsi').html(diagnoseDisplay ||
+                    '<p class="text-muted text-center my-3">Belum ada diagnosis fungsi</p>');
+            }
+
+            // Open main modal
+            $('#btn-diagnosis-fungsi-icd10').on('click', function() {
                 displayDiagnosisFungsi();
-                $('#searchDiagnosisInputFungsi').val('').focus();
-            }
-        });
+                $('#modal-diagnosis-fungsi-icd10').modal('show');
+            });
 
-        // Enter key handling for input
-        $('#searchDiagnosisInputFungsi').on('keypress', function(e) {
-            if (e.which === 13) {
-                $('#btnAddDiagnosisFungsi').click();
-            }
-        });
+            // Add new diagnosis
+            $('#btnAddDiagnosisFungsi').click(function() {
+                const diagnosis = $('#searchDiagnosisInputFungsi').val().trim();
 
-        // Edit diagnosis
-        $(document).on('click', '.edit-diagnosis-fungsi', function() {
-            const diagnosisId = $(this).data('id');
-            const index = parseInt(diagnosisId.split('-')[2]);
+                if (diagnosis) {
+                    dataDiagnosisFungsi.push(diagnosis);
+                    displayDiagnosisFungsi();
+                    $('#searchDiagnosisInputFungsi').val('').focus();
+                }
+            });
 
-            $('#editDiagnosisTextareaFungsi').val(dataDiagnosisFungsi[index]);
-            $('#editDiagnosisIdFungsi').val(index);
-            $('#modal-edit-diagnosis-fungsi').modal('show');
-        });
+            // Enter key handling for input
+            $('#searchDiagnosisInputFungsi').on('keypress', function(e) {
+                if (e.which === 13) {
+                    $('#btnAddDiagnosisFungsi').click();
+                }
+            });
 
-        // Update diagnosis
-        $('#btnUpdateDiagnosisFungsi').click(function() {
-            const updatedDiagnosis = $('#editDiagnosisTextareaFungsi').val().trim();
-            const index = parseInt($('#editDiagnosisIdFungsi').val());
-
-            if (updatedDiagnosis) {
-                dataDiagnosisFungsi[index] = updatedDiagnosis;
-                displayDiagnosisFungsi();
-                $('#modal-edit-diagnosis-fungsi').modal('hide');
-            }
-        });
-
-        // Remove diagnosis
-        $(document).on('click', '.remove-diagnosis-fungsi, .remove-main-diagnosis-fungsi', function() {
-            if (confirm('Apakah Anda yakin ingin menghapus diagnosis fungsi ini?')) {
+            // Edit diagnosis
+            $(document).on('click', '.edit-diagnosis-fungsi', function() {
                 const diagnosisId = $(this).data('id');
                 const index = parseInt(diagnosisId.split('-')[2]);
 
-                dataDiagnosisFungsi.splice(index, 1);
+                $('#editDiagnosisTextareaFungsi').val(dataDiagnosisFungsi[index]);
+                $('#editDiagnosisIdFungsi').val(index);
+                $('#modal-edit-diagnosis-fungsi').modal('show');
+            });
+
+            // Update diagnosis
+            $('#btnUpdateDiagnosisFungsi').click(function() {
+                const updatedDiagnosis = $('#editDiagnosisTextareaFungsi').val().trim();
+                const index = parseInt($('#editDiagnosisIdFungsi').val());
+
+                if (updatedDiagnosis) {
+                    dataDiagnosisFungsi[index] = updatedDiagnosis;
+                    displayDiagnosisFungsi();
+                    $('#modal-edit-diagnosis-fungsi').modal('hide');
+                }
+            });
+
+            // Remove diagnosis
+            $(document).on('click', '.remove-diagnosis-fungsi, .remove-main-diagnosis-fungsi', function() {
+                if (confirm('Apakah Anda yakin ingin menghapus diagnosis fungsi ini?')) {
+                    const diagnosisId = $(this).data('id');
+                    const index = parseInt(diagnosisId.split('-')[2]);
+
+                    dataDiagnosisFungsi.splice(index, 1);
+                    displayDiagnosisFungsi();
+                }
+            });
+
+            // Save diagnosis fungsi
+            $('#btnSaveDiagnoseFungsi').click(function() {
                 displayDiagnosisFungsi();
-            }
-        });
+                $('#modal-diagnosis-fungsi-icd10').modal('hide');
+            });
 
-        // Save diagnosis fungsi
-        $('#btnSaveDiagnoseFungsi').click(function() {
+            // Initial display
             displayDiagnosisFungsi();
-            $('#modal-diagnosis-fungsi-icd10').modal('hide');
         });
-
-        // Initial display
-        displayDiagnosisFungsi();
-    });
-</script>
+    </script>
+@endpush

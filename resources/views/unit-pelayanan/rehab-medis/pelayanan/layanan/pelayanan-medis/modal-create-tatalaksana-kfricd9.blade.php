@@ -32,121 +32,123 @@
     </div>
 </div>
 
-@include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-edit-tatalaksana-kfricd9')
-
-<script>
-    $('#btn-tatalaksana-kfricd9').on('click', function() {
-        $('#modal-tatalaksana-kfricd9').modal('show');
-    });
-
-    $(document).ready(function() {
-    // Initialize dataTatalaksana from server data or empty array
-    let dataTatalaksana = @json($dataResume->tatalaksana ?? []);
-
-    // Function to display tatalaksana in both modal and main view
-    function displayTatalaksana() {
-        let tatalaksanaList = '';
-        let tatalaksanaDisplay = '';
-
-        dataTatalaksana.forEach((tatalaksana, index) => {
-            const uniqueId = `tatalaksana-${index}`;
-
-            // Modal list item
-            tatalaksanaList += `
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                    <span class="tatalaksana-text">${tatalaksana}</span>
-                    <div>
-                        <a href="javascript:void(0)" class="edit-tatalaksana me-2" data-id="${uniqueId}">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="remove-tatalaksana text-danger" data-id="${uniqueId}">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </div>
-                </li>
-            `;
-
-            // Main view display
-            tatalaksanaDisplay += `
-                <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
-                    <span class="tatalaksana-text">${tatalaksana}</span>
-                    <a href="javascript:void(0)" class="remove-main-tatalaksana text-danger" data-id="${uniqueId}">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </div>
-            `;
+@push('js')
+    <script>
+        $('#btn-tatalaksana-kfricd9').on('click', function() {
+            $('#modal-tatalaksana-kfricd9').modal('show');
         });
 
-        $('#tatalaksanaList').html(tatalaksanaList ||
-            '<p class="text-muted text-center my-3">Belum ada tatalaksana</p>');
-        $('#diagnoseDisplaytatalaksanakfr').html(tatalaksanaDisplay ||
-            '<p class="text-muted text-center my-3">Belum ada tatalaksana</p>');
-    }
+        $(document).ready(function() {
+            // Initialize dataTatalaksana from server data or empty array
+            let dataTatalaksana = @json($layanan->tatalaksana ?? []);
 
-    // Open main modal
-    $('#btn-tatalaksana-kfricd9').on('click', function() {
-        displayTatalaksana();
-        $('#modal-tatalaksana-kfricd9').modal('show');
-    });
+            // Function to display tatalaksana in both modal and main view
+            function displayTatalaksana() {
+                let tatalaksanaList = '';
+                let tatalaksanaDisplay = '';
 
-    // Add new tatalaksana
-    $('#btnAddTatalaksana').click(function() {
-        const tatalaksana = $('#searchTatalaksanaInput').val().trim();
+                dataTatalaksana.forEach((tatalaksana, index) => {
+                    const uniqueId = `tatalaksana-${index}`;
 
-        if (tatalaksana) {
-            dataTatalaksana.push(tatalaksana);
+                    // Modal list item
+                    tatalaksanaList += `
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                            <span class="tatalaksana-text">${tatalaksana}</span>
+                            <div>
+                                <a href="javascript:void(0)" class="edit-tatalaksana me-2" data-id="${uniqueId}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="remove-tatalaksana text-danger" data-id="${uniqueId}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </li>
+                    `;
+
+                    // Main view display
+                    tatalaksanaDisplay += `
+                        <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
+                            <span class="tatalaksana-text">${tatalaksana}</span>
+                            <input type="hidden" name="tatalaksana[]" value="${tatalaksana}">
+
+                            <a href="javascript:void(0)" class="remove-main-tatalaksana text-danger" data-id="${uniqueId}">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+
+                $('#tatalaksanaList').html(tatalaksanaList ||
+                    '<p class="text-muted text-center my-3">Belum ada tatalaksana</p>');
+                $('#diagnoseDisplaytatalaksanakfr').html(tatalaksanaDisplay ||
+                    '<p class="text-muted text-center my-3">Belum ada tatalaksana</p>');
+            }
+
+            // Open main modal
+            $('#btn-tatalaksana-kfricd9').on('click', function() {
+                displayTatalaksana();
+                $('#modal-tatalaksana-kfricd9').modal('show');
+            });
+
+            // Add new tatalaksana
+            $('#btnAddTatalaksana').click(function() {
+                const tatalaksana = $('#searchTatalaksanaInput').val().trim();
+
+                if (tatalaksana) {
+                    dataTatalaksana.push(tatalaksana);
+                    displayTatalaksana();
+                    $('#searchTatalaksanaInput').val('').focus();
+                }
+            });
+
+            // Enter key handling for input
+            $('#searchTatalaksanaInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    $('#btnAddTatalaksana').click();
+                }
+            });
+
+            // Edit tatalaksana
+            $(document).on('click', '.edit-tatalaksana', function() {
+                const tatalaksanaId = $(this).data('id');
+                const index = parseInt(tatalaksanaId.split('-')[1]);
+
+                $('#editTatalaksanaTextarea').val(dataTatalaksana[index]);
+                $('#editTatalaksanaId').val(index);
+                $('#modal-edit-tatalaksana').modal('show');
+            });
+
+            // Update tatalaksana
+            $('#btnUpdateTatalaksana').click(function() {
+                const updatedTatalaksana = $('#editTatalaksanaTextarea').val().trim();
+                const index = parseInt($('#editTatalaksanaId').val());
+
+                if (updatedTatalaksana) {
+                    dataTatalaksana[index] = updatedTatalaksana;
+                    displayTatalaksana();
+                    $('#modal-edit-tatalaksana').modal('hide');
+                }
+            });
+
+            // Remove tatalaksana
+            $(document).on('click', '.remove-tatalaksana, .remove-main-tatalaksana', function() {
+                if (confirm('Apakah Anda yakin ingin menghapus tatalaksana ini?')) {
+                    const tatalaksanaId = $(this).data('id');
+                    const index = parseInt(tatalaksanaId.split('-')[1]);
+
+                    dataTatalaksana.splice(index, 1);
+                    displayTatalaksana();
+                }
+            });
+
+            // Save tatalaksana
+            $('#btnSaveTatalaksana').click(function() {
+                displayTatalaksana();
+                $('#modal-tatalaksana-kfricd9').modal('hide');
+            });
+
+            // Initial display
             displayTatalaksana();
-            $('#searchTatalaksanaInput').val('').focus();
-        }
-    });
-
-    // Enter key handling for input
-    $('#searchTatalaksanaInput').on('keypress', function(e) {
-        if (e.which === 13) {
-            $('#btnAddTatalaksana').click();
-        }
-    });
-
-    // Edit tatalaksana
-    $(document).on('click', '.edit-tatalaksana', function() {
-        const tatalaksanaId = $(this).data('id');
-        const index = parseInt(tatalaksanaId.split('-')[1]);
-
-        $('#editTatalaksanaTextarea').val(dataTatalaksana[index]);
-        $('#editTatalaksanaId').val(index);
-        $('#modal-edit-tatalaksana').modal('show');
-    });
-
-    // Update tatalaksana
-    $('#btnUpdateTatalaksana').click(function() {
-        const updatedTatalaksana = $('#editTatalaksanaTextarea').val().trim();
-        const index = parseInt($('#editTatalaksanaId').val());
-
-        if (updatedTatalaksana) {
-            dataTatalaksana[index] = updatedTatalaksana;
-            displayTatalaksana();
-            $('#modal-edit-tatalaksana').modal('hide');
-        }
-    });
-
-    // Remove tatalaksana
-    $(document).on('click', '.remove-tatalaksana, .remove-main-tatalaksana', function() {
-        if (confirm('Apakah Anda yakin ingin menghapus tatalaksana ini?')) {
-            const tatalaksanaId = $(this).data('id');
-            const index = parseInt(tatalaksanaId.split('-')[1]);
-
-            dataTatalaksana.splice(index, 1);
-            displayTatalaksana();
-        }
-    });
-
-    // Save tatalaksana
-    $('#btnSaveTatalaksana').click(function() {
-        displayTatalaksana();
-        $('#modal-tatalaksana-kfricd9').modal('hide');
-    });
-
-    // Initial display
-    displayTatalaksana();
-});
-</script>
+        });
+    </script>
+@endpush

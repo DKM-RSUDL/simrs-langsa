@@ -133,9 +133,7 @@
                                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#penyakitDahuluModal"><i class="bi bi-plus-square"></i> Tambah</button>
 
                                                     <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitdahulu-list">
-                                                        {{-- <a href="#" class="fw-bold">HYPERTENSI KRONIS</a> <br>
-                                                        <a href="#" class="fw-bold">DYSPEPSIA</a> <br>
-                                                        <a href="#" class="fw-bold">DEPRESIVE EPISODE</a> <br> --}}
+
                                                     </div>
                                                 </div>
                                             </div>
