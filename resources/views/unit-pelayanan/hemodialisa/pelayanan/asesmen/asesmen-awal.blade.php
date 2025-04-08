@@ -57,48 +57,72 @@
 </div>
 
 <ul class="list-group" id="asesmenList">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
+    @foreach ($asesmen as $item)
+        <li class="list-group-item d-flex justify-content-between align-items-center">
 
-        <div class="d-flex align-items-center gap-4">
-            <div class="text-center px-3">
-                <div class="fw-bold fs-4 mb-0 text-primary">
-                    12
+            <div class="d-flex align-items-center gap-4">
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ date('d', strtotime($item->waktu_asesmen)) }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ date('M-y', strtotime($item->waktu_asesmen)) }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ date('H:i', strtotime($item->waktu_asesmen)) }}
+                    </div>
                 </div>
-                <div class="text-muted" style="font-size: 0.85rem;">
-                    Mar-25
-                </div>
-                <div class="text-muted" style="font-size: 0.85rem;">
-                    12:12
+
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
+                        width="70" height="70">
+                    <div>
+                        <div class="text-primary fw-bold mb-1">
+                            @php
+                                $label = 'Asesmen';
+
+                                if($item->kategori == 1) $label .= ' Medis';
+                                if($item->kategori == 2) $label .= ' Keperawatan';
+                            @endphp
+
+                            {{ $label }}
+                        </div>
+                        <div class="text-muted">
+                            By: {{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3">
-                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle me-3" alt="Foto Pasien"
-                    width="70" height="70">
-                <div>
-                    <div class="text-primary fw-bold mb-1">
-                        Asesmen Medis
-                    </div>
-                    <div class="text-muted">
-                        By: Polan</span>
-                    </div>
-                </div>
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+                @if ($item->kategori == 1)
+                    <a href="{{ route('hemodialisa.pelayanan.asesmen.medis.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i>
+                        Lihat
+                    </a>
+
+                    <a href="{{ route('hemodialisa.pelayanan.asesmen.medis.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i>
+                        Edit
+                    </a>
+                @endif
+
+
+                @if ($item->kategori == 2)
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i>
+                        Lihat
+                    </a>
+
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i>
+                        Edit
+                    </a>
+                @endif
             </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="d-flex gap-2">
-            <a href="#" class="btn btn-sm btn-info">
-                <i class="fas fa-eye me-1"></i>
-                Lihat
-            </a>
-
-            <a href="#" class="btn btn-sm btn-secondary">
-                <i class="fas fa-edit"></i>
-                Edit
-            </a>
-        </div>
-    </li>
+        </li>
+    @endforeach
 </ul>
 
 @push('js')

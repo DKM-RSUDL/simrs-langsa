@@ -114,7 +114,7 @@
                                         <div class="row w-100">
                                             <div class="col-12">
                                                 <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitsekarang-list">
-                                                    @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang as $ps)
+                                                    @foreach ($asesmen->praOperatifPerawat->penyakit_sekarang ?? [] as $ps)
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $ps }}</p>
                                                         </div>
@@ -130,7 +130,7 @@
                                         <div class="row w-100">
                                             <div class="col-12">
                                                 <div class="bg-secondary-subtle rounded-2 p-3" id="penyakitdahulu-list">
-                                                    @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu as $pd)
+                                                    @foreach ($asesmen->praOperatifPerawat->penyakit_dahulu ?? [] as $pd)
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $pd }}</p>
                                                         </div>
@@ -158,7 +158,7 @@
                                         <div class="row w-100">
                                             <div class="col-12">
                                                 <div class="bg-secondary-subtle rounded-2 p-3" id="jenisoperasi-list">
-                                                    @foreach ($asesmen->praOperatifPerawat->jenis_operasi as $jo)
+                                                    @foreach ($asesmen->praOperatifPerawat->jenis_operasi ?? [] as $jo)
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <p class="fw-bold text-primary m-0 text-decoration-underline">{{ $jo }}</p>
                                                         </div>
@@ -189,7 +189,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($asesmen->praOperatifPerawat->alergi as $alergi)
+                                                        @foreach ($asesmen->praOperatifPerawat->alergi ?? [] as $alergi)
                                                         @php
                                                             $alergi = json_decode($alergi, true);
                                                         @endphp
