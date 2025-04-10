@@ -506,8 +506,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="kassa" id="kassa_tidak_lengkap"
-                                                                    value="Tidak Lengkap">
+                                                                    name="kassa4" id="kassa_tidak_lengkap"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="kassa_tidak_lengkap">Tidak Lengkap</label>
                                                             </div>
@@ -515,8 +515,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="jarum" id="jarum_tidak_lengkap"
-                                                                    value="Tidak Lengkap">
+                                                                    name="jarum4" id="jarum_tidak_lengkap"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="jarum_tidak_lengkap">Tidak Lengkap</label>
                                                             </div>
@@ -524,8 +524,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="instrumen" id="instrumen_tidak_lengkap"
-                                                                    value="Tidak Lengkap">
+                                                                    name="instrumen4" id="instrumen_tidak_lengkap"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="instrumen_tidak_lengkap">Tidak Lengkap</label>
                                                             </div>
@@ -540,8 +540,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="kassa" id="kassa_tidak_perlu"
-                                                                    value="Tidak perlu">
+                                                                    name="kassa5" id="kassa_tidak_perlu"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="kassa_tidak_perlu">Tidak Perlu</label>
                                                             </div>
@@ -549,8 +549,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="jarum" id="jarum_tidak_perlu"
-                                                                    value="Tidak perlu">
+                                                                    name="jarum5" id="jarum_tidak_perlu"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="jarum_tidak_perlu">Tidak Perlu</label>
                                                             </div>
@@ -558,8 +558,8 @@
                                                         <td>
                                                             <div class="d-flex gap-2 align-items-center">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="instrumen" id="instrumen_tidak_perlu"
-                                                                    value="Tidak perlu">
+                                                                    name="instrumen5" id="instrumen_tidak_perlu"
+                                                                    value="1">
                                                                 <label class="form-check-label"
                                                                     for="instrumen_tidak_perlu">Tidak Perlu</label>
                                                             </div>
