@@ -137,7 +137,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Aktif</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -147,7 +147,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Pending Order Masuk</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countPendingPatientRanap($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -198,7 +198,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex justify-content-center">
-                                        <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm">
+                                        <a href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk}" class="edit btn btn-outline-primary btn-sm disabled">
                                             <i class="ti-pencil-alt"></i>
                                         </a>
 

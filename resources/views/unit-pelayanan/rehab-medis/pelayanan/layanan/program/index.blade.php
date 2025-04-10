@@ -48,7 +48,9 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                <a href="{{ route('rehab-medis.pelayanan.layanan.program.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                @if (count($tindakan) < 1)
+                    <a href="{{ route('rehab-medis.pelayanan.layanan.program.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                @endif
             </div>
 
         </div>
@@ -78,12 +80,14 @@
                             </ul>
                         </td>
                         <td>
-                            <a href="{{ route('rehab-medis.pelayanan.layanan.program.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="mb-2 btn btn-sm btn-warning">
-                                <i class="ti-pencil"></i>
-                            </a>
-                            <button class="mb-2 btn btn-sm btn-danger btn-delete" data-program="{{ encrypt($item->id) }}">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            @if (count($tindakan) < 1)
+                                <a href="{{ route('rehab-medis.pelayanan.layanan.program.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="mb-2 btn btn-sm btn-warning">
+                                    <i class="ti-pencil"></i>
+                                </a>
+                                <button class="mb-2 btn btn-sm btn-danger btn-delete" data-program="{{ encrypt($item->id) }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

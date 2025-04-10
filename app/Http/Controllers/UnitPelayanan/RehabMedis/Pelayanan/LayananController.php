@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\RmeRehabMedikLayanan;
 use App\Models\RmeRehabMedikProgram;
 use App\Models\RmeRehabMedikProgramDetail;
+use App\Models\RmeRehabMedikTindakan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,6 +18,13 @@ use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->kdUnitDef_ = 74;
+    }
+
     public function index(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -26,7 +34,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -46,19 +54,26 @@ class LayananController extends Controller
 
         $layanan = RmeRehabMedikLayanan::with(['userCreate'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 214)
+            ->where('kd_unit', $this->kdUnitDef_)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
         $programs = RmeRehabMedikProgram::with(['detail'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 214)
+            ->where('kd_unit', $this->kdUnitDef_)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
-        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.index', compact('dataMedis', 'layanan', 'programs'));
+        $tindakan = RmeRehabMedikTindakan::with(['karyawan'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $this->kdUnitDef_)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->get();
+
+        return view('unit-pelayanan.rehab-medis.pelayanan.layanan.index', compact('dataMedis', 'layanan', 'programs', 'tindakan'));
     }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
@@ -70,7 +85,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -103,7 +118,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -116,7 +131,7 @@ class LayananController extends Controller
             // store
             $layanan = new RmeRehabMedikLayanan();
             $layanan->kd_pasien             = $kd_pasien;
-            $layanan->kd_unit               = 214;
+            $layanan->kd_unit               = $this->kdUnitDef_;
             $layanan->tgl_masuk             = $tgl_masuk;
             $layanan->urut_masuk            = $urut_masuk;
             $layanan->tgl_pelayanan         = $request->tgl_pelayanan;
@@ -152,7 +167,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -189,7 +204,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -236,7 +251,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -274,7 +289,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();
@@ -328,7 +343,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -405,7 +420,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -425,7 +440,7 @@ class LayananController extends Controller
             // store program
             $program = new RmeRehabMedikProgram();
             $program->kd_pasien     = $kd_pasien;
-            $program->kd_unit       = 214;
+            $program->kd_unit       = $this->kdUnitDef_;
             $program->tgl_masuk     = $tgl_masuk;
             $program->urut_masuk    = $urut_masuk;
             $program->tgl_pelayanan = $request->tgl_pelayanan;
@@ -440,7 +455,8 @@ class LayananController extends Controller
                 $programDetailData = [
                     'id_program'    => $program->id,
                     'kd_produk'     => $pr['kd_produk'],
-                    'tarif'         => intval($pr['tarif'])
+                    'tarif'         => intval($pr['tarif']),
+                    'tgl_berlaku'   => $pr['tgl_berlaku']
                 ];
                 RmeRehabMedikProgramDetail::create($programDetailData);
             }
@@ -464,7 +480,7 @@ class LayananController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 214)
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -543,7 +559,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->where('kunjungan.kd_pasien', $kd_pasien)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -577,7 +593,8 @@ class LayananController extends Controller
                 $programDetailData = [
                     'id_program'    => $id,
                     'kd_produk'     => $pr['kd_produk'],
-                    'tarif'         => intval($pr['tarif'])
+                    'tarif'         => intval($pr['tarif']),
+                    'tgl_berlaku'   => $pr['tgl_berlaku']
                 ];
                 RmeRehabMedikProgramDetail::create($programDetailData);
             }
@@ -605,7 +622,7 @@ class LayananController extends Controller
                     $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
                 })
                 ->where('kunjungan.kd_pasien', $kd_pasien)
-                ->where('kunjungan.kd_unit', 214)
+                ->where('kunjungan.kd_unit', $this->kdUnitDef_)
                 ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
                 ->where('kunjungan.urut_masuk', $urut_masuk)
                 ->first();

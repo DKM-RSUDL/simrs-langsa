@@ -34,7 +34,16 @@ class ForensikController extends Controller
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', $kd_unit);
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', $kd_unit);
+
+            if ($unit->kd_unit == 228) $data->where('t.Dilayani', 0);
+            if ($unit->kd_unit == 76) $data->whereNull('tgl_keluar')->whereNull('jam_keluar');
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {

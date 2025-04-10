@@ -35,7 +35,12 @@ class RawatInapController extends Controller
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
                 ->where('kd_unit', $kd_unit)
-                ->where('status_inap', 1);
+                ->where(function ($q) {
+                    $q->whereNull('status_inap');
+                    $q->orWhere('status_inap', 1);
+                })
+                ->whereNull('tgl_pulang')
+                ->whereNull('jam_pulang');
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {

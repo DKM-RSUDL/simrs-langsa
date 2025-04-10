@@ -40,7 +40,7 @@
                             </div>
                             <div class="tab-pane fade" id="pra-induksi" role="tabpanel" aria-labelledby="pra-induksi-tab">
                                 {{-- TAB 2. buatlah list disini --}}
-                                {{-- @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.asesmen.index-skriningkhusus') --}}
+                                @include('unit-pelayanan.operasi.pelayanan.asesmen.pra-induksi.pra-induksi')
                             </div>
                         </div>
                     </div>
