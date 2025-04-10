@@ -67,12 +67,9 @@
             <div class="col-md-3">
                 <div class="card mb-4 p-3">
                     <div class="card-body">
-                        <h5 class="card-title">Informasi</h5>
-                        {{-- <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod recusandae molestiae quam
-                            a vitae dolorum
-                        </p> --}}
-                        <a href="#" class="btn btn-primary">Selengkap</a>
+                        <h5 class="card-title">Status RME</h5>
+                        <p class="card-text">Sistem Rekam Medis Elektronik RSUD Langsa: <span class="fw-bold text-success">Online</span></p>
+                        <a href="#" class="btn btn-primary btn-sm">Cek Detail</a>
                     </div>
                 </div>
             </div>
@@ -244,14 +241,21 @@
 
             <div class="col-md-4">
                 <div class="card mb-4 p-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Informasi</h5>
-                        {{-- <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod
-                            recusandae molestiae quam a vitae dolorum, nihil quidem accusamus ratione? Hic beatae, eius
-                            voluptatem nobis dolore necessitatibus blanditiis ipsam ea.</p> --}}
-                    </div>
+                    <h5 class="card-title">Informasi Sistem RME RSUD Langsa</h5>
+                    <p class="card-text">
+                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak pendaftaran hingga pelaporan. 
+                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan pengurangan penggunaan kertas sesuai 
+                        Peraturan Menteri Kesehatan No. 24 Tahun 2022.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><strong>Lokasi:</strong> Jl. Jend. A. Yani No.1, Langsa, Aceh</li>
+                        <li><strong>Status Akreditasi:</strong> Tingkat Utama (KARS 2017)</li>
+                        <li><strong>Kontak:</strong> (0641) 22800</li>
+                    </ul>
+                    <a href="https://rsud.langsakota.go.id" target="_blank" class="btn btn-outline-primary btn-sm">Kunjungi Situs Resmi</a>
                 </div>
             </div>
+
         </div>
 
 

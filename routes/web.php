@@ -36,6 +36,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
@@ -48,6 +49,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -371,6 +373,8 @@ Route::middleware('auth')->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
+                                        Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                                     });
                                 });
                             });
@@ -447,6 +451,19 @@ Route::middleware('auth')->group(function () {
 
                                     Route::prefix('keperawatan')->group(function () {
                                         Route::name('.keperawatan')->group(function () {
+
+
+                                            Route::prefix('umum')->group(function () {
+                                                Route::name('.umum')->group(function () {
+                                                    Route::controller(AsesmenKepUmumController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
 
                                             Route::prefix('anak')->group(function () {
                                                 Route::name('.anak')->group(function () {
@@ -859,6 +876,22 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+
+                        //LAPORAN ANASTESI
+                        Route::prefix('laporan-anastesi')->group(function () {
+                            Route::name('.laporan-anastesi')->group(function () {
+                                Route::controller(LaporanAnastesiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                });
+                            });
+                        });
+
 
 
                         //LAPORAN OPERASI
