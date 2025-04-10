@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\Operasi;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\OkAsesmen;
+use App\Models\OkPraInduksi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,13 @@ class AsesmenController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.asesmen.index', compact('dataMedis', 'asesmen'));
+        $okPraInduksi = OkPraInduksi::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', 71)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->latest('id')
+            ->paginate(10);
+
+        return view('unit-pelayanan.operasi.pelayanan.asesmen.index', compact('dataMedis', 'asesmen', 'okPraInduksi'));
     }
 }

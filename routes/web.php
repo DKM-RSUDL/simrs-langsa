@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\Operasi\PraInduksitController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CpptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDar
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
@@ -874,6 +876,18 @@ Route::middleware('auth')->group(function () {
                                         });
                                     });
                                 });
+
+                                Route::prefix('pra-induksi')->group(function () {
+                                    Route::name('.pra-induksi')->group(function () {
+                                        Route::controller(PraInduksitController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                        });
+                                    });
+                                });
                             });
                         });
 
@@ -912,6 +926,7 @@ Route::middleware('auth')->group(function () {
             });
         });
 
+
         // HEMODIALISA
         Route::prefix('hemodialisa')->group(function () {
             Route::name('hemodialisa')->group(function () {
@@ -936,6 +951,14 @@ Route::middleware('auth')->group(function () {
                                             Route::get('/{data}/show', 'show')->name('.show');
                                             Route::post('/', 'store')->name('.store');
                                             Route::put('/{data}', 'update')->name('.update');
+                                        });
+                                    });
+                                });
+
+                                Route::prefix('keperawatan')->group(function () {
+                                    Route::name('.keperawatan')->group(function () {
+                                        Route::controller(AsesmenHemodialisaKeperawatanController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
                                         });
                                     });
                                 });

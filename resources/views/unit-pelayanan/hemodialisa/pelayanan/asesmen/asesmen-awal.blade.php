@@ -46,7 +46,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="custom__dropdown__item" href="#">
+                        <a class="custom__dropdown__item" href="{{ route('hemodialisa.pelayanan.asesmen.keperawatan.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                             Asesmen Keperawatan
                         </a>
                     </li>
