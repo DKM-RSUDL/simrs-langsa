@@ -1,5 +1,6 @@
 <!-- Modal Alergi -->
-<div class="modal fade" id="alergiModal" tabindex="-1" aria-labelledby="alergiModalLabel" aria-hidden="true" style="z-index: 1060;">
+<div class="modal fade" id="alergiModal" tabindex="-1" aria-labelledby="alergiModalLabel" aria-hidden="true"
+    style="z-index: 1060;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <!-- Modal Header -->
@@ -13,14 +14,17 @@
                 <!-- Form Section -->
                 <div class="form-section mb-4">
                     <h6 class="fw-bold">Tambah Alergi</h6>
-                    <p class="text-muted small">Isi informasi alergi pada kolom di bawah dan tekan tambah untuk menambah ke daftar alergi</p>
+                    <p class="text-muted small">Isi informasi alergi pada kolom di bawah dan tekan tambah untuk menambah
+                        ke daftar alergi</p>
 
                     <form id="formAlergi">
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="alergenInput" placeholder="Alergen" autocomplete="off">
+                            <input type="text" class="form-control" id="alergenInput" placeholder="Alergen"
+                                autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="reaksiInput" placeholder="Reaksi" autocomplete="off">
+                            <input type="text" class="form-control" id="reaksiInput" placeholder="Reaksi"
+                                autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <select class="form-select" id="severeInput">
@@ -55,24 +59,24 @@
 </div>
 
 @push('js')
-<script>
-$(document).ready(function() {
-    // ===== VARIABEL & INISIALISASI =====
-    // Inisialisasi data dari database jika ada
-    let dataAlergi = @json($dataResume->alergi ?? []);
-    let editMode = false;
-    let editIndex = null;
+    <script>
+        $(document).ready(function() {
+            // ===== VARIABEL & INISIALISASI =====
+            // Inisialisasi data dari database jika ada
+            let dataAlergi = {!! isset($dataResume->alergi) ? json_encode($dataResume->alergi) : '[]' !!};
+            let editMode = false;
+            let editIndex = null;
 
-    // ===== FUNGSI HELPER =====
-    // Memperbarui tampilan tabel utama
-    function updateMainTable() {
-        let tableBody = '';
+            // ===== FUNGSI HELPER =====
+            // Memperbarui tampilan tabel utama
+            function updateMainTable() {
+                let tableBody = '';
 
-        if (dataAlergi.length === 0) {
-            tableBody = '<tr><td colspan="4" class="text-center">Belum ada data alergi</td></tr>';
-        } else {
-            dataAlergi.forEach((alergi, index) => {
-                tableBody += `
+                if (dataAlergi.length === 0) {
+                    tableBody = '<tr><td colspan="4" class="text-center">Belum ada data alergi</td></tr>';
+                } else {
+                    dataAlergi.forEach((alergi, index) => {
+                        tableBody += `
                     <tr>
                         <td>${alergi.alergen}</td>
                         <td>${alergi.reaksi}</td>
@@ -89,22 +93,22 @@ $(document).ready(function() {
                         </td>
                     </tr>
                 `;
-            });
-        }
+                    });
+                }
 
-        $('#createAlergiTable tbody').html(tableBody);
-        updateHiddenInput();
-    }
+                $('#createAlergiTable tbody').html(tableBody);
+                updateHiddenInput();
+            }
 
-    // Memperbarui daftar di modal
-    function updateModalList() {
-        let listItems = '';
+            // Memperbarui daftar di modal
+            function updateModalList() {
+                let listItems = '';
 
-        if (dataAlergi.length === 0) {
-            listItems = '<div class="list-group-item text-center text-muted">Belum ada data alergi</div>';
-        } else {
-            dataAlergi.forEach((alergi, index) => {
-                listItems += `
+                if (dataAlergi.length === 0) {
+                    listItems = '<div class="list-group-item text-center text-muted">Belum ada data alergi</div>';
+                } else {
+                    dataAlergi.forEach((alergi, index) => {
+                        listItems += `
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <strong>${alergi.alergen}</strong> - ${alergi.reaksi}
@@ -120,163 +124,163 @@ $(document).ready(function() {
                         </div>
                     </div>
                 `;
-            });
-        }
+                    });
+                }
 
-        $('#listAlergi').html(listItems);
-    }
-
-    // Memperbarui hidden input
-    function updateHiddenInput() {
-        $('input[name="alergi"]').val(JSON.stringify(dataAlergi));
-    }
-
-    // Reset form
-    function resetForm() {
-        $('#formAlergi')[0].reset();
-        editMode = false;
-        editIndex = null;
-        $('#btnAddAlergi').text('Tambah');
-    }
-
-    // ===== EVENT HANDLERS =====
-    // Tambah/update alergi
-    $('#btnAddAlergi').click(function() {
-        const alergi = {
-            alergen: $('#alergenInput').val().trim(),
-            reaksi: $('#reaksiInput').val().trim(),
-            severe: $('#severeInput').val()
-        };
-
-        // Validasi form
-        if (!alergi.alergen || !alergi.reaksi || !alergi.severe) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Semua field harus diisi!'
-            });
-            return;
-        }
-
-        if (editMode) {
-            // Update data yang sudah ada
-            dataAlergi[editIndex] = alergi;
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: 'Data alergi berhasil diperbarui',
-                timer: 1500,
-                showConfirmButton: false
-            });
-        } else {
-            // Cek data duplikat saat menambah data baru
-            const isDuplicate = dataAlergi.some(item =>
-                item.alergen.toLowerCase() === alergi.alergen.toLowerCase()
-            );
-
-            if (isDuplicate) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Perhatian',
-                    text: 'Alergi ini sudah ada dalam daftar!'
-                });
-                return;
+                $('#listAlergi').html(listItems);
             }
 
-            // Tambah data baru
-            dataAlergi.push(alergi);
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: 'Data alergi berhasil ditambahkan',
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
+            // Memperbarui hidden input
+            function updateHiddenInput() {
+                $('input[name="alergi"]').val(JSON.stringify(dataAlergi));
+            }
 
-        updateModalList();
-        resetForm();
-    });
+            // Reset form
+            function resetForm() {
+                $('#formAlergi')[0].reset();
+                editMode = false;
+                editIndex = null;
+                $('#btnAddAlergi').text('Tambah');
+            }
 
-    // Edit alergi dari modal dan tabel
-    $(document).on('click', '.edit-alergi, .edit-modal-alergi', function() {
-        const index = $(this).data('index');
-        const alergi = dataAlergi[index];
+            // ===== EVENT HANDLERS =====
+            // Tambah/update alergi
+            $('#btnAddAlergi').click(function() {
+                const alergi = {
+                    alergen: $('#alergenInput').val().trim(),
+                    reaksi: $('#reaksiInput').val().trim(),
+                    severe: $('#severeInput').val()
+                };
 
-        editMode = true;
-        editIndex = index;
+                // Validasi form
+                if (!alergi.alergen || !alergi.reaksi || !alergi.severe) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Semua field harus diisi!'
+                    });
+                    return;
+                }
 
-        $('#alergenInput').val(alergi.alergen);
-        $('#reaksiInput').val(alergi.reaksi);
-        $('#severeInput').val(alergi.severe);
-        $('#btnAddAlergi').text('Update');
+                if (editMode) {
+                    // Update data yang sudah ada
+                    dataAlergi[editIndex] = alergi;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data alergi berhasil diperbarui',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    // Cek data duplikat saat menambah data baru
+                    const isDuplicate = dataAlergi.some(item =>
+                        item.alergen.toLowerCase() === alergi.alergen.toLowerCase()
+                    );
 
-        // Jika tombol edit dari tabel, buka modal
-        if ($(this).hasClass('edit-alergi')) {
-            $('#alergiModal').modal('show');
-        }
+                    if (isDuplicate) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Alergi ini sudah ada dalam daftar!'
+                        });
+                        return;
+                    }
 
-        // Scroll ke form jika di dalam modal
-        $('.modal-body').scrollTop(0);
-    });
+                    // Tambah data baru
+                    dataAlergi.push(alergi);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data alergi berhasil ditambahkan',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
 
-    // Hapus alergi dari modal dan tabel
-    $(document).on('click', '.delete-alergi, .remove-alergi', function() {
-        const index = $(this).data('index');
-        const alergi = dataAlergi[index];
-
-        Swal.fire({
-            title: 'Hapus Alergi',
-            text: `Apakah Anda yakin ingin menghapus alergi "${alergi.alergen}"?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dataAlergi.splice(index, 1);
-                updateMainTable();
                 updateModalList();
+                resetForm();
+            });
+
+            // Edit alergi dari modal dan tabel
+            $(document).on('click', '.edit-alergi, .edit-modal-alergi', function() {
+                const index = $(this).data('index');
+                const alergi = dataAlergi[index];
+
+                editMode = true;
+                editIndex = index;
+
+                $('#alergenInput').val(alergi.alergen);
+                $('#reaksiInput').val(alergi.reaksi);
+                $('#severeInput').val(alergi.severe);
+                $('#btnAddAlergi').text('Update');
+
+                // Jika tombol edit dari tabel, buka modal
+                if ($(this).hasClass('edit-alergi')) {
+                    $('#alergiModal').modal('show');
+                }
+
+                // Scroll ke form jika di dalam modal
+                $('.modal-body').scrollTop(0);
+            });
+
+            // Hapus alergi dari modal dan tabel
+            $(document).on('click', '.delete-alergi, .remove-alergi', function() {
+                const index = $(this).data('index');
+                const alergi = dataAlergi[index];
+
+                Swal.fire({
+                    title: 'Hapus Alergi',
+                    text: `Apakah Anda yakin ingin menghapus alergi "${alergi.alergen}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        dataAlergi.splice(index, 1);
+                        updateMainTable();
+                        updateModalList();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: 'Data alergi berhasil dihapus',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
+            // Simpan dan tutup modal
+            $('#btnSaveAlergi').click(function() {
+                updateMainTable();
+                $('#alergiModal').modal('hide');
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'Terhapus!',
-                    text: 'Data alergi berhasil dihapus',
+                    title: 'Berhasil',
+                    text: 'Data alergi berhasil disimpan',
                     timer: 1500,
                     showConfirmButton: false
                 });
-            }
+            });
+
+            // Buka modal
+            $('#openAlergiModal').click(function() {
+                resetForm();
+                updateModalList();
+                $('#alergiModal').modal('show');
+            });
+
+            // Reset form saat modal ditutup
+            $('#alergiModal').on('hidden.bs.modal', function() {
+                resetForm();
+            });
+
+            // Inisialisasi tampilan awal
+            updateMainTable();
         });
-    });
-
-    // Simpan dan tutup modal
-    $('#btnSaveAlergi').click(function() {
-        updateMainTable();
-        $('#alergiModal').modal('hide');
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: 'Data alergi berhasil disimpan',
-            timer: 1500,
-            showConfirmButton: false
-        });
-    });
-
-    // Buka modal
-    $('#openAlergiModal').click(function() {
-        resetForm();
-        updateModalList();
-        $('#alergiModal').modal('show');
-    });
-
-    // Reset form saat modal ditutup
-    $('#alergiModal').on('hidden.bs.modal', function() {
-        resetForm();
-    });
-
-    // Inisialisasi tampilan awal
-    updateMainTable();
-});
-</script>
+    </script>
 @endpush

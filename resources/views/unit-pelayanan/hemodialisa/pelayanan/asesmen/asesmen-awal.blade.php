@@ -88,7 +88,8 @@
                             {{ $label }}
                         </div>
                         <div class="text-muted">
-                            By: {{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }}
+                            {{-- By: {{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }} --}}
+                            By: {{ $item->userCreate->karyawan->gelar_depan ?? '' }} {{ $item->userCreate->karyawan ? str()->title($item->userCreate->karyawan->nama) : '' }} {{ $item->userCreate->karyawan->gelar_belakang ?? '' }}
                         </div>
                     </div>
                 </div>
