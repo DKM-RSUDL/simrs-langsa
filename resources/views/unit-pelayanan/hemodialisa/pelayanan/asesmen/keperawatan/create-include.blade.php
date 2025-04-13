@@ -190,6 +190,39 @@
             hitungLPT();
         });
 
+        // Tunggu sampai DOM sepenuhnya dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event handler untuk tombol tambah keterangan
+            document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const keteranganDiv = document.getElementById(targetId);
+                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
+                        '.form-check-input');
+
+                    // Toggle tampilan keterangan
+                    if (keteranganDiv.style.display === 'none') {
+                        keteranganDiv.style.display = 'block';
+                        normalCheckbox.checked = false; // Uncheck normal checkbox
+                    } else {
+                        keteranganDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            // Event handler untuk checkbox normal
+            document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
+                        '.keterangan');
+                    if (this.checked) {
+                        keteranganDiv.style.display = 'none';
+                        keteranganDiv.querySelector('input').value = ''; // Reset input value
+                    }
+                });
+            });
+        });
+
         // 5. Riwayat Obat dan Rekomendasi Dokter
         document.addEventListener('DOMContentLoaded', function () {
             // Inisialisasi array kosong untuk data obat

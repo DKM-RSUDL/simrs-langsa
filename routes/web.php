@@ -929,7 +929,7 @@ Route::middleware('auth')->group(function () {
                                             Route::get('/{data}/edit', 'edit')->name('.edit');
                                             Route::get('/{data}/show', 'show')->name('.show');
                                             Route::post('/', 'store')->name('.store');
-                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::put('/{id}', 'update')->name('.update');
                                         });
                                     });
                                 });
