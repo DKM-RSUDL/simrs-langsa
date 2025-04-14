@@ -246,7 +246,7 @@
                                                 <label for="lama_menjalani_hd" style="min-width: 200px;">Lama Menjalani
                                                     HD</label>
                                                 <input type="number" class="form-control" id="lama_menjalani_hd"
-                                                    name="lama_menjalani_hd" placeholder="1">
+                                                    name="lama_menjalani_hd">
                                                 <input type="text" class="form-control" id="lama_menjalani_hd_unit"
                                                     name="lama_menjalani_hd_unit" placeholder="tahun/bulan">
                                             </div>
@@ -255,7 +255,7 @@
                                                 <label for="jadwal_hd_rutin" style="min-width: 200px;">Jadwal HD
                                                     Rutin</label>
                                                 <input type="number" class="form-control" id="jadwal_hd_rutin"
-                                                    name="jadwal_hd_rutin" placeholder="1">
+                                                    name="jadwal_hd_rutin">
                                                 <input type="text" class="form-control" id="jadwal_hd_rutin_unit"
                                                     name="jadwal_hd_rutin_unit" placeholder="Per minggu">
                                             </div>
