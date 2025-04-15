@@ -959,6 +959,10 @@ Route::middleware('auth')->group(function () {
                                     Route::name('.keperawatan')->group(function () {
                                         Route::controller(AsesmenHemodialisaKeperawatanController::class)->group(function () {
                                             Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::get('/{data}/show', 'show')->name('.show');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{id}', 'update')->name('.update');
                                         });
                                     });
                                 });

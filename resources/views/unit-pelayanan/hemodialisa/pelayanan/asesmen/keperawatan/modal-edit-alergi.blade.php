@@ -63,7 +63,7 @@
         $(document).ready(function() {
             // ===== VARIABEL & INISIALISASI =====
             // Inisialisasi data dari database jika ada
-            let dataAlergi = {!! isset($dataResume->alergi) ? json_encode($dataResume->alergi) : '[]' !!};
+            let dataAlergi = {!! $asesmen->keperawatan->alergi ?? '[]' !!};
             let editMode = false;
             let editIndex = null;
 

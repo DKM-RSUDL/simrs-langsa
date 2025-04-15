@@ -137,6 +137,92 @@
 
 @push('js')
     <script>
+        // 2. Pemeriksaan Fisik Antropometri
+        // Ambil referensi ke elemen input
+        const tinggiBadanInput = document.getElementById('tinggi_badan');
+        const beratBadanInput = document.getElementById('berat_badan');
+        const imtInput = document.getElementById('imt');
+        const lptInput = document.getElementById('lpt');
+
+        // Fungsi untuk menghitung IMT
+        function hitungIMT() {
+            const tinggiBadan = parseFloat(tinggiBadanInput.value) || 0;
+            const beratBadan = parseFloat(beratBadanInput.value) || 0;
+
+            // Pastikan kedua nilai diisi
+            if (tinggiBadan > 0 && beratBadan > 0) {
+                // Rumus IMT: Berat (kg) / (Tinggi (m))²
+                const tinggiMeter = tinggiBadan / 100; // konversi cm ke m
+                const imt = beratBadan / (tinggiMeter * tinggiMeter);
+
+                // Tampilkan hasil dengan 2 angka desimal
+                imtInput.value = imt.toFixed(2);
+            } else {
+                imtInput.value = '';
+            }
+        }
+
+        // Fungsi untuk menghitung LPT (Luas Permukaan Tubuh) dengan rumus DuBois
+        function hitungLPT() {
+            const tinggiBadan = parseFloat(tinggiBadanInput.value) || 0;
+            const beratBadan = parseFloat(beratBadanInput.value) || 0;
+
+            // Pastikan kedua nilai diisi
+            if (tinggiBadan > 0 && beratBadan > 0) {
+                // Rumus DuBois: LPT(m²) = 0.007184 × tinggi(cm)^0.725 × berat(kg)^0.425
+                const lpt = 0.007184 * Math.pow(tinggiBadan, 0.725) * Math.pow(beratBadan, 0.425);
+
+                // Tampilkan hasil dengan 2 angka desimal
+                lptInput.value = lpt.toFixed(2);
+            } else {
+                lptInput.value = '';
+            }
+        }
+
+        // Jalankan perhitungan saat nilai tinggi atau berat berubah
+        tinggiBadanInput.addEventListener('input', function () {
+            hitungIMT();
+            hitungLPT();
+        });
+
+        beratBadanInput.addEventListener('input', function () {
+            hitungIMT();
+            hitungLPT();
+        });
+
+        // Tunggu sampai DOM sepenuhnya dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event handler untuk tombol tambah keterangan
+            document.querySelectorAll('.tambah-keterangan').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const keteranganDiv = document.getElementById(targetId);
+                    const normalCheckbox = this.closest('.pemeriksaan-item').querySelector(
+                        '.form-check-input');
+
+                    // Toggle tampilan keterangan
+                    if (keteranganDiv.style.display === 'none') {
+                        keteranganDiv.style.display = 'block';
+                        normalCheckbox.checked = false; // Uncheck normal checkbox
+                    } else {
+                        keteranganDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            // Event handler untuk checkbox normal
+            document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const keteranganDiv = this.closest('.pemeriksaan-item').querySelector(
+                        '.keterangan');
+                    if (this.checked) {
+                        keteranganDiv.style.display = 'none';
+                        keteranganDiv.querySelector('input').value = ''; // Reset input value
+                    }
+                });
+            });
+        });
+
         // 5. Riwayat Obat dan Rekomendasi Dokter
         document.addEventListener('DOMContentLoaded', function () {
             // Inisialisasi array kosong untuk data obat
@@ -148,6 +234,15 @@
 
             // Inisialisasi modal obat dokter
             const modalObatDokter = new bootstrap.Modal(document.getElementById('modalTambahObatDokter'));
+
+            // Fungsi untuk mengupdate input hidden dengan data JSON
+            function updateObatPasienJSON() {
+                document.getElementById('obat_pasien_json').value = JSON.stringify(window.obatPasienData);
+            }
+
+            function updateObatDokterJSON() {
+                document.getElementById('obat_dokter_json').value = JSON.stringify(window.obatDokterData);
+            }
 
             // Event listener untuk simpan obat pasien
             document.getElementById('btn-simpan-obat-pasien').addEventListener('click', function () {
@@ -192,6 +287,7 @@
                 }
 
                 renderObatPasienTable();
+                updateObatPasienJSON(); // Update JSON di input hidden
                 resetFormObatPasien();
                 modalObatPasien.hide();
             });
@@ -239,6 +335,7 @@
                 }
 
                 renderObatDokterTable();
+                updateObatDokterJSON(); // Update JSON di input hidden
                 resetFormObatDokter();
                 modalObatDokter.hide();
             });
@@ -260,23 +357,26 @@
                     row.id = `obat-pasien-row-${item.id}`;
 
                     row.innerHTML = `
-                                    <td>${item.nama}</td>
-                                    <td>${item.dosis}</td>
-                                    <td>${item.waktu}</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="editObatPasien(${item.id})">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObatPasien(${item.id})">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                `;
+                                        <td>${item.nama}</td>
+                                        <td>${item.dosis}</td>
+                                        <td>${item.waktu}</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="editObatPasien(${item.id})">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObatPasien(${item.id})">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    `;
 
                     tableBody.appendChild(row);
                 });
+
+                // Update JSON dalam input hidden
+                updateObatPasienJSON();
             };
 
             // Fungsi untuk render tabel obat dokter
@@ -296,23 +396,26 @@
                     row.id = `obat-dokter-row-${item.id}`;
 
                     row.innerHTML = `
-                                    <td>${item.nama}</td>
-                                    <td>${item.dosis}</td>
-                                    <td>${item.waktu}</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="editObatDokter(${item.id})">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObatDokter(${item.id})">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                `;
+                                        <td>${item.nama}</td>
+                                        <td>${item.dosis}</td>
+                                        <td>${item.waktu}</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="editObatDokter(${item.id})">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeObatDokter(${item.id})">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    `;
 
                     tableBody.appendChild(row);
                 });
+
+                // Update JSON dalam input hidden
+                updateObatDokterJSON();
             };
 
             // Reset form obat pasien
@@ -340,6 +443,84 @@
             document.querySelector('[data-bs-target="#modalTambahObatDokter"]').addEventListener('click', function () {
                 resetFormObatDokter();
             });
+
+            // Fungsi edit obat pasien
+            window.editObatPasien = function (id) {
+                const item = window.obatPasienData.find(item => item.id === id);
+                if (item) {
+                    document.getElementById('obat-pasien-id').value = item.id;
+                    document.getElementById('obat-pasien-nama').value = item.nama;
+                    document.getElementById('obat-pasien-dosis').value = item.dosis;
+                    document.getElementById('obat-pasien-waktu').value = item.waktu;
+
+                    modalObatPasien.show();
+                }
+            };
+
+            // Fungsi hapus obat pasien
+            window.removeObatPasien = function (id) {
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Data obat akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.obatPasienData = window.obatPasienData.filter(item => item.id !== id);
+                        renderObatPasienTable();
+                        updateObatPasienJSON();
+
+                        Swal.fire(
+                            'Terhapus!',
+                            'Data obat berhasil dihapus.',
+                            'success'
+                        );
+                    }
+                });
+            };
+
+            // Fungsi edit obat dokter
+            window.editObatDokter = function (id) {
+                const item = window.obatDokterData.find(item => item.id === id);
+                if (item) {
+                    document.getElementById('obat-dokter-id').value = item.id;
+                    document.getElementById('obat-dokter-nama').value = item.nama;
+                    document.getElementById('obat-dokter-dosis').value = item.dosis;
+                    document.getElementById('obat-dokter-waktu').value = item.waktu;
+
+                    modalObatDokter.show();
+                }
+            };
+
+            // Fungsi hapus obat dokter
+            window.removeObatDokter = function (id) {
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Data obat akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.obatDokterData = window.obatDokterData.filter(item => item.id !== id);
+                        renderObatDokterTable();
+                        updateObatDokterJSON();
+
+                        Swal.fire(
+                            'Terhapus!',
+                            'Data obat berhasil dihapus.',
+                            'success'
+                        );
+                    }
+                });
+            };
 
             // Render data awal
             renderObatPasienTable();
@@ -646,8 +827,8 @@
             });
 
             // Set tanggal hari ini sebagai default
-            const today = new Date();
-            $('#tanggal_pengkajian_psiko').datepicker('setDate', today);
+            // const today = new Date();
+            // $('#tanggal_pengkajian_psiko').datepicker('setDate', today);
 
             // Update hidden input saat checkbox berubah
             $('input[name="kondisi_psikologis[]"]').change(function () {
@@ -705,11 +886,52 @@
             }
         }
 
+        // 10. Status Psikososial
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function untuk toggle jika_ya container
+            window.toggleJikaYa = function () {
+                const kepatuhanLayanan = document.getElementById('kepatuhan_layanan');
+                const jikaYaContainer = document.getElementById('jika_ya_container');
+
+                if (kepatuhanLayanan.value === 'Ya') {
+                    jikaYaContainer.style.display = 'flex';
+                } else {
+                    jikaYaContainer.style.display = 'none';
+                    document.getElementById('jika_ya_jelaskan').value = '';
+                }
+            };
+
+            // Function untuk update hidden JSON field
+            function updateKondisiPsikologisJSON() {
+                const checkboxes = document.querySelectorAll('input[name="kondisi_psikologis[]"]:checked');
+                const values = Array.from(checkboxes).map(cb => cb.value);
+                document.getElementById('kondisi_psikologis_json').value = JSON.stringify(values);
+            }
+
+            // Tambahkan event listener ke semua checkbox kondisi psikologis
+            const checkboxes = document.querySelectorAll('input[name="kondisi_psikologis[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateKondisiPsikologisJSON);
+            });
+
+            // Update kondisi_psikologis_json saat halaman dimuat
+            updateKondisiPsikologisJSON();
+
+            // Initialize kepatuhan_layanan toggle
+            toggleJikaYa();
+
+            // Untuk form submission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function () {
+                updateKondisiPsikologisJSON();
+            });
+        });
 
         // 11. Monitoring Hemodialisis
         $(document).ready(function () {
             // Inisialisasi detail field yang disembunyikan saat awal
             toggleDetailFields();
+            togglePreOpFields(); // Menambahkan inisialisasi untuk fields Pre Op
 
             // Event listener untuk checkbox program profiling
             $('input[name="program_profiling[]"]').change(function () {
@@ -719,6 +941,11 @@
             // Event listener untuk checkbox program aksesbilling
             $('input[name="program_aksesbilling[]"]').change(function () {
                 toggleDetailFields();
+            });
+
+            // Event listener untuk checkbox di bagian Pre Op
+            $('#conductivity_check, #kalium_check, #suhu_dialisat_check, #base_na_check').change(function () {
+                togglePreOpFields();
             });
 
             // Fungsi untuk toggle detail fields
@@ -732,6 +959,33 @@
                 $('#av_shunt_detail').prop('disabled', !$('#av_shunt').is(':checked'));
                 $('#cdl_detail').prop('disabled', !$('#cdl').is(':checked'));
                 $('#femoral_detail').prop('disabled', !$('#femoral').is(':checked'));
+            }
+
+            // Fungsi untuk toggle fields di bagian Pre Op
+            function togglePreOpFields() {
+                // Conductivity
+                $('#conductivity').prop('disabled', !$('#conductivity_check').is(':checked'));
+                if (!$('#conductivity_check').is(':checked')) {
+                    $('#conductivity').val('');
+                }
+
+                // Kalium
+                $('#kalium').prop('disabled', !$('#kalium_check').is(':checked'));
+                if (!$('#kalium_check').is(':checked')) {
+                    $('#kalium').val('');
+                }
+
+                // Suhu Dialisat
+                $('#suhu_dialisat').prop('disabled', !$('#suhu_dialisat_check').is(':checked'));
+                if (!$('#suhu_dialisat_check').is(':checked')) {
+                    $('#suhu_dialisat').val('');
+                }
+
+                // Base Na
+                $('#base_na').prop('disabled', !$('#base_na_check').is(':checked'));
+                if (!$('#base_na_check').is(':checked')) {
+                    $('#base_na').val('');
+                }
             }
 
             // Fungsi untuk mengumpulkan semua data form ke dalam JSON
@@ -763,10 +1017,10 @@
                         },
                         pre_op: {
                             dialisat: [],
-                            conductivity: $('#conductivity').val(),
-                            kalium: $('#kalium').val(),
-                            suhu_dialisat: $('#suhu_dialisat').val(),
-                            base_na: $('#base_na').val()
+                            conductivity: $('#conductivity_check').is(':checked') ? $('#conductivity').val() : null,
+                            kalium: $('#kalium_check').is(':checked') ? $('#kalium').val() : null,
+                            suhu_dialisat: $('#suhu_dialisat_check').is(':checked') ? $('#suhu_dialisat').val() : null,
+                            base_na: $('#base_na_check').is(':checked') ? $('#base_na').val() : null
                         }
                     },
                     heparinisasi: {
@@ -843,72 +1097,527 @@
             });
 
             // Inisialisasi data form dari server jika ada
-            if (typeof initialMonitoringData !== 'undefined') {
-                // Kode untuk mengisi form dari data server
-                // ...
+            if (typeof initialMonitoringData !== 'undefined' && initialMonitoringData) {
+                try {
+                    const data = JSON.parse(initialMonitoringData);
+
+                    // Pre Op Fields
+                    if (data.preekripsi && data.preekripsi.pre_op) {
+                        // Dialisat
+                        if (data.preekripsi.pre_op.dialisat) {
+                            for (const item of data.preekripsi.pre_op.dialisat) {
+                                if (item === 'Asetat') {
+                                    $('#dialisat_asetat').prop('checked', true);
+                                }
+                                if (item === 'Bicarbonat') {
+                                    $('#dialisat_bicarbonat').prop('checked', true);
+                                }
+                            }
+                        }
+
+                        // Conductivity
+                        if (data.preekripsi.pre_op.conductivity) {
+                            $('#conductivity_check').prop('checked', true);
+                            $('#conductivity').val(data.preekripsi.pre_op.conductivity);
+                        }
+
+                        // Kalium
+                        if (data.preekripsi.pre_op.kalium) {
+                            $('#kalium_check').prop('checked', true);
+                            $('#kalium').val(data.preekripsi.pre_op.kalium);
+                        }
+
+                        // Suhu Dialisat
+                        if (data.preekripsi.pre_op.suhu_dialisat) {
+                            $('#suhu_dialisat_check').prop('checked', true);
+                            $('#suhu_dialisat').val(data.preekripsi.pre_op.suhu_dialisat);
+                        }
+
+                        // Base Na
+                        if (data.preekripsi.pre_op.base_na) {
+                            $('#base_na_check').prop('checked', true);
+                            $('#base_na').val(data.preekripsi.pre_op.base_na);
+                        }
+                    }
+
+                    // Inisialisasi kembali toggle fields
+                    toggleDetailFields();
+                    togglePreOpFields();
+                } catch (e) {
+                    console.error('Error parsing initial data:', e);
+                }
             }
         });
 
-        // 12. Penyulit Selama HD
-        // Modal untuk Teknis
-        document.addEventListener('DOMContentLoaded', function () {
-            const teknisOptions = document.querySelectorAll('.teknis-option');
-            const teknisDisplay = document.getElementById('teknis_display');
-            const teknisValues = document.getElementById('teknis_values');
-            const teknisSelectedItems = document.getElementById('teknis_selected_items');
-            const saveTeknisButton = document.getElementById('saveTeknisButton');
+        // lanjutan bagian Intra HD
+        $(document).ready(function () {
+    // Event delegation for buttons
+    $('#observasiTableBody').on('click', '.btn-delete-row', function () {
+        const row = $(this).closest('tr');
+        deleteRow(row);
+    });
 
-            // Menyimpan pilihan saat tombol Simpan ditekan
-            saveTeknisButton.addEventListener('click', function () {
-                const selectedOptions = Array.from(teknisOptions)
-                    .filter(option => option.checked)
-                    .map(option => option.value);
+    $('#observasiTableBody').on('click', '.btn-edit-row', function () {
+        const row = $(this).closest('tr');
+        editRow(row);
+    });
 
-                // Memperbarui input tersembunyi dengan nilai yang dipilih (JSON string)
-                teknisValues.value = JSON.stringify(selectedOptions);
+    // Save button for Intra HD form
+    $('.btn-simpan-intra-hd').click(function (e) {
+        e.preventDefault();
+        addDataToTable();
+    });
 
-                // Memperbarui tampilan
-                if (selectedOptions.length > 0) {
-                    teknisDisplay.value = `${selectedOptions.length} item dipilih`;
-                    teknisSelectedItems.innerHTML = selectedOptions.map(item =>
-                        `<span class="badge bg-light text-dark me-1 mb-1">${item}</span>`
-                    ).join('');
-                } else {
-                    teknisDisplay.value = 'pilih';
-                    teknisSelectedItems.innerHTML = '';
+    // Form submission handler
+    $('form').on('submit', function () {
+        // This is critical - fill form fields with values before submission
+        fillFormFieldsBeforeSubmit();
+        updateObservasiData();
+        return true;
+    });
+
+    // Load existing data on page load
+    loadExistingData();
+});
+
+// Fill all form fields with values before form submission
+function fillFormFieldsBeforeSubmit() {
+    // If there's no value in the main fields, but we have rows in the table,
+    // use the values from the last row
+    if ($('#observasiTableBody tr').length > 0 && !$('#waktu_intra_pre_hd').val()) {
+        const lastRow = $('#observasiTableBody tr:last');
+
+        // Set the values from the last row if the current form fields are empty
+        if (!$('#waktu_intra_pre_hd').val()) {
+            $('#waktu_intra_pre_hd').val(lastRow.find('.observasi-waktu').val());
+        }
+
+        if (!$('#qb_intra').val()) {
+            $('#qb_intra').val(lastRow.find('.observasi-qb').val());
+        }
+
+        if (!$('#qd_intra').val()) {
+            $('#qd_intra').val(lastRow.find('.observasi-qd').val());
+        }
+
+        if (!$('#uf_rate_intra').val()) {
+            $('#uf_rate_intra').val(lastRow.find('.observasi-uf-rate').val());
+        }
+
+        // Handle TD field
+        if (!$('#sistole_intra').val() || !$('#diastole_intra').val()) {
+            const tdValue = lastRow.find('.observasi-td').val();
+            if (tdValue && tdValue.includes('/')) {
+                const tdParts = tdValue.split('/');
+                if (!$('#sistole_intra').val()) {
+                    $('#sistole_intra').val(tdParts[0]);
                 }
-            });
-        });
-
-        //Modal untuk Klinis
-        document.addEventListener('DOMContentLoaded', function () {
-            const klinisOptions = document.querySelectorAll('.klinis-option');
-            const klinisDisplay = document.getElementById('klinis_display');
-            const klinisValues = document.getElementById('klinis_values');
-            const klinisSelectedItems = document.getElementById('klinis_selected_items');
-            const saveKlinisButton = document.getElementById('saveKlinisButton');
-
-            // Menyimpan pilihan saat tombol Simpan ditekan
-            saveKlinisButton.addEventListener('click', function () {
-                const selectedOptions = Array.from(klinisOptions)
-                    .filter(option => option.checked)
-                    .map(option => option.value);
-
-                // Memperbarui input tersembunyi dengan nilai yang dipilih (JSON string)
-                klinisValues.value = JSON.stringify(selectedOptions);
-
-                // Memperbarui tampilan
-                if (selectedOptions.length > 0) {
-                    klinisDisplay.value = `${selectedOptions.length} item dipilih`;
-                    klinisSelectedItems.innerHTML = selectedOptions.map(item =>
-                        `<span class="badge bg-light text-dark me-1 mb-1">${item}</span>`
-                    ).join('');
-                } else {
-                    klinisDisplay.value = 'pilih';
-                    klinisSelectedItems.innerHTML = '';
+                if (!$('#diastole_intra').val()) {
+                    $('#diastole_intra').val(tdParts[1]);
                 }
-            });
+            }
+        }
+
+        if (!$('#nadi_intra').val()) {
+            $('#nadi_intra').val(lastRow.find('.observasi-nadi').val());
+        }
+
+        if (!$('#suhu_intra').val()) {
+            $('#suhu_intra').val(lastRow.find('.observasi-suhu').val());
+        }
+    }
+
+    // Ensure we have values in the problematic fields (default values if empty)
+    if (!$('#nafas_intra').val()) {
+        $('#nafas_intra').val('33'); // Default value
+    }
+
+    if (!$('#nacl_intra').val()) {
+        $('#nacl_intra').val('33'); // Default value
+    }
+
+    if (!$('#minum_intra').val()) {
+        $('#minum_intra').val('33'); // Default value
+    }
+
+    if (!$('#intake_lain_intra').val()) {
+        $('#intake_lain_intra').val('33'); // Default value
+    }
+
+    if (!$('#output_intra').val()) {
+        $('#output_intra').val('33'); // Default value
+    }
+}
+
+// Load existing data if available
+function loadExistingData() {
+    const existingData = $('#observasi_data').val();
+    if (existingData) {
+        try {
+            const observasiData = JSON.parse(existingData);
+
+            // Populate table with rows
+            if (Array.isArray(observasiData)) {
+                observasiData.forEach(item => {
+                    addRowToTable(
+                        item.waktu,
+                        item.qb,
+                        item.qd,
+                        item.uf_rate,
+                        item.td,
+                        item.nadi,
+                        item.suhu
+                    );
+                });
+            }
+        } catch (e) {
+            console.error('Error parsing existing data:', e);
+        }
+    }
+}
+
+function deleteRow(row) {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data observasi ini akan dihapus!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            row.remove();
+            updateObservasiData();
+            Swal.fire(
+                'Terhapus!',
+                'Data observasi telah dihapus.',
+                'success'
+            );
+        }
+    });
+}
+
+function editRow(row) {
+    // Get values from the row
+    const waktu = row.find('.observasi-waktu').val();
+    const qb = row.find('.observasi-qb').val();
+    const qd = row.find('.observasi-qd').val();
+    const ufRate = row.find('.observasi-uf-rate').val();
+
+    // Split TD value into systole and diastole
+    const tdValue = row.find('.observasi-td').val();
+    let sistole = '';
+    let diastole = '';
+    if (tdValue && tdValue.includes('/')) {
+        const tdParts = tdValue.split('/');
+        sistole = tdParts[0];
+        diastole = tdParts[1];
+    }
+
+    const nadi = row.find('.observasi-nadi').val();
+    const suhu = row.find('.observasi-suhu').val();
+
+    // Fill the Intra HD form with values from the row
+    $('#waktu_intra_pre_hd').val(waktu);
+    $('#qb_intra').val(qb);
+    $('#qd_intra').val(qd);
+    $('#uf_rate_intra').val(ufRate);
+    $('#sistole_intra').val(sistole);
+    $('#diastole_intra').val(diastole);
+    $('#nadi_intra').val(nadi);
+    $('#suhu_intra').val(suhu);
+
+    // Mark the row being edited
+    row.addClass('editing');
+
+    // Change the save button text to "Update"
+    $('.btn-simpan-intra-hd').text('Update ke Tabel').data('mode', 'edit');
+}
+
+function addDataToTable() {
+    const waktu = $('#waktu_intra_pre_hd').val();
+    const qb = $('#qb_intra').val();
+    const qd = $('#qd_intra').val();
+    const ufRate = $('#uf_rate_intra').val();
+    const sistole = $('#sistole_intra').val();
+    const diastole = $('#diastole_intra').val();
+    const td = (sistole || diastole) ? `${sistole || ''}/${diastole || ''}` : '';
+    const nadi = $('#nadi_intra').val();
+    const suhu = $('#suhu_intra').val();
+
+    // Remember the values of the problematic fields
+    const nafas = $('#nafas_intra').val();
+    const nacl = $('#nacl_intra').val();
+    const minum = $('#minum_intra').val();
+    const intakeLain = $('#intake_lain_intra').val();
+    const output = $('#output_intra').val();
+
+    // Validate minimum data
+    if (!waktu) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Data Tidak Lengkap',
+            text: 'Waktu Intra Pre HD harus diisi!'
         });
+        return;
+    }
+
+    // Check if in edit mode
+    const editMode = $('.btn-simpan-intra-hd').data('mode') === 'edit';
+
+    if (editMode) {
+        // Update the row being edited
+        const editingRow = $('#observasiTableBody tr.editing');
+        if (editingRow.length) {
+            editingRow.find('.observasi-waktu').val(waktu);
+            editingRow.find('.observasi-qb').val(qb);
+            editingRow.find('.observasi-qd').val(qd);
+            editingRow.find('.observasi-uf-rate').val(ufRate);
+            editingRow.find('.observasi-td').val(td);
+            editingRow.find('.observasi-nadi').val(nadi);
+            editingRow.find('.observasi-suhu').val(suhu);
+
+            // Remove editing class
+            editingRow.removeClass('editing');
+
+            // Reset button to "Save"
+            $('.btn-simpan-intra-hd').text('Simpan ke Tabel').removeData('mode');
+
+            // Show success notification
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Data observasi berhasil diperbarui!',
+                timer: 1500
+            });
+        }
+    } else {
+        // Add new data to the table
+        addRowToTable(waktu, qb, qd, ufRate, td, nadi, suhu);
+
+        // Show success notification
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: 'Data observasi berhasil ditambahkan!',
+            timer: 1500
+        });
+    }
+
+    updateObservasiData();
+
+    // Only reset table-related fields
+    $('#waktu_intra_pre_hd').val('');
+    $('#qb_intra').val('');
+    $('#qd_intra').val('');
+    $('#uf_rate_intra').val('');
+    $('#sistole_intra').val('');
+    $('#diastole_intra').val('');
+    $('#nadi_intra').val('');
+    $('#suhu_intra').val('');
+
+    // Preserve the problematic fields' values
+    $('#nafas_intra').val(nafas);
+    $('#nacl_intra').val(nacl);
+    $('#minum_intra').val(minum);
+    $('#intake_lain_intra').val(intakeLain);
+    $('#output_intra').val(output);
+}
+
+function addRowToTable(waktu, qb, qd, ufRate, td, nadi, suhu) {
+    const rowHtml = `
+        <tr class="text-center">
+            <td>
+                <div class="input-group input-group-sm">
+                    <input type="time" class="form-control form-control-sm observasi-waktu" value="${waktu}">
+                </div>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-qb" value="${qb || ''}">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-qd" value="${qd || ''}">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-uf-rate" value="${ufRate || ''}">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-td" value="${td}">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-nadi" value="${nadi || ''}">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm observasi-suhu" value="${suhu || ''}">
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-warning btn-sm btn-edit-row">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm btn-delete-row">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `;
+
+    $('#observasiTableBody').append(rowHtml);
+}
+
+function updateObservasiData() {
+    const tableRows = [];
+
+    // Collect the table data
+    $('#observasiTableBody tr').each(function () {
+        const row = $(this);
+        const rowData = {
+            waktu: row.find('.observasi-waktu').val(),
+            qb: row.find('.observasi-qb').val(),
+            qd: row.find('.observasi-qd').val(),
+            uf_rate: row.find('.observasi-uf-rate').val(),
+            td: row.find('.observasi-td').val(),
+            nadi: row.find('.observasi-nadi').val(),
+            suhu: row.find('.observasi-suhu').val()
+        };
+
+        // Only add rows that have at least time
+        if (rowData.waktu) {
+            tableRows.push(rowData);
+        }
+    });
+
+    // Set the JSON string to the hidden input
+    $('#observasi_data').val(JSON.stringify(tableRows));
+}
+
+// 12. Penyulit Selama HD
+$(document).ready(function() {
+    // Initialize selected values if they exist
+    loadExistingValues();
+
+    // Handle saving the Teknis modal selections
+    $('#saveTeknisButton').click(function() {
+        saveTeknisSelections();
+    });
+
+    // Handle saving the Klinis modal selections
+    $('#saveKlinisButton').click(function() {
+        saveKlinisSelections();
+    });
+});
+
+/**
+ * Load existing values from hidden inputs if they exist
+ */
+function loadExistingValues() {
+    // Load Teknis values
+    if ($('#teknis_values').val()) {
+        try {
+            const teknisValues = JSON.parse($('#teknis_values').val());
+
+            // Check the appropriate checkboxes
+            teknisValues.forEach(value => {
+                $('.teknis-option[value="' + value + '"]').prop('checked', true);
+            });
+
+            // Update the display
+            updateTeknisDisplay(teknisValues);
+        } catch (e) {
+            console.error('Error parsing teknis values:', e);
+        }
+    }
+
+    // Load Klinis values
+    if ($('#klinis_values').val()) {
+        try {
+            const klinisValues = JSON.parse($('#klinis_values').val());
+
+            // Check the appropriate checkboxes
+            klinisValues.forEach(value => {
+                $('.klinis-option[value="' + value + '"]').prop('checked', true);
+            });
+
+            // Update the display
+            updateKlinisDisplay(klinisValues);
+        } catch (e) {
+            console.error('Error parsing klinis values:', e);
+        }
+    }
+}
+
+/**
+ * Save the selected teknis options
+ */
+function saveTeknisSelections() {
+    const selectedValues = [];
+
+    // Get all checked options
+    $('.teknis-option:checked').each(function() {
+        selectedValues.push($(this).val());
+    });
+
+    // Store the values in the hidden input as JSON
+    $('#teknis_values').val(JSON.stringify(selectedValues));
+
+    // Update the display
+    updateTeknisDisplay(selectedValues);
+}
+
+/**
+ * Save the selected klinis options
+ */
+function saveKlinisSelections() {
+    const selectedValues = [];
+
+    // Get all checked options
+    $('.klinis-option:checked').each(function() {
+        selectedValues.push($(this).val());
+    });
+
+    // Store the values in the hidden input as JSON
+    $('#klinis_values').val(JSON.stringify(selectedValues));
+
+    // Update the display
+    updateKlinisDisplay(selectedValues);
+}
+
+/**
+ * Update the teknis display area with selected values
+ */
+function updateTeknisDisplay(selectedValues) {
+    if (selectedValues.length > 0) {
+        // Update the input display with a summary
+        $('#teknis_display').val(selectedValues.length + ' item dipilih');
+
+        // Show detailed list below
+        const itemsList = selectedValues.map(value => `<span class="badge bg-primary me-1 mb-1">${value}</span>`).join('');
+        $('#teknis_selected_items').html(itemsList);
+    } else {
+        $('#teknis_display').val('');
+        $('#teknis_selected_items').html('');
+    }
+}
+
+/**
+ * Update the klinis display area with selected values
+ */
+function updateKlinisDisplay(selectedValues) {
+    if (selectedValues.length > 0) {
+        // Update the input display with a summary
+        $('#klinis_display').val(selectedValues.length + ' item dipilih');
+
+        // Show detailed list below
+        const itemsList = selectedValues.map(value => `<span class="badge bg-primary me-1 mb-1">${value}</span>`).join('');
+        $('#klinis_selected_items').html(itemsList);
+    } else {
+        $('#klinis_display').val('');
+        $('#klinis_selected_items').html('');
+    }
+}
 
         // 13. Disharge Planning
         // Modal untuk Rencana Pulang
@@ -943,7 +1652,7 @@
 
 
         // 14. Diagnosis Diagnosis Banding
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initDiagnosisManagement('diagnosis-banding', 'diagnosis_banding');
             initDiagnosisManagement('diagnosis-kerja', 'diagnosis_kerja');
 
@@ -985,7 +1694,7 @@
                 }
 
                 // Input event listener for suggestions
-                inputField.addEventListener('input', function() {
+                inputField.addEventListener('input', function () {
                     const inputValue = this.value.trim().toLowerCase();
 
                     if (inputValue) {
@@ -1047,7 +1756,7 @@
                 }
 
                 // Add diagnosis when plus button is clicked
-                addButton.addEventListener('click', function() {
+                addButton.addEventListener('click', function () {
                     const diagnosisText = inputField.value.trim();
                     if (diagnosisText) {
                         addDiagnosis(diagnosisText);
@@ -1055,7 +1764,7 @@
                 });
 
                 // Add diagnosis when Enter key is pressed
-                inputField.addEventListener('keypress', function(e) {
+                inputField.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         const diagnosisText = this.value.trim();
@@ -1066,7 +1775,7 @@
                 });
 
                 // Close suggestions when clicking outside
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
                         suggestionsList.style.display = 'none';
                     }
@@ -1101,7 +1810,7 @@
                         deleteButton.className = 'btn btn-sm text-danger';
                         deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
                         deleteButton.type = 'button';
-                        deleteButton.addEventListener('click', function() {
+                        deleteButton.addEventListener('click', function () {
                             diagnosisList.splice(index, 1);
                             renderDiagnosisList();
                             updateHiddenInput();
@@ -1120,7 +1829,7 @@
         });
 
         // 15.Implementasi
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize all sections
             initImplementationSection('rencana', 'rencana_penatalaksanaan', 'prognosis');
             initImplementationSection('observasi', 'observasi', 'observasi');
@@ -1185,7 +1894,7 @@
                 }
 
                 // Input event listener for suggestions
-                inputField.addEventListener('input', function() {
+                inputField.addEventListener('input', function () {
                     const inputValue = this.value.trim().toLowerCase();
 
                     if (inputValue) {
@@ -1265,7 +1974,7 @@
                 }
 
                 // Add item
-                addButton.addEventListener('click', function() {
+                addButton.addEventListener('click', function () {
                     const itemText = inputField.value.trim();
                     if (itemText) {
                         addItem(itemText);
@@ -1273,7 +1982,7 @@
                 });
 
                 // Add item when Enter
-                inputField.addEventListener('keypress', function(e) {
+                inputField.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         const itemText = this.value.trim();
@@ -1284,7 +1993,7 @@
                 });
 
                 // Close
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
                         suggestionsList.style.display = 'none';
                     }
@@ -1310,9 +2019,9 @@
                             const notification = document.createElement('div');
                             notification.className = 'alert alert-info alert-dismissible fade show mt-2';
                             notification.innerHTML = `
-                                <small>Item "${itemText}" sudah ada di database dan akan digunakan.</small>
-                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
-                            `;
+                                                            <small>Item "${itemText}" sudah ada di database dan akan digunakan.</small>
+                                                            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                                                        `;
                             listContainer.parentNode.insertBefore(notification, listContainer.nextSibling);
 
                             // Auto-dismiss after 3 seconds
@@ -1331,14 +2040,14 @@
                         toast.className = 'toast align-items-center text-white bg-danger border-0';
                         toast.setAttribute('role', 'alert');
                         toast.innerHTML = `
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    <i class="bi bi-exclamation-circle me-2"></i>
-                                    "${itemText}" sudah ada dalam daftar
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                            </div>
-                        `;
+                                                        <div class="d-flex">
+                                                            <div class="toast-body">
+                                                                <i class="bi bi-exclamation-circle me-2"></i>
+                                                                "${itemText}" sudah ada dalam daftar
+                                                            </div>
+                                                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                                        </div>
+                                                    `;
 
                         toastContainer.appendChild(toast);
                         document.body.appendChild(toastContainer);
@@ -1350,7 +2059,7 @@
                         bsToast.show();
 
                         // Remove container after toast is hidden
-                        toast.addEventListener('hidden.bs.toast', function() {
+                        toast.addEventListener('hidden.bs.toast', function () {
                             document.body.removeChild(toastContainer);
                         });
                     }
@@ -1374,7 +2083,7 @@
                         deleteButton.className = 'btn btn-link text-danger p-0';
                         deleteButton.type = 'button';
                         deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
-                        deleteButton.addEventListener('click', function() {
+                        deleteButton.addEventListener('click', function () {
                             itemsList.splice(index, 1);
                             renderItemsList();
                             updateHiddenInput();

@@ -51,4 +51,56 @@ class RmeHdAsesmen extends Model
     {
         return $this->belongsTo(User::class, 'user_create', 'id');
     }
+
+    // keperawatan
+    public function keperawatan()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatan::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanPemeriksaanFisik()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+
+    public function pemeriksaanFisik()
+    {
+        return $this->hasMany(RmeAsesmenPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanPempen()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanPempen::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanStatusGizi()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanStatusGizi::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanRisikoJatuh()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanRisikoJatuh::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanStatusPsikososial()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanStatusPsikososial::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanMonitoringPreekripsi()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanMonitoringPreekripsi::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanMonitoringHeparinisasi()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanMonitoringHeparinisasi::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanMonitoringTindakan()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanMonitoringTindakan::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanMonitoringIntrahd()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanMonitoringIntrahd::class, 'id_asesmen', 'id');
+    }
+    public function keperawatanMonitoringPosthd()
+    {
+        return $this->hasOne(RmeHdAsesmenKeperawatanMonitoringPosthd::class, 'id_asesmen', 'id');
+    }
+
 }
