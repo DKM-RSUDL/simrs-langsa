@@ -60,7 +60,7 @@
                                 <p class="fw-medium">
                                     {{ $laporanAnastesi->time_out == 1 ? 'Ya' : 'Tidak' }}
                                     @if($laporanAnastesi->jam_time_out)
-                                        ({{ $laporanAnastesi->jam_time_out }})
+                                        ({{ date('H:i', strtotime($laporanAnastesi->jam_time_out)) }})
                                     @endif
                                 </p>
                             </div>
@@ -106,16 +106,17 @@
                                 <p class="fw-medium">
                                     {{ $laporanAnastesiDtl->instrument == 1 ? 'Ya' : 'Tidak' }}
                                     @if($laporanAnastesiDtl->instrument_time)
-                                        ({{ $laporanAnastesiDtl->instrument_time }})
+                                        ({{ date('H:i', strtotime($laporanAnastesiDtl->instrument_time)) }})
                                     @endif
                                 </p>
+                                
                             </div>
                             <div class="col-md-6">
                                 <label class="fw-bold text-muted">Prothese/Implant</label>
                                 <p class="fw-medium">
                                     {{ $laporanAnastesiDtl->prothese == 1 ? 'Ya' : 'Tidak' }}
                                     @if($laporanAnastesiDtl->prothese_time)
-                                        ({{ $laporanAnastesiDtl->prothese_time }})
+                                        ({{ date('H:i', strtotime($laporanAnastesiDtl->prothese_time)) }})
                                     @endif
                                 </p>
                             </div>
@@ -166,26 +167,26 @@
                                     <tbody>
                                         <tr>
                                             <td>Lengan Kanan</td>
-                                            <td>{{ $laporanAnastesiDtl->lengan_kanan_mulai }}</td>
-                                            <td>{{ $laporanAnastesiDtl->lengan_kanan_selesai }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_mulai)) }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_selesai)) }}</td>
                                             <td>{{ $laporanAnastesiDtl->lengan_kanan_tekanan }}</td>
                                         </tr>
                                         <tr>
                                             <td>Kaki Kanan</td>
-                                            <td>{{ $laporanAnastesiDtl->kaki_kanan_mulai }}</td>
-                                            <td>{{ $laporanAnastesiDtl->kaki_kanan_selesai }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_mulai)) }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_selesai)) }}</td>
                                             <td>{{ $laporanAnastesiDtl->kaki_kanan_tekanan }}</td>
                                         </tr>
                                         <tr>
                                             <td>Lengan Kiri</td>
-                                            <td>{{ $laporanAnastesiDtl->lengan_kiri_mulai }}</td>
-                                            <td>{{ $laporanAnastesiDtl->lengan_kiri_selesai }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_mulai)) }}</td>
+                                            <td>{{ date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_selesai)) }}</td>
                                             <td>{{ $laporanAnastesiDtl->lengan_kiri_tekanan }}</td>
                                         </tr>
                                         <tr>
                                             <td>Kaki Kiri</td>
-                                            <td>{{ $laporanAnastesiDtl->kaki_kiri_mulai }}</td>
-                                            <td>{{ $laporanAnastesiDtl->kaki_kiri_selesai }}</td>
+                                            <td>{{ date ('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_mulai)) }}</td>
+                                            <td>{{ date ('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_selesai)) }}</td>
                                             <td>{{ $laporanAnastesiDtl->kaki_kiri_tekanan }}</td>
                                         </tr>
                                     </tbody>

@@ -11,7 +11,7 @@
 
         <div class="col-md-9">
             <a href="{{ route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn">
+                class="btn-outline-primary">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form method="POST"
