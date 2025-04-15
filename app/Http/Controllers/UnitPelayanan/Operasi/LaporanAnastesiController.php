@@ -186,6 +186,12 @@ class LaporanAnastesiController extends Controller
             $lapAnastesiDtlDua->kassa_tiga = $request->kassa3;
             $lapAnastesiDtlDua->jarum_tiga = $request->jarum3;
             $lapAnastesiDtlDua->instrumen_tiga = $request->instrumen3;
+            // $lapAnastesiDtlDua->kassa_tidak_lengkap = $request->kassa4 ?? '0';
+            // $lapAnastesiDtlDua->jarum_tidak_lengkap = $request->jarum4 ?? '0';
+            // $lapAnastesiDtlDua->instrumen_tidak_lengkap = $request->instrumen4 ?? '0';
+            // $lapAnastesiDtlDua->kassa_tidak_perlu = $request->kassa5 ?? '0';
+            // $lapAnastesiDtlDua->jarum_tidak_perlu = $request->jarum5 ?? '0';
+            // $lapAnastesiDtlDua->instrumen_tidak_perlu = $request->instrumen5 ?? '0';
             $lapAnastesiDtlDua->dilakukan_xray = $request->dilakukan_xray;
             $lapAnastesiDtlDua->penggunaan_tampon = $request->penggunaan_tampon;
             $lapAnastesiDtlDua->jenis_tampon = $request->jenis_tampon;

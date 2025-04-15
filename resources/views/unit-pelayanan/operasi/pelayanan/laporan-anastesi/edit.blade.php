@@ -11,7 +11,7 @@
 
         <div class="col-md-9">
             <a href="{{ route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                class="btn">
+                class="btn-primary">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form method="POST"
@@ -93,7 +93,7 @@
                                                 </option>
                                             </select>
                                             <input type="time" name="jam_time_out" id="jam_time_out" class="form-control"
-                                                value="{{ $laporanAnastesi->jam_time_out }}">
+                                                value="{{ $laporanAnastesi->jam_time_out ? date('H:i', strtotime($laporanAnastesi->jam_time_out)) : '' }}">
                                         </div>
 
                                         <!-- Tingkat Kesadaran Pasien Saat Masuk Kamar Operasi -->
@@ -245,7 +245,7 @@
                                                 </option>
                                             </select>
                                             <input type="time" name="jam_instrumen" class="form-control"
-                                                value="{{ $laporanAnastesiDtl->instrument_time }}">
+                                                value="{{ $laporanAnastesiDtl->instrument_time ? date('H:i', strtotime($laporanAnastesiDtl->instrument_time)) : '' }}">
                                         </div>
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Prothese/Lmplant</label>
@@ -259,7 +259,7 @@
                                                 </option>
                                             </select>
                                             <input type="time" name="jam_prothese" class="form-control"
-                                                value="{{ $laporanAnastesiDtl->prothese_time }}">
+                                                value="{{ $laporanAnastesiDtl->prothese_time ? date('H:i', strtotime($laporanAnastesiDtl->prothese_time)) : '' }}">
                                         </div>
 
                                         <!-- Pemasangan Diathermy (Elektrokauter) -->
@@ -337,9 +337,9 @@
                                         <div class="form-group">
                                             <label style="min-width: 300px;">Jam Mulai S/D Selesai</label>
                                             <input type="time" name="jam_temperatur_mulai" class="form-control me-3"
-                                                value="{{ $laporanAnastesiDtl->jam_temperatur_mulai }}">
+                                                value="{{ $laporanAnastesiDtl->jam_temperatur_mulai ? date('H:i', strtotime($laporanAnastesiDtl->jam_temperatur_mulai)) : '' }}">
                                             <input type="time" name="jam_temperatur_selesai" class="form-control"
-                                                value="{{ $laporanAnastesiDtl->jam_temperatur_selesai }}">
+                                                value="{{ $laporanAnastesiDtl->jam_temperatur_selesai ? date('H:i', strtotime($laporanAnastesiDtl->jam_temperatur_selesai)) : '' }}">
                                         </div>
 
                                         <div class="form-group">
@@ -382,12 +382,12 @@
                                                         <td>
                                                             <input type="time" name="jam_lengan_kanan_mulai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->lengan_kanan_mulai }}">
+                                                                value="{{ $laporanAnastesiDtl->lengan_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_mulai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="time" name="jam_lengan_kanan_selesai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->lengan_kanan_selesai }}">
+                                                                value="{{ $laporanAnastesiDtl->lengan_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kanan_selesai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="tekanan_lengan_kanan"
@@ -404,12 +404,12 @@
                                                         <td>
                                                             <input type="time" name="jam_kaki_kanan_mulai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->kaki_kanan_mulai }}">
+                                                                value="{{ $laporanAnastesiDtl->kaki_kanan_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_mulai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="time" name="jam_kaki_kanan_selesai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->kaki_kanan_selesai }}">
+                                                                value="{{ $laporanAnastesiDtl->kaki_kanan_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kanan_selesai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="tekanan_kaki_kanan"
@@ -426,12 +426,12 @@
                                                         <td>
                                                             <input type="time" name="jam_lengan_kiri_mulai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->lengan_kiri_mulai }}">
+                                                                value="{{ $laporanAnastesiDtl->lengan_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_mulai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="time" name="jam_lengan_kiri_selesai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->lengan_kiri_selesai }}">
+                                                                value="{{ $laporanAnastesiDtl->lengan_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->lengan_kiri_selesai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="tekanan_lengan_kiri"
@@ -448,12 +448,12 @@
                                                         <td>
                                                             <input type="time" name="jam_kaki_kiri_mulai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->kaki_kiri_mulai }}">
+                                                                value="{{ $laporanAnastesiDtl->kaki_kiri_mulai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_mulai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="time" name="jam_kaki_kiri_selesai"
                                                                 class="form-control"
-                                                                value="{{ $laporanAnastesiDtl->kaki_kiri_selesai }}">
+                                                                value="{{ $laporanAnastesiDtl->kaki_kiri_selesai ? date('H:i', strtotime($laporanAnastesiDtl->kaki_kiri_selesai)) : '' }}">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="tekanan_kaki_kiri"
@@ -732,7 +732,7 @@
                                             <label style="min-width: 200px;">Waktu Mulai Operasi</label>
                                             <div class="d-flex gap-3 align-items-center">
                                                 <input type="date" class="form-control me-3" name="waktu_mulai_operasi" value="{{ $waktuMulaiOperasi ?? '' }}">
-                                                <input type="time" class="form-control" name="jam_mulai_operasi" value="{{ $jamMulaiOperasi ?? '' }}">
+                                                <input type="time" class="form-control" name="jam_mulai_operasi" value="{{ $jamMulaiOperasi ? date('H:i', strtotime($jamMulaiOperasi)) : '' }}">
                                             </div>
                                         </div>
 
@@ -740,7 +740,7 @@
                                             <label style="min-width: 200px;">Waktu Selesai Operasi</label>
                                             <div class="d-flex gap-3 align-items-center">
                                                 <input type="date" class="form-control me-3" name="waktu_selesai_operasi" value="{{ $waktuSelesaiOperasi ?? '' }}">
-                                                <input type="time" class="form-control" name="jam_selesai_operasi" value="{{ $jamSelesaiOperasi ?? '' }}">
+                                                <input type="time" class="form-control" name="jam_selesai_operasi" value="{{ $jamSelesaiOperasi ? date('H:i', strtotime($jamSelesaiOperasi)) : '' }}">
                                             </div>
                                         </div>
 
@@ -934,7 +934,7 @@
                                                     <div class="col-md-8">
                                                         <div class="d-flex gap-3">
                                                             <input type="date" class="form-control" name="tanggal_pencatatan" style="border-radius: 10px; max-width: 200px;" value="{{ $tanggalPencatatan ?? '' }}">
-                                                            <input type="time" class="form-control" name="jam_pencatatan" style="border-radius: 10px; max-width: 150px;" value="{{ $jamPencatatan ?? '' }}">
+                                                            <input type="time" class="form-control" name="jam_pencatatan" style="border-radius: 10px; max-width: 150px;" value="{{ $jamPencatatan ? date('H:i', strtotime($jamPencatatan)) : '' }}">
                                                         </div>
                                                     </div>
                                                 </div>
