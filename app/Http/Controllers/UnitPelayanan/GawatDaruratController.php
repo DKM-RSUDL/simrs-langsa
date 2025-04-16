@@ -505,17 +505,17 @@ class GawatDaruratController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
 
         $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
             ->where('kd_pasien', $kd_pasien)
