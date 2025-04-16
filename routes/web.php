@@ -504,17 +504,6 @@ Route::middleware('auth')->group(function () {
                                                     });
                                                 });
                                             });
-
-
-                                            Route::prefix('perinatology')->group(function () {
-                                                Route::name('.perinatology')->group(function () {
-                                                    Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
-                                                        Route::get('/', 'index')->name('.index');
-                                                        Route::post('/', 'store')->name('.store');
-                                                        Route::put('/', 'update')->name('.update');
-                                                    });
-                                                });
-                                            });
                                         });
                                     });
                                 });

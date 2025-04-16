@@ -29,11 +29,11 @@
                         {{-- FORM ASESMEN KEPERATAWAN perinatology --}}
                         <form method="POST"
                             action="{{ route('rawat-inap.asesmen.keperawatan.perinatology.update', [
-                                'kd_unit' => $kd_unit,
-                                'kd_pasien' => $kd_pasien,
-                                'tgl_masuk' => $tgl_masuk,
-                                'urut_masuk' => $urut_masuk,
-                                'id' => $asesmen->id,
+                                $dataMedis->kd_unit,
+                                $dataMedis->kd_pasien,
+                                $dataMedis->tgl_masuk,
+                                $dataMedis->urut_masuk,
+                                $asesmen->id,
                             ]) }}">
                             @csrf
                             @method('PUT')
@@ -116,15 +116,15 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Kaki Kiri</label>
                                                 <div class="input-group mb-2">
-                                                    <input type="file" 
-                                                        class="form-control @error('sidik_kaki_kiri') is-invalid @enderror" 
+                                                    <input type="file"
+                                                        class="form-control @error('sidik_kaki_kiri') is-invalid @enderror"
                                                         name="sidik_kaki_kiri">
                                                 </div>
                                                 @if($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kiri ?? '')
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
                                                         <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kiri) }}" 
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kiri) }}"
                                                         class="btn btn-sm btn-info ms-2" target="_blank">
                                                             <i class="bi bi-eye"></i> Lihat
                                                         </a>
@@ -138,15 +138,15 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Kaki Kanan</label>
                                                 <div class="input-group mb-2">
-                                                    <input type="file" 
-                                                        class="form-control @error('sidik_kaki_kanan') is-invalid @enderror" 
+                                                    <input type="file"
+                                                        class="form-control @error('sidik_kaki_kanan') is-invalid @enderror"
                                                         name="sidik_kaki_kanan">
                                                 </div>
                                                 @if($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kanan ?? '')
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
                                                         <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kanan) }}" 
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_telapak_kaki_kanan) }}"
                                                         class="btn btn-sm btn-info ms-2" target="_blank">
                                                             <i class="bi bi-eye"></i> Lihat
                                                         </a>
@@ -173,7 +173,7 @@
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
                                                         <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kiri) }}" 
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kiri) }}"
                                                         class="btn btn-sm btn-info ms-2" target="_blank">
                                                             <i class="bi bi-eye"></i> Lihat
                                                         </a>
@@ -191,7 +191,7 @@
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-check-circle-fill text-success me-2"></i>
                                                         <small class="text-success">File sudah diunggah sebelumnya</small>
-                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kanan) }}" 
+                                                        <a href="{{ Storage::url($asesmen->rmeAsesmenPerinatology->sidik_jari_ibu_kanan) }}"
                                                         class="btn btn-sm btn-info ms-2" target="_blank">
                                                             <i class="bi bi-eye"></i> Lihat
                                                         </a>
@@ -543,7 +543,7 @@
                                                 <option value="Distensi" {{ $asesmen->rmeAsesmenPerinatologyPemeriksaanLanjut->keadaan_perut == 'Distensi' ? 'selected' : '' }}>Distensi</option>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Umbilikus</label>
                                             <select class="form-select" name="umbilikus">
@@ -794,7 +794,7 @@
                                             <input type="text" class="form-control" name="usia_kehamilan"
                                                 placeholder="Masukkan usia kehamilan" value="{{ $asesmen->rmeAsesmenPerinatologyRiwayatIbu->usia_kehamilan }}">
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Cara Persalinan</label>
                                         <select class="form-select" name="cara_persalinan">
@@ -957,7 +957,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>                        
+                                </div>
 
                                 {{-- 7. Alergi sectio --}}
                                 <div class="section-separator" id="alergi">
@@ -1711,7 +1711,7 @@
                                         <div class="mt-4">
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanNorton" 
+                                                <div id="kesimpulanNorton"
                                                     class="alert {{ strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
                                                     {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? 'Risiko Rendah' }}
                                                 </div>
@@ -1790,7 +1790,7 @@
                                         <div class="mt-4">
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanBraden" 
+                                                <div id="kesimpulanBraden"
                                                     class="alert {{ strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
                                                     {{ $asesmen->rmeAsesmenPerinatologyResikoDekubitus->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
                                                 </div>
@@ -2015,9 +2015,9 @@
                                                 <option value="0" {{ $asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
-                                        
+
                                         <!-- Add more NRS form fields here -->
-                                        
+
                                         <!-- Nilai -->
                                         <div id="nrsConclusion" class="risk-indicators mt-4">
                                             <div class="alert alert-success" style="{{ strpos($asesmen->rmeAsesmenPerinatologyGizi->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko rendah</div>
@@ -2048,15 +2048,15 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                        <div id="adl_kesimpulan" class="alert {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional ? 
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' : 
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' : 
-                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success'))) 
+                                        <div id="adl_kesimpulan" class="alert {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional ?
+                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' :
+                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' :
+                                            (strpos($asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success')))
                                             : 'alert-info' }}">
                                             {{ isset($asesmen->rmeAsesmenPerinatologyFungsional) && $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional ? $asesmen->rmeAsesmenPerinatologyFungsional->kesimpulan_fungsional : 'Pilih skala aktivitas harian terlebih dahulu' }}
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Hidden fields untuk menyimpan data ADL -->
                                     <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->jenis_skala : '' }}">
                                     <input type="hidden" id="adl_makan" name="adl_makan" value="{{ isset($asesmen->rmeAsesmenPerinatologyFungsional) ? $asesmen->rmeAsesmenPerinatologyFungsional->makan : '' }}">
@@ -2161,11 +2161,11 @@
                                         <label class="form-label">Usia lanjut</label>
                                         <select class="form-select" name="usia_lanjut">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="0" 
+                                            <option value="0"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->usia_lanjut == '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="1" 
+                                            <option value="1"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->usia_lanjut == '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2176,11 +2176,11 @@
                                         <label class="form-label">Hambatan mobilisasi</label>
                                         <select class="form-select" name="hambatan_mobilisasi">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="0" 
+                                            <option value="0"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->hambatan_mobilisasi == '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="1" 
+                                            <option value="1"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->hambatan_mobilisasi == '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2191,11 +2191,11 @@
                                         <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
                                         <select class="form-select" name="penggunaan_media_berkelanjutan">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->membutuhkan_pelayanan_medis == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->membutuhkan_pelayanan_medis == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2215,11 +2215,11 @@
                                         <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah Pulang</label>
                                         <select class="form-select" name="keterampilan_khusus">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memerlukan_keterampilan_khusus == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memerlukan_keterampilan_khusus == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2230,11 +2230,11 @@
                                         <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit</label>
                                         <select class="form-select" name="alat_bantu">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memerlukan_alat_bantu == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memerlukan_alat_bantu == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2245,11 +2245,11 @@
                                         <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah Pulang</label>
                                         <select class="form-select" name="nyeri_kronis">
                                             <option value="" disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memiliki_nyeri_kronis == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->memiliki_nyeri_kronis == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -2259,11 +2259,11 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label">Perkiraan lama hari dirawat</label>
-                                            <input type="text" class="form-control" name="perkiraan_hari" 
+                                            <input type="text" class="form-control" name="perkiraan_hari"
                                                 placeholder="hari"
                                                 value="{{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->perkiraan_lama_dirawat ?? '' }}">
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <label class="form-label">Rencana Tanggal Pulang</label>
                                             <input type="date" class="form-control" name="tanggal_pulang"
@@ -2284,7 +2284,7 @@
                                                 Tidak mebutuhkan rencana pulang khusus
                                             </div>
                                         </div>
-                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing" 
+                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
                                             value="{{ optional($asesmen->rmeAsesmenPerinatologyRencanaPulang)->kesimpulan ?? 'Tidak mebutuhkan rencana pulang khusus' }}">
                                     </div>
                                 </div>
@@ -2295,11 +2295,11 @@
 
                                     @php
                                     // Parse existing diagnosis data from database
-                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_banding) 
-                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_banding, true) 
+                                    $diagnosisBanding = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_banding)
+                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_banding, true)
                                         : [];
-                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_kerja) 
-                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_kerja, true) 
+                                    $diagnosisKerja = !empty($asesmen->rmeAsesmenPerinatology->diagnosis_kerja)
+                                        ? json_decode($asesmen->rmeAsesmenPerinatology->diagnosis_kerja, true)
                                         : [];
                                     @endphp
 
@@ -2323,7 +2323,7 @@
                                             @forelse($diagnosisBanding as $index => $diagnosis)
                                                 <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
                                                     <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis" 
+                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis"
                                                         data-type="banding" data-index="{{ $index }}">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -2358,7 +2358,7 @@
                                             @forelse($diagnosisKerja as $index => $diagnosis)
                                                 <div class="diagnosis-item d-flex justify-content-between align-items-center mb-2">
                                                     <span>{{ $index + 1 }}. {{ $diagnosis }}</span>
-                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis" 
+                                                    <button type="button" class="btn btn-sm text-danger delete-diagnosis"
                                                         data-type="kerja" data-index="{{ $index }}">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -2380,20 +2380,20 @@
 
                                     @php
                                         // Parse data implementasi dari database (sesuaikan dengan field di model asesmen anak)
-                                        $observasi = !empty($asesmen->rmeAsesmenPerinatology->observasi) 
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->observasi, true) 
+                                        $observasi = !empty($asesmen->rmeAsesmenPerinatology->observasi)
+                                            ? json_decode($asesmen->rmeAsesmenPerinatology->observasi, true)
                                             : [];
-                                        $terapeutik = !empty($asesmen->rmeAsesmenPerinatology->terapeutik) 
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->terapeutik, true) 
+                                        $terapeutik = !empty($asesmen->rmeAsesmenPerinatology->terapeutik)
+                                            ? json_decode($asesmen->rmeAsesmenPerinatology->terapeutik, true)
                                             : [];
-                                        $edukasi = !empty($asesmen->rmeAsesmenPerinatology->edukasi) 
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->edukasi, true) 
+                                        $edukasi = !empty($asesmen->rmeAsesmenPerinatology->edukasi)
+                                            ? json_decode($asesmen->rmeAsesmenPerinatology->edukasi, true)
                                             : [];
-                                        $kolaborasi = !empty($asesmen->rmeAsesmenPerinatology->kolaborasi) 
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->kolaborasi, true) 
+                                        $kolaborasi = !empty($asesmen->rmeAsesmenPerinatology->kolaborasi)
+                                            ? json_decode($asesmen->rmeAsesmenPerinatology->kolaborasi, true)
                                             : [];
-                                        $prognosis = !empty($asesmen->rmeAsesmenPerinatology->prognosis) 
-                                            ? json_decode($asesmen->rmeAsesmenPerinatology->prognosis, true) 
+                                        $prognosis = !empty($asesmen->rmeAsesmenPerinatology->prognosis)
+                                            ? json_decode($asesmen->rmeAsesmenPerinatology->prognosis, true)
                                             : [];
                                     @endphp
 

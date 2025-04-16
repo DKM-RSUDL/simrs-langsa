@@ -21,6 +21,8 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -45,12 +47,12 @@ class AsesmenKepOpthamologyController extends Controller
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
             ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
@@ -101,8 +103,8 @@ class AsesmenKepOpthamologyController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        // dd($request->all());
         DB::beginTransaction();
+
         try {
             $tanggal = $request->tanggal_masuk;
             $jam = $request->jam_masuk;
@@ -311,6 +313,44 @@ class AsesmenKepOpthamologyController extends Controller
             $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
             $asesmenRencana->save();
 
+
+            // RESUME
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->suhu
+                    ],
+                    'nadi'   => [
+                        'hasil' => $request->nadi
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tinggi_badan
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->berat_badan
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
             DB::commit();
 
             return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
@@ -325,7 +365,7 @@ class AsesmenKepOpthamologyController extends Controller
     {
         try {
             // Ambil data asesmen beserta semua relasinya
-            
+
 
             $asesmen = RmeAsesmen::with([
                 'user',
@@ -527,6 +567,8 @@ class AsesmenKepOpthamologyController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+
         try {
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->user_id = Auth::id();
@@ -762,14 +804,114 @@ class AsesmenKepOpthamologyController extends Controller
                 'kesimpulan' => $request->kesimpulan_planing
             ]);
 
+
+            // RESUME
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->suhu
+                    ],
+                    'nadi'   => [
+                        'hasil' => $request->nadi
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tinggi_badan
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->berat_badan
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            DB::commit();
+
             return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
                 ->with('success', 'Data asesmen Opthamology berhasil diperbarui');
         } catch (ModelNotFoundException $e) {
+            DB::rollBack();
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
         } catch (\Exception $e) {
+            DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
+    }
 }
