@@ -297,7 +297,7 @@
                                                     <div class="col-md-10">
                                                         <div class="input-group">
                                                             <span class="input-group-text">Isokor/anisokor:</span>
-                                                            <input type="text" class="form-control" name="pupil_isokor">
+                                                            {{-- <input type="text" class="form-control" name="pupil_isokor"> --}}
                                                             <span class="input-group-text">Ø:</span>
                                                             <input type="text" class="form-control"
                                                                 style="width: 60px" name="pupil_anisokor">
@@ -378,7 +378,7 @@
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-2">
-                                                        <label>Refleks Patologis</label>
+                                                        <label>Refleks Fisiologis</label>
                                                     </div>
                                                     <div class="col-md-10">
                                                         <div class="row">

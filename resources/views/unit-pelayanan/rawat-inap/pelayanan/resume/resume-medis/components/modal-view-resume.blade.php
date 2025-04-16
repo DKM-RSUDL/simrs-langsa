@@ -368,8 +368,10 @@
 
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-labor')
 
-<script>
-    $('#btn-view-resume').on('click', function() {
-        $('#modal-view-resume').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-view-resume').on('click', function() {
+            $('#modal-view-resume').modal('show');
+        });
+    </script>
+@endpush

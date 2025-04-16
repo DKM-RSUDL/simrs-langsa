@@ -55,8 +55,7 @@ class FarmasiController extends Controller
 
     public function store($kd_pasien, $tgl_masuk, Request $request)
     {
-        // DB::beginTransaction();
-        // dd($request->all());
+        DB::beginTransaction();
 
         try {
             // Validasi input
@@ -144,14 +143,12 @@ class FarmasiController extends Controller
                 $mrResepDtl->save();
             }
 
-            // DB::commit();
             $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-            Log::info('Resep berhasil disimpan', ['id_mrresep' => $ID_MRRESEP]);
 
+            DB::commit();
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $ID_MRRESEP], 200);
         } catch (\Exception $e) {
-            // DB::rollback();
-            Log::error('Error in FarmasiController@store', ['error' => $e->getMessage()]);
+            DB::rollback();
             return response()->json(['message' => 'Terjadi kesalahan internal server', 'error' => $e->getMessage()], 500);
         }
     }
@@ -166,28 +163,28 @@ class FarmasiController extends Controller
         }
 
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
-        ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where(function ($query) use ($search) {
-            // Optimize search conditions
-            $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
-                ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
-        })
-        ->select(
-            'APT_OBAT.KD_PRD as id',
-            'APT_OBAT.nama_obat as text',
-            'latest_price.HRG_BELI_OBT as harga',
-            'APT_SATUAN.SATUAN as satuan'
-        )
-        ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-        ->limit(10)
-        ->get();
+            ->where(function ($query) use ($search) {
+                // Optimize search conditions
+                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
+                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
+            })
+            ->select(
+                'APT_OBAT.KD_PRD as id',
+                'APT_OBAT.nama_obat as text',
+                'latest_price.HRG_BELI_OBT as harga',
+                'APT_SATUAN.SATUAN as satuan'
+            )
+            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
+            ->limit(10)
+            ->get();
 
         // Simpan ke cache selama 5 menit
         Cache::put($cacheKey, $obats, now()->addMinutes(5));
@@ -198,18 +195,18 @@ class FarmasiController extends Controller
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
@@ -237,11 +234,11 @@ class FarmasiController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -297,5 +294,4 @@ class FarmasiController extends Controller
             if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
-    
 }

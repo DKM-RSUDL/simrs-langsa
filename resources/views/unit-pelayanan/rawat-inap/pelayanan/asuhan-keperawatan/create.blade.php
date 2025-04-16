@@ -27,7 +27,7 @@
                                 <div class="col-md-4">
                                     <div class="mb-3 mb-md-0">
                                         <label class="form-label fw-bold">Tanggal Implementasi</label>
-                                        <input type="date" class="form-control" name="tgl_implementasi">
+                                        <input type="date" class="form-control" name="tgl_implementasi" value="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-8">

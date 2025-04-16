@@ -367,9 +367,15 @@
         $('.modal-edit-labor').on('shown.bs.modal', function() {
             let $this = $(this);
 
-            $this.find('#kd_dokter').mousedown(function(e) {
-                e.preventDefault();
-            });
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#kd_dokter').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
         });
 
         // $(document).ready(function() {

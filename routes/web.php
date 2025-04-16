@@ -386,6 +386,7 @@ Route::middleware('auth')->group(function () {
                                 Route::name('.rawat-inap-resume')->group(function () {
                                     Route::controller(RawatInapResumeController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::post('/validasi', 'validasiResume')->name('.validasi');
                                         Route::put('/{id}', 'update')->name('.update');
                                     });
                                 });

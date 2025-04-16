@@ -1682,7 +1682,7 @@
 
                                         <div class="form-group mb-3">
                                             <label style="min-width: 200px;">Pekerjaan</label>
-                                            <select class="form-select" name="sosial_ekonomi_pekerjaan"
+                                            <select class="form-select select2" name="sosial_ekonomi_pekerjaan"
                                                 id="sosial_pekerjaan">
                                                 <option value="">--Pilih Pekerjaan--</option>
                                                 @foreach ($pekerjaan as $kerjaan)
