@@ -67,12 +67,9 @@
             <div class="col-md-3">
                 <div class="card mb-4 p-3">
                     <div class="card-body">
-                        <h5 class="card-title">Informasi</h5>
-                        {{-- <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod recusandae molestiae quam
-                            a vitae dolorum
-                        </p> --}}
-                        <a href="#" class="btn btn-primary">Selengkap</a>
+                        <h5 class="card-title">Status RME</h5>
+                        <p class="card-text">Sistem Rekam Medis Elektronik RSUD Langsa: <span class="fw-bold text-success">Online</span></p>
+                        <a href="#" class="btn btn-primary btn-sm">Cek Detail</a>
                     </div>
                 </div>
             </div>
@@ -84,38 +81,181 @@
             <div class="col-md-8">
                 <div class="card mb-3 p-4">
                     <div class="row">
-                        @foreach ([['route' => route('rawat-jalan.index'), 'icon' => 'wheelchair', 'title' => 'Rawat Jalan', 'patients' => 23], ['route' => route('rawat-inap.index'), 'icon' => 'procedures', 'title' => 'Rawat Inap', 'patients' => 11], ['route' => route('gawat-darurat.index'), 'icon' => 'truck-medical', 'title' => 'Gawat Darurat', 'patients' => 23], ['route' => '#', 'icon' => 'person-dots-from-line', 'title' => 'Bedah Sentral', 'patients' => 4], ['route' => '#', 'icon' => 'lungs', 'title' => 'Hemodialisis', 'patients' => 23], ['route' => '#', 'icon' => 'flask', 'title' => 'Cathlab', 'patients' => 31], ['route' => 'unit-pelayanan/forensik', 'icon' => 'magnifying-glass', 'title' => 'Forensik', 'patients' => 31], ['route' => '#', 'icon' => 'notes-medical', 'title' => 'Rehab Medis', 'patients' => 31], ['route' => '#', 'icon' => 'mortar-pestle', 'title' => 'Gizi Klinis', 'patients' => 31]] as $card)
-                            <div class="col-md-4 p-2">
-                                <a href="{{ $card['route'] }}" class="text-decoration-none card-hover">
-                                    <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
-                                        <div class="card-body d-flex align-items-center">
-                                            <div class="me-2">
-                                                <i class="fa fa-{{ $card['icon'] }} fa-2x"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fs-6 fw-bold text-primary">{{ $card['title'] }}</div>
-                                                <div class="fs-6 text-muted">Pasien: <span
-                                                        class="fw-bold text-black">{{ $card['patients'] }}</span></div>
-                                            </div>
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rawat-jalan.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-wheelchair fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rawat Jalan</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
                                         </div>
                                     </div>
-                                </a>
-                            </div>
-                        @endforeach
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rawat-inap.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-procedures fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rawat Inap</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('gawat-darurat.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-truck-medical fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Gawat Darurat</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('operasi.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-person-dots-from-line fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Bedah Sentral</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-lungs fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Hemodialisa</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-flask fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Cathlab</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('forensik.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-magnifying-glass fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Forensik</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="{{ route('rehab-medis.index') }}" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-notes-medical fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Rehab Medik</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 p-2">
+                            <a href="#" class="text-decoration-none card-hover">
+                                <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-mortar-pestle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-6 fw-bold text-primary">Gizi Klinis</div>
+                                            <div class="fs-6 text-muted">Pasien: <span
+                                                    class="fw-bold text-black">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="card mb-4 p-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Informasi</h5>
-                        {{-- <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quod
-                            recusandae molestiae quam a vitae dolorum, nihil quidem accusamus ratione? Hic beatae, eius
-                            voluptatem nobis dolore necessitatibus blanditiis ipsam ea.</p> --}}
-                    </div>
+                    <h5 class="card-title">Informasi Sistem RME RSUD Langsa</h5>
+                    <p class="card-text">
+                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak pendaftaran hingga pelaporan. 
+                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan pengurangan penggunaan kertas sesuai 
+                        Peraturan Menteri Kesehatan No. 24 Tahun 2022.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><strong>Lokasi:</strong> Jl. Jend. A. Yani No.1, Langsa, Aceh</li>
+                        <li><strong>Status Akreditasi:</strong> Tingkat Utama (KARS 2017)</li>
+                        <li><strong>Kontak:</strong> (0641) 22800</li>
+                    </ul>
+                    <a href="https://rsud.langsakota.go.id" target="_blank" class="btn btn-outline-primary btn-sm">Kunjungi Situs Resmi</a>
                 </div>
             </div>
+
         </div>
 
 

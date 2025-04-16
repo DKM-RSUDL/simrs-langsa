@@ -70,13 +70,6 @@
                                             <label style="min-width: 200px;">Barang Berharga</label>
                                             <input type="text" class="form-control" name="barang_berharga">
                                         </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 200px;">Ruang</label>
-                                            <select class="form-select" name="ruang">
-                                                <option selected disabled>Pilih</option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <div class="section-separator" id="anamnesis">
@@ -123,12 +116,12 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Tanpa Bantuan O2</label>
-                                                    <input type="number" class="form-control" name="saturasi_o2_tanpa"
+                                                    <input type="number" class="form-control" name="spo_o2_tanpa"
                                                         placeholder="Tanpa bantuan O2">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Bantuan O2</label>
-                                                    <input type="number" class="form-control" name="saturasi_o2_dengan"
+                                                    <input type="number" class="form-control" name="spo_o2_dengan"
                                                         placeholder="Dengan bantuan O2">
                                                 </div>
                                             </div>
@@ -142,37 +135,37 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Sensorium</label>
-                                            <input type="text" class="form-control" name="Sensorium"
+                                            <input type="text" class="form-control" name="sensorium"
                                                 placeholder="Jelaskan">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Anemis</label>
-                                            <input type="text" class="form-control" name="Anemis"
+                                            <input type="text" class="form-control" name="anemis"
                                                 placeholder="Jelaskan">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Ikhterik</label>
-                                            <input type="text" class="form-control" name="Ikhterik"
+                                            <input type="text" class="form-control" name="ikhterik"
                                                 placeholder="Jelaskan">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Dyspnoe</label>
-                                            <input type="text" class="form-control" name="Dyspnoe"
+                                            <input type="text" class="form-control" name="dyspnoe"
                                                 placeholder="Jelaskan">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Sianosis</label>
-                                            <input type="text" class="form-control" name="Sianosis"
+                                            <input type="text" class="form-control" name="sianosis"
                                                 placeholder="Jelaskan">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Edema</label>
-                                            <input type="text" class="form-control" name="Edema"
+                                            <input type="text" class="form-control" name="edema"
                                                 placeholder="Jelaskan">
                                         </div>
 
@@ -194,13 +187,13 @@
                                             <h6>Pemeriksaan Fisik Komperenshif</h6>
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">RPT</label>
-                                                <input type="text" class="form-control" name="RPT"
+                                                <input type="text" class="form-control" name="rpt"
                                                     placeholder="jelaskan">
                                             </div>
 
                                             <div class="form-group">
                                                 <label style="min-width: 200px;">RPO</label>
-                                                <input type="text" class="form-control" name="RPO"
+                                                <input type="text" class="form-control" name="rpo"
                                                     placeholder="jelaskan">
                                             </div>
 
@@ -226,12 +219,12 @@
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
                                                         <input type="text" class="form-control"
-                                                            name="kor_oculi_dextra" placeholder="jelaskan">
+                                                            name="sph_oculi_dextra" placeholder="jelaskan">
                                                     </div>
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
-                                                            name="kor_oculi_sinistra" placeholder="jelaskan">
+                                                            name="sph_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -289,12 +282,12 @@
                                                 <div class="d-flex gap-3" style="width: 100%;">
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">TOD</label>
-                                                        <input type="text" class="form-control" name="tos"
+                                                        <input type="text" class="form-control" name="tio_tod"
                                                             placeholder="jelaskan">
                                                     </div>
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">TOS</label>
-                                                        <input type="text" class="form-control" name="tod"
+                                                        <input type="text" class="form-control" name="tio_tos"
                                                             placeholder="jelaskan">
                                                     </div>
                                                 </div>
@@ -400,7 +393,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label style="min-width: 200px;">Palpebra Inferior</label>
+                                                <label style="min-width: 200px;">Palpebra Superior</label>
                                                 <div class="d-flex gap-3" style="width: 100%;">
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
@@ -416,23 +409,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label style="min-width: 200px;">Conj. Tars Superior</label>
-                                                <div class="d-flex gap-3" style="width: 100%;">
-                                                    <div class="flex-grow-1">
-                                                        <label class="form-label">Oculi Dextra</label>
-                                                        <input type="text" class="form-control"
-                                                            name="superior_oculi_dextra" placeholder="jelaskan">
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <label class="form-label">Oculi Sinistra</label>
-                                                        <input type="text" class="form-control"
-                                                            name="superior_oculi_sinistra" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Conj. Tars. Inferior</label>
+                                                <label style="min-width: 200px;">Palpebra Inferior</label>
                                                 <div class="d-flex gap-3" style="width: 100%;">
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
@@ -443,6 +420,38 @@
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
                                                             name="inferior_oculi_sinistra" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Conj. Tars Superior</label>
+                                                <div class="d-flex gap-3" style="width: 100%;">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label">Oculi Dextra</label>
+                                                        <input type="text" class="form-control"
+                                                            name="tars_superior_oculi_dextra" placeholder="jelaskan">
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label">Oculi Sinistra</label>
+                                                        <input type="text" class="form-control"
+                                                            name="tars_superior_oculi_sinistra" placeholder="jelaskan">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="min-width: 200px;">Conj. Tars. Inferior</label>
+                                                <div class="d-flex gap-3" style="width: 100%;">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label">Oculi Dextra</label>
+                                                        <input type="text" class="form-control"
+                                                            name="tars_inferior_oculi_dextra" placeholder="jelaskan">
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label">Oculi Sinistra</label>
+                                                        <input type="text" class="form-control"
+                                                            name="tars_inferior_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -459,22 +468,6 @@
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
                                                             name="bulbi_oculi_sinistra" placeholder="jelaskan">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label style="min-width: 200px;">Sclera</label>
-                                                <div class="d-flex gap-3" style="width: 100%;">
-                                                    <div class="flex-grow-1">
-                                                        <label class="form-label">Oculi Dextra</label>
-                                                        <input type="text" class="form-control"
-                                                            name="sclera_oculi_dextra" placeholder="jelaskan">
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <label class="form-label">Oculi Sinistra</label>
-                                                        <input type="text" class="form-control"
-                                                            name="sclera_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -517,12 +510,12 @@
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
                                                         <input type="text" class="form-control"
-                                                            name="camera_oculi_dextra" placeholder="jelaskan">
+                                                            name="anterior_oculi_dextra" placeholder="jelaskan">
                                                     </div>
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
-                                                            name="camera_oculi_sinistra" placeholder="jelaskan">
+                                                            name="anterior_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,12 +574,12 @@
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
                                                         <input type="text" class="form-control"
-                                                            name="corpus_oculi_dextra" placeholder="jelaskan">
+                                                            name="vitreous_oculi_dextra" placeholder="jelaskan">
                                                     </div>
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
-                                                            name="corpus_oculi_sinistra" placeholder="jelaskan">
+                                                            name="vitreous_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -614,12 +607,12 @@
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Dextra</label>
                                                         <input type="text" class="form-control"
-                                                            name="sclera_oculi_dextra" placeholder="jelaskan">
+                                                            name="papil_oculi_dextra" placeholder="jelaskan">
                                                     </div>
                                                     <div class="flex-grow-1">
                                                         <label class="form-label">Oculi Sinistra</label>
                                                         <input type="text" class="form-control"
-                                                            name="sclera_oculi_sinistra" placeholder="jelaskan">
+                                                            name="papil_oculi_sinistra" placeholder="jelaskan">
                                                     </div>
                                                 </div>
                                             </div>
@@ -923,7 +916,7 @@
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
-                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData">
+                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" value="[]">
                                         <div class="table-responsive">
                                             <table class="table" id="createRiwayatObatTable">
                                                 <thead>

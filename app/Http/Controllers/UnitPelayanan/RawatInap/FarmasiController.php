@@ -8,6 +8,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
+use App\Models\RmeCatatanPemberianObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
@@ -44,13 +45,14 @@ class FarmasiController extends Controller
 
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
+        $riwayatCatatanObat = $this->getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk);
         // dd($riwayatObatHariIni);
 
         $dokters = Dokter::all();
 
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters')
+            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'riwayatCatatanObat', 'kd_pasien', 'tgl_masuk', 'dokters')
         );
     }
 
@@ -63,7 +65,8 @@ class FarmasiController extends Controller
             // Validasi input
             $validatedData = $request->validate([
                 'kd_dokter' => 'required',
-                'tgl_order' => 'required|date_format:Y-m-d H:i:s',
+                'tgl_order' => 'required|date_format:Y-m-d',
+                'jam_order' => 'required',
                 'cat_racikan' => 'nullable|string',
                 'obat' => 'required|array|min:1',
                 'obat.*.id' => 'required',
@@ -117,8 +120,9 @@ class FarmasiController extends Controller
             $mrResep->URUT_MASUK = $kunjungan->urut_masuk;
             $mrResep->KD_DOKTER = $validatedData['kd_dokter'];
             $mrResep->ID_MRRESEP = $ID_MRRESEP;
-            $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? null;
+            $mrResep->CAT_RACIKAN = $validatedData['cat_racikan'] ?? '';
             $mrResep->TGL_ORDER = $validatedData['tgl_order'];
+            $mrResep->JAM_ORDER = $validatedData['jam_order'];
             $mrResep->STATUS = 0;
             $mrResep->DILAYANI = 0;
             $mrResep->STTS_TERIMA = 0;
@@ -138,6 +142,8 @@ class FarmasiController extends Controller
                 $mrResepDtl->SATUAN_TAKARAN = $obat['satuan'];
                 $mrResepDtl->KD_DOKTER = $validatedData['kd_dokter'];
                 $mrResepDtl->KET = $obat['aturanTambahan'];
+                $mrResepDtl->RACIKAN = 0;
+                $mrResepDtl->VERIFIED = 1;
                 $mrResep->STATUS = 0;
                 $mrResepDtl->save();
             }
@@ -282,5 +288,93 @@ class FarmasiController extends Controller
             if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
+
+    public function catatanObat(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        try {
+            // Validasi data
+            $validatedData = $request->validate([
+                'kd_petugas' => 'required',
+                'nama_obat' => 'required',
+                'frekuensi' => 'required',
+                'keterangan' => 'required',
+                'dosis' => 'required',
+                'satuan' => 'required',
+                'tanggal' => 'required|date',
+                'freak' => 'required',
+                'jam' => 'required',
+                'catatan' => 'nullable',
+            ]);
+
+            // Simpan ke tabel RmeCatatanPemberianObat
+            $catatan = new RmeCatatanPemberianObat();
+            $catatan->kd_pasien = $kd_pasien;
+            $catatan->kd_unit = $kd_unit;
+            $catatan->tgl_masuk = $tgl_masuk;
+            $catatan->urut_masuk = $urut_masuk;
+            $catatan->kd_petugas = $validatedData['kd_petugas'];
+            $catatan->nama_obat = $validatedData['nama_obat'];
+            $catatan->frekuensi = $validatedData['frekuensi'];
+            $catatan->keterangan = $validatedData['keterangan'];
+            $catatan->dosis = $validatedData['dosis'];
+            $catatan->satuan = $validatedData['satuan'];
+            $catatan->freak = $validatedData['freak'];
+            $catatan->tanggal = $validatedData['tanggal'] . ' ' . $validatedData['jam'];
+            $catatan->catatan = $validatedData['catatan'];
+            $catatan->save();
+
+            return response()->json(['message' => 'Catatan pemberian obat berhasil disimpan', 'id' => $catatan->id]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Gagal menyimpan catatan', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function getRiwayatCatatanPemberianObat($kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk)
+    {
+        return RmeCatatanPemberianObat::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->with('petugas')
+            ->select(
+                'id',
+                'kd_petugas',
+                'nama_obat',
+                'frekuensi',
+                'dosis',
+                'satuan',
+                'keterangan',
+                'freak',
+                'tanggal',
+                'catatan'
+            )
+            ->orderBy('tanggal', 'desc')
+            ->get();
+    }
+
+    public function hapusCatatanObat($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Cari record berdasarkan ID
+            $catatan = RmeCatatanPemberianObat::find($id);
+
+            if (!$catatan) {
+                return response()->json([
+                    'message' => 'Gagal menghapus catatan',
+                    'error' => 'Catatan dengan ID ' . $id . ' tidak ditemukan'
+                ], 404);
+            }
+
+            $catatan->delete();
+
+            return response()->json(['message' => 'Catatan pemberian obat berhasil dihapus']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal menghapus catatan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
 
 }

@@ -11,13 +11,21 @@ use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\PasienInap;
 use App\Models\RujukanKunjungan;
 use App\Models\SjpKunjungan;
 use App\Models\Transaksi;
+use App\Models\Unit;
+use App\Models\User;
+use App\Models\HrdKaryawan;
+use App\Models\HrdRuangan;
+use App\Models\RmeSerahTerima;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+
 
 class GawatDaruratController extends Controller
 {
@@ -30,7 +38,17 @@ class GawatDaruratController extends Controller
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', 3);
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', 3)
+                ->where('t.Dilayani', 0)
+                ->where('t.co_status', 0)
+                ->whereNull('kunjungan.tgl_keluar')
+                ->whereNull('kunjungan.jam_keluar');
             // ->whereDate('tgl_masuk', '>=', $tglBatasData);
 
             // Filte dokter
@@ -64,9 +82,9 @@ class GawatDaruratController extends Controller
                 })
 
                 ->order(function ($query) {
-                    $query->orderBy('tgl_masuk', 'desc')
-                        ->orderBy('antrian', 'desc')
-                        ->orderBy('urut_masuk', 'desc');
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.antrian', 'desc')
+                        ->orderBy('kunjungan.urut_masuk', 'desc');
                 })
                 ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
                 ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')
@@ -471,8 +489,9 @@ class GawatDaruratController extends Controller
         }
     }
 
-    public function rujukAntarRs($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function serahTerimaPasien($kd_pasien, $tgl_masuk, $urut_masuk)
     {
+
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -486,6 +505,119 @@ class GawatDaruratController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis'));
+        // Menghitung umur berdasarkan tgl_lahir jika ada
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+
+        $serahTerimaData = RmeSerahTerima::with(['unitAsal', 'unitTujuan', 'petugasAsal', 'petugasTerima'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit_asal', 3)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        if (empty($serahTerimaData)) abort(404, 'Data serah terima tidak ditemukan !');
+
+        $unit = Unit::where('aktif', 1)->get();
+        $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
+
+        $petugasIGD = User::with('karyawan')
+            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
+            ->whereRelation('karyawan', 'kd_detail_jenis_tenaga', 1)
+            ->whereRelation('karyawan', 'kd_ruangan', 36)
+            ->get();
+
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.serah-terima-pasien.index', compact('dataMedis', 'serahTerimaData', 'unit', 'unitTujuan', 'petugasIGD'));
+    }
+
+    public function getPetugasByUnit(Request $request)
+    {
+        // dd($request);
+        $kdUnit = $request->kd_unit;
+
+        if (!$kdUnit) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kode unit tidak ditemukan!',
+                'data' => []
+            ]);
+        }
+
+        $users = User::join('hrd_karyawan', 'rme_users.kd_karyawan', '=', 'hrd_karyawan.kd_karyawan')
+            ->join('hrd_ruangan', 'hrd_karyawan.kd_ruangan', '=', 'hrd_ruangan.kd_ruangan')
+            ->select('rme_users.id', 'rme_users.name')
+            ->where('hrd_ruangan.kd_unit', $kdUnit)
+            ->get();
+
+        // if ($users->isEmpty()) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Tidak ada petugas di unit ini!',
+        //         'data' => []
+        //     ]);
+        // }
+
+        $petugasOptions = '<option value="">--pilih petugas--</option>';
+        foreach ($users as $user) {
+            $petugasOptions .= "<option value='{$user->id}'>{$user->name}</option>";
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data petugas berhasil diambil.',
+            'data' => [
+                'petugasOption' => $petugasOptions
+            ]
+        ]);
+    }
+
+    public function serahTerimaPasienCreate($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // validasi
+            $request->validate([
+                'subjective'            => 'required',
+                'background'            => 'required',
+                'assessment'            => 'required',
+                'recomendation'         => 'required',
+                'petugas_menyerahkan'   => 'required',
+                'tanggal_menyerahkan'   => 'required|date_format:Y-m-d',
+                'jam_menyerahkan'       => 'required|date_format:H:i',
+            ]);
+
+
+
+            // data
+            $data = [
+                'subjective'            => $request->subjective,
+                'background'            => $request->background,
+                'assessment'            => $request->assessment,
+                'recomendation'         => $request->recomendation,
+                'petugas_menyerahkan'   => $request->petugas_menyerahkan,
+                'tanggal_menyerahkan'   => $request->tanggal_menyerahkan,
+                'jam_menyerahkan'       => $request->jam_menyerahkan,
+                'status'                => 1
+            ];
+
+            $id = decrypt($idEncrypt);
+            RmeSerahTerima::where('id', $id)->update($data);
+
+            DB::commit();
+            return to_route('gawat-darurat.index')->with('success', 'Pasien berhasil diserahkan ke rawat inap!');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

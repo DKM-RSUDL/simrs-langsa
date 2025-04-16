@@ -156,7 +156,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Semua Pasien</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">55</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countActivePatientRajal($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="text-center">
                             <p class="m-0 p-0">Belum Selesai</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countUnfinishedPatientRajal($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -189,7 +189,7 @@
                         </div>
                         <div class="text-center">
                             <p class="m-0 p-0">Selesai</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">22</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countFinishedPatientRajal($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>

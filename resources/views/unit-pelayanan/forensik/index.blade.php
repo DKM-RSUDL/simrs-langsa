@@ -14,7 +14,7 @@
                             <hr class="text-secondary">
                             <p class="text-black">
                                 <img src="{{ asset('assets/img/Account.png') }}" alt="" width="15%">
-                                Pasien : 0
+                                Pasien : {{ countUnfinishedPatientRajal(228) }}
                             </p>
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                             <hr class="text-secondary">
                             <p class="text-black">
                                 <img src="{{ asset('assets/img/Account.png') }}" alt="" width="15%">
-                                Pasien : 0
+                                Pasien : {{ countUnfinishedPatientWithTglKeluar(76) }}
                             </p>
                         </div>
                     </div>

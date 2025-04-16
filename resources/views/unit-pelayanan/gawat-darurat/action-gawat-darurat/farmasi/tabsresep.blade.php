@@ -22,7 +22,7 @@
 
     {{-- Tabel E-Resep Obat & BMHP --}}
     <div class="table-responsive">
-        <table class="table table-bordered" id="tabelResep">
+        <table class="table table-bordered table-hover" id="tabelResep">
             <thead>
                 <tr>
                     <th>#Order</th>
@@ -77,7 +77,7 @@
                     }
                 @endphp
                 
-                <tr>
+                <tr class="{{ $loop->odd ? 'table-light' : 'table-secondary' }}">
                     <td>{{ (int)$resep->id_mrresep }}</td>    
                     <td>{{ \Carbon\Carbon::parse($resep->tgl_order)->format('d-m-Y H:i') }}</td>
                     <td>{{ $resep->nama_obat ?? 'Tidak ada informasi' }}</td>

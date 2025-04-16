@@ -11,7 +11,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RehabMedisController extends Controller
 {
-    protected $roleService;
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->kdUnitDef_ = 74;
+    }
+
     public function index(Request $request)
     {
 
@@ -19,7 +25,15 @@ class RehabMedisController extends Controller
             $dokterFilter = $request->get('dokter');
 
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', 214);
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('t.kd_unit', $this->kdUnitDef_)
+                ->whereNull('kunjungan.tgl_keluar')
+                ->whereNull('kunjungan.jam_keluar');
 
             // Filte dokter
             if (!empty($dokterFilter)) $data->where('kd_dokter', $dokterFilter);
@@ -52,9 +66,9 @@ class RehabMedisController extends Controller
                 })
 
                 ->order(function ($query) {
-                    $query->orderBy('tgl_masuk', 'desc')
-                        ->orderBy('antrian', 'desc')
-                        ->orderBy('urut_masuk', 'desc');
+                    $query->orderBy('kunjungan.tgl_masuk', 'desc')
+                        ->orderBy('kunjungan.antrian', 'desc')
+                        ->orderBy('t.urut_masuk', 'desc');
                 })
                 ->editColumn('tgl_masuk', fn($row) => date('Y-m-d', strtotime($row->tgl_masuk)) ?: '-')
                 ->addColumn('triase', fn($row) => $row->kd_triase ?: '-')
@@ -84,20 +98,21 @@ class RehabMedisController extends Controller
         }
 
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                            ->where('kd_unit', 214)
-                            ->whereRelation('dokter', 'status', 1)
-                            ->get();
+            ->where('kd_unit', 214)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
-        return view('unit-pelayanan.rehab-medis.index', compact('dokter',));
+        return view('unit-pelayanan.rehab-medis.index', compact('dokter'));
     }
 
-    public function pelayanan($kd_pasien, $tgl_masuk)
+    public function pelayanan($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->where('kd_unit', 214)
+            ->where('kd_unit', $this->kdUnitDef_)
             ->where('kd_pasien', $kd_pasien)
             ->whereDate('tgl_masuk', $tgl_masuk)
-            ->firstOrFail();
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
         // Menghitung umur berdasarkan tgl_lahir jika ada
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {

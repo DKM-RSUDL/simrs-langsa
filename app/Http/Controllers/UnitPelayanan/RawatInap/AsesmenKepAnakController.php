@@ -259,16 +259,16 @@ class AsesmenKepAnakController extends Controller
                 ]);
             }
 
+
             //Simpan ke table RmeKepAnakStatusNyeri
+            $statusNyeri = new RmeAsesmenKepAnakStatusNyeri();
+            $statusNyeri->id_asesmen = $dataAsesmen->id;
             if ($request->filled('jenis_skala_nyeri')) {
                 $jenisSkala = [
                     'NRS' => 1,
                     'FLACC' => 2,
                     'CRIES' => 3
                 ];
-
-                $statusNyeri = new RmeAsesmenKepAnakStatusNyeri();
-                $statusNyeri->id_asesmen = $dataAsesmen->id;
                 $statusNyeri->jenis_skala_nyeri = $jenisSkala[$request->jenis_skala_nyeri];
                 $statusNyeri->nilai_nyeri = $request->nilai_skala_nyeri;
                 $statusNyeri->kesimpulan_nyeri = $request->kesimpulan_nyeri;
@@ -302,9 +302,10 @@ class AsesmenKepAnakController extends Controller
                 $statusNyeri->faktor_pemberat = $request->faktor_pemberat;
                 $statusNyeri->faktor_peringan = $request->faktor_peringan;
                 $statusNyeri->efek_nyeri = $request->efek_nyeri;
-                $statusNyeri->save();
             }
+            $statusNyeri->save();
 
+            
             //Simpan ke table RmeAsesmenKepAnakRiwayatKesehatan
             $riwayatKesehatan = new RmeAsesmenKepAnakRiwayatKesehatan();
             $riwayatKesehatan->id_asesmen = $dataAsesmen->id;
@@ -549,8 +550,8 @@ class AsesmenKepAnakController extends Controller
                 $statusFungsional->kesimpulan = $request->adl_kesimpulan_value;
                 $statusFungsional->nilai_skala_adl = $request->filled('adl_total') ? (int)$request->adl_total : null;
                 $statusFungsional->kesimpulan_fungsional = $request->adl_kesimpulan_value;
-                $statusFungsional->save();
             }
+            $statusFungsional->save();
 
             // Simpan ke table RmeAsesmenKepAnakRencana
             $asesmenRencana = new RmeAsesmenKepAnakRencanaPulang();

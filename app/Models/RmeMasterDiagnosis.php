@@ -10,4 +10,8 @@ class RmeMasterDiagnosis extends Model
     use HasFactory;
     protected $table = 'RME_MASTER_DIAGNOSIS';
     public $timestamps = false;
+
+    protected $fillable = [
+        'nama_diagnosis'
+    ];
 }

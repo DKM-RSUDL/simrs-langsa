@@ -48,7 +48,9 @@
             <!-- Add Button -->
             <!-- Include the modal file -->
             <div class="col-md-2">
-                <a href="javascript:void(0)" id="btn-create-program" class="btn btn-primary">Tambah</a>
+                @if (count($tindakan) < 1)
+                    <a href="{{ route('rehab-medis.pelayanan.layanan.program.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                @endif
             </div>
 
         </div>
@@ -57,7 +59,7 @@
     <div class="table-responsive">
         <table class="table table-bordered table-sm table-hover">
             <thead class="table-primary">
-                <tr>
+                <tr align="middle">
                     <th width="100px">No</th>
                     <th>Tanggal</th>
                     <th>Program</th>
@@ -65,27 +67,110 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>098</td>
-                    <td>08 Desember 2024</td>
-                    <td>Program 1</td>
-                    <td>
-                        <a href="javascript:void(0)" id="btn-asuhan-edit" class="mb-2 btn btn-sm btn-warning">
-                            <i class="ti-pencil"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="mb-2 btn btn-sm btn-danger btn-delete">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                </tr>
+
+                @foreach ($programs as $item)
+                    <tr>
+                        <td align="middle">{{ $loop->iteration }}</td>
+                        <td>{{ date('Y-m-d', strtotime($item->tgl_pelayanan)) }} {{ date('H:i', strtotime($item->jam_pelayanan)) }}</td>
+                        <td>
+                            <ul class="ps-5">
+                                @foreach ($item->detail as $detail)
+                                    <li>{{ $detail->produk->deskripsi }}</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>
+                            @if (count($tindakan) < 1)
+                                <a href="{{ route('rehab-medis.pelayanan.layanan.program.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="mb-2 btn btn-sm btn-warning">
+                                    <i class="ti-pencil"></i>
+                                </a>
+                                <button class="mb-2 btn btn-sm btn-danger btn-delete" data-program="{{ encrypt($item->id) }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
 </div>
 
-@include("unit-pelayanan.rehab-medis.pelayanan.layanan.program.modal-create-program")
-@push('js')
-    <script type="text/javascript">
 
+@push('js')
+    <script>
+        $('.btn-delete').click(function(e) {
+            let $this = $(this);
+            let program = $this.attr('data-program');
+
+
+            Swal.fire({
+                title: "Anda yakin ingin menghapus?",
+                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('rehab-medis.pelayanan.layanan.program.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            _method: "delete",
+                            program: program
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Sedang Memproses',
+                                html: 'Mohon tunggu sebentar...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function (res) {
+                            let status = res.status;
+                            let msg = res.message;
+                            let data = res.data;
+
+                            if(status == 'error') {
+                                Swal.fire({
+                                    title: "Gagal!",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false,
+                                });
+
+                                return false;
+                            }
+
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: "Data program berhasil dihapus !",
+                                icon: "success",
+                                allowOutsideClick: false,
+                            });
+
+                            location.reload();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Gagal!",
+                                text: "Internal Server Error",
+                                icon: "error",
+                                allowOutsideClick: false,
+                            });
+                        }
+                    });
+                }
+            });
+
+        });
     </script>
 @endpush

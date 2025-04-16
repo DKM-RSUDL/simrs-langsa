@@ -137,7 +137,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Aktif</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countAktivePatientRanap($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -147,7 +147,7 @@
                         <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="Icon" width="40">
                         <div class="text-center">
                             <p class="m-0 p-0">Pending Order Masuk</p>
-                            <p class="m-0 p-0 fs-4 fw-bold">33</p>
+                            <p class="m-0 p-0 fs-4 fw-bold">{{ countPendingPatientRanap($unit->kd_unit) }}</p>
                         </div>
                     </div>
                 </a>
@@ -239,7 +239,7 @@
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuran-keperawatan'}">Asuhan Keperawatan</a></li>
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuhan-keperawatan'}">Asuhan Keperawatan</a></li>
                                                 </ul>
                                             </div>
                                         </div>

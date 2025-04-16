@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitPelayanan\Operasi\PraInduksitController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\CpptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +30,18 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as Gawa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatDaruratTindakanController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
@@ -43,6 +51,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -55,11 +64,13 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
@@ -94,8 +105,8 @@ Route::middleware('auth')->group(function () {
                     Route::prefix('unit/{kd_unit}')->group(function () {
                         Route::name('.unit')->group(function () {
                             Route::get('/', [RawatJalanController::class, 'unitPelayanan']);
-                            Route::get('/belum-selesai', [RawatJalanController::class, 'unitPelayanan'])->name('.belum-selesai');
-                            Route::get('/selesai', [RawatJalanController::class, 'unitPelayanan'])->name('.selesai');
+                            Route::get('/belum-selesai', [RawatJalanController::class, 'belumSelesai'])->name('.belum-selesai');
+                            Route::get('/selesai', [RawatJalanController::class, 'selesai'])->name('.selesai');
                         });
 
                         // Pelayanan
@@ -107,11 +118,25 @@ Route::middleware('auth')->group(function () {
                             // rujuk route
                             Route::prefix('rujuk-antar-rs')->group(function () {
                                 Route::name('.rujuk-antar-rs')->group(function () {
-                                    Route::controller(RawatJalanController::class)->group(function () {
-                                        Route::get('/', 'rujukAntarRs');
+                                    Route::controller(RujukJalanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
+
+                            // rujuk route
+                            // Route::prefix('rujuk-antar-rs')->group(function () {
+                            //     Route::name('.rujuk-antar-rs')->group(function () {
+                            //         Route::controller(RawatJalanController::class)->group(function () {
+                            //             Route::get('/', 'rujukAntarRs');
+                            //         });
+                            //     });
+                            // });
 
                             // CPPT
                             Route::prefix('cppt')->group(function () {
@@ -226,6 +251,19 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
+                            Route::prefix('asesmen-keperawatan')->group(function () {
+                                Route::name('.asesmen-keperawatan')->group(function () {
+                                    Route::controller(AsesmenKeperawatanRajalController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{id}', 'show')->name('.show');
+                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                        Route::put('/{id}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -337,6 +375,8 @@ Route::middleware('auth')->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
+                                        Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                                     });
                                 });
                             });
@@ -414,6 +454,19 @@ Route::middleware('auth')->group(function () {
                                     Route::prefix('keperawatan')->group(function () {
                                         Route::name('.keperawatan')->group(function () {
 
+
+                                            Route::prefix('umum')->group(function () {
+                                                Route::name('.umum')->group(function () {
+                                                    Route::controller(AsesmenKepUmumController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
                                             Route::prefix('anak')->group(function () {
                                                 Route::name('.anak')->group(function () {
                                                     Route::controller(AsesmenKepAnakController::class)->group(function () {
@@ -467,21 +520,31 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // asuran keperawatan
-                            Route::prefix('asuran-keperawatan')->group(function () {
-                                Route::name('.asuran-keperawatan')->group(function () {
+                            Route::prefix('asuhan-keperawatan')->group(function () {
+                                Route::name('.asuhan-keperawatan')->group(function () {
                                     Route::controller(AsuhanKeperawatanRawatInapController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::get('/{data}/show', 'show')->name('.show');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/edit/{data}', 'edit')->name('.edit');
                                         Route::post('/', 'store')->name('.store');
-                                        Route::put('/', 'update')->name('.update');
+                                        Route::delete('/', 'destroy')->name('.destroy');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                    });
+                                });
+                            });
+
+                            Route::prefix('serah-terima')->group(function () {
+                                Route::name('.serah-terima')->group(function () {
+                                    Route::controller(RawatInapController::class)->group(function () {
+                                        Route::get('/', 'serahTerimaPasien');
+                                        Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
                                     });
                                 });
                             });
                         });
                     });
                 });
-
-                // sementara dari anas
-                Route::get('asuhan-keperawatan', [AsuhanKeperawatanRawatInapController::class, 'index'])->name('asuhan-keperawatan.index');
             });
         });
 
@@ -511,8 +574,22 @@ Route::middleware('auth')->group(function () {
                         // rujuk route
                         Route::prefix('{urut_masuk}/rujuk-antar-rs')->group(function () {
                             Route::name('rujuk-antar-rs')->group(function () {
+                                Route::controller(RujukController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+                        // serah terima route
+                        Route::prefix('{urut_masuk}/serah-terima-pasien')->group(function () {
+                            Route::name('serah-terima-pasien')->group(function () {
                                 Route::controller(GawatDaruratController::class)->group(function () {
-                                    Route::get('/', 'rujukAntarRs');
+                                    Route::get('/', 'serahTerimaPasien');
+                                    Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
                                 });
                             });
                         });
@@ -688,26 +765,53 @@ Route::middleware('auth')->group(function () {
             });
         });
 
+
+        // REHAB MEDIK
         Route::prefix('rehab-medis')->group(function () {
             Route::name('rehab-medis')->group(function () {
                 Route::get('/', [RehabMedisController::class, 'index'])->name('.index');
 
-                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}')->group(function () {
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
                     Route::name('.pelayanan')->group(function () {
                         Route::get('/', [RehabMedisController::class, 'pelayanan']);
 
                         // Pelayanan
-                        Route::get('layanan', [LayananController::class, 'index'])->name('.layanan');
+                        Route::prefix('layanan')->group(function () {
+                            Route::name('.layanan')->group(function () {
+                                Route::controller(LayananController::class)->group(function () {
+                                    Route::get('/', 'index');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
+
+                                    // PROGRAM
+                                    Route::prefix('program')->group(function () {
+                                        Route::name('.program')->group(function () {
+                                            Route::get('/create', 'createProgram')->name('.create');
+                                            Route::get('/{data}/edit', 'editProgram')->name('.edit');
+                                            Route::post('/', 'storeProgram')->name('.store');
+                                            Route::put('/{data}', 'updateProgram')->name('.update');
+                                            Route::delete('/', 'destroyProgram')->name('.destroy');
+                                        });
+                                    });
+                                });
+                            });
+                        });
 
                         // Tindakan
                         Route::prefix('tindakan')->group(function () {
                             Route::name('.tindakan')->group(function () {
                                 Route::controller(RehamMedisTindakanController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
-                                    Route::post('/', 'storeTindakan')->name('.store');
-                                    Route::put('/', 'updateTindakan')->name('.update');
-                                    Route::delete('/', 'deleteTindakan')->name('.delete');
-                                    Route::post('/get-tindakan-ajax', 'getTindakanAjax')->name('.get-tindakan-ajax');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'destroy')->name('.destroy');
                                 });
                             });
                         });
@@ -716,6 +820,7 @@ Route::middleware('auth')->group(function () {
             });
         });
 
+        // BEDAH SENTRAL (OPERASI)
         Route::prefix('operasi')->group(function () {
             Route::name('operasi')->group(function () {
                 Route::get('/', [OperasiController::class, 'index'])->name('.index');
@@ -768,6 +873,96 @@ Route::middleware('auth')->group(function () {
                                                     Route::get('/{data}', 'show')->name('.show');
                                                 });
                                             });
+                                        });
+                                    });
+                                });
+
+                                Route::prefix('pra-induksi')->group(function () {
+                                    Route::name('.pra-induksi')->group(function () {
+                                        Route::controller(PraInduksitController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::get('/edit/{data}', 'edit')->name('.edit');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                            Route::get('/{data}', 'show')->name('.show');
+                                        });
+                                    });
+                                });
+                            });
+                        });
+
+
+                        //LAPORAN ANASTESI
+                        Route::prefix('laporan-anastesi')->group(function () {
+                            Route::name('.laporan-anastesi')->group(function () {
+                                Route::controller(LaporanAnastesiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                });
+                            });
+                        });
+
+
+
+                        //LAPORAN OPERASI
+                        Route::prefix('laporan-operasi')->group(function () {
+                            Route::name('.laporan-operasi')->group(function () {
+                                Route::controller(LaporanOperasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/edit', 'edit')->name('.edit');
+                                    Route::get('/show', 'show')->name('.show');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/', 'update')->name('.update');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+
+        // HEMODIALISA
+        Route::prefix('hemodialisa')->group(function () {
+            Route::name('hemodialisa')->group(function () {
+                Route::get('/', [HemodialisaController::class, 'index'])->name('.index');
+
+                // Pelayanan
+                Route::prefix('pelayanan/{kd_pasien}/{tgl_masuk}/{urut_masuk}')->group(function () {
+                    Route::name('.pelayanan')->group(function () {
+                        Route::get('/', [HemodialisaController::class, 'pelayanan']);
+
+                        // Asesmen
+                        Route::prefix('asesmen')->group(function () {
+                            Route::name('.asesmen')->group(function () {
+                                Route::get('/', [AsesmenMedisController::class, 'index'])->name('.index');
+
+                                //MEDIS
+                                Route::prefix('medis')->group(function () {
+                                    Route::name('.medis')->group(function () {
+                                        Route::controller(AsesmenMedisController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::get('/{data}/show', 'show')->name('.show');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{data}', 'update')->name('.update');
+                                        });
+                                    });
+                                });
+
+                                Route::prefix('keperawatan')->group(function () {
+                                    Route::name('.keperawatan')->group(function () {
+                                        Route::controller(AsesmenHemodialisaKeperawatanController::class)->group(function () {
+                                            Route::get('/create', 'create')->name('.create');
+                                            Route::get('/{data}/edit', 'edit')->name('.edit');
+                                            Route::get('/{data}/show', 'show')->name('.show');
+                                            Route::post('/', 'store')->name('.store');
+                                            Route::put('/{id}', 'update')->name('.update');
                                         });
                                     });
                                 });

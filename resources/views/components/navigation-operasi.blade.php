@@ -60,12 +60,12 @@
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Operatif',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.laporan-operasi.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Anestesi',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'agree.png',

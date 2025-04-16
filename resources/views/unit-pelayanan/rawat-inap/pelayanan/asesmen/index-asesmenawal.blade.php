@@ -44,8 +44,15 @@
                 </button>
                 <ul class="custom__dropdown__menu">
                     <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#detailPasienModal">Umum Dewasa</a></li>
+                            data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li>
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
+                     <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.umum.index', [
+                            'kd_unit' => request()->route('kd_unit'),
+                            'kd_pasien' => request()->route('kd_pasien'),
+                            'tgl_masuk' => request()->route('tgl_masuk'),
+                            'urut_masuk' => request()->route('urut_masuk'),
+                        ]) }}">Keperawatan Umum/Dewasa</a>
+                                        </li>
                                         <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
                             'kd_unit' => request()->route('kd_unit'),
                             'kd_pasien' => request()->route('kd_pasien'),
@@ -163,6 +170,18 @@
                     </a>
                 @endif
 
+                @if ($item->kategori == 2 && $item->sub_kategori == 1)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.umum.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.umum.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
                 @if ($item->kategori == 2 && $item->sub_kategori == 7)
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-info">
@@ -170,6 +189,18 @@
                     </a>
 
                     <a href="{{ route('rawat-inap.asesmen.keperawatan.anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if ($item->kategori == 2 && $item->sub_kategori == 6)
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
@@ -197,6 +228,7 @@
                     class="btn btn-sm btn-secondary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
+
                 @elseif($item->kategori == 1 && $item->sub_kategori == 3)
                 <a href="{{ route('rawat-inap.asesmen.medis.neurologi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                     class="btn btn-sm btn-info">

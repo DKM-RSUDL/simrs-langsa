@@ -16,7 +16,7 @@
                                     <hr class="text-secondary">
                                     <p class="text-black">
                                         <img src="{{ asset('assets/img/Account.png') }}" alt="" width="15%">
-                                        Pasien : 0
+                                        Pasien : {{ countUnfinishedPatientRajal($unt->kd_unit) }}
                                     </p>
                                 </div>
                             </div>

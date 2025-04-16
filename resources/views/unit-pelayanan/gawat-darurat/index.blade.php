@@ -184,7 +184,7 @@
                     <img src="{{ asset('assets/img/icons/Sick.png') }}" alt="User Icon" class="user__icon">
                     <div class="text-center">
                         <p class="m-0 p-0">Aktif</p>
-                        <p class="m-0 p-0 fs-4 fw-bold">3</p>
+                        <p class="m-0 p-0 fs-4 fw-bold">{{ countActivePatientIGD() }}</p>
                     </div>
                 </div>
             </div>
@@ -977,7 +977,7 @@
                                                 <li class="dropdown-submenu">
                                                     <a class="dropdown-item m-1 dropdown-toggle" href="#">Mutasi Pasien</a>
                                                     <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Pindah Ruangan / Rawat Inap</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/serah-terima-pasien'}">Pindah Ruangan / Rawat Inap</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (Berobat Jalan)</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pulangkan (APS)</a></li>
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/rujuk-antar-rs'}">Rujuk Keluar RS</a></li>

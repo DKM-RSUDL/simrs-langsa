@@ -33,123 +33,124 @@
     </div>
 </div>
 
-@include('unit-pelayanan.rehab-medis.pelayanan.layanan.pelayanan-medis.modal-edit-diagnosismedisicd10')
-
-<script>
-    $('#btn-diagnosis-medis-icd10').on('click', function() {
-        $('#modal-diagnosis-medis-icd10').modal('show');
-    });
-
-    $(document).ready(function() {
-        // Initialize dataDiagnosis from server data or empty array
-        let dataDiagnosis = @json($dataResume->diagnosis ?? []);
-
-        // Function to display diagnoses in both modal and main view
-        function displayDiagnosis() {
-            let diagnosisList = '';
-            let diagnoseDisplay = '';
-
-            if (dataDiagnosis && Array.isArray(dataDiagnosis)) {
-                dataDiagnosis.forEach((diagnosis, index) => {
-                    const uniqueId = `diagnosis-${index}`;
-
-                    // Modal list item
-                    diagnosisList += `
-                    <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                        <span class="diagnosis-text">${diagnosis}</span>
-                        <div>
-                            <a href="javascript:void(0)" class="edit-diagnosis me-2" data-id="${uniqueId}">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="javascript:void(0)" class="remove-diagnosis text-danger" data-id="${uniqueId}">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
-                    </li>
-                `;
-
-                    // Main view display
-                    diagnoseDisplay += `
-                    <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
-                        <span class="diagnosis-text">${diagnosis}</span>
-                        <a href="javascript:void(0)" class="remove-main-diagnosis text-danger" data-id="${uniqueId}">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </div>
-                `;
-                });
-            }
-
-            $('#diagnosisList').html(diagnosisList ||
-                '<p class="text-muted text-center my-3">Belum ada diagnosis Medis</p>');
-            $('#diagnoseDisplay').html(diagnoseDisplay ||
-                '<p class="text-muted text-center my-3">Belum ada diagnosis Medis</p>');
-        }
-
-        // Open main modal
+@push('js')
+    <script>
         $('#btn-diagnosis-medis-icd10').on('click', function() {
-            displayDiagnosis();
             $('#modal-diagnosis-medis-icd10').modal('show');
         });
 
-        // Add new diagnosis
-        $('#btnAddDiagnosis').click(function() {
-            const diagnosis = $('#searchDiagnosisInput').val().trim();
+        $(document).ready(function() {
+            // Initialize dataDiagnosis from server data or empty array
+            let dataDiagnosis = @json($layanan->diagnosis_medis ?? []);
 
-            if (diagnosis) {
-                dataDiagnosis.push(diagnosis);
+            // Function to display diagnoses in both modal and main view
+            function displayDiagnosis() {
+                let diagnosisList = '';
+                let diagnoseDisplay = '';
+
+                if (dataDiagnosis && Array.isArray(dataDiagnosis)) {
+                    dataDiagnosis.forEach((diagnosis, index) => {
+                        const uniqueId = `diagnosis-${index}`;
+
+                        // Modal list item
+                        diagnosisList += `
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
+                            <span class="diagnosis-text">${diagnosis}</span>
+                            <div>
+                                <a href="javascript:void(0)" class="edit-diagnosis me-2" data-id="${uniqueId}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0)" class="remove-diagnosis text-danger" data-id="${uniqueId}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </li>
+                    `;
+
+                        // Main view display
+                        diagnoseDisplay += `
+                        <div class="d-flex justify-content-between align-items-center mb-2" id="main-${uniqueId}">
+                            <span class="diagnosis-text">${diagnosis}</span>
+                            <input type="hidden" name="diagnosis_medis[]" value="${diagnosis}">
+                            <a href="javascript:void(0)" class="remove-main-diagnosis text-danger" data-id="${uniqueId}">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    `;
+                    });
+                }
+
+                $('#diagnosisList').html(diagnosisList ||
+                    '<p class="text-muted text-center my-3">Belum ada diagnosis Medis</p>');
+                $('#diagnoseDisplay').html(diagnoseDisplay ||
+                    '<p class="text-muted text-center my-3">Belum ada diagnosis Medis</p>');
+            }
+
+            // Open main modal
+            $('#btn-diagnosis-medis-icd10').on('click', function() {
                 displayDiagnosis();
-                $('#searchDiagnosisInput').val('').focus();
-            }
-        });
+                $('#modal-diagnosis-medis-icd10').modal('show');
+            });
 
-        // Enter key handling for input
-        $('#searchDiagnosisInput').on('keypress', function(e) {
-            if (e.which === 13) {
-                $('#btnAddDiagnosis').click();
-            }
-        });
+            // Add new diagnosis
+            $('#btnAddDiagnosis').click(function() {
+                const diagnosis = $('#searchDiagnosisInput').val().trim();
 
-        // Edit diagnosis
-        $(document).on('click', '.edit-diagnosis', function() {
-            const diagnosisId = $(this).data('id');
-            const index = parseInt(diagnosisId.split('-')[1]);
+                if (diagnosis) {
+                    dataDiagnosis.push(diagnosis);
+                    displayDiagnosis();
+                    $('#searchDiagnosisInput').val('').focus();
+                }
+            });
 
-            $('#editDiagnosisTextarea').val(dataDiagnosis[index]);
-            $('#editDiagnosisId').val(index);
-            $('#modal-daftar-input-diagnosis').modal('show');
-        });
+            // Enter key handling for input
+            $('#searchDiagnosisInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    $('#btnAddDiagnosis').click();
+                }
+            });
 
-        // Update diagnosis
-        $('#btnUpdateDiagnosis').click(function() {
-            const updatedDiagnosis = $('#editDiagnosisTextarea').val().trim();
-            const index = parseInt($('#editDiagnosisId').val());
-
-            if (updatedDiagnosis) {
-                dataDiagnosis[index] = updatedDiagnosis;
-                displayDiagnosis();
-                $('#modal-daftar-input-diagnosis').modal('hide');
-            }
-        });
-
-        // Remove diagnosis
-        $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
-            if (confirm('Apakah Anda yakin ingin menghapus diagnosis ini?')) {
+            // Edit diagnosis
+            $(document).on('click', '.edit-diagnosis', function() {
                 const diagnosisId = $(this).data('id');
                 const index = parseInt(diagnosisId.split('-')[1]);
 
-                dataDiagnosis.splice(index, 1);
+                $('#editDiagnosisTextarea').val(dataDiagnosis[index]);
+                $('#editDiagnosisId').val(index);
+                $('#modal-daftar-input-diagnosis').modal('show');
+            });
+
+            // Update diagnosis
+            $('#btnUpdateDiagnosis').click(function() {
+                const updatedDiagnosis = $('#editDiagnosisTextarea').val().trim();
+                const index = parseInt($('#editDiagnosisId').val());
+
+                if (updatedDiagnosis) {
+                    dataDiagnosis[index] = updatedDiagnosis;
+                    displayDiagnosis();
+                    $('#modal-daftar-input-diagnosis').modal('hide');
+                }
+            });
+
+            // Remove diagnosis
+            $(document).on('click', '.remove-diagnosis, .remove-main-diagnosis', function() {
+                if (confirm('Apakah Anda yakin ingin menghapus diagnosis ini?')) {
+                    const diagnosisId = $(this).data('id');
+                    const index = parseInt(diagnosisId.split('-')[1]);
+
+                    dataDiagnosis.splice(index, 1);
+                    displayDiagnosis();
+                }
+            });
+
+            // Save diagnosis
+            $('#btnSaveDiagnose').click(function() {
                 displayDiagnosis();
-            }
-        });
+                $('#modal-diagnosis-medis-icd10').modal('hide');
+            });
 
-        // Save diagnosis
-        $('#btnSaveDiagnose').click(function() {
+            // Initial display
             displayDiagnosis();
-            $('#modal-diagnosis-medis-icd10').modal('hide');
         });
-
-        // Initial display
-        displayDiagnosis();
-    });
-</script>
+    </script>
+@endpush
