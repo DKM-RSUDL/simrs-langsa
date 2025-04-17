@@ -64,316 +64,318 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ============= PENYAKIT YANG PERNAH DIDERITA =============
-    // Arrays to store the diseases
-    let penyakitList = [];
-    let tempPenyakitList = [];
-    
-    // Load initial data for penyakit
-    const penyakitInput = document.getElementById('penyakitDideritaInput');
-    try {
-        const penyakitData = penyakitInput.value.trim();
-        if (penyakitData && penyakitData !== '[]') {
-            penyakitList = JSON.parse(penyakitData);
-        }
-    } catch (error) {
-        console.error('Error parsing penyakit data:', error);
-    }
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ============= PENYAKIT YANG PERNAH DIDERITA =============
+            // Arrays to store the diseases
+            let penyakitList = [];
+            let tempPenyakitList = [];
 
-    // Function to update the main UI and hidden input for penyakit
-    function updatePenyakitList() {
-        const listContainer = document.getElementById('selectedPenyakitList');
-        const hiddenInput = document.getElementById('penyakitDideritaInput');
-        const emptyState = document.getElementById('emptyState');
-
-        // Clear the current list
-        listContainer.innerHTML = '';
-
-        if (penyakitList.length === 0) {
-            listContainer.appendChild(emptyState);
-        } else {
-            // Remove emptyState from DOM if it exists
-            if (emptyState.parentNode === listContainer) {
-                listContainer.removeChild(emptyState);
+            // Load initial data for penyakit
+            const penyakitInput = document.getElementById('penyakitDideritaInput');
+            try {
+                const penyakitData = penyakitInput.value.trim();
+                if (penyakitData && penyakitData !== '[]') {
+                    penyakitList = JSON.parse(penyakitData);
+                }
+            } catch (error) {
+                console.error('Error parsing penyakit data:', error);
             }
-            
-            // Add each disease to the list
-            penyakitList.forEach((penyakit, index) => {
-                const item = document.createElement('div');
-                item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
-                item.innerHTML = `
-                    <span>${penyakit}</span>
-                    <button type="button" class="btn btn-sm btn-danger delete-penyakit" data-index="${index}">
-                        <i class="ti-trash"></i>
-                    </button>
-                `;
-                listContainer.appendChild(item);
+
+            // Function to update the main UI and hidden input for penyakit
+            function updatePenyakitList() {
+                const listContainer = document.getElementById('selectedPenyakitList');
+                const hiddenInput = document.getElementById('penyakitDideritaInput');
+                const emptyState = document.getElementById('emptyState');
+
+                // Clear the current list
+                listContainer.innerHTML = '';
+
+                if (penyakitList.length === 0) {
+                    listContainer.appendChild(emptyState);
+                } else {
+                    // Remove emptyState from DOM if it exists
+                    if (emptyState.parentNode === listContainer) {
+                        listContainer.removeChild(emptyState);
+                    }
+
+                    // Add each disease to the list
+                    penyakitList.forEach((penyakit, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
+                        item.innerHTML = `
+                            <span>${penyakit}</span>
+                            <button type="button" class="btn btn-sm btn-danger delete-penyakit" data-index="${index}">
+                                <i class="ti-trash"></i>
+                            </button>
+                        `;
+                        listContainer.appendChild(item);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-penyakit').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            removePenyakit(index);
+                        });
+                    });
+                }
+
+                // Update hidden input with JSON string
+                hiddenInput.value = JSON.stringify(penyakitList);
+            }
+
+            // Function to update the modal's temporary list for penyakit
+            function updateModalList() {
+                const modalList = document.getElementById('modalPenyakitList');
+                const modalEmptyState = document.getElementById('modalEmptyState');
+
+                // Clear the current list
+                modalList.innerHTML = '';
+
+                if (tempPenyakitList.length === 0) {
+                    // Create and append empty state
+                    const newEmptyState = document.createElement('div');
+                    newEmptyState.id = 'modalEmptyState';
+                    newEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
+                    newEmptyState.innerHTML = '<p class="mb-0">Belum ada penyakit dalam list sementara</p>';
+                    modalList.appendChild(newEmptyState);
+                } else {
+                    // Add each disease to the temporary list
+                    tempPenyakitList.forEach((penyakit, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
+                        item.innerHTML = `
+                            <span>${penyakit}</span>
+                            <button type="button" class="btn btn-sm btn-danger delete-temp-penyakit" data-index="${index}">
+                                <i class="ti-trash"></i>
+                            </button>
+                        `;
+                        modalList.appendChild(item);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-temp-penyakit').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            removeTempPenyakit(index);
+                        });
+                    });
+                }
+            }
+
+            // Function to add a new disease to temporary list
+            function addToTempList() {
+                const input = document.getElementById('penyakitInput');
+                const penyakit = input.value.trim();
+
+                if (penyakit) {
+                    tempPenyakitList.push(penyakit);
+                    updateModalList();
+                    input.value = '';
+                    input.focus();
+                }
+            }
+
+            // Function to save temporary list to main list
+            function savePenyakit() {
+                if (tempPenyakitList.length > 0) {
+                    penyakitList = [...penyakitList, ...tempPenyakitList];
+                    tempPenyakitList = []; // Clear temporary list
+                    updatePenyakitList();
+                    updateModalList();
+                }
+            }
+
+            // Function to remove a disease from main list
+            function removePenyakit(index) {
+                penyakitList.splice(index, 1);
+                updatePenyakitList();
+            }
+
+            // Function to remove a disease from temporary list
+            function removeTempPenyakit(index) {
+                tempPenyakitList.splice(index, 1);
+                updateModalList();
+            }
+
+            // Add event listeners for penyakit
+            document.getElementById('tambahKeList').addEventListener('click', addToTempList);
+            document.getElementById('simpanPenyakit').addEventListener('click', savePenyakit);
+
+            // Add event listener for enter key in input for penyakit
+            document.getElementById('penyakitInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addToTempList();
+                }
             });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-penyakit').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removePenyakit(index);
-                });
+
+            // Reset temporary list when modal is opened for penyakit
+            document.getElementById('penyakitModal').addEventListener('show.bs.modal', function() {
+                tempPenyakitList = [];
+                updateModalList();
+                document.getElementById('penyakitInput').value = '';
             });
-        }
 
-        // Update hidden input with JSON string
-        hiddenInput.value = JSON.stringify(penyakitList);
-    }
+            // ============= RIWAYAT KESEHATAN KELUARGA =============
+            // Arrays to store the health history
+            let riwayatList = [];
+            let tempRiwayatList = [];
 
-    // Function to update the modal's temporary list for penyakit
-    function updateModalList() {
-        const modalList = document.getElementById('modalPenyakitList');
-        const modalEmptyState = document.getElementById('modalEmptyState');
+            // Load initial data for riwayat
+            const riwayatInput = document.getElementById('riwayatKesehatanInput');
+            try {
+                const riwayatData = riwayatInput.value.trim();
+                if (riwayatData && riwayatData !== '[]') {
+                    riwayatList = JSON.parse(riwayatData);
+                }
+            } catch (error) {
+                console.error('Error parsing riwayat data:', error);
+            }
 
-        // Clear the current list
-        modalList.innerHTML = '';
+            // Function to update the main UI and hidden input for riwayat
+            function updateRiwayatList() {
+                const listContainer = document.getElementById('selectedRiwayatList');
+                const hiddenInput = document.getElementById('riwayatKesehatanInput');
+                const emptyState = document.getElementById('emptyStateRiwayat');
 
-        if (tempPenyakitList.length === 0) {
-            // Create and append empty state
-            const newEmptyState = document.createElement('div');
-            newEmptyState.id = 'modalEmptyState';
-            newEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
-            newEmptyState.innerHTML = '<p class="mb-0">Belum ada penyakit dalam list sementara</p>';
-            modalList.appendChild(newEmptyState);
-        } else {
-            // Add each disease to the temporary list
-            tempPenyakitList.forEach((penyakit, index) => {
-                const item = document.createElement('div');
-                item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
-                item.innerHTML = `
-                    <span>${penyakit}</span>
-                    <button type="button" class="btn btn-sm btn-danger delete-temp-penyakit" data-index="${index}">
-                        <i class="ti-trash"></i>
-                    </button>
-                `;
-                modalList.appendChild(item);
+                // Clear the current list
+                listContainer.innerHTML = '';
+
+                if (riwayatList.length === 0) {
+                    listContainer.appendChild(emptyState);
+                } else {
+                    // Remove emptyState from DOM if it exists
+                    if (emptyState.parentNode === listContainer) {
+                        listContainer.removeChild(emptyState);
+                    }
+
+                    // Add each health history to the list
+                    riwayatList.forEach((riwayat, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
+                        item.innerHTML = `
+                            <span>${riwayat}</span>
+                            <button type="button" class="btn btn-sm btn-danger delete-riwayat" data-index="${index}">
+                                <i class="ti-trash"></i>
+                            </button>
+                        `;
+                        listContainer.appendChild(item);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-riwayat').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            removeRiwayat(index);
+                        });
+                    });
+                }
+
+                // Update hidden input with JSON string
+                hiddenInput.value = JSON.stringify(riwayatList);
+            }
+
+            // Function to update the modal's temporary list for riwayat
+            function updateModalRiwayatList() {
+                const modalList = document.getElementById('modalRiwayatList');
+                const modalEmptyState = document.getElementById('modalEmptyStateRiwayat');
+
+                // Clear the current list
+                modalList.innerHTML = '';
+
+                if (tempRiwayatList.length === 0) {
+                    // Create and append empty state
+                    const newEmptyState = document.createElement('div');
+                    newEmptyState.id = 'modalEmptyStateRiwayat';
+                    newEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
+                    newEmptyState.innerHTML = '<p class="mb-0">Belum ada riwayat dalam list sementara</p>';
+                    modalList.appendChild(newEmptyState);
+                } else {
+                    // Add each health history to the temporary list
+                    tempRiwayatList.forEach((riwayat, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
+                        item.innerHTML = `
+                            <span>${riwayat}</span>
+                            <button type="button" class="btn btn-sm btn-danger delete-temp-riwayat" data-index="${index}">
+                                <i class="ti-trash"></i>
+                            </button>
+                        `;
+                        modalList.appendChild(item);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-temp-riwayat').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            removeTempRiwayat(index);
+                        });
+                    });
+                }
+            }
+
+            // Function to add a new health history to temporary list
+            function addToTempRiwayatList() {
+                const input = document.getElementById('riwayatInput');
+                const riwayat = input.value.trim();
+
+                if (riwayat) {
+                    tempRiwayatList.push(riwayat);
+                    updateModalRiwayatList();
+                    input.value = '';
+                    input.focus();
+                }
+            }
+
+            // Function to save temporary list to main list
+            function saveRiwayat() {
+                if (tempRiwayatList.length > 0) {
+                    riwayatList = [...riwayatList, ...tempRiwayatList];
+                    tempRiwayatList = []; // Clear temporary list
+                    updateRiwayatList();
+                    updateModalRiwayatList();
+                }
+            }
+
+            // Function to remove a health history from main list
+            function removeRiwayat(index) {
+                riwayatList.splice(index, 1);
+                updateRiwayatList();
+            }
+
+            // Function to remove a health history from temporary list
+            function removeTempRiwayat(index) {
+                tempRiwayatList.splice(index, 1);
+                updateModalRiwayatList();
+            }
+
+            // Add event listeners for riwayat
+            document.getElementById('tambahKeListRiwayat').addEventListener('click', addToTempRiwayatList);
+            document.getElementById('simpanRiwayat').addEventListener('click', saveRiwayat);
+
+            // Add event listener for enter key in input for riwayat
+            document.getElementById('riwayatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addToTempRiwayatList();
+                }
             });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-temp-penyakit').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeTempPenyakit(index);
-                });
+
+            // Reset temporary list when modal is opened for riwayat
+            document.getElementById('riwayatKeluargaModal').addEventListener('show.bs.modal', function() {
+                tempRiwayatList = [];
+                updateModalRiwayatList();
+                document.getElementById('riwayatInput').value = '';
             });
-        }
-    }
 
-    // Function to add a new disease to temporary list
-    function addToTempList() {
-        const input = document.getElementById('penyakitInput');
-        const penyakit = input.value.trim();
-
-        if (penyakit) {
-            tempPenyakitList.push(penyakit);
-            updateModalList();
-            input.value = '';
-            input.focus();
-        }
-    }
-
-    // Function to save temporary list to main list
-    function savePenyakit() {
-        if (tempPenyakitList.length > 0) {
-            penyakitList = [...penyakitList, ...tempPenyakitList];
-            tempPenyakitList = []; // Clear temporary list
+            // Initial update for both lists
             updatePenyakitList();
-            updateModalList();
-        }
-    }
-
-    // Function to remove a disease from main list
-    function removePenyakit(index) {
-        penyakitList.splice(index, 1);
-        updatePenyakitList();
-    }
-
-    // Function to remove a disease from temporary list
-    function removeTempPenyakit(index) {
-        tempPenyakitList.splice(index, 1);
-        updateModalList();
-    }
-
-    // Add event listeners for penyakit
-    document.getElementById('tambahKeList').addEventListener('click', addToTempList);
-    document.getElementById('simpanPenyakit').addEventListener('click', savePenyakit);
-
-    // Add event listener for enter key in input for penyakit
-    document.getElementById('penyakitInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addToTempList();
-        }
-    });
-
-    // Reset temporary list when modal is opened for penyakit
-    document.getElementById('penyakitModal').addEventListener('show.bs.modal', function() {
-        tempPenyakitList = [];
-        updateModalList();
-        document.getElementById('penyakitInput').value = '';
-    });
-    
-    // ============= RIWAYAT KESEHATAN KELUARGA =============
-    // Arrays to store the health history
-    let riwayatList = [];
-    let tempRiwayatList = [];
-    
-    // Load initial data for riwayat
-    const riwayatInput = document.getElementById('riwayatKesehatanInput');
-    try {
-        const riwayatData = riwayatInput.value.trim();
-        if (riwayatData && riwayatData !== '[]') {
-            riwayatList = JSON.parse(riwayatData);
-        }
-    } catch (error) {
-        console.error('Error parsing riwayat data:', error);
-    }
-
-    // Function to update the main UI and hidden input for riwayat
-    function updateRiwayatList() {
-        const listContainer = document.getElementById('selectedRiwayatList');
-        const hiddenInput = document.getElementById('riwayatKesehatanInput');
-        const emptyState = document.getElementById('emptyStateRiwayat');
-
-        // Clear the current list
-        listContainer.innerHTML = '';
-
-        if (riwayatList.length === 0) {
-            listContainer.appendChild(emptyState);
-        } else {
-            // Remove emptyState from DOM if it exists
-            if (emptyState.parentNode === listContainer) {
-                listContainer.removeChild(emptyState);
-            }
-            
-            // Add each health history to the list
-            riwayatList.forEach((riwayat, index) => {
-                const item = document.createElement('div');
-                item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
-                item.innerHTML = `
-                    <span>${riwayat}</span>
-                    <button type="button" class="btn btn-sm btn-danger delete-riwayat" data-index="${index}">
-                        <i class="ti-trash"></i>
-                    </button>
-                `;
-                listContainer.appendChild(item);
-            });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-riwayat').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeRiwayat(index);
-                });
-            });
-        }
-
-        // Update hidden input with JSON string
-        hiddenInput.value = JSON.stringify(riwayatList);
-    }
-
-    // Function to update the modal's temporary list for riwayat
-    function updateModalRiwayatList() {
-        const modalList = document.getElementById('modalRiwayatList');
-        const modalEmptyState = document.getElementById('modalEmptyStateRiwayat');
-
-        // Clear the current list
-        modalList.innerHTML = '';
-
-        if (tempRiwayatList.length === 0) {
-            // Create and append empty state
-            const newEmptyState = document.createElement('div');
-            newEmptyState.id = 'modalEmptyStateRiwayat';
-            newEmptyState.className = 'border border-dashed border-secondary rounded p-3 text-center text-muted';
-            newEmptyState.innerHTML = '<p class="mb-0">Belum ada riwayat dalam list sementara</p>';
-            modalList.appendChild(newEmptyState);
-        } else {
-            // Add each health history to the temporary list
-            tempRiwayatList.forEach((riwayat, index) => {
-                const item = document.createElement('div');
-                item.className = 'p-2 bg-light rounded d-flex justify-content-between align-items-center';
-                item.innerHTML = `
-                    <span>${riwayat}</span>
-                    <button type="button" class="btn btn-sm btn-danger delete-temp-riwayat" data-index="${index}">
-                        <i class="ti-trash"></i>
-                    </button>
-                `;
-                modalList.appendChild(item);
-            });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-temp-riwayat').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeTempRiwayat(index);
-                });
-            });
-        }
-    }
-
-    // Function to add a new health history to temporary list
-    function addToTempRiwayatList() {
-        const input = document.getElementById('riwayatInput');
-        const riwayat = input.value.trim();
-
-        if (riwayat) {
-            tempRiwayatList.push(riwayat);
-            updateModalRiwayatList();
-            input.value = '';
-            input.focus();
-        }
-    }
-
-    // Function to save temporary list to main list
-    function saveRiwayat() {
-        if (tempRiwayatList.length > 0) {
-            riwayatList = [...riwayatList, ...tempRiwayatList];
-            tempRiwayatList = []; // Clear temporary list
             updateRiwayatList();
+            updateModalList();
             updateModalRiwayatList();
-        }
-    }
-
-    // Function to remove a health history from main list
-    function removeRiwayat(index) {
-        riwayatList.splice(index, 1);
-        updateRiwayatList();
-    }
-
-    // Function to remove a health history from temporary list
-    function removeTempRiwayat(index) {
-        tempRiwayatList.splice(index, 1);
-        updateModalRiwayatList();
-    }
-
-    // Add event listeners for riwayat
-    document.getElementById('tambahKeListRiwayat').addEventListener('click', addToTempRiwayatList);
-    document.getElementById('simpanRiwayat').addEventListener('click', saveRiwayat);
-
-    // Add event listener for enter key in input for riwayat
-    document.getElementById('riwayatInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addToTempRiwayatList();
-        }
-    });
-
-    // Reset temporary list when modal is opened for riwayat
-    document.getElementById('riwayatKeluargaModal').addEventListener('show.bs.modal', function() {
-        tempRiwayatList = [];
-        updateModalRiwayatList();
-        document.getElementById('riwayatInput').value = '';
-    });
-
-    // Initial update for both lists
-    updatePenyakitList();
-    updateRiwayatList();
-    updateModalList();
-    updateModalRiwayatList();
-});
-</script>
+        });
+    </script>
+@endpush

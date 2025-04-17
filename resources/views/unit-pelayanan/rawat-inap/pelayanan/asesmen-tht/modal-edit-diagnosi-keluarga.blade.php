@@ -65,224 +65,226 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        function safeParseJson(value, defaultValue = []) {
-            if (Array.isArray(value)) return value;
+@push('js')
+    <script>
+        $(document).ready(function () {
+            function safeParseJson(value, defaultValue = []) {
+                if (Array.isArray(value)) return value;
 
-            if (typeof value === 'string') {
-                try {
-                    const parsed = JSON.parse(value);
-                    return Array.isArray(parsed) ? parsed : defaultValue;
-                } catch (error) {
-                    console.error('Error parsing family diagnosis JSON:', error);
-                    return defaultValue;
+                if (typeof value === 'string') {
+                    try {
+                        const parsed = JSON.parse(value);
+                        return Array.isArray(parsed) ? parsed : defaultValue;
+                    } catch (error) {
+                        console.error('Error parsing family diagnosis JSON:', error);
+                        return defaultValue;
+                    }
+                }
+
+                return defaultValue;
+            }
+
+            let familyDiseaseList = safeParseJson(
+                @json($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_keluarga'] ?? [])
+            );
+
+            function removeDuplicates(arr) {
+                return Array.from(new Set(arr.filter(item => item && item.trim() !== '')));
+            }
+
+            // Function to render diagnosis list
+            function renderFamilyDiseaseList() {
+                familyDiseaseList = removeDuplicates(familyDiseaseList);
+
+                const modalList = $('#family-disease-list-modal');
+                const displayList = $('.family-disease-display-list');
+                modalList.empty();
+                displayList.empty();
+
+                familyDiseaseList.forEach((disease, index) => {
+                    // For modal list
+                    const modalItem = $(`
+                        <div class="d-flex justify-content-between align-items-center mb-2 family-disease-item" data-index="${index}">
+                            <div class="d-flex align-items-center">
+                                <span class="family-disease-drag-handle me-2" style="cursor: move;">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                                <span class="family-disease-text">${disease}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2 btn-edit-family-disease" data-index="${index}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger btn-remove-family-disease" data-index="${index}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                    modalList.append(modalItem);
+
+                    // For main display list
+                    const displayItem = $(`
+                        <div class="family-disease-display-item mb-2 d-flex justify-content-between align-items-center" data-disease="${disease}">
+                            <div class="d-flex align-items-center w-100">
+                                <span class="family-disease-drag-handle me-2" style="cursor: move;">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                                <span class="flex-grow-1">${disease}</span>
+                            </div>
+                        </div>
+                    `);
+                    displayList.append(displayItem);
+                });
+
+                $('#family-disease-data-input').val(JSON.stringify(familyDiseaseList));
+
+                initializeFamilyDiseaseSortable();
+            }
+
+            // Initialize Sortable for drag and drop
+            function initializeFamilyDiseaseSortable() {
+                // Destroy existing Sortable instances if they exist
+                if (window.familyDiseaseSortableModal) {
+                    window.familyDiseaseSortableModal.destroy();
+                }
+                if (window.familyDiseaseSortableDisplay) {
+                    window.familyDiseaseSortableDisplay.destroy();
+                }
+
+                // Sortable for modal list
+                const modalList = document.getElementById('family-disease-list-modal');
+                if (modalList && window.Sortable) {
+                    window.familyDiseaseSortableModal = new Sortable(modalList, {
+                        animation: 150,
+                        handle: '.family-disease-drag-handle',
+                        onEnd: function (evt) {
+                            const newOrder = [];
+                            $('#family-disease-list-modal .family-disease-item').each(function () {
+                                const disease = $(this).find('.family-disease-text').text();
+                                if (disease && !newOrder.includes(disease)) {
+                                    newOrder.push(disease);
+                                }
+                            });
+
+                            familyDiseaseList = newOrder;
+                            renderFamilyDiseaseList();
+                        }
+                    });
+                }
+
+                // Sortable for display list
+                const displayList = document.querySelector('.family-disease-display-list');
+                if (displayList && window.Sortable) {
+                    window.familyDiseaseSortableDisplay = new Sortable(displayList, {
+                        animation: 150,
+                        handle: '.family-disease-drag-handle',
+                        onEnd: function (evt) {
+                            // Reorder diagnoses in display list
+                            const newOrder = [];
+                            $('.family-disease-display-list .family-disease-display-item').each(function () {
+                                const disease = $(this).data('disease');
+                                if (disease && !newOrder.includes(disease)) {
+                                    newOrder.push(disease);
+                                }
+                            });
+
+                            // Update diagnoses
+                            familyDiseaseList = newOrder;
+                            renderFamilyDiseaseList();
+                        }
+                    });
                 }
             }
 
-            return defaultValue;
-        }
-
-        let familyDiseaseList = safeParseJson(
-            @json($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_keluarga'] ?? [])
-        );
-
-        function removeDuplicates(arr) {
-            return Array.from(new Set(arr.filter(item => item && item.trim() !== '')));
-        }
-
-        // Function to render diagnosis list
-        function renderFamilyDiseaseList() {
-            familyDiseaseList = removeDuplicates(familyDiseaseList);
-
-            const modalList = $('#family-disease-list-modal');
-            const displayList = $('.family-disease-display-list');
-            modalList.empty();
-            displayList.empty();
-
-            familyDiseaseList.forEach((disease, index) => {
-                // For modal list
-                const modalItem = $(`
-                    <div class="d-flex justify-content-between align-items-center mb-2 family-disease-item" data-index="${index}">
-                        <div class="d-flex align-items-center">
-                            <span class="family-disease-drag-handle me-2" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <span class="family-disease-text">${disease}</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-outline-primary me-2 btn-edit-family-disease" data-index="${index}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger btn-remove-family-disease" data-index="${index}">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `);
-                modalList.append(modalItem);
-
-                // For main display list
-                const displayItem = $(`
-                    <div class="family-disease-display-item mb-2 d-flex justify-content-between align-items-center" data-disease="${disease}">
-                        <div class="d-flex align-items-center w-100">
-                            <span class="family-disease-drag-handle me-2" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <span class="flex-grow-1">${disease}</span>
-                        </div>
-                    </div>
-                `);
-                displayList.append(displayItem);
+            // Open modal to add/edit diagnoses
+            $('#btn-open-family-disease-modal').on('click', function () {
+                renderFamilyDiseaseList();
+                $('#modal-family-disease-history').modal('show');
             });
 
-            $('#family-disease-data-input').val(JSON.stringify(familyDiseaseList));
-
-            initializeFamilyDiseaseSortable();
-        }
-
-        // Initialize Sortable for drag and drop
-        function initializeFamilyDiseaseSortable() {
-            // Destroy existing Sortable instances if they exist
-            if (window.familyDiseaseSortableModal) {
-                window.familyDiseaseSortableModal.destroy();
-            }
-            if (window.familyDiseaseSortableDisplay) {
-                window.familyDiseaseSortableDisplay.destroy();
-            }
-
-            // Sortable for modal list
-            const modalList = document.getElementById('family-disease-list-modal');
-            if (modalList && window.Sortable) {
-                window.familyDiseaseSortableModal = new Sortable(modalList, {
-                    animation: 150,
-                    handle: '.family-disease-drag-handle',
-                    onEnd: function (evt) {
-                        const newOrder = [];
-                        $('#family-disease-list-modal .family-disease-item').each(function () {
-                            const disease = $(this).find('.family-disease-text').text();
-                            if (disease && !newOrder.includes(disease)) {
-                                newOrder.push(disease);
-                            }
-                        });
-
-                        familyDiseaseList = newOrder;
+            $('#btn-add-family-disease').on('click', function () {
+                const newDisease = $('#family-disease-input').val().trim();
+                if (newDisease) {
+                    if (!familyDiseaseList.some(d => d.toLowerCase() === newDisease.toLowerCase())) {
+                        familyDiseaseList.push(newDisease);
                         renderFamilyDiseaseList();
-                    }
-                });
-            }
-
-            // Sortable for display list
-            const displayList = document.querySelector('.family-disease-display-list');
-            if (displayList && window.Sortable) {
-                window.familyDiseaseSortableDisplay = new Sortable(displayList, {
-                    animation: 150,
-                    handle: '.family-disease-drag-handle',
-                    onEnd: function (evt) {
-                        // Reorder diagnoses in display list
-                        const newOrder = [];
-                        $('.family-disease-display-list .family-disease-display-item').each(function () {
-                            const disease = $(this).data('disease');
-                            if (disease && !newOrder.includes(disease)) {
-                                newOrder.push(disease);
-                            }
+                        $('#family-disease-input').val('');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Penyakit keluarga sudah ada dalam daftar',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
                         });
-
-                        // Update diagnoses
-                        familyDiseaseList = newOrder;
-                        renderFamilyDiseaseList();
                     }
-                });
-            }
-        }
-
-        // Open modal to add/edit diagnoses
-        $('#btn-open-family-disease-modal').on('click', function () {
-            renderFamilyDiseaseList();
-            $('#modal-family-disease-history').modal('show');
-        });
-
-        $('#btn-add-family-disease').on('click', function () {
-            const newDisease = $('#family-disease-input').val().trim();
-            if (newDisease) {
-                if (!familyDiseaseList.some(d => d.toLowerCase() === newDisease.toLowerCase())) {
-                    familyDiseaseList.push(newDisease);
-                    renderFamilyDiseaseList();
-                    $('#family-disease-input').val('');
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Penyakit keluarga sudah ada dalam daftar',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
                 }
-            }
-        });
+            });
 
-        // Handle Enter key for adding diagnosis
-        $('#family-disease-input').on('keypress', function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                $('#btn-add-family-disease').click();
-            }
-        });
-
-        // Open edit diagnosis modal
-        $(document).on('click', '.btn-edit-family-disease', function () {
-            const index = $(this).data('index');
-            const disease = familyDiseaseList[index];
-
-            $('#edit-family-disease-input').val(disease);
-            $('#edit-family-disease-index').val(index);
-            $('#modal-edit-family-disease').modal('show');
-        });
-
-        // Update diagnosis
-        $('#btn-update-family-disease').on('click', function () {
-            const index = $('#edit-family-disease-index').val();
-            const updatedDisease = $('#edit-family-disease-input').val().trim();
-
-            if (updatedDisease) {
-                const duplicateIndex = familyDiseaseList.findIndex(
-                    (d, i) => d.toLowerCase() === updatedDisease.toLowerCase() && i !== parseInt(index)
-                );
-
-                if (duplicateIndex === -1) {
-                    familyDiseaseList[index] = updatedDisease;
-                    renderFamilyDiseaseList();
-                    $('#modal-edit-family-disease').modal('hide');
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Penyakit keluarga sudah ada dalam daftar',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+            // Handle Enter key for adding diagnosis
+            $('#family-disease-input').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#btn-add-family-disease').click();
                 }
-            }
-        });
+            });
 
-        // Remove diagnosis
-        $(document).on('click', '.btn-remove-family-disease', function () {
-            const index = $(this).data('index');
-            familyDiseaseList.splice(index, 1);
+            // Open edit diagnosis modal
+            $(document).on('click', '.btn-edit-family-disease', function () {
+                const index = $(this).data('index');
+                const disease = familyDiseaseList[index];
+
+                $('#edit-family-disease-input').val(disease);
+                $('#edit-family-disease-index').val(index);
+                $('#modal-edit-family-disease').modal('show');
+            });
+
+            // Update diagnosis
+            $('#btn-update-family-disease').on('click', function () {
+                const index = $('#edit-family-disease-index').val();
+                const updatedDisease = $('#edit-family-disease-input').val().trim();
+
+                if (updatedDisease) {
+                    const duplicateIndex = familyDiseaseList.findIndex(
+                        (d, i) => d.toLowerCase() === updatedDisease.toLowerCase() && i !== parseInt(index)
+                    );
+
+                    if (duplicateIndex === -1) {
+                        familyDiseaseList[index] = updatedDisease;
+                        renderFamilyDiseaseList();
+                        $('#modal-edit-family-disease').modal('hide');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Penyakit keluarga sudah ada dalam daftar',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
+                }
+            });
+
+            // Remove diagnosis
+            $(document).on('click', '.btn-remove-family-disease', function () {
+                const index = $(this).data('index');
+                familyDiseaseList.splice(index, 1);
+                renderFamilyDiseaseList();
+            });
+
+            // Save diagnoses
+            $('#btn-save-family-disease').on('click', function () {
+                familyDiseaseList = removeDuplicates(familyDiseaseList);
+                renderFamilyDiseaseList();
+                $('#modal-family-disease-history').modal('hide');
+            });
+
             renderFamilyDiseaseList();
         });
-
-        // Save diagnoses
-        $('#btn-save-family-disease').on('click', function () {
-            familyDiseaseList = removeDuplicates(familyDiseaseList);
-            renderFamilyDiseaseList();
-            $('#modal-family-disease-history').modal('hide');
-        });
-
-        renderFamilyDiseaseList();
-    });
-</script>
+    </script>
+@endpush

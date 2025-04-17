@@ -66,108 +66,110 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var obatModal = new bootstrap.Modal(document.getElementById('obatModal'));
-        var obatTable = document.querySelector('#createRiwayatObatTable tbody');
-        var listObat = document.getElementById('listObat');
-        var riwayatObat = [];
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var obatModal = new bootstrap.Modal(document.getElementById('obatModal'));
+            var obatTable = document.querySelector('#createRiwayatObatTable tbody');
+            var listObat = document.getElementById('listObat');
+            var riwayatObat = [];
 
-        function updateMainView() {
-            if (riwayatObat.length === 0) {
-                obatTable.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center py-3">
-                            <div class="text-muted">
-                                <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
-                                <p class="mb-0">Belum ada data riwayat obat</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                obatTable.innerHTML = riwayatObat.map((o, index) => `
-                    <tr>
-                        <td>${o.namaObat}</td>
-                        <td>${o.dosis} ${o.satuan}</td>
-                        <td>${o.frekuensi} (${o.keterangan})</td>
-                        <td>
-                            <button class="btn btn-sm btn-link delete-obat" data-index="${index}">
-                                <i class="ti-trash text-danger"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
+            function updateMainView() {
+                if (riwayatObat.length === 0) {
+                    obatTable.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-3">
+                                <div class="text-muted">
+                                    <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
+                                    <p class="mb-0">Belum ada data riwayat obat</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    obatTable.innerHTML = riwayatObat.map((o, index) => `
+                        <tr>
+                            <td>${o.namaObat}</td>
+                            <td>${o.dosis} ${o.satuan}</td>
+                            <td>${o.frekuensi} (${o.keterangan})</td>
+                            <td>
+                                <button class="btn btn-sm btn-link delete-obat" data-index="${index}">
+                                    <i class="ti-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
             }
-        }
 
-        function updateModalView() {
-            if (riwayatObat.length === 0) {
-                listObat.innerHTML = `
-                    <div class="text-center text-muted p-3">
-                        <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
-                        <p class="mb-0">Belum ada data riwayat obat</p>
-                    </div>
-                `;
-            } else {
-                listObat.innerHTML = riwayatObat.map(o => `
-                    <li class="mb-2">
-                        <span class="fw-bold">${o.namaObat}</span> - 
-                        <span class="text-muted">${o.dosis} ${o.satuan}</span> 
-                        <span class="badge bg-warning">${o.frekuensi} (${o.keterangan})</span>
-                    </li>
-                `).join('');
+            function updateModalView() {
+                if (riwayatObat.length === 0) {
+                    listObat.innerHTML = `
+                        <div class="text-center text-muted p-3">
+                            <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0">Belum ada data riwayat obat</p>
+                        </div>
+                    `;
+                } else {
+                    listObat.innerHTML = riwayatObat.map(o => `
+                        <li class="mb-2">
+                            <span class="fw-bold">${o.namaObat}</span> -
+                            <span class="text-muted">${o.dosis} ${o.satuan}</span>
+                            <span class="badge bg-warning">${o.frekuensi} (${o.keterangan})</span>
+                        </li>
+                    `).join('');
+                }
             }
-        }
 
-        document.getElementById('openObatModal').addEventListener('click', function() {
-            updateModalView();
-            obatModal.show();
-        });
-
-        document.getElementById('btnTambahObat').addEventListener('click', function() {
-            var namaObat = document.getElementById('namaObat').value.trim();
-            var frekuensi = document.getElementById('frekuensi').value;
-            var keterangan = document.getElementById('keterangan').value;
-            var dosis = document.getElementById('dosis').value;
-            var satuan = document.getElementById('satuan').value.trim();
-
-            if (namaObat !== '' && satuan !== '') {
-                riwayatObat.push({
-                    namaObat: namaObat,
-                    frekuensi: frekuensi,
-                    keterangan: keterangan,
-                    dosis: dosis,
-                    satuan: satuan
-                });
+            document.getElementById('openObatModal').addEventListener('click', function() {
                 updateModalView();
+                obatModal.show();
+            });
 
-                // Reset form kecuali satuan (default "Tablet")
-                document.getElementById('namaObat').value = '';
-                document.getElementById('frekuensi').value = '3 x 1 hari';
-                document.getElementById('keterangan').value = 'Sesudah Makan';
-                document.getElementById('dosis').value = '1/2';
-            } else {
-                alert('Harap isi Nama Obat dan Satuan');
-            }
-        });
+            document.getElementById('btnTambahObat').addEventListener('click', function() {
+                var namaObat = document.getElementById('namaObat').value.trim();
+                var frekuensi = document.getElementById('frekuensi').value;
+                var keterangan = document.getElementById('keterangan').value;
+                var dosis = document.getElementById('dosis').value;
+                var satuan = document.getElementById('satuan').value.trim();
 
-        document.getElementById('btnSaveObat').addEventListener('click', function() {
-            updateMainView();
-            document.getElementById('riwayatObatData').value = JSON.stringify(riwayatObat);
-            obatModal.hide();
-        });
+                if (namaObat !== '' && satuan !== '') {
+                    riwayatObat.push({
+                        namaObat: namaObat,
+                        frekuensi: frekuensi,
+                        keterangan: keterangan,
+                        dosis: dosis,
+                        satuan: satuan
+                    });
+                    updateModalView();
 
-        obatTable.addEventListener('click', function(e) {
-            if (e.target.closest('.delete-obat')) {
-                var row = e.target.closest('tr');
-                var index = Array.from(row.parentElement.children).indexOf(row);
-                riwayatObat.splice(index, 1);
+                    // Reset form kecuali satuan (default "Tablet")
+                    document.getElementById('namaObat').value = '';
+                    document.getElementById('frekuensi').value = '3 x 1 hari';
+                    document.getElementById('keterangan').value = 'Sesudah Makan';
+                    document.getElementById('dosis').value = '1/2';
+                } else {
+                    alert('Harap isi Nama Obat dan Satuan');
+                }
+            });
+
+            document.getElementById('btnSaveObat').addEventListener('click', function() {
                 updateMainView();
-            }
-        });
+                document.getElementById('riwayatObatData').value = JSON.stringify(riwayatObat);
+                obatModal.hide();
+            });
 
-        riwayatObat = [];
-        updateMainView();
-    });
-</script>
+            obatTable.addEventListener('click', function(e) {
+                if (e.target.closest('.delete-obat')) {
+                    var row = e.target.closest('tr');
+                    var index = Array.from(row.parentElement.children).indexOf(row);
+                    riwayatObat.splice(index, 1);
+                    updateMainView();
+                }
+            });
+
+            riwayatObat = [];
+            updateMainView();
+        });
+    </script>
+@endpush

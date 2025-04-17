@@ -62,222 +62,224 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        function safeParseJson(value, defaultValue = []) {
-            if (Array.isArray(value)) return value;
+@push('js')
+    <script>
+        $(document).ready(function () {
+            function safeParseJson(value, defaultValue = []) {
+                if (Array.isArray(value)) return value;
 
-            if (typeof value === 'string') {
-                try {
-                    const parsed = JSON.parse(value);
-                    return Array.isArray(parsed) ? parsed : defaultValue;
-                } catch (error) {
-                    console.error('Error parsing diagnosis JSON:', error);
-                    return defaultValue;
+                if (typeof value === 'string') {
+                    try {
+                        const parsed = JSON.parse(value);
+                        return Array.isArray(parsed) ? parsed : defaultValue;
+                    } catch (error) {
+                        console.error('Error parsing diagnosis JSON:', error);
+                        return defaultValue;
+                    }
+                }
+
+                return defaultValue;
+            }
+
+            // Initialize diagnoses from the database
+            let diagnosisDiderita = safeParseJson(
+                @json($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_diderita'] ?? [])
+            );
+
+            function removeDuplicates(arr) {
+                return Array.from(new Set(arr.filter(item => item && item.trim() !== '')));
+            }
+
+            // Function to render diagnosis list
+            function renderDiagnosisDiderita() {
+                diagnosisDiderita = removeDuplicates(diagnosisDiderita);
+
+                const diagnosisList = $('#diagnosisListDiderita');
+                const displayList = $('#diagnosisListDisplay');
+                diagnosisList.empty();
+                displayList.empty();
+
+                // Populate lists with current diagnoses
+                diagnosisDiderita.forEach((diagnosis, index) => {
+                    const diagnosisItem = $(`
+                        <div class="d-flex justify-content-between align-items-center mb-2 diagnosis-item" data-index="${index}" data-diagnosis="${diagnosis}">
+                            <div class="d-flex align-items-center">
+                                <span class="diagnosis-drag-handle me-2" style="cursor: move;">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                                <span class="diagnosis-text">${diagnosis}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2 edit-diagnosis" data-index="${index}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger remove-diagnosis" data-index="${index}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                    diagnosisList.append(diagnosisItem);
+
+                    const displayItem = $(`
+                        <div class="diagnosis-display-item mb-2 d-flex justify-content-between align-items-center" data-diagnosis="${diagnosis}">
+                            <div class="d-flex align-items-center w-100">
+                                <span class="diagnosis-drag-handle me-2" style="cursor: move;">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                                <span class="flex-grow-1">${diagnosis}</span>
+                            </div>
+                        </div>
+                    `);
+                    displayList.append(displayItem);
+                });
+
+                $('#diagnosisDataDiderit').val(JSON.stringify(diagnosisDiderita));
+
+                initializeSortable();
+            }
+
+            // Initialize Sortable for drag and drop
+            function initializeSortable() {
+                if (window.diagnosisDideritaSortableModal) {
+                    window.diagnosisDideritaSortableModal.destroy();
+                }
+                if (window.diagnosisDideritaSortableDisplay) {
+                    window.diagnosisDideritaSortableDisplay.destroy();
+                }
+
+                // Sortable for modal list
+                const modalList = document.getElementById('diagnosisListDiderita');
+                if (modalList && window.Sortable) {
+                    window.diagnosisDideritaSortableModal = new Sortable(modalList, {
+                        animation: 150,
+                        handle: '.diagnosis-drag-handle',
+                        onEnd: function (evt) {
+                            const newOrder = [];
+                            $('#diagnosisListDiderita .diagnosis-item').each(function () {
+                                const diagnosis = $(this).data('diagnosis');
+                                if (diagnosis && !newOrder.includes(diagnosis)) {
+                                    newOrder.push(diagnosis);
+                                }
+                            });
+
+                            diagnosisDiderita = newOrder;
+                            renderDiagnosisDiderita();
+                        }
+                    });
+                }
+
+                // Sortable for display list
+                const displayList = document.getElementById('diagnosisListDisplay');
+                if (displayList && window.Sortable) {
+                    window.diagnosisDideritaSortableDisplay = new Sortable(displayList, {
+                        animation: 150,
+                        handle: '.diagnosis-drag-handle',
+                        onEnd: function (evt) {
+                            const newOrder = [];
+                            $('#diagnosisListDisplay .diagnosis-display-item').each(function () {
+                                const diagnosis = $(this).data('diagnosis');
+                                if (diagnosis && !newOrder.includes(diagnosis)) {
+                                    newOrder.push(diagnosis);
+                                }
+                            });
+
+                            diagnosisDiderita = newOrder;
+                            renderDiagnosisDiderita();
+                        }
+                    });
                 }
             }
 
-            return defaultValue;
-        }
-
-        // Initialize diagnoses from the database
-        let diagnosisDiderita = safeParseJson(
-            @json($asesmen->rmeAsesmenThtRiwayatKesehatanObatAlergi[0]['riwayat_kesehatan_penyakit_diderita'] ?? [])
-        );
-
-        function removeDuplicates(arr) {
-            return Array.from(new Set(arr.filter(item => item && item.trim() !== '')));
-        }
-
-        // Function to render diagnosis list
-        function renderDiagnosisDiderita() {
-            diagnosisDiderita = removeDuplicates(diagnosisDiderita);
-
-            const diagnosisList = $('#diagnosisListDiderita');
-            const displayList = $('#diagnosisListDisplay');
-            diagnosisList.empty();
-            displayList.empty();
-
-            // Populate lists with current diagnoses
-            diagnosisDiderita.forEach((diagnosis, index) => {
-                const diagnosisItem = $(`
-                    <div class="d-flex justify-content-between align-items-center mb-2 diagnosis-item" data-index="${index}" data-diagnosis="${diagnosis}">
-                        <div class="d-flex align-items-center">
-                            <span class="diagnosis-drag-handle me-2" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <span class="diagnosis-text">${diagnosis}</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-outline-primary me-2 edit-diagnosis" data-index="${index}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger remove-diagnosis" data-index="${index}">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `);
-                diagnosisList.append(diagnosisItem);
-
-                const displayItem = $(`
-                    <div class="diagnosis-display-item mb-2 d-flex justify-content-between align-items-center" data-diagnosis="${diagnosis}">
-                        <div class="d-flex align-items-center w-100">
-                            <span class="diagnosis-drag-handle me-2" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <span class="flex-grow-1">${diagnosis}</span>
-                        </div>
-                    </div>
-                `);
-                displayList.append(displayItem);
+            // Open modal to add/edit diagnoses
+            $('#btn-diagnosis-diderit').on('click', function () {
+                renderDiagnosisDiderita();
+                $('#modal-diagnosis-diderita').modal('show');
             });
 
-            $('#diagnosisDataDiderit').val(JSON.stringify(diagnosisDiderita));
-
-            initializeSortable();
-        }
-
-        // Initialize Sortable for drag and drop
-        function initializeSortable() {
-            if (window.diagnosisDideritaSortableModal) {
-                window.diagnosisDideritaSortableModal.destroy();
-            }
-            if (window.diagnosisDideritaSortableDisplay) {
-                window.diagnosisDideritaSortableDisplay.destroy();
-            }
-
-            // Sortable for modal list
-            const modalList = document.getElementById('diagnosisListDiderita');
-            if (modalList && window.Sortable) {
-                window.diagnosisDideritaSortableModal = new Sortable(modalList, {
-                    animation: 150,
-                    handle: '.diagnosis-drag-handle',
-                    onEnd: function (evt) {
-                        const newOrder = [];
-                        $('#diagnosisListDiderita .diagnosis-item').each(function () {
-                            const diagnosis = $(this).data('diagnosis');
-                            if (diagnosis && !newOrder.includes(diagnosis)) {
-                                newOrder.push(diagnosis);
-                            }
-                        });
-
-                        diagnosisDiderita = newOrder;
+            // Add new diagnosis
+            $('#btnAddDiagnosisDiderita').on('click', function () {
+                const newDiagnosis = $('#searchDiagnosisInputDiderita').val().trim();
+                if (newDiagnosis) {
+                    if (!diagnosisDiderita.some(d => d.toLowerCase() === newDiagnosis.toLowerCase())) {
+                        diagnosisDiderita.push(newDiagnosis);
                         renderDiagnosisDiderita();
-                    }
-                });
-            }
-
-            // Sortable for display list
-            const displayList = document.getElementById('diagnosisListDisplay');
-            if (displayList && window.Sortable) {
-                window.diagnosisDideritaSortableDisplay = new Sortable(displayList, {
-                    animation: 150,
-                    handle: '.diagnosis-drag-handle',
-                    onEnd: function (evt) {
-                        const newOrder = [];
-                        $('#diagnosisListDisplay .diagnosis-display-item').each(function () {
-                            const diagnosis = $(this).data('diagnosis');
-                            if (diagnosis && !newOrder.includes(diagnosis)) {
-                                newOrder.push(diagnosis);
-                            }
+                        $('#searchDiagnosisInputDiderita').val('');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Penyakit sudah ada dalam daftar',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
                         });
-
-                        diagnosisDiderita = newOrder;
-                        renderDiagnosisDiderita();
                     }
-                });
-            }
-        }        
-
-        // Open modal to add/edit diagnoses
-        $('#btn-diagnosis-diderit').on('click', function () {
-            renderDiagnosisDiderita();
-            $('#modal-diagnosis-diderita').modal('show');
-        });
-
-        // Add new diagnosis
-        $('#btnAddDiagnosisDiderita').on('click', function () {
-            const newDiagnosis = $('#searchDiagnosisInputDiderita').val().trim();
-            if (newDiagnosis) {
-                if (!diagnosisDiderita.some(d => d.toLowerCase() === newDiagnosis.toLowerCase())) {
-                    diagnosisDiderita.push(newDiagnosis);
-                    renderDiagnosisDiderita();
-                    $('#searchDiagnosisInputDiderita').val('');
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Penyakit sudah ada dalam daftar',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
                 }
-            }
-        });
+            });
 
-        // Handle Enter key for adding diagnosis
-        $('#searchDiagnosisInputDiderita').on('keypress', function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                $('#btnAddDiagnosisDiderita').click();
-            }
-        });
-
-        // Open edit diagnosis modal
-        $(document).on('click', '.edit-diagnosis', function () {
-            const index = $(this).data('index');
-            const diagnosis = diagnosisDiderita[index];
-
-            $('#editDiagnosisInput').val(diagnosis);
-            $('#editDiagnosisIndex').val(index);
-            $('#modal-edit-diagnosis-diderita').modal('show');
-        });
-
-        // Update diagnosis
-        $('#btnUpdateDiagnosisDiderita').on('click', function () {
-            const index = $('#editDiagnosisIndex').val();
-            const updatedDiagnosis = $('#editDiagnosisInput').val().trim();
-
-            if (updatedDiagnosis) {
-                const duplicateIndex = diagnosisDiderita.findIndex(
-                    (d, i) => d.toLowerCase() === updatedDiagnosis.toLowerCase() && i !== parseInt(index)
-                );
-
-                if (duplicateIndex === -1) {
-                    diagnosisDiderita[index] = updatedDiagnosis;
-                    renderDiagnosisDiderita();
-                    $('#modal-edit-diagnosis-diderita').modal('hide');
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Penyakit sudah ada dalam daftar',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+            // Handle Enter key for adding diagnosis
+            $('#searchDiagnosisInputDiderita').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#btnAddDiagnosisDiderita').click();
                 }
-            }
-        });
+            });
 
-        // Remove diagnosis
-        $(document).on('click', '.remove-diagnosis', function () {
-            const index = $(this).data('index');
-            diagnosisDiderita.splice(index, 1);
+            // Open edit diagnosis modal
+            $(document).on('click', '.edit-diagnosis', function () {
+                const index = $(this).data('index');
+                const diagnosis = diagnosisDiderita[index];
+
+                $('#editDiagnosisInput').val(diagnosis);
+                $('#editDiagnosisIndex').val(index);
+                $('#modal-edit-diagnosis-diderita').modal('show');
+            });
+
+            // Update diagnosis
+            $('#btnUpdateDiagnosisDiderita').on('click', function () {
+                const index = $('#editDiagnosisIndex').val();
+                const updatedDiagnosis = $('#editDiagnosisInput').val().trim();
+
+                if (updatedDiagnosis) {
+                    const duplicateIndex = diagnosisDiderita.findIndex(
+                        (d, i) => d.toLowerCase() === updatedDiagnosis.toLowerCase() && i !== parseInt(index)
+                    );
+
+                    if (duplicateIndex === -1) {
+                        diagnosisDiderita[index] = updatedDiagnosis;
+                        renderDiagnosisDiderita();
+                        $('#modal-edit-diagnosis-diderita').modal('hide');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Penyakit sudah ada dalam daftar',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
+                }
+            });
+
+            // Remove diagnosis
+            $(document).on('click', '.remove-diagnosis', function () {
+                const index = $(this).data('index');
+                diagnosisDiderita.splice(index, 1);
+                renderDiagnosisDiderita();
+            });
+
+            // Save diagnoses
+            $('#btnSaveDiagnosisDiderita').on('click', function () {
+                diagnosisDiderita = removeDuplicates(diagnosisDiderita);
+                renderDiagnosisDiderita();
+                $('#modal-diagnosis-diderita').modal('hide');
+            });
+
             renderDiagnosisDiderita();
         });
-
-        // Save diagnoses
-        $('#btnSaveDiagnosisDiderita').on('click', function () {
-            diagnosisDiderita = removeDuplicates(diagnosisDiderita);
-            renderDiagnosisDiderita();
-            $('#modal-diagnosis-diderita').modal('hide');
-        });
-
-        renderDiagnosisDiderita();
-    });
-</script>
+    </script>
+@endpush

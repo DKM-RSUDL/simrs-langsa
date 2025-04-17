@@ -59,168 +59,170 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        // Inisialisasi data dari database jika ada
-        let dataRiwayatKehamilan = @json($dataResume->riwayat_kehamilan_sekarang ?? []);
-    
-        // Fungsi untuk menghapus duplikat dari array
-        function removeDuplicates(arr) {
-            return [...new Set(arr)];
-        }
-    
-        // Fungsi untuk memperbarui hidden input dan tampilan
-        function displayRiwayatKehamilan() {
-            // Bersihkan duplikat sebelum menampilkan
-            dataRiwayatKehamilan = removeDuplicates(dataRiwayatKehamilan);
-    
-            let riwayatKehamilanList = '';
-            let riwayatKehamilanDisplay = '';
-    
-            if (dataRiwayatKehamilan && Array.isArray(dataRiwayatKehamilan)) {
-                dataRiwayatKehamilan.forEach((history, index) => {
-                    let uniqueId = 'riwayat-kehamilan-' + index;
-    
-                    // Untuk modal riwayat kehamilan
-                    riwayatKehamilanList += `
-                    <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
-                        <span class="fw-bold">${history}</span>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-link edit-riwayat-kehamilan" data-id="${uniqueId}">
-                                <i class="bi bi-pencil text-primary"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-link remove-riwayat-kehamilan" data-id="${uniqueId}">
-                                <i class="bi bi-trash text-danger"></i>
-                            </button>
-                        </div>
-                    </li>`;
-    
-                    // Untuk tampilan utama
-                    riwayatKehamilanDisplay += `
-                    <div class="riwayat-kehamilan-item d-flex justify-content-between align-items-center mb-2"
-                        id="main-${uniqueId}" data-riwayat-kehamilan="${history}">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="drag-handle" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi data dari database jika ada
+            let dataRiwayatKehamilan = @json($dataResume->riwayat_kehamilan_sekarang ?? []);
+
+            // Fungsi untuk menghapus duplikat dari array
+            function removeDuplicates(arr) {
+                return [...new Set(arr)];
+            }
+
+            // Fungsi untuk memperbarui hidden input dan tampilan
+            function displayRiwayatKehamilan() {
+                // Bersihkan duplikat sebelum menampilkan
+                dataRiwayatKehamilan = removeDuplicates(dataRiwayatKehamilan);
+
+                let riwayatKehamilanList = '';
+                let riwayatKehamilanDisplay = '';
+
+                if (dataRiwayatKehamilan && Array.isArray(dataRiwayatKehamilan)) {
+                    dataRiwayatKehamilan.forEach((history, index) => {
+                        let uniqueId = 'riwayat-kehamilan-' + index;
+
+                        // Untuk modal riwayat kehamilan
+                        riwayatKehamilanList += `
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="${uniqueId}">
                             <span class="fw-bold">${history}</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-link remove-main-riwayat-kehamilan" data-id="${uniqueId}">
-                            <i class="bi bi-x-circle text-danger"></i>
-                        </button>
-                    </div>`;
-                });
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-link edit-riwayat-kehamilan" data-id="${uniqueId}">
+                                    <i class="bi bi-pencil text-primary"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-link remove-riwayat-kehamilan" data-id="${uniqueId}">
+                                    <i class="bi bi-trash text-danger"></i>
+                                </button>
+                            </div>
+                        </li>`;
+
+                        // Untuk tampilan utama
+                        riwayatKehamilanDisplay += `
+                        <div class="riwayat-kehamilan-item d-flex justify-content-between align-items-center mb-2"
+                            id="main-${uniqueId}" data-riwayat-kehamilan="${history}">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="drag-handle" style="cursor: move;">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                                <span class="fw-bold">${history}</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-link remove-main-riwayat-kehamilan" data-id="${uniqueId}">
+                                <i class="bi bi-x-circle text-danger"></i>
+                            </button>
+                        </div>`;
+                    });
+                }
+
+                // Update tampilan
+                $('#riwayatKehamilanList').html(riwayatKehamilanList);
+                $('.riwayat-kehamilan-list').html(riwayatKehamilanDisplay);
+
+                // Update hidden input dengan JSON string
+                $('#riwayatKehamilanSekarangInput').val(JSON.stringify(dataRiwayatKehamilan));
+
+                // Initialize Sortable
+                initializeSortable();
             }
-    
-            // Update tampilan
-            $('#riwayatKehamilanList').html(riwayatKehamilanList);
-            $('.riwayat-kehamilan-list').html(riwayatKehamilanDisplay);
-    
-            // Update hidden input dengan JSON string
-            $('#riwayatKehamilanSekarangInput').val(JSON.stringify(dataRiwayatKehamilan));
-    
-            // Initialize Sortable
-            initializeSortable();
-        }
-    
-        // Inisialisasi Sortable
-        function initializeSortable() {
-            let riwayatKehamilanList = document.querySelector('.riwayat-kehamilan-list');
-            if (riwayatKehamilanList) {
-                new Sortable(riwayatKehamilanList, {
-                    animation: 150,
-                    handle: '.drag-handle',
-                    onEnd: function(evt) {
-                        // Buat array baru dari urutan setelah drag
-                        let newOrder = [];
-                        $('.riwayat-kehamilan-item').each(function() {
-                            let history = $(this).data('riwayat-kehamilan');
-                            if (history && !newOrder.includes(history)) {
-                                newOrder.push(history);
-                            }
-                        });
-    
-                        // Update dataRiwayatKehamilan dengan array baru tanpa duplikat
-                        dataRiwayatKehamilan = newOrder;
-    
-                        // Update hidden input
-                        $('#riwayatKehamilanSekarangInput').val(JSON.stringify(dataRiwayatKehamilan));
-                    }
-                });
+
+            // Inisialisasi Sortable
+            function initializeSortable() {
+                let riwayatKehamilanList = document.querySelector('.riwayat-kehamilan-list');
+                if (riwayatKehamilanList) {
+                    new Sortable(riwayatKehamilanList, {
+                        animation: 150,
+                        handle: '.drag-handle',
+                        onEnd: function(evt) {
+                            // Buat array baru dari urutan setelah drag
+                            let newOrder = [];
+                            $('.riwayat-kehamilan-item').each(function() {
+                                let history = $(this).data('riwayat-kehamilan');
+                                if (history && !newOrder.includes(history)) {
+                                    newOrder.push(history);
+                                }
+                            });
+
+                            // Update dataRiwayatKehamilan dengan array baru tanpa duplikat
+                            dataRiwayatKehamilan = newOrder;
+
+                            // Update hidden input
+                            $('#riwayatKehamilanSekarangInput').val(JSON.stringify(dataRiwayatKehamilan));
+                        }
+                    });
+                }
             }
-        }
-    
-        // Tampilkan data awal
-        displayRiwayatKehamilan();
-    
-        // Buka modal
-        $('#btnRiwayatKehamilan').on('click', function() {
+
+            // Tampilkan data awal
             displayRiwayatKehamilan();
-            $('#modalCreateRiwayatKehamilan').modal('show');
-        });
-    
-        // Tambah riwayat kehamilan
-        $('#btnAddRiwayatKehamilan').click(function() {
-            var history = $('#searchRiwayatKehamilanInput').val().trim();
-            if (history !== '') {
-                // Cek apakah riwayat sudah ada
-                if (!dataRiwayatKehamilan.includes(history)) {
-                    dataRiwayatKehamilan.push(history);
+
+            // Buka modal
+            $('#btnRiwayatKehamilan').on('click', function() {
+                displayRiwayatKehamilan();
+                $('#modalCreateRiwayatKehamilan').modal('show');
+            });
+
+            // Tambah riwayat kehamilan
+            $('#btnAddRiwayatKehamilan').click(function() {
+                var history = $('#searchRiwayatKehamilanInput').val().trim();
+                if (history !== '') {
+                    // Cek apakah riwayat sudah ada
+                    if (!dataRiwayatKehamilan.includes(history)) {
+                        dataRiwayatKehamilan.push(history);
+                        displayRiwayatKehamilan();
+                    }
+                    $('#searchRiwayatKehamilanInput').val('');
+                }
+            });
+
+            // Handle enter key
+            $('#searchRiwayatKehamilanInput').keypress(function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#btnAddRiwayatKehamilan').click();
+                }
+            });
+
+            // Open edit modal
+            $(document).on('click', '.edit-riwayat-kehamilan', function() {
+                var historyId = $(this).data('id');
+                var index = historyId.split('-')[2];
+                var historyText = dataRiwayatKehamilan[index];
+
+                $('#editRiwayatKehamilanTextarea').val(historyText);
+                $('#editRiwayatKehamilanId').val(index);
+
+                $('#modalEditRiwayatKehamilan').modal('show');
+            });
+
+            // Save edit pregnancy history
+            $('#btnUpdateRiwayatKehamilan').click(function() {
+                var updatedHistory = $('#editRiwayatKehamilanTextarea').val().trim();
+                var index = $('#editRiwayatKehamilanId').val();
+
+                if (updatedHistory !== '') {
+                    dataRiwayatKehamilan[index] = updatedHistory;
                     displayRiwayatKehamilan();
                 }
-                $('#searchRiwayatKehamilanInput').val('');
-            }
-        });
-    
-        // Handle enter key
-        $('#searchRiwayatKehamilanInput').keypress(function(e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                $('#btnAddRiwayatKehamilan').click();
-            }
-        });
-    
-        // Open edit modal
-        $(document).on('click', '.edit-riwayat-kehamilan', function() {
-            var historyId = $(this).data('id');
-            var index = historyId.split('-')[2];
-            var historyText = dataRiwayatKehamilan[index];
-    
-            $('#editRiwayatKehamilanTextarea').val(historyText);
-            $('#editRiwayatKehamilanId').val(index);
-    
-            $('#modalEditRiwayatKehamilan').modal('show');
-        });
-    
-        // Save edit pregnancy history
-        $('#btnUpdateRiwayatKehamilan').click(function() {
-            var updatedHistory = $('#editRiwayatKehamilanTextarea').val().trim();
-            var index = $('#editRiwayatKehamilanId').val();
-    
-            if (updatedHistory !== '') {
-                dataRiwayatKehamilan[index] = updatedHistory;
+
+                $('#modalEditRiwayatKehamilan').modal('hide');
+            });
+
+            // Hapus riwayat kehamilan
+            $(document).on('click', '.remove-riwayat-kehamilan, .remove-main-riwayat-kehamilan', function() {
+                var historyId = $(this).data('id');
+                var index = historyId.split('-')[2];
+                if (index >= 0 && index < dataRiwayatKehamilan.length) {
+                    dataRiwayatKehamilan.splice(index, 1);
+                    displayRiwayatKehamilan();
+                }
+            });
+
+            // Simpan riwayat kehamilan
+            $('#btnSaveRiwayatKehamilan').click(function() {
+                // Pastikan tidak ada duplikat sebelum menyimpan
+                dataRiwayatKehamilan = removeDuplicates(dataRiwayatKehamilan);
                 displayRiwayatKehamilan();
-            }
-    
-            $('#modalEditRiwayatKehamilan').modal('hide');
+                $('#modalCreateRiwayatKehamilan').modal('hide');
+            });
         });
-    
-        // Hapus riwayat kehamilan
-        $(document).on('click', '.remove-riwayat-kehamilan, .remove-main-riwayat-kehamilan', function() {
-            var historyId = $(this).data('id');
-            var index = historyId.split('-')[2];
-            if (index >= 0 && index < dataRiwayatKehamilan.length) {
-                dataRiwayatKehamilan.splice(index, 1);
-                displayRiwayatKehamilan();
-            }
-        });
-    
-        // Simpan riwayat kehamilan
-        $('#btnSaveRiwayatKehamilan').click(function() {
-            // Pastikan tidak ada duplikat sebelum menyimpan
-            dataRiwayatKehamilan = removeDuplicates(dataRiwayatKehamilan);
-            displayRiwayatKehamilan();
-            $('#modalCreateRiwayatKehamilan').modal('hide');
-        });
-    });
     </script>
+@endpush

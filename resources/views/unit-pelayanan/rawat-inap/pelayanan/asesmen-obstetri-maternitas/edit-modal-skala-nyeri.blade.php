@@ -421,332 +421,334 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // ----- VARIABEL GLOBAL ----- //
-        // Elemen-elemen DOM utama
-        const jenisSkalaSelect = document.getElementById('jenisSkalaSelect');
-        const selectedScaleInfo = document.getElementById('selectedScaleInfo');
-        const scaleInfoBtn = document.getElementById('scaleInfoBtn');
-        const selectedScaleDisplay = document.getElementById('selectedScaleDisplay');
-        const kesimpulanNyeri = document.getElementById('kesimpulanNyeri');
-        const kesimpulanNyeriInput = document.getElementById('kesimpulanNyeriInput');
-        const skalaNyeriMain = document.getElementById('skala_nyeri_main');
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // ----- VARIABEL GLOBAL ----- //
+            // Elemen-elemen DOM utama
+            const jenisSkalaSelect = document.getElementById('jenisSkalaSelect');
+            const selectedScaleInfo = document.getElementById('selectedScaleInfo');
+            const scaleInfoBtn = document.getElementById('scaleInfoBtn');
+            const selectedScaleDisplay = document.getElementById('selectedScaleDisplay');
+            const kesimpulanNyeri = document.getElementById('kesimpulanNyeri');
+            const kesimpulanNyeriInput = document.getElementById('kesimpulanNyeriInput');
+            const skalaNyeriMain = document.getElementById('skala_nyeri_main');
 
-        // Bootstrap Modal objects
-        let nrsModal, flaccModal, criesModal;
+            // Bootstrap Modal objects
+            let nrsModal, flaccModal, criesModal;
 
-        // Inisialisasi modals jika elemen ada
-        if (document.getElementById('nrsModal')) {
-            nrsModal = new bootstrap.Modal(document.getElementById('nrsModal'));
-        }
-        if (document.getElementById('flaccModal')) {
-            flaccModal = new bootstrap.Modal(document.getElementById('flaccModal'));
-        }
-        if (document.getElementById('criesModal')) {
-            criesModal = new bootstrap.Modal(document.getElementById('criesModal'));
-        }
-
-        // ----- FUNGSI UTAMA UNTUK SEMUA SKALA ----- //
-
-        // Fungsi untuk menampilkan modal yang sesuai
-        function showModalForScale(scale) {
-            switch (scale) {
-                case 'nrs':
-                    if (nrsModal) nrsModal.show();
-                    break;
-                case 'flacc':
-                    if (flaccModal) flaccModal.show();
-                    break;
-                case 'cries':
-                    if (criesModal) criesModal.show();
-                    break;
+            // Inisialisasi modals jika elemen ada
+            if (document.getElementById('nrsModal')) {
+                nrsModal = new bootstrap.Modal(document.getElementById('nrsModal'));
             }
-        }
-
-        // Fungsi untuk update kesimpulan nyeri di halaman utama
-        function updateKesimpulanNyeri(skalaType, skor, kategori) {
-            // Simpan nilai skor ke input hidden utama
-            skalaNyeriMain.value = skor;
-
-            // Tampilkan skor skala nyeri yang dipilih
-            selectedScaleDisplay.innerHTML = `
-                <div class="alert alert-info">
-                    <strong>${skalaType}:</strong> Skor ${skor} - ${kategori}
-                </div>
-            `;
-            selectedScaleDisplay.classList.remove('d-none');
-
-            // Update kesimpulan nyeri
-            kesimpulanNyeri.textContent = kategori;
-            kesimpulanNyeriInput.value = kategori;
-
-            // Update warna background kesimpulan nyeri
-            kesimpulanNyeri.className = 'p-3 rounded text-white';
-
-            if (kategori === 'NYERI RINGAN' || kategori === 'Nyeri Ringan' || kategori === 'Tidak Nyeri') {
-                kesimpulanNyeri.classList.add('bg-success');
-            } else if (kategori === 'NYERI SEDANG' || kategori === 'Nyeri Sedang') {
-                kesimpulanNyeri.classList.add('bg-warning');
-                kesimpulanNyeri.classList.remove('text-white');
-                kesimpulanNyeri.classList.add('text-dark');
-            } else {
-                kesimpulanNyeri.classList.add('bg-danger');
+            if (document.getElementById('flaccModal')) {
+                flaccModal = new bootstrap.Modal(document.getElementById('flaccModal'));
             }
-        }
-
-        // Event listener untuk pemilihan skala
-        jenisSkalaSelect.addEventListener('change', function () {
-            const selectedValue = this.value;
-
-            if (selectedValue) {
-                selectedScaleInfo.classList.remove('d-none');
-                showModalForScale(selectedValue);
-            } else {
-                selectedScaleInfo.classList.add('d-none');
+            if (document.getElementById('criesModal')) {
+                criesModal = new bootstrap.Modal(document.getElementById('criesModal'));
             }
-        });
 
-        // Event listener untuk tombol info
-        scaleInfoBtn.addEventListener('click', function () {
-            const selectedValue = jenisSkalaSelect.value;
-            showModalForScale(selectedValue);
-        });
+            // ----- FUNGSI UTAMA UNTUK SEMUA SKALA ----- //
 
-        // ----- FUNGSI SKALA NRS ----- //
-        const nrsInput = document.getElementById('nrs_skala_nyeri');
-        const nrsBtn = document.getElementById('skalaNyeriBtn');
-        const nrsNilaiInput = document.getElementById('nrs_skala_nyeri_nilai');
-        const simpanNRSBtn = document.getElementById('simpanNRS');
+            // Fungsi untuk menampilkan modal yang sesuai
+            function showModalForScale(scale) {
+                switch (scale) {
+                    case 'nrs':
+                        if (nrsModal) nrsModal.show();
+                        break;
+                    case 'flacc':
+                        if (flaccModal) flaccModal.show();
+                        break;
+                    case 'cries':
+                        if (criesModal) criesModal.show();
+                        break;
+                }
+            }
 
-        if (nrsInput && nrsBtn && simpanNRSBtn) {
-            // Inisialisasi nilai awal NRS
-            updateNRSButton(parseInt(nrsInput.value) || 0);
+            // Fungsi untuk update kesimpulan nyeri di halaman utama
+            function updateKesimpulanNyeri(skalaType, skor, kategori) {
+                // Simpan nilai skor ke input hidden utama
+                skalaNyeriMain.value = skor;
 
-            // Event handler untuk input NRS
-            nrsInput.addEventListener('input', function () {
-                let nilai = parseInt(this.value) || 0;
+                // Tampilkan skor skala nyeri yang dipilih
+                selectedScaleDisplay.innerHTML = `
+                    <div class="alert alert-info">
+                        <strong>${skalaType}:</strong> Skor ${skor} - ${kategori}
+                    </div>
+                `;
+                selectedScaleDisplay.classList.remove('d-none');
 
-                // Batasi nilai antara 0-10
-                nilai = Math.min(Math.max(nilai, 0), 10);
-                this.value = nilai;
-                nrsNilaiInput.value = nilai;
+                // Update kesimpulan nyeri
+                kesimpulanNyeri.textContent = kategori;
+                kesimpulanNyeriInput.value = kategori;
 
-                updateNRSButton(nilai);
-            });
+                // Update warna background kesimpulan nyeri
+                kesimpulanNyeri.className = 'p-3 rounded text-white';
 
-            // Event handler untuk tombol simpan NRS
-            simpanNRSBtn.addEventListener('click', function () {
-                const nilai = parseInt(nrsInput.value) || 0;
-                let kategori;
-
-                if (nilai === 0) {
-                    kategori = 'Tidak Nyeri';
-                } else if (nilai >= 1 && nilai <= 3) {
-                    kategori = 'Nyeri Ringan';
-                } else if (nilai >= 4 && nilai <= 6) {
-                    kategori = 'Nyeri Sedang';
+                if (kategori === 'NYERI RINGAN' || kategori === 'Nyeri Ringan' || kategori === 'Tidak Nyeri') {
+                    kesimpulanNyeri.classList.add('bg-success');
+                } else if (kategori === 'NYERI SEDANG' || kategori === 'Nyeri Sedang') {
+                    kesimpulanNyeri.classList.add('bg-warning');
+                    kesimpulanNyeri.classList.remove('text-white');
+                    kesimpulanNyeri.classList.add('text-dark');
                 } else {
-                    kategori = 'Nyeri Berat';
+                    kesimpulanNyeri.classList.add('bg-danger');
                 }
-
-                // Update kesimpulan nyeri di halaman utama
-                updateKesimpulanNyeri('NRS', nilai, kategori);
-
-                // Tutup modal
-                if (nrsModal) nrsModal.hide();
-            });
-
-            // Fungsi untuk update tombol NRS
-            function updateNRSButton(nilai) {
-                let buttonClass, textNyeri;
-
-                switch (true) {
-                    case nilai === 0:
-                        buttonClass = 'btn-success';
-                        textNyeri = 'Tidak Nyeri';
-                        break;
-                    case nilai >= 1 && nilai <= 3:
-                        buttonClass = 'btn-success';
-                        textNyeri = 'Nyeri Ringan';
-                        break;
-                    case nilai >= 4 && nilai <= 6:
-                        buttonClass = 'btn-warning';
-                        textNyeri = 'Nyeri Sedang';
-                        break;
-                    case nilai >= 7 && nilai <= 9:
-                        buttonClass = 'btn-danger';
-                        textNyeri = 'Nyeri Berat';
-                        break;
-                    case nilai >= 10:
-                        buttonClass = 'btn-danger';
-                        textNyeri = 'Nyeri Tak Tertahankan';
-                        break;
-                }
-
-                nrsBtn.classList.remove('btn-success', 'btn-warning', 'btn-danger');
-                nrsBtn.classList.add(buttonClass);
-                nrsBtn.textContent = textNyeri;
             }
 
-            // Inisialisasi tombol dan gambar pada modal NRS
-            const scaleButtons = document.querySelectorAll('[data-scale]');
-            const numericScale = document.getElementById('numericScale');
-            const wongBakerScale = document.getElementById('wongBakerScale');
+            // Event listener untuk pemilihan skala
+            jenisSkalaSelect.addEventListener('change', function () {
+                const selectedValue = this.value;
 
-            if (scaleButtons.length && numericScale && wongBakerScale) {
-                // Add click event to buttons
-                scaleButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        // Remove active class from all buttons
-                        scaleButtons.forEach(btn => {
-                            btn.classList.remove('btn-primary');
-                            btn.classList.add('btn-outline-primary');
+                if (selectedValue) {
+                    selectedScaleInfo.classList.remove('d-none');
+                    showModalForScale(selectedValue);
+                } else {
+                    selectedScaleInfo.classList.add('d-none');
+                }
+            });
+
+            // Event listener untuk tombol info
+            scaleInfoBtn.addEventListener('click', function () {
+                const selectedValue = jenisSkalaSelect.value;
+                showModalForScale(selectedValue);
+            });
+
+            // ----- FUNGSI SKALA NRS ----- //
+            const nrsInput = document.getElementById('nrs_skala_nyeri');
+            const nrsBtn = document.getElementById('skalaNyeriBtn');
+            const nrsNilaiInput = document.getElementById('nrs_skala_nyeri_nilai');
+            const simpanNRSBtn = document.getElementById('simpanNRS');
+
+            if (nrsInput && nrsBtn && simpanNRSBtn) {
+                // Inisialisasi nilai awal NRS
+                updateNRSButton(parseInt(nrsInput.value) || 0);
+
+                // Event handler untuk input NRS
+                nrsInput.addEventListener('input', function () {
+                    let nilai = parseInt(this.value) || 0;
+
+                    // Batasi nilai antara 0-10
+                    nilai = Math.min(Math.max(nilai, 0), 10);
+                    this.value = nilai;
+                    nrsNilaiInput.value = nilai;
+
+                    updateNRSButton(nilai);
+                });
+
+                // Event handler untuk tombol simpan NRS
+                simpanNRSBtn.addEventListener('click', function () {
+                    const nilai = parseInt(nrsInput.value) || 0;
+                    let kategori;
+
+                    if (nilai === 0) {
+                        kategori = 'Tidak Nyeri';
+                    } else if (nilai >= 1 && nilai <= 3) {
+                        kategori = 'Nyeri Ringan';
+                    } else if (nilai >= 4 && nilai <= 6) {
+                        kategori = 'Nyeri Sedang';
+                    } else {
+                        kategori = 'Nyeri Berat';
+                    }
+
+                    // Update kesimpulan nyeri di halaman utama
+                    updateKesimpulanNyeri('NRS', nilai, kategori);
+
+                    // Tutup modal
+                    if (nrsModal) nrsModal.hide();
+                });
+
+                // Fungsi untuk update tombol NRS
+                function updateNRSButton(nilai) {
+                    let buttonClass, textNyeri;
+
+                    switch (true) {
+                        case nilai === 0:
+                            buttonClass = 'btn-success';
+                            textNyeri = 'Tidak Nyeri';
+                            break;
+                        case nilai >= 1 && nilai <= 3:
+                            buttonClass = 'btn-success';
+                            textNyeri = 'Nyeri Ringan';
+                            break;
+                        case nilai >= 4 && nilai <= 6:
+                            buttonClass = 'btn-warning';
+                            textNyeri = 'Nyeri Sedang';
+                            break;
+                        case nilai >= 7 && nilai <= 9:
+                            buttonClass = 'btn-danger';
+                            textNyeri = 'Nyeri Berat';
+                            break;
+                        case nilai >= 10:
+                            buttonClass = 'btn-danger';
+                            textNyeri = 'Nyeri Tak Tertahankan';
+                            break;
+                    }
+
+                    nrsBtn.classList.remove('btn-success', 'btn-warning', 'btn-danger');
+                    nrsBtn.classList.add(buttonClass);
+                    nrsBtn.textContent = textNyeri;
+                }
+
+                // Inisialisasi tombol dan gambar pada modal NRS
+                const scaleButtons = document.querySelectorAll('[data-scale]');
+                const numericScale = document.getElementById('numericScale');
+                const wongBakerScale = document.getElementById('wongBakerScale');
+
+                if (scaleButtons.length && numericScale && wongBakerScale) {
+                    // Add click event to buttons
+                    scaleButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            // Remove active class from all buttons
+                            scaleButtons.forEach(btn => {
+                                btn.classList.remove('btn-primary');
+                                btn.classList.add('btn-outline-primary');
+                            });
+
+                            // Add active class to clicked button
+                            this.classList.remove('btn-outline-primary');
+                            this.classList.add('btn-primary');
+
+                            // Hide both images first
+                            numericScale.style.display = 'none';
+                            wongBakerScale.style.display = 'none';
+
+                            // Show the selected image
+                            if (this.dataset.scale === 'numeric') {
+                                numericScale.style.display = 'block';
+                            } else {
+                                wongBakerScale.style.display = 'block';
+                            }
                         });
+                    });
 
-                        // Add active class to clicked button
-                        this.classList.remove('btn-outline-primary');
-                        this.classList.add('btn-primary');
+                    // Show numeric scale by default
+                    scaleButtons[0].click();
+                }
+            }
 
-                        // Hide both images first
-                        numericScale.style.display = 'none';
-                        wongBakerScale.style.display = 'none';
+            // ----- FUNGSI SKALA FLACC ----- //
+            const flaccInputs = document.querySelectorAll('.flacc-input');
+            const flaccTotal = document.getElementById('flaccTotal');
+            const flaccCategory = document.getElementById('flaccCategory');
+            const flaccScoreInput = document.getElementById('flaccScoreInput');
+            const simpanFlaccBtn = document.getElementById('simpanFlacc');
 
-                        // Show the selected image
-                        if (this.dataset.scale === 'numeric') {
-                            numericScale.style.display = 'block';
-                        } else {
-                            wongBakerScale.style.display = 'block';
+            if (flaccInputs.length && flaccTotal && flaccCategory && flaccScoreInput && simpanFlaccBtn) {
+                // Event listener untuk perubahan nilai FLACC
+                flaccInputs.forEach(input => {
+                    input.addEventListener('change', calculateFlaccScore);
+                });
+
+                // Hitung skor FLACC awal
+                calculateFlaccScore();
+
+                // Fungsi untuk menghitung skor FLACC
+                function calculateFlaccScore() {
+                    let total = 0;
+                    let categories = ['flacc_face', 'flacc_legs', 'flacc_activity', 'flacc_cry', 'flacc_consolability'];
+
+                    categories.forEach(category => {
+                        const selectedInput = document.querySelector(`input[name="${category}"]:checked`);
+                        if (selectedInput) {
+                            total += parseInt(selectedInput.value) || 0;
                         }
                     });
-                });
 
-                // Show numeric scale by default
-                scaleButtons[0].click();
-            }
-        }
+                    // Update tampilan skor
+                    flaccTotal.textContent = total;
+                    flaccScoreInput.value = total;
 
-        // ----- FUNGSI SKALA FLACC ----- //
-        const flaccInputs = document.querySelectorAll('.flacc-input');
-        const flaccTotal = document.getElementById('flaccTotal');
-        const flaccCategory = document.getElementById('flaccCategory');
-        const flaccScoreInput = document.getElementById('flaccScoreInput');
-        const simpanFlaccBtn = document.getElementById('simpanFlacc');
-
-        if (flaccInputs.length && flaccTotal && flaccCategory && flaccScoreInput && simpanFlaccBtn) {
-            // Event listener untuk perubahan nilai FLACC
-            flaccInputs.forEach(input => {
-                input.addEventListener('change', calculateFlaccScore);
-            });
-
-            // Hitung skor FLACC awal
-            calculateFlaccScore();
-
-            // Fungsi untuk menghitung skor FLACC
-            function calculateFlaccScore() {
-                let total = 0;
-                let categories = ['flacc_face', 'flacc_legs', 'flacc_activity', 'flacc_cry', 'flacc_consolability'];
-
-                categories.forEach(category => {
-                    const selectedInput = document.querySelector(`input[name="${category}"]:checked`);
-                    if (selectedInput) {
-                        total += parseInt(selectedInput.value) || 0;
+                    // Update kategori nyeri
+                    let kategoriFlacc;
+                    if (total <= 3) {
+                        kategoriFlacc = 'NYERI RINGAN';
+                        flaccCategory.className = 'badge bg-success px-3 py-2';
+                    } else if (total <= 6) {
+                        kategoriFlacc = 'NYERI SEDANG';
+                        flaccCategory.className = 'badge bg-warning text-dark px-3 py-2';
+                    } else {
+                        kategoriFlacc = 'NYERI BERAT';
+                        flaccCategory.className = 'badge bg-danger px-3 py-2';
                     }
-                });
 
-                // Update tampilan skor
-                flaccTotal.textContent = total;
-                flaccScoreInput.value = total;
-
-                // Update kategori nyeri
-                let kategoriFlacc;
-                if (total <= 3) {
-                    kategoriFlacc = 'NYERI RINGAN';
-                    flaccCategory.className = 'badge bg-success px-3 py-2';
-                } else if (total <= 6) {
-                    kategoriFlacc = 'NYERI SEDANG';
-                    flaccCategory.className = 'badge bg-warning text-dark px-3 py-2';
-                } else {
-                    kategoriFlacc = 'NYERI BERAT';
-                    flaccCategory.className = 'badge bg-danger px-3 py-2';
+                    flaccCategory.textContent = kategoriFlacc;
                 }
 
-                flaccCategory.textContent = kategoriFlacc;
+                // Event listener untuk tombol simpan FLACC
+                simpanFlaccBtn.addEventListener('click', function () {
+                    const skor = flaccTotal.textContent;
+                    const kategori = flaccCategory.textContent;
+
+                    // Update kesimpulan nyeri di halaman utama
+                    updateKesimpulanNyeri('FLACC', skor, kategori);
+
+                    // Tutup modal
+                    if (flaccModal) flaccModal.hide();
+                });
             }
 
-            // Event listener untuk tombol simpan FLACC
-            simpanFlaccBtn.addEventListener('click', function () {
-                const skor = flaccTotal.textContent;
-                const kategori = flaccCategory.textContent;
+            // ----- FUNGSI SKALA CRIES ----- //
+            const criesInputs = document.querySelectorAll('.cries-input');
+            const criesTotal = document.getElementById('criesTotal');
+            const criesCategory = document.getElementById('criesCategory');
+            const criesScoreInput = document.getElementById('criesScoreInput');
+            const simpanCriesBtn = document.getElementById('simpanCries');
 
-                // Update kesimpulan nyeri di halaman utama
-                updateKesimpulanNyeri('FLACC', skor, kategori);
-
-                // Tutup modal
-                if (flaccModal) flaccModal.hide();
-            });
-        }
-
-        // ----- FUNGSI SKALA CRIES ----- //
-        const criesInputs = document.querySelectorAll('.cries-input');
-        const criesTotal = document.getElementById('criesTotal');
-        const criesCategory = document.getElementById('criesCategory');
-        const criesScoreInput = document.getElementById('criesScoreInput');
-        const simpanCriesBtn = document.getElementById('simpanCries');
-
-        if (criesInputs.length && criesTotal && criesCategory && criesScoreInput && simpanCriesBtn) {
-            // Event listener untuk perubahan nilai CRIES
-            criesInputs.forEach(input => {
-                input.addEventListener('change', calculateCriesScore);
-            });
-
-            // Hitung skor CRIES awal
-            calculateCriesScore();
-
-            // Fungsi untuk menghitung skor CRIES
-            function calculateCriesScore() {
-                let total = 0;
-                let categories = ['cries_cry', 'cries_requires', 'cries_increased', 'cries_expression', 'cries_sleepless'];
-
-                categories.forEach(category => {
-                    const selectedInput = document.querySelector(`input[name="${category}"]:checked`);
-                    if (selectedInput) {
-                        total += parseInt(selectedInput.value) || 0;
-                    }
+            if (criesInputs.length && criesTotal && criesCategory && criesScoreInput && simpanCriesBtn) {
+                // Event listener untuk perubahan nilai CRIES
+                criesInputs.forEach(input => {
+                    input.addEventListener('change', calculateCriesScore);
                 });
 
-                // Update tampilan skor
-                criesTotal.textContent = total;
-                criesScoreInput.value = total;
+                // Hitung skor CRIES awal
+                calculateCriesScore();
 
-                // Update kategori nyeri
-                let kategoriCries;
-                if (total <= 3) {
-                    kategoriCries = 'NYERI RINGAN';
-                    criesCategory.className = 'badge bg-success px-3 py-2';
-                } else if (total <= 6) {
-                    kategoriCries = 'NYERI SEDANG';
-                    criesCategory.className = 'badge bg-warning text-dark px-3 py-2';
-                } else {
-                    kategoriCries = 'NYERI BERAT';
-                    criesCategory.className = 'badge bg-danger px-3 py-2';
+                // Fungsi untuk menghitung skor CRIES
+                function calculateCriesScore() {
+                    let total = 0;
+                    let categories = ['cries_cry', 'cries_requires', 'cries_increased', 'cries_expression', 'cries_sleepless'];
+
+                    categories.forEach(category => {
+                        const selectedInput = document.querySelector(`input[name="${category}"]:checked`);
+                        if (selectedInput) {
+                            total += parseInt(selectedInput.value) || 0;
+                        }
+                    });
+
+                    // Update tampilan skor
+                    criesTotal.textContent = total;
+                    criesScoreInput.value = total;
+
+                    // Update kategori nyeri
+                    let kategoriCries;
+                    if (total <= 3) {
+                        kategoriCries = 'NYERI RINGAN';
+                        criesCategory.className = 'badge bg-success px-3 py-2';
+                    } else if (total <= 6) {
+                        kategoriCries = 'NYERI SEDANG';
+                        criesCategory.className = 'badge bg-warning text-dark px-3 py-2';
+                    } else {
+                        kategoriCries = 'NYERI BERAT';
+                        criesCategory.className = 'badge bg-danger px-3 py-2';
+                    }
+
+                    criesCategory.textContent = kategoriCries;
                 }
 
-                criesCategory.textContent = kategoriCries;
+                // Event listener untuk tombol simpan CRIES
+                simpanCriesBtn.addEventListener('click', function () {
+                    const skor = criesTotal.textContent;
+                    const kategori = criesCategory.textContent;
+
+                    // Update kesimpulan nyeri di halaman utama
+                    updateKesimpulanNyeri('CRIES', skor, kategori);
+
+                    // Tutup modal
+                    if (criesModal) criesModal.hide();
+                });
             }
 
-            // Event listener untuk tombol simpan CRIES
-            simpanCriesBtn.addEventListener('click', function () {
-                const skor = criesTotal.textContent;
-                const kategori = criesCategory.textContent;
-
-                // Update kesimpulan nyeri di halaman utama
-                updateKesimpulanNyeri('CRIES', skor, kategori);
-
-                // Tutup modal
-                if (criesModal) criesModal.hide();
-            });
-        }
-
-    });
-</script>
+        });
+    </script>
+@endpush
