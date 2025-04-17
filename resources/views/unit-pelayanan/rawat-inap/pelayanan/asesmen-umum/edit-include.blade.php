@@ -234,7 +234,7 @@
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString().split('T')[0];
             document.getElementById('tanggal_masuk').value = formattedDate;
-            
+
             const hours = String(currentDate.getHours()).padStart(2, '0');
             const minutes = String(currentDate.getMinutes()).padStart(2, '0');
             document.getElementById('jam_masuk').value = `${hours}:${minutes}`;
@@ -258,19 +258,19 @@
             let currentEyeScore = 0;
             let currentVerbalScore = 0;
             let currentMotoricScore = 0;
-            
+
             // For edit mode - initialize with existing GCS score
             const existingGcsScore = {{ $asesmen->asesmenKepUmumDetail->gcs ?? 0 }};
-            
+
             if (existingGcsScore > 0) {
                 downScoreInput.value = existingGcsScore;
-                
+
                 // You'll need to add these hidden fields to store the component values
                 // or retrieve them from the database if you store them separately
                 currentEyeScore = {{ $asesmen->asesmenKepUmumDetail->gcs_eye ?? 0 }};
                 currentVerbalScore = {{ $asesmen->asesmenKepUmumDetail->gcs_verbal ?? 0 }};
                 currentMotoricScore = {{ $asesmen->asesmenKepUmumDetail->gcs_motoric ?? 0 }};
-                
+
                 // Pre-select the radio buttons based on existing values
                 if (currentEyeScore > 0) {
                     const eyeRadio = document.getElementById(`eye_${currentEyeScore}`);
@@ -279,7 +279,7 @@
                         eyeValueDisplay.textContent = `Eye: ${eyeRadio.dataset.text} (${currentEyeScore})`;
                     }
                 }
-                
+
                 if (currentVerbalScore > 0) {
                     const verbalRadio = document.getElementById(`verbal_${currentVerbalScore}`);
                     if (verbalRadio) {
@@ -287,7 +287,7 @@
                         verbalValueDisplay.textContent = `Verbal: ${verbalRadio.dataset.text} (${currentVerbalScore})`;
                     }
                 }
-                
+
                 if (currentMotoricScore > 0) {
                     const motoricRadio = document.getElementById(`motoric_${currentMotoricScore}`);
                     if (motoricRadio) {
@@ -295,7 +295,7 @@
                         motoricValueDisplay.textContent = `Motoric: ${motoricRadio.dataset.text} (${currentMotoricScore})`;
                     }
                 }
-                
+
                 // Update total display
                 totalGCSDisplay.textContent = existingGcsScore;
             }
@@ -328,7 +328,7 @@
 
                 const total = eyeScore + verbalScore + motoricScore;
                 totalGCSDisplay.textContent = total;
-                
+
                 // Update the current scores
                 currentEyeScore = eyeScore;
                 currentVerbalScore = verbalScore;
@@ -344,10 +344,10 @@
             simpanBtn.addEventListener('click', function() {
                 const skor = parseInt(totalGCSDisplay.textContent) || 0;
                 downScoreInput.value = skor;
-            
+
                 const modal = bootstrap.Modal.getOrCreateInstance(gcsModal);
                 modal.hide();
-                
+
                 // Manual fallback if Bootstrap's method fails
                 if (document.body.classList.contains('modal-open')) {
                     document.body.classList.remove('modal-open');
@@ -366,14 +366,14 @@
                             radio.checked = false;
                         });
                     });
-                    
+
                     eyeValueDisplay.textContent = 'Eye: -';
                     verbalValueDisplay.textContent = 'Verbal: -';
                     motoricValueDisplay.textContent = 'Motoric: -';
                     totalGCSDisplay.textContent = '0';
                 }
             });
-            
+
             hitungSkor();
 
 
@@ -417,7 +417,7 @@
             if (nrsValue) {
                 nrsValue.addEventListener('input', function() {
                     let value = parseInt(this.value);
-                    
+
                     // Validate range
                     if (value < 0) this.value = 0;
                     if (value > 10) this.value = 10;
@@ -427,7 +427,7 @@
                     let kesimpulan = '';
                     let alertClass = '';
                     let emoji = '';
-                    
+
                     if (value >= 0 && value <= 3) {
                         kesimpulan = 'Nyeri Ringan';
                         alertClass = 'alert-success';
@@ -459,11 +459,11 @@
                     if (nilaiSkalaNyeri && nrsValue && kesimpulanNyeri && kesimpulanNyeriAlert) {
                         const value = parseInt(nrsValue.value);
                         nilaiSkalaNyeri.value = value;
-                        
+
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (value >= 0 && value <= 3) {
                             kesimpulan = 'Nyeri Ringan';
                             alertClass = 'alert-success';
@@ -487,7 +487,7 @@
                             </div>
                         `;
                         kesimpulanNyeriAlert.className = `alert ${alertClass}`;
-                        
+
                         bootstrap.Modal.getInstance(nrsModal).hide();
                     }
                 });
@@ -512,18 +512,18 @@
                 const flaccChecks = document.querySelectorAll('.flacc-check:checked');
                 const flaccTotal = document.getElementById('flaccTotal');
                 const flaccKesimpulan = document.getElementById('flaccKesimpulan');
-                
+
                 let total = 0;
                 flaccChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 flaccTotal.value = total;
 
                 let kesimpulan = '';
                 let alertClass = '';
                 let emoji = '';
-                
+
                 if (total >= 0 && total <= 3) {
                     kesimpulan = 'Nyeri Ringan';
                     alertClass = 'alert-success';
@@ -552,13 +552,13 @@
             if (simpanFLACC) {
                 simpanFLACC.addEventListener('click', function() {
                     const flaccTotal = document.getElementById('flaccTotal');
-                    
+
                     if (nilaiSkalaNyeri && flaccTotal && flaccTotal.value !== '') {
                         let total = parseInt(flaccTotal.value);
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (total >= 0 && total <= 3) {
                             kesimpulan = 'Nyeri Ringan';
                             alertClass = 'alert-success';
@@ -608,18 +608,18 @@
                 const criesChecks = document.querySelectorAll('.cries-check:checked');
                 const criesTotal = document.getElementById('criesTotal');
                 const criesKesimpulan = document.getElementById('criesKesimpulan');
-                
+
                 let total = 0;
                 criesChecks.forEach(check => {
                     total += parseInt(check.value);
                 });
-                
+
                 criesTotal.value = total;
 
                 let kesimpulan = '';
                 let alertClass = '';
                 let emoji = '';
-                
+
                 if (total >= 0 && total <= 3) {
                     kesimpulan = 'Nyeri Ringan';
                     alertClass = 'alert-success';
@@ -648,13 +648,13 @@
             if (simpanCRIES) {
                 simpanCRIES.addEventListener('click', function() {
                     const criesTotal = document.getElementById('criesTotal');
-                    
+
                     if (nilaiSkalaNyeri && criesTotal && criesTotal.value !== '') {
                         let total = criesTotal.value ? parseInt(criesTotal.value) : null;
                         let kesimpulan = '';
                         let alertClass = '';
                         let emoji = '';
-                        
+
                         if (total >= 0 && total <= 3) {
                             kesimpulan = 'Ny oNyeri Ringan';
                             alertClass = 'alert-success';
@@ -957,7 +957,7 @@
                 container.innerHTML = items.map(item => `
                     <div class="alert alert-light border d-flex justify-content-between align-items-center py-1 px-2 mb-1">
                         <span>${item}</span>
-                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2" 
+                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2"
                                 onclick="removeItem('${containerId}', '${item}')">
                             <i class="bi bi-x" style="font-size: 1.2rem;"></i>
                         </button>
@@ -1056,7 +1056,7 @@
             handleKondisiPsikologis();
             handleGangguanPerilaku();
 
-           
+
 
             //============================================================//
             // 12.FUNGSI STATUS GIZI
@@ -1158,7 +1158,7 @@
             });
 
             updateDischargePlanningConclusion();
-            
+
 
             //------------------------------------------------------------//
             //============================================================//
@@ -1181,7 +1181,7 @@
                 suggestionsList.style.overflowY = 'auto';
                 suggestionsList.style.width = 'calc(100% - 30px)';
                 suggestionsList.style.display = 'none';
-                
+
                 // Insert suggestions list after input
                 inputField.parentNode.insertBefore(suggestionsList, inputField.nextSibling);
 
@@ -1193,7 +1193,7 @@
                     id: text.toLowerCase().replace(/\s+/g, '_'),
                     text: text
                 }));
-                
+
                 // Load initial data if available
                 let diagnosisList = [];
                 try {
@@ -1203,17 +1203,17 @@
                     diagnosisList = [];
                     updateHiddenInput();
                 }
-                
+
                 // Input event listener for suggestions
                 inputField.addEventListener('input', function() {
                     const inputValue = this.value.trim().toLowerCase();
-                    
+
                     if (inputValue) {
                         // Filter database options
-                        const filteredOptions = diagnosisOptions.filter(option => 
+                        const filteredOptions = diagnosisOptions.filter(option =>
                             option.text.toLowerCase().includes(inputValue)
                         );
-                        
+
                         // Show suggestions
                         showSuggestions(filteredOptions, inputValue);
                     } else {
@@ -1221,11 +1221,11 @@
                         suggestionsList.style.display = 'none';
                     }
                 });
-                
+
                 // Function to show suggestions
                 function showSuggestions(options, inputValue) {
                     suggestionsList.innerHTML = '';
-                    
+
                     if (options.length > 0) {
                         // Render existing options
                         options.forEach(option => {
@@ -1238,7 +1238,7 @@
                             });
                             suggestionsList.appendChild(suggestionItem);
                         });
-                        
+
                         // Add option to create new if no exact match
                         if (!options.some(opt => opt.text.toLowerCase() === inputValue)) {
                             const newOptionItem = document.createElement('div');
@@ -1250,7 +1250,7 @@
                             });
                             suggestionsList.appendChild(newOptionItem);
                         }
-                        
+
                         suggestionsList.style.display = 'block';
                     } else {
                         // If no options, show add new option
@@ -1265,7 +1265,7 @@
                         suggestionsList.style.display = 'block';
                     }
                 }
-                
+
                 // Add diagnosis when plus button is clicked
                 addButton.addEventListener('click', function() {
                     const diagnosisText = inputField.value.trim();
@@ -1273,7 +1273,7 @@
                         addDiagnosis(diagnosisText);
                     }
                 });
-                
+
                 // Add diagnosis when Enter key is pressed
                 inputField.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -1284,14 +1284,14 @@
                         }
                     }
                 });
-                
+
                 // Close suggestions when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!inputField.contains(e.target) && !suggestionsList.contains(e.target)) {
                         suggestionsList.style.display = 'none';
                     }
                 });
-                
+
                 function addDiagnosis(diagnosisText) {
                     // Check for duplicates
                     if (!diagnosisList.includes(diagnosisText)) {
@@ -1305,17 +1305,17 @@
                         alert(`"${diagnosisText}" sudah ada dalam daftar`);
                     }
                 }
-                
+
                 function renderDiagnosisList() {
                     listContainer.innerHTML = '';
-                    
+
                     diagnosisList.forEach((diagnosis, index) => {
                         const diagnosisItem = document.createElement('div');
                         diagnosisItem.className = 'diagnosis-item d-flex justify-content-between align-items-center mb-2';
-                        
+
                         const diagnosisSpan = document.createElement('span');
                         diagnosisSpan.textContent = `${index + 1}. ${diagnosis}`;
-                        
+
                         const deleteButton = document.createElement('button');
                         deleteButton.className = 'btn btn-sm text-danger';
                         deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
@@ -1325,13 +1325,13 @@
                             renderDiagnosisList();
                             updateHiddenInput();
                         });
-                        
+
                         diagnosisItem.appendChild(diagnosisSpan);
                         diagnosisItem.appendChild(deleteButton);
                         listContainer.appendChild(diagnosisItem);
                     });
                 }
-                
+
                 function updateHiddenInput() {
                     hiddenInput.value = JSON.stringify(diagnosisList);
                 }
@@ -1344,7 +1344,7 @@
         //=================================================//
 
 
-        
+
         //=================================================//
         // 10. FUNGSI IMPLEMENTASI
         //=================================================//
@@ -2182,7 +2182,7 @@
         //========================================================================//
         function removeItem(containerId, item) {
             const container = document.getElementById(containerId);
-            
+
             // Uncheck checkbox yang sesuai
             if (containerId === 'selectedKondisiPsikologis') {
                 document.querySelectorAll('.kondisi-options input[type="checkbox"]').forEach(checkbox => {

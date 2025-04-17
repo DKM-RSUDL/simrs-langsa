@@ -36,7 +36,7 @@
                             ]) }}">
                             @csrf
                             @method('PUT')
-                            
+
                             <div class="px-3">
 
                                 {{-- 1. Data Masuk --}}
@@ -68,20 +68,21 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Diagnosa Masuk</label>
-                                        <input type="text" class="form-control" name="diagnosa_masuk" 
+                                        <input type="text" class="form-control" name="diagnosa_masuk"
                                             value="{{ $asesmen->asesmenKepUmumDetail->diagnosa_masuk ?? '' }}">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Barang Berharga</label>
-                                        <input type="text" class="form-control" name="barang_berharga" 
+                                        <input type="text" class="form-control" name="barang_berharga"
                                             value="{{ $asesmen->asesmenKepUmumDetail->barang_berharga ?? '' }}">
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Alat Bantu</label>
-                                        <input type="text" class="form-control" name="alat_bantu" 
+                                        <input type="text" class="form-control" name="alat_bantu"
                                             value="{{ $asesmen->asesmenKepUmumDetail->alat_bantu ?? '' }}">
+                                            </select>
                                     </div>
                                 </div>
 
@@ -103,13 +104,13 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
                                         <div class="d-flex gap-3" style="width: 100%;">
-                                            
+
                                             <div class="flex-grow-1">
                                                 <label class="form-label">Sistole</label>
                                                 <input type="number" class="form-control" name="sistole"
                                                     placeholder="Sistole" value="{{ $asesmen->asesmenKepUmumDetail->sistole ?? '' }}">
                                             </div>
-                                            
+
                                             <div class="flex-grow-1">
                                                 <label class="form-label">Diastole</label>
                                                 <input type="number" class="form-control" name="diastole"
@@ -180,13 +181,13 @@
                                         <h6>Antropometri</h6>
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tinggi Badan (Cm)</label>
-                                            <input type="number" id="tinggi_badan" name="tinggi_badan" class="form-control" 
+                                            <input type="number" id="tinggi_badan" name="tinggi_badan" class="form-control"
                                                 value="{{ $asesmen->asesmenKepUmumDetail->tinggi_badan ?? '' }}">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Berat Badan (Kg)</label>
-                                            <input type="number" id="berat_badan" name="berat_badan" class="form-control" 
+                                            <input type="number" id="berat_badan" name="berat_badan" class="form-control"
                                                 value="{{ $asesmen->asesmenKepUmumDetail->berat_badan ?? '' }}">
                                         </div>
 
@@ -426,7 +427,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {{-- 5. Riwayat Kesehatan --}}
                                 <div class="section-separator" id="riwayat-kesehatan">
                                     <h5 class="section-title">5. Riwayat Kesehatan</h5>
@@ -455,9 +456,9 @@
                                         <label style="min-width: 200px;">Riwayat Kecelakaan</label>
                                         <select class="form-select" name="riwayat_kecelakaan">
                                             <option value="">--Pilih--</option>
-                                            @php 
-                                                $riwayatKecelakaan = isset($asesmen->rmeAsesmenKepUmumRiwayatKesehatan) ? 
-                                                    $asesmen->rmeAsesmenKepUmumRiwayatKesehatan->riwayat_kecelakaan : null; 
+                                            @php
+                                                $riwayatKecelakaan = isset($asesmen->rmeAsesmenKepUmumRiwayatKesehatan) ?
+                                                    $asesmen->rmeAsesmenKepUmumRiwayatKesehatan->riwayat_kecelakaan : null;
                                             @endphp
                                             <option value="Kecelakaan Lalu Lintas"
                                                 {{ $riwayatKecelakaan == 'Kecelakaan Lalu Lintas' ? 'selected' : '' }}>
@@ -590,7 +591,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
                                         <i class="ti-plus"></i> Tambah
                                     </button>
-                                    <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" 
+                                    <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData"
                                         value="{{ $asesmen->asesmenKepUmumDetail->riwayat_penggunaan_obat ?? '[]' }}">
                                     <div class="table-responsive">
                                         <table class="table" id="createRiwayatObatTable">
@@ -713,7 +714,7 @@
                                         <div class="mt-4">
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanNorton" 
+                                                <div id="kesimpulanNorton"
                                                     class="alert {{ strpos($asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
                                                     {{ $asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? 'Risiko Rendah' }}
                                                 </div>
@@ -792,7 +793,7 @@
                                         <div class="mt-4">
                                             <div class="d-flex gap-2">
                                                 <span class="fw-bold">Kesimpulan :</span>
-                                                <div id="kesimpulanBraden" 
+                                                <div id="kesimpulanBraden"
                                                     class="alert {{ strpos($asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? '', 'Tinggi') !== false ? 'alert-danger' : (strpos($asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? '', 'Sedang') !== false ? 'alert-warning' : 'alert-success') }} mb-0 flex-grow-1">
                                                     {{ $asesmen->asesmenKepUmumRisikoDekubitus->decubitus_kesimpulan ?? 'Kesimpulan Skala Braden' }}
                                                 </div>
@@ -820,7 +821,7 @@
                                                                 $kondisiPsikologis = json_decode($asesmen->asesmenKepUmumStatusPsikologis->kondisi_psikologis ?? '[]', true);
                                                             @endphp
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="Tidak ada kelainan" id="kondisi1" 
+                                                                <input class="form-check-input" type="checkbox" value="Tidak ada kelainan" id="kondisi1"
                                                                     {{ in_array('Tidak ada kelainan', $kondisiPsikologis) ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="kondisi1">Tidak ada kelainan</label>
                                                             </div>
@@ -1246,9 +1247,9 @@
                                                 <option value="0" {{ $asesmen->asesmenKepUmumGizi->gizi_nrs_jatuh_saat_masuk_rs == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
-                                        
+
                                         <!-- Add more NRS form fields here -->
-                                        
+
                                         <!-- Nilai -->
                                         <div id="nrsConclusion" class="risk-indicators mt-4">
                                             <div class="alert alert-success" style="{{ strpos($asesmen->asesmenKepUmumGizi->gizi_nrs_kesimpulan ?? '', 'rendah') !== false ? '' : 'display: none;' }}">Kesimpulan: Beresiko rendah</div>
@@ -1279,15 +1280,15 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Kesimpulan Fungsional</label>
-                                        <div id="adl_kesimpulan" class="alert {{ isset($asesmen->asesmenKepUmumStatusFungsional) && $asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional ? 
-                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' : 
-                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' : 
-                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success'))) 
+                                        <div id="adl_kesimpulan" class="alert {{ isset($asesmen->asesmenKepUmumStatusFungsional) && $asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional ?
+                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Total') !== false ? 'alert-danger' :
+                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Berat') !== false ? 'alert-warning' :
+                                            (strpos($asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional, 'Ketergantungan Sedang') !== false ? 'alert-info' : 'alert-success')))
                                             : 'alert-info' }}">
                                             {{ isset($asesmen->asesmenKepUmumStatusFungsional) && $asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional ? $asesmen->asesmenKepUmumStatusFungsional->kesimpulan_fungsional : 'Pilih skala aktivitas harian terlebih dahulu' }}
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Hidden fields untuk menyimpan data ADL -->
                                     <input type="hidden" id="adl_jenis_skala" name="adl_jenis_skala" value="{{ isset($asesmen->asesmenKepUmumStatusFungsional) ? $asesmen->asesmenKepUmumStatusFungsional->jenis_skala : '' }}">
                                     <input type="hidden" id="adl_makan" name="adl_makan" value="{{ isset($asesmen->asesmenKepUmumStatusFungsional) ? $asesmen->asesmenKepUmumStatusFungsional->makan : '' }}">
@@ -1391,11 +1392,11 @@
                                         <label class="form-label">Usia lanjut</label>
                                         <select class="form-select" name="usia_lanjut">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->usia_lanjut == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="0" 
+                                            <option value="0"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->usia_lanjut == '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="1" 
+                                            <option value="1"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->usia_lanjut == '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1406,11 +1407,11 @@
                                         <label class="form-label">Hambatan mobilisasi</label>
                                         <select class="form-select" name="hambatan_mobilisasi">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->hambatan_mobilisasi == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="0" 
+                                            <option value="0"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->hambatan_mobilisasi == '0' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="1" 
+                                            <option value="1"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->hambatan_mobilisasi == '1' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1421,11 +1422,11 @@
                                         <label class="form-label">Membutuhkan penggunaan media berkelanjutan</label>
                                         <select class="form-select" name="penggunaan_media_berkelanjutan">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->penggunaan_media_berkelanjutan == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->membutuhkan_pelayanan_medis == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->membutuhkan_pelayanan_medis == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1445,11 +1446,11 @@
                                         <label class="form-label">Pasien / Keluarga Memerlukan Keterampilan Khusus Setelah Pulang</label>
                                         <select class="form-select" name="keterampilan_khusus">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_keterampilan_khusus == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_keterampilan_khusus == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_keterampilan_khusus == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1460,11 +1461,11 @@
                                         <label class="form-label">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit</label>
                                         <select class="form-select" name="alat_bantu">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_alat_bantu == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_alat_bantu == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memerlukan_alat_bantu == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1475,11 +1476,11 @@
                                         <label class="form-label">Pasien Memiliki Nyeri Kronis Dan / Kebiasaan Setelah Pulang</label>
                                         <select class="form-select" name="nyeri_kronis">
                                             <option value="" {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memiliki_nyeri_kronis == null ? 'selected' : '' }} disabled>--Pilih--</option>
-                                            <option value="ya" 
+                                            <option value="ya"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memiliki_nyeri_kronis == 'ya' ? 'selected' : '' }}>
                                                 Ya
                                             </option>
-                                            <option value="tidak" 
+                                            <option value="tidak"
                                                 {{ optional($asesmen->asesmenKepUmumRencanaPulang)->memiliki_nyeri_kronis == 'tidak' ? 'selected' : '' }}>
                                                 Tidak
                                             </option>
@@ -1489,11 +1490,11 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label">Perkiraan lama hari dirawat</label>
-                                            <input type="text" class="form-control" name="perkiraan_hari" 
+                                            <input type="text" class="form-control" name="perkiraan_hari"
                                                 placeholder="hari"
                                                 value="{{ optional($asesmen->asesmenKepUmumRencanaPulang)->perkiraan_lama_dirawat ?? '' }}">
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <label class="form-label">Rencana Tanggal Pulang</label>
                                             <input type="date" class="form-control" name="tanggal_pulang"
@@ -1514,7 +1515,7 @@
                                                 Tidak mebutuhkan rencana pulang khusus
                                             </div>
                                         </div>
-                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing" 
+                                        <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
                                             value="{{ optional($asesmen->asesmenKepUmumRencanaPulang)->kesimpulan ?? 'Tidak mebutuhkan rencana pulang khusus' }}">
                                     </div>
                                 </div>
@@ -1743,7 +1744,7 @@
                                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.edit-modal-create-alergi')
                                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-intervensirisikojatuh')
                                 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-umum.modal-skala-adl')
-                                
+
 
                                 {{-- Submit button placeholder (will be replaced with full form) --}}
                                 <div class="text-end mt-4">

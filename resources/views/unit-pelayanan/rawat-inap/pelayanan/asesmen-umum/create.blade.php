@@ -79,6 +79,7 @@
                                                 <option value="Lensa Kontak">Lensa Kontak</option>
                                                 <option value="Gigi Palsu">Gigi Palsu</option>
                                                 <option value="Alat Bantu Dengar">Alat Bantu Dengar</option>
+                                                <option value="Tidak Ada">Tidak Ada</option>
                                             </select>
                                         </div>
                                     </div>
@@ -99,13 +100,13 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tek. Darah (mmHg)</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                
+
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
                                                     <input type="number" class="form-control" name="sistole"
                                                         placeholder="Sistole">
                                                 </div>
-                                                
+
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
                                                     <input type="number" class="form-control" name="diastole"
@@ -392,7 +393,7 @@
 
                                     <div class="section-separator" id="riwayat-kesehatan">
                                         <h5 class="section-title">5. Riwayat Kesehatan</h5>
-                                        
+
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Penyakit Yang Pernah Diderita</label>
                                             <div class="w-100">
@@ -2090,7 +2091,7 @@
                                                 <label class="form-label">Perkiraan lama hari dirawat</label>
                                                 <input type="text" class="form-control" name="perkiraan_hari" placeholder="hari">
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <label class="form-label">Rencana Tanggal Pulang</label>
                                                 <input type="date" class="form-control" name="tanggal_pulang">
@@ -2101,7 +2102,7 @@
                                             <label class="form-label">KESIMPULAN</label>
                                             <div class="d-flex flex-column gap-2">
                                                 <div class="alert alert-info">
-                                                    
+
                                                 </div>
                                                 <div class="alert alert-warning">
                                                     Mebutuhkan rencana pulang khusus
@@ -2138,7 +2139,7 @@
                                             <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
                                                 <!-- Diagnosis items will be added here dynamically -->
                                             </div>
-                                            
+
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
@@ -2164,7 +2165,7 @@
                                             <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
                                                 <!-- Diagnosis items will be added here dynamically -->
                                             </div>
-                                            
+
                                             <!-- Hidden input to store JSON data -->
                                             <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                         </div>
