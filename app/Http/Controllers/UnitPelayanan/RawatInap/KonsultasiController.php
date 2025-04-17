@@ -19,6 +19,7 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KonsultasiController extends Controller
 {
@@ -155,6 +156,7 @@ class KonsultasiController extends Controller
 
     public function storeKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+
         // Validation
         $msgErr = [
             'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
@@ -180,236 +182,245 @@ class KonsultasiController extends Controller
             'konsul'                => 'required',
         ], $msgErr);
 
+        DB::beginTransaction();
 
-        // get kunjungan
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+        try {
 
-        $unit = Unit::where('kd_unit', $kd_unit)->first();
+            // get kunjungan
+            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
 
-
-        if (empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
-
-
-        // Create New Kunjungan Tujuan
-
-        // get request data
-        $tgl_konsul = $request->tgl_konsul;
-        $jam_konsul = $request->jam_konsul;
-        $dokter_pengirim = $request->dokter_pengirim;
-        $unit_tujuan = $request->unit_tujuan;
-        $dokter_unit_tujuan = $request->dokter_unit_tujuan;
-        $konsulen_harap = $request->konsulen_harap;
-        $catatan = $request->catatan;
-        $konsul = $request->konsul;
-
-        // get antrian terakhir
-        $getLastAntrian = Kunjungan::select('antrian')
-            ->whereDate('tgl_masuk', $tgl_konsul)
-            ->where('kd_unit', $unit_tujuan)
-            ->orderBy('antrian', 'desc')
-            ->first();
-
-        $no_antrian = !empty($getLastAntrian) ? $getLastAntrian->antrian + 1 : 1;
-
-        // pasien not null get last urut masuk
-        $getLastUrutMasukPatient = Kunjungan::select('urut_masuk')
-            ->where('kd_pasien', $kd_pasien)
-            ->whereDate('tgl_masuk', $tgl_konsul)
-            ->orderBy('urut_masuk', 'desc')
-            ->first();
-
-        $new_urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
-
-        // insert ke tabel kunjungan
-        $dataKunjungan = [
-            'kd_pasien'         => $kd_pasien,
-            'kd_unit'           => $unit_tujuan,
-            'tgl_masuk'         => $tgl_konsul,
-            'urut_masuk'        => $new_urut_masuk,
-            'jam_masuk'         => $jam_konsul,
-            'asal_pasien'       => 0,
-            'cara_penerimaan'   => 99,
-            'kd_rujukan'        => 1,
-            'no_surat'          => '',
-            'kd_dokter'         => $dokter_unit_tujuan,
-            'baru'              => 1,
-            'kd_customer'       => '0000000001',
-            'shift'             => 0,
-            'kontrol'           => 0,
-            'antrian'           => $no_antrian,
-            'tgl_surat'         => $tgl_konsul,
-            'jasa_raharja'      => 0,
-            'catatan'           => '',
-            'is_rujukan'        => 1,
-            'rujukan_ket'       => $unit->nama_unit
-        ];
-
-        Kunjungan::create($dataKunjungan);
-
-        // delete rujukan_kunjungan
-        RujukanKunjungan::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $unit_tujuan)
-            ->whereDate('tgl_masuk', $tgl_konsul)
-            ->where('urut_masuk', $new_urut_masuk)
-            ->delete();
+            $unit = Unit::where('kd_unit', $kd_unit)->first();
 
 
-        // insert transaksi
-        $lastTransaction = Transaksi::select('no_transaksi')
-            ->where('kd_kasir', '01')
-            ->orderBy('no_transaksi', 'desc')
-            ->first();
+            if (empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
 
-        if ($lastTransaction) {
-            $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
-            $newTransactionNumber = $lastTransactionNumber + 1;
-        } else {
-            $newTransactionNumber = 1;
+
+            // Create New Kunjungan Tujuan
+
+            // get request data
+            $tgl_konsul = $request->tgl_konsul;
+            $jam_konsul = $request->jam_konsul;
+            $dokter_pengirim = $request->dokter_pengirim;
+            $unit_tujuan = $request->unit_tujuan;
+            $dokter_unit_tujuan = $request->dokter_unit_tujuan;
+            $konsulen_harap = $request->konsulen_harap;
+            $catatan = $request->catatan;
+            $konsul = $request->konsul;
+
+            // get antrian terakhir
+            $getLastAntrian = Kunjungan::select('antrian')
+                ->whereDate('tgl_masuk', $tgl_konsul)
+                ->where('kd_unit', $unit_tujuan)
+                ->orderBy('antrian', 'desc')
+                ->first();
+
+            $no_antrian = !empty($getLastAntrian) ? $getLastAntrian->antrian + 1 : 1;
+
+            // pasien not null get last urut masuk
+            $getLastUrutMasukPatient = Kunjungan::select('urut_masuk')
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_konsul)
+                ->orderBy('urut_masuk', 'desc')
+                ->first();
+
+            $new_urut_masuk = !empty($getLastUrutMasukPatient) ? $getLastUrutMasukPatient->urut_masuk + 1 : 0;
+
+            // insert ke tabel kunjungan
+            $dataKunjungan = [
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => $unit_tujuan,
+                'tgl_masuk'         => $tgl_konsul,
+                'urut_masuk'        => $new_urut_masuk,
+                'jam_masuk'         => $jam_konsul,
+                'asal_pasien'       => 0,
+                'cara_penerimaan'   => 99,
+                'kd_rujukan'        => 1,
+                'no_surat'          => '',
+                'kd_dokter'         => $dokter_unit_tujuan,
+                'baru'              => 1,
+                'kd_customer'       => '0000000001',
+                'shift'             => 0,
+                'kontrol'           => 0,
+                'antrian'           => $no_antrian,
+                'tgl_surat'         => $tgl_konsul,
+                'jasa_raharja'      => 0,
+                'catatan'           => '',
+                'is_rujukan'        => 1,
+                'rujukan_ket'       => $unit->nama_unit
+            ];
+
+            Kunjungan::create($dataKunjungan);
+
+            // delete rujukan_kunjungan
+            RujukanKunjungan::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $unit_tujuan)
+                ->whereDate('tgl_masuk', $tgl_konsul)
+                ->where('urut_masuk', $new_urut_masuk)
+                ->delete();
+
+
+            // insert transaksi
+            $lastTransaction = Transaksi::select('no_transaksi')
+                ->where('kd_kasir', '01')
+                ->orderBy('no_transaksi', 'desc')
+                ->first();
+
+            if ($lastTransaction) {
+                $lastTransactionNumber = (int) $lastTransaction->no_transaksi;
+                $newTransactionNumber = $lastTransactionNumber + 1;
+            } else {
+                $newTransactionNumber = 1;
+            }
+
+            // formatted new transaction number with 7 digits length
+            $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
+
+            $dataTransaksi = [
+                'kd_kasir'      => '01',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $unit_tujuan,
+                'tgl_transaksi' => $tgl_konsul,
+                'app'           => 0,
+                'ispay'         => 0,
+                'co_status'     => 0,
+                'urut_masuk'    => $new_urut_masuk,
+                'kd_user'       => $dokter_pengirim, // nanti diambil dari user yang login
+                'lunas'         => 0,
+            ];
+
+            Transaksi::create($dataTransaksi);
+
+
+            // insert detail_transaksi
+            $dataDetailTransaksi = [
+                'no_transaksi'  => $formattedTransactionNumber,
+                'kd_kasir'      => '01',
+                'tgl_transaksi' => $tgl_konsul,
+                'urut'          => 1,
+                'kd_tarif'      => 'TU',
+                'kd_produk'     => 3634,
+                'kd_unit'       => $unit_tujuan,
+                'kd_unit_tr'    => $kd_unit,
+                'tgl_berlaku'   => '2019-07-01',
+                'kd_user'       => $dokter_pengirim,
+                'shift'         => 0,
+                'harga'         => 15000,
+                'qty'           => 1,
+                'flag'          => 0,
+                'jns_trans'     => 0,
+            ];
+
+            DetailTransaksi::create($dataDetailTransaksi);
+
+
+            // insert detail_prsh
+            $dataDetailPrsh = [
+                'kd_kasir'      => '01',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'urut'          => 1,
+                'tgl_transaksi' => $tgl_konsul,
+                'hak'           => 15000,
+                'selisih'       => 0,
+                'disc'          => 0
+            ];
+
+            DetailPrsh::create($dataDetailPrsh);
+
+
+            // delete detail_component
+            DetailComponent::where('kd_kasir', '01')
+                ->where('no_transaksi', $formattedTransactionNumber)
+                ->where('urut', 1)
+                ->delete();
+
+
+            // insert detail_component
+            $dataDetailComponent = [
+                'kd_kasir'      => '01',
+                'no_transaksi'  => $formattedTransactionNumber,
+                'tgl_transaksi' => $tgl_konsul,
+                'urut'          => 1,
+                'kd_component'  => '30',
+                'tarif'         => 15000,
+                'disc'          => 0
+            ];
+
+            DetailComponent::create($dataDetailComponent);
+
+            // insert sjp_kunjungan
+            $sjpKunjunganData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $unit_tujuan,
+                'tgl_masuk'     => $tgl_konsul,
+                'urut_masuk'    => $new_urut_masuk,
+                'no_sjp'        => '',
+                'penjamin_laka' => 0,
+                'katarak'       => 0,
+                'dpjp'          => $dokter_unit_tujuan,
+                'cob'           => 0
+            ];
+
+            SjpKunjungan::create($sjpKunjunganData);
+
+
+            // Insert konsultasi
+            $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->orderBy('urut_konsul', 'desc')
+                ->first();
+
+            $urut_konsul = !empty($getLastUrutKonsul) ? $getLastUrutKonsul->urut_konsul + 1 : 1;
+
+            $konsultasiData = [
+                'kd_pasien'                 => $kd_pasien,
+                'kd_unit'                   => $kd_unit,
+                'tgl_masuk'                 => $tgl_masuk,
+                'urut_masuk'                => $urut_masuk,
+                'kd_pasien_tujuan'          => $kd_pasien,
+                'kd_unit_tujuan'            => $unit_tujuan,
+                'tgl_masuk_tujuan'          => $tgl_konsul,
+                'urut_masuk_tujuan'         => $new_urut_masuk,
+                'urut_konsul'               => $urut_konsul,
+                'jam_masuk_tujuan'          => $jam_konsul,
+                'kd_dokter'                 => $dokter_pengirim,
+                'kd_dokter_tujuan'          => $dokter_unit_tujuan,
+                'kd_konsulen_diharapkan'    => $konsulen_harap,
+                'catatan'                   => $catatan,
+                'konsul'                    => $konsul
+            ];
+
+            Konsultasi::create($konsultasiData);
+
+
+            // create resume
+            $resumeData = [
+                'unit_rujuk_internal'   => $unit_tujuan,
+            ];
+
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            DB::commit();
+            return back()->with('success', 'Konsultasi berhasil di tambah!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        // formatted new transaction number with 7 digits length
-        $formattedTransactionNumber = str_pad($newTransactionNumber, 7, '0', STR_PAD_LEFT);
-
-        $dataTransaksi = [
-            'kd_kasir'      => '01',
-            'no_transaksi'  => $formattedTransactionNumber,
-            'kd_pasien'     => $kd_pasien,
-            'kd_unit'       => $unit_tujuan,
-            'tgl_transaksi' => $tgl_konsul,
-            'app'           => 0,
-            'ispay'         => 0,
-            'co_status'     => 0,
-            'urut_masuk'    => $new_urut_masuk,
-            'kd_user'       => $dokter_pengirim, // nanti diambil dari user yang login
-            'lunas'         => 0,
-        ];
-
-        Transaksi::create($dataTransaksi);
-
-
-        // insert detail_transaksi
-        $dataDetailTransaksi = [
-            'no_transaksi'  => $formattedTransactionNumber,
-            'kd_kasir'      => '01',
-            'tgl_transaksi' => $tgl_konsul,
-            'urut'          => 1,
-            'kd_tarif'      => 'TU',
-            'kd_produk'     => 3634,
-            'kd_unit'       => $unit_tujuan,
-            'kd_unit_tr'    => $kd_unit,
-            'tgl_berlaku'   => '2019-07-01',
-            'kd_user'       => $dokter_pengirim,
-            'shift'         => 0,
-            'harga'         => 15000,
-            'qty'           => 1,
-            'flag'          => 0,
-            'jns_trans'     => 0,
-        ];
-
-        DetailTransaksi::create($dataDetailTransaksi);
-
-
-        // insert detail_prsh
-        $dataDetailPrsh = [
-            'kd_kasir'      => '01',
-            'no_transaksi'  => $formattedTransactionNumber,
-            'urut'          => 1,
-            'tgl_transaksi' => $tgl_konsul,
-            'hak'           => 15000,
-            'selisih'       => 0,
-            'disc'          => 0
-        ];
-
-        DetailPrsh::create($dataDetailPrsh);
-
-
-        // delete detail_component
-        DetailComponent::where('kd_kasir', '01')
-            ->where('no_transaksi', $formattedTransactionNumber)
-            ->where('urut', 1)
-            ->delete();
-
-
-        // insert detail_component
-        $dataDetailComponent = [
-            'kd_kasir'      => '01',
-            'no_transaksi'  => $formattedTransactionNumber,
-            'tgl_transaksi' => $tgl_konsul,
-            'urut'          => 1,
-            'kd_component'  => '30',
-            'tarif'         => 15000,
-            'disc'          => 0
-        ];
-
-        DetailComponent::create($dataDetailComponent);
-
-        // insert sjp_kunjungan
-        $sjpKunjunganData = [
-            'kd_pasien'     => $kd_pasien,
-            'kd_unit'       => $unit_tujuan,
-            'tgl_masuk'     => $tgl_konsul,
-            'urut_masuk'    => $new_urut_masuk,
-            'no_sjp'        => '',
-            'penjamin_laka' => 0,
-            'katarak'       => 0,
-            'dpjp'          => $dokter_unit_tujuan,
-            'cob'           => 0
-        ];
-
-        SjpKunjungan::create($sjpKunjunganData);
-
-
-        // Insert konsultasi
-        $getLastUrutKonsul = Konsultasi::select(['urut_konsul'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->orderBy('urut_konsul', 'desc')
-            ->first();
-
-        $urut_konsul = !empty($getLastUrutKonsul) ? $getLastUrutKonsul->urut_konsul + 1 : 1;
-
-        $konsultasiData = [
-            'kd_pasien'                 => $kd_pasien,
-            'kd_unit'                   => $kd_unit,
-            'tgl_masuk'                 => $tgl_masuk,
-            'urut_masuk'                => $urut_masuk,
-            'kd_pasien_tujuan'          => $kd_pasien,
-            'kd_unit_tujuan'            => $unit_tujuan,
-            'tgl_masuk_tujuan'          => $tgl_konsul,
-            'urut_masuk_tujuan'         => $new_urut_masuk,
-            'urut_konsul'               => $urut_konsul,
-            'jam_masuk_tujuan'          => $jam_konsul,
-            'kd_dokter'                 => $dokter_pengirim,
-            'kd_dokter_tujuan'          => $dokter_unit_tujuan,
-            'kd_konsulen_diharapkan'    => $konsulen_harap,
-            'catatan'                   => $catatan,
-            'konsul'                    => $konsul
-        ];
-
-        Konsultasi::create($konsultasiData);
-
-
-        // create resume
-        $resumeData = [
-            'unit_rujuk_internal'   => $unit_tujuan,
-        ];
-
-
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
-        return back()->with('success', 'Konsultasi berhasil di tambah!');
     }
 
     public function getKonsulAjax($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -472,26 +483,38 @@ class KonsultasiController extends Controller
         ], $msgErr);
 
 
-        // update konsul
-        Konsultasi::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->where('kd_unit_tujuan', $request->old_kd_unit_tujuan)
-            ->where('tgl_masuk_tujuan', $request->old_tgl_konsul)
-            ->where('jam_masuk_tujuan', $request->old_jam_konsul)
-            ->where('urut_konsul', $request->urut_konsul)
-            ->update([
-                'kd_konsulen_diharapkan'    => $request->konsulen_harap,
-                'catatan'                   => $request->catatan,
-                'konsul'                    => $request->konsul,
-            ]);
+        DB::beginTransaction();
 
-        return back()->with('success', 'Konsultasi berhasil di ubah');
+        try {
+
+            // update konsul
+            Konsultasi::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('kd_unit_tujuan', $request->old_kd_unit_tujuan)
+                ->where('tgl_masuk_tujuan', $request->old_tgl_konsul)
+                ->where('jam_masuk_tujuan', $request->old_jam_konsul)
+                ->where('urut_konsul', $request->urut_konsul)
+                ->update([
+                    'kd_konsulen_diharapkan'    => $request->konsulen_harap,
+                    'catatan'                   => $request->catatan,
+                    'konsul'                    => $request->konsul,
+                ]);
+
+            DB::commit();
+
+            return back()->with('success', 'Konsultasi berhasil di ubah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function deleteKonsultasi($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
+
         try {
             // get konsultasi
             $konsultasi = Konsultasi::where('kd_pasien', $kd_pasien)
@@ -556,6 +579,7 @@ class KonsultasiController extends Controller
                 ->where('urut_konsul', $request->urut_konsul)
                 ->delete();
 
+            DB::commit();
 
             return response()->json([
                 'status'    => 'success',
@@ -563,6 +587,7 @@ class KonsultasiController extends Controller
                 'data'      => []
             ], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),
@@ -575,10 +600,10 @@ class KonsultasiController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
         $resumeDtlData = [
             'tindak_lanjut_code'    => 4,
@@ -586,7 +611,7 @@ class KonsultasiController extends Controller
             'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
         ];
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => $kd_unit,
@@ -601,13 +626,12 @@ class KonsultasiController extends Controller
             // create resume detail
             $resumeDtlData['id_resume'] = $newResume->id;
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
             $resumeDtlData['id_resume'] = $resume->id;
 
-            if(empty($resumeDtl)) {
+            if (empty($resumeDtl)) {
                 RmeResumeDtl::create($resumeDtlData);
             } else {
                 $resumeDtl->tindak_lanjut_code  = 4;

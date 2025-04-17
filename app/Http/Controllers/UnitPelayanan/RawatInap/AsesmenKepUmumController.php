@@ -28,6 +28,8 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,7 +111,6 @@ class AsesmenKepUmumController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        // dd($request->all());
         DB::beginTransaction();
         try {
             // Ambil tanggal dan jam dari form
@@ -333,9 +334,7 @@ class AsesmenKepUmumController extends Controller
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_status_mental = array_search($request->risiko_jatuh_morse_status_mental, ['0' => 0, '15' => 15]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_morse_kesimpulan = $request->risiko_jatuh_morse_kesimpulan;
                 $asesmenKepUmumRisikoJatuh->save();
-            }
-
-            else if ($request->resiko_jatuh_jenis == 3) {
+            } else if ($request->resiko_jatuh_jenis == 3) {
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_usia_anak = array_search((int)$request->risiko_jatuh_pediatrik_usia_anak, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_jenis_kelamin = array_search($request->risiko_jatuh_pediatrik_jenis_kelamin, ['2' => 2, '1' => 1]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_diagnosis = array_search($request->risiko_jatuh_pediatrik_diagnosis, ['4' => 4, '3' => 3, '2' => 2, '1' => 1]);
@@ -344,9 +343,7 @@ class AsesmenKepUmumController extends Controller
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_pembedahan = array_search($request->risiko_jatuh_pediatrik_pembedahan, ['3' => 3, '2' => 2, '1' => 1]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_penggunaan_mentosa = array_search($request->risiko_jatuh_pediatrik_penggunaan_mentosa, ['3' => 3, '2' => 2, '1' => 1]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_pediatrik_kesimpulan = $request->risiko_jatuh_pediatrik_kesimpulan;
-            }
-
-            else if ($request->resiko_jatuh_jenis == 4) {
+            } else if ($request->resiko_jatuh_jenis == 4) {
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_jatuh_saat_masuk_rs = array_search($request->risiko_jatuh_lansia_jatuh_saat_masuk_rs, ['6' => 6, '0' => 0]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_riwayat_jatuh_2_bulan = array_search($request->risiko_jatuh_lansia_riwayat_jatuh_2_bulan, ['6' => 6, '0' => 0]);
                 $asesmenKepUmumRisikoJatuh->risiko_jatuh_lansia_status_bingung = array_search($request->risiko_jatuh_lansia_status_bingung, ['14' => 14, '0' => 0]);
@@ -539,13 +536,49 @@ class AsesmenKepUmumController extends Controller
             }
             $statusFungsional->save();
 
+            // RESUME
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->suhu
+                    ],
+                    'nadi'   => [
+                        'hasil' => ''
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tinggi_badan
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->berat_badan
+                    ]
+                ]
+            ];
 
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
             DB::commit();
 
             return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
                 ->with('success', 'Data asesmen Keperwatan Umum berhasil disimpan');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -564,7 +597,7 @@ class AsesmenKepUmumController extends Controller
                 },
                 'asesmenKepUmumStatusNyeri',             // Changed from rmeAsesmenKepUmumStatusNyeri
                 'asesmenKepUmumRiwayatKesehatan',        // Changed from rmeAsesmenKepUmumRiwayatKesehatan
-                'asesmenKepUmumRencanaPulang',           // Changed from rmeAsesmenKepUmumRencanaPulang 
+                'asesmenKepUmumRencanaPulang',           // Changed from rmeAsesmenKepUmumRencanaPulang
                 'asesmenKepUmumRisikoJatuh',             // This one is correct
                 'asesmenKepUmumRisikoDekubitus',         // Changed from rmeAsesmenKepUmumRisikoDekubitus
                 'asesmenKepUmumStatusPsikologis',        // Changed from rmeAsesmenKepUmumStatusPsikologis
@@ -785,6 +818,7 @@ class AsesmenKepUmumController extends Controller
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
+
         try {
             // Find the assessment
             $dataAsesmen = RmeAsesmen::findOrFail($id);
@@ -1187,6 +1221,43 @@ class AsesmenKepUmumController extends Controller
             $statusFungsional->kesimpulan_fungsional = $request->adl_kesimpulan_value;
             $statusFungsional->save();
 
+            // RESUME
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->suhu
+                    ],
+                    'nadi'   => [
+                        'hasil' => ''
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tinggi_badan
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->berat_badan
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
             DB::commit();
 
             return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
@@ -1196,6 +1267,64 @@ class AsesmenKepUmumController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
 
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
+    }
 }
