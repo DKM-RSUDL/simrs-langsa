@@ -170,84 +170,92 @@ class TindakanController extends Controller
             'gambar_tindakan'   => 'required|image|file|max:5120',
         ], $messageErr);
 
+        DB::beginTransaction();
+
+        try {
+
+            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            $lastTindakanUrut = ListTindakanPasien::select(['urut_list'])
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->orderBy('urut_list', 'desc')
+                ->first();
+
+            $urut_list = !empty($lastTindakanUrut) ? $lastTindakanUrut->urut_list + 1 : 1;
+
+            // upload gambar tindakan
+            $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/rawat-inap/tindakan-pasien') : '';
+
+            // insert data tindakan
+            $tindakanData = [
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => $kd_unit,
+                'tgl_masuk'         => $tgl_masuk,
+                'urut_masuk'        => $urut_masuk,
+                'urut_list'         => $urut_list,
+                'tgl_tindakan'      => $request->tgl_tindakan,
+                'jam_tindakan'      => $request->jam_tindakan,
+                'kd_dokter'         => $request->ppa,
+                'kd_produk'         => $request->tindakan,
+                'kesimpulan'        => $request->kesimpulan,
+                'gambar'            => $pathGambarTindakan,
+                'laporan_hasil'     => $request->laporan,
+            ];
+
+            ListTindakanPasien::create($tindakanData);
 
 
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+            // insert detail_transaksi
 
-        $lastTindakanUrut = ListTindakanPasien::select(['urut_list'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->orderBy('urut_list', 'desc')
-            ->first();
+            $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
+                ->where('no_transaksi', $kunjungan->no_transaksi)
+                ->orderBy('urut', 'desc')
+                ->first();
 
-        $urut_list = !empty($lastTindakanUrut) ? $lastTindakanUrut->urut_list + 1 : 1;
+            $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
 
-        // upload gambar tindakan
-        $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/rawat-inap/tindakan-pasien') : '';
+            $dataDetailTransaksi = [
+                'no_transaksi'  => $kunjungan->no_transaksi,
+                'kd_kasir'      => $kunjungan->kd_kasir,
+                'tgl_transaksi' => $tgl_masuk,
+                'urut'          => $urut,
+                'kd_tarif'      => 'TU',
+                'kd_produk'     => $request->tindakan,
+                'kd_unit'       => $kd_unit,
+                'kd_unit_tr'    => $kd_unit,
+                'tgl_berlaku'   => $request->tgl_berlaku,
+                'kd_user'       => $request->ppa,
+                'shift'         => 0,
+                'harga'         => $request->tarif_tindakan,
+                'qty'           => 1,
+                'flag'          => 0,
+                'jns_trans'     => 0,
+            ];
 
-        // insert data tindakan
-        $tindakanData = [
-            'kd_pasien'         => $kd_pasien,
-            'kd_unit'           => $kd_unit,
-            'tgl_masuk'         => $tgl_masuk,
-            'urut_masuk'        => $urut_masuk,
-            'urut_list'         => $urut_list,
-            'tgl_tindakan'      => $request->tgl_tindakan,
-            'jam_tindakan'      => $request->jam_tindakan,
-            'kd_dokter'         => $request->ppa,
-            'kd_produk'         => $request->tindakan,
-            'kesimpulan'        => $request->kesimpulan,
-            'gambar'            => $pathGambarTindakan,
-            'laporan_hasil'     => $request->laporan,
-        ];
+            DetailTransaksi::create($dataDetailTransaksi);
 
-        ListTindakanPasien::create($tindakanData);
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
 
-
-        // insert detail_transaksi
-
-        $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
-            ->where('no_transaksi', $kunjungan->no_transaksi)
-            ->orderBy('urut', 'desc')
-            ->first();
-
-        $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
-
-        $dataDetailTransaksi = [
-            'no_transaksi'  => $kunjungan->no_transaksi,
-            'kd_kasir'      => $kunjungan->kd_kasir,
-            'tgl_transaksi' => $tgl_masuk,
-            'urut'          => $urut,
-            'kd_tarif'      => 'TU',
-            'kd_produk'     => $request->tindakan,
-            'kd_unit'       => $kd_unit,
-            'kd_unit_tr'    => $kd_unit,
-            'tgl_berlaku'   => $request->tgl_berlaku,
-            'kd_user'       => $request->ppa,
-            'shift'         => 0,
-            'harga'         => $request->tarif_tindakan,
-            'qty'           => 1,
-            'flag'          => 0,
-            'jns_trans'     => 0,
-        ];
-
-        DetailTransaksi::create($dataDetailTransaksi);
-
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        return back()->with('success', 'Tindakan berhasil ditambah');
+            DB::commit();
+            return back()->with('success', 'Tindakan berhasil ditambah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function getTindakanAjax($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -338,58 +346,70 @@ class TindakanController extends Controller
 
         $request->validate($rules, $messageErr);
 
-        $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->where('urut_list', $request->urut_list)
-            ->first();
+        DB::beginTransaction();
 
-        // update data tindakan
-        $tindakanData = [
-            'tgl_tindakan'      => $request->tgl_tindakan,
-            'jam_tindakan'      => $request->jam_tindakan,
-            'kd_dokter'         => $request->ppa,
-            'kd_produk'         => $request->tindakan,
-            'kesimpulan'        => $request->kesimpulan,
-            'laporan_hasil'     => $request->laporan,
-        ];
+        try {
 
-        if ($request->hasFile('gambar_tindakan')) {
-            if (Storage::exists($tindakan->gambar)) Storage::delete($tindakan->gambar);
+            $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('urut_list', $request->urut_list)
+                ->first();
 
-            // upload gambar tindakan
-            $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/rawat-inap/tindakan-pasien') : '';
-            $tindakanData['gambar'] = $pathGambarTindakan;
+            // update data tindakan
+            $tindakanData = [
+                'tgl_tindakan'      => $request->tgl_tindakan,
+                'jam_tindakan'      => $request->jam_tindakan,
+                'kd_dokter'         => $request->ppa,
+                'kd_produk'         => $request->tindakan,
+                'kesimpulan'        => $request->kesimpulan,
+                'laporan_hasil'     => $request->laporan,
+            ];
+
+            if ($request->hasFile('gambar_tindakan')) {
+                if (Storage::exists($tindakan->gambar)) Storage::delete($tindakan->gambar);
+
+                // upload gambar tindakan
+                $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/rawat-inap/tindakan-pasien') : '';
+                $tindakanData['gambar'] = $pathGambarTindakan;
+            }
+
+            ListTindakanPasien::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('urut_list', $request->urut_list)
+                ->update($tindakanData);
+
+
+            $dataDetailTransaksi = [
+                'kd_produk'     => $request->tindakan,
+                'tgl_berlaku'   => $request->tgl_berlaku,
+                'kd_user'       => $request->ppa,
+                'harga'         => $request->tarif_tindakan,
+            ];
+
+            DetailTransaksi::where('no_transaksi', $request->no_transaksi)
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_produk', $tindakan->kd_produk)
+                ->whereDate('tgl_transaksi', $tgl_masuk)
+                ->update($dataDetailTransaksi);
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
+
+            DB::commit();
+            return back()->with('success', 'Tindakan berhasil diubah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        ListTindakanPasien::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->where('urut_list', $request->urut_list)
-            ->update($tindakanData);
-
-
-        $dataDetailTransaksi = [
-            'kd_produk'     => $request->tindakan,
-            'tgl_berlaku'   => $request->tgl_berlaku,
-            'kd_user'       => $request->ppa,
-            'harga'         => $request->tarif_tindakan,
-        ];
-
-        DetailTransaksi::where('no_transaksi', $request->no_transaksi)
-            ->where('kd_unit', $kd_unit)
-            ->where('kd_produk', $tindakan->kd_produk)
-            ->whereDate('tgl_transaksi', $tgl_masuk)
-            ->update($dataDetailTransaksi);
-
-        $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk);
-        return back()->with('success', 'Tindakan berhasil diubah');
     }
 
     public function deleteTindakan($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
+
         try {
 
             $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
@@ -414,12 +434,15 @@ class TindakanController extends Controller
                 ->whereDate('tgl_transaksi', $tgl_masuk)
                 ->delete();
 
+            DB::commit();
+
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Tindakan berhasil dihapus',
                 'data'      => []
             ], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),
@@ -433,12 +456,12 @@ class TindakanController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => $kd_unit,
@@ -456,7 +479,6 @@ class TindakanController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -464,7 +486,7 @@ class TindakanController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }
