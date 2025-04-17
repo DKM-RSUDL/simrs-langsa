@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TindakanController extends Controller
@@ -152,106 +153,116 @@ class TindakanController extends Controller
 
     public function storeTindakan($kd_pasien, $tgl_masuk, Request $request)
     {
-        $messageErr = [
-            'tindakan.required'         => 'Tindakan harus dipilih!',
-            'ppa.required'              => 'PPA harus dipilih!',
-            'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
-            'jam_tindakan.required'     => 'Jam harus dipilih!',
-            // 'laporan.required'          => 'Laporan tindakan harus diisi!',
-            // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
-            // 'gambar_tindakan.required'  => 'Gambar harus dipilih!',
-            'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
-            'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
-        ];
+        DB::beginTransaction();
 
-        $request->validate([
-            'tindakan'          => 'required',
-            'ppa'               => 'required',
-            'tgl_tindakan'      => 'required',
-            'jam_tindakan'      => 'required',
-            // 'laporan'           => 'required',
-            // 'kesimpulan'        => 'required',
-            // 'gambar_tindakan'   => 'required|image|file|max:5120',
-            'gambar_tindakan'   => 'image|file|max:5120',
-        ], $messageErr);
+        try {
 
+            $messageErr = [
+                'tindakan.required'         => 'Tindakan harus dipilih!',
+                'ppa.required'              => 'PPA harus dipilih!',
+                'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
+                'jam_tindakan.required'     => 'Jam harus dipilih!',
+                // 'laporan.required'          => 'Laporan tindakan harus diisi!',
+                // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
+                // 'gambar_tindakan.required'  => 'Gambar harus dipilih!',
+                'gambar_tindakan.image'     => 'Format file gambar tindakan tidak sesuai!',
+                'gambar_tindakan.max'       => 'Gambar tindakan maksimak 5 mb!'
+            ];
 
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
-
-        $lastTindakanUrut = ListTindakanPasien::select(['urut_list'])
-            ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kunjungan->kd_unit)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $kunjungan->urut_masuk)
-            ->orderBy('urut_list', 'desc')
-            ->first();
-
-        $urut_list = !empty($lastTindakanUrut) ? $lastTindakanUrut->urut_list + 1 : 1;
-
-        // upload gambar tindakan
-        $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/gawat-darurat/tindakan-pasien') : '';
-
-        // insert data tindakan
-        $tindakanData = [
-            'kd_pasien'         => $kd_pasien,
-            'kd_unit'           => $kunjungan->kd_unit,
-            'tgl_masuk'         => $tgl_masuk,
-            'urut_masuk'        => $kunjungan->urut_masuk,
-            'urut_list'         => $urut_list,
-            'tgl_tindakan'      => $request->tgl_tindakan,
-            'jam_tindakan'      => $request->jam_tindakan,
-            'kd_dokter'         => $request->ppa,
-            'kd_produk'         => $request->tindakan,
-            'kesimpulan'        => $request->kesimpulan,
-            'gambar'            => $pathGambarTindakan,
-            'laporan_hasil'     => $request->laporan,
-            'user_create'       => Auth::id()
-        ];
-
-        ListTindakanPasien::create($tindakanData);
+            $request->validate([
+                'tindakan'          => 'required',
+                'ppa'               => 'required',
+                'tgl_tindakan'      => 'required',
+                'jam_tindakan'      => 'required',
+                // 'laporan'           => 'required',
+                // 'kesimpulan'        => 'required',
+                // 'gambar_tindakan'   => 'required|image|file|max:5120',
+                'gambar_tindakan'   => 'image|file|max:5120',
+            ], $messageErr);
 
 
-        // insert detail_transaksi
+            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', 3)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
 
-        $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
-            ->where('no_transaksi', $kunjungan->no_transaksi)
-            ->orderBy('urut', 'desc')
-            ->first();
+            $lastTindakanUrut = ListTindakanPasien::select(['urut_list'])
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kunjungan->kd_unit)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $kunjungan->urut_masuk)
+                ->orderBy('urut_list', 'desc')
+                ->first();
 
-        $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
+            $urut_list = !empty($lastTindakanUrut) ? $lastTindakanUrut->urut_list + 1 : 1;
 
-        $dataDetailTransaksi = [
-            'no_transaksi'  => $kunjungan->no_transaksi,
-            'kd_kasir'      => '06',
-            'tgl_transaksi' => $tgl_masuk,
-            'urut'          => $urut,
-            'kd_tarif'      => 'TU',
-            'kd_produk'     => $request->tindakan,
-            'kd_unit'       => 3,
-            'kd_unit_tr'    => 3,
-            'tgl_berlaku'   => $request->tgl_berlaku,
-            'kd_user'       => $request->ppa,
-            'shift'         => 0,
-            'harga'         => $request->tarif_tindakan,
-            'qty'           => 1,
-            'flag'          => 0,
-            'jns_trans'     => 0,
-        ];
+            // upload gambar tindakan
+            $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/gawat-darurat/tindakan-pasien') : '';
 
-        DetailTransaksi::create($dataDetailTransaksi);
+            // insert data tindakan
+            $tindakanData = [
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => $kunjungan->kd_unit,
+                'tgl_masuk'         => $tgl_masuk,
+                'urut_masuk'        => $kunjungan->urut_masuk,
+                'urut_list'         => $urut_list,
+                'tgl_tindakan'      => $request->tgl_tindakan,
+                'jam_tindakan'      => $request->jam_tindakan,
+                'kd_dokter'         => $request->ppa,
+                'kd_produk'         => $request->tindakan,
+                'kesimpulan'        => $request->kesimpulan,
+                'gambar'            => $pathGambarTindakan,
+                'laporan_hasil'     => $request->laporan,
+                'user_create'       => Auth::id()
+            ];
 
-        $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-        return back()->with('success', 'Tindakan berhasil ditambah');
+            ListTindakanPasien::create($tindakanData);
+
+
+            // insert detail_transaksi
+
+            $lastDetailTransaksiUrut = DetailTransaksi::select(['urut'])
+                ->where('no_transaksi', $kunjungan->no_transaksi)
+                ->orderBy('urut', 'desc')
+                ->first();
+
+            $urut = !empty($lastDetailTransaksiUrut) ? $lastDetailTransaksiUrut->urut + 1 : 1;
+
+            $dataDetailTransaksi = [
+                'no_transaksi'  => $kunjungan->no_transaksi,
+                'kd_kasir'      => '06',
+                'tgl_transaksi' => $tgl_masuk,
+                'urut'          => $urut,
+                'kd_tarif'      => 'TU',
+                'kd_produk'     => $request->tindakan,
+                'kd_unit'       => 3,
+                'kd_unit_tr'    => 3,
+                'tgl_berlaku'   => $request->tgl_berlaku,
+                'kd_user'       => $request->ppa,
+                'shift'         => 0,
+                'harga'         => $request->tarif_tindakan,
+                'qty'           => 1,
+                'flag'          => 0,
+                'jns_trans'     => 0,
+            ];
+
+            DetailTransaksi::create($dataDetailTransaksi);
+
+            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+
+            DB::commit();
+            return back()->with('success', 'Tindakan berhasil ditambah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function getTindakanAjax($kd_pasien, $tgl_masuk, Request $request)
@@ -313,90 +324,102 @@ class TindakanController extends Controller
 
     public function updateTindakan($kd_pasien, $tgl_masuk, Request $request)
     {
-        $messageErr = [
-            'tindakan.required'         => 'Tindakan harus dipilih!',
-            'ppa.required'              => 'PPA harus dipilih!',
-            'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
-            'jam_tindakan.required'     => 'Jam harus dipilih!',
-            // 'laporan.required'          => 'Laporan tindakan harus diisi!',
-            // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
-        ];
+        DB::beginTransaction();
 
-        $rules = [
-            'tindakan'          => 'required',
-            'ppa'               => 'required',
-            'tgl_tindakan'      => 'required',
-            'jam_tindakan'      => 'required',
-            // 'laporan'           => 'required',
-            // 'kesimpulan'        => 'required',
-        ];
+        try {
 
-        if ($request->hasFile('gambar_tindakan')) {
-            $rules['gambar_tindakan'] = 'required|image|file|max:5120';
+            $messageErr = [
+                'tindakan.required'         => 'Tindakan harus dipilih!',
+                'ppa.required'              => 'PPA harus dipilih!',
+                'tgl_tindakan.required'     => 'Tanggal harus dipilih!',
+                'jam_tindakan.required'     => 'Jam harus dipilih!',
+                // 'laporan.required'          => 'Laporan tindakan harus diisi!',
+                // 'kesimpulan.required'       => 'Kesimpulan tindakan harus diisi!',
+            ];
 
-            $messageErr['gambar_tindakan.required'] = 'Gambar harus dipilih!';
-            $messageErr['gambar_tindakan.image'] = 'Format file gambar tindakan tidak sesuai!';
-            $messageErr['gambar_tindakan.max'] = 'Gambar tindakan maksimak 5 mb!';
+            $rules = [
+                'tindakan'          => 'required',
+                'ppa'               => 'required',
+                'tgl_tindakan'      => 'required',
+                'jam_tindakan'      => 'required',
+                // 'laporan'           => 'required',
+                // 'kesimpulan'        => 'required',
+            ];
+
+            if ($request->hasFile('gambar_tindakan')) {
+                $rules['gambar_tindakan'] = 'required|image|file|max:5120';
+
+                $messageErr['gambar_tindakan.required'] = 'Gambar harus dipilih!';
+                $messageErr['gambar_tindakan.image'] = 'Format file gambar tindakan tidak sesuai!';
+                $messageErr['gambar_tindakan.max'] = 'Gambar tindakan maksimak 5 mb!';
+            }
+
+            $request->validate($rules, $messageErr);
+
+
+            $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 3)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $request->urut_masuk)
+                ->where('urut_list', $request->urut_list)
+                ->first();
+
+
+            // update data tindakan
+            $tindakanData = [
+                'tgl_tindakan'      => $request->tgl_tindakan,
+                'jam_tindakan'      => $request->jam_tindakan,
+                'kd_dokter'         => $request->ppa,
+                'kd_produk'         => $request->tindakan,
+                'kesimpulan'        => $request->kesimpulan,
+                'laporan_hasil'     => $request->laporan,
+                'user_edit'         => Auth::id()
+            ];
+
+            if ($request->hasFile('gambar_tindakan')) {
+                if (Storage::exists($tindakan->gambar)) Storage::delete($tindakan->gambar);
+
+                // upload gambar tindakan
+                $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/gawat-darurat/tindakan-pasien') : '';
+                $tindakanData['gambar'] = $pathGambarTindakan;
+            }
+
+            ListTindakanPasien::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 3)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $request->urut_masuk)
+                ->where('urut_list', $request->urut_list)
+                ->update($tindakanData);
+
+
+            $dataDetailTransaksi = [
+                'kd_produk'     => $request->tindakan,
+                'tgl_berlaku'   => $request->tgl_berlaku,
+                'kd_user'       => $request->ppa,
+                'harga'         => $request->tarif_tindakan,
+            ];
+
+            DetailTransaksi::where('no_transaksi', $request->no_transaksi)
+                ->where('kd_kasir', '06')
+                ->where('kd_unit', 3)
+                ->where('kd_produk', $tindakan->kd_produk)
+                ->whereDate('tgl_transaksi', $tgl_masuk)
+                ->update($dataDetailTransaksi);
+
+            $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
+
+            DB::commit();
+            return back()->with('success', 'Tindakan berhasil diubah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        $request->validate($rules, $messageErr);
-
-
-        $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $request->urut_masuk)
-            ->where('urut_list', $request->urut_list)
-            ->first();
-
-
-        // update data tindakan
-        $tindakanData = [
-            'tgl_tindakan'      => $request->tgl_tindakan,
-            'jam_tindakan'      => $request->jam_tindakan,
-            'kd_dokter'         => $request->ppa,
-            'kd_produk'         => $request->tindakan,
-            'kesimpulan'        => $request->kesimpulan,
-            'laporan_hasil'     => $request->laporan,
-            'user_edit'         => Auth::id()
-        ];
-
-        if ($request->hasFile('gambar_tindakan')) {
-            if (Storage::exists($tindakan->gambar)) Storage::delete($tindakan->gambar);
-
-            // upload gambar tindakan
-            $pathGambarTindakan = ($request->hasFile('gambar_tindakan')) ? $request->file('gambar_tindakan')->store('uploads/gawat-darurat/tindakan-pasien') : '';
-            $tindakanData['gambar'] = $pathGambarTindakan;
-        }
-
-        ListTindakanPasien::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
-            ->whereDate('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $request->urut_masuk)
-            ->where('urut_list', $request->urut_list)
-            ->update($tindakanData);
-
-
-        $dataDetailTransaksi = [
-            'kd_produk'     => $request->tindakan,
-            'tgl_berlaku'   => $request->tgl_berlaku,
-            'kd_user'       => $request->ppa,
-            'harga'         => $request->tarif_tindakan,
-        ];
-
-        DetailTransaksi::where('no_transaksi', $request->no_transaksi)
-            ->where('kd_kasir', '06')
-            ->where('kd_unit', 3)
-            ->where('kd_produk', $tindakan->kd_produk)
-            ->whereDate('tgl_transaksi', $tgl_masuk)
-            ->update($dataDetailTransaksi);
-
-        $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-        return back()->with('success', 'Tindakan berhasil diubah');
     }
 
     public function deleteTindakan($kd_pasien, $tgl_masuk, Request $request)
     {
+        DB::beginTransaction();
+
         try {
 
             $tindakan = ListTindakanPasien::where('kd_pasien', $kd_pasien)
@@ -422,12 +445,16 @@ class TindakanController extends Controller
                 ->whereDate('tgl_transaksi', $tgl_masuk)
                 ->delete();
 
+            DB::commit();
+
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Tindakan berhasil dihapus',
                 'data'      => []
             ], 200);
         } catch (Exception $e) {
+
+            DB::rollBack();
             return response()->json([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),

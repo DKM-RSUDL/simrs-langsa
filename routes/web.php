@@ -386,6 +386,7 @@ Route::middleware('auth')->group(function () {
                                 Route::name('.rawat-inap-resume')->group(function () {
                                     Route::controller(RawatInapResumeController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::post('/validasi', 'validasiResume')->name('.validasi');
                                         Route::put('/{id}', 'update')->name('.update');
                                     });
                                 });
@@ -500,17 +501,6 @@ Route::middleware('auth')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
-                                                    });
-                                                });
-                                            });
-
-
-                                            Route::prefix('perinatology')->group(function () {
-                                                Route::name('.perinatology')->group(function () {
-                                                    Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
-                                                        Route::get('/', 'index')->name('.index');
-                                                        Route::post('/', 'store')->name('.store');
-                                                        Route::put('/', 'update')->name('.update');
                                                     });
                                                 });
                                             });

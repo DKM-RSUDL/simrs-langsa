@@ -31,14 +31,14 @@ class AsesmenController extends Controller
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
-        ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-        ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
@@ -79,18 +79,21 @@ class AsesmenController extends Controller
 
         // Mengambil asesmen dengan join ke data_triase untuk mendapatkan tanggal_triase
         $asesmen = RmeAsesmen::with(['user'])
-        ->leftJoin('data_triase', 'RME_ASESMEN.id', '=',
-            'data_triase.id_asesmen'
-        )
-        ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
-        ->where('RME_ASESMEN.kd_unit', $kd_unit)
-        ->select(
-            'RME_ASESMEN.*',
-            'data_triase.tanggal_triase',
-            'data_triase.id as id_triase'
-        )
-        ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc')
-        ->get();
+            ->leftJoin(
+                'data_triase',
+                'RME_ASESMEN.id',
+                '=',
+                'data_triase.id_asesmen'
+            )
+            ->where('RME_ASESMEN.kd_pasien', $kd_pasien)
+            ->where('RME_ASESMEN.kd_unit', $kd_unit)
+            ->select(
+                'RME_ASESMEN.*',
+                'data_triase.tanggal_triase',
+                'data_triase.id as id_triase'
+            )
+            ->orderBy('RME_ASESMEN.waktu_asesmen', 'desc')
+            ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen.index', compact(
             'dataMedis',
@@ -112,17 +115,18 @@ class AsesmenController extends Controller
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
 
         try {
             $user = auth()->user();
 
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
                 ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
                 ->leftJoin('data_triase', 'kunjungan.kd_pasien', '=', 'data_triase.kd_pasien_triase')
                 ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter', 'data_triase.foto_pasien', 'data_triase.status', 'data_triase.usia_bulan')
@@ -311,11 +315,10 @@ class AsesmenController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
+            DB::commit();
             return response()->json(['message' => 'Berhasil']);
-
-            // DB::commit();
         } catch (\Exception $e) {
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
@@ -356,7 +359,7 @@ class AsesmenController extends Controller
             $retriaseData = DataTriase::where('id_asesmen', $id)->get();
 
             $pemeriksaanFisik = RmeAsesmenPemeriksaanFisik::with('itemFisik')
-            ->where('id_asesmen', $id)
+                ->where('id_asesmen', $id)
                 ->get()
                 ->map(function ($item) {
                     return [
@@ -408,7 +411,7 @@ class AsesmenController extends Controller
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
 
             $asesmen = RmeAsesmen::where('id', $id)
@@ -417,7 +420,7 @@ class AsesmenController extends Controller
                 ->firstOrFail();
 
             $dataMedis = Kunjungan::with(['pasien', 'dokter'])
-            ->where('kd_pasien', $kd_pasien)
+                ->where('kd_pasien', $kd_pasien)
                 ->whereDate('tgl_masuk', $tgl_masuk)
                 ->first();
 
@@ -596,12 +599,13 @@ class AsesmenController extends Controller
 
             $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
 
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Exception $e) {
-            // DB::rollback();
+            DB::rollback();
 
             return response()->json([
                 'status' => 'error',
@@ -629,10 +633,10 @@ class AsesmenController extends Controller
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
@@ -650,7 +654,7 @@ class AsesmenController extends Controller
     private function getLabor($kd_pasien)
     {
         return SegalaOrder::with(['details.produk', 'dokter', 'labHasil'])
-        ->where('kd_pasien', $kd_pasien)
+            ->where('kd_pasien', $kd_pasien)
             ->orderBy('tgl_order', 'desc')
             ->get()
             ->map(function ($order) {
@@ -684,7 +688,7 @@ class AsesmenController extends Controller
     private function getRadiologi($kd_pasien)
     {
         return SegalaOrder::with(['details.produk', 'dokter'])
-        ->where('kd_pasien', $kd_pasien)
+            ->where('kd_pasien', $kd_pasien)
             ->where('kategori', 'RD')
             ->orderBy('tgl_order', 'desc')
             ->get()
@@ -774,5 +778,4 @@ class AsesmenController extends Controller
             }
         }
     }
-
 }

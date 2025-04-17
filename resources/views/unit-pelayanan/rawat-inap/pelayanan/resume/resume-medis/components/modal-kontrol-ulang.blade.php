@@ -19,37 +19,39 @@
 </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        const savedDate = $('#kontrol-ulang').val();
-        if (savedDate) {
-            $('#selected-date').text(savedDate);
-        }
-
-        // Handler modal
-        $('#btn-tgl-kontrol-ulang').on('click', function(e) {
-            e.preventDefault();
-            $(this).find('input[type="radio"]').prop('checked', true);
-            $('#modal-create-kontrol-ulang').modal('show');
-        });
-
-        // Handler tombol simpan
-        $('#btn-simpan-kontrol').on('click', function() {
-            const selectedDate = $('#kontrol-ulang').val();
-            if (selectedDate) {
-                $('#selected-date').text(selectedDate);
-                $('#kontrol').val('Kontrol ulang, tgl: ' + selectedDate);
-                $('#modal-create-kontrol-ulang').modal('hide');
-            } else {
-                alert('Silahkan pilih tanggal kontrol');
+@push('js')
+    <script>
+        $(document).ready(function() {
+            const savedDate = $('#kontrol-ulang').val();
+            if (savedDate) {
+                $('#selected-date').text(savedDate);
             }
-        });
 
-        // Handler modal ditutup
-        $('#modal-create-kontrol-ulang').on('hidden.bs.modal', function() {
-            if (!$('#selected-date').text()) {
-                $('#kontrol').prop('checked', false);
-            }
+            // Handler modal
+            $('#btn-tgl-kontrol-ulang').on('click', function(e) {
+                e.preventDefault();
+                $(this).find('input[type="radio"]').prop('checked', true);
+                $('#modal-create-kontrol-ulang').modal('show');
+            });
+
+            // Handler tombol simpan
+            $('#btn-simpan-kontrol').on('click', function() {
+                const selectedDate = $('#kontrol-ulang').val();
+                if (selectedDate) {
+                    $('#selected-date').text(selectedDate);
+                    $('#kontrol').val('Kontrol ulang, tgl: ' + selectedDate);
+                    $('#modal-create-kontrol-ulang').modal('hide');
+                } else {
+                    alert('Silahkan pilih tanggal kontrol');
+                }
+            });
+
+            // Handler modal ditutup
+            $('#modal-create-kontrol-ulang').on('hidden.bs.modal', function() {
+                if (!$('#selected-date').text()) {
+                    $('#kontrol').prop('checked', false);
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endpush

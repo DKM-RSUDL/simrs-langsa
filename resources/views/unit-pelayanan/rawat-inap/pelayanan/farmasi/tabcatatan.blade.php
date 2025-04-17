@@ -66,7 +66,7 @@
                 @endif
             </tbody>
         </table>
-    </div>    
+    </div>
 
     @if (isset($error))
         <div class="alert alert-warning">{{ $error }}</div>
@@ -77,68 +77,70 @@
     @endif
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.btn-delete').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                console.log('ID yang akan dihapus:', id); // Debug ID
-                
-                // Ganti confirm dengan SweetAlert
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: 'Catatan ini akan dihapus secara permanen!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const url = "{{ route('rawat-inap.farmasi.hapusCatatanObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}".replace(':id', id);
-                        console.log('URL yang dikirim:', url); // Debug URL
-                        
-                        fetch(url, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json',
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Response:', data); // Debug response
-                            if (data.message.includes('berhasil')) {
-                                Swal.fire(
-                                    'Terhapus!',
-                                    'Catatan berhasil dihapus.',
-                                    'success'
-                                ).then(() => {
-                                    this.closest('tr').remove();
-                                    document.querySelectorAll('#resepTable tbody tr').forEach((row, index) => {
-                                        row.cells[0].textContent = index + 1;
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    console.log('ID yang akan dihapus:', id); // Debug ID
+
+                    // Ganti confirm dengan SweetAlert
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Catatan ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const url = "{{ route('rawat-inap.farmasi.hapusCatatanObat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}".replace(':id', id);
+                            console.log('URL yang dikirim:', url); // Debug URL
+
+                            fetch(url, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Response:', data); // Debug response
+                                if (data.message.includes('berhasil')) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'Catatan berhasil dihapus.',
+                                        'success'
+                                    ).then(() => {
+                                        this.closest('tr').remove();
+                                        document.querySelectorAll('#resepTable tbody tr').forEach((row, index) => {
+                                            row.cells[0].textContent = index + 1;
+                                        });
                                     });
-                                });
-                            } else {
+                                } else {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Gagal menghapus: ' + data.error,
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
                                 Swal.fire(
-                                    'Gagal!',
-                                    'Gagal menghapus: ' + data.error,
+                                    'Error!',
+                                    'Terjadi kesalahan saat menghapus.',
                                     'error'
                                 );
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan saat menghapus.',
-                                'error'
-                            );
-                        });
-                    }
+                            });
+                        }
+                    });
                 });
             });
         });
-    });
-</script>
+    </script>
+@endpush

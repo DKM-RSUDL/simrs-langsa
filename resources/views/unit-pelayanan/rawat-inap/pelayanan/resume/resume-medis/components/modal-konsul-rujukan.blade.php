@@ -150,55 +150,57 @@
 
 @include('unit-pelayanan.rawat-jalan.pelayanan.resume.resume-medis.components.modal-daftar-input-diagnosis')
 
-<script>
-    $(document).ready(function() {
-        // Inisialisasi
-        const previousUnitId = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi
+            const previousUnitId = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
 
-        // nilai awal jika ada
-        if (previousUnitId) {
-            $('#unit_tujuan').val(previousUnitId);
-        }
-
-        $('#btn-konsul-rujukan').on('click', function(e) {
-            e.preventDefault();
-            $('#konsul').prop('checked', true);
-            $('#modal-konsul-rujukan').modal('show');
-        });
-
-        // simpan pilihan unit
-        $('#btn-simpan-konsul-rujukan').on('click', function() {
-            const selectedUnit = $('#unit_tujuan');
-            const unitId = selectedUnit.val();
-            const unitName = selectedUnit.find('option:selected').text().trim();
-
-            // Validasi
-            if (!unitId || unitId === "" || unitId === "-Pilih Unit Pelayanan-") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Silahkan pilih unit pelayanan terlebih dahulu!'
-                });
-                return;
+            // nilai awal jika ada
+            if (previousUnitId) {
+                $('#unit_tujuan').val(previousUnitId);
             }
 
-            // Update
-            $('#selected-unit-tujuan')
-                .text(unitName)
-                .attr('data-unit-id', unitId);
+            $('#btn-konsul-rujukan').on('click', function(e) {
+                e.preventDefault();
+                $('#konsul').prop('checked', true);
+                $('#modal-konsul-rujukan').modal('show');
+            });
 
-            // Update radio
-            $('#konsul')
-                .prop('checked', true)
-                .val('Konsul/Rujuk Internal Ke: ' + unitName);
+            // simpan pilihan unit
+            $('#btn-simpan-konsul-rujukan').on('click', function() {
+                const selectedUnit = $('#unit_tujuan');
+                const unitId = selectedUnit.val();
+                const unitName = selectedUnit.find('option:selected').text().trim();
 
-            $('#modal-konsul-rujukan').modal('hide');
+                // Validasi
+                if (!unitId || unitId === "" || unitId === "-Pilih Unit Pelayanan-") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Silahkan pilih unit pelayanan terlebih dahulu!'
+                    });
+                    return;
+                }
+
+                // Update
+                $('#selected-unit-tujuan')
+                    .text(unitName)
+                    .attr('data-unit-id', unitId);
+
+                // Update radio
+                $('#konsul')
+                    .prop('checked', true)
+                    .val('Konsul/Rujuk Internal Ke: ' + unitName);
+
+                $('#modal-konsul-rujukan').modal('hide');
+            });
+
+            $('#modal-konsul-rujukan').on('hidden.bs.modal', function() {
+                if (!$('#selected-unit-tujuan').text().trim()) {
+                    $('#konsul').prop('checked', false);
+                }
+            });
         });
-
-        $('#modal-konsul-rujukan').on('hidden.bs.modal', function() {
-            if (!$('#selected-unit-tujuan').text().trim()) {
-                $('#konsul').prop('checked', false);
-            }
-        });
-    });
-</script>
+    </script>
+@endpush

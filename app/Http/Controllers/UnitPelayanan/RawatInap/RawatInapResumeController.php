@@ -13,6 +13,7 @@ use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\Unit;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -94,19 +95,19 @@ class RawatInapResumeController extends Controller
             ->orderBy('tgl_masuk', 'desc')
             ->paginate(10);
 
-         // Ambil semua dokter
-         $dataDokter = DokterKlinik::with(['dokter', 'unit'])
-         ->where('kd_unit', 3)
-         ->whereRelation('dokter', 'status', 1)
-         ->get();
+        // Ambil semua dokter
+        $dataDokter = DokterKlinik::with(['dokter', 'unit'])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
-     // Ambil dokter yang aktif saat ini
-     $dokterPengirim = DokterKlinik::with(['konsultasi' => function ($query) {
-         $query->with('dokter');
-     }])
-         ->where('kd_unit', 3)
-         ->whereRelation('dokter', 'status', 1)
-         ->first();
+        // Ambil dokter yang aktif saat ini
+        $dokterPengirim = DokterKlinik::with(['konsultasi' => function ($query) {
+            $query->with('dokter');
+        }])
+            ->where('kd_unit', 3)
+            ->whereRelation('dokter', 'status', 1)
+            ->first();
 
         // Mengambil data hasil pemeriksaan laboratorium
         $dataLabor = SegalaOrder::with(['details.produk'])
@@ -185,8 +186,8 @@ class RawatInapResumeController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $validator = Validator::make($request->all(), [
                 'anamnesis' => 'required|string',
                 'pemeriksaan_penunjang' => 'required|string',
@@ -248,7 +249,7 @@ class RawatInapResumeController extends Controller
                 'icd_10' => $newIcd10,
                 'icd_9' => $newIcd9,
                 'alergi' => $newAlergi,
-                'status' => 1,
+                // 'status' => 1,
                 'user_validasi' => Auth::id()
             ]);
 
@@ -279,6 +280,45 @@ class RawatInapResumeController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memperbarui data'
             ], 500);
+        }
+    }
+
+
+    public function validasiResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $resumeId = decrypt($request->resume_id);
+
+            $resume = RMEResume::find($resumeId);
+
+            if (empty($resume)) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data resume gagal di cari !',
+                    'data'      => []
+                ]);
+            }
+
+            $resume->status = 1;
+            $resume->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'OK',
+                'data'      => []
+            ]);
+        } catch (Exception $e) {
+
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Internal server error !',
+                'data'      => []
+            ]);
         }
     }
 

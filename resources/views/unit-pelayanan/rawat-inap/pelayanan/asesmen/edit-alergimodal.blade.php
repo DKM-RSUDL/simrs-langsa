@@ -54,169 +54,171 @@
     </div>
 </div>
 
-<script>
-    // Deklarasikan variabel untuk modal dan data di scope yang bisa diakses
-    let editAlergiModal;
-    let editAlergis = [];
+@push('js')
+    <script>
+        // Deklarasikan variabel untuk modal dan data di scope yang bisa diakses
+        let editAlergiModal;
+        let editAlergis = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inisialisasi modal
-        editAlergiModal = new bootstrap.Modal(document.getElementById('editAlergiModal'));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi modal
+            editAlergiModal = new bootstrap.Modal(document.getElementById('editAlergiModal'));
 
-        // Fungsi untuk mengupdate tampilan list di modal
-        function updateEditModalView() {
-            const editListAlergi = document.getElementById('editListAlergi');
-            if (!editListAlergi) return;
+            // Fungsi untuk mengupdate tampilan list di modal
+            function updateEditModalView() {
+                const editListAlergi = document.getElementById('editListAlergi');
+                if (!editListAlergi) return;
 
-            if (editAlergis.length === 0) {
-                editListAlergi.innerHTML = '<li class="text-muted">Tidak ada data alergi</li>';
-                return;
+                if (editAlergis.length === 0) {
+                    editListAlergi.innerHTML = '<li class="text-muted">Tidak ada data alergi</li>';
+                    return;
+                }
+
+                editListAlergi.innerHTML = editAlergis.map((a, index) => `
+                <li class="d-flex justify-content-between align-items-center mb-2">
+                    <span>${a.jenis} - ${a.alergen} - ${a.reaksi} (${a.keparahan})</span>
+                    <button class="btn btn-sm btn-link delete-modal-alergi p-0" data-index="${index}">
+                        <i class="bi bi-trash-fill text-danger"></i>
+                    </button>
+                </li>
+            `).join('');
             }
 
-            editListAlergi.innerHTML = editAlergis.map((a, index) => `
-            <li class="d-flex justify-content-between align-items-center mb-2">
-                <span>${a.jenis} - ${a.alergen} - ${a.reaksi} (${a.keparahan})</span>
-                <button class="btn btn-sm btn-link delete-modal-alergi p-0" data-index="${index}">
-                    <i class="bi bi-trash-fill text-danger"></i>
-                </button>
-            </li>
-        `).join('');
-        }
+            // Fungsi untuk mengupdate tampilan tabel
+            function updateEditTableView() {
+                const tbody = $('#editAlergiTable tbody');
+                tbody.empty();
 
-        // Fungsi untuk mengupdate tampilan tabel
-        function updateEditTableView() {
-            const tbody = $('#editAlergiTable tbody');
-            tbody.empty();
+                if (editAlergis.length === 0) {
+                    tbody.html(`
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <em>Tidak ada data alergi</em>
+                        </td>
+                    </tr>
+                `);
+                    return;
+                }
 
-            if (editAlergis.length === 0) {
-                tbody.html(`
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <em>Tidak ada data alergi</em>
-                    </td>
-                </tr>
-            `);
-                return;
-            }
-
-            editAlergis.forEach((alergi, index) => {
-                const row = `
-                <tr>
-                    <td>${alergi.jenis || '-'}</td>
-                    <td>${alergi.alergen || '-'}</td>
-                    <td>${alergi.reaksi || '-'}</td>
-                    <td>${alergi.keparahan || '-'}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger delete-edit-alergi" data-index="${index}">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-                tbody.append(row);
-            });
-        }
-
-        // Fungsi untuk mereset form
-        function resetEditForm() {
-            $('#editJenisAlergiInput').val('');
-            $('#editAlergenInput').val('');
-            $('#editReaksiInput').val('');
-            $('#editTingkatKeparahanInput').val('');
-        }
-
-        // Event handler untuk membuka modal
-        $(document).on('click', '#openEditAlergiModal', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            console.log('Opening modal with data:', originalAlergiData); // Debug log
-
-            // Reset form dan data
-            resetEditForm();
-            editAlergis = Array.isArray(originalAlergiData) ? [...originalAlergiData] :
-                (originalAlergiData ? [originalAlergiData] : []);
-
-            updateEditModalView();
-            editAlergiModal.show();
-        });
-
-        // Event handler untuk menambah alergi
-        $(document).on('click', '#btnEditListAlergi', function(e) {
-            e.preventDefault();
-            console.log('Add button clicked'); // Debug log
-
-            const jenisAlergi = $('#editJenisAlergiInput').val();
-            const alergen = $('#editAlergenInput').val();
-            const reaksi = $('#editReaksiInput').val();
-            const keparahan = $('#editTingkatKeparahanInput').val();
-
-            console.log('Form values:', {
-                jenisAlergi,
-                alergen,
-                reaksi,
-                keparahan
-            }); // Debug log
-
-            if (!jenisAlergi || !alergen || !reaksi || !keparahan) {
-                Swal.fire({
-                    title: 'Peringatan',
-                    text: 'Harap isi semua field alergi',
-                    icon: 'warning'
+                editAlergis.forEach((alergi, index) => {
+                    const row = `
+                    <tr>
+                        <td>${alergi.jenis || '-'}</td>
+                        <td>${alergi.alergen || '-'}</td>
+                        <td>${alergi.reaksi || '-'}</td>
+                        <td>${alergi.keparahan || '-'}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-edit-alergi" data-index="${index}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                    tbody.append(row);
                 });
-                return;
             }
 
-            editAlergis.push({
-                jenis: jenisAlergi,
-                alergen: alergen,
-                reaksi: reaksi,
-                keparahan: keparahan
+            // Fungsi untuk mereset form
+            function resetEditForm() {
+                $('#editJenisAlergiInput').val('');
+                $('#editAlergenInput').val('');
+                $('#editReaksiInput').val('');
+                $('#editTingkatKeparahanInput').val('');
+            }
+
+            // Event handler untuk membuka modal
+            $(document).on('click', '#openEditAlergiModal', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log('Opening modal with data:', originalAlergiData); // Debug log
+
+                // Reset form dan data
+                resetEditForm();
+                editAlergis = Array.isArray(originalAlergiData) ? [...originalAlergiData] :
+                    (originalAlergiData ? [originalAlergiData] : []);
+
+                updateEditModalView();
+                editAlergiModal.show();
             });
 
-            console.log('Updated editAlergis:', editAlergis); // Debug log
+            // Event handler untuk menambah alergi
+            $(document).on('click', '#btnEditListAlergi', function(e) {
+                e.preventDefault();
+                console.log('Add button clicked'); // Debug log
 
-            resetEditForm();
-            updateEditModalView();
+                const jenisAlergi = $('#editJenisAlergiInput').val();
+                const alergen = $('#editAlergenInput').val();
+                const reaksi = $('#editReaksiInput').val();
+                const keparahan = $('#editTingkatKeparahanInput').val();
+
+                console.log('Form values:', {
+                    jenisAlergi,
+                    alergen,
+                    reaksi,
+                    keparahan
+                }); // Debug log
+
+                if (!jenisAlergi || !alergen || !reaksi || !keparahan) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Harap isi semua field alergi',
+                        icon: 'warning'
+                    });
+                    return;
+                }
+
+                editAlergis.push({
+                    jenis: jenisAlergi,
+                    alergen: alergen,
+                    reaksi: reaksi,
+                    keparahan: keparahan
+                });
+
+                console.log('Updated editAlergis:', editAlergis); // Debug log
+
+                resetEditForm();
+                updateEditModalView();
+            });
+
+            // Event handler untuk menyimpan perubahan
+            $(document).on('click', '#btnSaveEditAlergi', function(e) {
+                e.preventDefault();
+                console.log('Saving data:', editAlergis); // Debug log
+
+                originalAlergiData = [...editAlergis];
+                updateEditTableView();
+                editAlergiModal.hide();
+            });
+
+            // Event handler untuk menghapus dari modal
+            $(document).on('click', '.delete-modal-alergi', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const index = $(this).data('index');
+                editAlergis.splice(index, 1);
+                updateEditModalView();
+            });
+
+            // Event handler untuk menghapus dari tabel
+            $(document).on('click', '.delete-edit-alergi', function(e) {
+                e.preventDefault();
+                const index = $(this).data('index');
+                editAlergis.splice(index, 1);
+                originalAlergiData = [...editAlergis];
+                updateEditTableView();
+            });
+
+            // Prevent modal from closing parent
+            $('#editAlergiModal').on('hidden.bs.modal', function(event) {
+                event.stopPropagation();
+                resetEditForm();
+            });
         });
 
-        // Event handler untuk menyimpan perubahan
-        $(document).on('click', '#btnSaveEditAlergi', function(e) {
-            e.preventDefault();
-            console.log('Saving data:', editAlergis); // Debug log
-
-            originalAlergiData = [...editAlergis];
-            updateEditTableView();
-            editAlergiModal.hide();
-        });
-
-        // Event handler untuk menghapus dari modal
-        $(document).on('click', '.delete-modal-alergi', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const index = $(this).data('index');
-            editAlergis.splice(index, 1);
-            updateEditModalView();
-        });
-
-        // Event handler untuk menghapus dari tabel
-        $(document).on('click', '.delete-edit-alergi', function(e) {
-            e.preventDefault();
-            const index = $(this).data('index');
-            editAlergis.splice(index, 1);
-            originalAlergiData = [...editAlergis];
-            updateEditTableView();
-        });
-
-        // Prevent modal from closing parent
-        $('#editAlergiModal').on('hidden.bs.modal', function(event) {
-            event.stopPropagation();
-            resetEditForm();
-        });
-    });
-
-    // Fungsi untuk mengumpulkan data alergi (digunakan saat submit form utama)
-    function collectEditAlergi() {
-        console.log('Collecting alergi data:', originalAlergiData); // Debug log
-        return originalAlergiData;
-    }
-</script>
+        // Fungsi untuk mengumpulkan data alergi (digunakan saat submit form utama)
+        function collectEditAlergi() {
+            console.log('Collecting alergi data:', originalAlergiData); // Debug log
+            return originalAlergiData;
+        }
+    </script>
+@endpush

@@ -35,150 +35,154 @@
     </div>
 </div>
 
-<script>
-    // Deklarasikan variabel untuk modal dan data di scope yang bisa diakses
-    let editDiagnosisModal;
-    let editDiagnoses = [];
+@push('js')
+    <script>
+        // Deklarasikan variabel untuk modal dan data di scope yang bisa diakses
+        let editDiagnosisModal;
+        let editDiagnoses = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inisialisasi modal
-        editDiagnosisModal = new bootstrap.Modal(document.getElementById('editDiagnosisModal'));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi modal
+            editDiagnosisModal = new bootstrap.Modal(document.getElementById('editDiagnosisModal'));
 
-        // Fungsi untuk mengupdate tampilan list di modal
-        function updateEditModalView() {
-            const editListDiagnosis = document.getElementById('editListDiagnosis');
-            if (!editListDiagnosis) return;
+            // Fungsi untuk mengupdate tampilan list di modal
+            function updateEditModalView() {
+                const editListDiagnosis = document.getElementById('editListDiagnosis');
+                if (!editListDiagnosis) return;
 
-            if (editDiagnoses.length === 0) {
-                editListDiagnosis.innerHTML = '<li class="text-muted">Tidak ada diagnosis</li>';
-                return;
+                if (editDiagnoses.length === 0) {
+                    editListDiagnosis.innerHTML = '<li class="text-muted">Tidak ada diagnosis</li>';
+                    return;
+                }
+
+                editListDiagnosis.innerHTML = editDiagnoses.map((diagnosis, index) => `
+                <li class="d-flex justify-content-between align-items-center mb-2">
+                    <span>${diagnosis}</span>
+                    <button class="btn btn-sm btn-link delete-modal-diagnosis p-0" data-index="${index}">
+                        <i class="bi bi-trash-fill text-danger"></i>
+                    </button>
+                </li>
+            `).join('');
             }
 
-            editListDiagnosis.innerHTML = editDiagnoses.map((diagnosis, index) => `
-            <li class="d-flex justify-content-between align-items-center mb-2">
-                <span>${diagnosis}</span>
-                <button class="btn btn-sm btn-link delete-modal-diagnosis p-0" data-index="${index}">
-                    <i class="bi bi-trash-fill text-danger"></i>
-                </button>
-            </li>
-        `).join('');
-        }
-
-        // Fungsi untuk mengupdate tampilan di main form
-        function updateEditTableView() {
-            const diagnosisHtml = editDiagnoses.map((diagnosis, index) => `
-            <div class="diagnosis-item mb-2">
-                <div class="d-flex align-items-center">
-                    <div class="me-2">
-                        <span class="badge bg-primary">${index + 1}</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        ${diagnosis}
+            // Fungsi untuk mengupdate tampilan di main form
+            function updateEditTableView() {
+                const diagnosisHtml = editDiagnoses.map((diagnosis, index) => `
+                <div class="diagnosis-item mb-2">
+                    <div class="d-flex align-items-center">
+                        <div class="me-2">
+                            <span class="badge bg-primary">${index + 1}</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            ${diagnosis}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
 
-            $('#editDiagnoseList').html(diagnosisHtml || '<em>Tidak ada diagnosis</em>');
-        }
-
-        // Handler untuk membuka modal
-        $(document).on('click', '#openEditDiagnosisModal', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            console.log('Opening modal with data:', window.originalDiagnosisData);
-
-            // Reset form dan data
-            $('#editDiagnosisInput').val('');
-            editDiagnoses = Array.isArray(window.originalDiagnosisData) ? [...window
-                .originalDiagnosisData
-            ] : [];
-
-            updateEditModalView();
-            editDiagnosisModal.show();
-        });
-
-        // Handler untuk menambah diagnosis
-        $(document).on('click', '#btnEditListDiagnosis', function(e) {
-            e.preventDefault();
-
-            const diagnosisInput = $('#editDiagnosisInput').val().trim();
-
-            if (!diagnosisInput) {
-                Swal.fire({
-                    title: 'Peringatan',
-                    text: 'Harap isi diagnosis',
-                    icon: 'warning'
-                });
-                return;
+                $('#editDiagnoseList').html(diagnosisHtml || '<em>Tidak ada diagnosis</em>');
             }
 
-            editDiagnoses.push(diagnosisInput);
-            $('#editDiagnosisInput').val('');
-            updateEditModalView();
+            // Handler untuk membuka modal
+            $(document).on('click', '#openEditDiagnosisModal', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log('Opening modal with data:', window.originalDiagnosisData);
+
+                // Reset form dan data
+                $('#editDiagnosisInput').val('');
+                editDiagnoses = Array.isArray(window.originalDiagnosisData) ? [...window
+                    .originalDiagnosisData
+                ] : [];
+
+                updateEditModalView();
+                editDiagnosisModal.show();
+            });
+
+            // Handler untuk menambah diagnosis
+            $(document).on('click', '#btnEditListDiagnosis', function(e) {
+                e.preventDefault();
+
+                const diagnosisInput = $('#editDiagnosisInput').val().trim();
+
+                if (!diagnosisInput) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Harap isi diagnosis',
+                        icon: 'warning'
+                    });
+                    return;
+                }
+
+                editDiagnoses.push(diagnosisInput);
+                $('#editDiagnosisInput').val('');
+                updateEditModalView();
+            });
+
+            // Handler untuk menyimpan perubahan
+            $(document).on('click', '#btnSaveEditDiagnosis', function(e) {
+                e.preventDefault();
+                console.log('Saving diagnoses:', editDiagnoses);
+
+                window.originalDiagnosisData = [...editDiagnoses];
+                updateEditTableView();
+                editDiagnosisModal.hide();
+            });
+
+            // Handler untuk menghapus diagnosis
+            $(document).on('click', '.delete-modal-diagnosis', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const index = $(this).data('index');
+                editDiagnoses.splice(index, 1);
+                updateEditModalView();
+            });
+
+            // Prevent modal from closing parent
+            $('#editDiagnosisModal').on('hidden.bs.modal', function(event) {
+                event.stopPropagation();
+                $('#editDiagnosisInput').val('');
+            });
         });
 
-        // Handler untuk menyimpan perubahan
-        $(document).on('click', '#btnSaveEditDiagnosis', function(e) {
-            e.preventDefault();
-            console.log('Saving diagnoses:', editDiagnoses);
+        // CSS untuk styling
+    </script>
+@endpush
 
-            window.originalDiagnosisData = [...editDiagnoses];
-            updateEditTableView();
-            editDiagnosisModal.hide();
-        });
+@push('css')
+    <style>
+        #editListDiagnosis li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
 
-        // Handler untuk menghapus diagnosis
-        $(document).on('click', '.delete-modal-diagnosis', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const index = $(this).data('index');
-            editDiagnoses.splice(index, 1);
-            updateEditModalView();
-        });
+        #editListDiagnosis li:last-child {
+            border-bottom: none;
+        }
 
-        // Prevent modal from closing parent
-        $('#editDiagnosisModal').on('hidden.bs.modal', function(event) {
-            event.stopPropagation();
-            $('#editDiagnosisInput').val('');
-        });
-    });
+        .delete-modal-diagnosis {
+            color: #dc3545;
+            background: none;
+            border: none;
+            padding: 0;
+        }
 
-    // CSS untuk styling
-</script>
+        .delete-modal-diagnosis:hover {
+            color: #c82333;
+        }
 
-<style>
-    #editListDiagnosis li {
-        padding: 8px;
-        border-bottom: 1px solid #eee;
-    }
+        .diagnosis-item {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 8px;
+        }
 
-    #editListDiagnosis li:last-child {
-        border-bottom: none;
-    }
-
-    .delete-modal-diagnosis {
-        color: #dc3545;
-        background: none;
-        border: none;
-        padding: 0;
-    }
-
-    .delete-modal-diagnosis:hover {
-        color: #c82333;
-    }
-
-    .diagnosis-item {
-        background-color: #f8f9fa;
-        border-radius: 4px;
-        padding: 8px;
-    }
-
-    .diagnosis-item .badge {
-        min-width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
+        .diagnosis-item .badge {
+            min-width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+@endpush

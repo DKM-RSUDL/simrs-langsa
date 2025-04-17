@@ -50,108 +50,110 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var alergiModalElement = document.getElementById('alergiModal');
-        var alergiModal = new bootstrap.Modal(alergiModalElement);
-        var alergiTable = document.querySelector('#createAlergiTable tbody');
-        var listAlergi = document.getElementById('listAlergi');
-        var alergis = [];
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var alergiModalElement = document.getElementById('alergiModal');
+            var alergiModal = new bootstrap.Modal(alergiModalElement);
+            var alergiTable = document.querySelector('#createAlergiTable tbody');
+            var listAlergi = document.getElementById('listAlergi');
+            var alergis = [];
 
-        function updateMainView() {
-            if (alergis.length === 0) {
-                alergiTable.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-3">Tidak ada alergi, silahkan tambah</td>
-                    </tr>
-                `;
-            } else {
-                alergiTable.innerHTML = alergis.map((a, index) => `
-                    <tr>
-                        <td>${a.jenis}</td>
-                        <td>${a.alergen}</td>
-                        <td>${a.reaksi}</td>
-                        <td>${a.severe}</td>
-                        <td>
-                            <button class="btn btn-sm btn-link delete-alergi" data-index="${index}">
-                                <i class="fas fa-times text-danger"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-            document.getElementById('alergisInput').value = JSON.stringify(alergis);
-        }
-
-        function updateModalView() {
-            if (alergis.length === 0) {
-                listAlergi.innerHTML = '<li class="text-muted">Tidak ada alergi</li>';
-            } else {
-                listAlergi.innerHTML = alergis.map(a => `
-                    <li class="mb-2">
-                        <span class="fw-bold">${a.jenis}</span>: ${a.alergen} - ${a.reaksi} 
-                        <span class="badge bg-warning">${a.severe}</span>
-                    </li>
-                `).join('');
-            }
-        }
-
-        document.getElementById('openAlergiModal').addEventListener('click', function() {
-            updateModalView();
-            alergiModal.show();
-        });
-
-        document.getElementById('btnAddAlergi').addEventListener('click', function() {
-            var jenisInput = document.getElementById('jenisInput').value;
-            var alergenInput = document.getElementById('alergenInput').value.trim();
-            var reaksiInput = document.getElementById('reaksiInput').value.trim();
-            var severeInput = document.getElementById('severeInput').value;
-
-            if (jenisInput === '' || alergenInput === '' || reaksiInput === '' || severeInput === '') {
-                alert('Harap isi semua field alergi');
-                return;
+            function updateMainView() {
+                if (alergis.length === 0) {
+                    alergiTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-3">Tidak ada alergi, silahkan tambah</td>
+                        </tr>
+                    `;
+                } else {
+                    alergiTable.innerHTML = alergis.map((a, index) => `
+                        <tr>
+                            <td>${a.jenis}</td>
+                            <td>${a.alergen}</td>
+                            <td>${a.reaksi}</td>
+                            <td>${a.severe}</td>
+                            <td>
+                                <button class="btn btn-sm btn-link delete-alergi" data-index="${index}">
+                                    <i class="fas fa-times text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                document.getElementById('alergisInput').value = JSON.stringify(alergis);
             }
 
-            alergis.push({
-                jenis: jenisInput,
-                alergen: alergenInput,
-                reaksi: reaksiInput,
-                severe: severeInput
+            function updateModalView() {
+                if (alergis.length === 0) {
+                    listAlergi.innerHTML = '<li class="text-muted">Tidak ada alergi</li>';
+                } else {
+                    listAlergi.innerHTML = alergis.map(a => `
+                        <li class="mb-2">
+                            <span class="fw-bold">${a.jenis}</span>: ${a.alergen} - ${a.reaksi}
+                            <span class="badge bg-warning">${a.severe}</span>
+                        </li>
+                    `).join('');
+                }
+            }
+
+            document.getElementById('openAlergiModal').addEventListener('click', function() {
+                updateModalView();
+                alergiModal.show();
             });
-            updateModalView();
 
-            // Reset inputs
-            document.getElementById('jenisInput').value = '';
-            document.getElementById('alergenInput').value = '';
-            document.getElementById('reaksiInput').value = '';
-            document.getElementById('severeInput').value = '';
-        });
+            document.getElementById('btnAddAlergi').addEventListener('click', function() {
+                var jenisInput = document.getElementById('jenisInput').value;
+                var alergenInput = document.getElementById('alergenInput').value.trim();
+                var reaksiInput = document.getElementById('reaksiInput').value.trim();
+                var severeInput = document.getElementById('severeInput').value;
 
-        document.getElementById('btnSaveAlergi').addEventListener('click', function() {
-            updateMainView();
-            alergiModal.hide();
-        });
+                if (jenisInput === '' || alergenInput === '' || reaksiInput === '' || severeInput === '') {
+                    alert('Harap isi semua field alergi');
+                    return;
+                }
 
-        // Handle modal hidden event to ensure backdrop is removed
-        alergiModalElement.addEventListener('hidden.bs.modal', function() {
-            document.body.classList.remove('modal-open');
-            var backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
-        });
+                alergis.push({
+                    jenis: jenisInput,
+                    alergen: alergenInput,
+                    reaksi: reaksiInput,
+                    severe: severeInput
+                });
+                updateModalView();
 
-        // Event delegation for delete buttons
-        alergiTable.addEventListener('click', function(e) {
-            if (e.target.closest('.delete-alergi')) {
-                var row = e.target.closest('tr');
-                var index = Array.from(row.parentElement.children).indexOf(row);
-                alergis.splice(index, 1);
+                // Reset inputs
+                document.getElementById('jenisInput').value = '';
+                document.getElementById('alergenInput').value = '';
+                document.getElementById('reaksiInput').value = '';
+                document.getElementById('severeInput').value = '';
+            });
+
+            document.getElementById('btnSaveAlergi').addEventListener('click', function() {
                 updateMainView();
-            }
-        });
+                alergiModal.hide();
+            });
 
-        alergis = [];
-        updateMainView();
-    });
-</script>
+            // Handle modal hidden event to ensure backdrop is removed
+            alergiModalElement.addEventListener('hidden.bs.modal', function() {
+                document.body.classList.remove('modal-open');
+                var backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+
+            // Event delegation for delete buttons
+            alergiTable.addEventListener('click', function(e) {
+                if (e.target.closest('.delete-alergi')) {
+                    var row = e.target.closest('tr');
+                    var index = Array.from(row.parentElement.children).indexOf(row);
+                    alergis.splice(index, 1);
+                    updateMainView();
+                }
+            });
+
+            alergis = [];
+            updateMainView();
+        });
+    </script>
+@endpush

@@ -233,7 +233,7 @@ class AsesmenController extends Controller
 
     public function update($kd_pasien, $tgl_masuk, $id, Request $request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
 
             $asesmen = RmeAsesmen::where('id', $id)
@@ -483,13 +483,13 @@ class AsesmenController extends Controller
 
             $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
 
-            // DB::commit();
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Exception $e) {
-            // DB::rollback();
+            DB::rollback();
 
             return response()->json([
                 'status' => 'error',
@@ -653,8 +653,7 @@ class AsesmenController extends Controller
 
     public function store($kd_pasien, $tgl_masuk, Request $request)
     {
-        // DB::beginTransaction();
-        // dd($request->all());
+        DB::beginTransaction();
 
         try {
 
@@ -925,11 +924,10 @@ class AsesmenController extends Controller
 
             $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk, $resumeData);
 
+            DB::commit();
             return response()->json(['message' => 'Berhasil']);
-
-            // DB::commit();
         } catch (\Exception $e) {
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }

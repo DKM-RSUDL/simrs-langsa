@@ -18,8 +18,10 @@
 </div>
 
 
-<script>
-    $('#btn-daftar-input-diagnosis-keluarga').on('click', function() {
-        $('#modal-daftar-input-diagnosis-keluarga').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-daftar-input-diagnosis-keluarga').on('click', function() {
+            $('#modal-daftar-input-diagnosis-keluarga').modal('show');
+        });
+    </script>
+@endpush

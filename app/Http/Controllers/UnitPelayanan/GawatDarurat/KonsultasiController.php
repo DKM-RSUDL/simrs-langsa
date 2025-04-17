@@ -24,6 +24,7 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class KonsultasiController extends Controller
@@ -133,65 +134,74 @@ class KonsultasiController extends Controller
 
     public function storeKonsultasi($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
-        // Validation
-        $msgErr = [
-            'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
-            'tgl_konsul.required'           => 'Tanggal konsul harus dipilih!',
-            'tgl_konsul.date_format'        => 'Tanggal konsul harus format yang benar!',
-            'jam_konsul.required'           => 'Jam konsul harus dipilih!',
-            'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
-            'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
-            'konsultasi.required'            => 'Konsultasi harus di isi!'
-        ];
+        DB::beginTransaction();
 
-        $request->validate([
-            'dokter_pengirim'       => 'required',
-            'dokter_tujuan'         => 'required',
-            'tgl_konsul'            => 'required|date_format:Y-m-d',
-            'jam_konsul'            => 'required|date_format:H:i',
-            'konsultasi'            => 'required',
-        ], $msgErr);
+        try {
+            // Validation
+            $msgErr = [
+                'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
+                'tgl_konsul.required'           => 'Tanggal konsul harus dipilih!',
+                'tgl_konsul.date_format'        => 'Tanggal konsul harus format yang benar!',
+                'jam_konsul.required'           => 'Jam konsul harus dipilih!',
+                'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
+                'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
+                'konsultasi.required'            => 'Konsultasi harus di isi!'
+            ];
 
-
-        // get kunjungan
-        $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', 3)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
-            ->first();
+            $request->validate([
+                'dokter_pengirim'       => 'required',
+                'dokter_tujuan'         => 'required',
+                'tgl_konsul'            => 'required|date_format:Y-m-d',
+                'jam_konsul'            => 'required|date_format:H:i',
+                'konsultasi'            => 'required',
+            ], $msgErr);
 
 
-        if (empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
+            // get kunjungan
+            $kunjungan = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->where('kunjungan.kd_unit', 3)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
 
 
-        // store konsultasi
-        $dataKonsul = [
-            'kd_pasien'         => $kd_pasien,
-            'kd_unit'           => 3,
-            'tgl_masuk'         => $tgl_masuk,
-            'urut_masuk'        => $urut_masuk,
-            'kd_dokter'         => $request->dokter_pengirim,
-            'kd_dokter_tujuan'  => $request->dokter_tujuan,
-            'tgl_konsul'        => $request->tgl_konsul,
-            'jam_konsul'        => $request->jam_konsul,
-            'subjective'        => $request->subjective,
-            'background'        => $request->background,
-            'assesment'         => $request->assesment,
-            'recomendation'     => $request->recomendation,
-            'konsultasi'        => $request->konsultasi,
-            'instruksi'         => $request->instruksi,
-            'user_create'       => Auth::id()
-        ];
+            if (empty($kunjungan)) return back()->with('error', 'Kunjungan gagal terdeteksi sistem!');
 
-        KonsultasiIGD::create($dataKonsul);
-        return back()->with('success', 'Konsultasi berhasil di tambah!');
+
+            // store konsultasi
+            $dataKonsul = [
+                'kd_pasien'         => $kd_pasien,
+                'kd_unit'           => 3,
+                'tgl_masuk'         => $tgl_masuk,
+                'urut_masuk'        => $urut_masuk,
+                'kd_dokter'         => $request->dokter_pengirim,
+                'kd_dokter_tujuan'  => $request->dokter_tujuan,
+                'tgl_konsul'        => $request->tgl_konsul,
+                'jam_konsul'        => $request->jam_konsul,
+                'subjective'        => $request->subjective,
+                'background'        => $request->background,
+                'assesment'         => $request->assesment,
+                'recomendation'     => $request->recomendation,
+                'konsultasi'        => $request->konsultasi,
+                'instruksi'         => $request->instruksi,
+                'user_create'       => Auth::id()
+            ];
+
+            KonsultasiIGD::create($dataKonsul);
+
+            DB::commit();
+            return back()->with('success', 'Konsultasi berhasil di tambah!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function getKonsulAjax($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -226,50 +236,59 @@ class KonsultasiController extends Controller
 
     public function updateKonsultasi($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
+
+        try {
+
+            // Validation
+            $msgErr = [
+                'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
+                'tgl_konsul.required'           => 'Tanggal konsul harus dipilih!',
+                'tgl_konsul.date_format'        => 'Tanggal konsul harus format yang benar!',
+                'jam_konsul.required'           => 'Jam konsul harus dipilih!',
+                'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
+                'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
+                'konsultasi.required'            => 'Konsultasi harus di isi!'
+            ];
+
+            $request->validate([
+                'id_konsul'             => 'required',
+                'dokter_pengirim'       => 'required',
+                'dokter_tujuan'         => 'required',
+                'tgl_konsul'            => 'required|date_format:Y-m-d',
+                'jam_konsul'            => 'required',
+                'konsultasi'            => 'required',
+            ], $msgErr);
 
 
-        // Validation
-        $msgErr = [
-            'dokter_pengirim.required'      => 'Dokter pengirim harus dipilih!',
-            'tgl_konsul.required'           => 'Tanggal konsul harus dipilih!',
-            'tgl_konsul.date_format'        => 'Tanggal konsul harus format yang benar!',
-            'jam_konsul.required'           => 'Jam konsul harus dipilih!',
-            'jam_konsul.date_format'        => 'Jam konsul harus format yang benar!',
-            'dokter_tujuan.required'        => 'Dokter tujuan harus dipilih!',
-            'konsultasi.required'            => 'Konsultasi harus di isi!'
-        ];
+            // update konsul
+            KonsultasiIGD::where('id', $request->id_konsul)
+                ->update([
+                    'kd_dokter'         => $request->dokter_pengirim,
+                    'kd_dokter_tujuan'  => $request->dokter_tujuan,
+                    'tgl_konsul'        => $request->tgl_konsul,
+                    'jam_konsul'        => $request->jam_konsul,
+                    'subjective'        => $request->subjective,
+                    'background'        => $request->background,
+                    'assesment'         => $request->assesment,
+                    'recomendation'     => $request->recomendation,
+                    'konsultasi'        => $request->konsultasi,
+                    'instruksi'         => $request->instruksi,
+                    'user_edit'       => Auth::id()
+                ]);
 
-        $request->validate([
-            'id_konsul'             => 'required',
-            'dokter_pengirim'       => 'required',
-            'dokter_tujuan'         => 'required',
-            'tgl_konsul'            => 'required|date_format:Y-m-d',
-            'jam_konsul'            => 'required',
-            'konsultasi'            => 'required',
-        ], $msgErr);
-
-
-        // update konsul
-        KonsultasiIGD::where('id', $request->id_konsul)
-            ->update([
-                'kd_dokter'         => $request->dokter_pengirim,
-                'kd_dokter_tujuan'  => $request->dokter_tujuan,
-                'tgl_konsul'        => $request->tgl_konsul,
-                'jam_konsul'        => $request->jam_konsul,
-                'subjective'        => $request->subjective,
-                'background'        => $request->background,
-                'assesment'         => $request->assesment,
-                'recomendation'     => $request->recomendation,
-                'konsultasi'        => $request->konsultasi,
-                'instruksi'         => $request->instruksi,
-                'user_edit'       => Auth::id()
-            ]);
-
-        return back()->with('success', 'Konsultasi berhasil di ubah');
+            DB::commit();
+            return back()->with('success', 'Konsultasi berhasil di ubah');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function deleteKonsultasi($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
+
         try {
             // get konsultasi
             $idKonsul = decrypt($request->data_konsul);
@@ -285,12 +304,14 @@ class KonsultasiController extends Controller
 
             $konsultasi->delete();
 
+            DB::commit();
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Konsultasi berhasil dihapus',
                 'data'      => []
             ], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),

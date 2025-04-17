@@ -197,6 +197,8 @@ class ResumeController extends Controller
     // Controller
     public function store(Request $request, $kd_pasien, $tgl_masuk)
     {
+        DB::beginTransaction();
+
         try {
             // Validate request
             $validated = $request->validate([
@@ -231,11 +233,14 @@ class ResumeController extends Controller
                 ], 200);
             }
 
+            DB::commit();
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menyimpan data konsultasi'
             ], 500);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -245,115 +250,127 @@ class ResumeController extends Controller
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'anamnesis' => 'required',
-            'pemeriksaan_penunjang' => 'required',
-            'diagnosis' => 'required|json',
-            'icd_10' => 'required|json',
-            'icd_9' => 'required|json',
-            'alergi' => 'nullable|json',
+        DB::beginTransaction();
 
-            // RmeResumeDtl
-            'tindak_lanjut_code' => 'required|string',
-            'tindak_lanjut_name' => 'required|string',
-            'tgl_kontrol_ulang' => 'nullable|string',
-            'rs_rujuk' => 'nullable|string',
-            'alasan_rujuk' => 'nullable|string',
-            'transportasi_rujuk' => 'nullable|string',
-            'unit_rujuk_internal' => 'nullable|string',
-            'unit_rawat_inap' => 'nullable|string',
-            'tgl_rajal' => 'nullable|string',
-            'unit_rajal' => 'nullable|string',
-            'alasan_menolak_inap' => 'nullable|string',
-            'tgl_meninggal' => 'nullable|string',
-            'jam_meninggal' => 'nullable|string',
-            'tgl_meninggal_doa' => 'nullable|string',
-            'jam_meninggal_doa' => 'nullable|string',
-        ]);
+        try {
 
-        if ($validator->fails()) {
+            $validator = Validator::make($request->all(), [
+                'anamnesis' => 'required',
+                'pemeriksaan_penunjang' => 'required',
+                'diagnosis' => 'required|json',
+                'icd_10' => 'required|json',
+                'icd_9' => 'required|json',
+                'alergi' => 'nullable|json',
+
+                // RmeResumeDtl
+                'tindak_lanjut_code' => 'required|string',
+                'tindak_lanjut_name' => 'required|string',
+                'tgl_kontrol_ulang' => 'nullable|string',
+                'rs_rujuk' => 'nullable|string',
+                'alasan_rujuk' => 'nullable|string',
+                'transportasi_rujuk' => 'nullable|string',
+                'unit_rujuk_internal' => 'nullable|string',
+                'unit_rawat_inap' => 'nullable|string',
+                'tgl_rajal' => 'nullable|string',
+                'unit_rajal' => 'nullable|string',
+                'alasan_menolak_inap' => 'nullable|string',
+                'tgl_meninggal' => 'nullable|string',
+                'jam_meninggal' => 'nullable|string',
+                'tgl_meninggal_doa' => 'nullable|string',
+                'jam_meninggal_doa' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $data = RMEResume::where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->findOrFail($id);
+
+            // newline
+            $cleanArray = function ($array) {
+                return array_map(function ($item) {
+                    return trim(preg_replace('/\s+/', ' ', $item));
+                }, $array);
+            };
+
+            // Data baru
+            $newDiagnosis = json_decode($request->diagnosis, true);
+            $newIcd10 = json_decode($request->icd_10, true);
+            $newIcd9 = json_decode($request->icd_9, true);
+            $newAlergi = json_decode($request->alergi, true);
+
+            // Bersihkan data newline
+            $newDiagnosis = $cleanArray($newDiagnosis);
+            $newIcd10 = $cleanArray($newIcd10);
+            $newIcd9 = $cleanArray($newIcd9);
+            $newAlergi = $cleanArray($newAlergi);
+
+            $data->update([
+                'anamnesis' => $request->anamnesis,
+                'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
+                'diagnosis' => $newDiagnosis,
+                'icd_10' => $newIcd10,
+                'icd_9' => $newIcd9,
+                'alergi' => $newAlergi,
+                'anjuran_diet' => $request->anjuran_diet,
+                'anjuran_edukasi' => $request->anjuran_edukasi,
+                // 'status' => 1,
+                'user_validasi' => Auth::id(),
+            ]);
+
+            $resumeDtl = RmeResumeDtl::updateOrCreate(
+                [
+                    'id_resume' => $data->id
+                ],
+                [
+                    'tindak_lanjut_name' => $request->tindak_lanjut_name,
+                    'tindak_lanjut_code' => $request->tindak_lanjut_code,
+                    'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
+                    'rs_rujuk' => $request->rs_rujuk,
+                    'alasan_rujuk' => $request->alasan_rujuk,
+                    'transportasi_rujuk' => $request->transportasi_rujuk,
+                    'unit_rujuk_internal' => $request->unit_rujuk_internal,
+                    'unit_rawat_inap' => $request->unit_rawat_inap,
+                    'tgl_pulang'    => $request->tgl_pulang,
+                    'jam_pulang'    => $request->jam_pulang,
+                    'alasan_pulang'    => $request->alasan_pulang,
+                    'kondisi_pulang'    => $request->kondisi_pulang,
+                    'tgl_rajal'    => $request->tgl_rajal,
+                    'unit_rajal'    => $request->unit_rajal,
+                    'alasan_menolak_inap'    => $request->alasan_menolak_inap,
+                    'tgl_meninggal'    => $request->tgl_meninggal,
+                    'jam_meninggal'    => $request->jam_meninggal,
+                    'tgl_meninggal_doa'    => $request->tgl_meninggal_doa,
+                    'jam_meninggal_doa'    => $request->jam_meninggal_doa,
+                ]
+            );
+
+            DB::commit();
+
             return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+                'success' => true,
+                'message' => 'Data berhasil diperbarui',
+                'data' => [
+                    'resume' => $data,
+                    'resume_detail' => $resumeDtl
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
         }
-
-        $data = RMEResume::where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->findOrFail($id);
-
-        // newline
-        $cleanArray = function ($array) {
-            return array_map(function ($item) {
-                return trim(preg_replace('/\s+/', ' ', $item));
-            }, $array);
-        };
-
-        // Data baru
-        $newDiagnosis = json_decode($request->diagnosis, true);
-        $newIcd10 = json_decode($request->icd_10, true);
-        $newIcd9 = json_decode($request->icd_9, true);
-        $newAlergi = json_decode($request->alergi, true);
-
-        // Bersihkan data newline
-        $newDiagnosis = $cleanArray($newDiagnosis);
-        $newIcd10 = $cleanArray($newIcd10);
-        $newIcd9 = $cleanArray($newIcd9);
-        $newAlergi = $cleanArray($newAlergi);
-
-        $data->update([
-            'anamnesis' => $request->anamnesis,
-            'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
-            'diagnosis' => $newDiagnosis,
-            'icd_10' => $newIcd10,
-            'icd_9' => $newIcd9,
-            'alergi' => $newAlergi,
-            'anjuran_diet' => $request->anjuran_diet,
-            'anjuran_edukasi' => $request->anjuran_edukasi,
-            // 'status' => 1,
-            'user_validasi' => Auth::id(),
-        ]);
-
-        $resumeDtl = RmeResumeDtl::updateOrCreate(
-            [
-                'id_resume' => $data->id
-            ],
-            [
-                'tindak_lanjut_name' => $request->tindak_lanjut_name,
-                'tindak_lanjut_code' => $request->tindak_lanjut_code,
-                'tgl_kontrol_ulang' => $request->tgl_kontrol_ulang,
-                'rs_rujuk' => $request->rs_rujuk,
-                'alasan_rujuk' => $request->alasan_rujuk,
-                'transportasi_rujuk' => $request->transportasi_rujuk,
-                'unit_rujuk_internal' => $request->unit_rujuk_internal,
-                'unit_rawat_inap' => $request->unit_rawat_inap,
-                'tgl_pulang'    => $request->tgl_pulang,
-                'jam_pulang'    => $request->jam_pulang,
-                'alasan_pulang'    => $request->alasan_pulang,
-                'kondisi_pulang'    => $request->kondisi_pulang,
-                'tgl_rajal'    => $request->tgl_rajal,
-                'unit_rajal'    => $request->unit_rajal,
-                'alasan_menolak_inap'    => $request->alasan_menolak_inap,
-                'tgl_meninggal'    => $request->tgl_meninggal,
-                'jam_meninggal'    => $request->jam_meninggal,
-                'tgl_meninggal_doa'    => $request->tgl_meninggal_doa,
-                'jam_meninggal_doa'    => $request->jam_meninggal_doa,
-            ]
-        );
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil diperbarui',
-            'data' => [
-                'resume' => $data,
-                'resume_detail' => $resumeDtl
-            ]
-        ]);
     }
 
 
     public function validasiResume($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
+        DB::beginTransaction();
+
         try {
             $resumeId = decrypt($request->resume_id);
 
@@ -370,12 +387,16 @@ class ResumeController extends Controller
             $resume->status = 1;
             $resume->save();
 
+            DB::commit();
+
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'OK',
                 'data'      => []
             ]);
         } catch (Exception $e) {
+
+            DB::rollBack();
             return response()->json([
                 'status'    => 'error',
                 'message'   => 'Internal server error !',

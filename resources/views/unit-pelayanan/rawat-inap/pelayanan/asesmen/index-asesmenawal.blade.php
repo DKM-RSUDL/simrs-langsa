@@ -246,105 +246,109 @@
 </ul>
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen.create-asesmen')
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all filter elements
-        const startDateInput = document.getElementById('start_date');
-        const endDateInput = document.getElementById('end_date');
-        const searchInput = document.getElementById('searchInput');
-        const asesmenList = document.getElementById('asesmenList');
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all filter elements
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            const searchInput = document.getElementById('searchInput');
+            const asesmenList = document.getElementById('asesmenList');
 
-        // Add event listeners to filter inputs
-        startDateInput.addEventListener('input', filterList);
-        endDateInput.addEventListener('input', filterList);
-        searchInput.addEventListener('input', filterList);
+            // Add event listeners to filter inputs
+            startDateInput.addEventListener('input', filterList);
+            endDateInput.addEventListener('input', filterList);
+            searchInput.addEventListener('input', filterList);
 
-        function filterList() {
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            const search = searchInput.value.toLowerCase();
+            function filterList() {
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+                const search = searchInput.value.toLowerCase();
 
-            // Loop through all items and filter based on criteria
-            Array.from(asesmenList.children).forEach(item => {
-                const itemDate = item.getAttribute('data-date');
-                const itemName = item.getAttribute('data-name').toLowerCase();
+                // Loop through all items and filter based on criteria
+                Array.from(asesmenList.children).forEach(item => {
+                    const itemDate = item.getAttribute('data-date');
+                    const itemName = item.getAttribute('data-name').toLowerCase();
 
-                const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <=
-                    endDate);
-                const searchMatch = itemName.includes(search);
+                    const dateMatch = (!startDate || itemDate >= startDate) && (!endDate || itemDate <=
+                        endDate);
+                    const searchMatch = itemName.includes(search);
 
-                if (dateMatch && searchMatch) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
+                    if (dateMatch && searchMatch) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // untuk dropdown:
+        function toggleDropdown(button) {
+            const menu = button.nextElementSibling;
+            button.classList.toggle('active');
+            menu.classList.toggle('show');
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!button.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                    button.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
                 }
             });
         }
-    });
+    </script>
+@endpush
 
-    // untuk dropdown:
-    function toggleDropdown(button) {
-        const menu = button.nextElementSibling;
-        button.classList.toggle('active');
-        menu.classList.toggle('show');
+@push('css')
+    <style>
+        #asesmenList .list-group-item:nth-child(even) {
+            background-color: #edf7ff;
+        }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function closeDropdown(e) {
-            if (!button.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.remove('show');
-                button.classList.remove('active');
-                document.removeEventListener('click', closeDropdown);
-            }
-        });
-    }
-</script>
+        /* Background putih untuk item ganjil */
+        #asesmenList .list-group-item:nth-child(odd) {
+            background-color: #ffffff;
+        }
 
-<style>
-    #asesmenList .list-group-item:nth-child(even) {
-        background-color: #edf7ff;
-    }
+        /* Efek hover tetap sama untuk konsistensi */
+        #asesmenList .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
 
-    /* Background putih untuk item ganjil */
-    #asesmenList .list-group-item:nth-child(odd) {
-        background-color: #ffffff;
-    }
+        .list-group-item {
+            margin-bottom: 0.2rem;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            transition: all 0.2s;
+        }
 
-    /* Efek hover tetap sama untuk konsistensi */
-    #asesmenList .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
+        .list-group-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
 
-    .list-group-item {
-        margin-bottom: 0.2rem;
-        border-radius: 0.5rem !important;
-        padding: 0.5rem;
-        border: 1px solid #dee2e6;
-        background: white;
-        transition: all 0.2s;
-    }
+        .gap-2 {
+            gap: 0.5rem !important;
+        }
 
-    .list-group-item:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
+        .gap-3 {
+            gap: 1rem !important;
+        }
 
-    .gap-2 {
-        gap: 0.5rem !important;
-    }
+        .gap-4 {
+            gap: 1.5rem !important;
+        }
 
-    .gap-3 {
-        gap: 1rem !important;
-    }
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+        }
 
-    .gap-4 {
-        gap: 1.5rem !important;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 1rem;
-        font-size: 0.875rem;
-    }
-
-    .btn i {
-        font-size: 0.875rem;
-    }
-</style>
+        .btn i {
+            font-size: 0.875rem;
+        }
+    </style>
+@endpush

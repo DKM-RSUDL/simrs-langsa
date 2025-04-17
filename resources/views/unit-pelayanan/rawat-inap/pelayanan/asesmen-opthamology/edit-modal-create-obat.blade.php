@@ -66,133 +66,135 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var obatModal = new bootstrap.Modal(document.getElementById('obatModal'));
-        var obatTable = document.querySelector('#createRiwayatObatTable tbody');
-        var listObat = document.getElementById('listObat');
-        var riwayatObat = [];
-        
-        // Ambil data awal dari hidden input
-        const riwayatObatInput = document.getElementById('riwayatObatData');
-        try {
-            const initialData = riwayatObatInput.value.trim();
-            if (initialData && initialData !== '[]') {
-                riwayatObat = JSON.parse(initialData);
-            }
-        } catch (error) {
-            console.error('Error parsing riwayat obat:', error);
-            riwayatObat = [];
-        }
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var obatModal = new bootstrap.Modal(document.getElementById('obatModal'));
+            var obatTable = document.querySelector('#createRiwayatObatTable tbody');
+            var listObat = document.getElementById('listObat');
+            var riwayatObat = [];
 
-        function updateMainView() {
-            if (riwayatObat.length === 0) {
-                obatTable.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center py-3">
-                            <div class="text-muted">
-                                <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
-                                <p class="mb-0">Belum ada data riwayat obat</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                obatTable.innerHTML = riwayatObat.map((o, index) => `
-                    <tr>
-                        <td>${o.namaObat}</td>
-                        <td>${o.dosis} ${o.satuan}</td>
-                        <td>${o.frekuensi} (${o.keterangan})</td>
-                        <td>
-                            <button class="btn btn-sm btn-link delete-obat" data-index="${index}">
+            // Ambil data awal dari hidden input
+            const riwayatObatInput = document.getElementById('riwayatObatData');
+            try {
+                const initialData = riwayatObatInput.value.trim();
+                if (initialData && initialData !== '[]') {
+                    riwayatObat = JSON.parse(initialData);
+                }
+            } catch (error) {
+                console.error('Error parsing riwayat obat:', error);
+                riwayatObat = [];
+            }
+
+            function updateMainView() {
+                if (riwayatObat.length === 0) {
+                    obatTable.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-3">
+                                <div class="text-muted">
+                                    <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
+                                    <p class="mb-0">Belum ada data riwayat obat</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    obatTable.innerHTML = riwayatObat.map((o, index) => `
+                        <tr>
+                            <td>${o.namaObat}</td>
+                            <td>${o.dosis} ${o.satuan}</td>
+                            <td>${o.frekuensi} (${o.keterangan})</td>
+                            <td>
+                                <button class="btn btn-sm btn-link delete-obat" data-index="${index}">
+                                    <i class="ti-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    // Tambahkan event listener untuk tombol hapus
+                    document.querySelectorAll('.delete-obat').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = this.getAttribute('data-index');
+                            riwayatObat.splice(index, 1);
+                            updateMainView();
+                            riwayatObatInput.value = JSON.stringify(riwayatObat);
+                        });
+                    });
+                }
+            }
+
+            function updateModalView() {
+                if (riwayatObat.length === 0) {
+                    listObat.innerHTML = `
+                        <div class="text-center text-muted p-3">
+                            <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0">Belum ada data riwayat obat</p>
+                        </div>
+                    `;
+                } else {
+                    listObat.innerHTML = riwayatObat.map((o, index) => `
+                        <li class="mb-2">
+                            <span class="fw-bold">${o.namaObat}</span> -
+                            <span class="text-muted">${o.dosis} ${o.satuan}</span>
+                            <span class="badge bg-warning">${o.frekuensi} (${o.keterangan})</span>
+                            <button class="btn btn-sm btn-link p-0 ms-2 delete-obat-modal" data-index="${index}">
                                 <i class="ti-trash text-danger"></i>
                             </button>
-                        </td>
-                    </tr>
-                `).join('');
-                
-                // Tambahkan event listener untuk tombol hapus
-                document.querySelectorAll('.delete-obat').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const index = this.getAttribute('data-index');
-                        riwayatObat.splice(index, 1);
-                        updateMainView();
-                        riwayatObatInput.value = JSON.stringify(riwayatObat);
+                        </li>
+                    `).join('');
+
+                    // Tambahkan event listener untuk tombol hapus di modal
+                    document.querySelectorAll('.delete-obat-modal').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = this.getAttribute('data-index');
+                            riwayatObat.splice(index, 1);
+                            updateModalView();
+                        });
                     });
-                });
+                }
             }
-        }
 
-        function updateModalView() {
-            if (riwayatObat.length === 0) {
-                listObat.innerHTML = `
-                    <div class="text-center text-muted p-3">
-                        <i class="bi bi-exclamation-circle mb-2" style="font-size: 1.5rem;"></i>
-                        <p class="mb-0">Belum ada data riwayat obat</p>
-                    </div>
-                `;
-            } else {
-                listObat.innerHTML = riwayatObat.map((o, index) => `
-                    <li class="mb-2">
-                        <span class="fw-bold">${o.namaObat}</span> - 
-                        <span class="text-muted">${o.dosis} ${o.satuan}</span> 
-                        <span class="badge bg-warning">${o.frekuensi} (${o.keterangan})</span>
-                        <button class="btn btn-sm btn-link p-0 ms-2 delete-obat-modal" data-index="${index}">
-                            <i class="ti-trash text-danger"></i>
-                        </button>
-                    </li>
-                `).join('');
-                
-                // Tambahkan event listener untuk tombol hapus di modal
-                document.querySelectorAll('.delete-obat-modal').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const index = this.getAttribute('data-index');
-                        riwayatObat.splice(index, 1);
-                        updateModalView();
-                    });
-                });
-            }
-        }
-
-        document.getElementById('openObatModal').addEventListener('click', function() {
-            updateModalView();
-            obatModal.show();
-        });
-
-        document.getElementById('btnTambahObat').addEventListener('click', function() {
-            var namaObat = document.getElementById('namaObat').value.trim();
-            var frekuensi = document.getElementById('frekuensi').value;
-            var keterangan = document.getElementById('keterangan').value;
-            var dosis = document.getElementById('dosis').value;
-            var satuan = document.getElementById('satuan').value.trim();
-
-            if (namaObat !== '' && satuan !== '') {
-                riwayatObat.push({
-                    namaObat: namaObat,
-                    frekuensi: frekuensi,
-                    keterangan: keterangan,
-                    dosis: dosis,
-                    satuan: satuan
-                });
+            document.getElementById('openObatModal').addEventListener('click', function() {
                 updateModalView();
+                obatModal.show();
+            });
 
-                // Reset form kecuali satuan (default "Tablet")
-                document.getElementById('namaObat').value = '';
-                document.getElementById('frekuensi').value = '3 x 1 hari';
-                document.getElementById('keterangan').value = 'Sesudah Makan';
-                document.getElementById('dosis').value = '1/2';
-            } else {
-                alert('Harap isi Nama Obat dan Satuan');
-            }
-        });
+            document.getElementById('btnTambahObat').addEventListener('click', function() {
+                var namaObat = document.getElementById('namaObat').value.trim();
+                var frekuensi = document.getElementById('frekuensi').value;
+                var keterangan = document.getElementById('keterangan').value;
+                var dosis = document.getElementById('dosis').value;
+                var satuan = document.getElementById('satuan').value.trim();
 
-        document.getElementById('btnSaveObat').addEventListener('click', function() {
+                if (namaObat !== '' && satuan !== '') {
+                    riwayatObat.push({
+                        namaObat: namaObat,
+                        frekuensi: frekuensi,
+                        keterangan: keterangan,
+                        dosis: dosis,
+                        satuan: satuan
+                    });
+                    updateModalView();
+
+                    // Reset form kecuali satuan (default "Tablet")
+                    document.getElementById('namaObat').value = '';
+                    document.getElementById('frekuensi').value = '3 x 1 hari';
+                    document.getElementById('keterangan').value = 'Sesudah Makan';
+                    document.getElementById('dosis').value = '1/2';
+                } else {
+                    alert('Harap isi Nama Obat dan Satuan');
+                }
+            });
+
+            document.getElementById('btnSaveObat').addEventListener('click', function() {
+                updateMainView();
+                document.getElementById('riwayatObatData').value = JSON.stringify(riwayatObat);
+                obatModal.hide();
+            });
+
+            // Initialize the table with existing data on page load
             updateMainView();
-            document.getElementById('riwayatObatData').value = JSON.stringify(riwayatObat);
-            obatModal.hide();
         });
-
-        // Initialize the table with existing data on page load
-        updateMainView();
-    });
-</script>
+    </script>
+@endpush

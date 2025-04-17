@@ -61,166 +61,168 @@
     </div>
 </div>
 
-<script>
-    $('#btn-riwayat-obat').on('click', function() {
-        $('#modal-create-riwayat-obat').modal('show');
-    });
-
-    $(document).ready(function() {
-        // Inisialisasi data dari database jika ada
-        let dataObat = @json($dataResume->riwayat_penggunaan_obat ?? []);
-
-        // Fungsi untuk memperbarui tabel dan hidden input
-        function updateTable() {
-            let tableBody = '';
-            dataObat.forEach((obat, index) => {
-                // Format dosis untuk tampilan
-                const dosisDisplay = `${obat.dosis} ${obat.satuan} ${obat.frekuensi}`;
-
-                tableBody += `
-                <tr>
-                    <td>${obat.namaObat}</td>
-                    <td>${dosisDisplay}</td>
-                    <td>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span>${obat.keterangan}</span>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-link edit-obat" data-index="${index}">
-                                    <i class="bi bi-pencil text-primary"></i>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-link delete-obat" data-index="${index}">
-                                    <i class="bi bi-trash text-danger"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            });
-
-            $('#createRiwayatObatTable tbody').html(tableBody);
-            updateHiddenInput();
-        }
-
-        // Fungsi untuk update hidden input
-        function updateHiddenInput() {
-            $('#riwayatObatData').val(JSON.stringify(dataObat));
-        }
-
-        // Fungsi untuk reset form dengan nilai default
-        function resetForm() {
-            $('#formRiwayatObat')[0].reset();
-            setDefaultValues();
-        }
-
-        // Fungsi untuk set nilai default
-        function setDefaultValues() {
-            $('#dosis').val('1/2');
-            $('#satuan').val('Tablet');
-            $('#frekuensi').val('3 x 1 hari');
-            $('#keterangan').val('Sesudah Makan');
-        }
-
-        // Event handler untuk tombol Tambah Obat
-        $('#btnTambahObat').click(function() {
-            const obat = {
-                namaObat: $('#namaObat').val().trim(),
-                frekuensi: $('#frekuensi').val(),
-                dosis: $('#dosis').val(),
-                satuan: $('#satuan').val(),
-                keterangan: $('#keterangan').val()
-            };
-
-            if (!obat.namaObat) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Nama obat harus diisi!'
-                });
-                return;
-            }
-
-            // Cek duplikasi
-            const isDuplicate = dataObat.some(item =>
-                item.namaObat.toLowerCase() === obat.namaObat.toLowerCase() &&
-                item.dosis === obat.dosis &&
-                item.satuan === obat.satuan
-            );
-
-            if (isDuplicate) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Perhatian',
-                    text: 'Obat dengan dosis yang sama sudah ada dalam daftar!'
-                });
-                return;
-            }
-
-            dataObat.push(obat);
-            updateTable();
-            $('#modal-create-riwayat-obat').modal('hide');
-            resetForm();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: 'Data obat berhasil ditambahkan',
-                timer: 1500,
-                showConfirmButton: false
-            });
-        });
-
-        // Event handler untuk tombol Edit
-        $(document).on('click', '.edit-obat', function() {
-            const index = $(this).data('index');
-            const obat = dataObat[index];
-
-            $('#namaObat').val(obat.namaObat);
-            $('#frekuensi').val(obat.frekuensi);
-            $('#dosis').val(obat.dosis);
-            $('#satuan').val(obat.satuan);
-            $('#keterangan').val(obat.keterangan);
-
-            dataObat.splice(index, 1);
+@push('js')
+    <script>
+        $('#btn-riwayat-obat').on('click', function() {
             $('#modal-create-riwayat-obat').modal('show');
         });
 
-        // Event handler untuk tombol Delete
-        $(document).on('click', '.delete-obat', function() {
-            const index = $(this).data('index');
-            const obat = dataObat[index];
+        $(document).ready(function() {
+            // Inisialisasi data dari database jika ada
+            let dataObat = @json($dataResume->riwayat_penggunaan_obat ?? []);
 
-            Swal.fire({
-                title: 'Hapus Obat',
-                text: `Apakah Anda yakin ingin menghapus ${obat.namaObat}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    dataObat.splice(index, 1);
-                    updateTable();
+            // Fungsi untuk memperbarui tabel dan hidden input
+            function updateTable() {
+                let tableBody = '';
+                dataObat.forEach((obat, index) => {
+                    // Format dosis untuk tampilan
+                    const dosisDisplay = `${obat.dosis} ${obat.satuan} ${obat.frekuensi}`;
 
+                    tableBody += `
+                    <tr>
+                        <td>${obat.namaObat}</td>
+                        <td>${dosisDisplay}</td>
+                        <td>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${obat.keterangan}</span>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-link edit-obat" data-index="${index}">
+                                        <i class="bi bi-pencil text-primary"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-link delete-obat" data-index="${index}">
+                                        <i class="bi bi-trash text-danger"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                });
+
+                $('#createRiwayatObatTable tbody').html(tableBody);
+                updateHiddenInput();
+            }
+
+            // Fungsi untuk update hidden input
+            function updateHiddenInput() {
+                $('#riwayatObatData').val(JSON.stringify(dataObat));
+            }
+
+            // Fungsi untuk reset form dengan nilai default
+            function resetForm() {
+                $('#formRiwayatObat')[0].reset();
+                setDefaultValues();
+            }
+
+            // Fungsi untuk set nilai default
+            function setDefaultValues() {
+                $('#dosis').val('1/2');
+                $('#satuan').val('Tablet');
+                $('#frekuensi').val('3 x 1 hari');
+                $('#keterangan').val('Sesudah Makan');
+            }
+
+            // Event handler untuk tombol Tambah Obat
+            $('#btnTambahObat').click(function() {
+                const obat = {
+                    namaObat: $('#namaObat').val().trim(),
+                    frekuensi: $('#frekuensi').val(),
+                    dosis: $('#dosis').val(),
+                    satuan: $('#satuan').val(),
+                    keterangan: $('#keterangan').val()
+                };
+
+                if (!obat.namaObat) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Terhapus!',
-                        text: 'Data obat berhasil dihapus',
-                        timer: 1500,
-                        showConfirmButton: false
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Nama obat harus diisi!'
                     });
+                    return;
                 }
+
+                // Cek duplikasi
+                const isDuplicate = dataObat.some(item =>
+                    item.namaObat.toLowerCase() === obat.namaObat.toLowerCase() &&
+                    item.dosis === obat.dosis &&
+                    item.satuan === obat.satuan
+                );
+
+                if (isDuplicate) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Obat dengan dosis yang sama sudah ada dalam daftar!'
+                    });
+                    return;
+                }
+
+                dataObat.push(obat);
+                updateTable();
+                $('#modal-create-riwayat-obat').modal('hide');
+                resetForm();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Data obat berhasil ditambahkan',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             });
-        });
 
-        // Reset form saat modal ditutup
-        $('#modal-create-riwayat-obat').on('hidden.bs.modal', function() {
-            resetForm();
-        });
+            // Event handler untuk tombol Edit
+            $(document).on('click', '.edit-obat', function() {
+                const index = $(this).data('index');
+                const obat = dataObat[index];
 
-        // Inisialisasi tampilan awal
-        updateTable();
-    });
-</script>
+                $('#namaObat').val(obat.namaObat);
+                $('#frekuensi').val(obat.frekuensi);
+                $('#dosis').val(obat.dosis);
+                $('#satuan').val(obat.satuan);
+                $('#keterangan').val(obat.keterangan);
+
+                dataObat.splice(index, 1);
+                $('#modal-create-riwayat-obat').modal('show');
+            });
+
+            // Event handler untuk tombol Delete
+            $(document).on('click', '.delete-obat', function() {
+                const index = $(this).data('index');
+                const obat = dataObat[index];
+
+                Swal.fire({
+                    title: 'Hapus Obat',
+                    text: `Apakah Anda yakin ingin menghapus ${obat.namaObat}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        dataObat.splice(index, 1);
+                        updateTable();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: 'Data obat berhasil dihapus',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
+            // Reset form saat modal ditutup
+            $('#modal-create-riwayat-obat').on('hidden.bs.modal', function() {
+                resetForm();
+            });
+
+            // Inisialisasi tampilan awal
+            updateTable();
+        });
+    </script>
+@endpush

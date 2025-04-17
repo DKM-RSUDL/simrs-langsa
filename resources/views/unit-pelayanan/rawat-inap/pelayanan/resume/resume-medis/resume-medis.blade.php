@@ -90,44 +90,47 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-create')
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-view-resume')
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        // Filter by period
-        $('#SelectOption').change(function() {
-            var periode = $(this).val();
-            var kd_unit = "{{ $dataMedis->kd_unit }}";
-            var kd_pasien = "{{ $dataMedis->kd_pasien }}";
-            var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
-            var urut_masuk = "{{ $dataMedis->urut_masuk }}";
+@push('js')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Filter by period
+            $('#SelectOption').change(function() {
+                var periode = $(this).val();
+                var kd_unit = "{{ $dataMedis->kd_unit }}";
+                var kd_pasien = "{{ $dataMedis->kd_pasien }}";
+                var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
+                var urut_masuk = "{{ $dataMedis->urut_masuk }}";
 
-            var queryString = '?periode=' + periode;
-            window.location.href = "/unit-pelayanan/rawat-inap/unit/" + kd_unit + "/pelayanan/" +
-                kd_pasien + "/" +
-                tgl_masuk + "/" + urut_masuk + "/rawat-inap-resume/" + queryString;
+                var queryString = '?periode=' + periode;
+                window.location.href = "/unit-pelayanan/rawat-inap/unit/" + kd_unit + "/pelayanan/" +
+                    kd_pasien + "/" +
+                    tgl_masuk + "/" + urut_masuk + "/rawat-inap-resume/" + queryString;
+            });
+
+            // Filter by start date and end date
+            $('#filterButton').click(function(e) {
+                e.preventDefault();
+
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+                var kd_unit = "{{ $dataMedis->kd_unit }}";
+                var kd_pasien = "{{ $dataMedis->kd_pasien }}";
+                var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
+                var urut_masuk = "{{ $dataMedis->urut_masuk }}";
+
+                if (!startDate || !endDate) {
+                    alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
+                    return;
+                }
+
+                var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
+                window.location.href = "/unit-pelayanan/rawat-inap/unit/" + kd_unit + "/pelayanan/" +
+                    kd_pasien + "/" +
+                    tgl_masuk + "/" + urut_masuk + "/rawat-inap-resume/" + queryString;
+
+
+            });
         });
+    </script>
+@endpush
 
-        // Filter by start date and end date
-        $('#filterButton').click(function(e) {
-            e.preventDefault();
-
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
-            var kd_unit = "{{ $dataMedis->kd_unit }}";
-            var kd_pasien = "{{ $dataMedis->kd_pasien }}";
-            var tgl_masuk = "{{ \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d') }}";
-            var urut_masuk = "{{ $dataMedis->urut_masuk }}";
-
-            if (!startDate || !endDate) {
-                alert('Silakan pilih tanggal awal dan tanggal akhir terlebih dahulu.');
-                return;
-            }
-
-            var queryString = '?start_date=' + startDate + '&end_date=' + endDate;
-            window.location.href = "/unit-pelayanan/rawat-inap/unit/" + kd_unit + "/pelayanan/" +
-                kd_pasien + "/" +
-                tgl_masuk + "/" + urut_masuk + "/rawat-inap-resume/" + queryString;
-
-
-        });
-    });
-</script>
