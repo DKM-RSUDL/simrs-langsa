@@ -8,6 +8,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
+use App\Models\RmeRekonsiliasiObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class FarmasiController extends Controller
 {
@@ -295,6 +297,84 @@ class FarmasiController extends Controller
             ];
 
             if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+        }
+    }
+
+    public function rekonsiliasiObat($kd_pasien, $tgl_masuk, Request $request)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'nama_obat' => 'required|string|max:255',
+            'frekuensi' => 'required|string|max:255',
+            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'dosis' => 'required|string|max:255',
+            'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
+            'dibawa' => 'required|in:0,1',
+            'perubahanpakai' => 'nullable|string|max:255',
+            'kd_petugas' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            // Konversi tindak_lanjut_dpjp ke nilai numerik
+            $tindakLanjutMap = [
+                'Lanjut aturan pakai sama' => 1,
+                'Lanjut aturan pakai berubah' => 2,
+                'Stop' => 3,
+            ];
+            $tindakLanjutValue = $tindakLanjutMap[$request->tindak_lanjut];
+
+            // Ambil kd_unit dan urut_masuk dari model Kunjungan
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data Kunjungan Tidak Ditemukan');
+            }
+
+
+            // Simpan data ke tabel RmeRekonsiliasiObat
+            $rekonsiliasi = RmeRekonsiliasiObat::create([
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => date('Y-m-d H:i:s', strtotime($tgl_masuk)),
+                'kd_unit' => 3,
+                'urut_masuk' => $dataMedis->urut_masuk,
+                'nama_obat' => $request->nama_obat,
+                'frekuensi_obat' => $request->frekuensi,
+                'keterangan_obat' => $request->keterangan,
+                'dosis_obat' => $request->dosis,
+                'tindak_lanjut_dpjp' => $tindakLanjutValue,
+                'obat_dibawa_pulang' => $request->dibawa,
+                'perubahan_aturan_pakai' => $request->perubahanpakai,
+                'user_created' => $request->kd_petugas,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat berhasil disimpan',
+                'id' => $rekonsiliasi->id,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: ' . $e->getMessage(),
+            ], 500);
         }
     }
     

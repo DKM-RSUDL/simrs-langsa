@@ -671,6 +671,7 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                    Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
                                 });
                             });
                         });

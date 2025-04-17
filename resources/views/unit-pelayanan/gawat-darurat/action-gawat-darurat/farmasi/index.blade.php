@@ -46,6 +46,10 @@
                                     type="button" role="tab" aria-controls="riwayat" aria-selected="false">Riwayat
                                     Penggunaan Obat</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rekonsiliasi-tab" data-bs-toggle="tab" data-bs-target="#rekonsiliasi"
+                                    type="button" role="tab" aria-controls="rekonsiliasi" aria-selected="false">Rekonsiliasi Obat</button>
+                            </li>
                         </ul>
 
                         {{-- Tab Content --}}
@@ -57,6 +61,10 @@
                             <div class="tab-pane fade" id="riwayat" role="tabpanel" aria-labelledby="riwayat-tab">
                                 {{-- TAB 2. buatlah list disini --}}
                                 @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsriwayat')
+                            </div>
+                            <div class="tab-pane fade" id="rekonsiliasi" role="tabpanel" aria-labelledby="rekonsiliasi-tab">
+                                {{-- TAB 3. buatlah list disini --}}
+                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.tabsrekonsiliasi')
                             </div>
                         </div>
                     </div>
@@ -70,6 +78,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
         $(document).ready(function() {
+
+
+            // Simpan tab aktif ke localStorage saat tab berubah
+            $('#myTab .nav-link').on('shown.bs.tab', function (e) {
+                const activeTabId = $(e.target).attr('id'); // Misal: resep-tab, riwayat-tab, rekonsiliasi-tab
+                localStorage.setItem('activeMainTab', activeTabId);
+            });
+
+            // Pulihkan tab aktif saat halaman dimuat
+            const savedTab = localStorage.getItem('activeMainTab');
+            if (savedTab) {
+                $(`#${savedTab}`).tab('show'); // Aktifkan tab yang tersimpan
+            }
 
             // ------------ 1. Variabel Global dan Inisialisasi ------------ //
             let daftarObat = [];
