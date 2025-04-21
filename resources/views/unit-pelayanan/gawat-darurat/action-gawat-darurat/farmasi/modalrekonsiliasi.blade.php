@@ -107,6 +107,12 @@
                     <!-- Hidden Input untuk kd_petugas -->
                     <input type="hidden" name="kd_petugas" value="{{ auth()->user()->id }}">
                 </form>
+                <!-- Overlay loading -->
+                <div id="loadingOverlay" class="d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.8); z-index: 1051;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -172,9 +178,16 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            // Event input untuk pencarian obat
+            // Debounce untuk event input
+            let timeout;
             $(document).on('input', '#cariObatRekon', function() {
+                if ($(this).prop('readonly')) {
+                    $('#obatListRekon').hide();
+                    return;
+                }
+
                 const query = $(this).val().trim();
+                clearTimeout(timeout);
 
                 if (query.length === 0) {
                     $('#obatListRekon').hide().empty();
@@ -183,78 +196,57 @@
                 }
 
                 if (query.length < 2) {
-                    $('#obatListRekon').html(
-                        '<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>')
-                    .show();
+                    $('#obatListRekon').html('<div class="dropdown-item text-muted">Ketik minimal 2 karakter...</div>').show();
                     return;
                 }
 
                 $('#obatListRekon').html(`
-                <div class="dropdown-item text-center py-3">
-                    <div class="spinner-border spinner-border-sm text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div class="dropdown-item text-center py-3">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                </div>
-            `).show();
+                `).show();
 
-                setTimeout(() => {
+                timeout = setTimeout(() => {
                     $.ajax({
                         url: '{{ route('farmasi.searchObat', ['kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk]) }}',
                         method: 'GET',
-                        data: {
-                            term: query
-                        },
+                        data: { term: query },
                         dataType: 'json',
                         success: function(data) {
-                            console.log('Respons searchObat:',
-                            data); // Debugging respons
                             let html = '';
                             if (data && data.length > 0) {
                                 data.forEach(function(obat) {
-                                    if (!obat.id) {
-                                        console.warn('Obat tanpa ID:',
-                                        obat); // Debugging obat tanpa ID
-                                    }
                                     html += `
-                                    <a href="#" class="dropdown-item py-2" 
-                                       data-id="${obat.id || ''}" 
-                                       data-harga="${obat.harga || ''}" 
-                                       data-satuan="${obat.satuan || ''}">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
-                                            <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
-                                        </div>
-                                    </a>`;
+                                        <a href="#" class="dropdown-item py-2" 
+                                        data-id="${obat.id || ''}" 
+                                        data-harga="${obat.harga || ''}" 
+                                        data-satuan="${obat.satuan || ''}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="fw-medium">${obat.text || 'Tidak ada nama'}</div>
+                                                <span class="badge bg-light text-dark">Satuan: ${obat.satuan || 'N/A'}</span>
+                                            </div>
+                                        </a>`;
                                 });
                             } else {
-                                html =
-                                    '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
+                                html = '<div class="dropdown-item text-muted py-2">Tidak ada hasil yang ditemukan</div>';
                             }
-
                             $('#obatListRekon').html(html).show();
                         },
                         error: function(xhr) {
-                            console.error('Error searchObat:', xhr
-                            .responseText); // Debugging error
-                            $('#obatListRekon').html(
-                                '<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>'
-                                ).show();
+                            $('#obatListRekon').html('<div class="dropdown-item text-danger py-2">Terjadi kesalahan saat mencari obat</div>').show();
                         }
                     });
                 }, 300);
             });
 
-            // Event pilih obat
+            // Pilih obat
             $(document).on('click', '#obatListRekon a', function(e) {
                 e.preventDefault();
                 const $this = $(this);
                 const obatId = $this.data('id');
                 const obatName = $this.find('.fw-medium').text();
-
-                console.log('Obat dipilih:', {
-                    id: obatId,
-                    name: obatName
-                }); // Debugging
 
                 if (!obatId) {
                     iziToast.error({
@@ -267,29 +259,28 @@
 
                 $('#cariObatRekon').val(obatName).prop('readonly', true);
                 $('#selectedObatId').val(obatId);
-                $('#obatListRekon').hide();
+                $('#obatListRekon').hide().empty();
                 $('#clearObatRekon').show();
             });
 
-            // Event clear
+            // Clear input
             $(document).on('click', '#clearObatRekon', function() {
                 $('#cariObatRekon').val('').prop('readonly', false).focus();
                 $('#selectedObatId').val('');
-                $('#obatListRekon').hide();
+                $('#obatListRekon').hide().empty();
                 $('#clearObatRekon').hide();
             });
 
             // Klik luar
             $(document).on('click', function(e) {
-                if (!$(e.target).closest('#cariObatRekon, #obatListRekon').length) {
-                    $('#obatListRekon').hide();
+                if (!$(e.target).closest('#cariObatRekon, #obatListRekon, #clearObatRekon').length) {
+                    $('#obatListRekon').hide().empty();
                 }
             });
 
-            // Submit form ketika tombol simpan diklik
+            // Submit form
             $('#btnSaveObat').on('click', function() {
                 const obatId = $('#selectedObatId').val();
-
                 if (!obatId) {
                     iziToast.error({
                         title: 'Error',
@@ -301,18 +292,23 @@
                 }
 
                 if ($('#rekonsiliasiForm')[0].checkValidity()) {
-                    const formData = $('#rekonsiliasiForm').serialize();
-                    console.log('Form data:', formData); // Debugging
+                    const $btn = $(this);
+                    const originalBtnText = $btn.html();
+                    $btn.html(`
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...
+                    `).prop('disabled', true);
+                    // Tampilkan overlay
+                    $('#loadingOverlay').removeClass('d-none');
 
                     $.ajax({
                         url: $('#rekonsiliasiForm').attr('action'),
                         method: 'POST',
-                        data: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
+                        data: $('#rekonsiliasiForm').serialize(),
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         success: function(response) {
-                            console.log('Submit success:', response); // Debugging
+                            $btn.html(originalBtnText).prop('disabled', false);
+                            $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
+
                             if (response.success) {
                                 iziToast.success({
                                     title: 'Sukses',
@@ -322,7 +318,6 @@
                                 $('#tambahRekonsiliasi').modal('hide');
                                 $('#rekonsiliasiForm')[0].reset();
                                 $('#clearObatRekon').click();
-                                // Refresh halaman untuk memperbarui daftar rekonsiliasi
                                 location.reload();
                             } else {
                                 iziToast.error({
@@ -333,11 +328,12 @@
                             }
                         },
                         error: function(xhr) {
-                            console.error('Submit error:', xhr.responseText); // Debugging
+                            $btn.html(originalBtnText).prop('disabled', false);
+                            $('#loadingOverlay').addClass('d-none'); // Sembunyikan overlay
+
                             let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
                             if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = Object.values(xhr.responseJSON.errors).flat()
-                                    .join('<br>');
+                                errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                             } else if (xhr.responseJSON && xhr.responseJSON.message) {
                                 errorMessage = xhr.responseJSON.message;
                             }

@@ -37,6 +37,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatan
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
+use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
@@ -672,6 +673,7 @@ Route::middleware('auth')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                     Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                    Route::delete('/rekonsiliasi-obat-delete', 'rekonsiliasiObatDelete')->name('.rekonsiliasiObatDelete');
                                 });
                             });
                         });
@@ -922,6 +924,32 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+
+                        //CEKLIST KESELAMATAN
+                        Route::prefix('ceklist-keselamatan')->group(function () {
+                            Route::name('.ceklist-keselamatan')->group(function () {
+                                Route::controller(CeklistKeselamatanController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+
+                                    Route::get('/create-signin', 'createSignin')->name('.create-signin');
+                                    Route::post('/store-signin', 'storeSignin')->name('.store-signin');
+                                    Route::get('/edit-signin/{id}', 'editSignin')->name('.edit-signin');
+                                    Route::delete('/destroy-signin/{id}', 'destroySignin')->name('.destroy-signin');
+
+                                    Route::get('/create-timeout', 'createTimeout')->name('.create-timeout');
+                                    Route::post('/store-timeout', 'storeTimeout')->name('.store-timeout');
+                                    Route::get('/edit-timeout/{id}', 'editTimeout')->name('.edit-timeout');
+                                    Route::delete('/destroy-timeout/{id}', 'destroyTimeout')->name('.destroy-timeout');
+
+                                    Route::get('/create-signout', 'createSignout')->name('.create-signout');
+                                    Route::post('/store-signout', 'storeSignout')->name('.store-signout');
+                                    Route::get('/edit-signout/{id}', 'editSignout')->name('.edit-signout');
+                                    Route::delete('/destroy-signout/{id}', 'destroySignout')->name('.destroy-signout');
+                                });
+                            });
+                        });
+
                     });
                 });
             });

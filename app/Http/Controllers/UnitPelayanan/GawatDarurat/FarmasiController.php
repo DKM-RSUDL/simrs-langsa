@@ -47,11 +47,14 @@ class FarmasiController extends Controller
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
 
+        // Ambil data rekonsiliasi obat
+        $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
+
         $dokters = Dokter::all();
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters')
+            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters', 'rekonsiliasiObat')
         );
     }
 
@@ -377,5 +380,37 @@ class FarmasiController extends Controller
             ], 500);
         }
     }
-    
+
+    public function rekonsiliasiObatDelete($kd_pasien, $tgl_masuk, Request $request)
+    {
+
+        try {
+            $rekonsiliasi = RmeRekonsiliasiObat::where('id', $request->id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
+
+            $rekonsiliasi->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat berhasil dihapus',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus rekonsiliasi obat: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function getRekonsiliasi($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        return RmeRekonsiliasiObat::where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', 3)
+            ->where('urut_masuk', $urut_masuk)
+            ->get();
+    }
+
 }
