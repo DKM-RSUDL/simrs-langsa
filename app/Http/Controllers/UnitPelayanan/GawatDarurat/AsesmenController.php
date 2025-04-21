@@ -18,6 +18,7 @@ use App\Models\RmeFaktorPeringan;
 use App\Models\RmeFrekuensiNyeri;
 use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMenjalar;
+use App\Models\RmeRekonsiliasiObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\RmeSpri;
@@ -27,6 +28,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AsesmenController extends Controller
 {
@@ -927,6 +929,7 @@ class AsesmenController extends Controller
             DB::commit();
             return response()->json(['message' => 'Berhasil']);
         } catch (\Exception $e) {
+            DB::rollBack();
             DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
