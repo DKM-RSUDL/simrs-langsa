@@ -921,20 +921,24 @@ Route::middleware('auth')->group(function () {
                             Route::name('.ceklist-keselamatan')->group(function () {
                                 Route::controller(CeklistKeselamatanController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
+                                    Route::get('/print', 'print')->name('.print');
 
                                     Route::get('/create-signin', 'createSignin')->name('.create-signin');
                                     Route::post('/store-signin', 'storeSignin')->name('.store-signin');
                                     Route::get('/edit-signin/{id}', 'editSignin')->name('.edit-signin');
+                                    Route::put('/update-signin/{id}', 'updateSignin')->name('.update-signin');
                                     Route::delete('/destroy-signin/{id}', 'destroySignin')->name('.destroy-signin');
 
                                     Route::get('/create-timeout', 'createTimeout')->name('.create-timeout');
                                     Route::post('/store-timeout', 'storeTimeout')->name('.store-timeout');
                                     Route::get('/edit-timeout/{id}', 'editTimeout')->name('.edit-timeout');
+                                    Route::put('/update-timeout/{id}', 'updateTimeout')->name('.update-timeout');
                                     Route::delete('/destroy-timeout/{id}', 'destroyTimeout')->name('.destroy-timeout');
 
                                     Route::get('/create-signout', 'createSignout')->name('.create-signout');
                                     Route::post('/store-signout', 'storeSignout')->name('.store-signout');
                                     Route::get('/edit-signout/{id}', 'editSignout')->name('.edit-signout');
+                                    Route::put('/update-signout/{id}', 'updateSignout')->name('.update-signout');
                                     Route::delete('/destroy-signout/{id}', 'destroySignout')->name('.destroy-signout');
                                 });
                             });

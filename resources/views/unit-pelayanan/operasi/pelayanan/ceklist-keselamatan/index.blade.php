@@ -6,12 +6,10 @@
             background-color: #edf7ff;
         }
 
-        /* Background putih untuk item ganjil */
         #asesmenList .list-group-item:nth-child(odd) {
             background-color: #ffffff;
         }
 
-        /* Efek hover tetap sama untuk konsistensi */
         #asesmenList .list-group-item:hover {
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
@@ -63,14 +61,13 @@
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
-
                     <div class="card-body">
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="sign-tab" data-bs-toggle="tab" data-bs-target="#sign"
-                                    type="button" role="tab" aria-controls="sign" aria-selected="true">Sebelum Indusk
-                                    Anastesi (SIGN)</button>
+                                    type="button" role="tab" aria-controls="sign" aria-selected="true">Sebelum Induksi
+                                    Anestesi (SIGN)</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="timeout-tab" data-bs-toggle="tab" data-bs-target="#timeout"
@@ -80,15 +77,27 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="signout-tab" data-bs-toggle="tab" data-bs-target="#signout"
                                     type="button" role="tab" aria-controls="signout" aria-selected="false">Sebelum
-                                    Tutup Luka Operasi(SIGN OUT)</button>
+                                    Tutup Luka Operasi (SIGN OUT)</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <!-- Print Button -->
+                                @if ($hasSignIn && $hasTimeout && $hasSignout)
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                            class="btn btn-success btn-sm d-flex align-items-center" target="_blank" type="button">
+                                            <i class="ti-printer me-1"></i> Print
+                                        </a>
+                                    </div>
+                                @endif
                             </li>
                         </ul>
+
+
 
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="sign" role="tabpanel"
                                 aria-labelledby="sign-tab">
-                                {{-- TAB 1. buatlah list disini --}}
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
                                         @if (!$hasSignIn)
@@ -102,7 +111,6 @@
                                                 </a>
                                             </div>
                                         @endif
-
                                     </div>
 
                                     {{-- data --}}
@@ -133,7 +141,7 @@
                                                             </p>
                                                         </div>
                                                         <div>
-                                                            <a href="" class="btn btn-sm btn-warning me-1">
+                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signin', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signIn->id]) }}" class="btn btn-sm btn-warning me-1">
                                                                 <i class="ti-pencil me-1"></i>
                                                             </a>
                                                             <form method="POST"
@@ -231,13 +239,10 @@
                                             </div>
                                         @endif
                                     </div>
-
-
                                 </div>
                             </div>
 
                             <div class="tab-pane fade" id="timeout" role="tabpanel" aria-labelledby="timeout-tab">
-                                {{-- TAB 2. buatlah list disini --}}
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
                                         @if (!$hasTimeout)
@@ -252,7 +257,6 @@
                                                 </a>
                                             </div>
                                         @endif
-
                                     </div>
 
                                     {{-- data --}}
@@ -275,7 +279,7 @@
                                                                 ({{ $dataMedis->kd_pasien }})
                                                             </p>
                                                             <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
-                                                                {{ $timeout->dokterBedah->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                                {{ $timeout->dokterBedah->nama ?? 'Tidak Tersedia' }}
                                                             </p>
                                                             <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
                                                                 Anestesi:
@@ -286,7 +290,7 @@
                                                             </p>
                                                         </div>
                                                         <div>
-                                                            <a href="#" class="btn btn-sm btn-warning me-1">
+                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-timeout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $timeout->id]) }}" class="btn btn-sm btn-warning me-1">
                                                                 <i class="ti-pencil me-1"></i>
                                                             </a>
                                                             <form method="POST"
@@ -392,7 +396,6 @@
                             </div>
 
                             <div class="tab-pane fade" id="signout" role="tabpanel" aria-labelledby="signout-tab">
-                                {{-- TAB 3. buatlah list disini --}}
                                 <div>
                                     <div class="d-flex justify-content-between align-items-center m-3">
                                         @if (!$hasSignout)
@@ -405,7 +408,6 @@
                                                     type="button">
                                                     <i class="ti-plus me-1"></i> Tambah
                                                 </a>
-
                                             </div>
                                         @endif
                                     </div>
@@ -430,7 +432,11 @@
                                                                 ({{ $dataMedis->kd_pasien }})
                                                             </p>
                                                             <p class="mb-1"><i class="ti-medall me-2"></i>Ahli Bedah:
-                                                                {{ $signout->dokterBedah->nama_lengkap ?? 'Tidak Tersedia' }}
+                                                                @if($signout->ahli_bedah && $signout->dokterBedah)
+                                                                    {{ $signout->dokterBedah->nama_lengkap }}
+                                                                @else
+                                                                    Tidak Tersedia (ID: {{ $signout->ahli_bedah ?? 'Kosong' }})
+                                                                @endif
                                                             </p>
                                                             <p class="mb-1"><i class="ti-medall-alt me-2"></i>Dokter
                                                                 Anestesi:
@@ -441,7 +447,7 @@
                                                             </p>
                                                         </div>
                                                         <div>
-                                                            <a href="#" class="btn btn-sm btn-warning me-1">
+                                                            <a href="{{ route('operasi.pelayanan.ceklist-keselamatan.edit-signout', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $signout->id]) }}" class="btn btn-sm btn-warning me-1">
                                                                 <i class="ti-pencil me-1"></i>
                                                             </a>
                                                             <form method="POST"
@@ -516,10 +522,8 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -554,8 +558,7 @@
             // Store the active tab in localStorage when a tab is clicked
             document.querySelectorAll('.nav-tabs .nav-link').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    const tabId = this.id.replace('-tab',
-                    ''); // Extract tab ID (e.g., 'timeout' from 'timeout-tab')
+                    const tabId = this.id.replace('-tab', '');
                     localStorage.setItem('activeTab', tabId);
                 });
             });
