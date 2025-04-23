@@ -9,7 +9,7 @@ class Edukasi extends Model
 {
     use HasFactory;
 
-    protected $table = 'EDUKASI';
+    protected $table = 'RME_EDUKASI';
     public $timestamps = false;
     protected $guarded = ['id'];
 
