@@ -51,7 +51,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <a href="{{ route('rawat-inap.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                <a href="{{ route('rawat-jalan.edukasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                     class="btn btn-primary">
                                     <i class="ti-plus"></i> Tambah
                                 </a>
@@ -108,14 +108,14 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('rawat-inap.edukasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                <a href="{{ route('rawat-jalan.edukasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                     class="btn btn-info btn-sm" title="Detail">
                                                     <i class="ti-eye"></i>
                                                 </a>
-                                                <a href="{{ route('rawat-inap.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                <a href="{{ route('rawat-jalan.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
                                                     <i class="ti-pencil"></i>
                                                 </a>
-                                                <form action="{{ route('rawat-inap.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                <form action="{{ route('rawat-jalan.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                     method="POST" class="delete-form" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')

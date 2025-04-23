@@ -116,7 +116,12 @@
         [
             'icon' => 'info.png',
             'label' => 'Edukasi',
-            'link' => '#',
+            'link' => route('rawat-jalan.edukasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'goal.png',

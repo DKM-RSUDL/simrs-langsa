@@ -14,11 +14,9 @@
             <i class="ti-arrow-left"></i> Kembali
         </a>
 
-        <form id="edukasiForm" method="POST" action="{{ route('rawat-inap.edukasi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}">
+        <form id="edukasiForm" method="POST" action="{{ route('rawat-jalan.edukasi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}">
             @csrf
-            @method('PUT')
-            <input type="hidden" name="kd_unit" value="{{ $dataMedis->kd_unit }}">
-            <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
+            @method('PUT')            
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100 shadow-sm">

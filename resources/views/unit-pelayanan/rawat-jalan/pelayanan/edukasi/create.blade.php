@@ -13,7 +13,7 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-inap.edukasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-jalan.edukasi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
                 @csrf
 
                 <div class="d-flex justify-content-center">
