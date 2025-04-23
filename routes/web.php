@@ -57,6 +57,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
@@ -67,6 +68,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
@@ -228,6 +230,21 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
 
+                            // edukasi
+                            Route::prefix('edukasi')->group(function () {
+                                Route::name('.edukasi')->group(function () {
+                                    Route::controller(RawatJalanEdukasiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                             // Resume
                             Route::prefix('rawat-jalan-resume')->group(function () {
                                 Route::name('.rawat-jalan-resume')->group(function () {
@@ -363,6 +380,21 @@ Route::middleware('auth')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/', 'update')->name('.update');
                                         Route::delete('/', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // edukasi
+                            Route::prefix('edukasi')->group(function () {
+                                Route::name('.edukasi')->group(function () {
+                                    Route::controller(RawatInapEdukasiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
