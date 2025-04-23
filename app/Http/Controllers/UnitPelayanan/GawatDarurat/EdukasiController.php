@@ -1169,4 +1169,66 @@ class EdukasiController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+        try {
+            // Verify Kunjungan exists
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien')
+                        ->on('kunjungan.kd_unit', '=', 't.kd_unit')
+                        ->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi')
+                        ->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->where('kunjungan.urut_masuk', $urut_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                return redirect()->route('edukasi.index', [
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk,
+                ])->with('error', 'Data kunjungan tidak ditemukan.');
+            }
+
+            // Find Edukasi
+            $edukasi = Edukasi::findOrFail($id);
+
+            // Delete related records
+            EdukasiPasien::where('id_edukasi', $edukasi->id)->delete();
+            EdukasiKebutuhanEdukasi::where('id_edukasi', $edukasi->id)->delete();
+            EdukasiKebutuhanEdukasiLanjutan::where('id_edukasi', $edukasi->id)->delete();
+
+            // Delete Edukasi
+            $edukasi->delete();
+
+            DB::commit();
+            return redirect()->route('edukasi.index', [
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('success', 'Data edukasi berhasil dihapus!');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            DB::rollBack();
+            return redirect()->route('edukasi.index', [
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('error', 'Data edukasi tidak ditemukan.');
+        } catch (Exception $e) {
+            DB::rollBack();            
+            return redirect()->route('edukasi.index', [
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ])->with('error', 'Terjadi kesalahan saat menghapus data. Silakan coba lagi.');
+        }
+    }
 }

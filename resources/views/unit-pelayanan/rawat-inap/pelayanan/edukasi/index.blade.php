@@ -115,8 +115,8 @@
                                                 <a href="{{ route('edukasi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
                                                     <i class="ti-pencil"></i>
                                                 </a>
-                                                <form action="{{ route('edukasi.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                    method="POST" class="delete-form" style="display: inline;">
+                                                <form action="" method="POST" style="display: inline;"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus">
@@ -145,31 +145,3 @@
         </div>
     </div>
 @endsection
-
-
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Attach SweetAlert to all delete forms
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: 'Data edukasi ini akan dihapus secara permanen!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-@endpush

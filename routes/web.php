@@ -694,7 +694,7 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/{data}/edit', 'edit')->name('.edit');
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/{data}', 'update')->name('.update');
-                                    Route::delete('/', 'delete')->name('.delete');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
                                 });
                             });
                         });
