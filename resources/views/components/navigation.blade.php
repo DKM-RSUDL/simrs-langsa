@@ -77,11 +77,11 @@
             'label' => 'Farmasi',
             'link' => route('farmasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
         ],
-        // [
-        //     'icon' => 'info.png',
-        //     'label' => 'Edukasi',
-        //     'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
-        // ],
+        [
+            'icon' => 'info.png',
+            'label' => 'Edukasi',
+            'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
+        ],
         // [
         //     'icon' => 'goal.png',
         //     'label' => 'Care Plan',

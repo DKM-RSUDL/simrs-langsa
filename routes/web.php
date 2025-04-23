@@ -684,11 +684,25 @@ Route::middleware('auth')->group(function () {
                             });
                         });
 
+                        // edukasi
+                        Route::prefix('{urut_masuk}/edukasi')->group(function () {
+                            Route::name('edukasi')->group(function () {
+                                Route::controller(GawatDaruratEdukasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                });
+                            });
+                        });
+
                         Route::resource('/', MedisGawatDaruratController::class);
                         // Route::resource('asesmen', GawatDaruratAsesmenController::class);
                         Route::resource('labor', GawatDaruratLaborController::class);
                         Route::post('cetak', [GawatDaruratLaborController::class, 'cetak']);
-                        Route::resource('edukasi', GawatDaruratEdukasiController::class);
                         Route::resource('careplan', GawatDaruratCarePlanController::class);
                         Route::resource('resume', GawatDaruratResumeController::class);
 
