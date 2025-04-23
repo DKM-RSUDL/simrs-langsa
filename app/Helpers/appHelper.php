@@ -250,6 +250,7 @@ if (!function_exists('countAktivePatientRanap')) {
             })
             ->whereNull('kunjungan.tgl_pulang')
             ->whereNull('kunjungan.jam_pulang')
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
             ->count();
 
 
@@ -301,6 +302,7 @@ if (!function_exists('countUnfinishedPatientRajal')) {
         })
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('t.Dilayani', 0)
+            ->whereYear('kunjungan.tgl_masuk', '>=', 2024)
             ->count();
 
         return $result;
