@@ -9,7 +9,7 @@ class EdukasiKebutuhanEdukasiLanjutan extends Model
 {
     use HasFactory;
 
-    protected $table = 'EDUKASI_KEBUTUHAN_EDUKASI_LANJUTAN';
+    protected $table = 'RME_EDUKASI_KEBUTUHAN_EDUKASI_LANJUTAN';
     public $timestamps = false;
     protected $guarded = ['id'];
 }
