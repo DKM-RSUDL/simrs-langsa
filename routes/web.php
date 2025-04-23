@@ -199,8 +199,11 @@ Route::middleware('auth')->group(function () {
                                 Route::name('.farmasi')->group(function () {
                                     Route::controller(FarmasiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::get('/order-obat', 'orderObat')->name('.order-obat');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                        Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
                                     });
                                 });
                             });
@@ -375,9 +378,12 @@ Route::middleware('auth')->group(function () {
                                     Route::controller(RawatInapFarmasiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
+                                        Route::get('/order-obat', 'orderObat')->name('.order-obat');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                         Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
                                         Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
+                                        Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                        Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
                                     });
                                 });
                             });

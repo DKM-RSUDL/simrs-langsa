@@ -13,9 +13,10 @@
 
         <!-- Tombol "Tambah" di Sebelah Kanan -->
         <div class="mt-2">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahResep" type="button" aria-label="Tambah Resep Baru">
+            <a href="{{ route('rawat-jalan.farmasi.order-obat', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+               class="btn btn-primary" aria-label="Tambah Resep Baru">
                 <i class="ti-plus"></i> Tambah
-            </button>
+            </a>
         </div>
 
     </div>
@@ -101,5 +102,3 @@
     </div>
     <div id="pesanKosong" class="alert alert-info d-none">Tidak ada data resep obat untuk hari ini.</div>
 </div>
-
-@include('unit-pelayanan.rawat-jalan.pelayanan.farmasi.modalresep')
