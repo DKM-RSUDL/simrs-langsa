@@ -243,9 +243,15 @@
         $('#addTindakanModal').on('shown.bs.modal', function() {
             let $this = $(this);
 
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            })
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#ppa').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
 
             // Destroy existing Select2 instance before reinitializing
             initSelect2();
@@ -375,9 +381,15 @@
         $('#editTindakanModal').on('shown.bs.modal', function() {
             let $this = $(this);
 
-            $this.find('#ppa').mousedown(function(e) {
-                e.preventDefault();
-            });
+            @cannot('is-admin')
+                @cannot('is-perawat')
+                    @cannot('is-bidan')
+                        $this.find('#ppa').mousedown(function(e) {
+                            e.preventDefault();
+                        });
+                    @endcannot
+                @endcannot
+            @endcannot
             // Destroy existing Select2 instance before reinitializing
             editInitSelect2();
         });

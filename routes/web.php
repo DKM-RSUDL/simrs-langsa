@@ -37,7 +37,9 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatan
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
+use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
+use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
@@ -50,6 +52,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -405,6 +408,8 @@ Route::middleware('auth')->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
+                                        Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
                                     });
                                 });
                             });
@@ -414,6 +419,7 @@ Route::middleware('auth')->group(function () {
                                 Route::name('.rawat-inap-resume')->group(function () {
                                     Route::controller(RawatInapResumeController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::post('/validasi', 'validasiResume')->name('.validasi');
                                         Route::put('/{id}', 'update')->name('.update');
                                     });
                                 });
@@ -482,6 +488,19 @@ Route::middleware('auth')->group(function () {
                                     Route::prefix('keperawatan')->group(function () {
                                         Route::name('.keperawatan')->group(function () {
 
+
+                                            Route::prefix('umum')->group(function () {
+                                                Route::name('.umum')->group(function () {
+                                                    Route::controller(AsesmenKepUmumController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
                                             Route::prefix('anak')->group(function () {
                                                 Route::name('.anak')->group(function () {
                                                     Route::controller(AsesmenKepAnakController::class)->group(function () {
@@ -515,17 +534,6 @@ Route::middleware('auth')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
-                                                    });
-                                                });
-                                            });
-
-
-                                            Route::prefix('perinatology')->group(function () {
-                                                Route::name('.perinatology')->group(function () {
-                                                    Route::controller(AsesmenKepPerinatologyController::class)->group(function () {
-                                                        Route::get('/', 'index')->name('.index');
-                                                        Route::post('/', 'store')->name('.store');
-                                                        Route::put('/', 'update')->name('.update');
                                                     });
                                                 });
                                             });
@@ -686,6 +694,8 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::post('/', 'store')->name('.store');
                                     Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                    Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                    Route::delete('/rekonsiliasi-obat-delete', 'rekonsiliasiObatDelete')->name('.rekonsiliasiObatDelete');
                                 });
                             });
                         });
@@ -921,6 +931,22 @@ Route::middleware('auth')->group(function () {
                         });
 
 
+                        //LAPORAN ANASTESI
+                        Route::prefix('laporan-anastesi')->group(function () {
+                            Route::name('.laporan-anastesi')->group(function () {
+                                Route::controller(LaporanAnastesiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                });
+                            });
+                        });
+
+
+
                         //LAPORAN OPERASI
                         Route::prefix('laporan-operasi')->group(function () {
                             Route::name('.laporan-operasi')->group(function () {
@@ -934,6 +960,32 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+
+
+                        //CEKLIST KESELAMATAN
+                        Route::prefix('ceklist-keselamatan')->group(function () {
+                            Route::name('.ceklist-keselamatan')->group(function () {
+                                Route::controller(CeklistKeselamatanController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+
+                                    Route::get('/create-signin', 'createSignin')->name('.create-signin');
+                                    Route::post('/store-signin', 'storeSignin')->name('.store-signin');
+                                    Route::get('/edit-signin/{id}', 'editSignin')->name('.edit-signin');
+                                    Route::delete('/destroy-signin/{id}', 'destroySignin')->name('.destroy-signin');
+
+                                    Route::get('/create-timeout', 'createTimeout')->name('.create-timeout');
+                                    Route::post('/store-timeout', 'storeTimeout')->name('.store-timeout');
+                                    Route::get('/edit-timeout/{id}', 'editTimeout')->name('.edit-timeout');
+                                    Route::delete('/destroy-timeout/{id}', 'destroyTimeout')->name('.destroy-timeout');
+
+                                    Route::get('/create-signout', 'createSignout')->name('.create-signout');
+                                    Route::post('/store-signout', 'storeSignout')->name('.store-signout');
+                                    Route::get('/edit-signout/{id}', 'editSignout')->name('.edit-signout');
+                                    Route::delete('/destroy-signout/{id}', 'destroySignout')->name('.destroy-signout');
+                                });
+                            });
+                        });
+
                     });
                 });
             });

@@ -426,7 +426,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-info"><i class="bi bi-printer"></i>
                     Print</button>
-                <button type="button" class="btn btn-sm btn-primary" id="update">Simpan</button>
+                <button type="button" class="btn btn-sm btn-primary" id="update">Ubah</button>
+                <button type="button" class="btn btn-sm btn-success" id="btnValidate">Validasi</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -443,253 +444,329 @@
 @include('unit-pelayanan.rawat-inap.pelayanan.resume.resume-medis.components.modal-rs-rujuk-bagian')
 
 
-<script type="text/javascript">
-    $('#btn-edit-resume').on('click', function() {
-        $('#modal-edit-resume').modal('show');
-    });
+@push('js')
+    <script type="text/javascript">
+        $('#btn-edit-resume').on('click', function() {
+            $('#modal-edit-resume').modal('show');
+        });
 
-    $('.tindak-lanjut-option').on('click', function(e) {
-        e.preventDefault();
-        $(this).find('input[type="radio"]').prop('checked', true);
-    });
+        $('.tindak-lanjut-option').on('click', function(e) {
+            e.preventDefault();
+            $(this).find('input[type="radio"]').prop('checked', true);
+        });
 
-    $('#update').click(function(e) {
-        e.preventDefault();
+        // validasi
+        $('#btnValidate').click(function(e) {
+            let $this = $(this);
+            let resumeId = "{{ encrypt($dataResume->id) }}";
 
-        if (!validateForm()) {
-            return;
-        }
-
-        // Ambil resume_id, biarkan null jika tidak ada
-        const resume_id = '{{ $dataResume->id ?? null }}';
-
-        // Deklarasi di awal script
-        const previousTglKontrolUlang = '{{ $dataResume->rmeResumeDet->tgl_kontrol_ulang ?? '' }}';
-        const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
-        const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
-        const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
-
-        if (!resume_id) {
             Swal.fire({
-                icon: 'warning',
-                title: 'Perhatian',
-                text: 'Data resume belum tersedia. Silahkan buat resume baru terlebih dahulu.',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+                title: "Konfirmasi",
+                text: "Apakah anda yakin ingin validasi resume ? Resume yang telah divalidasi tidak dapat dirubah kembali",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-        let formData = new FormData();
-
-        formData.append('anamnesis', $('#anamnesis').val().trim());
-        formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
-
-        // const diagnosisArray = $('#diagnoseDisplay').children()
-        //     .map(function() {
-        //         return $(this).find('.fw-bold').text().trim();
-        //     }).get().filter(Boolean);
-
-        // if (diagnosisArray.length === 0) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error',
-        //         text: 'Minimal satu diagnosis harus diisi'
-        //     });
-        //     return;
-        // }
-        // formData.append('diagnosis', JSON.stringify(diagnosisArray));
-        // kode baru
-        if (dataDiagnosis.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Minimal satu diagnosis harus diisi'
-            });
-            return;
-        }
-        console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
-        formData.append('diagnosis', JSON.stringify(dataDiagnosis));
-
-        // Ambil data ICD
-        const icd10Array = $('#icdList').children()
-            .map(function() {
-                return $(this).text().trim().split(' ')[0];
-            }).get().filter(Boolean);
-        // if (icd10Array.length === 0) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error',
-        //         text: 'Minimal satu ICD 10 harus diisi'
-        //     });
-        //     return;
-        // }
-        formData.append('icd_10', JSON.stringify(icd10Array));
-
-        const icd9Array = $('#icd9List').children()
-            .map(function() {
-                return $(this).text().trim().split(' ')[0];
-            }).get().filter(Boolean);
-        // if (icd9Array.length === 0) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error',
-        //         text: 'Minimal satu ICD 9 harus diisi'
-        //     });
-        //     return;
-        // }
-        formData.append('icd_9', JSON.stringify(icd9Array));
-
-        // Get control ulang tgl
-        const ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
-        formData.append('tgl_kontrol_ulang', ControlUlangTgl);
-
-        // Get Rujuk RS lain bagian
-        const RujukRSBagian = $('#selected-rs-info').text().trim();
-        let rs_rujuk_bagian, rs_rujuk;
-        if (RujukRSBagian) {
-            const parts = RujukRSBagian.split(' - ');
-            rs_rujuk_bagian = parts[0].trim() || previousRsRujukBagian;
-            rs_rujuk = parts.length > 1 ? parts[1].trim() || previousRsRujuk : previousRsRujuk;
-        } else {
-            rs_rujuk_bagian = previousRsRujukBagian;
-            rs_rujuk = previousRsRujuk;
-        }
-        formData.append('rs_rujuk_bagian', rs_rujuk_bagian);
-        formData.append('rs_rujuk', rs_rujuk);
-
-        // Ambil ID unit dari atribut data-unit-id
-        const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
-        console.log('Sending unit_rujuk_internal:', unitId);
-        formData.append('unit_rujuk_internal', unitId);
-
-        // Get Alergi
-        const Alergirray = $('#list-alergi').children()
-            .map(function() {
-                return $(this).text();
-            }).get().filter(Boolean);
-        formData.append('alergi', JSON.stringify(Alergirray));
-
-        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
-        formData.append('tindak_lanjut_name', tindakLanjutElement.val());
-        formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
-
-        formData.append('_method', 'PUT');
-
-        // Build URL
-        const url =
-            `{{ route('rawat-inap.rawat-inap-resume.update', [
-                'kd_unit' => $dataMedis->kd_unit,
-                'kd_pasien' => $dataMedis->kd_pasien,
-                'tgl_masuk' => $dataMedis->tgl_masuk,
-                'urut_masuk' => $dataMedis->urut_masuk,
-                'id' => ':id',
-            ]) }}`
-            .replace(':id', resume_id);
-
-        // Show konfirmasi
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Apakah Anda yakin ingin validasi data resume ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Validasi',
-            cancelButtonText: 'Batal',
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return new Promise((resolve, reject) => {
                     $.ajax({
-                            url: url,
-                            type: "POST",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content')
+                        type: "post",
+                        url: "{{ route('rawat-inap.rawat-inap-resume.validasi', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            resume_id: resumeId
+                        },
+                        dataType: "json",
+                        beforeSend: function() {
+                            $this.html(
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                            );
+                            $this.prop('disabled', true);
+                        },
+                        success: function(res) {
+                            let status = res.status;
+                            let msg = res.message;
+
+                            if (status == 'error') {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: msg,
+                                    icon: "error",
+                                    allowOutsideClick: false
+                                });
+
+                                return false;
                             }
-                        })
-                        .done(response => resolve(response))
-                        .fail(xhr => reject(xhr));
+
+                            Swal.fire({
+                                title: "Success",
+                                text: 'Resume berhasil di validasi !',
+                                icon: "success",
+                                allowOutsideClick: false
+                            });
+
+                            window.location.reload();
+                        },
+                        complete: function() {
+                            $this.html('Validasi');
+                            $this.prop('disabled', false);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Internal Server Error !",
+                                icon: "error"
+                            });
+                        }
+                    });
+
+                }
+            });
+
+        });
+
+        // ubah
+        $('#update').click(function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            // Ambil resume_id, biarkan null jika tidak ada
+            const resume_id = '{{ $dataResume->id ?? null }}';
+
+            // Deklarasi di awal script
+            const previousTglKontrolUlang = '{{ $dataResume->rmeResumeDet->tgl_kontrol_ulang ?? '' }}';
+            const previousRsRujukBagian = '{{ $dataResume->rmeResumeDet->rs_rujuk_bagian ?? '' }}';
+            const previousRsRujuk = '{{ $dataResume->rmeResumeDet->rs_rujuk ?? '' }}';
+            const previousUnitRujukInternal = '{{ $dataResume->rmeResumeDet->unit_rujuk_internal ?? '' }}';
+
+            if (!resume_id) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: 'Data resume belum tersedia. Silahkan buat resume baru terlebih dahulu.',
+                    confirmButtonText: 'OK'
                 });
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const response = result.value;
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukses',
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 3000
-                    }).then(() => {
-                        $('#modal-edit-resume').modal('hide');
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: response.message || 'Terjadi kesalahan saat memperbarui data.'
-                    });
-                }
+                return;
             }
-        }).catch(error => {
-            console.error('Error details:', error);
-            let errorMessage = "Terjadi kesalahan saat memperbarui data.";
-            if (error.responseJSON) {
-                if (error.responseJSON.errors) {
-                    errorMessage = Object.values(error.responseJSON.errors).join("\n");
-                } else if (error.responseJSON.message) {
-                    errorMessage = error.responseJSON.message;
-                }
+
+            let formData = new FormData();
+
+            formData.append('anamnesis', $('#anamnesis').val().trim());
+            formData.append('pemeriksaan_penunjang', $('#pemeriksaan_penunjang').val().trim());
+
+            // const diagnosisArray = $('#diagnoseDisplay').children()
+            //     .map(function() {
+            //         return $(this).find('.fw-bold').text().trim();
+            //     }).get().filter(Boolean);
+
+            // if (diagnosisArray.length === 0) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: 'Minimal satu diagnosis harus diisi'
+            //     });
+            //     return;
+            // }
+            // formData.append('diagnosis', JSON.stringify(diagnosisArray));
+            // kode baru
+            if (dataDiagnosis.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Minimal satu diagnosis harus diisi'
+                });
+                return;
             }
+            console.log('Data diagnosis yang akan disimpan:', dataDiagnosis);
+            formData.append('diagnosis', JSON.stringify(dataDiagnosis));
+
+            // Ambil data ICD
+            const icd10Array = $('#icdList').children()
+                .map(function() {
+                    return $(this).text().trim().split(' ')[0];
+                }).get().filter(Boolean);
+            // if (icd10Array.length === 0) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: 'Minimal satu ICD 10 harus diisi'
+            //     });
+            //     return;
+            // }
+            formData.append('icd_10', JSON.stringify(icd10Array));
+
+            const icd9Array = $('#icd9List').children()
+                .map(function() {
+                    return $(this).text().trim().split(' ')[0];
+                }).get().filter(Boolean);
+            // if (icd9Array.length === 0) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: 'Minimal satu ICD 9 harus diisi'
+            //     });
+            //     return;
+            // }
+            formData.append('icd_9', JSON.stringify(icd9Array));
+
+            // Get control ulang tgl
+            const ControlUlangTgl = $('#selected-date').text().trim() || previousTglKontrolUlang;
+            formData.append('tgl_kontrol_ulang', ControlUlangTgl);
+
+            // Get Rujuk RS lain bagian
+            const RujukRSBagian = $('#selected-rs-info').text().trim();
+            let rs_rujuk_bagian, rs_rujuk;
+            if (RujukRSBagian) {
+                const parts = RujukRSBagian.split(' - ');
+                rs_rujuk_bagian = parts[0].trim() || previousRsRujukBagian;
+                rs_rujuk = parts.length > 1 ? parts[1].trim() || previousRsRujuk : previousRsRujuk;
+            } else {
+                rs_rujuk_bagian = previousRsRujukBagian;
+                rs_rujuk = previousRsRujuk;
+            }
+            formData.append('rs_rujuk_bagian', rs_rujuk_bagian);
+            formData.append('rs_rujuk', rs_rujuk);
+
+            // Ambil ID unit dari atribut data-unit-id
+            const unitId = $('#selected-unit-tujuan').attr('data-unit-id') || previousUnitRujukInternal;
+            console.log('Sending unit_rujuk_internal:', unitId);
+            formData.append('unit_rujuk_internal', unitId);
+
+            // Get Alergi
+            const Alergirray = $('#list-alergi').children()
+                .map(function() {
+                    return $(this).text();
+                }).get().filter(Boolean);
+            formData.append('alergi', JSON.stringify(Alergirray));
+
+            const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+            formData.append('tindak_lanjut_name', tindakLanjutElement.val());
+            formData.append('tindak_lanjut_code', tindakLanjutElement.data('code'));
+
+            formData.append('_method', 'PUT');
+
+            // Build URL
+            const url =
+                `{{ route('rawat-inap.rawat-inap-resume.update', [
+                    'kd_unit' => $dataMedis->kd_unit,
+                    'kd_pasien' => $dataMedis->kd_pasien,
+                    'tgl_masuk' => $dataMedis->tgl_masuk,
+                    'urut_masuk' => $dataMedis->urut_masuk,
+                    'id' => ':id',
+                ]) }}`
+                .replace(':id', resume_id);
+
+            // Show konfirmasi
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: errorMessage
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin validasi data resume ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Validasi',
+                cancelButtonText: 'Batal',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                                url: url,
+                                type: "POST",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                }
+                            })
+                            .done(response => resolve(response))
+                            .fail(xhr => reject(xhr));
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const response = result.value;
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 3000
+                        }).then(() => {
+                            $('#modal-edit-resume').modal('hide');
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.message || 'Terjadi kesalahan saat memperbarui data.'
+                        });
+                    }
+                }
+            }).catch(error => {
+                console.error('Error details:', error);
+                let errorMessage = "Terjadi kesalahan saat memperbarui data.";
+                if (error.responseJSON) {
+                    if (error.responseJSON.errors) {
+                        errorMessage = Object.values(error.responseJSON.errors).join("\n");
+                    } else if (error.responseJSON.message) {
+                        errorMessage = error.responseJSON.message;
+                    }
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
             });
         });
-    });
 
-    // Form validation function
-    function validateForm() {
+        // Form validation function
+        function validateForm() {
 
-        const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
-        if (!tindakLanjutElement.length) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validasi Error',
-                text: 'Tindak lanjut wajib dipilih'
-            });
-            return false;
-        }
-
-        const requiredFields = {
-            'anamnesis': 'Anamnesis',
-            'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
-        };
-        let isValid = true;
-
-        // Check required fields
-        for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
-            const value = $(`#${fieldId}`).val().trim();
-            if (!value) {
+            const tindakLanjutElement = $('input[name="tindak_lanjut_name"]:checked');
+            if (!tindakLanjutElement.length) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Validasi Error',
-                    text: `${fieldName} wajib diisi`
+                    text: 'Tindak lanjut wajib dipilih'
                 });
                 return false;
             }
+
+            const requiredFields = {
+                'anamnesis': 'Anamnesis',
+                'pemeriksaan_penunjang': 'Pemeriksaan Penunjang'
+            };
+            let isValid = true;
+
+            // Check required fields
+            for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+                const value = $(`#${fieldId}`).val().trim();
+                if (!value) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validasi Error',
+                        text: `${fieldName} wajib diisi`
+                    });
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        return true;
-    }
-
-    // Helper function
-    function sanitizeInput(input) {
-        return input ? input.trim() : '';
-    }
-</script>
+        // Helper function
+        function sanitizeInput(input) {
+            return input ? input.trim() : '';
+        }
+    </script>
+@endpush

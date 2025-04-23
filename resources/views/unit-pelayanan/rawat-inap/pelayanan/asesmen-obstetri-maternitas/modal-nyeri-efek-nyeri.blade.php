@@ -128,435 +128,439 @@
     </div>
 </div>
 
-<style>
-.selected-items .badge {
-    border-radius: 50px;
-    padding: 8px 16px;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    font-weight: normal;
-    display: inline-flex;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
-}
-
-.selected-items .badge:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.selected-items .badge .badge-remove {
-    margin-left: 8px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-    cursor: pointer;
-}
-
-.selected-items .badge .badge-remove:hover {
-    opacity: 1;
-}
-
-.form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-.card {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.modal-content {
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.form-control:focus, .btn:focus {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    border-color: #86b7fe;
-}
-
-.btn-primary {
-    background-color: #0d6efd;
-}
-
-.btn-outline-danger {
-    color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-    color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.list-group-item {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    transition: background-color 0.2s ease;
-}
-
-.list-group-item:hover {
-    background-color: #f8f9fa;
-}
-
-.form-check-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-</style>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const btnPilihEfekNyeri = document.getElementById('btnPilihEfekNyeri');
-        const modalEfekNyeriElement = document.getElementById('modalEfekNyeri');
-        const efekNyeriLainnya = document.getElementById('efekNyeriLainnya');
-        const efekNyeriLainnyaContainer = document.getElementById('efekNyeriLainnyaContainer');
-        const addMoreLainnyaBtn = document.getElementById('addMoreLainnya');
-
-        if (!modalEfekNyeriElement) {
-            console.error('Modal element not found');
-            return;
+@push('css')
+    <style>
+        .selected-items .badge {
+            border-radius: 50px;
+            padding: 8px 16px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
         }
 
-        let modalEfekNyeri;
-        try {
-            modalEfekNyeri = new bootstrap.Modal(modalEfekNyeriElement);
-        } catch (error) {
-            console.error('Failed to initialize modal:', error);
-            return;
+        .selected-items .badge:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
-        const checkboxEfekNyeri = document.querySelectorAll('.efek-nyeri-checkbox');
-        const btnSimpanEfekNyeri = document.getElementById('btnSimpanEfekNyeri');
-        const efekNyeriDisplay = document.getElementById('efekNyeriDisplay');
-        const efekNyeriInput = document.getElementById('efekNyeriInput');
-        const efekNyeriPilihan = document.getElementById('efekNyeriPilihan');
-
-        if (btnPilihEfekNyeri) {
-            btnPilihEfekNyeri.addEventListener('click', function () {
-                modalEfekNyeri.show();
-            });
-        } else {
-            console.error('Button element not found');
+        .selected-items .badge .badge-remove {
+            margin-left: 8px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            cursor: pointer;
         }
 
-        // Toggle lainnya
-        if (efekNyeriLainnya && efekNyeriLainnyaContainer) {
-            efekNyeriLainnya.addEventListener('change', function () {
-                if (this.checked) {
-                    efekNyeriLainnyaContainer.classList.remove('d-none');
-                    const firstInput = efekNyeriLainnyaContainer.querySelector('.lainnya-input');
-                    if (firstInput) {
-                        setTimeout(() => firstInput.focus(), 100);
-                    }
-                } else {
-                    efekNyeriLainnyaContainer.classList.add('d-none');
-                    document.querySelectorAll('.lainnya-input').forEach(input => {
-                        input.value = '';
-                    });
-                    const lainnyaItems = document.querySelectorAll('.lainnya-item');
-                    for (let i = 1; i < lainnyaItems.length; i++) {
-                        lainnyaItems[i].remove();
-                    }
-                }
-            });
+        .selected-items .badge .badge-remove:hover {
+            opacity: 1;
         }
 
-        // Add lainnya input
-        if (addMoreLainnyaBtn) {
-            addMoreLainnyaBtn.addEventListener('click', function() {
-                const lainnyaItemsContainer = document.querySelector('.lainnya-items');
-                if (!lainnyaItemsContainer) return;
-
-                const newItem = document.createElement('div');
-                newItem.className = 'lainnya-item mb-2';
-                newItem.style.opacity = '0';
-                newItem.style.transform = 'translateY(-10px)';
-                newItem.style.transition = 'all 0.3s ease';
-
-                newItem.innerHTML = `
-                    <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <i class="bi bi-plus-circle text-primary"></i>
-                        </span>
-                        <input type="text" class="form-control lainnya-input"
-                            placeholder="Masukkan efek nyeri lainnya">
-                        <button class="btn btn-outline-danger remove-lainnya" type="button">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                `;
-
-                lainnyaItemsContainer.appendChild(newItem);
-
-                void newItem.offsetWidth;
-
-                newItem.style.opacity = '1';
-                newItem.style.transform = 'translateY(0)';
-
-                const removeBtn = newItem.querySelector('.remove-lainnya');
-                if (removeBtn) {
-                    removeBtn.addEventListener('click', function() {
-                        newItem.style.opacity = '0';
-                        newItem.style.transform = 'translateY(-10px)';
-
-                        setTimeout(() => {
-                            newItem.remove();
-                        }, 300);
-                    });
-                }
-
-                const newInput = newItem.querySelector('.lainnya-input');
-                if (newInput) {
-                    setTimeout(() => newInput.focus(), 100);
-                }
-            });
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
         }
 
-        // Add event listeners to initial remove buttons
-        document.querySelectorAll('.remove-lainnya').forEach(button => {
-            button.addEventListener('click', function() {
-                const item = this.closest('.lainnya-item');
+        .card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
 
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(-10px)';
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-                setTimeout(() => {
-                    item.remove();
-                }, 300);
-            });
-        });
+        .form-control:focus, .btn:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            border-color: #86b7fe;
+        }
 
-        function createBadge(value, isLainnya = false) {
-            let bgColor = isLainnya ? 'bg-info' : 'bg-primary';
-            let icon = '';
+        .btn-primary {
+            background-color: #0d6efd;
+        }
 
-            // Add specific icons based on value
-            if (value === 'Mual/ muntah' || value === 'Muntah') {
-                icon = '<i class="bi bi-emoji-frown me-1"></i>';
-            } else if (value === 'Tidur') {
-                icon = '<i class="bi bi-moon me-1"></i>';
-            } else if (value === 'Nafsu makan') {
-                icon = '<i class="bi bi-cup-hot me-1"></i>';
-            } else if (value === 'Aktivitas') {
-                icon = '<i class="bi bi-person-walking me-1"></i>';
-            } else if (value === 'Emosi') {
-                icon = '<i class="bi bi-emoji-angry me-1"></i>';
-            } else {
-                icon = '<i class="bi bi-tag me-1"></i>';
+        .btn-outline-danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .list-group-item {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .form-check-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnPilihEfekNyeri = document.getElementById('btnPilihEfekNyeri');
+            const modalEfekNyeriElement = document.getElementById('modalEfekNyeri');
+            const efekNyeriLainnya = document.getElementById('efekNyeriLainnya');
+            const efekNyeriLainnyaContainer = document.getElementById('efekNyeriLainnyaContainer');
+            const addMoreLainnyaBtn = document.getElementById('addMoreLainnya');
+
+            if (!modalEfekNyeriElement) {
+                console.error('Modal element not found');
+                return;
             }
 
-            const badge = document.createElement('span');
-            badge.className = `badge ${bgColor} me-2 mb-2`;
-            badge.innerHTML = `${icon}${value} <span class="badge-remove ms-2"><i class="bi bi-x"></i></span>`;
+            let modalEfekNyeri;
+            try {
+                modalEfekNyeri = new bootstrap.Modal(modalEfekNyeriElement);
+            } catch (error) {
+                console.error('Failed to initialize modal:', error);
+                return;
+            }
 
-            // Add click event to remove button
-            const removeBtn = badge.querySelector('.badge-remove');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
+            const checkboxEfekNyeri = document.querySelectorAll('.efek-nyeri-checkbox');
+            const btnSimpanEfekNyeri = document.getElementById('btnSimpanEfekNyeri');
+            const efekNyeriDisplay = document.getElementById('efekNyeriDisplay');
+            const efekNyeriInput = document.getElementById('efekNyeriInput');
+            const efekNyeriPilihan = document.getElementById('efekNyeriPilihan');
 
-                    // Animate removal
-                    badge.style.opacity = '0';
-                    badge.style.transform = 'scale(0.8)';
+            if (btnPilihEfekNyeri) {
+                btnPilihEfekNyeri.addEventListener('click', function () {
+                    modalEfekNyeri.show();
+                });
+            } else {
+                console.error('Button element not found');
+            }
+
+            // Toggle lainnya
+            if (efekNyeriLainnya && efekNyeriLainnyaContainer) {
+                efekNyeriLainnya.addEventListener('change', function () {
+                    if (this.checked) {
+                        efekNyeriLainnyaContainer.classList.remove('d-none');
+                        const firstInput = efekNyeriLainnyaContainer.querySelector('.lainnya-input');
+                        if (firstInput) {
+                            setTimeout(() => firstInput.focus(), 100);
+                        }
+                    } else {
+                        efekNyeriLainnyaContainer.classList.add('d-none');
+                        document.querySelectorAll('.lainnya-input').forEach(input => {
+                            input.value = '';
+                        });
+                        const lainnyaItems = document.querySelectorAll('.lainnya-item');
+                        for (let i = 1; i < lainnyaItems.length; i++) {
+                            lainnyaItems[i].remove();
+                        }
+                    }
+                });
+            }
+
+            // Add lainnya input
+            if (addMoreLainnyaBtn) {
+                addMoreLainnyaBtn.addEventListener('click', function() {
+                    const lainnyaItemsContainer = document.querySelector('.lainnya-items');
+                    if (!lainnyaItemsContainer) return;
+
+                    const newItem = document.createElement('div');
+                    newItem.className = 'lainnya-item mb-2';
+                    newItem.style.opacity = '0';
+                    newItem.style.transform = 'translateY(-10px)';
+                    newItem.style.transition = 'all 0.3s ease';
+
+                    newItem.innerHTML = `
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-plus-circle text-primary"></i>
+                            </span>
+                            <input type="text" class="form-control lainnya-input"
+                                placeholder="Masukkan efek nyeri lainnya">
+                            <button class="btn btn-outline-danger remove-lainnya" type="button">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    lainnyaItemsContainer.appendChild(newItem);
+
+                    void newItem.offsetWidth;
+
+                    newItem.style.opacity = '1';
+                    newItem.style.transform = 'translateY(0)';
+
+                    const removeBtn = newItem.querySelector('.remove-lainnya');
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', function() {
+                            newItem.style.opacity = '0';
+                            newItem.style.transform = 'translateY(-10px)';
+
+                            setTimeout(() => {
+                                newItem.remove();
+                            }, 300);
+                        });
+                    }
+
+                    const newInput = newItem.querySelector('.lainnya-input');
+                    if (newInput) {
+                        setTimeout(() => newInput.focus(), 100);
+                    }
+                });
+            }
+
+            // Add event listeners to initial remove buttons
+            document.querySelectorAll('.remove-lainnya').forEach(button => {
+                button.addEventListener('click', function() {
+                    const item = this.closest('.lainnya-item');
+
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(-10px)';
 
                     setTimeout(() => {
-                        efekNyeriPilihan.removeChild(badge);
+                        item.remove();
+                    }, 300);
+                });
+            });
 
-                        // Update checkbox
-                        if (!isLainnya) {
-                            checkboxEfekNyeri.forEach(function(cb) {
-                                if (cb.value === value) {
-                                    cb.checked = false;
+            function createBadge(value, isLainnya = false) {
+                let bgColor = isLainnya ? 'bg-info' : 'bg-primary';
+                let icon = '';
+
+                // Add specific icons based on value
+                if (value === 'Mual/ muntah' || value === 'Muntah') {
+                    icon = '<i class="bi bi-emoji-frown me-1"></i>';
+                } else if (value === 'Tidur') {
+                    icon = '<i class="bi bi-moon me-1"></i>';
+                } else if (value === 'Nafsu makan') {
+                    icon = '<i class="bi bi-cup-hot me-1"></i>';
+                } else if (value === 'Aktivitas') {
+                    icon = '<i class="bi bi-person-walking me-1"></i>';
+                } else if (value === 'Emosi') {
+                    icon = '<i class="bi bi-emoji-angry me-1"></i>';
+                } else {
+                    icon = '<i class="bi bi-tag me-1"></i>';
+                }
+
+                const badge = document.createElement('span');
+                badge.className = `badge ${bgColor} me-2 mb-2`;
+                badge.innerHTML = `${icon}${value} <span class="badge-remove ms-2"><i class="bi bi-x"></i></span>`;
+
+                // Add click event to remove button
+                const removeBtn = badge.querySelector('.badge-remove');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+
+                        // Animate removal
+                        badge.style.opacity = '0';
+                        badge.style.transform = 'scale(0.8)';
+
+                        setTimeout(() => {
+                            efekNyeriPilihan.removeChild(badge);
+
+                            // Update checkbox
+                            if (!isLainnya) {
+                                checkboxEfekNyeri.forEach(function(cb) {
+                                    if (cb.value === value) {
+                                        cb.checked = false;
+                                    }
+                                });
+                            }
+
+                            updateInputValues();
+                        }, 200);
+                    });
+                }
+
+                // Add animation styles
+                badge.style.transition = 'all 0.3s ease';
+                badge.style.opacity = '0';
+                badge.style.transform = 'scale(0.8)';
+
+                setTimeout(() => {
+                    badge.style.opacity = '1';
+                    badge.style.transform = 'scale(1)';
+                }, 50);
+
+                return badge;
+            }
+
+            // Update input fields based on selected badges
+            function updateInputValues() {
+                const badges = efekNyeriPilihan.querySelectorAll('.badge');
+                const values = [];
+
+                badges.forEach(function(badge) {
+                    const textContent = badge.textContent.trim().replace('×', '').trim();
+                    values.push(textContent);
+                });
+
+                const displayText = values.join(', ');
+                efekNyeriDisplay.value = displayText;
+                efekNyeriInput.value = displayText;
+
+                if (efekNyeriDisplay) {
+                    efekNyeriDisplay.classList.add('border-primary');
+                    setTimeout(() => {
+                        efekNyeriDisplay.classList.remove('border-primary');
+                    }, 500);
+                }
+            }
+
+            // Handle saving selected options with better feedback
+            if (btnSimpanEfekNyeri && efekNyeriPilihan && efekNyeriDisplay && efekNyeriInput) {
+                btnSimpanEfekNyeri.addEventListener('click', function () {
+                    this.innerHTML = '<i class="bi bi-check2-all me-1"></i> Disimpan!';
+                    this.classList.add('btn-success');
+                    this.classList.remove('btn-primary');
+
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="bi bi-check-lg me-1"></i> Simpan Pilihan';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-primary');
+                    }, 1000);
+
+                    const existingBadges = efekNyeriPilihan.querySelectorAll('.badge');
+                    existingBadges.forEach(badge => {
+                        badge.style.opacity = '0';
+                        badge.style.transform = 'scale(0.8)';
+                    });
+
+                    setTimeout(() => {
+                        efekNyeriPilihan.innerHTML = '';
+
+                        checkboxEfekNyeri.forEach(function (checkbox) {
+                            if (checkbox.checked) {
+                                const badge = createBadge(checkbox.value);
+                                efekNyeriPilihan.appendChild(badge);
+                            }
+                        });
+
+                        // Add "lainnya" selections if any
+                        if (efekNyeriLainnya.checked) {
+                            const lainnyaInputs = document.querySelectorAll('.lainnya-input');
+
+                            lainnyaInputs.forEach(function(input) {
+                                if (input.value.trim() !== '') {
+                                    const badge = createBadge(input.value.trim(), true);
+                                    efekNyeriPilihan.appendChild(badge);
                                 }
                             });
                         }
 
                         updateInputValues();
-                    }, 200);
+
+                        modalEfekNyeri.hide();
+                    }, 300);
                 });
             }
 
-            // Add animation styles
-            badge.style.transition = 'all 0.3s ease';
-            badge.style.opacity = '0';
-            badge.style.transform = 'scale(0.8)';
+            // Reset form when modal is hidden (if no selections)
+            if (modalEfekNyeriElement) {
+                modalEfekNyeriElement.addEventListener('hidden.bs.modal', function () {
+                    if (efekNyeriInput && !efekNyeriInput.value) {
+                        checkboxEfekNyeri.forEach(function (checkbox) {
+                            checkbox.checked = false;
+                        });
 
-            setTimeout(() => {
-                badge.style.opacity = '1';
-                badge.style.transform = 'scale(1)';
-            }, 50);
+                        if (efekNyeriLainnya) efekNyeriLainnya.checked = false;
+                        if (efekNyeriLainnyaContainer) efekNyeriLainnyaContainer.classList.add('d-none');
 
-            return badge;
-        }
+                        document.querySelectorAll('.lainnya-input').forEach(input => {
+                            input.value = '';
+                        });
 
-        // Update input fields based on selected badges
-        function updateInputValues() {
-            const badges = efekNyeriPilihan.querySelectorAll('.badge');
-            const values = [];
-
-            badges.forEach(function(badge) {
-                const textContent = badge.textContent.trim().replace('×', '').trim();
-                values.push(textContent);
-            });
-
-            const displayText = values.join(', ');
-            efekNyeriDisplay.value = displayText;
-            efekNyeriInput.value = displayText;
-
-            if (efekNyeriDisplay) {
-                efekNyeriDisplay.classList.add('border-primary');
-                setTimeout(() => {
-                    efekNyeriDisplay.classList.remove('border-primary');
-                }, 500);
-            }
-        }
-
-        // Handle saving selected options with better feedback
-        if (btnSimpanEfekNyeri && efekNyeriPilihan && efekNyeriDisplay && efekNyeriInput) {
-            btnSimpanEfekNyeri.addEventListener('click', function () {
-                this.innerHTML = '<i class="bi bi-check2-all me-1"></i> Disimpan!';
-                this.classList.add('btn-success');
-                this.classList.remove('btn-primary');
-
-                setTimeout(() => {
-                    this.innerHTML = '<i class="bi bi-check-lg me-1"></i> Simpan Pilihan';
-                    this.classList.remove('btn-success');
-                    this.classList.add('btn-primary');
-                }, 1000);
-
-                const existingBadges = efekNyeriPilihan.querySelectorAll('.badge');
-                existingBadges.forEach(badge => {
-                    badge.style.opacity = '0';
-                    badge.style.transform = 'scale(0.8)';
+                        const lainnyaItems = document.querySelectorAll('.lainnya-item');
+                        for (let i = 1; i < lainnyaItems.length; i++) {
+                            lainnyaItems[i].remove();
+                        }
+                    }
                 });
+            }
 
-                setTimeout(() => {
-                    efekNyeriPilihan.innerHTML = '';
+            if (efekNyeriInput && efekNyeriInput.value && efekNyeriPilihan) {
+                const savedValues = efekNyeriInput.value.split(', ');
+                if (efekNyeriDisplay) efekNyeriDisplay.value = efekNyeriInput.value;
 
-                    checkboxEfekNyeri.forEach(function (checkbox) {
-                        if (checkbox.checked) {
-                            const badge = createBadge(checkbox.value);
+                const standardValues = [];
+                const lainnyaValues = [];
+
+                savedValues.forEach(value => {
+                    let found = false;
+
+                    checkboxEfekNyeri.forEach(checkbox => {
+                        if (value === checkbox.value) {
+                            checkbox.checked = true;
+                            found = true;
+                            standardValues.push(value);
+
+                            const badge = createBadge(value);
                             efekNyeriPilihan.appendChild(badge);
                         }
                     });
 
-                    // Add "lainnya" selections if any
-                    if (efekNyeriLainnya.checked) {
-                        const lainnyaInputs = document.querySelectorAll('.lainnya-input');
+                    if (!found) {
+                        lainnyaValues.push(value);
 
-                        lainnyaInputs.forEach(function(input) {
-                            if (input.value.trim() !== '') {
-                                const badge = createBadge(input.value.trim(), true);
-                                efekNyeriPilihan.appendChild(badge);
-                            }
-                        });
-                    }
-
-                    updateInputValues();
-
-                    modalEfekNyeri.hide();
-                }, 300);
-            });
-        }
-
-        // Reset form when modal is hidden (if no selections)
-        if (modalEfekNyeriElement) {
-            modalEfekNyeriElement.addEventListener('hidden.bs.modal', function () {
-                if (efekNyeriInput && !efekNyeriInput.value) {
-                    checkboxEfekNyeri.forEach(function (checkbox) {
-                        checkbox.checked = false;
-                    });
-
-                    if (efekNyeriLainnya) efekNyeriLainnya.checked = false;
-                    if (efekNyeriLainnyaContainer) efekNyeriLainnyaContainer.classList.add('d-none');
-
-                    document.querySelectorAll('.lainnya-input').forEach(input => {
-                        input.value = '';
-                    });
-
-                    const lainnyaItems = document.querySelectorAll('.lainnya-item');
-                    for (let i = 1; i < lainnyaItems.length; i++) {
-                        lainnyaItems[i].remove();
-                    }
-                }
-            });
-        }
-
-        if (efekNyeriInput && efekNyeriInput.value && efekNyeriPilihan) {
-            const savedValues = efekNyeriInput.value.split(', ');
-            if (efekNyeriDisplay) efekNyeriDisplay.value = efekNyeriInput.value;
-
-            const standardValues = [];
-            const lainnyaValues = [];
-
-            savedValues.forEach(value => {
-                let found = false;
-
-                checkboxEfekNyeri.forEach(checkbox => {
-                    if (value === checkbox.value) {
-                        checkbox.checked = true;
-                        found = true;
-                        standardValues.push(value);
-
-                        const badge = createBadge(value);
+                        const badge = createBadge(value, true);
                         efekNyeriPilihan.appendChild(badge);
                     }
                 });
 
-                if (!found) {
-                    lainnyaValues.push(value);
+                if (lainnyaValues.length > 0) {
+                    efekNyeriLainnya.checked = true;
+                    efekNyeriLainnyaContainer.classList.remove('d-none');
 
-                    const badge = createBadge(value, true);
-                    efekNyeriPilihan.appendChild(badge);
-                }
-            });
+                    const lainnyaItemsContainer = document.querySelector('.lainnya-items');
+                    if (lainnyaItemsContainer) {
+                        lainnyaItemsContainer.innerHTML = '';
 
-            if (lainnyaValues.length > 0) {
-                efekNyeriLainnya.checked = true;
-                efekNyeriLainnyaContainer.classList.remove('d-none');
+                        lainnyaValues.forEach(value => {
+                            const newItem = document.createElement('div');
+                            newItem.className = 'lainnya-item mb-2';
+                            newItem.innerHTML = `
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-plus-circle text-primary"></i>
+                                    </span>
+                                    <input type="text" class="form-control lainnya-input"
+                                        value="${value}" placeholder="Masukkan efek nyeri lainnya">
+                                    <button class="btn btn-outline-danger remove-lainnya" type="button">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            `;
 
-                const lainnyaItemsContainer = document.querySelector('.lainnya-items');
-                if (lainnyaItemsContainer) {
-                    lainnyaItemsContainer.innerHTML = '';
+                            lainnyaItemsContainer.appendChild(newItem);
 
-                    lainnyaValues.forEach(value => {
-                        const newItem = document.createElement('div');
-                        newItem.className = 'lainnya-item mb-2';
-                        newItem.innerHTML = `
-                            <div class="input-group">
-                                <span class="input-group-text bg-light">
-                                    <i class="bi bi-plus-circle text-primary"></i>
-                                </span>
-                                <input type="text" class="form-control lainnya-input"
-                                    value="${value}" placeholder="Masukkan efek nyeri lainnya">
-                                <button class="btn btn-outline-danger remove-lainnya" type="button">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-                        `;
+                            const removeBtn = newItem.querySelector('.remove-lainnya');
+                            if (removeBtn) {
+                                removeBtn.addEventListener('click', function() {
+                                    newItem.style.opacity = '0';
+                                    newItem.style.transform = 'translateY(-10px)';
 
-                        lainnyaItemsContainer.appendChild(newItem);
-
-                        const removeBtn = newItem.querySelector('.remove-lainnya');
-                        if (removeBtn) {
-                            removeBtn.addEventListener('click', function() {
-                                newItem.style.opacity = '0';
-                                newItem.style.transform = 'translateY(-10px)';
-
-                                setTimeout(() => {
-                                    newItem.remove();
-                                }, 300);
-                            });
-                        }
-                    });
+                                    setTimeout(() => {
+                                        newItem.remove();
+                                    }, 300);
+                                });
+                            }
+                        });
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
+@endpush

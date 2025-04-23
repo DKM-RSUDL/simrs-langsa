@@ -220,8 +220,13 @@
                         <label class="form-check-label" for="tindakanCirculation12">Transfusi darah</label>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="tindakanCirculation13" value="Lainnya">
-                        <label class="form-check-label" for="tindakanCirculation13">Lainnya</label>
+                        <input type="checkbox" class="form-check-input" id="tindakanCirculation13"
+                            value="Kolaborasi">
+                        <label class="form-check-label" for="tindakanCirculation13">Kolaborasi</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="tindakanCirculation14" value="Lainnya">
+                        <label class="form-check-label" for="tindakanCirculation14">Lainnya</label>
                     </div>
                     <div class="mt-3 lainnya-circulation-input" style="display: none;">
                         <input type="text" class="form-control" id="tindakanCirculationLainnya"

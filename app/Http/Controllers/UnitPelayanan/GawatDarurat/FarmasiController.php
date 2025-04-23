@@ -8,6 +8,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\MrResep;
 use App\Models\MrResepDtl;
+use App\Models\RmeRekonsiliasiObat;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class FarmasiController extends Controller
 {
@@ -45,18 +47,20 @@ class FarmasiController extends Controller
         $riwayatObat = $this->getRiwayatObat($kd_pasien);
         $riwayatObatHariIni = $this->getRiwayatObatHariIni($kd_pasien);
 
+        // Ambil data rekonsiliasi obat
+        $rekonsiliasiObat = $this->getRekonsiliasi($kd_pasien, $tgl_masuk, $dataMedis->urut_masuk);
+
         $dokters = Dokter::all();
 
         return view(
             'unit-pelayanan.gawat-darurat.action-gawat-darurat.farmasi.index',
-            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters')
+            compact('dataMedis', 'riwayatObat', 'riwayatObatHariIni', 'kd_pasien', 'tgl_masuk', 'dokters', 'rekonsiliasiObat')
         );
     }
 
     public function store($kd_pasien, $tgl_masuk, Request $request)
     {
-        // DB::beginTransaction();
-        // dd($request->all());
+        DB::beginTransaction();
 
         try {
             // Validasi input
@@ -144,14 +148,12 @@ class FarmasiController extends Controller
                 $mrResepDtl->save();
             }
 
-            // DB::commit();
             $this->createResume($kd_pasien, $tgl_masuk, $request->urut_masuk);
-            Log::info('Resep berhasil disimpan', ['id_mrresep' => $ID_MRRESEP]);
 
+            DB::commit();
             return response()->json(['message' => 'Resep berhasil disimpan', 'id_mrresep' => $ID_MRRESEP], 200);
         } catch (\Exception $e) {
-            // DB::rollback();
-            Log::error('Error in FarmasiController@store', ['error' => $e->getMessage()]);
+            DB::rollback();
             return response()->json(['message' => 'Terjadi kesalahan internal server', 'error' => $e->getMessage()], 500);
         }
     }
@@ -166,28 +168,28 @@ class FarmasiController extends Controller
         }
 
         $obats = AptObat::join('APT_PRODUK', 'APT_OBAT.KD_PRD', '=', 'APT_PRODUK.KD_PRD')
-        ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where(function ($query) use ($search) {
-            // Optimize search conditions
-            $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
-                ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
-        })
-        ->select(
-            'APT_OBAT.KD_PRD as id',
-            'APT_OBAT.nama_obat as text',
-            'latest_price.HRG_BELI_OBT as harga',
-            'APT_SATUAN.SATUAN as satuan'
-        )
-        ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
-        ->limit(10)
-        ->get();
+            ->where(function ($query) use ($search) {
+                // Optimize search conditions
+                $query->where('APT_OBAT.nama_obat', 'LIKE', $search . '%')
+                    ->orWhere('APT_OBAT.nama_obat', 'LIKE', '% ' . $search . '%');
+            })
+            ->select(
+                'APT_OBAT.KD_PRD as id',
+                'APT_OBAT.nama_obat as text',
+                'latest_price.HRG_BELI_OBT as harga',
+                'APT_SATUAN.SATUAN as satuan'
+            )
+            ->groupBy('APT_OBAT.KD_PRD', 'APT_OBAT.nama_obat', 'latest_price.HRG_BELI_OBT', 'APT_SATUAN.SATUAN')
+            ->limit(10)
+            ->get();
 
         // Simpan ke cache selama 5 menit
         Cache::put($cacheKey, $obats, now()->addMinutes(5));
@@ -198,18 +200,18 @@ class FarmasiController extends Controller
     private function getRiwayatObat($kd_pasien)
     {
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->leftJoin(DB::raw('(SELECT KD_PRD, HRG_BELI_OBT
                            FROM DATA_BATCH AS db
                            WHERE TGL_MASUK = (
                                SELECT MAX(TGL_MASUK)
                                FROM DATA_BATCH
                                WHERE KD_PRD = db.KD_PRD
                            )) AS latest_price'), 'APT_OBAT.KD_PRD', '=', 'latest_price.KD_PRD')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->select(
                 DB::raw('DISTINCT MR_RESEP.TGL_MASUK'),
                 'MR_RESEP.KD_DOKTER',
@@ -237,11 +239,11 @@ class FarmasiController extends Controller
         $today = Carbon::today()->toDateString();
 
         return DB::table('MR_RESEP')
-        ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
-        ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
-        ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
-        ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
-        ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
+            ->join('DOKTER', 'MR_RESEP.KD_DOKTER', '=', 'DOKTER.KD_DOKTER')
+            ->leftJoin('MR_RESEPDTL', 'MR_RESEP.ID_MRRESEP', '=', 'MR_RESEPDTL.ID_MRRESEP')
+            ->leftJoin('APT_OBAT', 'MR_RESEPDTL.KD_PRD', '=', 'APT_OBAT.KD_PRD')
+            ->leftJoin('APT_SATUAN', 'APT_OBAT.KD_SATUAN', '=', 'APT_SATUAN.KD_SATUAN')
+            ->where('MR_RESEP.KD_PASIEN', $kd_pasien)
             ->whereDate('MR_RESEP.TGL_ORDER', $today)
             ->select(
                 'MR_RESEP.TGL_ORDER',
@@ -297,5 +299,114 @@ class FarmasiController extends Controller
             if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
-    
+
+    public function rekonsiliasiObat($kd_pasien, $tgl_masuk, Request $request)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'nama_obat' => 'required|string|max:255',
+            'frekuensi' => 'required|string|max:255',
+            'keterangan' => 'required|string|in:Sebelum Makan,Sesudah Makan,Saat Makan',
+            'dosis' => 'required|string|max:255',
+            'tindak_lanjut' => 'required|string|in:Lanjut aturan pakai sama,Lanjut aturan pakai berubah,Stop',
+            'dibawa' => 'required|in:0,1',
+            'perubahanpakai' => 'nullable|string|max:255',
+            'kd_petugas' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            // Konversi tindak_lanjut_dpjp ke nilai numerik
+            $tindakLanjutMap = [
+                'Lanjut aturan pakai sama' => 1,
+                'Lanjut aturan pakai berubah' => 2,
+                'Stop' => 3,
+            ];
+            $tindakLanjutValue = $tindakLanjutMap[$request->tindak_lanjut];
+
+            // Ambil kd_unit dan urut_masuk dari model Kunjungan
+            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->where('kunjungan.kd_unit', 3)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
+
+            if (!$dataMedis) {
+                abort(404, 'Data Kunjungan Tidak Ditemukan');
+            }
+
+
+            // Simpan data ke tabel RmeRekonsiliasiObat
+            $rekonsiliasi = RmeRekonsiliasiObat::create([
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => date('Y-m-d H:i:s', strtotime($tgl_masuk)),
+                'kd_unit' => 3,
+                'urut_masuk' => $dataMedis->urut_masuk,
+                'nama_obat' => $request->nama_obat,
+                'frekuensi_obat' => $request->frekuensi,
+                'keterangan_obat' => $request->keterangan,
+                'dosis_obat' => $request->dosis,
+                'tindak_lanjut_dpjp' => $tindakLanjutValue,
+                'obat_dibawa_pulang' => $request->dibawa,
+                'perubahan_aturan_pakai' => $request->perubahanpakai,
+                'user_created' => $request->kd_petugas,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat berhasil disimpan',
+                'id' => $rekonsiliasi->id,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan rekonsiliasi obat: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function rekonsiliasiObatDelete($kd_pasien, $tgl_masuk, Request $request)
+    {
+
+        try {
+            $rekonsiliasi = RmeRekonsiliasiObat::where('id', $request->id)
+                ->where('kd_pasien', $kd_pasien)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->firstOrFail();
+
+            $rekonsiliasi->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rekonsiliasi obat berhasil dihapus',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus rekonsiliasi obat: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function getRekonsiliasi($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        return RmeRekonsiliasiObat::where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', 3)
+            ->where('urut_masuk', $urut_masuk)
+            ->get();
+    }
 }

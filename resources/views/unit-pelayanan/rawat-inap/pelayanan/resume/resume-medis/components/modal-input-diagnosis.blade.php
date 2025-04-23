@@ -18,8 +18,10 @@
     </div>
 </div>
 
-<script>
-    $('#btn-input-diagnosis').on('click', function() {
-        $('#modal-input-diagnosis').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-input-diagnosis').on('click', function() {
+            $('#modal-input-diagnosis').modal('show');
+        });
+    </script>
+@endpush

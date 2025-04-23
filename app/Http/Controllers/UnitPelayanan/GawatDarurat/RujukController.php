@@ -27,18 +27,19 @@ class RujukController extends Controller
 
         // Get existing rujukan data for this patient
         $rujukan = RmeRujukKeluar::where('kd_pasien', $kd_pasien)
-        ->where('urut_masuk', $urut_masuk)
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('id', 'desc')
-        ->get();
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.rujuk-antar-rs.index', compact('dataMedis', 'rujukan'));
     }
 
     public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $rujukan = new RmeRujukKeluar();
             $rujukan->kd_pasien = $request->kd_pasien;
@@ -111,8 +112,9 @@ class RujukController extends Controller
 
     public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $rujukan = RmeRujukKeluar::findOrFail($id);
             $rujukan->kd_pasien = $request->kd_pasien;
@@ -173,8 +175,9 @@ class RujukController extends Controller
 
     public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $rujukan = RmeRujukKeluar::findOrFail($id);
             $rujukan->delete();

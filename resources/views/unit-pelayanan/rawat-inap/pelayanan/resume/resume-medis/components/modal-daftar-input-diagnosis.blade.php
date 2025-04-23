@@ -17,9 +17,10 @@
     </div>
 </div>
 
-
-<script>
-    $('#btn-daftar-input-diagnosis').on('click', function() {
-        $('#modal-daftar-input-diagnosis').modal('show');
-    });
-</script>
+@push('js')
+    <script>
+        $('#btn-daftar-input-diagnosis').on('click', function() {
+            $('#modal-daftar-input-diagnosis').modal('show');
+        });
+    </script>
+@endpush

@@ -55,7 +55,7 @@
         [
             'icon' => 'check.svg',
             'label' => 'Cek List Keselamatan',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.ceklist-keselamatan.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'check.svg',
@@ -65,7 +65,7 @@
         [
             'icon' => 'check.svg',
             'label' => 'Laporan Anestesi',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'agree.png',

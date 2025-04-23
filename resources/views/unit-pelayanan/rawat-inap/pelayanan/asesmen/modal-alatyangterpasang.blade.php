@@ -39,114 +39,116 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var alatModal = new bootstrap.Modal(document.getElementById('alatModal'));
-    var alatData = [];
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var alatModal = new bootstrap.Modal(document.getElementById('alatModal'));
+            var alatData = [];
 
-    document.getElementById('openAlatModal').addEventListener('click', function() {
-        resetForm();
-        alatModal.show();
-    });
+            document.getElementById('openAlatModal').addEventListener('click', function() {
+                resetForm();
+                alatModal.show();
+            });
 
-    document.getElementById('simpanAlat').addEventListener('click', function() {
-        var namaAlat = document.getElementById('namaAlat');
-        var lokasiAlat = document.getElementById('lokasiAlat');
-        var keteranganAlat = document.getElementById('keteranganAlat');
+            document.getElementById('simpanAlat').addEventListener('click', function() {
+                var namaAlat = document.getElementById('namaAlat');
+                var lokasiAlat = document.getElementById('lokasiAlat');
+                var keteranganAlat = document.getElementById('keteranganAlat');
 
-        if (namaAlat.value && lokasiAlat.value && keteranganAlat.value) {
-            var editIndex = document.getElementById('editIndex').value;
-            var alat = {
-                nama: namaAlat.value,
-                lokasi: lokasiAlat.value,
-                keterangan: keteranganAlat.value,
-            };
+                if (namaAlat.value && lokasiAlat.value && keteranganAlat.value) {
+                    var editIndex = document.getElementById('editIndex').value;
+                    var alat = {
+                        nama: namaAlat.value,
+                        lokasi: lokasiAlat.value,
+                        keterangan: keteranganAlat.value,
+                    };
 
-            if (editIndex === "-1") {
-                alatData.push(alat);
-            } else {
-                alatData[parseInt(editIndex)] = alat;
+                    if (editIndex === "-1") {
+                        alatData.push(alat);
+                    } else {
+                        alatData[parseInt(editIndex)] = alat;
+                    }
+
+                    updateAlatTable();
+                    alatModal.hide();
+                    resetForm();
+                } else {
+                    alert('Harap isi semua field');
+                }
+            });
+
+            function resetForm() {
+                document.getElementById('namaAlat').value = '';
+                document.getElementById('lokasiAlat').value = '';
+                document.getElementById('keteranganAlat').value = '';
+                document.getElementById('editIndex').value = "-1";
             }
 
+            function editAlat(index) {
+                var alat = alatData[index];
+                document.getElementById('namaAlat').value = alat.nama;
+                document.getElementById('lokasiAlat').value = alat.lokasi;
+                document.getElementById('keteranganAlat').value = alat.keterangan;
+                document.getElementById('editIndex').value = index;
+                alatModal.show();
+            }
+
+            function updateAlatTable() {
+                var tableBody = document.querySelector('#alatTable tbody');
+                if (tableBody) {
+                    tableBody.innerHTML = '';
+                    alatData.forEach(function(alat, index) {
+                        var row = tableBody.insertRow();
+                        row.innerHTML = `
+                        <td>${alat.nama}</td>
+                        <td>${alat.lokasi}</td>
+                        <td>${alat.keterangan}</td>
+                        <td>
+                            <button class="btn btn-sm btn-link edit-alat" data-index="${index}">
+                            <i class="bi bi-pencil-fill text-primary"></i>
+                            </button>
+                            <button class="btn btn-sm btn-link hapus-alat" data-index="${index}">
+                                <i class="bi bi-trash-fill text-danger"></i>
+                            </button>
+                        </td>
+                    `;
+                    });
+
+                    // Tambahkan event listener untuk tombol edit dan hapus
+                    document.querySelectorAll('.edit-alat').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            var index = this.getAttribute('data-index');
+                            editAlat(index);
+                        });
+                    });
+
+                    document.querySelectorAll('.hapus-alat').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            var index = this.getAttribute('data-index');
+                            alatData.splice(index, 1);
+                            updateAlatTable();
+                        });
+                    });
+                }
+            }
+
+            window.getAlatTerpasangData = function() {
+                return JSON.stringify(alatData);
+            };
+
+            window.updateAlatTerpasangData = function(newData) {
+                alatData = newData;
+                updateAlatTable();
+            };
+
             updateAlatTable();
-            alatModal.hide();
-            resetForm();
-        } else {
-            alert('Harap isi semua field');
+
+        });
+
+        if (typeof window.getAlatTerpasangData === 'undefined') {
+            window.getAlatTerpasangData = function() {
+                return JSON.stringify([]);
+            };
         }
-    });
-
-    function resetForm() {
-        document.getElementById('namaAlat').value = '';
-        document.getElementById('lokasiAlat').value = '';
-        document.getElementById('keteranganAlat').value = '';
-        document.getElementById('editIndex').value = "-1";
-    }
-
-    function editAlat(index) {
-        var alat = alatData[index];
-        document.getElementById('namaAlat').value = alat.nama;
-        document.getElementById('lokasiAlat').value = alat.lokasi;
-        document.getElementById('keteranganAlat').value = alat.keterangan;
-        document.getElementById('editIndex').value = index;
-        alatModal.show();
-    }
-
-    function updateAlatTable() {
-        var tableBody = document.querySelector('#alatTable tbody');
-        if (tableBody) {
-            tableBody.innerHTML = '';
-            alatData.forEach(function(alat, index) {
-                var row = tableBody.insertRow();
-                row.innerHTML = `
-                <td>${alat.nama}</td>
-                <td>${alat.lokasi}</td>
-                <td>${alat.keterangan}</td>
-                <td>
-                    <button class="btn btn-sm btn-link edit-alat" data-index="${index}">
-                    <i class="bi bi-pencil-fill text-primary"></i>
-                    </button>
-                    <button class="btn btn-sm btn-link hapus-alat" data-index="${index}">
-                        <i class="bi bi-trash-fill text-danger"></i>
-                    </button>
-                </td>
-            `;
-            });
-
-            // Tambahkan event listener untuk tombol edit dan hapus
-            document.querySelectorAll('.edit-alat').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var index = this.getAttribute('data-index');
-                    editAlat(index);
-                });
-            });
-
-            document.querySelectorAll('.hapus-alat').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var index = this.getAttribute('data-index');
-                    alatData.splice(index, 1);
-                    updateAlatTable();
-                });
-            });
-        }
-    }
-
-    window.getAlatTerpasangData = function() {
-        return JSON.stringify(alatData);
-    };
-
-    window.updateAlatTerpasangData = function(newData) {
-        alatData = newData;
-        updateAlatTable();
-    };
-
-    updateAlatTable();
-
-});
-
-if (typeof window.getAlatTerpasangData === 'undefined') {
-    window.getAlatTerpasangData = function() {
-        return JSON.stringify([]);
-    };
-}
-</script>
+    </script>
+@endpush

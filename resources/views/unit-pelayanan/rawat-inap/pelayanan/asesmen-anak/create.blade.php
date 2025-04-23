@@ -589,7 +589,7 @@
 
 
                                         <div class="form-group">
-                                            <label style="min-width: 200px;">Riwayat Kesehatan Keluarga</label>
+                                            <label style="min-width: 200px;">Riwayat Penyakit Keluarga</label>
                                             <div class="w-100">
                                                 <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
                                                     <i class="ti-plus"></i> Tambah
@@ -598,7 +598,7 @@
                                                     <!-- Empty state message -->
                                                     <div id="emptyStateRiwayat" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
                                                         <i class="ti-info-circle mb-2"></i>
-                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang ditambahkan.</p>
+                                                        <p class="mb-0">Belum ada riwayat Penyakit keluarga yang ditambahkan.</p>
                                                     </div>
                                                 </div>
                                                 <!-- Hidden input to store the JSON data -->
@@ -2189,7 +2189,7 @@
                                             <label class="form-label">KESIMPULAN</label>
                                             <div class="d-flex flex-column gap-2">
                                                 <div class="alert alert-info">
-                                                    Pilih semua Planning
+                                                    
                                                 </div>
                                                 <div class="alert alert-warning">
                                                     Mebutuhkan rencana pulang khusus

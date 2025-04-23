@@ -111,7 +111,7 @@
         <!-- Left Side -->
         <div class="login__left">
             <h1>
-                Selamat Datang...<br />Di Rekam Medis Elektronik<br />RSUD Langsa
+                Selamat Datang...<br />Di Electronic Medical Record Information System<br />RSUD Langsa
             </h1>
             <div class="row mt-5">
                 <div class="col-6">

@@ -108,17 +108,7 @@
                                                         <div class="col-md-6">
                                                             <label for="frekuensi"
                                                                 class="form-label">Frekuensi/interval</label>
-                                                            <select class="form-select" id="frekuensi">
-                                                                <option>1 x 1 hari</option>
-                                                                <option>2 x 1 hari</option>
-                                                                <option selected>3 x 1 hari</option>
-                                                                <option>4 x 1 hari</option>
-                                                                <option>5 x 1 hari</option>
-                                                                <option>6 x 1 hari</option>
-                                                                <option>Per 24 Jam</option>
-                                                                <option>Per 12 Jam</option>
-                                                                <option>Per 6 Jam</option>
-                                                            </select>
+                                                            <input type="text" class="form-control" id="frekuensi" placeholder="3 x 1 hari">
                                                         </div>
                                                     </div>
 
@@ -126,14 +116,7 @@
                                                         <div class="col-md-6">
                                                             <label for="dosis" class="form-label">Dosis Sekali
                                                                 Minum</label>
-                                                            <select class="form-select" id="dosis">
-                                                                <option>1/6</option>
-                                                                <option>1/4</option>
-                                                                <option selected>1/2</option>
-                                                                <option>1</option>
-                                                                <option>2</option>
-                                                                <option>3</option>
-                                                            </select>
+                                                                <input type="text" class="form-control" id="dosis" placeholder="1/2 , 1, 2">
                                                         </div>
                                                         <div class="col md-6">
                                                             <label for="satuanObat" class="form-label">Satuan

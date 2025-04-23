@@ -45,202 +45,204 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        // Inisialisasi data dari database jika ada
-        let dataAlergi = @json($dataResume->alergi ?? []);
-        let editMode = false;
-        let editIndex = null;
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi data dari database jika ada
+            let dataAlergi = @json($dataResume->alergi ?? []);
+            let editMode = false;
+            let editIndex = null;
 
-        // Fungsi untuk memperbarui tampilan tabel utama
-        function updateMainTable() {
-            let tableBody = '';
-            dataAlergi.forEach((alergi, index) => {
-                tableBody += `
-                <tr>
-                    <td>${alergi.alergen}</td>
-                    <td>${alergi.reaksi}</td>
-                    <td>${alergi.severe}</td>
-                    <td>
+            // Fungsi untuk memperbarui tampilan tabel utama
+            function updateMainTable() {
+                let tableBody = '';
+                dataAlergi.forEach((alergi, index) => {
+                    tableBody += `
+                    <tr>
+                        <td>${alergi.alergen}</td>
+                        <td>${alergi.reaksi}</td>
+                        <td>${alergi.severe}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-link delete-alergi" data-index="${index}">
+                                    <i class="bi bi-trash text-danger"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                });
+                $('#createAlergiTable tbody').html(tableBody);
+                updateHiddenInput();
+            }
+
+            // Fungsi untuk memperbarui list di modal
+            function updateModalList() {
+                let listItems = '';
+                dataAlergi.forEach((alergi, index) => {
+                    listItems += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${alergi.alergen}</strong> - ${alergi.reaksi}
+                            <span class="badge bg-secondary ms-2">${alergi.severe}</span>
+                        </div>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-link delete-alergi" data-index="${index}">
+                            <button type="button" class="btn btn-sm btn-link edit-modal-alergi" data-index="${index}">
+                                <i class="bi bi-pencil text-primary"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-link remove-alergi" data-index="${index}">
                                 <i class="bi bi-trash text-danger"></i>
                             </button>
                         </div>
-                    </td>
-                </tr>
-            `;
-            });
-            $('#createAlergiTable tbody').html(tableBody);
-            updateHiddenInput();
-        }
-
-        // Fungsi untuk memperbarui list di modal
-        function updateModalList() {
-            let listItems = '';
-            dataAlergi.forEach((alergi, index) => {
-                listItems += `
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>${alergi.alergen}</strong> - ${alergi.reaksi}
-                        <span class="badge bg-secondary ms-2">${alergi.severe}</span>
                     </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-link edit-modal-alergi" data-index="${index}">
-                            <i class="bi bi-pencil text-primary"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-link remove-alergi" data-index="${index}">
-                            <i class="bi bi-trash text-danger"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            });
-            $('#listAlergi').html(listItems);
-        }
-
-        // Fungsi untuk update hidden input
-        function updateHiddenInput() {
-            $('input[name="alergi"]').val(JSON.stringify(dataAlergi));
-        }
-
-        // Reset form
-        function resetForm() {
-            $('#formAlergi')[0].reset();
-            editMode = false;
-            editIndex = null;
-            $('#btnAddAlergi').text('Tambah');
-        }
-
-        // Event handler untuk tambah/update alergi
-        $('#btnAddAlergi').click(function() {
-            const alergi = {
-                alergen: $('#alergenInput').val().trim(),
-                reaksi: $('#reaksiInput').val().trim(),
-                severe: $('#severeInput').val()
-            };
-
-            if (!alergi.alergen || !alergi.reaksi || !alergi.severe) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Semua field harus diisi!'
+                `;
                 });
-                return;
+                $('#listAlergi').html(listItems);
             }
 
-            if (editMode) {
-                // Update existing data
-                dataAlergi[editIndex] = alergi;
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Data alergi berhasil diperbarui',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            } else {
-                // Check for duplicates only when adding new data
-                const isDuplicate = dataAlergi.some(item =>
-                    item.alergen.toLowerCase() === alergi.alergen.toLowerCase()
-                );
+            // Fungsi untuk update hidden input
+            function updateHiddenInput() {
+                $('input[name="alergi"]').val(JSON.stringify(dataAlergi));
+            }
 
-                if (isDuplicate) {
+            // Reset form
+            function resetForm() {
+                $('#formAlergi')[0].reset();
+                editMode = false;
+                editIndex = null;
+                $('#btnAddAlergi').text('Tambah');
+            }
+
+            // Event handler untuk tambah/update alergi
+            $('#btnAddAlergi').click(function() {
+                const alergi = {
+                    alergen: $('#alergenInput').val().trim(),
+                    reaksi: $('#reaksiInput').val().trim(),
+                    severe: $('#severeInput').val()
+                };
+
+                if (!alergi.alergen || !alergi.reaksi || !alergi.severe) {
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian',
-                        text: 'Alergi ini sudah ada dalam daftar!'
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Semua field harus diisi!'
                     });
                     return;
                 }
 
-                dataAlergi.push(alergi);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Data alergi berhasil ditambahkan',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            }
-
-            updateModalList();
-            resetForm();
-        });
-
-        // Event handler untuk edit dari modal dan tabel
-        $(document).on('click', '.edit-alergi, .edit-modal-alergi', function() {
-            const index = $(this).data('index');
-            const alergi = dataAlergi[index];
-
-            editMode = true;
-            editIndex = index;
-
-            $('#alergenInput').val(alergi.alergen);
-            $('#reaksiInput').val(alergi.reaksi);
-            $('#severeInput').val(alergi.severe);
-            $('#btnAddAlergi').text('Update');
-
-            // Scroll ke form jika di dalam modal
-            $('.modal-body').scrollTop(0);
-        });
-
-        // Event handler untuk hapus dari modal dan tabel
-        $(document).on('click', '.delete-alergi, .remove-alergi', function() {
-            const index = $(this).data('index');
-            const alergi = dataAlergi[index];
-
-            Swal.fire({
-                title: 'Hapus Alergi',
-                text: `Apakah Anda yakin ingin menghapus alergi "${alergi.alergen}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    dataAlergi.splice(index, 1);
-                    updateMainTable();
-                    updateModalList();
-
+                if (editMode) {
+                    // Update existing data
+                    dataAlergi[editIndex] = alergi;
                     Swal.fire({
                         icon: 'success',
-                        title: 'Terhapus!',
-                        text: 'Data alergi berhasil dihapus',
+                        title: 'Berhasil',
+                        text: 'Data alergi berhasil diperbarui',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    // Check for duplicates only when adding new data
+                    const isDuplicate = dataAlergi.some(item =>
+                        item.alergen.toLowerCase() === alergi.alergen.toLowerCase()
+                    );
+
+                    if (isDuplicate) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Alergi ini sudah ada dalam daftar!'
+                        });
+                        return;
+                    }
+
+                    dataAlergi.push(alergi);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data alergi berhasil ditambahkan',
                         timer: 1500,
                         showConfirmButton: false
                     });
                 }
-            });
-        });
 
-        // Event handler untuk simpan dan tutup modal
-        $('#btnSaveAlergi').click(function() {
+                updateModalList();
+                resetForm();
+            });
+
+            // Event handler untuk edit dari modal dan tabel
+            $(document).on('click', '.edit-alergi, .edit-modal-alergi', function() {
+                const index = $(this).data('index');
+                const alergi = dataAlergi[index];
+
+                editMode = true;
+                editIndex = index;
+
+                $('#alergenInput').val(alergi.alergen);
+                $('#reaksiInput').val(alergi.reaksi);
+                $('#severeInput').val(alergi.severe);
+                $('#btnAddAlergi').text('Update');
+
+                // Scroll ke form jika di dalam modal
+                $('.modal-body').scrollTop(0);
+            });
+
+            // Event handler untuk hapus dari modal dan tabel
+            $(document).on('click', '.delete-alergi, .remove-alergi', function() {
+                const index = $(this).data('index');
+                const alergi = dataAlergi[index];
+
+                Swal.fire({
+                    title: 'Hapus Alergi',
+                    text: `Apakah Anda yakin ingin menghapus alergi "${alergi.alergen}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        dataAlergi.splice(index, 1);
+                        updateMainTable();
+                        updateModalList();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: 'Data alergi berhasil dihapus',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
+            // Event handler untuk simpan dan tutup modal
+            $('#btnSaveAlergi').click(function() {
+                updateMainTable();
+                $('#alergiModal').modal('hide');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Data alergi berhasil disimpan',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+
+            // Event handler untuk buka modal
+            $('#openAlergiModal').click(function() {
+                resetForm();
+                updateModalList();
+                $('#alergiModal').modal('show');
+            });
+
+            // Reset form saat modal ditutup
+            $('#alergiModal').on('hidden.bs.modal', function() {
+                resetForm();
+            });
+
+            // Inisialisasi tampilan awal
             updateMainTable();
-            $('#alergiModal').modal('hide');
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: 'Data alergi berhasil disimpan',
-                timer: 1500,
-                showConfirmButton: false
-            });
         });
-
-        // Event handler untuk buka modal
-        $('#openAlergiModal').click(function() {
-            resetForm();
-            updateModalList();
-            $('#alergiModal').modal('show');
-        });
-
-        // Reset form saat modal ditutup
-        $('#alergiModal').on('hidden.bs.modal', function() {
-            resetForm();
-        });
-
-        // Inisialisasi tampilan awal
-        updateMainTable();
-    });
-</script>
+    </script>
+@endpush

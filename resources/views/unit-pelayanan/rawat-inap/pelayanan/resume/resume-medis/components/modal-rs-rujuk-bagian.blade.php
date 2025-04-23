@@ -22,54 +22,56 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        // Inisialisasi nilai yang sudah ada
-        const savedRsRujuk = $('#rs-rujuk').val();
-        const savedRsRujukBagian = $('#rs-rujuk-bagian').val();
+@push('js')
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi nilai yang sudah ada
+            const savedRsRujuk = $('#rs-rujuk').val();
+            const savedRsRujukBagian = $('#rs-rujuk-bagian').val();
 
-        // Update span di modal utama jika ada data tersimpan
-        if (savedRsRujuk || savedRsRujukBagian) {
-            updateRujukDisplay(savedRsRujuk, savedRsRujukBagian);
-        }
-
-        // Handler untuk membuka modal
-        $('#btn-rs-rujuk-bagian').on('click', function(e) {
-            e.preventDefault();
-            // Check radio button
-            $(this).find('input[type="radio"]').prop('checked', true);
-            // Tampilkan modal
-            $('#modal-rs-rujuk-bagian').modal('show');
-        });
-
-        // Handler untuk tombol simpan
-        $('#btn-simpan-rs-rujuk-bagian').on('click', function() {
-            const selectedRs = $('#rs-rujuk').val();
-            const selectedBagian = $('#rs-rujuk-bagian').val();
-
-            if (selectedRs && selectedBagian) {
-                updateRujukDisplay(selectedRs, selectedBagian);
-                $('#modal-rs-rujuk-bagian').modal('hide');
-            } else {
-                alert('Silahkan lengkapi data RS dan Bagian Rujukan');
+            // Update span di modal utama jika ada data tersimpan
+            if (savedRsRujuk || savedRsRujukBagian) {
+                updateRujukDisplay(savedRsRujuk, savedRsRujukBagian);
             }
-        });
 
-        // Fungsi untuk update tampilan rujukan
-        function updateRujukDisplay(rs, bagian) {
-            // Update span di modal utama
-            $('#selected-rs-info').text(`${bagian} - ${rs}`);
-            // Update value radio button
-            $('#rujuk').val(`Rujuk RS lain bagian: ${bagian} - ${rs}`);
-            // Check radio button
-            $('#rujuk').prop('checked', true);
-        }
+            // Handler untuk membuka modal
+            $('#btn-rs-rujuk-bagian').on('click', function(e) {
+                e.preventDefault();
+                // Check radio button
+                $(this).find('input[type="radio"]').prop('checked', true);
+                // Tampilkan modal
+                $('#modal-rs-rujuk-bagian').modal('show');
+            });
 
-        // Handler untuk reset form saat modal ditutup
-        $('#modal-rs-rujuk-bagian').on('hidden.bs.modal', function() {
-            if (!$('#selected-rs-info').text()) {
-                $('#rujuk').prop('checked', false);
+            // Handler untuk tombol simpan
+            $('#btn-simpan-rs-rujuk-bagian').on('click', function() {
+                const selectedRs = $('#rs-rujuk').val();
+                const selectedBagian = $('#rs-rujuk-bagian').val();
+
+                if (selectedRs && selectedBagian) {
+                    updateRujukDisplay(selectedRs, selectedBagian);
+                    $('#modal-rs-rujuk-bagian').modal('hide');
+                } else {
+                    alert('Silahkan lengkapi data RS dan Bagian Rujukan');
+                }
+            });
+
+            // Fungsi untuk update tampilan rujukan
+            function updateRujukDisplay(rs, bagian) {
+                // Update span di modal utama
+                $('#selected-rs-info').text(`${bagian} - ${rs}`);
+                // Update value radio button
+                $('#rujuk').val(`Rujuk RS lain bagian: ${bagian} - ${rs}`);
+                // Check radio button
+                $('#rujuk').prop('checked', true);
             }
+
+            // Handler untuk reset form saat modal ditutup
+            $('#modal-rs-rujuk-bagian').on('hidden.bs.modal', function() {
+                if (!$('#selected-rs-info').text()) {
+                    $('#rujuk').prop('checked', false);
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endpush

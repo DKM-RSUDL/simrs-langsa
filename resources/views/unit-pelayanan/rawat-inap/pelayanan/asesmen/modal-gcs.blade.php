@@ -57,90 +57,91 @@
     </div>
 </div>
 
-
-<script>
-    function openGCSModal() {
-        const gcsModal = new bootstrap.Modal(document.getElementById('gcsModal'));
-        gcsModal.show();
-    }
-
-    // Fungsi untuk memperbarui tampilan GCS berdasarkan pilihan
-    function updateGCSDisplay() {
-        const eye = document.querySelector('input[name="gcs_eye"]:checked');
-        const verbal = document.querySelector('input[name="gcs_verbal"]:checked');
-        const motoric = document.querySelector('input[name="gcs_motoric"]:checked');
-
-        if (eye) {
-            document.getElementById('eyeValueDisplay').textContent =
-                `Eye: ${eye.getAttribute('data-text')} (${eye.value})`;
+@push('js')
+    <script>
+        function openGCSModal() {
+            const gcsModal = new bootstrap.Modal(document.getElementById('gcsModal'));
+            gcsModal.show();
         }
 
-        if (verbal) {
-            document.getElementById('verbalValueDisplay').textContent =
-                `Verbal: ${verbal.getAttribute('data-text')} (${verbal.value})`;
-        }
+        // Fungsi untuk memperbarui tampilan GCS berdasarkan pilihan
+        function updateGCSDisplay() {
+            const eye = document.querySelector('input[name="gcs_eye"]:checked');
+            const verbal = document.querySelector('input[name="gcs_verbal"]:checked');
+            const motoric = document.querySelector('input[name="gcs_motoric"]:checked');
 
-        if (motoric) {
-            document.getElementById('motoricValueDisplay').textContent =
-                `Motoric: ${motoric.getAttribute('data-text')} (${motoric.value})`;
-        }
-
-        const totalGCS = (eye ? parseInt(eye.value) : 0) + (verbal ? parseInt(verbal.value) : 0) + (motoric ? parseInt(
-            motoric.value) : 0);
-        document.getElementById('totalGCSDisplay').textContent = totalGCS;
-    }
-
-    // Event listener untuk setiap input radio pada kategori GCS
-    document.querySelectorAll('input[name="gcs_eye"], input[name="gcs_verbal"], input[name="gcs_motoric"]').forEach(
-        input => {
-            input.addEventListener('change', updateGCSDisplay);
-        });
-
-    function saveGCS() {
-
-        const eye = document.querySelector('input[name="gcs_eye"]:checked');
-        const verbal = document.querySelector('input[name="gcs_verbal"]:checked');
-        const motoric = document.querySelector('input[name="gcs_motoric"]:checked');
-
-        if (eye && verbal && motoric) {
-            const totalGCS = parseInt(eye.value) + parseInt(verbal.value) + parseInt(motoric.value);
-
-            // Pastikan elemen dengan ID gcsValue dan gcsScoreDisplay ada sebelum mengatur nilainya
-            const gcsValueElement = document.getElementById('gcsValue');
-            const gcsScoreDisplayElement = document.getElementById('gcsScoreDisplay');
-
-            if (gcsValueElement) {
-                gcsValueElement.value = totalGCS;
+            if (eye) {
+                document.getElementById('eyeValueDisplay').textContent =
+                    `Eye: ${eye.getAttribute('data-text')} (${eye.value})`;
             }
 
-            if (gcsScoreDisplayElement) {
-                gcsScoreDisplayElement.value = totalGCS;
+            if (verbal) {
+                document.getElementById('verbalValueDisplay').textContent =
+                    `Verbal: ${verbal.getAttribute('data-text')} (${verbal.value})`;
             }
 
-            // Simpan objek GCS dalam format JSON yang diinginkan
-            window.gcsData = {
-                eye: {
-                    value: parseInt(eye.value),
-                    description: eye.getAttribute('data-text')
-                },
-                verbal: {
-                    value: parseInt(verbal.value),
-                    description: verbal.getAttribute('data-text')
-                },
-                motoric: {
-                    value: parseInt(motoric.value),
-                    description: motoric.getAttribute('data-text')
-                },
-                total: totalGCS
-            };
-
-            // Mendapatkan modal Bootstrap yang sedang terbuka dan menutupnya jika ada
-            const gcsModal = bootstrap.Modal.getInstance(document.getElementById('gcsModal'));
-            if (gcsModal) {
-                gcsModal.hide();
+            if (motoric) {
+                document.getElementById('motoricValueDisplay').textContent =
+                    `Motoric: ${motoric.getAttribute('data-text')} (${motoric.value})`;
             }
-        } else {
-            alert("Harap pilih semua kategori untuk menghitung nilai GCS.");
+
+            const totalGCS = (eye ? parseInt(eye.value) : 0) + (verbal ? parseInt(verbal.value) : 0) + (motoric ? parseInt(
+                motoric.value) : 0);
+            document.getElementById('totalGCSDisplay').textContent = totalGCS;
         }
-    }
-</script>
+
+        // Event listener untuk setiap input radio pada kategori GCS
+        document.querySelectorAll('input[name="gcs_eye"], input[name="gcs_verbal"], input[name="gcs_motoric"]').forEach(
+            input => {
+                input.addEventListener('change', updateGCSDisplay);
+            });
+
+        function saveGCS() {
+
+            const eye = document.querySelector('input[name="gcs_eye"]:checked');
+            const verbal = document.querySelector('input[name="gcs_verbal"]:checked');
+            const motoric = document.querySelector('input[name="gcs_motoric"]:checked');
+
+            if (eye && verbal && motoric) {
+                const totalGCS = parseInt(eye.value) + parseInt(verbal.value) + parseInt(motoric.value);
+
+                // Pastikan elemen dengan ID gcsValue dan gcsScoreDisplay ada sebelum mengatur nilainya
+                const gcsValueElement = document.getElementById('gcsValue');
+                const gcsScoreDisplayElement = document.getElementById('gcsScoreDisplay');
+
+                if (gcsValueElement) {
+                    gcsValueElement.value = totalGCS;
+                }
+
+                if (gcsScoreDisplayElement) {
+                    gcsScoreDisplayElement.value = totalGCS;
+                }
+
+                // Simpan objek GCS dalam format JSON yang diinginkan
+                window.gcsData = {
+                    eye: {
+                        value: parseInt(eye.value),
+                        description: eye.getAttribute('data-text')
+                    },
+                    verbal: {
+                        value: parseInt(verbal.value),
+                        description: verbal.getAttribute('data-text')
+                    },
+                    motoric: {
+                        value: parseInt(motoric.value),
+                        description: motoric.getAttribute('data-text')
+                    },
+                    total: totalGCS
+                };
+
+                // Mendapatkan modal Bootstrap yang sedang terbuka dan menutupnya jika ada
+                const gcsModal = bootstrap.Modal.getInstance(document.getElementById('gcsModal'));
+                if (gcsModal) {
+                    gcsModal.hide();
+                }
+            } else {
+                alert("Harap pilih semua kategori untuk menghitung nilai GCS.");
+            }
+        }
+    </script>
+@endpush
