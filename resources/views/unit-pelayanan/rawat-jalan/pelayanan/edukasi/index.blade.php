@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-bordered table-sm table-hover">
+                        <table class="table table-bordered table-hover">
                             <thead class="table-primary">
                                 <tr>
                                     <th>No</th>
