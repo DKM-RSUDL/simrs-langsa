@@ -156,7 +156,7 @@
                                                                 Tek. Darah
                                                             </span>
                                                             <input type="text" class="form-control text-center"
-                                                                id="tekanan_darah" name="tekanan_darah" placeholder="0">
+                                                                id="tekanan_darah" name="tekanan_darah">
                                                             <span class="input-group-text">mmHg</span>
                                                         </div>
                                                     </div>
