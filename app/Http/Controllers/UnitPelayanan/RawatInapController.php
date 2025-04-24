@@ -40,7 +40,8 @@ class RawatInapController extends Controller
                     $q->orWhere('status_inap', 1);
                 })
                 ->whereNull('tgl_pulang')
-                ->whereNull('jam_pulang');
+                ->whereNull('jam_pulang')
+                ->whereYear('tgl_masuk', '>=', 2024);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
