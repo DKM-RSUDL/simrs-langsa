@@ -50,7 +50,7 @@
         [
             'icon' => 'check.svg',
             'label' => 'Site Marking',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.site-marking.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
             'icon' => 'check.svg',

@@ -44,6 +44,7 @@ use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
+use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
@@ -946,6 +947,23 @@ Route::middleware('auth')->group(function () {
                                     Route::get('/edit-signout/{id}', 'editSignout')->name('.edit-signout');
                                     Route::put('/update-signout/{id}', 'updateSignout')->name('.update-signout');
                                     Route::delete('/destroy-signout/{id}', 'destroySignout')->name('.destroy-signout');
+                                });
+                            });
+                        });
+
+
+                        //SITE MARKING
+                        Route::prefix('site-marking')->group(function () {
+                            Route::name('.site-marking')->group(function () {
+                                Route::controller(SiteMarkingController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/store', 'store')->name('.store');
+                                    Route::get('/show/{id}', 'show')->name('.show');
+                                    Route::get('/edit/{id}', 'edit')->name('.edit');
+                                    Route::put('/update/{id}', 'update')->name('.update');
+                                    Route::delete('/destroy/{id}', 'destroy')->name('.destroy');
+                                    Route::get('/print/{id}', 'print')->name('.print');
                                 });
                             });
                         });
