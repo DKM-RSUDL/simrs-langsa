@@ -32,7 +32,8 @@ class RawatJalanController extends Controller
 
         if ($request->ajax()) {
             $data = Kunjungan::with(['pasien', 'dokter', 'customer'])
-                ->where('kd_unit', $kd_unit);
+                ->where('kd_unit', $kd_unit)
+                ->whereYear('tgl_masuk', '>=', 2024);
 
             return DataTables::of($data)
                 ->filter(function ($query) use ($request) {
