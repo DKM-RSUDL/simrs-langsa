@@ -65,19 +65,19 @@ class UserService
         // DB::beginTransaction();
 
         // try {
-            // create user
-            $user = $this->createUser($data);
-            return $user;
+        // create user
+        $user = $this->createUser($data);
+        return $user;
 
-            // create user profile
-            // $this->createUserProfile($data, $user);
+        // create user profile
+        // $this->createUserProfile($data, $user);
 
-            // DB::commit();
+        // DB::commit();
 
-            // return [
-            //     'success' => true,
-            //     'message' => 'Data berhasil disimpan.',
-            // ];
+        // return [
+        //     'success' => true,
+        //     'message' => 'Data berhasil disimpan.',
+        // ];
         // } catch (\Exception $e) {
         //     // DB::rollBack();
 
@@ -93,7 +93,7 @@ class UserService
         // Get karyawan data
         $karyawan = HrdKaryawan::where('kd_karyawan', $data['karyawan'])->first();
 
-        if(empty($karyawan)) {
+        if (empty($karyawan)) {
             return [
                 'success'   => false,
                 'message'   => 'Karyawan tidak ditemukan'
@@ -103,7 +103,7 @@ class UserService
         // check akun karyawan sudah ada atau belum
         $rmeUser = User::where('kd_karyawan', $karyawan->kd_karyawan)->first();
 
-        if(!empty($rmeUser)) {
+        if (!empty($rmeUser)) {
             return [
                 'success'   => false,
                 'message'   => 'Karyawan telah memiliki akun!'

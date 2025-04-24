@@ -79,6 +79,7 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
+use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -89,6 +90,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Auth::routes();
+
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
@@ -985,7 +987,6 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
-
                     });
                 });
             });

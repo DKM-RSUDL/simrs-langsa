@@ -38,8 +38,8 @@ class UserController extends Controller
     {
         $title = 'Tambah User';
         $karyawan = HrdKaryawan::where('status_peg', 1)
-                                ->orderBy('kd_karyawan')
-                                ->get();
+            ->orderBy('kd_karyawan')
+            ->get();
 
         return view('users.create', compact(
             'title',
