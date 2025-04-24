@@ -16,7 +16,7 @@
 
         <form id="edukasiForm" method="POST" action="{{ route('rawat-inap.edukasi.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}">
             @csrf
-            @method('PUT')            
+            @method('PUT')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100 shadow-sm">
@@ -25,7 +25,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="header-asesmen">Edukasi Pasien dan Keluarga Terintegrasi</h4>
                                 <div class="d-flex justify-content-end algn-items-end">
-                                    <a href="{{ route('edukasi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}"
+                                    <a href="{{ route('rawat-inap.edukasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $edukasi->id]) }}"
                                         class="btn btn-primary">
                                         <i class="bi bi-eye"></i> show
                                     </a>
