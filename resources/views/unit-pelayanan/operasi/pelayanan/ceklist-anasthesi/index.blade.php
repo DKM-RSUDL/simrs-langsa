@@ -47,6 +47,70 @@
     </div>
 </div>
 
-<ul class="list-group" id="ceklistKesiapan">
-    list data
+
+<ul class="list-group" id="laporanAnastesiList">
+    @forelse ($ceklistKesiapanAnesthesi as $item)
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-4">
+                <!-- Tanggal -->
+                <div class="text-center px-3">
+                    <div class="fw-bold fs-4 mb-0 text-primary">
+                        {{ date('d', strtotime($item->waktu_create)) }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ date('M-y', strtotime($item->waktu_create)) }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        {{ date('H:i', strtotime($item->waktu_create)) }}
+                    </div>
+                </div>
+
+                <!-- Info Laporan -->
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/images/avatar1.png') }}"
+                        class="rounded-circle border border-2" alt="Foto Pasien" width="60"
+                        height="60">
+                    <div>
+                        <div class="text-primary fw-bold mb-1">
+                            checklist kesiapan anasthesi
+                        </div>
+                        <div class="text-muted">
+                            By: <span class="fw-semibold">
+                                {{ $item->userCreate->karyawan->gelar_depan .
+                                    ' ' .
+                                    str()->title($item->userCreate->karyawan->nama) .
+                                    ' ' .
+                                    $item->userCreate->karyawan->gelar_belakang ??
+                                    '-' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+                <a href="{{ route('operasi.pelayanan.ceklist-anasthesi.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-info btn-sm px-3">
+                    <i class="fas fa-eye me-1"></i>
+                    Lihat
+                </a>
+
+                <a href="{{ route('operasi.pelayanan.ceklist-anasthesi.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                    class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </a>
+            </div>
+        </li>
+    @empty
+        <li class="list-group-item text-center">
+            Tidak ada laporan anestesi yang ditemukan.
+        </li>
+    @endforelse
 </ul>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-end">
+    {{ $ceklistKesiapanAnesthesi->links() }}
+</div>

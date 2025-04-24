@@ -9,12 +9,12 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('operasi.pelayanan.laporan-anastesi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+            <a href="{{ route('operasi.pelayanan.ceklist-anasthesi.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                 class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form method="POST"
-                action="{{ route('operasi.pelayanan.laporan-anastesi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                action="{{ route('operasi.pelayanan.ceklist-anasthesi.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                 enctype="multipart/form-data">
                 @csrf
 
@@ -37,15 +37,15 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Ruangan</label>
-                                    <input type="text" class="form-control" name="ruangan" required>
+                                    <input type="text" class="form-control" name="ruangan">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Diagnosis</label>
-                                    <input type="text" class="form-control" name="diagnosis" required>
+                                    <input type="text" class="form-control" name="diagnosis">
                                 </div>
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Teknik Anesthesia</label>
-                                    <input type="text" class="form-control" name="teknik_anesthesia" required>
+                                    <input type="text" class="form-control" name="teknik_anesthesia">
                                 </div>
                             </div>
 
@@ -60,14 +60,14 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia_listrik" id="mesin_anesthesia_listrik">
+                                                    <div class="form-check mb-3">                                                        
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia_listrik[]" id="mesin_anesthesia_listrik" value="mesin_anesthesia_listrik">
                                                         <label class="form-check-label" for="mesin_anesthesia_listrik">
                                                             Mesin anesthesia terhubung dengan sumber listrik, indikator (+) menyala
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="layar_pemantauan_listrik" id="layar_pemantauan_listrik">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia_listrik[]" id="layar_pemantauan_listrik" value="layar_pemantauan_listrik">
                                                         <label class="form-check-label" for="layar_pemantauan_listrik">
                                                             Layar pemantauan terhubung dengan sumber listrik, indikator (+)
                                                         </label>
@@ -75,13 +75,13 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="syringe_pump_listrik" id="syringe_pump_listrik">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia_listrik[]" id="syringe_pump_listrik" value="syringe_pump_listrik">
                                                         <label class="form-check-label" for="syringe_pump_listrik">
                                                             Syringe pump terhubung dengan sumber listrik, indikator (+)
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="defibrilator_listrik" id="defibrilator_listrik">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia_listrik[]" id="defibrilator_listrik" value="defibrilator_listrik">
                                                         <label class="form-check-label" for="defibrilator_listrik">
                                                             Defibrilator terhubung dengan sumber listrik, indikator (+)
                                                         </label>
@@ -102,19 +102,19 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="selang_oksigen" id="selang_oksigen">
+                                                        <input class="form-check-input" type="checkbox" name="gas_medis[]" id="selang_oksigen" value="selang_oksigen">
                                                         <label class="form-check-label" for="selang_oksigen">
                                                             Selang oksigen terhubung antara sumber gas dengan mesin anesthesia
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="flow_meter_o2" id="flow_meter_o2">
+                                                        <input class="form-check-input" type="checkbox" name="gas_medis[]" id="flow_meter_o2" value="flow_meter_o2">
                                                         <label class="form-check-label" for="flow_meter_o2">
                                                             Flow meter O2 di mesin anesthesia berfungsi, aliran gas keluar dari mesin dapat dirasakan
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="compressed_air" id="compressed_air">
+                                                        <input class="form-check-input" type="checkbox" name="gas_medis[]" id="compressed_air" value="compressed_air">
                                                         <label class="form-check-label" for="compressed_air">
                                                             Compressed air terhubung antara sumber gas dengan mesin anesthesia
                                                         </label>
@@ -122,13 +122,13 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="n2o_terhubung" id="n2o_terhubung">
+                                                        <input class="form-check-input" type="checkbox" name="gas_medis[]" id="n2o_terhubung" value="n2o_terhubung">
                                                         <label class="form-check-label" for="n2o_terhubung">
                                                             N2O terhubung antara sumber gas dengan mesin anesthesia
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="flow_meter_n2o" id="flow_meter_n2o">
+                                                        <input class="form-check-input" type="checkbox" name="gas_medis[]" id="flow_meter_n2o" value="flow_meter_n2o">
                                                         <label class="form-check-label" for="flow_meter_n2o">
                                                             Flow meter N2O di mesin anesthesia berfungsi, aliran gas keluar mesin dapat dirasakan
                                                         </label>
@@ -149,19 +149,19 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="power_on" id="power_on">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia[]" id="power_on" value="power_on">
                                                         <label class="form-check-label" for="power_on">
                                                             Power On
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="self_calibration" id="self_calibration">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia[]" id="self_calibration" value="self_calibration">
                                                         <label class="form-check-label" for="self_calibration">
                                                             Self calibration : DONE
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="absorber_co2" id="absorber_co2">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia[]" id="absorber_co2" value="absorber_co2">
                                                         <label class="form-check-label" for="absorber_co2">
                                                             Absorber CO2 dalam kondisi baik
                                                         </label>
@@ -169,13 +169,13 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="tidak_kebocoran" id="tidak_kebocoran">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia[]" id="tidak_kebocoran" value="tidak_kebocoran">
                                                         <label class="form-check-label" for="tidak_kebocoran">
                                                             Tidak ada kebocoran sirkuit nafas
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="zat_volatil" id="zat_volatil">
+                                                        <input class="form-check-input" type="checkbox" name="mesin_anesthesia[]" id="zat_volatil" value="zat_volatil">
                                                         <label class="form-check-label" for="zat_volatil">
                                                             Zat volatil terisi
                                                         </label>
@@ -196,25 +196,25 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="sungkup_muka" id="sungkup_muka">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="sungkup_muka" value="sungkup_muka">
                                                         <label class="form-check-label" for="sungkup_muka">
                                                             Sungkup muka dalam ukuran yang benar
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="oropharyngeal_airway" id="oropharyngeal_airway">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="oropharyngeal_airway" value="oropharyngeal_airway">
                                                         <label class="form-check-label" for="oropharyngeal_airway">
                                                             Oropharyngeal airway (Guedel) dalam ukuran yang benar
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="batang_laringoskop" id="batang_laringoskop">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="batang_laringoskop" value="batang_laringoskop">
                                                         <label class="form-check-label" for="batang_laringoskop">
                                                             Batang laringoskop berisi baterai
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="bilah_laringoskop" id="bilah_laringoskop">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="bilah_laringoskop" value="bilah_laringoskop">
                                                         <label class="form-check-label" for="bilah_laringoskop">
                                                             Bilah laringoskop dalam ukuran yang benar
                                                         </label>
@@ -222,31 +222,31 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="gagang_bilah_laringoskop" id="gagang_bilah_laringoskop">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="gagang_bilah_laringoskop" value="gagang_bilah_laringoskop">
                                                         <label class="form-check-label" for="gagang_bilah_laringoskop">
                                                             Gagang dan bilah laringoskop berfungsi dengan baik
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="ett_datai_mma" id="ett_datai_mma">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="ett_datai_mma" value="ett_datai_mma">
                                                         <label class="form-check-label" for="ett_datai_mma">
                                                             ETT datai MMA dalam ukuran yang benar dan tidak bocor
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="stilet_introduser" id="stilet_introduser">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="stilet_introduser" value="stilet_introduser">
                                                         <label class="form-check-label" for="stilet_introduser">
                                                             Stilet (introduser)
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="semprit_cuff" id="semprit_cuff">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="semprit_cuff" value="semprit_cuff">
                                                         <label class="form-check-label" for="semprit_cuff">
                                                             Semprit untuk mengembangkan cuff
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="forceps_magill" id="forceps_magill">
+                                                        <input class="form-check-input" type="checkbox" name="manajemen_jalan_nafas[]" id="forceps_magill" value="forceps_magill">
                                                         <label class="form-check-label" for="forceps_magill">
                                                             Forceps magill
                                                         </label>
@@ -267,19 +267,19 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="kabel_ekg" id="kabel_ekg">
+                                                        <input class="form-check-input" type="checkbox" name="pemantauan[]" id="kabel_ekg" value="kabel_ekg">
                                                         <label class="form-check-label" for="kabel_ekg">
                                                             Kabel EKG terhubung dengan layar pemantau
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="elektroda_ekg" id="elektroda_ekg">
+                                                        <input class="form-check-input" type="checkbox" name="pemantauan[]" id="elektroda_ekg" value="elektroda_ekg">
                                                         <label class="form-check-label" for="elektroda_ekg">
                                                             Elektroda EKG dalam jumlah dan ukuran yang sesuai
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="nibp_terhubung" id="nibp_terhubung">
+                                                        <input class="form-check-input" type="checkbox" name="pemantauan[]" id="nibp_terhubung" value="nibp_terhubung">
                                                         <label class="form-check-label" for="nibp_terhubung">
                                                             NIBP terhubung dengan layar pemantau dan berfungsi baik
                                                         </label>
@@ -287,13 +287,13 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="spo2_terhubung" id="spo2_terhubung">
+                                                        <input class="form-check-input" type="checkbox" name="pemantauan[]" id="spo2_terhubung" value="spo2_terhubung">
                                                         <label class="form-check-label" for="spo2_terhubung">
                                                             SpO2 terhubung dengan layar pemantau dan berfungsi baik
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="pemantau_suhu" id="pemantau_suhu">
+                                                        <input class="form-check-input" type="checkbox" name="pemantauan[]" id="pemantau_suhu" value="pemantau_suhu">
                                                         <label class="form-check-label" for="pemantau_suhu">
                                                             Pemantau suhu terhubung dengan layar pemantau
                                                         </label>
@@ -314,25 +314,25 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="stetoskop_tersedia" id="stetoskop_tersedia">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="stetoskop_tersedia" value="stetoskop_tersedia">
                                                         <label class="form-check-label" for="stetoskop_tersedia">
                                                             Stetoskop tersedia
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="suction_berfungsi" id="suction_berfungsi">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="suction_berfungsi" value="suction_berfungsi">
                                                         <label class="form-check-label" for="suction_berfungsi">
                                                             Suction berfungsi baik
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="selang_suction" id="selang_suction">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="selang_suction" value="selang_suction">
                                                         <label class="form-check-label" for="selang_suction">
                                                             Selang suction terhubung, kateter suction dalam ukuran yang benar
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="plester_fiksasi" id="plester_fiksasi">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="plester_fiksasi" value="plester_fiksasi">
                                                         <label class="form-check-label" for="plester_fiksasi">
                                                             Plester dan fiksasi
                                                         </label>
@@ -340,25 +340,25 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="blanket_roll" id="blanket_roll">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="blanket_roll" value="blanket_roll">
                                                         <label class="form-check-label" for="blanket_roll">
                                                             Blanket roll/hemotherm/radiant heater terhubung dengan sumber listrik dan berfungsi baik
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="blanket_roll_alas" id="blanket_roll_alas">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="blanket_roll_alas" value="blanket_roll_alas">
                                                         <label class="form-check-label" for="blanket_roll_alas">
                                                             Blanket roll dilapisi alas
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="lidocain_spray" id="lidocain_spray">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="lidocain_spray" value="lidocain_spray">
                                                         <label class="form-check-label" for="lidocain_spray">
                                                             Lidocain spray/jelly
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="defibrillator_jelly" id="defibrillator_jelly">
+                                                        <input class="form-check-input" type="checkbox" name="lain_lain[]" id="defibrillator_jelly" value="defibrillator_jelly">
                                                         <label class="form-check-label" for="defibrillator_jelly">
                                                             Defibrillator jelly
                                                         </label>
@@ -379,43 +379,43 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="epinefrin" id="epinefrin">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="epinefrin" value="epinefrin">
                                                         <label class="form-check-label" for="epinefrin">
                                                             Epinefrin
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="atrofin" id="atrofin">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="atrofin" value="atrofin">
                                                         <label class="form-check-label" for="atrofin">
                                                             Atrofin
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="sedatif" id="sedatif">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="sedatif" value="sedatif">
                                                         <label class="form-check-label" for="sedatif">
                                                             Sedatif (midazolam/propofol/etomidat/ketamin/tiopental)
                                                         </label>
                                                     </div>
                                                     <div class="form-group">
                                                         <label style="min-width: 100px;">Lain-lain:</label>                                                                                                                
-                                                        <input type="text" class="form-control" name="obat_lain" required>
+                                                        <input type="text" class="form-control" name="obat_lain">
                                                     </div>                                                    
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="opiat_opioid" id="opiat_opioid">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="opiat_opioid" value="opiat_opioid">
                                                         <label class="form-check-label" for="opiat_opioid">
                                                             Opiat/opioid
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="pelumpuh_otot" id="pelumpuh_otot">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="pelumpuh_otot" value="pelumpuh_otot">
                                                         <label class="form-check-label" for="pelumpuh_otot">
                                                             Pelumpuh otot
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="checkbox" name="antibiotik" id="antibiotik">
+                                                        <input class="form-check-input" type="checkbox" name="obat_obatan[]" id="antibiotik" value="antibiotik">
                                                         <label class="form-check-label" for="antibiotik">
                                                             Antibiotik
                                                         </label>
@@ -435,20 +435,19 @@
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Pemeriksa (Residen/perawat anestesi)</label>
-                                            <input type="text" class="form-control" name="pemeriksa" required>
+                                            <input type="text" class="form-control" name="pemeriksa">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Supervisor</label>
-                                            <input type="text" class="form-control" name="supervisor" required>
+                                            <input type="text" class="form-control" name="supervisor">
                                         </div>
 
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between mt-4">
-                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            <div class="d-flex justify-content-end mt-4">                                
                                 <button type="submit" class="btn btn-primary" id="simpan">
                                     <i class="fas fa-save me-1"></i> Simpan
                                 </button>

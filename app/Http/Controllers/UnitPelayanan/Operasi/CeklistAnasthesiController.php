@@ -5,7 +5,11 @@ namespace App\Http\Controllers\UnitPelayanan\Operasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\RmeCeklistKesiapanAnesthesi;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CeklistAnasthesiController extends Controller
 {
@@ -37,7 +41,7 @@ class CeklistAnasthesiController extends Controller
 
 
         return view('unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.index', compact(
-            'dataMedis'
+            'dataMedis',            
         ));
     }
 
@@ -70,5 +74,74 @@ class CeklistAnasthesiController extends Controller
         return view('unit-pelayanan.operasi.pelayanan.ceklist-anasthesi.create', compact(
             'dataMedis',
         ));
+    }
+
+    public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    {
+
+        DB::beginTransaction();
+
+        try {
+            // data dalam bentuk json
+            $mesin_anesthesia_listrik = null;
+            if ($request->has('mesin_anesthesia_listrik') && is_array($request->mesin_anesthesia_listrik)) {
+                $mesin_anesthesia_listrik = json_encode($request->mesin_anesthesia_listrik);
+            }
+            $gas_medis = null;
+            if ($request->has('gas_medis') && is_array($request->gas_medis)) {
+                $gas_medis = json_encode($request->gas_medis);
+            }
+            $mesin_anesthesia = null;
+            if ($request->has('mesin_anesthesia') && is_array($request->mesin_anesthesia)) {
+                $mesin_anesthesia = json_encode($request->mesin_anesthesia);
+            }
+            $manajemen_jalan_nafas = null;
+            if ($request->has('manajemen_jalan_nafas') && is_array($request->manajemen_jalan_nafas)) {
+                $manajemen_jalan_nafas = json_encode($request->manajemen_jalan_nafas);
+            }
+            $pemantauan = null;
+            if ($request->has('pemantauan') && is_array($request->pemantauan)) {
+                $pemantauan = json_encode($request->pemantauan);
+            }
+            $lain_lain = null;
+            if ($request->has('lain_lain') && is_array($request->lain_lain)) {
+                $lain_lain = json_encode($request->lain_lain);
+            }
+            $obat_obatan = null;
+            if ($request->has('obat_obatan') && is_array($request->obat_obatan)) {
+                $obat_obatan = json_encode($request->obat_obatan);
+            }
+
+            $ceklistKesiapanAnesthesi = new RmeCeklistKesiapanAnesthesi();
+            $ceklistKesiapanAnesthesi->kd_pasien = $kd_pasien;
+            $ceklistKesiapanAnesthesi->kd_unit = 71;
+            $ceklistKesiapanAnesthesi->tgl_masuk = $tgl_masuk;
+            $ceklistKesiapanAnesthesi->urut_masuk = $urut_masuk;
+            $ceklistKesiapanAnesthesi->waktu_create = date('Y-m-d H:i:s');
+            $ceklistKesiapanAnesthesi->user_create = Auth::id();
+
+            // Mengisi data dari request
+            $ceklistKesiapanAnesthesi->ruangan = $request->ruangan;
+            $ceklistKesiapanAnesthesi->diagnosis = $request->diagnosis;
+            $ceklistKesiapanAnesthesi->teknik_anesthesia = $request->teknik_anesthesia;
+            $ceklistKesiapanAnesthesi->mesin_anesthesia_listrik = $mesin_anesthesia_listrik;
+            $ceklistKesiapanAnesthesi->gas_medis = $gas_medis;
+            $ceklistKesiapanAnesthesi->mesin_anesthesia = $mesin_anesthesia;
+            $ceklistKesiapanAnesthesi->manajemen_jalan_nafas = $manajemen_jalan_nafas;
+            $ceklistKesiapanAnesthesi->pemantauan = $pemantauan;
+            $ceklistKesiapanAnesthesi->lain_lain = $lain_lain;
+            $ceklistKesiapanAnesthesi->obat_obatan = $obat_obatan;
+            $ceklistKesiapanAnesthesi->obat_lain = $request->obat_lain;
+            $ceklistKesiapanAnesthesi->pemeriksa = $request->pemeriksa;
+            $ceklistKesiapanAnesthesi->supervisor = $request->supervisor;
+
+            $ceklistKesiapanAnesthesi->save();
+
+            DB::commit();
+            return to_route('operasi.pelayanan.laporan-anastesi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'ceklist anasthesi berhasil di tambah !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
