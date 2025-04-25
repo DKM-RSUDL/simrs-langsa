@@ -8,7 +8,7 @@ use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class UserService
 {
@@ -19,7 +19,6 @@ class UserService
         // })->with('user.roles')->get();
 
         $data = User::with(['roles']);
-
 
         return DataTables::of($data)
             ->addIndexColumn()
@@ -39,18 +38,18 @@ class UserService
                 $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
                 return '<div class="d-flex">' . $actionBtn . '</div>';
             })
-            ->filter(function ($query) {
-                if (request()->has('search.value')) {
-                    $search = request('search.value');
-                    $query->where(function ($q) use ($search) {
-                        $q->where('kd_karyawan', 'like', "%$search%")
-                            ->orWhere('name', 'like', "%$search%")
-                            ->orWhereHas('roles', function ($q) use ($search) {
-                                $q->where('name', 'like', "%$search%");
-                            });
-                    });
-                }
-            })
+            // ->filter(function ($query) {
+            //     if (request()->has('search.value')) {
+            //         $search = request('search.value');
+            //         $query->where(function ($q) use ($search) {
+            //             $q->where('kd_karyawan', 'like', "%$search%")
+            //                 ->orWhere('name', 'like', "%$search%")
+            //                 ->orWhereHas('roles', function ($q) use ($search) {
+            //                     $q->where('name', 'like', "%$search%");
+            //                 });
+            //         });
+            //     }
+            // })
             ->rawColumns(['action'])
             ->make(true);
     }

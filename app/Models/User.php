@@ -14,9 +14,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    // protected $connection = 'sqlsrv_hrd';
+    protected $connection = 'sqlsrv_hrd';
 
-    protected $table = 'rme_users';
+    protected $table = 'users';
     // protected $primaryKey = 'kd_karyawan';
     // public $incrementing = false;
 

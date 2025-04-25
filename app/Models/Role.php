@@ -9,6 +9,6 @@ use Spatie\Permission\Models\Role as RoleSpatie;
 class Role extends RoleSpatie
 {
     use HasFactory;
-    // protected $connection = 'sqlsrv_hrd';
+    protected $connection = 'sqlsrv_rslangsa';
     protected $table = 'roles';
 }

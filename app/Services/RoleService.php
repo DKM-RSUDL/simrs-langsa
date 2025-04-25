@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;

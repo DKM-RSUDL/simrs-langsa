@@ -9,5 +9,5 @@ use Spatie\Permission\Models\Permission as PermissionSpatie;
 class Permission extends PermissionSpatie
 {
     use HasFactory;
-    // protected $connection = 'sqlsrv_hrd';
+    protected $connection = 'sqlsrv_rslangsa';
 }

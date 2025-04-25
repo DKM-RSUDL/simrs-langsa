@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
