@@ -231,6 +231,13 @@
                             <input type="hidden" name="marking_data" id="markingData">
                             <input type="hidden" name="active_template" id="activeTemplate" value="full-body">
 
+                            <input type="hidden" name="template_png_full_body" id="template_png_full_body">
+                            <input type="hidden" name="template_png_head_front_back" id="template_png_head_front_back">
+                            <input type="hidden" name="template_png_head_side" id="template_png_head_side">
+                            <input type="hidden" name="template_png_hand_dorsal" id="template_png_hand_dorsal">
+                            <input type="hidden" name="template_png_hand_palmar" id="template_png_hand_palmar">
+                            <input type="hidden" name="template_png_foot" id="template_png_foot">
+
                             <div class="template-selector mb-3">
                                 <label class="d-block mb-2">Pilih Template Anatomi:</label>
                                 <div class="btn-group" role="group">
@@ -277,11 +284,14 @@
                                         <span>Warna:</span>
                                         <div class="color-option active" data-color="#ff0000"
                                             style="background-color: #ff0000;"></div>
-                                        <div class="color-option" data-color="#0000ff" style="background-color: #0000ff;">
+                                        <div class="color-option" data-color="#0000ff"
+                                            style="background-color: #0000ff;">
                                         </div>
-                                        <div class="color-option" data-color="#00cc00" style="background-color: #00cc00;">
+                                        <div class="color-option" data-color="#00cc00"
+                                            style="background-color: #00cc00;">
                                         </div>
-                                        <div class="color-option" data-color="#ffcc00" style="background-color: #ffcc00;">
+                                        <div class="color-option" data-color="#ffcc00"
+                                            style="background-color: #ffcc00;">
                                         </div>
                                         <div class="color-option" data-color="#000000"
                                             style="background-color: #000000;"></div>
@@ -308,7 +318,7 @@
                                         @else
                                             <!-- Gambar untuk perempuan -->
                                             <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image"
-                                            id="template-full-body" alt="Seluruh Tubuh">
+                                                id="template-full-body" alt="Seluruh Tubuh">
                                             <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image"
                                                 id="template-head-front-back" alt="Muka Depan/Belakang">
                                             <img src="{{ asset('assets/images/sitemarking/2.png') }}" class="body-image"
@@ -396,10 +406,14 @@
                                                         <div class="border p-3 mb-2">
                                                             <canvas id="signatureDoctor" class="signature-pad"></canvas>
                                                         </div>
-                                                        <input type="hidden" name="tanda_tangan_dokter" id="doctorSignature">
+                                                        <input type="hidden" name="tanda_tangan_dokter"
+                                                            id="doctorSignature">
                                                         <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di atas</span>
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="clearDoctorSignature">
+                                                            <span class="text-muted small">Silakan tanda tangan di area di
+                                                                atas</span>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-secondary"
+                                                                id="clearDoctorSignature">
                                                                 <i class="fas fa-eraser me-1"></i>Hapus
                                                             </button>
                                                         </div>
@@ -411,10 +425,14 @@
                                                         <div class="border p-3 mb-2">
                                                             <canvas id="signaturePatient" class="signature-pad"></canvas>
                                                         </div>
-                                                        <input type="hidden" name="tanda_tangan_pasien" id="patientSignature">
+                                                        <input type="hidden" name="tanda_tangan_pasien"
+                                                            id="patientSignature">
                                                         <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di atas</span>
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="clearPatientSignature">
+                                                            <span class="text-muted small">Silakan tanda tangan di area di
+                                                                atas</span>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-secondary"
+                                                                id="clearPatientSignature">
                                                                 <i class="fas fa-eraser me-1"></i>Hapus
                                                             </button>
                                                         </div>
@@ -464,9 +482,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Inisialisasi signature pad untuk dokter
             const doctorCanvasElement = document.getElementById('signatureDoctor');
-
-            // Pastikan canvas memiliki ukuran yang benar
-            doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20; // Mengurangi padding
+            doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20;
             doctorCanvasElement.height = 150;
 
             const doctorSignaturePad = new SignaturePad(doctorCanvasElement, {
@@ -478,9 +494,7 @@
 
             // Inisialisasi signature pad untuk pasien
             const patientCanvasElement = document.getElementById('signaturePatient');
-
-            // Pastikan canvas memiliki ukuran yang benar
-            patientCanvasElement.width = patientCanvasElement.parentElement.clientWidth - 20; // Mengurangi padding
+            patientCanvasElement.width = patientCanvasElement.parentElement.clientWidth - 20;
             patientCanvasElement.height = 150;
 
             const patientSignaturePad = new SignaturePad(patientCanvasElement, {
@@ -504,19 +518,15 @@
 
             // Handle window resize untuk signature pads
             window.addEventListener('resize', function() {
-                // Simpan data tanda tangan sementara
                 const doctorData = doctorSignaturePad.toData();
                 const patientData = patientSignaturePad.toData();
 
-                // Resize canvas dokter
                 doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20;
                 doctorCanvasElement.height = 150;
 
-                // Resize canvas pasien
                 patientCanvasElement.width = patientCanvasElement.parentElement.clientWidth - 20;
                 patientCanvasElement.height = 150;
 
-                // Kembalikan data tanda tangan jika ada
                 if (doctorData && doctorData.length > 0) {
                     doctorSignaturePad.fromData(doctorData);
                 }
@@ -526,68 +536,31 @@
                 }
             });
 
-            // Fungsi untuk menyimpan tanda tangan ke input hidden sebelum submit
-            document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
-                // Cek apakah tanda tangan dokter sudah diisi
-                if (doctorSignaturePad.isEmpty()) {
-                    e.preventDefault();
-                    alert('Harap isi tanda tangan dokter terlebih dahulu!');
-                    return false;
-                }
-
-                // Cek apakah tanda tangan pasien sudah diisi
-                if (patientSignaturePad.isEmpty()) {
-                    e.preventDefault();
-                    alert('Harap isi tanda tangan pasien terlebih dahulu!');
-                    return false;
-                }
-
-                // Simpan data tanda tangan ke input hidden
-                document.getElementById('doctorSignature').value = doctorSignaturePad.toDataURL();
-                document.getElementById('patientSignature').value = patientSignaturePad.toDataURL();
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-
-
-
-
             // Variabel untuk menyimpan template yang aktif
             let activeTemplate = 'full-body';
-
-            // Variabel untuk menyimpan canvas
             let canvas;
-
-            // Variabel untuk menyimpan data marking per template
             const markingDataPerTemplate = {};
 
-            // Inisialisasi variabel
-            let currentTool = 'freeDraw'; // Default tool is freeDraw
+            // Inisialisasi variabel untuk drawing
+            let currentTool = 'freeDraw';
             let currentColor = '#ff0000';
             let isDrawing = false;
             let lastPosX, lastPosY;
 
             // Fungsi untuk menginisialisasi canvas
             function initializeCanvas() {
-                // Dapatkan ukuran gambar template yang aktif
                 const activeImage = document.getElementById('template-' + activeTemplate);
                 const imageWidth = activeImage.naturalWidth;
                 const imageHeight = activeImage.naturalHeight;
 
-                // Inisialisasi canvas jika belum ada
                 if (!canvas) {
                     canvas = new fabric.Canvas('drawingCanvas', {
                         width: imageWidth,
                         height: imageHeight,
                         backgroundColor: 'transparent',
-                        selection: true // Enable selection
+                        selection: true
                     });
                 } else {
-                    // Jika canvas sudah ada, ubah ukurannya
                     canvas.setWidth(imageWidth);
                     canvas.setHeight(imageHeight);
                 }
@@ -604,15 +577,25 @@
                     });
                 });
 
-                // Simpan data marking template sebelumnya jika ada
+                // Muat data marking jika ada
                 if (markingDataPerTemplate[activeTemplate]) {
                     canvas.loadFromJSON(markingDataPerTemplate[activeTemplate], canvas.renderAll.bind(canvas));
                 } else {
                     canvas.clear();
+                    fabric.Image.fromURL(activeImage.src, function(img) {
+                        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                            scaleX: canvas.width / img.width,
+                            scaleY: canvas.height / img.height,
+                            top: 0,
+                            left: 0,
+                            originX: 'left',
+                            originY: 'top'
+                        });
+                    });
                 }
 
-                // Set default drawing mode for freeDraw
-                canvas.isDrawingMode = true;
+                // Set drawing mode
+                canvas.isDrawingMode = currentTool === 'freeDraw';
                 canvas.freeDrawingBrush.color = currentColor;
                 canvas.freeDrawingBrush.width = 3;
 
@@ -627,41 +610,29 @@
             document.querySelectorAll('.template-selector .btn-group button').forEach(button => {
                 button.addEventListener('click', function() {
                     // Simpan data marking template sebelumnya
-                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON([
-                        'selectable', 'hasControls'
-                    ]));
+                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
 
                     // Update UI
-                    document.querySelectorAll('.template-selector .btn-group button').forEach(
-                        btn => {
-                            btn.classList.remove('active');
-                        });
+                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
 
                     // Update template aktif
                     activeTemplate = this.dataset.template;
 
-                    // Inisialisasi ulang canvas dengan template baru
+                    // Inisialisasi ulang canvas
                     initializeCanvas();
-
-                    // Update hidden input untuk template aktif
-                    document.getElementById('activeTemplate').value = activeTemplate;
                 });
             });
 
             // Event handlers untuk toolbar
             document.querySelectorAll('.tool-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove(
-                        'active'));
+                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
                     currentTool = this.dataset.tool;
 
-                    // Disable drawing mode jika tidak freeDraw
-                    if (currentTool !== 'freeDraw') {
-                        canvas.isDrawingMode = false;
-                    } else {
-                        canvas.isDrawingMode = true;
+                    canvas.isDrawingMode = currentTool === 'freeDraw';
+                    if (canvas.isDrawingMode) {
                         canvas.freeDrawingBrush.color = currentColor;
                         canvas.freeDrawingBrush.width = 3;
                     }
@@ -671,8 +642,7 @@
             // Event handlers untuk color picker
             document.querySelectorAll('.color-option').forEach(color => {
                 color.addEventListener('click', function() {
-                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove(
-                        'active'));
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     currentColor = this.dataset.color;
 
@@ -685,8 +655,6 @@
             // Event handler untuk clear button
             document.getElementById('clearBtn').addEventListener('click', function() {
                 canvas.clear();
-
-                // Set ulang background image
                 const activeImage = document.getElementById('template-' + activeTemplate);
                 fabric.Image.fromURL(activeImage.src, function(img) {
                     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
@@ -698,24 +666,21 @@
                         originY: 'top'
                     });
                 });
-
-                // Hapus data marking untuk template ini
                 delete markingDataPerTemplate[activeTemplate];
+                saveAllMarkingData();
             });
 
             // Mouse down event
             canvas.on('mouse:down', function(o) {
                 const pointer = canvas.getPointer(o.e);
-                const target = canvas.findTarget(o.e); // Check if there's an object under the cursor
+                const target = canvas.findTarget(o.e);
 
-                // If there's a target and we're not in erase mode, select it and allow modification
                 if (target && currentTool !== 'erase') {
                     canvas.setActiveObject(target);
-                    isDrawing = false; // Prevent creating a new mark
+                    isDrawing = false;
                     return;
                 }
 
-                // If no target or in erase mode, proceed to create a new mark
                 isDrawing = true;
                 lastPosX = pointer.x;
                 lastPosY = pointer.y;
@@ -730,8 +695,8 @@
                         strokeWidth: 2,
                         originX: 'center',
                         originY: 'center',
-                        selectable: true, // Allow selection
-                        hasControls: true // Show resize controls
+                        selectable: true,
+                        hasControls: true
                     });
                     canvas.add(circle);
                 } else if (currentTool === 'square') {
@@ -799,19 +764,13 @@
             // Mouse up event
             canvas.on('mouse:up', function() {
                 isDrawing = false;
-
-                // Simpan data marking
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
-                    'hasControls'
-                ]));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
                 saveAllMarkingData();
             });
 
             // Object modified event
             canvas.on('object:modified', function() {
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
-                    'hasControls'
-                ]));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
                 saveAllMarkingData();
             });
 
@@ -824,18 +783,97 @@
                 document.getElementById('markingData').value = JSON.stringify(allMarkingData);
             }
 
+            // Fungsi untuk menyimpan data PNG setiap template
+            function saveTemplatePngData() {
+                const templateNames = [
+                    'full-body',
+                    'head-front-back',
+                    'head-side',
+                    'hand-dorsal',
+                    'hand-palmar',
+                    'foot'
+                ];
+
+                templateNames.forEach(template => {
+                    const templateImage = document.getElementById('template-' + template);
+                    if (!templateImage) return;
+
+                    // Buat canvas sementara untuk template ini
+                    const tempCanvas = new fabric.Canvas(null, {
+                        width: templateImage.naturalWidth,
+                        height: templateImage.naturalHeight
+                    });
+
+                    // Set background image untuk semua template
+                    fabric.Image.fromURL(templateImage.src, function(img) {
+                        tempCanvas.setBackgroundImage(img, tempCanvas.renderAll.bind(tempCanvas), {
+                            scaleX: tempCanvas.width / img.width,
+                            scaleY: tempCanvas.height / img.height,
+                            top: 0,
+                            left: 0,
+                            originX: 'left',
+                            originY: 'top'
+                        });
+
+                        // Jika ada data marking, muat ke canvas
+                        if (markingDataPerTemplate[template]) {
+                            tempCanvas.loadFromJSON(markingDataPerTemplate[template], function() {
+                                tempCanvas.renderAll();
+                                // Ambil data PNG
+                                const pngData = tempCanvas.toDataURL('image/png');
+                                const inputId = 'template_png_' + template.replace(/-/g, '_');
+                                const inputElement = document.getElementById(inputId);
+                                if (inputElement) {
+                                    inputElement.value = pngData;
+                                }
+                                tempCanvas.dispose();
+                            });
+                        } else {
+                            // Jika tidak ada marking, gunakan gambar asli sebagai PNG
+                            tempCanvas.renderAll();
+                            const pngData = tempCanvas.toDataURL('image/png');
+                            const inputId = 'template_png_' + template.replace(/-/g, '_');
+                            const inputElement = document.getElementById(inputId);
+                            if (inputElement) {
+                                inputElement.value = pngData;
+                            }
+                            tempCanvas.dispose();
+                        }
+                    });
+                });
+            }
+
             // Submit form
             document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Simpan data marking sebelum submit
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
-                    'hasControls'
-                ]));
+                // Cek tanda tangan dokter
+                if (doctorSignaturePad.isEmpty()) {
+                    alert('Harap isi tanda tangan dokter terlebih dahulu!');
+                    return false;
+                }
+
+                // Cek tanda tangan pasien
+                if (patientSignaturePad.isEmpty()) {
+                    alert('Harap isi tanda tangan pasien terlebih dahulu!');
+                    return false;
+                }
+
+                // Simpan data tanda tangan
+                document.getElementById('doctorSignature').value = doctorSignaturePad.toDataURL();
+                document.getElementById('patientSignature').value = patientSignaturePad.toDataURL();
+
+                // Simpan data marking
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
                 saveAllMarkingData();
 
-                // Submit form
-                this.submit();
+                // Simpan data PNG untuk semua template
+                saveTemplatePngData();
+
+                // Submit form setelah semua data disiapkan
+                setTimeout(() => {
+                    this.submit();
+                }, 1500); // Beri waktu lebih untuk memproses semua PNG
             });
         });
     </script>

@@ -95,8 +95,8 @@ class SiteMarkingController extends Controller
 
     public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-
         // dd($request->all());
+
         DB::beginTransaction();
 
         try {
@@ -113,6 +113,12 @@ class SiteMarkingController extends Controller
                 'tanda_tangan_dokter' => 'required',
                 'tanda_tangan_pasien' => 'required',
                 'confirmation' => 'required',
+                'template_png_full_body' => 'nullable',
+                'template_png_head_front_back' => 'nullable',
+                'template_png_head_side' => 'nullable',
+                'template_png_hand_dorsal' => 'nullable',
+                'template_png_hand_palmar' => 'nullable',
+                'template_png_foot' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -191,6 +197,54 @@ class SiteMarkingController extends Controller
                 // Simpan path ke database
                 $data['tanda_tangan_pasien'] = $path . '/' . $filename;
             }
+
+            // BAGIAN BARU: Simpan gambar PNG untuk setiap template
+            $markingPath = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}/marking";
+
+            // Pastikan direktori ada
+            if (!Storage::exists($markingPath)) {
+                Storage::makeDirectory($markingPath);
+            }
+
+            // Daftar template yang akan disimpan
+            $templateNames = [
+                'full_body',
+                'head_front_back',
+                'head_side',
+                'hand_dorsal',
+                'hand_palmar',
+                'foot'
+            ];
+
+            // Array untuk menyimpan path gambar marking
+            $markingImages = [];
+
+            // Simpan gambar PNG untuk setiap template
+            foreach ($templateNames as $template) {
+                $inputName = 'template_png_' . $template;
+
+                if ($request->has($inputName) && !empty($request->$inputName)) {
+                    // Hapus header base64 jika ada
+                    $imageData = $request->$inputName;
+                    if (strpos($imageData, ';base64,') !== false) {
+                        list(, $imageData) = explode(';base64,', $imageData);
+                    }
+                    $imageData = str_replace(' ', '+', $imageData);
+                    $imageData = base64_decode($imageData);
+
+                    // Buat nama file unik
+                    $filename = 'marking_' . str_replace('_', '-', $template) . '_' . time() . '_' . uniqid() . '.png';
+
+                    // Simpan gambar
+                    Storage::put($markingPath . '/' . $filename, $imageData);
+
+                    // Tambahkan path ke array
+                    $markingImages[str_replace('_', '-', $template)] = $markingPath . '/' . $filename;
+                }
+            }
+
+            // Simpan data marking images ke database dalam format JSON
+            $data['marking_images'] = json_encode($markingImages);
 
             // Simpan data ke database
             OkSiteMarking::create($data);
@@ -313,6 +367,12 @@ class SiteMarkingController extends Controller
                 'tanda_tangan_dokter' => 'nullable',
                 'tanda_tangan_pasien' => 'nullable',
                 'confirmation' => 'required',
+                'template_png_full_body' => 'nullable',
+                'template_png_head_front_back' => 'nullable',
+                'template_png_head_side' => 'nullable',
+                'template_png_hand_dorsal' => 'nullable',
+                'template_png_hand_palmar' => 'nullable',
+                'template_png_foot' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -402,6 +462,72 @@ class SiteMarkingController extends Controller
                 $data['tanda_tangan_pasien'] = $path . '/' . $filename;
             }
 
+            // BAGIAN BARU: Update gambar PNG untuk setiap template
+            $markingPath = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}/marking";
+
+            // Pastikan direktori ada
+            if (!Storage::exists($markingPath)) {
+                Storage::makeDirectory($markingPath);
+            }
+
+            // Daftar template yang akan disimpan
+            $templateNames = [
+                'full_body',
+                'head_front_back',
+                'head_side',
+                'hand_dorsal',
+                'hand_palmar',
+                'foot'
+            ];
+
+            // Array untuk menyimpan path gambar marking
+            $markingImages = [];
+
+            // Ambil data marking_images yang sudah ada jika tersedia
+            $existingMarkingImages = [];
+            if ($siteMarking->marking_images) {
+                $existingMarkingImages = json_decode($siteMarking->marking_images, true) ?: [];
+            }
+
+            // Simpan gambar PNG untuk setiap template
+            foreach ($templateNames as $template) {
+                $inputName = 'template_png_' . $template;
+
+                if ($request->has($inputName) && !empty($request->$inputName)) {
+                    // Hapus file lama jika ada
+                    $templateKey = str_replace('_', '-', $template);
+                    if (isset($existingMarkingImages[$templateKey]) && Storage::exists($existingMarkingImages[$templateKey])) {
+                        Storage::delete($existingMarkingImages[$templateKey]);
+                    }
+
+                    // Hapus header base64 jika ada
+                    $imageData = $request->$inputName;
+                    if (strpos($imageData, ';base64,') !== false) {
+                        list(, $imageData) = explode(';base64,', $imageData);
+                    }
+                    $imageData = str_replace(' ', '+', $imageData);
+                    $imageData = base64_decode($imageData);
+
+                    // Buat nama file unik
+                    $filename = 'marking_' . str_replace('_', '-', $template) . '_' . time() . '_' . uniqid() . '.png';
+
+                    // Simpan gambar
+                    Storage::put($markingPath . '/' . $filename, $imageData);
+
+                    // Tambahkan path ke array
+                    $markingImages[str_replace('_', '-', $template)] = $markingPath . '/' . $filename;
+                } else {
+                    // Jika tidak ada gambar baru, pertahankan gambar yang sudah ada
+                    $templateKey = str_replace('_', '-', $template);
+                    if (isset($existingMarkingImages[$templateKey])) {
+                        $markingImages[$templateKey] = $existingMarkingImages[$templateKey];
+                    }
+                }
+            }
+
+            // Simpan data marking images ke database dalam format JSON
+            $data['marking_images'] = json_encode($markingImages);
+
             // Update data di database
             $siteMarking->update($data);
 
@@ -490,10 +616,10 @@ class SiteMarkingController extends Controller
             abort(404, 'Site marking not found');
         }
 
-        // Parsedkan data marking ke JSON
-        $markingData = json_decode($siteMarking->marking_data, true);
+        // Parse data marking_images ke JSON
+        $markingImages = json_decode($siteMarking->marking_images, true) ?? [];
 
-        return view('unit-pelayanan.operasi.pelayanan.sitemarking.print', compact('dataMedis', 'siteMarking', 'markingData'));
+        return view('unit-pelayanan.operasi.pelayanan.sitemarking.print', compact('dataMedis', 'siteMarking', 'markingImages'));
     }
 
 }
