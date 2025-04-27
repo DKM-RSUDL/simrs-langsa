@@ -85,40 +85,51 @@
             $(document).on('click', '.btn-delete', function() {
                 const id = $(this).data('id');
 
-
-                if (confirm('Apakah Anda yakin ingin menghapus rekonsiliasi obat ini?')) {
-                    $.ajax({
-                        url: "{{ route('farmasi.rekonsiliasiObatDelete', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
-                        method: 'DELETE',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            id: id
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                iziToast.success({
-                                    title: 'Sukses',
-                                    message: response.message,
-                                    position: 'topRight'
-                                });
-                                location.reload(); // Refresh halaman untuk memperbarui tabel
-                            } else {
-                                iziToast.error({
-                                    title: 'Error',
-                                    message: response.message,
-                                    position: 'topRight'
+                Swal.fire({
+                    title: 'Hapus Rekonsiliasi Obat',
+                    text: 'Apakah Anda yakin ingin menghapus rekonsiliasi obat ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('farmasi.rekonsiliasiObatDelete', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}",
+                            method: 'DELETE',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id: id
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Sukses!',
+                                        text: response.message,
+                                        icon: 'success'
+                                    }).then(() => {
+                                        location.reload(); // Refresh halaman untuk memperbarui tabel
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: response.message,
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Terjadi kesalahan saat menghapus data.',
+                                    icon: 'error'
                                 });
                             }
-                        },
-                        error: function(xhr) {
-                            iziToast.error({
-                                title: 'Error',
-                                message: 'Terjadi kesalahan saat menghapus data.',
-                                position: 'topRight'
-                            });
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
         });
     </script>

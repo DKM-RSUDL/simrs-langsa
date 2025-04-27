@@ -99,13 +99,7 @@
                                                     </div>
                                                     <label class="form-label">Aturan Pakai</label>
                                                     <div class="row mb-3">
-                                                        <div class="col-md-6">
-                                                            <label for="jumlahHari" class="form-label">Jumlah
-                                                                hari</label>
-                                                            <input type="number" class="form-control"
-                                                                id="jumlahHari">
-                                                        </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
                                                             <label for="frekuensi"
                                                                 class="form-label">Frekuensi/interval</label>
                                                             <input type="text" class="form-control" id="frekuensi" placeholder="3 x 1 hari">

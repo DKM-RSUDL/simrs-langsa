@@ -48,12 +48,12 @@
             'link' => route('operasi.pelayanan.asesmen.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
-            'icon' => 'check.svg',
+            'icon' => 'rrrr.png',
             'label' => 'Site Marking',
-            'link' => '#',
+            'link' => route('operasi.pelayanan.site-marking.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         [
-            'icon' => 'check.svg',
+            'icon' => 'ceklis.png',
             'label' => 'Cek List Keselamatan',
             'link' => route('operasi.pelayanan.ceklist-keselamatan.index', [$dataMedis->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
