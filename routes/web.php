@@ -38,6 +38,7 @@ use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatan
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
+use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistKeselamatanController;
 use App\Http\Controllers\UnitPelayanan\Operasi\EdukasiAnestesiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanAnastesiController;
@@ -951,6 +952,20 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('laporan-anastesi')->group(function () {
                             Route::name('.laporan-anastesi')->group(function () {
                                 Route::controller(LaporanAnastesiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/edit/{data}', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                });
+                            });
+                        });
+
+                        //LAPORAN ANASTESI
+                        Route::prefix('ceklist-anasthesi')->group(function () {
+                            Route::name('.ceklist-anasthesi')->group(function () {
+                                Route::controller(CeklistAnasthesiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');

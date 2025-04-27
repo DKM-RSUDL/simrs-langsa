@@ -11,6 +11,7 @@ use App\Models\OkLaporanAnastesi;
 use App\Models\OkLaporanAnastesiDtl;
 use App\Models\OkLaporanAnastesiDtl2;
 use App\Models\Perawat;
+use App\Models\RmeCeklistKesiapanAnesthesi;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -51,7 +52,18 @@ class LaporanAnastesiController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->get();
 
-        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.index', compact('dataMedis', 'laporanAnastesi'));
+        $ceklistKesiapanAnesthesi = RmeCeklistKesiapanAnesthesi::with('userCreate')
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('id', 'desc')
+            ->paginate(10);            
+
+        return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.index', compact(
+            'dataMedis', 
+            'laporanAnastesi',
+            'ceklistKesiapanAnesthesi',
+        ));
     }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
