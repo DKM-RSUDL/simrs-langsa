@@ -111,7 +111,7 @@
         <!-- Left Side -->
         <div class="login__left">
             <h1>
-                Selamat Datang...<br />Di Electronic Medical Record Information System<br />RSUD Langsa
+                Selamat Datang...<br />Di Electronic Medical Record Information System (EMRIS)<br />RSUD Langsa
             </h1>
             <div class="row mt-5">
                 <div class="col-6">
@@ -135,86 +135,8 @@
                         style="max-width: 150px;">
                 </div>
 
-                <!-- Form Login -->
-                {{-- <div class="col-md-8">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <h1 class="text-primary fw-bold text-center">{{ __('Login') }}</h1>
-                        <div class="mb-4">
-                            <label for="email" class="form-label text-center">{{ __('Email Address') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
-                                <input type="email" id="email" name="email"
-                                    class="form-control @error('email') is-invalid @enderror" placeholder="Masukkan Email"
-                                    value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label text-center">{{ __('Password') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" id="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror"
-                                    placeholder="Masukkan password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn__custom btn-lg"> {{ __('Login') }}</button>
-                        </div>
-                    </form>
-                </div> --}}
-
-                <div class="col-md-8">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <h1 class="text-primary fw-bold text-center">{{ __('Login') }}</h1>
-                        <div class="mb-4">
-                            <label for="kd_karyawan" class="form-label text-center">{{ __('Kode Karyawan') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill-add"></i></span>
-                                <input type="text" id="kd_karyawan" name="kd_karyawan"
-                                    class="form-control @error('kd_karyawan') is-invalid @enderror"
-                                    placeholder="Masukkan kode karyawan" value="{{ old('kd_karyawan') }}" required
-                                    autofocus>
-
-                                @error('kd_karyawan')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label text-center">{{ __('Password') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" id="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror"
-                                    placeholder="Masukkan password" required>
-
-                                @error('password')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn__custom btn-lg">{{ __('Login') }}</button>
-                        </div>
-                    </form>
+                <div class="col-md-8 text-center">
+                    <a href="{{ route('home') }}" class="btn btn__custom btn-lg">{{ __('Login') }}</a>
                 </div>
             </div>
         </div>
