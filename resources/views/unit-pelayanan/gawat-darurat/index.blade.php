@@ -1001,6 +1001,7 @@
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>
                                             </ul>
                                         </div>
                                     </div>
