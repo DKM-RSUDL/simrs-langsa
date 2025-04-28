@@ -200,7 +200,8 @@
             <div class="card-body">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Edit Penandaan Daerah Operasi</h5>
+                        <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Edit Penandaan Daerah Operasi
+                        </h5>
                     </div>
                     <div class="card-body">
                         <form id="siteMarkingForm"
@@ -211,23 +212,39 @@
                             <input type="hidden" name="kd_pasien" value="{{ $dataMedis->kd_pasien }}">
                             <input type="hidden" name="tgl_masuk" value="{{ $dataMedis->tgl_masuk }}">
                             <input type="hidden" name="urut_masuk" value="{{ $dataMedis->urut_masuk }}">
-                            <input type="hidden" name="marking_data" id="markingData" value="{{ htmlspecialchars($siteMarking->marking_data) }}">
-                            <input type="hidden" name="active_template" id="activeTemplate" value="{{ $siteMarking->active_template }}">
+                            <input type="hidden" name="marking_data" id="markingData"
+                                value="{{ htmlspecialchars($siteMarking->marking_data) }}">
+                            <input type="hidden" name="active_template" id="activeTemplate"
+                                value="{{ $siteMarking->active_template }}">
+
+                            <!-- Tambahan untuk menyimpan data PNG template -->
+                            <input type="hidden" name="template_png_full_body" id="template_png_full_body">
+                            <input type="hidden" name="template_png_head_front_back" id="template_png_head_front_back">
+                            <input type="hidden" name="template_png_head_side" id="template_png_head_side">
+                            <input type="hidden" name="template_png_hand_dorsal" id="template_png_hand_dorsal">
+                            <input type="hidden" name="template_png_hand_palmar" id="template_png_hand_palmar">
+                            <input type="hidden" name="template_png_foot" id="template_png_foot">
 
                             <div class="template-selector mb-3">
                                 <label class="d-block mb-2">Pilih Template Anatomi:</label>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'full-body' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'full-body' ? 'active' : '' }}"
                                         data-template="full-body">Seluruh Tubuh</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-front-back' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-front-back' ? 'active' : '' }}"
                                         data-template="head-front-back">Muka Depan/Belakang</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-side' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'head-side' ? 'active' : '' }}"
                                         data-template="head-side">Muka Samping Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-dorsal' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-dorsal' ? 'active' : '' }}"
                                         data-template="hand-dorsal">Tangan Dorsal Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-palmar' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'hand-palmar' ? 'active' : '' }}"
                                         data-template="hand-palmar">Tangan Palmar Kiri/Kanan</button>
-                                    <button type="button" class="btn btn-outline-primary {{ $siteMarking->active_template == 'foot' ? 'active' : '' }}"
+                                    <button type="button"
+                                        class="btn btn-outline-primary {{ $siteMarking->active_template == 'foot' ? 'active' : '' }}"
                                         data-template="foot">Kaki</button>
                                 </div>
                             </div>
@@ -258,11 +275,16 @@
 
                                     <div class="color-picker">
                                         <span>Warna:</span>
-                                        <div class="color-option active" data-color="#ff0000" style="background-color: #ff0000;"></div>
-                                        <div class="color-option" data-color="#0000ff" style="background-color: #0000ff;"></div>
-                                        <div class="color-option" data-color="#00cc00" style="background-color: #00cc00;"></div>
-                                        <div class="color-option" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
-                                        <div class="color-option" data-color="#000000" style="background-color: #000000;"></div>
+                                        <div class="color-option active" data-color="#ff0000"
+                                            style="background-color: #ff0000;"></div>
+                                        <div class="color-option" data-color="#0000ff"
+                                            style="background-color: #0000ff;"></div>
+                                        <div class="color-option" data-color="#00cc00"
+                                            style="background-color: #00cc00;"></div>
+                                        <div class="color-option" data-color="#ffcc00"
+                                            style="background-color: #ffcc00;"></div>
+                                        <div class="color-option" data-color="#000000"
+                                            style="background-color: #000000;"></div>
                                     </div>
                                 </div>
 
@@ -307,17 +329,20 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-header bg-light">
-                                            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>Detail Prosedur Operasi</h5>
+                                            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>Detail
+                                                Prosedur Operasi</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label class="form-label fw-bold"><i class="fas fa-user-md me-2"></i>Dokter Bedah</label>
+                                                        <label class="form-label fw-bold"><i
+                                                                class="fas fa-user-md me-2"></i>Dokter Bedah</label>
                                                         <select class="form-control select2" name="ahli_bedah" required>
                                                             <option value="" disabled>Pilih Ahli Bedah</option>
                                                             @foreach ($dokter as $d)
-                                                                <option value="{{ $d->kd_dokter }}" {{ $siteMarking->kd_dokter == $d->kd_dokter ? 'selected' : '' }}>
+                                                                <option value="{{ $d->kd_dokter }}"
+                                                                    {{ $siteMarking->kd_dokter == $d->kd_dokter ? 'selected' : '' }}>
                                                                     {{ $d->nama_lengkap }}
                                                                 </option>
                                                             @endforeach
@@ -326,21 +351,26 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label for="waktu" class="form-label fw-bold"><i class="fas fa-clock me-2"></i>Tanggal Prosedur</label>
-                                                        <input type="datetime-local" name="waktu" id="waktu" class="form-control"
-                                                            value="{{ \Carbon\Carbon::parse($siteMarking->waktu_prosedure)->format('Y-m-d\TH:i') }}" required>
+                                                        <label for="waktu" class="form-label fw-bold"><i
+                                                                class="fas fa-clock me-2"></i>Tanggal Prosedur</label>
+                                                        <input type="datetime-local" name="waktu" id="waktu"
+                                                            class="form-control"
+                                                            value="{{ \Carbon\Carbon::parse($siteMarking->waktu_prosedure)->format('Y-m-d\TH:i') }}"
+                                                            required>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="prosedur_operasi" class="form-label fw-bold"><i class="fas fa-procedures me-2"></i>Prosedur Operasi</label>
+                                                <label for="prosedur_operasi" class="form-label fw-bold"><i
+                                                        class="fas fa-procedures me-2"></i>Prosedur Operasi</label>
                                                 <textarea name="prosedur_operasi" id="prosedur_operasi" class="form-control" rows="3"
                                                     placeholder="Jelaskan prosedur operasi yang akan dilakukan..." required>{{ $siteMarking->prosedure }}</textarea>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="notes" class="form-label fw-bold"><i class="fas fa-clipboard me-2"></i>Catatan Site Marking</label>
+                                                <label for="notes" class="form-label fw-bold"><i
+                                                        class="fas fa-clipboard me-2"></i>Catatan Site Marking</label>
                                                 <textarea name="notes" id="notes" class="form-control" rows="3"
                                                     placeholder="Tambahkan catatan tentang site marking...">{{ $siteMarking->notes }}</textarea>
                                             </div>
@@ -353,7 +383,8 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-header bg-light">
-                                            <h5 class="card-title mb-0"><i class="fas fa-signature me-2"></i>Konfirmasi dan Tanda Tangan</h5>
+                                            <h5 class="card-title mb-0"><i class="fas fa-signature me-2"></i>Konfirmasi
+                                                dan Tanda Tangan</h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -363,10 +394,14 @@
                                                         <div class="border p-3 mb-2">
                                                             <canvas id="signatureDoctor" class="signature-pad"></canvas>
                                                         </div>
-                                                        <input type="hidden" name="tanda_tangan_dokter" id="doctorSignature">
+                                                        <input type="hidden" name="tanda_tangan_dokter"
+                                                            id="doctorSignature">
                                                         <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di atas</span>
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="clearDoctorSignature">
+                                                            <span class="text-muted small">Silakan tanda tangan di area di
+                                                                atas</span>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-secondary"
+                                                                id="clearDoctorSignature">
                                                                 <i class="fas fa-eraser me-1"></i>Hapus
                                                             </button>
                                                         </div>
@@ -378,10 +413,14 @@
                                                         <div class="border p-3 mb-2">
                                                             <canvas id="signaturePatient" class="signature-pad"></canvas>
                                                         </div>
-                                                        <input type="hidden" name="tanda_tangan_pasien" id="patientSignature">
+                                                        <input type="hidden" name="tanda_tangan_pasien"
+                                                            id="patientSignature">
                                                         <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di atas</span>
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="clearPatientSignature">
+                                                            <span class="text-muted small">Silakan tanda tangan di area di
+                                                                atas</span>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-secondary"
+                                                                id="clearPatientSignature">
                                                                 <i class="fas fa-eraser me-1"></i>Hapus
                                                             </button>
                                                         </div>
@@ -392,7 +431,8 @@
                                             <div class="form-group mt-3">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="confirmation"
-                                                        id="markingConfirmation" {{ $siteMarking->confirmation ? 'checked' : '' }} required>
+                                                        id="markingConfirmation"
+                                                        {{ $siteMarking->confirmation ? 'checked' : '' }} required>
                                                     <label class="form-check-label" for="markingConfirmation">
                                                         Saya menyatakan bahwa lokasi operasi yang telah ditetapkan pada
                                                         diagram di atas adalah benar dan telah dikonfirmasi oleh pasien.
@@ -428,6 +468,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // === SIGNATURE PAD INITIALIZATION ===
             // Inisialisasi signature pad untuk dokter
             const doctorCanvasElement = document.getElementById('signatureDoctor');
             doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20;
@@ -492,30 +533,30 @@
                 }
             });
 
-            // Fungsi untuk menyimpan tanda tangan ke input hidden sebelum submit
-            document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
-                // Tidak wajib memeriksa tanda tangan kosong karena validasi di controller bersifat nullable
-                document.getElementById('doctorSignature').value = doctorSignaturePad.toDataURL();
-                document.getElementById('patientSignature').value = patientSignaturePad.toDataURL();
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            // === CANVAS INITIALIZATION AND DRAWING TOOLS ===
             let activeTemplate = "{{ $siteMarking->active_template }}";
             let canvas;
             let markingDataPerTemplate = {};
 
-            // Muat data marking dari database
+            // Muat data marking dari database dengan error handling yang lebih baik
             try {
-                const savedData = JSON.parse(document.getElementById('markingData').value);
+                let savedData = {};
+                const markingDataValue = document.getElementById('markingData').value;
+
+                if (markingDataValue && markingDataValue.trim() !== '') {
+                    // Coba bersihkan data jika ada karakter yang tidak diharapkan
+                    const cleanedValue = markingDataValue.replace(/^\s+|\s+$/g, '');
+                    savedData = JSON.parse(cleanedValue);
+                }
+
                 if (savedData && savedData.templates) {
                     markingDataPerTemplate = savedData.templates;
                     activeTemplate = savedData.activeTemplate || activeTemplate;
                 }
             } catch (e) {
                 console.error('Error parsing marking data:', e);
+                // Inisialisasi ke objek kosong jika terjadi error
+                markingDataPerTemplate = {};
             }
 
             let currentTool = 'freeDraw';
@@ -568,8 +609,11 @@
 
             document.querySelectorAll('.template-selector .btn-group button').forEach(button => {
                 button.addEventListener('click', function() {
-                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
-                    document.querySelectorAll('.template-selector .btn-group button').forEach(btn => {
+                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON([
+                        'selectable', 'hasControls'
+                    ]));
+                    document.querySelectorAll('.template-selector .btn-group button').forEach(
+                    btn => {
                         btn.classList.remove('active');
                     });
                     this.classList.add('active');
@@ -581,7 +625,8 @@
 
             document.querySelectorAll('.tool-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentTool = this.dataset.tool;
 
@@ -597,7 +642,8 @@
 
             document.querySelectorAll('.color-option').forEach(color => {
                 color.addEventListener('click', function() {
-                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove(
+                        'active'));
                     this.classList.add('active');
                     currentColor = this.dataset.color;
                     if (canvas.isDrawingMode) {
@@ -641,7 +687,7 @@
                         left: pointer.x,
                         top: pointer.y,
                         radius: 10,
-                        fill: vat('transparent'),
+                        fill: 'transparent', // Fixed from vat('transparent')
                         stroke: currentColor,
                         strokeWidth: 2,
                         originX: 'center',
@@ -713,12 +759,16 @@
 
             canvas.on('mouse:up', function() {
                 isDrawing = false;
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
             canvas.on('object:modified', function() {
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
+                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                    'hasControls'
+                ]));
                 saveAllMarkingData();
             });
 
@@ -730,11 +780,121 @@
                 document.getElementById('markingData').value = JSON.stringify(allMarkingData);
             }
 
-            document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
+            // Fungsi untuk menyimpan data PNG untuk setiap template dengan Promise
+            function saveTemplatePngData() {
+                return new Promise((resolve) => {
+                    const templateNames = [
+                        'full-body',
+                        'head-front-back',
+                        'head-side',
+                        'hand-dorsal',
+                        'hand-palmar',
+                        'foot'
+                    ];
+
+                    let completedTemplates = 0;
+                    const totalTemplates = templateNames.length;
+
+                    templateNames.forEach(template => {
+                        const templateImage = document.getElementById('template-' + template);
+                        if (!templateImage) {
+                            completedTemplates++;
+                            if (completedTemplates >= totalTemplates) {
+                                resolve();
+                            }
+                            return;
+                        }
+
+                        // Buat canvas sementara untuk template ini
+                        const tempCanvas = new fabric.Canvas(null, {
+                            width: templateImage.naturalWidth,
+                            height: templateImage.naturalHeight
+                        });
+
+                        // Set background image untuk semua template
+                        fabric.Image.fromURL(templateImage.src, function(img) {
+                            tempCanvas.setBackgroundImage(img, tempCanvas.renderAll.bind(
+                                tempCanvas), {
+                                scaleX: tempCanvas.width / img.width,
+                                scaleY: tempCanvas.height / img.height,
+                                top: 0,
+                                left: 0,
+                                originX: 'left',
+                                originY: 'top'
+                            });
+
+                            // Jika ada data marking, muat ke canvas
+                            if (markingDataPerTemplate[template]) {
+                                tempCanvas.loadFromJSON(markingDataPerTemplate[template],
+                                    function() {
+                                        tempCanvas.renderAll();
+                                        // Ambil data PNG dengan kualitas lebih rendah untuk mengurangi ukuran
+                                        const pngData = tempCanvas.toDataURL(
+                                            'image/png', 0.7);
+                                        const inputId = 'template_png_' + template
+                                            .replace(/-/g, '_');
+                                        const inputElement = document.getElementById(
+                                            inputId);
+                                        if (inputElement) {
+                                            inputElement.value = pngData;
+                                        }
+                                        tempCanvas.dispose();
+
+                                        completedTemplates++;
+                                        if (completedTemplates >= totalTemplates) {
+                                            resolve();
+                                        }
+                                    });
+                            } else {
+                                // Jika tidak ada marking, gunakan gambar asli sebagai PNG
+                                tempCanvas.renderAll();
+                                const pngData = tempCanvas.toDataURL('image/png', 0.7);
+                                const inputId = 'template_png_' + template.replace(/-/g,
+                                    '_');
+                                const inputElement = document.getElementById(inputId);
+                                if (inputElement) {
+                                    inputElement.value = pngData;
+                                }
+                                tempCanvas.dispose();
+
+                                completedTemplates++;
+                                if (completedTemplates >= totalTemplates) {
+                                    resolve();
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Handle submit form
+            document.getElementById('siteMarkingForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
-                saveAllMarkingData();
-                this.submit();
+
+                try {
+                    // Tampilkan loading indicator jika perlu
+                    console.log('Memproses data marking...');
+
+                    // Simpan data marking
+                    markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable',
+                        'hasControls'
+                    ]));
+                    saveAllMarkingData();
+
+                    // Simpan data PNG untuk semua template
+                    await saveTemplatePngData();
+
+                    // Simpan data tanda tangan
+                    document.getElementById('doctorSignature').value = doctorSignaturePad.toDataURL();
+                    document.getElementById('patientSignature').value = patientSignaturePad.toDataURL();
+
+                    console.log('Data siap, mengirim form...');
+                    // Submit form
+                    this.submit();
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+                }
             });
         });
     </script>
