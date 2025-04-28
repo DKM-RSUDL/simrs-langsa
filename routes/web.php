@@ -59,6 +59,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCppt
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
@@ -532,6 +533,18 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
 
+
+                            //Monitoring
+                            Route::prefix('monitoring')->group(function () {
+                                Route::name('.monitoring')->group(function () {
+                                    Route::controller(MonitoringController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                    });
+                                });
+                            });
+
+
                             Route::prefix('serah-terima')->group(function () {
                                 Route::name('.serah-terima')->group(function () {
                                     Route::controller(RawatInapController::class)->group(function () {
@@ -540,6 +553,7 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
                         });
                     });
                 });
