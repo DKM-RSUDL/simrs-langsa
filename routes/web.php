@@ -46,6 +46,7 @@ use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperatifController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiMedisController;
 use App\Http\Controllers\UnitPelayanan\Operasi\LaporanOperasiController;
 use App\Http\Controllers\UnitPelayanan\Operasi\PraAnestesiPerawatController;
+use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
@@ -60,6 +61,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCppt
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
@@ -203,8 +205,11 @@ Route::middleware('auth')->group(function () {
                                 Route::name('.farmasi')->group(function () {
                                     Route::controller(FarmasiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
+                                        Route::get('/order-obat', 'orderObat')->name('.order-obat');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
+                                        Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                        Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
                                     });
                                 });
                             });
@@ -409,9 +414,12 @@ Route::middleware('auth')->group(function () {
                                     Route::controller(RawatInapFarmasiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
+                                        Route::get('/order-obat', 'orderObat')->name('.order-obat');
                                         Route::get('/search-obat', 'searchObat')->name('.searchObat');
                                         Route::post('/catatanObat', 'catatanObat')->name('.catatanObat');
                                         Route::delete('/catatanObat/{id}', 'hapusCatatanObat')->name('.hapusCatatanObat');
+                                        Route::post('/rekonsiliasiObat', 'rekonsiliasiObat')->name('.rekonsiliasiObat');
+                                        Route::delete('/deleteRekonsiliasiObat', 'deleteRekonsiliasiObat')->name('.rekonsiliasiObatDelete');
                                     });
                                 });
                             });
@@ -559,6 +567,18 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
 
+
+                            //Monitoring
+                            Route::prefix('monitoring')->group(function () {
+                                Route::name('.monitoring')->group(function () {
+                                    Route::controller(MonitoringController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                    });
+                                });
+                            });
+
+
                             Route::prefix('serah-terima')->group(function () {
                                 Route::name('.serah-terima')->group(function () {
                                     Route::controller(RawatInapController::class)->group(function () {
@@ -567,6 +587,7 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
+
                         });
                     });
                 });
@@ -998,21 +1019,42 @@ Route::middleware('auth')->group(function () {
                             Route::name('.ceklist-keselamatan')->group(function () {
                                 Route::controller(CeklistKeselamatanController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
+                                    Route::get('/print', 'print')->name('.print');
 
                                     Route::get('/create-signin', 'createSignin')->name('.create-signin');
                                     Route::post('/store-signin', 'storeSignin')->name('.store-signin');
                                     Route::get('/edit-signin/{id}', 'editSignin')->name('.edit-signin');
+                                    Route::put('/update-signin/{id}', 'updateSignin')->name('.update-signin');
                                     Route::delete('/destroy-signin/{id}', 'destroySignin')->name('.destroy-signin');
 
                                     Route::get('/create-timeout', 'createTimeout')->name('.create-timeout');
                                     Route::post('/store-timeout', 'storeTimeout')->name('.store-timeout');
                                     Route::get('/edit-timeout/{id}', 'editTimeout')->name('.edit-timeout');
+                                    Route::put('/update-timeout/{id}', 'updateTimeout')->name('.update-timeout');
                                     Route::delete('/destroy-timeout/{id}', 'destroyTimeout')->name('.destroy-timeout');
 
                                     Route::get('/create-signout', 'createSignout')->name('.create-signout');
                                     Route::post('/store-signout', 'storeSignout')->name('.store-signout');
                                     Route::get('/edit-signout/{id}', 'editSignout')->name('.edit-signout');
+                                    Route::put('/update-signout/{id}', 'updateSignout')->name('.update-signout');
                                     Route::delete('/destroy-signout/{id}', 'destroySignout')->name('.destroy-signout');
+                                });
+                            });
+                        });
+
+
+                        //SITE MARKING
+                        Route::prefix('site-marking')->group(function () {
+                            Route::name('.site-marking')->group(function () {
+                                Route::controller(SiteMarkingController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/store', 'store')->name('.store');
+                                    Route::get('/show/{id}', 'show')->name('.show');
+                                    Route::get('/edit/{id}', 'edit')->name('.edit');
+                                    Route::put('/update/{id}', 'update')->name('.update');
+                                    Route::delete('/destroy/{id}', 'destroy')->name('.destroy');
+                                    Route::get('/print/{id}', 'print')->name('.print');
                                 });
                             });
                         });
