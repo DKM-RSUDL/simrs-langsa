@@ -2,9 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
+
     </style>
 @endpush
 
@@ -50,7 +48,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('edukasi.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                            <a href="{{ route('permintaan-darah.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                 class="btn btn-primary">
                                 <i class="ti-plus"></i> Tambah
                             </a>
@@ -73,7 +71,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($edukasi as $index => $item)
+                            {{-- @forelse($edukasi as $index => $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('d-m-Y H:i', strtotime($item->waktu_edukasi)) }}</td>
@@ -129,13 +127,13 @@
                                 <tr>
                                     <td colspan="8" class="text-center">Tidak ada data edukasi</td>
                                 </tr>
-                            @endforelse
+                            @endforelse --}}
                         </tbody>
                     </table>
 
                     <!-- Pagination -->
                     <div class="d-flex justify-content-end">
-                        {{ $edukasi->links() }}
+                        {{-- {{ $edukasi->links() }} --}}
                     </div>
                 </div>
             </div>

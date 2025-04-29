@@ -80,7 +80,7 @@
         [
             'icon' => 'info.png',
             'label' => 'Edukasi',
-            'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData]),
+            'link' => route('edukasi.index', [$dataMedis->pasien->kd_pasien, $tglMasukData, $dataMedis->urut_masuk]),
         ],
         // [
         //     'icon' => 'goal.png',
