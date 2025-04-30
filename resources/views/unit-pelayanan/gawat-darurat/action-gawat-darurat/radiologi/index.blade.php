@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                                                } */
+                                                                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                        } */
     </style>
 @endpush
 
@@ -23,15 +23,9 @@
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                {{-- <button class="nav-link active" id="order-rad-tab" data-bs-toggle="tab"
-                                    data-bs-target="#order" type="button" role="tab" aria-controls="order"
-                                    aria-selected="true">Order
-                                </button> --}}
                                 <a href="?tab=order" class="nav-link active" aria-selected="true">Order</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                {{-- <button class="nav-link" id="hasil-rad-tab" data-bs-toggle="tab" data-bs-target="#hasil"
-                                    type="button" role="tab" aria-controls="hasil" aria-selected="false">Hasil</button> --}}
                                 <a href="?tab=hasil" class="nav-link" aria-selected="true">Hasil</a>
                             </li>
                         </ul>
