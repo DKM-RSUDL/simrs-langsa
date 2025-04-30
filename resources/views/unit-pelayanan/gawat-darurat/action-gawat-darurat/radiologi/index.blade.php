@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
+                                                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                                                } */
     </style>
 @endpush
 
@@ -17,137 +17,175 @@
         <div class="col-md-9">
             @include('components.navigation')
 
-            <div class="row">
-                <div class="d-flex justify-content-between align-items-center m-3">
+            <div class="d-flex justify-content-center">
+                <div class="card w-100 h-100">
+                    <div class="card-body">
+                        {{-- Tabs --}}
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                {{-- <button class="nav-link active" id="order-rad-tab" data-bs-toggle="tab"
+                                    data-bs-target="#order" type="button" role="tab" aria-controls="order"
+                                    aria-selected="true">Order
+                                </button> --}}
+                                <a href="?tab=order" class="nav-link active" aria-selected="true">Order</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                {{-- <button class="nav-link" id="hasil-rad-tab" data-bs-toggle="tab" data-bs-target="#hasil"
+                                    type="button" role="tab" aria-controls="hasil" aria-selected="false">Hasil</button> --}}
+                                <a href="?tab=hasil" class="nav-link" aria-selected="true">Hasil</a>
+                            </li>
+                        </ul>
 
-                    <div class="row">
-                        <!-- Select PPA Option -->
-                        <div class="col-md-2">
-                            <select class="form-select" id="SelectOption" aria-label="Pilih...">
-                                <option value="semua" selected>Semua Episode</option>
-                                <option value="option1">Episode Sekarang</option>
-                                <option value="option2">1 Bulan</option>
-                                <option value="option3">3 Bulan</option>
-                                <option value="option4">6 Bulan</option>
-                                <option value="option5">9 Bulan</option>
-                            </select>
-                        </div>
+                        {{-- Tab Content --}}
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active">
+                                {{-- TAB 1. buatlah list disini --}}
 
-                        <!-- Start Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="start_date" id="start_date" class="form-control"
-                                placeholder="Dari Tanggal">
-                        </div>
+                                <div class="row">
+                                    <div class="d-flex justify-content-between align-items-center m-3">
 
-                        <!-- End Date -->
-                        <div class="col-md-2">
-                            <input type="date" name="end_date" id="end_date" class="form-control"
-                                placeholder="S.d Tanggal">
-                        </div>
+                                        <div class="row">
+                                            <!-- Select PPA Option -->
+                                            <div class="col-md-2">
+                                                <select class="form-select" id="SelectOption" aria-label="Pilih...">
+                                                    <option value="semua" selected>Semua Episode</option>
+                                                    <option value="option1">Episode Sekarang</option>
+                                                    <option value="option2">1 Bulan</option>
+                                                    <option value="option3">3 Bulan</option>
+                                                    <option value="option4">6 Bulan</option>
+                                                    <option value="option5">9 Bulan</option>
+                                                </select>
+                                            </div>
 
-                        <!-- Button Filter -->
-                        <div class="col-md-1">
-                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
-                                    class="bi bi-funnel-fill"></i></button>
-                        </div>
+                                            <!-- Start Date -->
+                                            <div class="col-md-2">
+                                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                                    placeholder="Dari Tanggal">
+                                            </div>
 
-                        <!-- Search Bar -->
-                        <div class="col-md-3">
-                            <form method="GET"
-                                action="{{ route('radiologi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+                                            <!-- End Date -->
+                                            <div class="col-md-2">
+                                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                                    placeholder="S.d Tanggal">
+                                            </div>
 
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="dokter & no order" aria-label="Cari"
-                                        value="{{ request('search') }}" aria-describedby="basic-addon1">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                            <!-- Button Filter -->
+                                            <div class="col-md-1">
+                                                <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                                        class="bi bi-funnel-fill"></i></button>
+                                            </div>
+
+                                            <!-- Search Bar -->
+                                            <div class="col-md-3">
+                                                <form method="GET"
+                                                    action="{{ route('radiologi.index', ['kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d')]) }}">
+
+                                                    <div class="input-group">
+                                                        <input type="text" name="search" class="form-control"
+                                                            placeholder="dokter & no order" aria-label="Cari"
+                                                            value="{{ request('search') }}" aria-describedby="basic-addon1">
+                                                        <button type="submit" class="btn btn-primary">Cari</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <!-- Add Button -->
+                                            <!-- Include the modal file -->
+                                            <div class="col-md-2">
+                                                @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.modal')
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm table-hover">
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th width="100px">No order</th>
+                                                    <th>Nama Pemeriksaan</th>
+                                                    <th>Waktu Permintaan</th>
+                                                    <th>Waktu Hasil</th>
+                                                    <th>Dokter Pengirim</th>
+                                                    <th>Cito/Non Cito</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($radList as $rad)
+                                                    <tr>
+                                                        <td>{{ (int) $rad->kd_order }}</td>
+                                                        <td>
+                                                            @php
+                                                                $namaPemeriksaan = '';
+
+                                                                foreach ($rad->details as $dtl) {
+                                                                    $namaPemeriksaan .= empty($namaPemeriksaan)
+                                                                        ? $dtl->produk->deskripsi
+                                                                        : ', ' . $dtl->produk->deskripsi;
+                                                                }
+                                                            @endphp
+
+                                                            {{ $namaPemeriksaan }}
+                                                        </td>
+                                                        <td>{{ date('d M Y H:i', strtotime($rad->tgl_order)) }}</td>
+                                                        <td></td>
+                                                        <td>{{ $rad->dokter->nama_lengkap . '(' . $rad->unit->nama_unit . ')' }}
+                                                        </td>
+                                                        <td align="middle">
+                                                            {{ $rad->cyto == 1 ? 'Cito' : 'Non Cito' }}
+                                                        </td>
+                                                        <td>
+                                                            @php
+                                                                $statusOrder = $rad->status_order;
+                                                                $statusLabel = '';
+
+                                                                if ($statusOrder == 0) {
+                                                                    $statusLabel =
+                                                                        '<span class="text-warning">Diproses</span>';
+                                                                }
+                                                                if ($statusOrder == 1) {
+                                                                    $statusLabel =
+                                                                        '<span class="text-secondary">Diorder</span>';
+                                                                }
+                                                                if ($statusOrder == 2) {
+                                                                    $statusLabel =
+                                                                        '<span class="text-success">Selesai</span>';
+                                                                }
+                                                            @endphp
+
+                                                            {!! $statusLabel !!}
+                                                        </td>
+
+                                                        <td>
+                                                            @if ($rad->status_order == 1)
+                                                                <button class="btn btn-sm btn-secondary btn-edit-rad"
+                                                                    data-kode="{{ intval($rad->kd_order) }}"
+                                                                    data-bs-target="#editRadiologiModal"><i
+                                                                        class="ti-pencil"></i></button>
+                                                            @else
+                                                                <button class="btn btn-sm btn-primary btn-show-rad"
+                                                                    data-kode="{{ intval($rad->kd_order) }}"
+                                                                    data-bs-target="#showRadiologiModal"><i
+                                                                        class="ti-eye"></i></button>
+                                                            @endif
+                                                            <button
+                                                                class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad' : '' }}"
+                                                                data-kode="{{ intval($rad->kd_order) }}"><i
+                                                                    class="bi bi-x-circle {{ $rad->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
 
-                        <!-- Add Button -->
-                        <!-- Include the modal file -->
-                        <div class="col-md-2">
-                            @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.radiologi.modal')
+                            </div>
                         </div>
-
                     </div>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th width="100px">No order</th>
-                                <th>Nama Pemeriksaan</th>
-                                <th>Waktu Permintaan</th>
-                                <th>Waktu Hasil</th>
-                                <th>Dokter Pengirim</th>
-                                <th>Cito/Non Cito</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($radList as $rad)
-                                <tr>
-                                    <td>{{ (int) $rad->kd_order }}</td>
-                                    <td>
-                                        @php
-                                            $namaPemeriksaan = '';
-
-                                            foreach ($rad->details as $dtl) {
-                                                $namaPemeriksaan .= empty($namaPemeriksaan)
-                                                    ? $dtl->produk->deskripsi
-                                                    : ', ' . $dtl->produk->deskripsi;
-                                            }
-                                        @endphp
-
-                                        {{ $namaPemeriksaan }}
-                                    </td>
-                                    <td>{{ date('d M Y H:i', strtotime($rad->tgl_order)) }}</td>
-                                    <td></td>
-                                    <td>{{ $rad->dokter->nama_lengkap . '(' . $rad->unit->nama_unit . ')' }}</td>
-                                    <td align="middle">
-                                        {{ $rad->cyto == 1 ? 'Cito' : 'Non Cito' }}
-                                    </td>
-                                    <td>
-                                        @php
-                                            $statusOrder = $rad->status_order;
-                                            $statusLabel = '';
-
-                                            if ($statusOrder == 0) {
-                                                $statusLabel = '<span class="text-warning">Diproses</span>';
-                                            }
-                                            if ($statusOrder == 1) {
-                                                $statusLabel = '<span class="text-secondary">Diorder</span>';
-                                            }
-                                            if ($statusOrder == 2) {
-                                                $statusLabel = '<span class="text-success">Selesai</span>';
-                                            }
-                                        @endphp
-
-                                        {!! $statusLabel !!}
-                                    </td>
-
-                                    <td>
-                                        @if ($rad->status_order == 1)
-                                            <button class="btn btn-sm btn-secondary btn-edit-rad"
-                                                data-kode="{{ intval($rad->kd_order) }}"
-                                                data-bs-target="#editRadiologiModal"><i class="ti-pencil"></i></button>
-                                        @else
-                                            <button class="btn btn-sm btn-primary btn-show-rad"
-                                                data-kode="{{ intval($rad->kd_order) }}"
-                                                data-bs-target="#showRadiologiModal"><i class="ti-eye"></i></button>
-                                        @endif
-                                        <button class="btn btn-sm {{ $rad->status_order == 1 ? 'btn-delete-rad' : '' }}"
-                                            data-kode="{{ intval($rad->kd_order) }}"><i
-                                                class="bi bi-x-circle {{ $rad->status_order == 1 ? 'text-danger' : 'text-secondary' }}"></i></button>
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
