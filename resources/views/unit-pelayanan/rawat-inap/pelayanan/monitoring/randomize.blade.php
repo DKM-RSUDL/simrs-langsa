@@ -96,31 +96,31 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Indikasi ICCU</label>
-                                        <textarea class="form-control" name="indikasi_iccu" rows="3" required>{{ $latestMonitoring->indikasi_iccu ?? '' }}</textarea>
+                                        <textarea class="form-control" name="indikasi_iccu" rows="3" required></textarea>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label required">Diagnosa</label>
-                                        <input type="text" class="form-control" name="diagnosa" value="{{ $latestMonitoring->diagnosa ?? '' }}" required>
+                                        <input type="text" class="form-control" name="diagnosa" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Alergi</label>
-                                        <textarea class="form-control" name="alergi" rows="3" placeholder="Tuliskan jika ada alergi">{{ $latestMonitoring->alergi ?? '' }}</textarea>
+                                        <textarea class="form-control" name="alergi" rows="3" placeholder="Tuliskan jika ada alergi"></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Berat Badan (kg)</label>
                                                 <input type="number" step="0.1" min="0" class="form-control"
-                                                    name="berat_badan" placeholder="kg" value="{{ $latestMonitoring && $latestMonitoring->berat_badan ? number_format($latestMonitoring->berat_badan, 1) : '' }}">
+                                                    name="berat_badan" placeholder="kg">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Tinggi Badan (cm)</label>
                                                 <input type="number" step="1" min="0" class="form-control"
-                                                    name="tinggi_badan" placeholder="cm" value="{{ $latestMonitoring && $latestMonitoring->tinggi_badan ? number_format($latestMonitoring->tinggi_badan, 0) : '' }}">
+                                                    name="tinggi_badan" placeholder="cm">
                                             </div>
                                         </div>
                                     </div>
@@ -182,8 +182,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="form-label required">Sistolik (mmHg)</label>
-                                        <input type="number" class="form-control" name="sistolik" id="sistolik" required>
+                                        <label class="form-label">Sistolik (mmHg)</label>
+                                        <input type="number" class="form-control" name="sistolik" id="sistolik">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -599,7 +599,6 @@
     <script>
         $(document).ready(function() {
 
-
             ///===============================================================================================//
             // Add random data generation button to the form
             ///===============================================================================================//
@@ -621,6 +620,52 @@
                 function randomItem(array) {
                     return array[Math.floor(Math.random() * array.length)];
                 }
+                
+                // Random date within the last 7 days
+                function randomDate() {
+                    const today = new Date();
+                    const pastDays = randomNumber(0, 7);
+                    const date = new Date(today);
+                    date.setDate(today.getDate() - pastDays);
+                    return date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                }
+                
+                // Set date and time
+                $('[name="tgl_implementasi"]').val(randomDate());
+                
+                // Random time
+                const hours = String(randomNumber(0, 23)).padStart(2, '0');
+                const minutes = String(randomNumber(0, 59)).padStart(2, '0');
+                $('[name="jam_implementasi"]').val(`${hours}:${minutes}`);
+                
+                // Patient information
+                const indications = [
+                    "Acute Coronary Syndrome", 
+                    "Kardiomiopati", 
+                    "Post Cardiac Arrest", 
+                    "Aritmia yang tidak stabil", 
+                    "Gagal jantung akut", 
+                    "Tamponade jantung",
+                    "Shock kardiogenik"
+                ];
+                
+                const diagnoses = [
+                    "STEMI Anterior", 
+                    "NSTEMI", 
+                    "Unstable Angina", 
+                    "Aritmia Ventrikular", 
+                    "Congestive Heart Failure", 
+                    "Takikardia Supraventrikular",
+                    "Atrial Fibrillation"
+                ];
+                
+                const allergies = ["Tidak ada", "Penisilin", "Sulfa", "Seafood", "Kontras", "Aspirin", "Morfin", ""];
+                
+                $('[name="indikasi_iccu"]').val(randomItem(indications));
+                $('[name="diagnosa"]').val(randomItem(diagnoses));
+                $('[name="alergi"]').val(randomItem(allergies));
+                $('[name="berat_badan"]').val(randomNumber(45, 95, 1));
+                $('[name="tinggi_badan"]').val(randomNumber(150, 185));
                 
                 // Output
                 $('[name="bab"]').val(randomNumber(0, 3) + " x");
@@ -699,7 +744,7 @@
                 $('[name="terapi_oksigen"]').val(randomItem(terapiOksigen));
                 $('[name="albumin"]').val(randomNumber(3.5, 5.0, 1));
                 
-                const kesadaran = ["", "1", "2", "3", "4", "5"];
+                const kesadaran = ["", "compos_mentis", "somnolence", "sopor", "coma", "delirium"];
                 $('[name="kesadaran"]').val(randomItem(kesadaran));
                 
                 // Ventilator Parameters
@@ -735,6 +780,7 @@
             ///===============================================================================================//
             // Add random data generation button to the form
             ///===============================================================================================//
+
 
             // Validasi jam
             $('#jam_implementasi').on('change', function() {

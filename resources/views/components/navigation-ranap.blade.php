@@ -141,10 +141,10 @@
         ],
     ];
 
-    if (in_array($dataMedis->kd_unit, ['10015', '10016', '10031', '10032'])) {
+    if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {
         $navItems[] = [
             'icon' => 'monitoring.png',
-            'label' => 'Monitoring',
+            'label' => 'Monitoring ' . $dataMedis->unit->nama_unit,
             'link' => route('rawat-inap.monitoring.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,

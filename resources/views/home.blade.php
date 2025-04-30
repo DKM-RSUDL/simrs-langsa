@@ -16,8 +16,16 @@
                 <div class="card p-3 mb-4 rounded-lg position-relative">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <img src="{{ asset('assets/images/avatar1.png') }}" alt="Profile Picture"
-                                class="rounded-circle w-100 avatar-lg img-fluid" style="max-width: 100px; height: auto;">
+                            @if (empty(auth()->user()->karyawan->foto))
+                                <img src="{{ asset('assets/images/avatar1.png') }}" alt="Profile Picture"
+                                    class="rounded-circle w-100 avatar-lg img-fluid"
+                                    style="max-width: 100px; height: auto;">
+                            @else
+                                    <img src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}" alt="Profile Picture"
+                                    class="rounded-circle w-100 avatar-lg img-fluid"
+                                    style="max-width: 100px; height: auto;">
+                            @endif
+
                         </div>
                         <div class="card-body">
                             <h6 class="card-title mb-2" style="font-size: 1.5rem; font-weight: 800;">
@@ -68,7 +76,8 @@
                 <div class="card mb-4 p-3">
                     <div class="card-body">
                         <h5 class="card-title">Status RME</h5>
-                        <p class="card-text">Sistem Rekam Medis Elektronik RSUD Langsa: <span class="fw-bold text-success">Online</span></p>
+                        <p class="card-text">Sistem Rekam Medis Elektronik RSUD Langsa: <span
+                                class="fw-bold text-success">Online</span></p>
                         <a href="#" class="btn btn-primary btn-sm">Cek Detail</a>
                     </div>
                 </div>
@@ -90,8 +99,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rawat Jalan</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,8 +116,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rawat Inap</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -125,8 +134,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Gawat Darurat</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -142,8 +151,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Bedah Sentral</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -159,8 +168,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Hemodialisa</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -176,8 +185,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Cathlab</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -193,8 +202,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Forensik</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -210,8 +219,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Rehab Medik</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -227,8 +236,8 @@
                                         </div>
                                         <div>
                                             <div class="fs-6 fw-bold text-primary">Gizi Klinis</div>
-                                            <div class="fs-6 text-muted">Pasien: <span
-                                                    class="fw-bold text-black">0</span></div>
+                                            <div class="fs-6 text-muted">Pasien: <span class="fw-bold text-black">0</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -243,8 +252,10 @@
                 <div class="card mb-4 p-4">
                     <h5 class="card-title">Informasi Sistem RME RSUD Langsa</h5>
                     <p class="card-text">
-                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak pendaftaran hingga pelaporan. 
-                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan pengurangan penggunaan kertas sesuai 
+                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak
+                        pendaftaran hingga pelaporan.
+                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan
+                        pengurangan penggunaan kertas sesuai
                         Peraturan Menteri Kesehatan No. 24 Tahun 2022.
                     </p>
                     <ul class="list-unstyled">
@@ -252,7 +263,8 @@
                         <li><strong>Status Akreditasi:</strong> Tingkat Utama (KARS 2017)</li>
                         <li><strong>Kontak:</strong> (0641) 22800</li>
                     </ul>
-                    <a href="https://rsud.langsakota.go.id" target="_blank" class="btn btn-outline-primary btn-sm">Kunjungi Situs Resmi</a>
+                    <a href="https://rsud.langsakota.go.id" target="_blank"
+                        class="btn btn-outline-primary btn-sm">Kunjungi Situs Resmi</a>
                 </div>
             </div>
 

@@ -19,21 +19,6 @@
                     <li class="menu-content ps-menu">
                         <a href="#">
                             <div class="message-image">
-                                <img src="{{ asset('assets/images/avatar1.png') }}" class="rounded-circle w-100"
-                                    alt="user1">
-                            </div>
-                            <div class="message-content read">
-                                <div class="subject">
-                                    John
-                                </div>
-                                <div class="body">
-                                    Please call me at 9pm
-                                </div>
-                                <div class="time">Just now</div>
-                            </div>
-                        </a>
-                        <a href="#">
-                            <div class="message-image">
                                 <img src="{{ asset('assets/images/avatar2.png') }}" class="rounded-circle w-100"
                                     alt="user1">
                             </div>
@@ -147,7 +132,13 @@
                         <span></span>
                         <div>{{ Auth::user()->name ?? 'User' }}</div>
                     </div>
-                    <img class="img-user" src="{{ asset('assets/images/avatar1.png') }}" alt="user"srcset="">
+                    @if (empty(auth()->user()->karyawan->foto))
+                        <img class="img-user rounded-circle" src="{{ asset('assets/images/avatar1.png') }}" alt="user"srcset="">
+                    @else
+                        <img class="img-user rounded-circle"
+                            src="https://e-rsudlangsa.id/hrd/user/images/profil/{{ auth()->user()->karyawan->foto }}"
+                            alt="user"srcset="">
+                    @endif
                 </a>
                 <ul class="dropdown-menu small">
                     <li class="menu-content ps-menu">
@@ -162,7 +153,8 @@
                                 <i class="ti-power-off"></i> Logout
                             </div>
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                            style="display: none;">
                             @csrf
                         </form>
                     </li>
