@@ -59,8 +59,8 @@ class NavigationService
             $requestData['main_menu'] = NULL;
         }
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             // create permission
             $this->createPermission($requestData);

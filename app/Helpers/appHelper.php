@@ -7,7 +7,7 @@ use App\Models\Role;
 if (!function_exists('getMenus')) {
     function getMenus()
     {
-        return Navigation::with('subMenus')->orderBy('sort', 'desc')->get();
+        return Navigation::with('subMenus')->orderBy('sort', 'asc')->get();
     }
 }
 
