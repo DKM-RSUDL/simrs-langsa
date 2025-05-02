@@ -1131,7 +1131,12 @@ Route::middleware('ssoToken')->group(function () {
     Route::prefix('transfusi-darah')->group(function () {
         Route::name('transfusi-darah')->group(function () {
             Route::controller(PermintaanController::class)->group(function () {
-                //
+                // PERMINTAAN
+                Route::prefix('permintaan')->group(function () {
+                    Route::name('.permintaan')->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                    });
+                });
             });
         });
     });

@@ -12,4 +12,9 @@ class BdrsPermintaanDarah extends Model
     protected $table = 'BDRS_PERMINTAAN_DARAH';
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kd_unit', 'kd_unit');
+    }
 }
