@@ -29,6 +29,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
@@ -61,6 +62,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCppt
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
@@ -581,6 +583,18 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+
+                            //Monitoring
+                            Route::prefix('monitoring')->group(function () {
+                                Route::name('.monitoring')->group(function () {
+                                    Route::controller(MonitoringController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                    });
+                                });
+                            });
+
+
                             Route::prefix('serah-terima')->group(function () {
                                 Route::name('.serah-terima')->group(function () {
                                     Route::controller(RawatInapController::class)->group(function () {
@@ -589,6 +603,7 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
                         });
                     });
                 });
@@ -754,6 +769,21 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('{urut_masuk}/edukasi')->group(function () {
                             Route::name('edukasi')->group(function () {
                                 Route::controller(GawatDaruratEdukasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // permintaan darah
+                        Route::prefix('{urut_masuk}/permintaan-darah')->group(function () {
+                            Route::name('permintaan-darah')->group(function () {
+                                Route::controller(PermintaanDarahController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::get('/{data}', 'show')->name('.show');
