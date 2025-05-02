@@ -579,7 +579,7 @@ Route::middleware('auth')->group(function () {
                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                         Route::put('/{id}', 'update')->name('.update');
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
-                                        Route::get('/{id}/print', 'print')->name('.print');
+                                        Route::get('/print', 'print')->name('.print');
                                     });
                                 });
                             });

@@ -446,11 +446,15 @@ class MonitoringController extends Controller
 
     public function print(Request $request)
     {
-
         $kd_unit = $request->kd_unit;
         $kd_pasien = $request->kd_pasien;
         $tgl_masuk = $request->tgl_masuk;
         $urut_masuk = $request->urut_masuk;
+        $start_date = $request->start_date;
+        $start_time = $request->start_time;
+        $end_date = $request->end_date;
+        $end_time = $request->end_time;
+
         // Ambil data medis kunjungan
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -475,15 +479,34 @@ class MonitoringController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Ambil data monitoring terbaru untuk informasi umum pasien
-        $latestMonitoring = RmeIntesiveMonitoring::with(['detail'])
+        // Filter data monitoring berdasarkan range tanggal jika parameter ada
+        $monitoringQuery = RmeIntesiveMonitoring::with(['detail'])
             ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->orderBy('tgl_implementasi', 'desc')
+            ->where('urut_masuk', $urut_masuk);
+
+        // Terapkan filter tanggal jika ada
+        if ($start_date && $end_date) {
+            $start_datetime = $start_date . ' ' . ($start_time ?: '00:00:00');
+            $end_datetime = $end_date . ' ' . ($end_time ?: '23:59:59');
+
+            $monitoringQuery->whereRaw("CONCAT(tgl_implementasi, ' ', jam_implementasi) >= ?", [$start_datetime])
+                ->whereRaw("CONCAT(tgl_implementasi, ' ', jam_implementasi) <= ?", [$end_datetime]);
+        }
+
+        // Clone query untuk mendapatkan data terakhir dan semua data
+        $latestQuery = clone $monitoringQuery;
+
+        // Ambil data monitoring terbaru
+        $latestMonitoring = $latestQuery->orderBy('tgl_implementasi', 'desc')
             ->orderBy('jam_implementasi', 'desc')
             ->first();
+
+        // Ambil semua data monitoring dengan urutan ASC untuk daftar
+        $allMonitoringRecords = $monitoringQuery->orderBy('tgl_implementasi', 'asc')
+            ->orderBy('jam_implementasi', 'asc')
+            ->get();
 
         // Set judul unit
         $unitTitles = [
@@ -496,12 +519,23 @@ class MonitoringController extends Controller
         $title = isset($unitTitles[$dataMedis->kd_unit])
             ? $unitTitles[$dataMedis->kd_unit]
             : 'Monitoring Intensive Care';
-            
 
-
+        // Pass semua data ke view
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.monitoring.print',
-            compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'latestMonitoring', 'title')
+            compact(
+                'dataMedis',
+                'kd_pasien',
+                'tgl_masuk',
+                'urut_masuk',
+                'latestMonitoring',
+                'title',
+                'allMonitoringRecords',
+                'start_date',
+                'start_time',
+                'end_date',
+                'end_time'
+            )
         );
     }
 }

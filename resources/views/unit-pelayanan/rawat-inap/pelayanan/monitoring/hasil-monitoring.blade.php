@@ -207,26 +207,41 @@
                 });
 
                 // Print button handler
+                // Print button handler
+                // Print button handler
                 $('#printChartBtn').on('click', function() {
-                    // Urutan berdasarkan waktu asc untuk printing
-                    var sortedData = [...currentFilteredData].sort(function(a, b) {
-                        var timeA = new Date(a.tgl_implementasi + "T" + a.jam_implementasi);
-                        var timeB = new Date(b.tgl_implementasi + "T" + b.jam_implementasi);
-                        return timeA - timeB;
-                    });
+                    // Dapatkan nilai tanggal dari filter
+                    var startDate = $('#startDateFilter').val() || '';
+                    var startTime = $('#startTimeFilter').val() || '';
+                    var endDate = $('#endDateFilter').val() || '';
+                    var endTime = $('#endTimeFilter').val() || '';
+
+                    // Buat URL dengan parameter wajib
+                    var printUrl = '{{ route('rawat-inap.monitoring.print', [
+                        'kd_unit' => $dataMedis->kd_unit,
+                        'kd_pasien' => $kd_pasien,
+                        'tgl_masuk' => $tgl_masuk,
+                        'urut_masuk' => $urut_masuk
+                    ]) }}';
+                    
+                    // Tambahkan parameter tanggal ke URL dengan benar
+                    // Periksa apakah URL sudah memiliki parameter
+                    var separator = printUrl.includes('?') ? '&' : '?';
+                    
+                    if (startDate) {
+                        printUrl += separator + 'start_date=' + startDate;
+                        separator = '&'; // Setelah parameter pertama, selalu gunakan &
+                        
+                        if (startTime) printUrl += '&start_time=' + startTime;
+                    }
+                    
+                    if (endDate) {
+                        printUrl += '&end_date=' + endDate;
+                        if (endTime) printUrl += '&end_time=' + endTime;
+                    }
 
                     // Buka window baru untuk print
-                    var printWindow = window.open(
-                        '{{ route('rawat-inap.monitoring.print', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk, 'id' => ':id']) }}',
-                        '_blank');
-
-                    // Tunggu window baru dimuat
-                    printWindow.addEventListener('load', function() {
-                        // Transfer data ke window print
-                        printWindow.printData = sortedData;
-                        printWindow.filterRange = filterRangeText;
-                        printWindow.unitTitle = getUnitTitle('{{ $dataMedis->kd_unit }}');
-                    });
+                    window.open(printUrl, '_blank');
                 });
             }
         });

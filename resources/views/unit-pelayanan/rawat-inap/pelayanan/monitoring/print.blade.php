@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
     <style>
         body {
@@ -101,7 +102,7 @@
             font-weight: bold;
             font-size: 14px;
             z-index: 100;
-            width:100%;
+            width: 100%;
             text-align: right;
         }
 
@@ -168,31 +169,31 @@
         }
 
         .vital-signs-table th {
-            background-color: #f8f9fa;
+            background-color: #cdcdcd;
             padding: 8px;
             text-align: center;
-            border: 1px solid #dee2e6;
+            border: 1px solid #b8b8b8;
             font-weight: bold;
         }
 
         .vital-signs-table td {
-            padding: 8px;
+            padding: 6px;
             text-align: center;
-            border-top: none;
-            border-bottom: none;
-            border-left: 1px solid #dee2e6;
-            border-right: 1px solid #dee2e6;
+            border-top: 1px solid #a1a1a1;
+            border-bottom: 1px solid #b8b8b8;
+            border-left: 1px solid #b8b8b8;
+            border-right: 1px solid #b8b8b8;
         }
 
         .vital-signs-table tr:last-child td {
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #b8b8b8;
         }
 
         .parameter-header {
             text-align: left;
             font-weight: bold;
             background-color: #f8f9fa;
-            border: 1px solid #dee2e6 !important;
+            border: 1px solid #b8b8b8 !important;
         }
 
         .filter-info {
@@ -300,6 +301,11 @@
             <i class="bi bi-funnel me-1"></i>Filter: <span id="filterText">Semua data</span>
         </div>
 
+        <!-- Grafik Vital Signs -->
+        <div class="chart-container no-page-break" style="position: relative; border: 1px solid #818181; height: 300px; margin-bottom: 20px;">
+            <canvas id="vitalSignsChart"></canvas>
+        </div>
+
         <!-- Vital Signs Table - Unchanged -->
         <table class="vital-signs-table no-page-break" id="vitalSignsTable">
             <thead>
@@ -335,6 +341,49 @@
                 </tr>
             </tbody>
         </table>
+        
+        <!-- AGD Data Table - Tambahan baru -->
+        <div class="card no-page-break mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="vital-signs-table no-page-break" id="agdTable">
+                    <thead>
+                        <tr id="agdDateTimeHeaders">
+                            <th style="width: 200px;">Parameter</th>
+                            <!-- Date/Time headers akan diisi secara dinamis -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="parameter-header" style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">AGD</td>
+                            <!-- Sel kosong untuk setiap kolom waktu -->
+                        </tr>
+                        <tr>
+                            <td class="parameter-header">pH</td>
+                            <!-- Data akan diisi secara dinamis -->
+                        </tr>
+                        <tr>
+                            <td class="parameter-header">PO<sub>2</sub> (mmHg)</td>
+                            <!-- Data akan diisi secara dinamis -->
+                        </tr>
+                        <tr>
+                            <td class="parameter-header">PCO<sub>2</sub> (mmHg)</td>
+                            <!-- Data akan diisi secara dinamis -->
+                        </tr>
+                        <tr>
+                            <td class="parameter-header">BE (mmol/L)</td>
+                            <!-- Data akan diisi secara dinamis -->
+                        </tr>
+                        <tr>
+                            <td class="parameter-header">HCO<sub>3</sub> (mmol/L)</td>
+                            <!-- Data akan diisi secara dinamis -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- Signature -->
         <div class="signature">
@@ -478,6 +527,11 @@
                     populateRow(param.row, sortedData, param.accessor, param.label);
                 });
 
+                processAGDData(sortedData);
+
+                // Buat grafik untuk vital signs
+                createChart(sortedData);
+
                 // Sembunyikan loading indicator dan tampilkan konten
                 document.getElementById('loadingIndicator').style.display = 'none';
                 document.getElementById('printContent').style.display = 'block';
@@ -510,51 +564,324 @@
             });
         }
 
-        // Main execution when document is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM loaded, checking for data from opener");
+        // Function untuk memproses data AGD
+        // Function untuk memproses data AGD
+        function processAGDData(data) {
+            // Generate header untuk setiap pengukuran (sama dengan dateTimeHeaders utama)
+            const headerRow = document.getElementById('agdDateTimeHeaders');
+            headerRow.innerHTML = '<th style="width: 200px;">Parameter</th>';
 
-            if (window.opener && window.opener.printData) {
-                console.log("Found data in window.opener.printData");
-                processPrintData(
-                    window.opener.printData,
-                    window.opener.filterRange,
-                    window.opener.unitTitle
-                );
-            } else {
-                console.log("No data yet, setting up window listener");
-                window.addEventListener('message', event => {
-                    if (event.data && event.data.type === 'printData') {
-                        processPrintData(
-                            event.data.printData,
-                            event.data.filterRange,
-                            event.data.unitTitle
-                        );
-                    }
-                });
+            data.forEach(item => {
+                const datetime = formatDateTime(item.tgl_implementasi + 'T' + item.jam_implementasi);
+                const headerCell = document.createElement('th');
+                headerCell.innerHTML = datetime.time;
+                headerRow.appendChild(headerCell);
+            });
 
-                if (window.opener) {
-                    console.log("Requesting data from opener");
-                    window.opener.postMessage({
-                        type: 'requestPrintData'
-                    }, '*');
-                }
+            // Dapatkan baris tabel untuk setiap parameter AGD
+            const tableRows = document.querySelectorAll('#agdTable tbody tr');
 
-                setTimeout(() => {
-                    if (window.printData) {
-                        console.log("Found data in window.printData after delay");
-                        processPrintData(window.printData, window.filterRange, window.unitTitle);
-                    }
-                }, 500);
+            // Khusus untuk baris AGD (baris pertama), isi sel kosong dengan warna background yang sama
+            const agdHeaderRow = tableRows[0];
+            const headerCells = headerRow.querySelectorAll('th');
+            const emptyCellCount = headerCells.length - 1; // Kurangi 1 untuk kolom parameter
+            
+            // Tambahkan sel kosong untuk setiap kolom waktu
+            for (let i = 0; i < emptyCellCount; i++) {
+                const emptyCell = document.createElement('td');
+                emptyCell.style.color = '#1a202c';
+                emptyCell.style.fontWeight = 'bold';
+                emptyCell.style.textAlign = 'center';
+                emptyCell.style.border = '1px solid #b8b8b8';
+                agdHeaderRow.appendChild(emptyCell);
             }
 
-            setTimeout(() => {
-                if (document.getElementById('loadingIndicator').style.display !== 'none') {
-                    document.getElementById('loadingIndicator').innerHTML =
-                        '<div class="alert alert-warning">Data tidak berhasil dimuat. Coba tutup dan buka kembali jendela print.</div>';
+            // Definisikan parameter AGD dan formatnya (mulai dari baris kedua)
+            const agdParameters = [
+                {
+                    row: tableRows[1],
+                    accessor: item => formatNumber(item.detail?.ph, 2),
+                    label: 'pH'
+                },
+                {
+                    row: tableRows[2],
+                    accessor: item => formatNumber(item.detail?.po2, 0),
+                    label: 'PO2'
+                },
+                {
+                    row: tableRows[3],
+                    accessor: item => formatNumber(item.detail?.pco2, 0),
+                    label: 'PCO2'
+                },
+                {
+                    row: tableRows[4],
+                    accessor: item => formatNumber(item.detail?.be, 1),
+                    label: 'BE'
+                },
+                {
+                    row: tableRows[5],
+                    accessor: item => formatNumber(item.detail?.hco3, 1),
+                    label: 'HCO3'
                 }
-            }, 5000);
+            ];
+
+            // Isi data untuk setiap parameter AGD
+            agdParameters.forEach(param => {
+                populateRow(param.row, data, param.accessor, param.label);
+            });
+        }
+
+        // Main execution when document is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dapatkan data monitoring dari controller PHP
+            var monitoringData = @json($allMonitoringRecords ?? []);
+
+            // Dapatkan info filter dari parameter URL
+            var startDate = '{{ $start_date ?? '' }}';
+            var startTime = '{{ $start_time ?? '' }}';
+            var endDate = '{{ $end_date ?? '' }}';
+            var endTime = '{{ $end_time ?? '' }}';
+
+            // Buat teks filter
+            var filterRangeText = "Semua data";
+            if (startDate && endDate) {
+                filterRangeText = formatReadableDate(startDate) + " " + (startTime || "00:00") + " s.d " +
+                    formatReadableDate(endDate) + " " + (endTime || "23:59");
+            }
+
+            // Proses data untuk ditampilkan
+            if (monitoringData && monitoringData.length > 0) {
+                processPrintData(monitoringData, filterRangeText, '{{ $title }}');
+
+                // Tampilkan tanggal terbaru pada bagian info pasien
+                if (startDate && endDate) {
+                    document.getElementById('filterDate').textContent = formatReadableDate(startDate) +
+                        (startDate === endDate ? "" : " s.d " + formatReadableDate(endDate));
+                } else {
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0');
+                    var yyyy = today.getFullYear();
+                    document.getElementById('filterDate').textContent = dd + "-" + mm + "-" + yyyy;
+                }
+            } else {
+                document.getElementById('loadingIndicator').innerHTML =
+                    '<div class="alert alert-info">Tidak ada data untuk ditampilkan</div>';
+            }
         });
+
+        // Format tanggal menjadi format yang mudah dibaca
+        function formatReadableDate(dateString) {
+            var parts = dateString.split('-');
+            if (parts.length === 3) {
+                return parts[2] + '-' + parts[1] + '-' + parts[0];
+            }
+            return dateString;
+        }
+
+        // Fungsi untuk membuat grafik monitoring
+        function createChart(data) {
+            // Siapkan data untuk grafik
+            const labels = [];
+            const sistolikData = [];
+            const diastolikData = [];
+            const hrData = [];
+            const rrData = [];
+            const suhuData = [];
+            const mapData = [];
+
+            // Ambil data untuk grafik dari data monitoring
+            data.forEach(item => {
+                const datetime = formatDateTime(item.tgl_implementasi + 'T' + item.jam_implementasi);
+                labels.push(datetime.time);
+
+                // Ambil nilai vital sign
+                sistolikData.push(item.detail?.sistolik ? parseFloat(item.detail.sistolik) : null);
+                diastolikData.push(item.detail?.diastolik ? parseFloat(item.detail.diastolik) : null);
+                hrData.push(item.detail?.hr ? parseFloat(item.detail.hr) : null);
+                rrData.push(item.detail?.rr ? parseFloat(item.detail.rr) : null);
+                suhuData.push(item.detail?.temp ? parseFloat(item.detail.temp) : null);
+                mapData.push(item.detail?.map ? parseFloat(item.detail.map) : null);
+            });
+
+            // Buat grafik menggunakan Chart.js
+            const ctx = document.getElementById('vitalSignsChart').getContext('2d');
+
+            // Hapus grafik lama jika ada
+            if (window.vitalChart) {
+                window.vitalChart.destroy();
+            }
+
+            // Buat grafik baru
+            window.vitalChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                            label: 'Sistolik',
+                            data: sistolikData,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true, // Aktifkan fill untuk area di bawah garis
+                            tension: 0.4, // Membuat kurva lebih smooth
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(54, 162, 235, 0.3)');
+                                gradient.addColorStop(1, 'rgba(54, 162, 235, 0.05)');
+                                return gradient;
+                            }
+                        },
+                        {
+                            label: 'Diastolik',
+                            data: diastolikData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true,
+                            tension: 0.4,
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(75, 192, 192, 0.3)');
+                                gradient.addColorStop(1, 'rgba(75, 192, 192, 0.05)');
+                                return gradient;
+                            }
+                        },
+                        {
+                            label: 'Heart Rate',
+                            data: hrData,
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true,
+                            tension: 0.4,
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(255, 206, 86, 0.3)');
+                                gradient.addColorStop(1, 'rgba(255, 206, 86, 0.05)');
+                                return gradient;
+                            }
+                        },
+                        {
+                            label: 'Respiratory Rate',
+                            data: rrData,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true,
+                            tension: 0.4,
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(153, 102, 255, 0.3)');
+                                gradient.addColorStop(1, 'rgba(153, 102, 255, 0.05)');
+                                return gradient;
+                            }
+                        },
+                        {
+                            label: 'Suhu',
+                            data: suhuData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true,
+                            tension: 0.4,
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(255, 99, 132, 0.3)');
+                                gradient.addColorStop(1, 'rgba(255, 99, 132, 0.05)');
+                                return gradient;
+                            }
+                        },
+                        {
+                            label: 'MAP',
+                            data: mapData,
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            fill: true,
+                            tension: 0.4,
+                            // Efek bayangan area
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, 'rgba(255, 159, 64, 0.3)');
+                                gradient.addColorStop(1, 'rgba(255, 159, 64, 0.05)');
+                                return gradient;
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        text: 'Grafik Monitoring Tanda Vital',
+                        fontSize: 16,
+                        fontStyle: 'bold',
+                        padding: 20
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Waktu'
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Nilai'
+                            },
+                            ticks: {
+                                beginAtZero: false,
+                                min: 0,
+                                max: 200,
+                                stepSize: 20
+                            }
+                        }]
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 
