@@ -23,7 +23,7 @@ class MonitoringController extends Controller
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->where('kunjungan.urut_masuk', (int)$urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -72,7 +72,7 @@ class MonitoringController extends Controller
             compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'monitoringRecords', 'latestMonitoring', 'allMonitoringRecords')
         );
     }
-    
+
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -442,4 +442,66 @@ class MonitoringController extends Controller
         );
     }
 
+    // Tambahkan method print pada MonitoringController
+
+    public function print(Request $request)
+    {
+
+        $kd_unit = $request->kd_unit;
+        $kd_pasien = $request->kd_pasien;
+        $tgl_masuk = $request->tgl_masuk;
+        $urut_masuk = $request->urut_masuk;
+        // Ambil data medis kunjungan
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        // Hitung umur pasien
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Ambil data monitoring terbaru untuk informasi umum pasien
+        $latestMonitoring = RmeIntesiveMonitoring::with(['detail'])
+            ->where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tgl_implementasi', 'desc')
+            ->orderBy('jam_implementasi', 'desc')
+            ->first();
+
+        // Set judul unit
+        $unitTitles = [
+            '10015' => 'INTENSIVE CORONARY CARE UNIT',
+            '10016' => 'INTENSIVE CARE UNIT',
+            '10131' => 'NEONATAL INTENSIVE CARE UNIT',
+            '10132' => 'PEDIATRIC INTENSIVE CARE UNIT',
+        ];
+
+        $title = isset($unitTitles[$dataMedis->kd_unit])
+            ? $unitTitles[$dataMedis->kd_unit]
+            : 'Monitoring Intensive Care';
+            
+
+
+        return view(
+            'unit-pelayanan.rawat-inap.pelayanan.monitoring.print',
+            compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'latestMonitoring', 'title')
+        );
+    }
 }

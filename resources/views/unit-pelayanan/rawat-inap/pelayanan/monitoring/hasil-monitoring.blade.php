@@ -3,7 +3,7 @@
     <div class="card-header bg-light">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-clipboard-check me-2"></i>Informasi Pasien</h5>
-            <span class="badge bg-primary">Diperbarui:
+            <span class="badge bg-primary">Monitoring Terakhir:
                 {{ $latestMonitoring ? Carbon\Carbon::parse($latestMonitoring->created_at)->format('d M Y H:i') : '-' }}</span>
         </div>
     </div>
@@ -52,20 +52,28 @@
     </div>
 </div>
 
-{{-- Vital Signs Chart --}}
+
+{{-- Vital Signs Chart dengan Filter Rentang Waktu dan Jam --}}
 <div class="card mb-4">
     <div class="card-header bg-light">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>{{ $title }} Tanda Vital</h5>
+            <h5 class="mb-0"></h5>
             <div>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                    <input type="date" id="dateFilterHasil" class="form-control">
-                    <button type="button" class="btn btn-primary" id="applydateFilterHasil">
+                    <input type="date" id="startDateFilter" class="form-control" placeholder="Dari tanggal">
+                    <input type="time" id="startTimeFilter" class="form-control" placeholder="Jam mulai">
+                    <span class="input-group-text"><i class="fas fa-arrow-right"></i></span>
+                    <input type="date" id="endDateFilter" class="form-control" placeholder="Sampai tanggal">
+                    <input type="time" id="endTimeFilter" class="form-control" placeholder="Jam selesai">
+                    <button type="button" class="btn btn-primary" id="applyDateRangeFilter">
                         <i class="fas fa-filter me-1"></i>Filter
                     </button>
                     <button type="button" class="btn btn-outline-secondary ms-1" id="resetFilter">
                         <i class="fas fa-undo me-1"></i>Reset
+                    </button>
+                    <button type="button" class="btn btn-success ms-1" id="printChartBtn">
+                        <i class="fas fa-print me-1"></i>Print
                     </button>
                 </div>
             </div>
@@ -106,6 +114,7 @@
     </div>
 </div>
 
+
 @push('js')
     <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
     <script>
@@ -122,6 +131,8 @@
             function initializeChart() {
                 // Data dari backend
                 var monitoringData = @json($allMonitoringRecords ?? []);
+                var currentFilteredData = monitoringData; // Untuk menyimpan data hasil filter terakhir
+                var filterRangeText = "Semua data"; // Teks filter default
 
                 // Periksa apakah ada data monitoring
                 if (!monitoringData || monitoringData.length === 0) {
@@ -135,36 +146,87 @@
                 // Proses data untuk grafik
                 processChartData(monitoringData);
 
-                // Filter tanggal
-                $('#applydateFilterHasil').on('click', function() {
-                    var selectedDate = $('#dateFilterHasil').val();
-                    console.log("Tanggal yang dipilih:", selectedDate); // Debug
+                // Filter rentang tanggal dan jam
+                $('#applyDateRangeFilter').on('click', function() {
+                    var startDate = $('#startDateFilter').val();
+                    var startTime = $('#startTimeFilter').val() || '00:00';
+                    var endDate = $('#endDateFilter').val();
+                    var endTime = $('#endTimeFilter').val() || '23:59';
 
-                    if (!selectedDate) {
-                        alert("Pilih tanggal terlebih dahulu");
+                    console.log("Rentang waktu yang dipilih:", startDate, startTime, "sampai", endDate,
+                        endTime); // Debug
+
+                    if (!startDate || !endDate) {
+                        alert("Pilih tanggal mulai dan tanggal akhir terlebih dahulu");
                         return;
                     }
 
+                    // Buat objek DateTime untuk perbandingan
+                    var startDateTime = new Date(startDate + 'T' + startTime);
+                    var endDateTime = new Date(endDate + 'T' + endTime);
+
+                    // Validasi rentang waktu
+                    if (startDateTime > endDateTime) {
+                        alert("Tanggal dan jam mulai tidak boleh lebih besar dari tanggal dan jam akhir");
+                        return;
+                    }
+
+                    // Filter data berdasarkan rentang waktu
                     var filteredData = monitoringData.filter(function(item) {
-                        console.log("Membandingkan:", item.tgl_implementasi, "dengan",
-                        selectedDate); // Debug
-                        return item.tgl_implementasi === selectedDate;
+                        var itemDateTime = new Date(item.tgl_implementasi + 'T' + item
+                            .jam_implementasi);
+                        return itemDateTime >= startDateTime && itemDateTime <= endDateTime;
                     });
 
                     console.log("Data setelah difilter:", filteredData.length); // Debug
 
                     if (filteredData.length === 0) {
-                        alert("Tidak ada data pada tanggal " + formatReadableDate(selectedDate));
+                        alert("Tidak ada data pada rentang waktu " +
+                            formatReadableDate(startDate) + " " + startTime + " sampai " +
+                            formatReadableDate(endDate) + " " + endTime);
                         return;
                     }
+
+                    // Simpan data hasil filter dan teks filter
+                    currentFilteredData = filteredData;
+                    filterRangeText = formatReadableDate(startDate) + " " + startTime + " s.d " +
+                        formatReadableDate(endDate) + " " + endTime;
 
                     processChartData(filteredData);
                 });
 
                 // Reset filter
                 $('#resetFilter').on('click', function() {
-                    $('#dateFilterHasil').val('');
+                    $('#startDateFilter').val('');
+                    $('#startTimeFilter').val('');
+                    $('#endDateFilter').val('');
+                    $('#endTimeFilter').val('');
+                    currentFilteredData = monitoringData;
+                    filterRangeText = "Semua data";
                     processChartData(monitoringData);
+                });
+
+                // Print button handler
+                $('#printChartBtn').on('click', function() {
+                    // Urutan berdasarkan waktu asc untuk printing
+                    var sortedData = [...currentFilteredData].sort(function(a, b) {
+                        var timeA = new Date(a.tgl_implementasi + "T" + a.jam_implementasi);
+                        var timeB = new Date(b.tgl_implementasi + "T" + b.jam_implementasi);
+                        return timeA - timeB;
+                    });
+
+                    // Buka window baru untuk print
+                    var printWindow = window.open(
+                        '{{ route('rawat-inap.monitoring.print', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk, 'id' => ':id']) }}',
+                        '_blank');
+
+                    // Tunggu window baru dimuat
+                    printWindow.addEventListener('load', function() {
+                        // Transfer data ke window print
+                        printWindow.printData = sortedData;
+                        printWindow.filterRange = filterRangeText;
+                        printWindow.unitTitle = getUnitTitle('{{ $dataMedis->kd_unit }}');
+                    });
                 });
             }
         });
@@ -338,7 +400,7 @@
                     spanGaps: true, // Menghubungkan garis melalui nilai null
                     title: {
                         display: true,
-                        text: 'Monitoring Tanda Vital Pasien',
+                        text:  '{{ $title }} Tanda Vital Sign',
                         fontSize: 16,
                         fontStyle: 'bold'
                     },
@@ -524,6 +586,18 @@
         function formatDate(dateString) {
             var parts = dateString.split('-');
             return parts[2] + '-' + parts[1] + '-' + parts[0];
+        }
+
+        // Fungsi untuk mendapatkan judul unit
+        function getUnitTitle(kdUnit) {
+            var unitTitles = {
+                '10015': 'Monitoring ICCU',
+                '10016': 'Monitoring ICU',
+                '10131': 'Monitoring NICU',
+                '10132': 'Monitoring PICU'
+            };
+
+            return unitTitles[kdUnit] || 'Monitoring Intensive Care';
         }
     </script>
 @endpush
