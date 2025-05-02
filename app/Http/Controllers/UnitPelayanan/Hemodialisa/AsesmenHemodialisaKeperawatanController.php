@@ -32,7 +32,13 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenHemodialisaKeperawatanController extends Controller
 {
-    private $kdUnitDef_ = 72;
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/hemodialisa');
+        $this->kdUnitDef_ = 72;
+    }
 
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
     {
@@ -70,10 +76,10 @@ class AsesmenHemodialisaKeperawatanController extends Controller
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
 
         $perawat = HrdKaryawan::where('status_peg', 1)
-        ->where('kd_ruangan', 29)
-        ->where('kd_jenis_tenaga', 2)
-        ->where('kd_detail_jenis_tenaga', 1)
-        ->get();
+            ->where('kd_ruangan', 29)
+            ->where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->get();
 
         return view('unit-pelayanan.hemodialisa.pelayanan.asesmen.keperawatan.create', compact(
             'dataMedis',
@@ -129,7 +135,7 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatan->rencana_pulang_values = $request->rencana_pulang_values;
             // 14. Diagnosis
             $keperawatan->diagnosis_banding = $request->diagnosis_banding;
-            $keperawatan->diagnosis_kerja = $request->diagnosis_kerja;            
+            $keperawatan->diagnosis_kerja = $request->diagnosis_kerja;
             $keperawatan->terapeutik = $request->terapeutik;
             $keperawatan->edukasi = $request->edukasi;
             $keperawatan->kolaborasi = $request->kolaborasi;
@@ -338,20 +344,20 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatanMonitoringPosthd->save();
 
             //Simpan ke table RmePemeriksaanFisik
-                $itemFisik = MrItemFisik::all();
-                foreach ($itemFisik as $item) {
-                    $itemName = strtolower($item->nama);
-                    $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
-                    $keterangan = $request->input($item->id . '_keterangan');
-                    if ($isNormal) $keterangan = '';
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $itemName = strtolower($item->nama);
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+                if ($isNormal) $keterangan = '';
 
-                    RmeAsesmenPemeriksaanFisik::create([
-                        'id_asesmen' => $asesmen->id,
-                        'id_item_fisik' => $item->id,
-                        'is_normal' => $isNormal,
-                        'keterangan' => $keterangan
-                    ]);
-                }
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $asesmen->id,
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan
+                ]);
+            }
 
             //Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
@@ -500,7 +506,7 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             ->where('kd_jenis_tenaga', 2)
             ->where('kd_detail_jenis_tenaga', 1)
             ->get();
-        
+
         $asesmen = RmeHdAsesmen::with([
             'keperawatan',
             'keperawatanPemeriksaanFisik',
@@ -530,10 +536,10 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $asesmen->tgl_masuk = $tgl_masuk;
             $asesmen->urut_masuk = $urut_masuk;
             $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
-            $asesmen->kategori = 2;            
+            $asesmen->kategori = 2;
             $asesmen->user_edit = Auth::id();
             $asesmen->save();
-            
+
             // store keperawatan
             $keperawatan = RmeHdAsesmenKeperawatan::firstOrNew(['id_asesmen' => $asesmen->id]);
             $keperawatan->id_asesmen = $asesmen->id;
@@ -561,7 +567,7 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             $keperawatan->rencana_pulang_values = $request->rencana_pulang_values;
             // 14. Diagnosis
             $keperawatan->diagnosis_banding = $request->diagnosis_banding;
-            $keperawatan->diagnosis_kerja = $request->diagnosis_kerja;            
+            $keperawatan->diagnosis_kerja = $request->diagnosis_kerja;
             $keperawatan->terapeutik = $request->terapeutik;
             $keperawatan->edukasi = $request->edukasi;
             $keperawatan->kolaborasi = $request->kolaborasi;
@@ -829,7 +835,7 @@ class AsesmenHemodialisaKeperawatanController extends Controller
             saveToColumnUpdate($terapeutikList, 'terapeutik');
             saveToColumnUpdate($edukasiList, 'edukasi');
             saveToColumnUpdate($kolaborasiList, 'kolaborasi');
-            
+
             DB::commit();
             return to_route('hemodialisa.pelayanan.asesmen.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Asesmen medis berhasil di ubah !');
         } catch (Exception $e) {

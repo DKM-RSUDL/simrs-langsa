@@ -27,6 +27,11 @@ use Illuminate\Support\Facades\View;
 
 class LaborController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit', 'registrasiHasil'])

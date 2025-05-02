@@ -16,6 +16,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
@@ -603,7 +604,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -1126,5 +1126,13 @@ Route::middleware('ssoToken')->group(function () {
             });
         });
     });
-    // });
+
+    // TRANSFUSI DARAH
+    Route::prefix('transfusi-darah')->group(function () {
+        Route::name('transfusi-darah')->group(function () {
+            Route::controller(PermintaanController::class)->group(function () {
+                //
+            });
+        });
+    });
 });

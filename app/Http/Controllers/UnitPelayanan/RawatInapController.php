@@ -15,8 +15,15 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RawatInapController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
+    }
+
     public function index()
     {
+
         $unit = Unit::with(['bagian'])
             ->where('kd_bagian', 1)
             ->where('aktif', 1)

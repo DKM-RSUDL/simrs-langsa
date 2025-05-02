@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Http;
 
 class RadiologiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index($kd_pasien, $tgl_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])

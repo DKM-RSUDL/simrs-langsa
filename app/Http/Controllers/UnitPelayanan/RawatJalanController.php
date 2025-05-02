@@ -14,6 +14,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RawatJalanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index()
     {
         $unit = Unit::with(['bagian'])

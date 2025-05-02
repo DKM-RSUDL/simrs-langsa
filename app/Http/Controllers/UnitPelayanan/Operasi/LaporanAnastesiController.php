@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\DB;
 
 class LaporanAnastesiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -57,10 +62,10 @@ class LaporanAnastesiController extends Controller
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('id', 'desc')
-            ->paginate(10);            
+            ->paginate(10);
 
         return view('unit-pelayanan.operasi.pelayanan.laporan-anastesi.index', compact(
-            'dataMedis', 
+            'dataMedis',
             'laporanAnastesi',
             'ceklistKesiapanAnesthesi',
         ));
@@ -252,13 +257,12 @@ class LaporanAnastesiController extends Controller
 
 
 
-        DB::commit();
+            DB::commit();
             return to_route('operasi.pelayanan.laporan-anastesi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Laporan Anestesi berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
-
     }
 
 
@@ -587,5 +591,4 @@ class LaporanAnastesiController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
-
 }

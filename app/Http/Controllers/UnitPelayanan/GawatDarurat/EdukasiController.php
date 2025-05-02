@@ -17,6 +17,11 @@ use Exception;
 
 class EdukasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -1223,7 +1228,7 @@ class EdukasiController extends Controller
                 'urut_masuk' => $urut_masuk,
             ])->with('error', 'Data edukasi tidak ditemukan.');
         } catch (Exception $e) {
-            DB::rollBack();            
+            DB::rollBack();
             return redirect()->route('edukasi.index', [
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,

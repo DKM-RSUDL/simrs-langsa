@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\DB;
 
 class LaporanOperasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -241,8 +246,8 @@ class LaporanOperasiController extends Controller
             ];
 
             OkLaporanOperasi::where('kd_kasir', $dataMedis->kd_kasir)
-                        ->where('no_transaksi', $dataMedis->no_transaksi)
-                        ->update($data);
+                ->where('no_transaksi', $dataMedis->no_transaksi)
+                ->update($data);
 
             DB::commit();
             return to_route('operasi.pelayanan.laporan-operasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Laporan berhasil di ubah !');

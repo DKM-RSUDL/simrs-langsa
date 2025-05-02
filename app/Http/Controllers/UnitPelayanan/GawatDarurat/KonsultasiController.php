@@ -29,6 +29,11 @@ use Illuminate\Support\Facades\Validator;
 
 class KonsultasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])

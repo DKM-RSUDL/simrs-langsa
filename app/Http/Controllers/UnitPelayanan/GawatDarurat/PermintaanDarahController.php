@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\DB;
 
 class PermintaanDarahController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -106,45 +111,45 @@ class PermintaanDarahController extends Controller
         DB::beginTransaction();
         try {
 
-            $permintaanDarah = new BdrsPermintaanDarah();            
+            $permintaanDarah = new BdrsPermintaanDarah();
             $permintaanDarah->KD_PASIEN = $kd_pasien;
             $permintaanDarah->KD_UNIT = 3;
             $permintaanDarah->TGL_MASUK = $tgl_masuk;
             $permintaanDarah->URUT_MASUK = $urut_masuk;
             $permintaanDarah->STATUS = 0;
-            $permintaanDarah->USER_CREATE = Auth::id();                      
-            
+            $permintaanDarah->USER_CREATE = Auth::id();
+
             // filed all db
-            $permintaanDarah->TIPE = $request->TIPE;          
-            $permintaanDarah->KD_DOKTER = $request->KD_DOKTER;          
-            $permintaanDarah->TGL_PENGIRIMAN = $request->TGL_PENGIRIMAN;          
-            $permintaanDarah->TGL_DIPERLUKAN = $request->TGL_DIPERLUKAN;          
-            $permintaanDarah->DIAGNOSA_KIMIA = $request->DIAGNOSA_KIMIA;          
-            $permintaanDarah->ALASAN_TRANSFUSI = $request->ALASAN_TRANSFUSI;          
-            $permintaanDarah->KODE_GOLDA = $request->KODE_GOLDA;          
-            $permintaanDarah->HB = $request->HB;          
-            $permintaanDarah->NAMA_SUAMI_ISTRI = $request->NAMA_SUAMI_ISTRI;          
-            $permintaanDarah->TRANFUSI_SEBELUMNYA = $request->TRANFUSI_SEBELUMNYA;          
-            $permintaanDarah->REAKSI_TRANFUSI = $request->REAKSI_TRANFUSI;          
-            $permintaanDarah->SEROLOGI_DIMANA = $request->SEROLOGI_DIMANA;          
-            $permintaanDarah->SEROLOGI_KAPAN = $request->SEROLOGI_KAPAN;          
-            $permintaanDarah->SEROLOGI_HASIL = $request->SEROLOGI_HASIL;          
-            $permintaanDarah->PERNAH_HAMIL = $request->PERNAH_HAMIL;          
+            $permintaanDarah->TIPE = $request->TIPE;
+            $permintaanDarah->KD_DOKTER = $request->KD_DOKTER;
+            $permintaanDarah->TGL_PENGIRIMAN = $request->TGL_PENGIRIMAN;
+            $permintaanDarah->TGL_DIPERLUKAN = $request->TGL_DIPERLUKAN;
+            $permintaanDarah->DIAGNOSA_KIMIA = $request->DIAGNOSA_KIMIA;
+            $permintaanDarah->ALASAN_TRANSFUSI = $request->ALASAN_TRANSFUSI;
+            $permintaanDarah->KODE_GOLDA = $request->KODE_GOLDA;
+            $permintaanDarah->HB = $request->HB;
+            $permintaanDarah->NAMA_SUAMI_ISTRI = $request->NAMA_SUAMI_ISTRI;
+            $permintaanDarah->TRANFUSI_SEBELUMNYA = $request->TRANFUSI_SEBELUMNYA;
+            $permintaanDarah->REAKSI_TRANFUSI = $request->REAKSI_TRANFUSI;
+            $permintaanDarah->SEROLOGI_DIMANA = $request->SEROLOGI_DIMANA;
+            $permintaanDarah->SEROLOGI_KAPAN = $request->SEROLOGI_KAPAN;
+            $permintaanDarah->SEROLOGI_HASIL = $request->SEROLOGI_HASIL;
+            $permintaanDarah->PERNAH_HAMIL = $request->PERNAH_HAMIL;
             $permintaanDarah->ABORTUS_HDN = $request->ABORTUS_HDN;
-            $permintaanDarah->WB = $request->WB;            
-            $permintaanDarah->PRC = $request->PRC;            
-            $permintaanDarah->PRC_PEDIACTRIC = $request->PRC_PEDIACTRIC;            
-            $permintaanDarah->PRC_LEUKODEPLETED = $request->PRC_LEUKODEPLETED;            
-            $permintaanDarah->WASHED_ERYTHROYTE = $request->WASHED_ERYTHROYTE;            
-            $permintaanDarah->LAINNYA = $request->LAINNYA;            
-            $permintaanDarah->TC_BIASA = $request->TC_BIASA;            
-            $permintaanDarah->TC_APHERESIS = $request->TC_APHERESIS;            
-            $permintaanDarah->TC_POOLED = $request->TC_POOLED;            
-            $permintaanDarah->PLASMA_CAIR = $request->PLASMA_CAIR;            
-            $permintaanDarah->PLASMA_SEGAR_BEKU = $request->PLASMA_SEGAR_BEKU;            
-            $permintaanDarah->CIYOPRECIPITATE = $request->CIYOPRECIPITATE;                        
+            $permintaanDarah->WB = $request->WB;
+            $permintaanDarah->PRC = $request->PRC;
+            $permintaanDarah->PRC_PEDIACTRIC = $request->PRC_PEDIACTRIC;
+            $permintaanDarah->PRC_LEUKODEPLETED = $request->PRC_LEUKODEPLETED;
+            $permintaanDarah->WASHED_ERYTHROYTE = $request->WASHED_ERYTHROYTE;
+            $permintaanDarah->LAINNYA = $request->LAINNYA;
+            $permintaanDarah->TC_BIASA = $request->TC_BIASA;
+            $permintaanDarah->TC_APHERESIS = $request->TC_APHERESIS;
+            $permintaanDarah->TC_POOLED = $request->TC_POOLED;
+            $permintaanDarah->PLASMA_CAIR = $request->PLASMA_CAIR;
+            $permintaanDarah->PLASMA_SEGAR_BEKU = $request->PLASMA_SEGAR_BEKU;
+            $permintaanDarah->CIYOPRECIPITATE = $request->CIYOPRECIPITATE;
             $permintaanDarah->WAKTU_PENGAMBILAN_SAMPEL = $request->TGL_PENGAMBILAN_SAMPEL . ' ' . $request->WAKTU_PENGAMBILAN_SAMPEL;
-            $permintaanDarah->PETUGAS_PENGAMBILAN_SAMPEL = $request->PETUGAS_PENGAMBILAN_SAMPEL;                        
+            $permintaanDarah->PETUGAS_PENGAMBILAN_SAMPEL = $request->PETUGAS_PENGAMBILAN_SAMPEL;
             $permintaanDarah->save();
 
             DB::commit();

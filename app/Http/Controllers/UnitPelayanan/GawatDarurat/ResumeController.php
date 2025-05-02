@@ -34,6 +34,11 @@ use Illuminate\Validation\ValidationException;
 
 class ResumeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index(Request $request, $kd_pasien, $tgl_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien.golonganDarah', 'dokter', 'customer', 'unit'])
