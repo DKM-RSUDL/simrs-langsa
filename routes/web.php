@@ -1135,6 +1135,10 @@ Route::middleware('ssoToken')->group(function () {
                 Route::prefix('permintaan')->group(function () {
                     Route::name('.permintaan')->group(function () {
                         Route::get('/', 'index')->name('.index');
+                        Route::get('/datatables', 'datatable')->name('.datatable');
+                        Route::get('/show/{data}', 'show')->name('.show');
+                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });
