@@ -54,7 +54,14 @@ class PermintaanDarahController extends Controller
 
     private function orderTab($dataMedis, $request)
     {
-        $permintaanDarah = BdrsPermintaanDarah::orderBy('TGL_PENGIRIMAN', 'desc')->paginate(10);
+        // $permintaanDarah = BdrsPermintaanDarah::orderBy('TGL_PENGIRIMAN', 'desc')->paginate(10);
+        $permintaanDarah = BdrsPermintaanDarah::where('kd_pasien', $dataMedis->kd_pasien)
+        ->where('kd_unit', 3)
+        ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+        ->where('urut_masuk', $dataMedis->urut_masuk)
+        ->orderBy('TGL_PENGIRIMAN', 'desc')
+        ->paginate(10);
+
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.index', compact(
             'dataMedis',
             'permintaanDarah'

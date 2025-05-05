@@ -96,6 +96,7 @@ class RanapPermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
@@ -216,6 +217,7 @@ class RanapPermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
@@ -251,6 +253,7 @@ class RanapPermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
@@ -340,7 +343,7 @@ class RanapPermintaanDarahController extends Controller
             $permintaanDarah->save();
             DB::commit();
 
-            return to_route('rawat-inap.permintaan-darah.index', [$kd_pasien, $kd_unit, $tgl_masuk, $request->urut_masuk])
+            return to_route('rawat-inap.permintaan-darah.index', [$kd_unit, $kd_pasien, $tgl_masuk, $request->urut_masuk])
                 ->with('success', 'Berhasil mengupdate Permintaan Darah!');
         } catch (Exception $e) {
             DB::rollBack();
