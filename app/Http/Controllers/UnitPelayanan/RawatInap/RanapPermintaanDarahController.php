@@ -1,26 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\BdrsPermintaanDarah;
 use App\Models\DokterKlinik;
 use App\Models\GolonganDarah;
-use Illuminate\Http\Request;
 use App\Models\Kunjungan;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PermintaanDarahController extends Controller
+class RanapPermintaanDarahController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:read unit-pelayanan/gawat-darurat');
-    }
-
-    public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -29,12 +24,12 @@ class PermintaanDarahController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
-
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -61,13 +56,13 @@ class PermintaanDarahController extends Controller
     {
         // $permintaanDarah = BdrsPermintaanDarah::orderBy('TGL_PENGIRIMAN', 'desc')->paginate(10);
         $permintaanDarah = BdrsPermintaanDarah::where('kd_pasien', $dataMedis->kd_pasien)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $dataMedis->kd_unit)
             ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('TGL_PENGIRIMAN', 'desc')
             ->paginate(10);
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.index', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.index', compact(
             'dataMedis',
             'permintaanDarah'
         ));
@@ -78,7 +73,7 @@ class PermintaanDarahController extends Controller
         //
     }
 
-    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -87,10 +82,11 @@ class PermintaanDarahController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
 
@@ -100,20 +96,20 @@ class PermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
 
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.create', compact(
             'dataMedis',
             'dokter',
             'gologanDarah'
         ));
     }
 
-    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // 1. Validasi data dasar
         $request->validate([
@@ -167,41 +163,10 @@ class PermintaanDarahController extends Controller
 
             // Isi data pasien
             $permintaanDarah->KD_PASIEN = $kd_pasien;
+            $permintaanDarah->KD_UNIT = $kd_unit;
             $permintaanDarah->TGL_MASUK = $tgl_masuk;
             $permintaanDarah->URUT_MASUK = $urut_masuk;
-            $permintaanDarah->KD_UNIT = 3;
             $permintaanDarah->STATUS = 0;
-            $permintaanDarah->USER_CREATE = Auth::id();
-
-            // filed all db
-            $permintaanDarah->TIPE = $request->TIPE;
-            $permintaanDarah->KD_DOKTER = $request->KD_DOKTER;
-            $permintaanDarah->TGL_PENGIRIMAN = $request->TGL_PENGIRIMAN;
-            $permintaanDarah->TGL_DIPERLUKAN = $request->TGL_DIPERLUKAN;
-            $permintaanDarah->DIAGNOSA_KIMIA = $request->DIAGNOSA_KIMIA;
-            $permintaanDarah->ALASAN_TRANSFUSI = $request->ALASAN_TRANSFUSI;
-            $permintaanDarah->KODE_GOLDA = $request->KODE_GOLDA;
-            $permintaanDarah->HB = $request->HB;
-            $permintaanDarah->NAMA_SUAMI_ISTRI = $request->NAMA_SUAMI_ISTRI;
-            $permintaanDarah->TRANFUSI_SEBELUMNYA = $request->TRANFUSI_SEBELUMNYA;
-            $permintaanDarah->REAKSI_TRANFUSI = $request->REAKSI_TRANFUSI;
-            $permintaanDarah->SEROLOGI_DIMANA = $request->SEROLOGI_DIMANA;
-            $permintaanDarah->SEROLOGI_KAPAN = $request->SEROLOGI_KAPAN;
-            $permintaanDarah->SEROLOGI_HASIL = $request->SEROLOGI_HASIL;
-            $permintaanDarah->PERNAH_HAMIL = $request->PERNAH_HAMIL;
-            $permintaanDarah->ABORTUS_HDN = $request->ABORTUS_HDN;
-            $permintaanDarah->WB = $request->WB;
-            $permintaanDarah->PRC = $request->PRC;
-            $permintaanDarah->PRC_PEDIACTRIC = $request->PRC_PEDIACTRIC;
-            $permintaanDarah->PRC_LEUKODEPLETED = $request->PRC_LEUKODEPLETED;
-            $permintaanDarah->WASHED_ERYTHROYTE = $request->WASHED_ERYTHROYTE;
-            $permintaanDarah->LAINNYA = $request->LAINNYA;
-            $permintaanDarah->TC_BIASA = $request->TC_BIASA;
-            $permintaanDarah->TC_APHERESIS = $request->TC_APHERESIS;
-            $permintaanDarah->TC_POOLED = $request->TC_POOLED;
-            $permintaanDarah->PLASMA_CAIR = $request->PLASMA_CAIR;
-            $permintaanDarah->PLASMA_SEGAR_BEKU = $request->PLASMA_SEGAR_BEKU;
-            $permintaanDarah->CIYOPRECIPITATE = $request->CIYOPRECIPITATE;
             $permintaanDarah->USER_CREATE = Auth::id();
 
             // Isi data dari form
@@ -216,7 +181,12 @@ class PermintaanDarahController extends Controller
             $permintaanDarah->save();
             DB::commit();
 
-            return to_route('permintaan-darah.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+            return to_route('rawat-inap.permintaan-darah.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $request->urut_masuk,
+            ])
                 ->with('success', 'Berhasil menambah Permintaan Darah!');
         } catch (Exception $e) {
             DB::rollBack();
@@ -224,7 +194,7 @@ class PermintaanDarahController extends Controller
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -233,10 +203,11 @@ class PermintaanDarahController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
 
@@ -246,20 +217,20 @@ class PermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
         $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.show', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.show', compact(
             'dataMedis',
             'dokter',
             'gologanDarah',
             'permintaanDarah'
         ));
     }
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -268,10 +239,11 @@ class PermintaanDarahController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
 
@@ -281,13 +253,13 @@ class PermintaanDarahController extends Controller
 
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $kd_unit)
             ->get();
 
         $gologanDarah = GolonganDarah::all();
         $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.edit', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.edit', compact(
             'dataMedis',
             'dokter',
             'gologanDarah',
@@ -295,7 +267,7 @@ class PermintaanDarahController extends Controller
         ));
     }
 
-    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // 1. Validasi data dasar
         $request->validate([
@@ -363,7 +335,6 @@ class PermintaanDarahController extends Controller
 
             // Gabungkan tanggal dan waktu pengambilan sampel
             $permintaanDarah->WAKTU_PENGAMBILAN_SAMPEL = $request->TGL_PENGAMBILAN_SAMPEL . ' ' . $request->WAKTU_PENGAMBILAN_SAMPEL;
-            $permintaanDarah->PETUGAS_PENGAMBILAN_SAMPEL = $request->PETUGAS_PENGAMBILAN_SAMPEL;
 
             // Update user yang melakukan edit
             $permintaanDarah->USER_EDIT = Auth::id();
@@ -372,7 +343,7 @@ class PermintaanDarahController extends Controller
             $permintaanDarah->save();
             DB::commit();
 
-            return to_route('permintaan-darah.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+            return to_route('rawat-inap.permintaan-darah.index', [$kd_unit, $kd_pasien, $tgl_masuk, $request->urut_masuk])
                 ->with('success', 'Berhasil mengupdate Permintaan Darah!');
         } catch (Exception $e) {
             DB::rollBack();

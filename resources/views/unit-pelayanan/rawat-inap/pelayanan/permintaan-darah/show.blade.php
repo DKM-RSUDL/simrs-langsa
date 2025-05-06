@@ -47,13 +47,17 @@
         </div>
 
         <div class="col-md-9">
+            <div class="d-flex justify-content-between">
             <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
+            <a href="{{ route('rawat-inap.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $permintaanDarah->id]) }}" class="btn btn-warning btn-sm" title="Edit">
+                <i class="ti-pencil"></i> Edit
+            </a>
+        </div>
             <form id="edukasiForm" method="POST"
-                action="{{ route('permintaan-darah.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $permintaanDarah->id]) }}">
+                action="{{ route('rawat-inap.permintaan-darah.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
                 @csrf
-                @method('PUT')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
@@ -92,12 +96,12 @@
                                     <div class="form-row ml-auto justify-content-end">
                                         <div class="form-check form-check-inline mr-4">
                                             <input class="form-check-input" type="radio" name="TIPE" id="urgensi_biasa"
-                                                value="0" {{ $permintaanDarah->TIPE == 0 ? 'checked' : '' }} required>
+                                                value="0" {{ $permintaanDarah->TIPE == 0 ? 'checked' : '' }} disabled required>
                                             <label class="form-check-label" for="urgensi_biasa">Biasa</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="TIPE" id="urgensi_cito"
-                                                value="1" {{ $permintaanDarah->TIPE == 1 ? 'checked' : '' }} required>
+                                                value="1" {{ $permintaanDarah->TIPE == 1 ? 'checked' : '' }} disabled required>
                                             <label class="form-check-label" for="urgensi_cito">Cito (Harus disertai memo)</label>
                                         </div>
                                     </div>
@@ -110,7 +114,7 @@
 
                                     <div class="form-group">
                                         <label for="kd_dokter" style="min-width: 200px;">Dokter yang meminta</label>
-                                        <select name="KD_DOKTER" id="kd_dokter" class="form-select select2" required>
+                                        <select name="KD_DOKTER" id="kd_dokter" class="form-select" disabled required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
                                                 <option value="{{ $dok->dokter->kd_dokter }}"
@@ -125,30 +129,30 @@
                                         <label style="min-width: 200px;">Tgl Pengiriman</label>
                                         <input type="date" class="form-control" name="TGL_PENGIRIMAN"
                                             value="{{ $permintaanDarah->tgl_pengiriman ? \Carbon\Carbon::parse($permintaanDarah->tgl_pengiriman)->format('Y-m-d') : '' }}"
-                                         required>
+                                            disabled required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="diperlukan" style="min-width: 200px;">Diperlukan</label>
                                         <input type="date" class="form-control" name="TGL_DIPERLUKAN"
-                                        value="{{ $permintaanDarah->tgl_diperlukan ? \Carbon\Carbon::parse($permintaanDarah->tgl_diperlukan)->format('Y-m-d') : '' }}" required>
+                                        value="{{ $permintaanDarah->tgl_diperlukan ? \Carbon\Carbon::parse($permintaanDarah->tgl_diperlukan)->format('Y-m-d') : '' }}" disabled required>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Diagnosa Kimia</label>
                                         <input type="text" class="form-control" name="DIAGNOSA_KIMIA"
-                                            value="{{ $permintaanDarah->diagnosa_kimia }}" required>
+                                            value="{{ $permintaanDarah->diagnosa_kimia }}" disabled required>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Alasan Transfusi</label>
                                         <input type="text" class="form-control" name="ALASAN_TRANSFUSI"
-                                            value="{{ $permintaanDarah->alasan_transfusi }}" required>
+                                            value="{{ $permintaanDarah->alasan_transfusi }}" disabled required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="golda" style="min-width: 200px;">Golongan Darah</label>
-                                        <select class="form-select" name="KODE_GOLDA" id="golda" required>
+                                        <select class="form-select" name="KODE_GOLDA" id="golda" disabled required>
                                             <option value="">-- Pilih --</option>
                                             @foreach ($gologanDarah as $darah)
                                                 <option value="{{ $darah->kode }}" {{ $permintaanDarah->kode_golda == $darah->kode ? 'selected' : '' }}>
@@ -160,7 +164,7 @@
                                         <label class="ms-3">HB</label>
                                         <div class="input-group mb-3">
                                             <input type="number" name="HB" class="form-control"
-                                                value="{{ $permintaanDarah->hb }}" required>
+                                                value="{{ $permintaanDarah->hb }}" disabled required>
                                             <span class="input-group-text" id="basic-addon1">g</span>
                                         </div>
                                     </div>
@@ -168,11 +172,11 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nama Suami/Istri Pasien</label>
                                         <input type="text" class="form-control" name="NAMA_SUAMI_ISTRI"
-                                            value="{{ $permintaanDarah->nama_suami_istri }}" required>
+                                            value="{{ $permintaanDarah->nama_suami_istri }}" disabled required>
 
                                         <label class="mx-2">Register</label>
                                         <input type="text" class="form-control" name="KD_PASIEN"
-                                            value="{{ $permintaanDarah->kd_pasien }}" readonly required>
+                                            value="{{ $permintaanDarah->kd_pasien }}" readonly disabled required>
                                     </div>
 
                                 </div>
@@ -184,28 +188,28 @@
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Transfusi Sebelumnya</label>
                                         <input type="text" class="form-control" name="TRANFUSI_SEBELUMNYA"
-                                               value="{{ $permintaanDarah->tranfusi_sebelumnya }}">
+                                               value="{{ $permintaanDarah->tranfusi_sebelumnya }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Gejala Reaksi Transfusi</label>
                                         <input type="text" class="form-control" name="REAKSI_TRANFUSI"
-                                               value="{{ $permintaanDarah->reaksi_tranfusi }}">
+                                               value="{{ $permintaanDarah->reaksi_tranfusi }}" disabled>
                                     </div>
 
                                     <p class="fw-bold">Apakah pernah diperiksa Serologi golongan darah</p>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Dimana</label>
                                         <input type="text" class="form-control" name="SEROLOGI_DIMANA"
-                                               value="{{ $permintaanDarah->serologi_dimana }}">
+                                               value="{{ $permintaanDarah->serologi_dimana }}" disabled>
 
                                         <label class="mx-2">Kapan</label>
                                         <input type="date" class="form-control" name="SEROLOGI_KAPAN"
-                                               value="{{ $permintaanDarah->serologi_kapan ? \Carbon\Carbon::parse($permintaanDarah->SEROLOGI_KAPAN)->format('Y-m-d') : '' }}">
+                                               value="{{ $permintaanDarah->serologi_kapan ? \Carbon\Carbon::parse($permintaanDarah->SEROLOGI_KAPAN)->format('Y-m-d') : '' }}" disabled>
 
                                         <label class="mx-2">Hasil</label>
                                         <input type="text" class="form-control" name="serologi_dimana"
-                                               value="{{ $permintaanDarah->serologi_hasil }}">
+                                               value="{{ $permintaanDarah->serologi_hasil }}" disabled>
                                     </div>
 
                                     <div class="form-group">
@@ -213,7 +217,7 @@
                                         <div class="form-check mt-2">
                                             <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
                                                    id="radioDefault1Hamil" value="1"
-                                                   {{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'checked' : '' }}>
+                                                   {{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'checked' : '' }} disabled>
                                             <label class="form-check-label" for="radioDefault1Hamil">
                                                 Ya
                                             </label>
@@ -221,7 +225,7 @@
                                         <div class="form-check mx-2 mt-2">
                                             <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
                                                    id="radioDefault2Hamil" value="0"
-                                                   {{ !is_numeric($permintaanDarah->pernah_hamil) || $permintaanDarah->pernah_hamil == 0 ? 'checked' : '' }}>
+                                                   {{ !is_numeric($permintaanDarah->pernah_hamil) || $permintaanDarah->pernah_hamil == 0 ? 'checked' : '' }} disabled>
                                             <label class="form-check-label" for="radioDefault2Hamil">
                                                 Tidak
                                             </label>
@@ -230,7 +234,7 @@
                                         <label class="mx-3" style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}">Jumlah</label>
                                         <input type="number" class="form-control" id="pernah-hamil-jumlah"
                                                name="PERNAH_HAMIL_COUNT" value="{{ is_numeric($permintaanDarah->pernah_hamil) ? $permintaanDarah->pernah_hamil : '' }}"
-                                               style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}">
+                                               style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}" disabled>
                                     </div>
 
                                     <div class="form-group">
@@ -238,7 +242,7 @@
                                         <div class="form-check mt-2">
                                             <input class="form-check-input" type="radio" name="ABORTUS_HDN"
                                                    id="radioDefault1Abortur" value="1"
-                                                   {{ $permintaanDarah->abortus_hdn == 1 ? 'checked' : '' }}>
+                                                   {{ $permintaanDarah->abortus_hdn == 1 ? 'checked' : '' }} disabled>
                                             <label class="form-check-label" for="radioDefault1Abortur">
                                                 Ya
                                             </label>
@@ -246,7 +250,7 @@
                                         <div class="form-check mx-2 mt-2">
                                             <input class="form-check-input" type="radio" name="ABORTUS_HDN"
                                                    id="radioDefault2Abortus" value="0"
-                                                   {{ $permintaanDarah->abortus_hdn != 1 ? 'checked' : '' }}>
+                                                   {{ $permintaanDarah->abortus_hdn != 1 ? 'checked' : '' }} disabled>
                                             <label class="form-check-label" for="radioDefault2Abortus">
                                                 Tidak
                                             </label>
@@ -261,7 +265,7 @@
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">WB Segar / Biasa</label>
                                         <input type="number" class="form-control" name="WB"
-                                               value="{{ $permintaanDarah->wb }}">
+                                               value="{{ $permintaanDarah->wb }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
@@ -269,35 +273,35 @@
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Biasa</label>
                                         <input type="number" class="form-control" name="PRC"
-                                               value="{{ $permintaanDarah->prc }}">
+                                               value="{{ $permintaanDarah->prc }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Pediatric <br> Leukodepleted**</label>
                                         <input type="number" class="form-control" name="PRC_PEDIACTRIC"
-                                               value="{{ $permintaanDarah->prc_pediactric }}">
+                                               value="{{ $permintaanDarah->prc_pediactric }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Leukodepleted <br> (dengan filter)**</label>
                                         <input class="form-control" type="number" name="PRC_LEUKODEPLETED"
-                                               value="{{ $permintaanDarah->prc_leukodepleted }}">
+                                               value="{{ $permintaanDarah->prc_leukodepleted }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">Washed Erythrocyte (WE)</label>
                                         <input type="number" class="form-control" name="WASHED_ERYTHROYTE"
-                                               value="{{ $permintaanDarah->washed_erythroyte }}">
+                                               value="{{ $permintaanDarah->washed_erythroyte }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Lain-lain</label>
                                         <input type="text" class="form-control" name="LAINNYA"
-                                               value="{{ $permintaanDarah->lainnya }}">
+                                               value="{{ $permintaanDarah->lainnya }}" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -308,21 +312,21 @@
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">TC Biasa</label>
                                         <input type="number" class="form-control" name="TC_BIASA"
-                                               value="{{ $permintaanDarah->tc_biasa }}">
+                                               value="{{ $permintaanDarah->tc_biasa }}" disabled>
                                         <span class="input-group-text">unit</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">TC Apheresis*</label>
                                         <input type="number" class="form-control" name="TC_APHERESIS"
-                                               value="{{ $permintaanDarah->tc_apheresis }}">
+                                               value="{{ $permintaanDarah->tc_apheresis }}" disabled>
                                         <span class="input-group-text">unit</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">TC Pooled (Leukodepleted)**</label>
                                         <input type="number" class="form-control" name="TC_POOLED"
-                                               value="{{ $permintaanDarah->tc_pooled }}">
+                                               value="{{ $permintaanDarah->tc_pooled }}" disabled>
                                         <span class="input-group-text">unit</span>
                                     </div>
 
@@ -330,21 +334,21 @@
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">Plasma Cair (liquid Plasma)</label>
                                         <input type="number" class="form-control" name="PLASMA_CAIR"
-                                               value="{{ $permintaanDarah->plasma_cair }}">
+                                               value="{{ $permintaanDarah->plasma_cair }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">Plasma Segar Beku (FFP)</label>
                                         <input type="number" class="form-control" name="PLASMA_SEGAR_BEKU"
-                                               value="{{ $permintaanDarah->plasma_segar_beku }}">
+                                               value="{{ $permintaanDarah->plasma_segar_beku }}" disabled>
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">Cryoprecipitate AHF</label>
                                         <input type="number" class="form-control" name="CIYOPRECIPITATE"
-                                               value="{{ $permintaanDarah->ciyoprecipitate }}">
+                                               value="{{ $permintaanDarah->ciyoprecipitate }}" disabled>
                                         <span class="input-group-text">unit</span>
                                     </div>
                                 </div>
@@ -361,17 +365,17 @@
                                             $jam = $waktuPengambilanSampel->format('H:i');
                                         @endphp
                                         <input type="date" class="form-control" name="TGL_PENGAMBILAN_SAMPEL"
-                                               value="{{ $tanggal }}">
+                                               value="{{ $tanggal }}" disabled>
 
                                         <label class="mx-2">Jam</label>
                                         <input type="time" class="form-control" name="WAKTU_PENGAMBILAN_SAMPEL"
-                                               value="{{ $jam }}">
+                                               value="{{ $jam }}" disabled>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nama Petugas</label>
                                         <input type="text" class="form-control" name="PETUGAS_PENGAMBILAN_SAMPEL"
-                                               value="{{ $permintaanDarah->petugas_pengambilan_sampel }}">
+                                               value="{{ $permintaanDarah->petugas_pengambilan_sampel }}" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -393,11 +397,6 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-save"></i> Update
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

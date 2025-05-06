@@ -51,7 +51,7 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('permintaan-darah.update', [$dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $permintaanDarah->id]) }}">
+                action="{{ route('rawat-jalan.permintaan-darah.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $permintaanDarah->id]) }}">
                 @csrf
                 @method('PUT')
 
