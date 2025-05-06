@@ -114,7 +114,7 @@
                                         <select name="KD_DOKTER" id="kd_dokter" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->dokter->kd_dokter }}">{{ $dok->dokter->nama_lengkap }}</option>
+                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>

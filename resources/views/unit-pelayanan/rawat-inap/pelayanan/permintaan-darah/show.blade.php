@@ -51,7 +51,7 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
-                <a href="{{ route('rawat-inap.rajal-permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $permintaanDarah->id]) }}"
+                <a href="{{ route('rawat-inap.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $permintaanDarah->id]) }}"
                     class="btn btn-warning btn-sm" title="Edit">
                     <i class="ti-pencil"></i> Edit
                 </a>
@@ -115,8 +115,8 @@
                                     <select name="KD_DOKTER" id="kd_dokter" class="form-select" disabled required>
                                         <option value="">--Pilih--</option>
                                         @foreach ($dokter as $dok)
-                                            <option value="{{ $dok->dokter->kd_dokter }}" {{ $permintaanDarah->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                                {{ $dok->dokter->nama_lengkap }}
+                                            <option value="{{ $dok->kd_dokter }}" {{ $permintaanDarah->kd_dokter == $dok->kd_dokter ? 'selected' : '' }}>
+                                                {{ $dok->nama_lengkap }}
                                             </option>
                                         @endforeach
                                     </select>
