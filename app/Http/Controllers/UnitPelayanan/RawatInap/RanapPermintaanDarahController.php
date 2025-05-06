@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
+use App\Models\DokterInap;
 use Illuminate\Http\Request;
 use App\Models\BdrsPermintaanDarah;
 use App\Models\DokterKlinik;
@@ -94,10 +96,9 @@ class RanapPermintaanDarahController extends Controller
             abort(404, 'Data not found');
         }
 
-        $dokter = DokterKlinik::with(['unit', 'dokter'])
-            ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', $kd_unit)
+        $dokter = Dokter::where('status', 1)
             ->get();
+
 
         $gologanDarah = GolonganDarah::all();
 
@@ -215,10 +216,7 @@ class RanapPermintaanDarahController extends Controller
             abort(404, 'Data not found');
         }
 
-        $dokter = DokterKlinik::with(['unit', 'dokter'])
-            ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', $kd_unit)
-            ->get();
+        $dokter = Dokter::where('status', 1)->get();
 
         $gologanDarah = GolonganDarah::all();
         $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
@@ -251,10 +249,7 @@ class RanapPermintaanDarahController extends Controller
             abort(404, 'Data not found');
         }
 
-        $dokter = DokterKlinik::with(['unit', 'dokter'])
-            ->whereRelation('dokter', 'status', 1)
-            ->where('kd_unit', $kd_unit)
-            ->get();
+        $dokter = Dokter::where('status', 1)->get();
 
         $gologanDarah = GolonganDarah::all();
         $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
