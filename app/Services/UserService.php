@@ -35,7 +35,7 @@ class UserService
             })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="' . url("users", $row->id) . '/edit" name="edit" data-id="' . $row->id . '" class="editRole btn btn-warning btn-sm me-2"><i class="ti-pencil-alt"></i></a>';
-                $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
+                // $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
                 return '<div class="d-flex">' . $actionBtn . '</div>';
             })
             // ->filter(function ($query) {
