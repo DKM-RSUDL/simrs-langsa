@@ -427,7 +427,7 @@ Route::middleware('auth')->group(function () {
                             });
 
                             // permintaan darah
-                            Route::prefix(prefix: 'permintaan-darah')->group(function () {
+                            Route::prefix('permintaan-darah')->group(function () {
                                 Route::name('.permintaan-darah')->group(function () {
                                     Route::controller(RanapPermintaanDarahController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
