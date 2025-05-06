@@ -52,6 +52,7 @@
                         <tr align="middle">
                             <th>No</th>
                             <th>Tgl Permintaan</th>
+                            <th>Pasien</th>
                             <th>Unit</th>
                             <th>Dokter</th>
                             <th>Petugas</th>
@@ -95,6 +96,10 @@
                         name: 'tgl_order',
                     },
                     {
+                        data: 'pasien.nama',
+                        name: 'pasien.nama',
+                    },
+                    {
                         data: 'unit.nama_unit',
                         name: 'unit.nama_unit',
                     },
@@ -123,19 +128,19 @@
                         "className": "text-center",
                     },
                     {
-                        "targets": 1,
-                        "className": "text-center",
-                    },
-                    {
                         "targets": 2,
                         "className": "text-center",
                     },
                     {
-                        "targets": 5,
+                        "targets": 3,
                         "className": "text-center",
                     },
                     {
                         "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
                         "className": "text-center",
                     },
                 ]

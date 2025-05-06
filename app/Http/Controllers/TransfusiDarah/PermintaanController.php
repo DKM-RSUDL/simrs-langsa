@@ -23,16 +23,14 @@ class PermintaanController extends Controller
 
     public function index()
     {
-        $orders = BdrsPermintaanDarah::all();
         $units = Unit::whereIn('kd_bagian', [1, 2, 3])->where('aktif', 1)->get();
-
-        return view('transfusi-darah.permintaan.index', compact('orders', 'units'));
+        return view('transfusi-darah.permintaan.index', compact('units'));
     }
 
     public function datatable(Request $request)
     {
         if ($request->ajax()) {
-            $orders = BdrsPermintaanDarah::with(['unit', 'dokter']);
+            $orders = BdrsPermintaanDarah::with(['unit', 'dokter', 'pasien']);
 
             if ($request->kd_unit) $orders->where('kd_unit', $request->kd_unit);
             if (is_numeric($request->status)) $orders->where('status', $request->status);
