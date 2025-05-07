@@ -302,87 +302,517 @@
         </div>
 
         <!-- Grafik Vital Signs -->
-        <div class="chart-container no-page-break" style="position: relative; border: 1px solid #818181; height: 300px; margin-bottom: 20px;">
+        <div class="chart-container no-page-break"
+            style="position: relative; border: 1px solid #818181; height: 500px; width: 100%; margin-bottom: 20px;">
             <canvas id="vitalSignsChart"></canvas>
         </div>
 
         <!-- Vital Signs Table - Unchanged -->
+        <!-- Vital Signs Table -->
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
+        </div>
         <table class="vital-signs-table no-page-break" id="vitalSignsTable">
             <thead>
-                <tr id="dateTimeHeaders">
+                <tr>
                     <th style="width: 200px;">Parameter</th>
-                    <!-- Date/Time headers will be dynamically generated here -->
+                    @foreach ($allMonitoringRecords as $item)
+                        @php
+                            $datetime = \Carbon\Carbon::parse(
+                                $item->tgl_implementasi . ' ' . $item->jam_implementasi,
+                            )->format('H:i');
+                        @endphp
+                        <th>{{ $datetime }}</th>
+                    @endforeach
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="parameter-header">Sistolik (mmHg)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->sistolik) ? number_format($item->detail->sistolik, 0) : '-' }}</td>
+                    @endforeach
                 </tr>
                 <tr>
                     <td class="parameter-header">Diastolik (mmHg)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->diastolik) ? number_format($item->detail->diastolik, 0) : '-' }}
+                        </td>
+                    @endforeach
                 </tr>
                 <tr>
                     <td class="parameter-header">Heart Rate (x/mnt)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->hr) ? number_format($item->detail->hr, 0) : '-' }}</td>
+                    @endforeach
                 </tr>
                 <tr>
                     <td class="parameter-header">Respiratory Rate (x/mnt)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->rr) ? number_format($item->detail->rr, 0) : '-' }}</td>
+                    @endforeach
                 </tr>
                 <tr>
                     <td class="parameter-header">Suhu (°C)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->temp) ? number_format($item->detail->temp, 1) : '-' }}</td>
+                    @endforeach
                 </tr>
                 <tr>
                     <td class="parameter-header">MAP (mmHg)</td>
-                    <!-- Data will be filled dynamically -->
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->map) ? number_format($item->detail->map, 0) : '-' }}</td>
+                    @endforeach
                 </tr>
             </tbody>
         </table>
-        
-        <!-- AGD Data Table - Tambahan baru -->
-        <div class="card no-page-break mb-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
-            </div>
-            <div class="card-body p-0">
-                <table class="vital-signs-table no-page-break" id="agdTable">
-                    <thead>
-                        <tr id="agdDateTimeHeaders">
-                            <th style="width: 200px;">Parameter</th>
-                            <!-- Date/Time headers akan diisi secara dinamis -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="parameter-header" style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">AGD</td>
-                            <!-- Sel kosong untuk setiap kolom waktu -->
-                        </tr>
-                        <tr>
-                            <td class="parameter-header">pH</td>
-                            <!-- Data akan diisi secara dinamis -->
-                        </tr>
-                        <tr>
-                            <td class="parameter-header">PO<sub>2</sub> (mmHg)</td>
-                            <!-- Data akan diisi secara dinamis -->
-                        </tr>
-                        <tr>
-                            <td class="parameter-header">PCO<sub>2</sub> (mmHg)</td>
-                            <!-- Data akan diisi secara dinamis -->
-                        </tr>
-                        <tr>
-                            <td class="parameter-header">BE (mmol/L)</td>
-                            <!-- Data akan diisi secara dinamis -->
-                        </tr>
-                        <tr>
-                            <td class="parameter-header">HCO<sub>3</sub> (mmol/L)</td>
-                            <!-- Data akan diisi secara dinamis -->
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+
+        <!-- AGD Data Table -->
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
+        </div>
+        <!-- AGD Data Table -->
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-flask me-2"></i>Data Analisis Gas Darah (AGD)</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="vital-signs-table no-page-break" id="agdTable">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Parameter</th>
+                        @foreach ($allMonitoringRecords as $item)
+                            @php
+                                $datetime = \Carbon\Carbon::parse(
+                                    $item->tgl_implementasi . ' ' . $item->jam_implementasi,
+                                )->format('H:i');
+                            @endphp
+                            <th>{{ $datetime }}</th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            AGD</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">pH</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ph) ? number_format($item->detail->ph, 2) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">PO<sub>2</sub> (mmHg)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->po2) ? number_format($item->detail->po2, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">PCO<sub>2</sub> (mmHg)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->pco2) ? number_format($item->detail->pco2, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">BE (mmol/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->be) ? number_format($item->detail->be, 1) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">HCO<sub>3</sub> (mmol/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->hco3) ? number_format($item->detail->hco3, 1) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <!-- Add additional AGD parameters from controller -->
+                    <tr>
+                        <td class="parameter-header">Saturasi O<sub>2</sub> (%)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->saturasi_o2) ? number_format($item->detail->saturasi_o2, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Elektrolit</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Na<sup>+</sup> (mmol/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->na) ? number_format($item->detail->na, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">K<sup>+</sup> (mmol/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->k) ? number_format($item->detail->k, 1) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Cl<sup>-</sup> (mmol/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->cl) ? number_format($item->detail->cl, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Fungsi Ginjal</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Ureum (mg/dL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ureum) ? number_format($item->detail->ureum, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Creatinin (mg/dL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->creatinin) ? number_format($item->detail->creatinin, 2) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Hematologi</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Hb (g/dL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->hb) ? number_format($item->detail->hb, 1) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Ht (%)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ht) ? number_format($item->detail->ht, 1) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Leukosit (/μL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->leukosit) ? number_format($item->detail->leukosit, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Trombosit (/μL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->trombosit) ? number_format($item->detail->trombosit, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Fungsi Hati</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">SGOT (U/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->sgot) ? number_format($item->detail->sgot, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">SGPT (U/L)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->sgpt) ? number_format($item->detail->sgpt, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Albumin (g/dL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->albumin) ? number_format($item->detail->albumin, 1) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Lain-lain</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">GDS/KDGS (mg/dL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->kdgs) ? number_format($item->detail->kdgs, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Additional Medical Parameters Table -->
+        <div class="card-header bg-light mt-4">
+            <h5 class="mb-0"><i class="bi bi-clipboard2-pulse me-2"></i>Data Parameter Klinis</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="vital-signs-table no-page-break" id="clinicalTable">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Parameter</th>
+                        @foreach ($allMonitoringRecords as $item)
+                            @php
+                                $datetime = \Carbon\Carbon::parse(
+                                    $item->tgl_implementasi . ' ' . $item->jam_implementasi,
+                                )->format('H:i');
+                            @endphp
+                            <th>{{ $datetime }}</th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Tingkat Kesadaran</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Kesadaran</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->kesadaran) ? $item->detail->kesadaran : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">GCS - Mata (E)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->gcs_eye) ? number_format($item->detail->gcs_eye, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">GCS - Verbal (V)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->gcs_verbal) ? number_format($item->detail->gcs_verbal, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">GCS - Motorik (M)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->gcs_motor) ? number_format($item->detail->gcs_motor, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">GCS - Total</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->gcs_total) ? number_format($item->detail->gcs_total, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Pupil Kanan (mm)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->pupil_kanan) ? $item->detail->pupil_kanan : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Pupil Kiri (mm)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->pupil_kiri) ? $item->detail->pupil_kiri : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Terapi Oksigen</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Jenis Terapi</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->terapi_oksigen) ? $item->detail->terapi_oksigen : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Ventilator</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Mode</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_mode) ? $item->detail->ventilator_mode : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">MV (L/min)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_mv) ? number_format($item->detail->ventilator_mv, 1) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">TV (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_tv) ? number_format($item->detail->ventilator_tv, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">FiO<sub>2</sub> (%)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_fio2) ? number_format($item->detail->ventilator_fio2, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">I:E Ratio</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_ie_ratio) ? $item->detail->ventilator_ie_ratio : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Pmax (cmH<sub>2</sub>O)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_pmax) ? number_format($item->detail->ventilator_pmax, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">PEEP/PS (cmH<sub>2</sub>O)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ventilator_peep_ps) ? number_format($item->detail->ventilator_peep_ps, 0) : '-' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            Cateter & Tube</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">ETT No</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ett_no) ? $item->detail->ett_no : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Batas Bibir (cm)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->batas_bibir) && is_numeric($item->detail->batas_bibir) ? number_format($item->detail->batas_bibir, 2) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">NGT No</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ngt_no) ? $item->detail->ngt_no : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">CVC</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->cvc) ? $item->detail->cvc : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Urine Catch No</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->urine_catch_no) ? $item->detail->urine_catch_no : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">IV Line</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->iv_line) ? $item->detail->iv_line : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header"
+                            style="background-color: #e2e8f0; color: #1a202c; font-weight: bold; text-align: center;">
+                            I/O Balance</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td
+                                style="color: #1a202c; font-weight: bold; text-align: center; border: 1px solid #b8b8b8;">
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">BAB (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->bab) && is_numeric($item->bab) ? number_format((float)$item->bab, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Urine (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->urine) && is_numeric($item->urine) ? number_format((float)$item->urine, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">IWL (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->iwl) && is_numeric($item->iwl) ? number_format((float)$item->iwl, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Muntahan (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->muntahan_cms) && is_numeric($item->muntahan_cms) ? number_format((float)$item->muntahan_cms, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="parameter-header">Drain (mL)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->drain) && is_numeric($item->drain) ? number_format((float)$item->drain, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Signature -->
@@ -404,6 +834,7 @@
 
     <script>
         // Fungsi untuk memformat angka float
+        // Fungsi untuk memformat angka float - TETAP DIGUNAKAN
         function formatNumber(value, decimals = 1) {
             if (value === null || value === undefined || isNaN(value)) {
                 return '-';
@@ -411,7 +842,7 @@
             return parseFloat(value).toFixed(decimals);
         }
 
-        // Fungsi untuk memformat tanggal dan waktu
+        // Fungsi untuk memformat tanggal dan waktu - TETAP DIGUNAKAN UNTUK CHART
         function formatDateTime(dateTimeStr) {
             try {
                 const dateTime = new Date(dateTimeStr);
@@ -433,206 +864,48 @@
             }
         }
 
-        // Fungsi untuk memproses data
-        function processPrintData(data, filterRangeText, unitTitleText) {
-            console.log("Processing print data:", data.length, "records");
+        // Main execution when document is ready -
+        document.addEventListener('DOMContentLoaded', () => {
+            // JIKA MENGGUNAKAN BLADE TEMPLATE, GANTI DENGAN KODE BERIKUT:
+            // Ambil data dari tabel yang sudah dirender oleh Blade
+            const labels = Array.from(document.querySelectorAll('#vitalSignsTable thead th:not(:first-child)'))
+                .map(th => th.textContent.trim());
+
+            const sistolikData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(1) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            const diastolikData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(2) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            const hrData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(3) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            const rrData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(4) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            const suhuData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(5) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            const mapData = Array.from(document.querySelectorAll(
+                    '#vitalSignsTable tbody tr:nth-child(6) td:not(:first-child)'))
+                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+
+            // Buat grafik dengan data yang sudah diambil
+            createChartFromLabels(labels, sistolikData, diastolikData, hrData, rrData, suhuData, mapData);
+
+            // Sembunyikan loading indicator dan tampilkan konten
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('printContent').style.display = 'block';
 
             // Aktifkan tombol print
             document.getElementById('printBtn').disabled = false;
 
-            // Set informasi filter
-            if (filterRangeText) {
-                document.getElementById('filterText').textContent = filterRangeText;
-
-                // Ekstrak tanggal dari filterRangeText
-                // Contoh filterRangeText: "30-04-2025 00:00 s.d 30-04-2025 23:59"
-                const dateMatch = filterRangeText.match(/(\d{2}-\d{2}-\d{4})/);
-                if (dateMatch) {
-                    document.getElementById('filterDate').textContent = dateMatch[0]; // Misalnya: 30-04-2025
-                } else {
-                    document.getElementById('filterDate').textContent = '-';
-                }
-            } else {
-                document.getElementById('filterDate').textContent = '-';
-            }
-
-            // Set judul unit jika ada
-            if (unitTitleText) {
-                document.getElementById('unitTitle').textContent = unitTitleText;
-            }
-
-            if (!data || data.length === 0) {
-                document.getElementById('loadingIndicator').innerHTML =
-                    '<div class="alert alert-info">Tidak ada data untuk ditampilkan</div>';
-                return;
-            }
-
-            try {
-                // Urutkan data berdasarkan waktu (asc)
-                const sortedData = [...data].sort((a, b) => {
-                    const dateTimeA = new Date(a.tgl_implementasi + 'T' + a.jam_implementasi);
-                    const dateTimeB = new Date(b.tgl_implementasi + 'T' + b.jam_implementasi);
-                    return dateTimeA - dateTimeB;
-                });
-
-                // Generate header untuk setiap pengukuran
-                const headerRow = document.getElementById('dateTimeHeaders');
-                headerRow.innerHTML = '<th style="width: 200px;">Parameter</th>';
-
-                sortedData.forEach(item => {
-                    const datetime = formatDateTime(item.tgl_implementasi + 'T' + item.jam_implementasi);
-                    const headerCell = document.createElement('th');
-                    headerCell.innerHTML = datetime.time;
-                    headerRow.appendChild(headerCell);
-                });
-
-                // Dapatkan baris tabel untuk setiap parameter
-                const tableRows = document.querySelectorAll('#vitalSignsTable tbody tr');
-
-                // Definisikan parameter dan formatnya
-                const parameters = [{
-                        row: tableRows[0],
-                        accessor: item => formatNumber(item.detail?.sistolik, 0),
-                        label: 'Sistolik'
-                    },
-                    {
-                        row: tableRows[1],
-                        accessor: item => formatNumber(item.detail?.diastolik, 0),
-                        label: 'Diastolik'
-                    },
-                    {
-                        row: tableRows[2],
-                        accessor: item => formatNumber(item.detail?.hr, 0),
-                        label: 'Heart Rate'
-                    },
-                    {
-                        row: tableRows[3],
-                        accessor: item => formatNumber(item.detail?.rr, 0),
-                        label: 'Respiratory Rate'
-                    },
-                    {
-                        row: tableRows[4],
-                        accessor: item => formatNumber(item.detail?.temp, 1),
-                        label: 'Suhu'
-                    },
-                    {
-                        row: tableRows[5],
-                        accessor: item => formatNumber(item.detail?.map, 0),
-                        label: 'MAP'
-                    },
-                ];
-
-                // Isi data untuk setiap parameter
-                parameters.forEach(param => {
-                    populateRow(param.row, sortedData, param.accessor, param.label);
-                });
-
-                processAGDData(sortedData);
-
-                // Buat grafik untuk vital signs
-                createChart(sortedData);
-
-                // Sembunyikan loading indicator dan tampilkan konten
-                document.getElementById('loadingIndicator').style.display = 'none';
-                document.getElementById('printContent').style.display = 'block';
-
-            } catch (e) {
-                console.error("Error processing data:", e);
-                document.getElementById('loadingIndicator').innerHTML =
-                    `<div class="alert alert-danger">Error: ${e.message}</div>`;
-            }
-        }
-
-        // Helper function untuk mengisi baris dengan data
-        function populateRow(row, data, valueAccessor, label) {
-            // Reset row content except for the first cell (parameter name)
-            const cells = row.querySelectorAll('td:not(:first-child)');
-            cells.forEach(cell => cell.remove());
-
-            // Add cells for each data point
-            data.forEach(item => {
-                try {
-                    const cell = document.createElement('td');
-                    cell.textContent = valueAccessor(item);
-                    row.appendChild(cell);
-                } catch (e) {
-                    console.error(`Error populating cell for ${label}:`, e);
-                    const cell = document.createElement('td');
-                    cell.textContent = 'Error';
-                    row.appendChild(cell);
-                }
-            });
-        }
-
-        // Function untuk memproses data AGD
-        // Function untuk memproses data AGD
-        function processAGDData(data) {
-            // Generate header untuk setiap pengukuran (sama dengan dateTimeHeaders utama)
-            const headerRow = document.getElementById('agdDateTimeHeaders');
-            headerRow.innerHTML = '<th style="width: 200px;">Parameter</th>';
-
-            data.forEach(item => {
-                const datetime = formatDateTime(item.tgl_implementasi + 'T' + item.jam_implementasi);
-                const headerCell = document.createElement('th');
-                headerCell.innerHTML = datetime.time;
-                headerRow.appendChild(headerCell);
-            });
-
-            // Dapatkan baris tabel untuk setiap parameter AGD
-            const tableRows = document.querySelectorAll('#agdTable tbody tr');
-
-            // Khusus untuk baris AGD (baris pertama), isi sel kosong dengan warna background yang sama
-            const agdHeaderRow = tableRows[0];
-            const headerCells = headerRow.querySelectorAll('th');
-            const emptyCellCount = headerCells.length - 1; // Kurangi 1 untuk kolom parameter
-            
-            // Tambahkan sel kosong untuk setiap kolom waktu
-            for (let i = 0; i < emptyCellCount; i++) {
-                const emptyCell = document.createElement('td');
-                emptyCell.style.color = '#1a202c';
-                emptyCell.style.fontWeight = 'bold';
-                emptyCell.style.textAlign = 'center';
-                emptyCell.style.border = '1px solid #b8b8b8';
-                agdHeaderRow.appendChild(emptyCell);
-            }
-
-            // Definisikan parameter AGD dan formatnya (mulai dari baris kedua)
-            const agdParameters = [
-                {
-                    row: tableRows[1],
-                    accessor: item => formatNumber(item.detail?.ph, 2),
-                    label: 'pH'
-                },
-                {
-                    row: tableRows[2],
-                    accessor: item => formatNumber(item.detail?.po2, 0),
-                    label: 'PO2'
-                },
-                {
-                    row: tableRows[3],
-                    accessor: item => formatNumber(item.detail?.pco2, 0),
-                    label: 'PCO2'
-                },
-                {
-                    row: tableRows[4],
-                    accessor: item => formatNumber(item.detail?.be, 1),
-                    label: 'BE'
-                },
-                {
-                    row: tableRows[5],
-                    accessor: item => formatNumber(item.detail?.hco3, 1),
-                    label: 'HCO3'
-                }
-            ];
-
-            // Isi data untuk setiap parameter AGD
-            agdParameters.forEach(param => {
-                populateRow(param.row, data, param.accessor, param.label);
-            });
-        }
-
-        // Main execution when document is ready
-        document.addEventListener('DOMContentLoaded', () => {
+            // KODE LAMA - DAPAT DIHAPUS JIKA MENGGUNAKAN BLADE TEMPLATE:
             // Dapatkan data monitoring dari controller PHP
             var monitoringData = @json($allMonitoringRecords ?? []);
 
@@ -670,7 +943,7 @@
             }
         });
 
-        // Format tanggal menjadi format yang mudah dibaca
+        // Format tanggal menjadi format yang mudah dibaca - TETAP DIGUNAKAN
         function formatReadableDate(dateString) {
             var parts = dateString.split('-');
             if (parts.length === 3) {
@@ -679,40 +952,15 @@
             return dateString;
         }
 
-        // Fungsi untuk membuat grafik monitoring
-        function createChart(data) {
-            // Siapkan data untuk grafik
-            const labels = [];
-            const sistolikData = [];
-            const diastolikData = [];
-            const hrData = [];
-            const rrData = [];
-            const suhuData = [];
-            const mapData = [];
-
-            // Ambil data untuk grafik dari data monitoring
-            data.forEach(item => {
-                const datetime = formatDateTime(item.tgl_implementasi + 'T' + item.jam_implementasi);
-                labels.push(datetime.time);
-
-                // Ambil nilai vital sign
-                sistolikData.push(item.detail?.sistolik ? parseFloat(item.detail.sistolik) : null);
-                diastolikData.push(item.detail?.diastolik ? parseFloat(item.detail.diastolik) : null);
-                hrData.push(item.detail?.hr ? parseFloat(item.detail.hr) : null);
-                rrData.push(item.detail?.rr ? parseFloat(item.detail.rr) : null);
-                suhuData.push(item.detail?.temp ? parseFloat(item.detail.temp) : null);
-                mapData.push(item.detail?.map ? parseFloat(item.detail.map) : null);
-            });
-
-            // Buat grafik menggunakan Chart.js
-            const ctx = document.getElementById('vitalSignsChart').getContext('2d');
-
+        // Fungsi untuk membuat grafik monitoring dari label yang sudah disiapkan
+        function createChartFromLabels(labels, sistolikData, diastolikData, hrData, rrData, suhuData, mapData) {
             // Hapus grafik lama jika ada
             if (window.vitalChart) {
                 window.vitalChart.destroy();
             }
 
             // Buat grafik baru
+            const ctx = document.getElementById('vitalSignsChart').getContext('2d');
             window.vitalChart = new Chart(ctx, {
                 type: 'line',
                 data: {
