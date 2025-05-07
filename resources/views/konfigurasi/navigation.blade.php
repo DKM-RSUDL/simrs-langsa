@@ -363,7 +363,7 @@
             } else if (value == 'parent') {
                 $('#icon').prop('readonly', false)
                 $('#url').prop('readonly', true)
-                $('#url').val('#');
+                $('#url').val(`# ${$('#form-modalAction #name').val()}`);
                 $('#main_menu').addClass('d-none')
             } else {
                 $('#icon').prop('readonly', false)
@@ -379,7 +379,7 @@
             let type_menu = $('#type_menu').val()
 
             if (type_menu == 'parent') {
-                $('#url').val('#');
+                $('#url').val(`# ${value}`);
             }
         });
     </script>

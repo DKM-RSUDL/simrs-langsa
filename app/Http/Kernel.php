@@ -65,9 +65,10 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'ssoToken' => \App\Http\Middleware\CheckSsoTokenExpiration::class,
     ];
 
-    
+
 
     protected $routeMiddleware = [
         'check.unit'    => \App\Http\Middleware\CheckUnitAccess::class,

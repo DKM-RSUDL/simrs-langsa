@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
@@ -85,17 +87,32 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
+use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
+
+
+
+// Auth::routes();
 Route::middleware('guest')->group(function () {
+
     Route::get('/', function () {
         return view('auth.login');
     });
+
+    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
-Auth::routes();
-Route::middleware('auth')->group(function () {
+
+Route::middleware('ssoToken')->group(function () {
+
+    // Route::middleware('auth')->group(function () {
+
+    Route::get('/user-sso', [SsoController::class, 'getUser']);
+    Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('navigation', NavigationController::class);
@@ -619,7 +636,6 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -1090,7 +1106,6 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
-
                     });
                 });
             });
@@ -1138,6 +1153,24 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+                    });
+                });
+            });
+        });
+    });
+
+    // TRANSFUSI DARAH
+    Route::prefix('transfusi-darah')->group(function () {
+        Route::name('transfusi-darah')->group(function () {
+            Route::controller(PermintaanController::class)->group(function () {
+                // PERMINTAAN
+                Route::prefix('permintaan')->group(function () {
+                    Route::name('.permintaan')->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                        Route::get('/datatables', 'datatable')->name('.datatable');
+                        Route::get('/show/{data}', 'show')->name('.show');
+                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });

@@ -15,8 +15,15 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RawatInapController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
+    }
+
     public function index()
     {
+
         $unit = Unit::with(['bagian'])
             ->where('kd_bagian', 1)
             ->where('aktif', 1)
@@ -39,8 +46,8 @@ class RawatInapController extends Controller
                     $q->whereNull('status_inap');
                     $q->orWhere('status_inap', 1);
                 })
-                // ->whereNull('tgl_pulang')
-                // ->whereNull('jam_pulang')
+                ->whereNull('tgl_pulang')
+                ->whereNull('jam_pulang')
                 ->whereYear('tgl_masuk', '>=', 2024);
 
             return DataTables::of($data)

@@ -17,6 +17,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ForensikKlinikController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/forensik');
+    }
+
     public function index()
     {
         $unit = Unit::with(['bagian'])

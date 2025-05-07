@@ -17,7 +17,7 @@ class PermissionService
 
     public function dataTable()
     {
-        $roles = Role::where('name', '!=', 'admin')->with('permissions')->get();
+        $roles = Role::with('permissions')->get();
 
         return DataTables::of($roles)
             ->addColumn('permissions', function ($role) {
@@ -96,6 +96,16 @@ class PermissionService
                 // check role
                 $role = Role::findOrFail($roleId);
                 $success = true;
+
+                if ($role->name == 'admin') {
+                    $permit = Permission::all();
+                    $role->syncPermissions($permit);
+                    Artisan::call('permission:cache-reset');
+                    return [
+                        'status' => true,
+                        'message' => 'Semua permission berhasil ditambahkan.'
+                    ];
+                }
 
                 // add permission in loop
                 foreach ($permissions as $permission) {

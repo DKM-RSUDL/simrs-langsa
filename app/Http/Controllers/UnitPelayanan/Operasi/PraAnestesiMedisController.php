@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 
 class PraAnestesiMedisController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
     public function create($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])

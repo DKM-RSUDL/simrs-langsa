@@ -27,12 +27,20 @@
                 continue;
             }
 
+            if (strlen($segment) > 20) {
+                continue;
+            }
+
             if ($key == count($pathSegments) - 1) {
                 // Last segment (active)
                 echo '<li class="breadcrumb-item active" aria-current="page">' . ucfirst($segment) . '</li>';
             } else {
                 // Intermediate segments
-                echo '<li class="breadcrumb-item"><a href="' . url($currentPath) . '">' . ucfirst($segment) . '</a></li>';
+                echo '<li class="breadcrumb-item"><a href="' .
+                    url($currentPath) .
+                    '">' .
+                    ucfirst($segment) .
+                    '</a></li>';
             }
 
             $currentSegment = $segment;

@@ -20,11 +20,12 @@ class UserRolePermissionSeeder extends Seeder
         DB::beginTransaction();
 
         try {
-            $user = $this->createUser();
+            // $user = $this->createUser();
 
-            $this->createUserProfile();
+            // $this->createUserProfile();
 
-            $this->createRole($user);
+            // $this->createRole($user);
+            $this->createRole();
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -69,9 +70,8 @@ class UserRolePermissionSeeder extends Seeder
             // $role_admin->givePermissionTo($permissionUserDelete);
         }
 
-        $user['admin']->assignRole('admin');
-        $user['manager']->assignRole('manager');
-        $user['spv']->assignRole('spv');
+        $user = User::first();
+        $user->assignRole('admin');
     }
 
     public function createUser()

@@ -32,18 +32,23 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsesmenKeperawatanRajalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $user = auth()->user();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-        ->join('transaksi as t', function ($join) {
-            $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-            $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-            $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-            $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-        })
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -1080,39 +1085,39 @@ class AsesmenKeperawatanRajalController extends Controller
                 ->first();
 
             // Initialize collections with empty arrays if data is null
-            $faktorPemberatData = cache()->remember('faktor_pemberat', 3600, function() {
+            $faktorPemberatData = cache()->remember('faktor_pemberat', 3600, function () {
                 return RmeFaktorPemberat::select('id', 'name')->pluck('name', 'id');
             });
 
-            $kualitasNyeriData = cache()->remember('kualitas_nyeri', 3600, function() {
+            $kualitasNyeriData = cache()->remember('kualitas_nyeri', 3600, function () {
                 return RmeKualitasNyeri::select('id', 'name')->pluck('name', 'id');
             });
 
-            $menjalarData = cache()->remember('menjalar', 3600, function() {
+            $menjalarData = cache()->remember('menjalar', 3600, function () {
                 return RmeMenjalar::select('id', 'name')->pluck('name', 'id');
             });
 
-            $faktorPeringanData = cache()->remember('faktor_peringan', 3600, function() {
+            $faktorPeringanData = cache()->remember('faktor_peringan', 3600, function () {
                 return RmeFaktorPeringan::select('id', 'name')->pluck('name', 'id');
             });
 
-            $frekuensiNyeriData = cache()->remember('frekuensi_nyeri', 3600, function() {
+            $frekuensiNyeriData = cache()->remember('frekuensi_nyeri', 3600, function () {
                 return RmeFrekuensiNyeri::select('id', 'name')->pluck('name', 'id');
             });
 
-            $jenisNyeriData = cache()->remember('jenis_nyeri', 3600, function() {
+            $jenisNyeriData = cache()->remember('jenis_nyeri', 3600, function () {
                 return RmeJenisNyeri::select('id', 'name')->pluck('name', 'id');
             });
 
-            $pekerjaanData = cache()->remember('pekerjaan', 3600, function() {
+            $pekerjaanData = cache()->remember('pekerjaan', 3600, function () {
                 return Pekerjaan::select('kd_pekerjaan', 'pekerjaan')->pluck('pekerjaan', 'kd_pekerjaan');
             });
 
-            $agamaData = cache()->remember('agama', 3600, function() {
+            $agamaData = cache()->remember('agama', 3600, function () {
                 return Agama::select('kd_agama', 'agama')->pluck('agama', 'kd_agama');
             });
 
-            $pendidikanData = cache()->remember('pendidikan', 3600, function() {
+            $pendidikanData = cache()->remember('pendidikan', 3600, function () {
                 return Pendidikan::select('kd_pendidikan', 'pendidikan')->pluck('pendidikan', 'kd_pendidikan');
             });
 

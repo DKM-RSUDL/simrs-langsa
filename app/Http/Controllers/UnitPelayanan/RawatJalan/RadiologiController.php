@@ -7,17 +7,25 @@ use App\Models\Dokter;
 use App\Models\DokterKlinik;
 use App\Models\Kunjungan;
 use App\Models\Produk;
+use App\Models\RadHasil;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
 use App\Models\SegalaOrder;
 use App\Models\SegalaOrderDet;
+use App\Models\UnitAsal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class RadiologiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -33,10 +41,32 @@ class RadiologiController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // get tab
+        $tabContent = $request->query('tab');
+
+        if ($tabContent == 'hasil') {
+            return $this->hasilTabs($kd_unit, $dataMedis, $request);
+        } else {
+            return $this->orderTabs($kd_unit, $dataMedis, $request);
+        }
+    }
+
+    private function orderTabs($kd_unit, $dataMedis, $request)
+    {
         $dokter = DokterKlinik::with(['dokter', 'unit'])
-                                ->where('kd_unit', $kd_unit)
-                                ->whereRelation('dokter', 'status', 1)
-                                ->get();
+            ->where('kd_unit', $kd_unit)
+            ->whereRelation('dokter', 'status', 1)
+            ->get();
 
         $produk = Produk::with(['klas'])
             ->distinct()
@@ -106,22 +136,12 @@ class RadiologiController extends Controller
                     });
             })
             // end filter
-            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $kd_unit)
-            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('kategori', 'RD')
             ->orderBy('kd_order', 'desc')
             ->get();
-
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
 
         return view('unit-pelayanan.rawat-jalan.pelayanan.radiologi.index', [
             'dataMedis'     => $dataMedis,
@@ -129,6 +149,80 @@ class RadiologiController extends Controller
             'produk'        => $produk,
             'radList'       => $radList
         ]);
+    }
+
+    private function hasilTabs($kd_unit, $dataMedis, $request)
+    {
+        // get data trx radiologi by trx unit asal
+        $unitAsal = UnitAsal::where('no_transaksi_asal', $dataMedis->no_transaksi)
+            ->where('kd_kasir_asal', $dataMedis->kd_kasir)
+            ->where('kd_kasir', '04')
+            ->get();
+
+        // get data transaksi rad
+        $dataTransaksi = [];
+
+        foreach ($unitAsal as $ua) {
+            $dataRadHasil = RadHasil::select([
+                't.kd_pasien',
+                't.kd_unit',
+                't.tgl_transaksi',
+                't.urut_masuk',
+                'rad_hasil.urut',
+                'k.kd_dokter',
+                'd.nama_lengkap as nama_dokter',
+                'rad_hasil.kd_test as kd_produk',
+                'p.deskripsi as nama_produk',
+                'rad_hasil.hasil',
+                'rad_hasil.kd_alat',
+                'rad_hasil.accession_number',
+            ])
+                ->join('transaksi as t', function ($q) {
+                    $q->on('rad_hasil.kd_pasien', '=', 't.kd_pasien');
+                    $q->on('rad_hasil.kd_unit', '=', 't.kd_unit');
+                    $q->on('rad_hasil.tgl_masuk', '=', 't.tgl_transaksi');
+                    $q->on('rad_hasil.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->join('kunjungan as k', function ($q) {
+                    $q->on('k.kd_pasien', '=', 't.kd_pasien');
+                    $q->on('k.kd_unit', '=', 't.kd_unit');
+                    $q->on('k.tgl_masuk', '=', 't.tgl_transaksi');
+                    $q->on('k.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->join('dokter as d', 'd.kd_dokter', '=', 'k.kd_dokter')
+                ->join('produk as p', 'p.kd_produk', '=', 'rad_hasil.kd_test')
+                ->where('t.no_transaksi', $ua->no_transaksi)
+                ->where('t.kd_kasir', $ua->kd_kasir)
+                ->where('rad_hasil.kd_pasien', $dataMedis->kd_pasien)
+                ->where('rad_hasil.kd_unit', 5)
+                ->get()
+                ->toArray();
+
+            foreach ($dataRadHasil as $rh) {
+                array_push($dataTransaksi, $rh);
+            }
+        }
+
+        // get pacs url
+        for ($i = 0; $i < count($dataTransaksi); $i++) {
+            // get pacs
+            $trx = $dataTransaksi[$i];
+            $pacs = '';
+
+            if (!empty($trx['accession_number'])) {
+                $response = Http::post('https://e-rsudlangsa.id/api/pacs/get_order', ['acc' => intval($trx['accession_number'])]);
+                $result = $response->json();
+
+                if (isset($result['data']['UrlLink'])) $pacs = $result['data']['UrlLink'];
+            }
+
+            $dataTransaksi[$i]['pacs'] = $pacs;
+        }
+
+        return view('unit-pelayanan.rawat-jalan.pelayanan.radiologi.hasil-tab', compact(
+            'dataMedis',
+            'dataTransaksi'
+        ));
     }
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -368,12 +462,12 @@ class RadiologiController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => $kd_unit,
@@ -391,7 +485,6 @@ class RadiologiController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -399,7 +492,7 @@ class RadiologiController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

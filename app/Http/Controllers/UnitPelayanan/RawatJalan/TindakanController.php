@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Storage;
 
 class TindakanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -555,12 +560,12 @@ class TindakanController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => $kd_unit,
@@ -578,7 +583,6 @@ class TindakanController extends Controller
             ];
 
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
@@ -586,7 +590,7 @@ class TindakanController extends Controller
                 'id_resume'     => $resume->id
             ];
 
-            if(empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
+            if (empty($resumeDtl)) RmeResumeDtl::create($resumeDtlData);
         }
     }
 }

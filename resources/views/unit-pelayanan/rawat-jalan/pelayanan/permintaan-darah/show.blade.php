@@ -1,414 +1,509 @@
 @extends('layouts.administrator.master')
 
 @push('css')
-    <style>
-        .header-asesmen {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
-        }
+<style>
+    .header-asesmen {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+    }
 
-        .card {
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
+    .card {
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
 
-        .card-header {
-            padding: 0.75rem 1.25rem;
-            font-weight: 500;
-        }
+    .card-header {
+        padding: 0.75rem 1.25rem;
+        font-weight: 500;
+    }
 
-        .form-control:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
 
-        .form-control-plaintext {
-            padding-top: calc(0.375rem + 1px);
-        }
+    .form-control-plaintext {
+        padding-top: calc(0.375rem + 1px);
+    }
 
-        .custom-control-label {
-            cursor: pointer;
-        }
+    .custom-control-label {
+        cursor: pointer;
+    }
 
-        .table th {
-            font-size: 0.9rem;
-        }
-    </style>
+    .table th {
+        font-size: 0.9rem;
+    }
+</style>
 @endpush
 
 @section('content')
-    @include('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.include')
+@include('unit-pelayanan.gawat-darurat.action-gawat-darurat.edukasi.include')
 
-    <div class="row">
-        <div class="col-md-3">
-            @include('components.patient-card')
-        </div>
+<div class="row">
+    <div class="col-md-3">
+        @include('components.patient-card')
+    </div>
 
-        <div class="col-md-9">
-            <div class="d-flex justify-content-between">
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between">
             <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <a href="{{ route('rawat-jalan.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $permintaanDarah->id]) }}" class="btn btn-warning btn-sm" title="Edit">
+
+            @if ($order->status == 0)
+            <a href="{{ route('rawat-jalan.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $order->id]) }}"
+                class="btn btn-warning btn-sm ms-2" title="Edit">
                 <i class="ti-pencil"></i> Edit
             </a>
+            @endif            
         </div>
-            <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-jalan.permintaan-darah.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
-                @csrf
 
-                <div class="d-flex justify-content-center">
-                    <div class="card w-100 h-100 shadow-sm">
-                        <div class="card-body">
-                            <div class="px-3">
-                                <h4 class="header-asesmen text-center font-weight-bold mb-4">PERMINTAAN DARAH/PRODUK DARAH
-                                </h4>
-                                <p>Isikan data permintaan darah pasien dan keluarga terintegrasi</p>
-                            </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2"
+                    aria-expanded="true" aria-controls="collapseOne2">
+                    <span class="fw-bold">Detail Order</span>
+                </button>
+            </h2>
+            <div id="collapseOne2" class="accordion-collapse collapse show" aria-labelledby="headingOne1"
+                data-bs-parent="#accordionExample2" style="">
+                <div class="accordion-body">
 
-                            <!-- Petunjuk Permintaan -->
-                            <div class="section-separator mb-3">
-                                <div class="card-header font-weight-bold">PETUNJUK PERMINTAAN:</div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="">
                                 <div class="card-body">
-                                    <ol class="pl-3 mb-0">
-                                        <li>Satu Formulir untuk Satu kali permintaan</li>
-                                        <li>Setiap permintaan Darah harus disertai sampel Pasien dalam tabung EDTA 3 ml</li>
-                                        <li>Nama dan Identitas Pasien pada Formulir dan Contoh darah harus SAMA</li>
-                                    </ol>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Tipe</th>
+                                            <td>
+                                                @if ($order->tipe == 0)
+                                                Biasa
+                                                @endif
+
+                                                @if ($order->tipe == 1)
+                                                Cito
+                                                @endif
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Unit Order</th>
+                                            <td>{{ $order->unit->nama_unit }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Dokter</th>
+                                            <td>{{ $order->dokter->nama_lengkap }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="card-header font-weight-bold">PETUNJUK TRANSFUSI:</div>
+                            </div>
+
+                            <div class="">
                                 <div class="card-body">
-                                    <p class="mb-0">Pastikan Identitas Pasien dan Cocokkan etiket pada Kantong Darah, Label
-                                        dan Formulir, Segera kembalikan bila tidak Cocok Ke Bank Darah Rumah Sakit (BDRS)
-                                        setempat atau UTD PMI</p>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Nama OS</th>
+                                            <td>{{ str()->title($order->pasien->nama) ?? '-' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Jenis Kelamin</th>
+                                            <td>{{ $order->pasien->jenis_kelamin == '0' ? 'Perempuan' : 'Laki-Laki' ??
+                                                '-' }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>No RM</th>
+                                            <td>{{ $order->kd_pasien ?? '-' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Alamat</th>
+                                            <td>{{ $order->pasien->alamat ?? '-' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>No. HP</th>
+                                            <td>{{ $order->pasien->telepon ?? '-' }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 
-                            <!-- Urgency Section -->
-                            <div class="section-separator mb-3">
-                                <div class="card-header bg-white">
-                                    <p class="font-weight-bold mb-0">Harap Diisi LENGKAP oleh Pihak Rumah Sakit: Untuk
-                                        keamanan Transfusi</p>
-                                </div>
-                                <div class="card-body pt-2">
-                                    <div class="form-row ml-auto justify-content-end">
-                                        <div class="form-check form-check-inline mr-4">
-                                            <input class="form-check-input" type="radio" name="TIPE" id="urgensi_biasa"
-                                                value="0" {{ $permintaanDarah->TIPE == 0 ? 'checked' : '' }} disabled required>
-                                            <label class="form-check-label" for="urgensi_biasa">Biasa</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="TIPE" id="urgensi_cito"
-                                                value="1" {{ $permintaanDarah->TIPE == 1 ? 'checked' : '' }} disabled required>
-                                            <label class="form-check-label" for="urgensi_cito">Cito (Harus disertai memo)</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Permintaan -->
-                            <div class="section-separator mb-3">
+                            <div class="">
                                 <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <tr align="middle" class="bg-light">
+                                            <th colspan="2">DARAH LENGKAP (WHOLEBLOOD)</th>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label for="kd_dokter" style="min-width: 200px;">Dokter yang meminta</label>
-                                        <select name="KD_DOKTER" id="kd_dokter" class="form-select" disabled required>
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->dokter->kd_dokter }}"
-                                                    {{ $permintaanDarah->kd_dokter == $dok->dokter->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->dokter->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                        <tr>
+                                            <th>WB Segar/Biasa</th>
+                                            <td>{{ $order->wb ?? 0 }} ml</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tgl Pengiriman</label>
-                                        <input type="date" class="form-control" name="TGL_PENGIRIMAN"
-                                            value="{{ $permintaanDarah->tgl_pengiriman ? \Carbon\Carbon::parse($permintaanDarah->tgl_pengiriman)->format('Y-m-d') : '' }}"
-                                            disabled required>
-                                    </div>
+                                        <tr align="middle" class="bg-light">
+                                            <th colspan="2">DARAH MERAHPEKAT (PACKED RED CELL)</th>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label for="diperlukan" style="min-width: 200px;">Diperlukan</label>
-                                        <input type="date" class="form-control" name="TGL_DIPERLUKAN"
-                                        value="{{ $permintaanDarah->tgl_diperlukan ? \Carbon\Carbon::parse($permintaanDarah->tgl_diperlukan)->format('Y-m-d') : '' }}" disabled required>
-                                    </div>
+                                        <tr>
+                                            <th>PRC Biasa</th>
+                                            <td>{{ $order->prc ?? 0 }} ml</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Diagnosa Kimia</label>
-                                        <input type="text" class="form-control" name="DIAGNOSA_KIMIA"
-                                            value="{{ $permintaanDarah->diagnosa_kimia }}" disabled required>
-                                    </div>
+                                        <tr>
+                                            <th>PRC Pediatric Leukodepleted</th>
+                                            <td>{{ $order->prc_pediactric ?? 0 }} ml</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Alasan Transfusi</label>
-                                        <input type="text" class="form-control" name="ALASAN_TRANSFUSI"
-                                            value="{{ $permintaanDarah->alasan_transfusi }}" disabled required>
-                                    </div>
+                                        <tr>
+                                            <th>PRC Leukodepleted (dengan filter)</th>
+                                            <td>{{ $order->prc_leukodepleted ?? 0 }} ml</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label for="golda" style="min-width: 200px;">Golongan Darah</label>
-                                        <select class="form-select" name="KODE_GOLDA" id="golda" disabled required>
-                                            <option value="">-- Pilih --</option>
-                                            @foreach ($gologanDarah as $darah)
-                                                <option value="{{ $darah->kode }}" {{ $permintaanDarah->kode_golda == $darah->kode ? 'selected' : '' }}>
-                                                    {{ $darah->jenis }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <tr>
+                                            <th>Washed Erythroyte (WE)</th>
+                                            <td>{{ $order->washed_erythroyte ?? 0 }} ml</td>
+                                        </tr>
 
-                                        <label class="ms-3">HB</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" name="HB" class="form-control"
-                                                value="{{ $permintaanDarah->hb }}" disabled required>
-                                            <span class="input-group-text" id="basic-addon1">g</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nama Suami/Istri Pasien</label>
-                                        <input type="text" class="form-control" name="NAMA_SUAMI_ISTRI"
-                                            value="{{ $permintaanDarah->nama_suami_istri }}" disabled required>
-
-                                        <label class="mx-2">Register</label>
-                                        <input type="text" class="form-control" name="KD_PASIEN"
-                                            value="{{ $permintaanDarah->kd_pasien }}" readonly disabled required>
-                                    </div>
-
+                                        <tr>
+                                            <th>Lain-lain</th>
+                                            <td>{{ $order->lainnya ?? '-' }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 
-                            <!-- Medical History -->
-                            <div class="section-separator mb-3">
+                            <div class="">
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Transfusi Sebelumnya</label>
-                                        <input type="text" class="form-control" name="TRANFUSI_SEBELUMNYA"
-                                               value="{{ $permintaanDarah->tranfusi_sebelumnya }}" disabled>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Gejala Reaksi Transfusi</label>
-                                        <input type="text" class="form-control" name="REAKSI_TRANFUSI"
-                                               value="{{ $permintaanDarah->reaksi_tranfusi }}" disabled>
-                                    </div>
-
-                                    <p class="fw-bold">Apakah pernah diperiksa Serologi golongan darah</p>
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Dimana</label>
-                                        <input type="text" class="form-control" name="SEROLOGI_DIMANA"
-                                               value="{{ $permintaanDarah->serologi_dimana }}" disabled>
-
-                                        <label class="mx-2">Kapan</label>
-                                        <input type="date" class="form-control" name="SEROLOGI_KAPAN"
-                                               value="{{ $permintaanDarah->serologi_kapan ? \Carbon\Carbon::parse($permintaanDarah->SEROLOGI_KAPAN)->format('Y-m-d') : '' }}" disabled>
-
-                                        <label class="mx-2">Hasil</label>
-                                        <input type="text" class="form-control" name="serologi_dimana"
-                                               value="{{ $permintaanDarah->serologi_hasil }}" disabled>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;">Khusus Pasien wanita: Pernah hamil?</label>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
-                                                   id="radioDefault1Hamil" value="1"
-                                                   {{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="radioDefault1Hamil">
-                                                Ya
-                                            </label>
-                                        </div>
-                                        <div class="form-check mx-2 mt-2">
-                                            <input class="form-check-input" type="radio" name="PERNAH_HAMIL"
-                                                   id="radioDefault2Hamil" value="0"
-                                                   {{ !is_numeric($permintaanDarah->pernah_hamil) || $permintaanDarah->pernah_hamil == 0 ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="radioDefault2Hamil">
-                                                Tidak
-                                            </label>
-                                        </div>
-
-                                        <label class="mx-3" style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}">Jumlah</label>
-                                        <input type="number" class="form-control" id="pernah-hamil-jumlah"
-                                               name="PERNAH_HAMIL_COUNT" value="{{ is_numeric($permintaanDarah->pernah_hamil) ? $permintaanDarah->pernah_hamil : '' }}"
-                                               style="{{ is_numeric($permintaanDarah->pernah_hamil) && $permintaanDarah->pernah_hamil > 0 ? 'display:inline-block' : 'display:none' }}" disabled>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;">Pernah Abortus atau Bayi kuning karena hemolisis (HDN)?</label>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="radio" name="ABORTUS_HDN"
-                                                   id="radioDefault1Abortur" value="1"
-                                                   {{ $permintaanDarah->abortus_hdn == 1 ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="radioDefault1Abortur">
-                                                Ya
-                                            </label>
-                                        </div>
-                                        <div class="form-check mx-2 mt-2">
-                                            <input class="form-check-input" type="radio" name="ABORTUS_HDN"
-                                                   id="radioDefault2Abortus" value="0"
-                                                   {{ $permintaanDarah->abortus_hdn != 1 ? 'checked' : '' }} disabled>
-                                            <label class="form-check-label" for="radioDefault2Abortus">
-                                                Tidak
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Waktu Pengambilan Sampel</th>
+                                            <td>{{ date('d M Y H:i', strtotime($order->waktu_pengambilan_sampel)) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Petugas</th>
+                                            <td>{{ $order->petugas_pengambilan_sampel }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="section-separator mb-3">
+                        <div class="col-md-6">
+                            <div class="">
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold mb-3">DARAH LENGKAP (WHOLEBLOOD)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">WB Segar / Biasa</label>
-                                        <input type="number" class="form-control" name="WB"
-                                               value="{{ $permintaanDarah->wb }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Tgl Order</th>
+                                            <td>{{ date('d M Y', strtotime($order->tgl_pengiriman)) }}</td>
+                                        </tr>
 
-                                    <h5 class="font-weight-bold mt-4 mb-3">DARAH MERAHPEKAT (PACKED RED CELL)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Biasa</label>
-                                        <input type="number" class="form-control" name="PRC"
-                                               value="{{ $permintaanDarah->prc }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr>
+                                            <th>Tgl Diperlukan</th>
+                                            <td>{{ date('d M Y', strtotime($order->tgl_diperlukan)) }}</td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Pediatric <br> Leukodepleted**</label>
-                                        <input type="number" class="form-control" name="PRC_PEDIACTRIC"
-                                               value="{{ $permintaanDarah->prc_pediactric }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr>
+                                            <th>Diagnosa Kimia</th>
+                                            <td>{{ $order->diagnosa_kimia }}</td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">PRC Leukodepleted <br> (dengan filter)**</label>
-                                        <input class="form-control" type="number" name="PRC_LEUKODEPLETED"
-                                               value="{{ $permintaanDarah->prc_leukodepleted }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr>
+                                            <th>Gol. Darah</th>
+                                            <td>{{ $order->golDarah->jenis }}</td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Washed Erythrocyte (WE)</label>
-                                        <input type="number" class="form-control" name="WASHED_ERYTHROYTE"
-                                               value="{{ $permintaanDarah->washed_erythroyte }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr>
+                                            <th>Alasan Transfusi</th>
+                                            <td>{{ $order->alasan_transfusi }}</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Lain-lain</label>
-                                        <input type="text" class="form-control" name="LAINNYA"
-                                               value="{{ $permintaanDarah->lainnya }}" disabled>
-                                    </div>
+                                        <tr>
+                                            <th>HB</th>
+                                            <td>{{ $order->hb }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 
-                            <div class="section-separator mb-3">
+                            <div class="">
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold mb-3">THROMBOCYTE CONCENTRATE (TC)</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Biasa</label>
-                                        <input type="number" class="form-control" name="TC_BIASA"
-                                               value="{{ $permintaanDarah->tc_biasa }}" disabled>
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Transfusi Sebelumnya</th>
+                                            <td>{{ $order->tranfusi_sebelumnya ?? '-' }}</td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Apheresis*</label>
-                                        <input type="number" class="form-control" name="TC_APHERESIS"
-                                               value="{{ $permintaanDarah->tc_apheresis }}" disabled>
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                        <tr>
+                                            <th>Gejala Reaksi Transfusi</th>
+                                            <td>{{ $order->reaksi_tranfusi ?? '-' }}</td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">TC Pooled (Leukodepleted)**</label>
-                                        <input type="number" class="form-control" name="TC_POOLED"
-                                               value="{{ $permintaanDarah->tc_pooled }}" disabled>
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                        @if ($order->pasien->jenis_kelamin == 0)
+                                        <tr>
+                                            <th>Pernah Hamil</th>
+                                            <td>{{ $order->pernah_hamil ?? '-' }}</td>
+                                        </tr>
+                                        @endif
 
-                                    <h5 class="font-weight-bold mt-4 mb-3">PLASMA</h5>
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Plasma Cair (liquid Plasma)</label>
-                                        <input type="number" class="form-control" name="PLASMA_CAIR"
-                                               value="{{ $permintaanDarah->plasma_cair }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr>
+                                            <th>Pernah Abortus</th>
+                                            <td>{{ $order->abortus_hdn || $order->abortus_hdn == 0 ? 'Tidak pernah' :
+                                                'Pernah' }}
+                                            </td>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Plasma Segar Beku (FFP)</label>
-                                        <input type="number" class="form-control" name="PLASMA_SEGAR_BEKU"
-                                               value="{{ $permintaanDarah->plasma_segar_beku }}" disabled>
-                                        <span class="input-group-text">ml</span>
-                                    </div>
+                                        <tr align="middle" class="bg-light">
+                                            <th colspan="2">SEROLOGI</th>
+                                        </tr>
 
-                                    <div class="input-group mb-3">
-                                        <label style="min-width: 200px;">Cryoprecipitate AHF</label>
-                                        <input type="number" class="form-control" name="CIYOPRECIPITATE"
-                                               value="{{ $permintaanDarah->ciyoprecipitate }}" disabled>
-                                        <span class="input-group-text">unit</span>
-                                    </div>
+                                        <tr>
+                                            <th>Tempat</th>
+                                            <td>{{ $order->serologi_dimana ?? '-' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Waktu</th>
+                                            <td>{{ $order->serologi_kapan ?? '-' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Hasil</th>
+                                            <td>{{ $order->serologi_hasil ?? '-' }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 
-                            <!-- Declaration -->
-                            <div class="section-separator mb-3">
+                            <div class="">
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Tanggal Pengambilan Sampel</label>
-                                        @php
-                                            $waktuPengambilanSampel = \Carbon\Carbon::parse($permintaanDarah->tgl_pengambilan_sampel);
-                                            $tanggal = $waktuPengambilanSampel->format('Y-m-d');
-                                            $jam = $waktuPengambilanSampel->format('H:i');
-                                        @endphp
-                                        <input type="date" class="form-control" name="TGL_PENGAMBILAN_SAMPEL"
-                                               value="{{ $tanggal }}" disabled>
+                                    <table class="table table-bordered">
+                                        <tr align="middle" class="bg-light">
+                                            <th colspan="2">THROMBOCYTE CONCENTRATE (TC)</th>
+                                        </tr>
 
-                                        <label class="mx-2">Jam</label>
-                                        <input type="time" class="form-control" name="WAKTU_PENGAMBILAN_SAMPEL"
-                                               value="{{ $jam }}" disabled>
-                                    </div>
+                                        <tr>
+                                            <th>TC Biasa</th>
+                                            <td>{{ $order->tc_biasa ?? 0 }} unit</td>
+                                        </tr>
 
-                                    <div class="form-group">
-                                        <label style="min-width: 200px;">Nama Petugas</label>
-                                        <input type="text" class="form-control" name="PETUGAS_PENGAMBILAN_SAMPEL"
-                                               value="{{ $permintaanDarah->petugas_pengambilan_sampel }}" disabled>
-                                    </div>
+                                        <tr>
+                                            <th>TC Apheresis</th>
+                                            <td>{{ $order->tc_apheresis ?? 0 }} unit</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>TC Pooled (Leukodepleted)</th>
+                                            <td>{{ $order->tc_pooled ?? 0 }} unit</td>
+                                        </tr>
+
+                                        <tr align="middle" class="bg-light">
+                                            <th colspan="2">PLASMA</th>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Plasma Cair (liquid Palsma)</th>
+                                            <td>{{ $order->plasma_cair ?? 0 }} ml</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Plasma Segar Beku (FFP)</th>
+                                            <td>{{ $order->plasma_segar_beku ?? 0 }} ml</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Ciyoprecipitate AHF</th>
+                                            <td>{{ $order->ciyoprecipitate ?? 0 }} unit</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- UTD Section (Readonly) -->
-                            <div class="mb-3 section-separator">
-                                    <div class="alert alert-secondary mt-3">
-                                        <p class="mb-1"><b>PEMBERITAHUAN:</b></p>
-                                        <ol class="pl-3 mb-0">
-                                            <li>Darah dari Donor tidak diperjualbelikan namun memerlukan biaya pengolahan
-                                                yang disebut Service Cost atau BPPD (Biaya Pengganti Pengolahan Darah)</li>
-                                            <li>Biaya Pengganti Pengolahan Darah (BPPD) berlaku bagi setiap pemakai Darah
-                                                tanpa terkecuali</li>
-                                            <li>Pembayaran Biaya Pengganti Pengolahan Darah (BPPD) dilakukan di Rumah Sakit
-                                                (Bila ada Kerjasama dengan UTD)</li>
-                                            <li>Darah yang sudah di periksa tetap dikenakan Biaya</li>
-                                        </ol>
-                                    </div>
+                    {{-- @if ($order->status == 0)
+                    <div class="row">
+                        <div class="col-12 text-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#prosesModal">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                Terima / Proses
+                            </button>
+                        </div>
+                    </div>
+                    @endif --}}
+
+                </div>
+            </div>
+        </div>
+
+        @if ($order->status == 1 || $order->status == 2)
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                    <span class="fw-bold">Penerimaan Sampel Darah</span>
+                </button>
+            </h2>
+            <div id="collapseTwo2" class="accordion-collapse collapse" aria-labelledby="headingTwo2"
+                data-bs-parent="#accordionExample2" style="">
+                <div class="accordion-body">
+                    <div class="row mt-3">
+                        <div class="col-md-6 mx-auto">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Petugas Penerima</th>
+                                            <td>{{ $order->petugas_penerima_sampel ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Waktu Diterima</th>
+                                            <td>{{ date('d M Y', strtotime($order->tgl_terima_sampel)) . ' ' .
+                                                date('H:i', strtotime($order->jam_terima_sampel)) }}
+                                                WIB</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ABO</th>
+                                            <td>{{ $order->abo }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Rhesus</th>
+                                            <td>{{ $order->rhesus->jenis ?? '-' }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+
+        @if ($order->status == 2)
+        <div class="accordion-item mt-5">
+            <h2 class="accordion-header" id="headingThree3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+                    <span class="fw-bold">Pemeriksaan dan Pemberian Darah</span>
+                </button>
+            </h2>
+            <div id="collapseThree3" class="accordion-collapse collapse" aria-labelledby="headingThree3"
+                data-bs-parent="#accordionExample2" style="">
+                <div class="accordion-body">
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Petugas Pemeriksa</th>
+                                        <td>{{ $order->petugas_pemeriksa ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Waktu Periksa</th>
+                                        <td>
+                                            {{ date('d M Y', strtotime($order->tgl_periksa)) . ' ' . date('H:i',
+                                            strtotime($order->jam_periksa)) }}
+                                            WIB
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Hasil Pemeriksaan</th>
+                                        <td>
+                                            @if ($order->hasil_pemeriksaan == 0)
+                                            Tidak Cocok
+                                            @endif
+
+                                            @if ($order->hasil_pemeriksaan == 1)
+                                            Cocok
+                                            @endif
+
+                                            @if ($order->hasil_pemeriksaan == 2)
+                                            Tanpa Cross
+                                            @endif
+
+                                            @if ($order->hasil_pemeriksaan == 3)
+                                            Emergency
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Petugas yang Mengambil</th>
+                                        <td>{{ $order->petugas_ambil }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tr align="middle">
+                                        <th>No</th>
+                                        <th>No Kantong</th>
+                                        <th>Jenis Darah</th>
+                                        <th>Gol. Darah</th>
+                                        <th>Tanggal Pengambilan</th>
+                                        <th>Vol (ML) CC Kantong</th>
+                                    </tr>
+
+                                    @foreach ($order->detail as $detail)
+                                    <tr>
+                                        <td align="middle">{{ $loop->iteration }}</td>
+                                        <td align="middle">{{ $detail->no_kantong ?? '-' }}</td>
+                                        <td align="middle">
+                                            @if ($detail->jenis_darah == 1)
+                                            WB
+                                            @endif
+
+                                            @if ($detail->jenis_darah == 2)
+                                            PRC
+                                            @endif
+
+                                            @if ($detail->jenis_darah == 3)
+                                            TC
+                                            @endif
+
+                                            @if ($detail->jenis_darah == 4)
+                                            PLASMA
+                                            @endif
+                                        </td>
+                                        <td align="middle">{{ $detail->golDarah->jenis ?? '-' }}</td>
+                                        <td align="middle">
+                                            {{ date('d M Y', strtotime($detail->tgl_pengambilan)) }}
+                                        </td>
+                                        <td align="middle">{{ $detail->vol_kantong }}</td>
+                                    </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @endif
+
     </div>
+</div>
 @endsection
 
 @push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
             // Print functionality
             const printButton = document.getElementById('print_form');
             if (printButton) {
@@ -433,7 +528,7 @@
         });
 
         // Khusus Pasien wanita: Pernah hamil?
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Dapatkan referensi ke elemen-elemen yang diperlukan
             const radioYa = document.getElementById('radioDefault1Hamil');
             const radioTidak = document.getElementById('radioDefault2Hamil');
@@ -460,5 +555,5 @@
             // Jalankan fungsi saat halaman dimuat untuk mengatur tampilan awal
             toggleJumlahInput();
         });
-    </script>
+</script>
 @endpush

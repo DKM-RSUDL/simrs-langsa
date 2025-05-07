@@ -7,8 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Exception;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
@@ -59,8 +59,8 @@ class NavigationService
             $requestData['main_menu'] = NULL;
         }
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             // create permission
             $this->createPermission($requestData);

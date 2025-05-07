@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class RujukJalanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Format tanggal jika mengandung timestamp

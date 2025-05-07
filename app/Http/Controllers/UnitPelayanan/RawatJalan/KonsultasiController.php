@@ -21,6 +21,11 @@ use Illuminate\Http\Request;
 
 class KonsultasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -573,10 +578,10 @@ class KonsultasiController extends Controller
     {
         // get resume
         $resume = RMEResume::where('kd_pasien', $kd_pasien)
-                        ->where('kd_unit', $kd_unit)
-                        ->whereDate('tgl_masuk', $tgl_masuk)
-                        ->where('urut_masuk', $urut_masuk)
-                        ->first();
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
 
         $resumeDtlData = [
             'tindak_lanjut_code'    => 4,
@@ -584,7 +589,7 @@ class KonsultasiController extends Controller
             'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
         ];
 
-        if(empty($resume)) {
+        if (empty($resume)) {
             $resumeData = [
                 'kd_pasien'     => $kd_pasien,
                 'kd_unit'       => $kd_unit,
@@ -599,13 +604,12 @@ class KonsultasiController extends Controller
             // create resume detail
             $resumeDtlData['id_resume'] = $newResume->id;
             RmeResumeDtl::create($resumeDtlData);
-
         } else {
             // get resume dtl
             $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
             $resumeDtlData['id_resume'] = $resume->id;
 
-            if(empty($resumeDtl)) {
+            if (empty($resumeDtl)) {
                 RmeResumeDtl::create($resumeDtlData);
             } else {
                 $resumeDtl->tindak_lanjut_code  = 4;

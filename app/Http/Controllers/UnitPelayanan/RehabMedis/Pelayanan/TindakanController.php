@@ -30,6 +30,7 @@ class TindakanController extends Controller
 
     public function __construct()
     {
+        $this->middleware('can:read unit-pelayanan/rehab-medis');
         $this->kdUnitDef_ = 74;
     }
 

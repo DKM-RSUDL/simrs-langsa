@@ -138,7 +138,7 @@
             <p>Jl. Jend. A. Yani No.1 Kota Langsa</p>
         </div>
         <div class="center-column">
-            <p>Formulir Asesmen Keperawatan & Medis<br>IGD</p>
+            <p>Formulir Asesmen Keperawatan <br>IGD</p>
         </div>
         <div class="right-column">
             <table class="info-table">

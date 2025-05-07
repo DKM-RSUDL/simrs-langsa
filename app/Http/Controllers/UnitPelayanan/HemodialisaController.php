@@ -15,6 +15,7 @@ class HemodialisaController extends Controller
 
     public function __construct()
     {
+        $this->middleware('can:read unit-pelayanan/hemodialisa');
         $this->kdUnitDef_ = 72;
     }
 
