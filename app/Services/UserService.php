@@ -8,7 +8,7 @@ use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class UserService
 {
@@ -19,7 +19,6 @@ class UserService
         // })->with('user.roles')->get();
 
         $data = User::with(['roles']);
-
 
         return DataTables::of($data)
             ->addIndexColumn()
@@ -36,21 +35,21 @@ class UserService
             })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="' . url("users", $row->id) . '/edit" name="edit" data-id="' . $row->id . '" class="editRole btn btn-warning btn-sm me-2"><i class="ti-pencil-alt"></i></a>';
-                $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
+                // $actionBtn .= '<button type="button" name="delete" data-id="' . $row->id . '" class="deleteUser btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
                 return '<div class="d-flex">' . $actionBtn . '</div>';
             })
-            ->filter(function ($query) {
-                if (request()->has('search.value')) {
-                    $search = request('search.value');
-                    $query->where(function ($q) use ($search) {
-                        $q->where('kd_karyawan', 'like', "%$search%")
-                            ->orWhere('name', 'like', "%$search%")
-                            ->orWhereHas('roles', function ($q) use ($search) {
-                                $q->where('name', 'like', "%$search%");
-                            });
-                    });
-                }
-            })
+            // ->filter(function ($query) {
+            //     if (request()->has('search.value')) {
+            //         $search = request('search.value');
+            //         $query->where(function ($q) use ($search) {
+            //             $q->where('kd_karyawan', 'like', "%$search%")
+            //                 ->orWhere('name', 'like', "%$search%")
+            //                 ->orWhereHas('roles', function ($q) use ($search) {
+            //                     $q->where('name', 'like', "%$search%");
+            //                 });
+            //         });
+            //     }
+            // })
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -65,19 +64,19 @@ class UserService
         // DB::beginTransaction();
 
         // try {
-            // create user
-            $user = $this->createUser($data);
-            return $user;
+        // create user
+        $user = $this->createUser($data);
+        return $user;
 
-            // create user profile
-            // $this->createUserProfile($data, $user);
+        // create user profile
+        // $this->createUserProfile($data, $user);
 
-            // DB::commit();
+        // DB::commit();
 
-            // return [
-            //     'success' => true,
-            //     'message' => 'Data berhasil disimpan.',
-            // ];
+        // return [
+        //     'success' => true,
+        //     'message' => 'Data berhasil disimpan.',
+        // ];
         // } catch (\Exception $e) {
         //     // DB::rollBack();
 
@@ -93,7 +92,7 @@ class UserService
         // Get karyawan data
         $karyawan = HrdKaryawan::where('kd_karyawan', $data['karyawan'])->first();
 
-        if(empty($karyawan)) {
+        if (empty($karyawan)) {
             return [
                 'success'   => false,
                 'message'   => 'Karyawan tidak ditemukan'
@@ -103,7 +102,7 @@ class UserService
         // check akun karyawan sudah ada atau belum
         $rmeUser = User::where('kd_karyawan', $karyawan->kd_karyawan)->first();
 
-        if(!empty($rmeUser)) {
+        if (!empty($rmeUser)) {
             return [
                 'success'   => false,
                 'message'   => 'Karyawan telah memiliki akun!'

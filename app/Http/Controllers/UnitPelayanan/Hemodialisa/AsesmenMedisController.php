@@ -24,7 +24,13 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenMedisController extends Controller
 {
-    private $kdUnitDef_ = 72;
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/hemodialisa');
+        $this->kdUnitDef_ = 72;
+    }
 
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {

@@ -12,6 +12,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OperasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

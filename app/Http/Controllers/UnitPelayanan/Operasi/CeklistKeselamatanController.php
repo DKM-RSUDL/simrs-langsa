@@ -16,6 +16,11 @@ use Illuminate\Http\Request;
 
 class CeklistKeselamatanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
     public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -78,7 +83,7 @@ class CeklistKeselamatanController extends Controller
             },
             'perawatData'
         ]);
-        
+
 
         $signoutList->load([
             'dokterBedah',
@@ -88,7 +93,7 @@ class CeklistKeselamatanController extends Controller
             'perawatData'
         ]);
 
-        // Periksa jika sudah ada data 
+        // Periksa jika sudah ada data
         $hasSignIn = $signInList->count() > 0;
         $hasTimeout = $timeoutList->count() > 0;
         $hasSignout = $signoutList->count() > 0;
@@ -758,6 +763,4 @@ class CeklistKeselamatanController extends Controller
             $urut_masuk
         ])->with('success', 'Checklist Sign Out berhasil dihapus!');
     }
-
-
 }

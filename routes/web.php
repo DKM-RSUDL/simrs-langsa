@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
 use App\Http\Controllers\UnitPelayanan\ForensikController;
@@ -64,6 +66,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatIn
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
@@ -75,6 +78,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
@@ -83,17 +87,32 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
+use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
+
+
+
+// Auth::routes();
 Route::middleware('guest')->group(function () {
+
     Route::get('/', function () {
         return view('auth.login');
     });
+
+    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
 });
 
-Auth::routes();
-Route::middleware('auth')->group(function () {
+
+Route::middleware('ssoToken')->group(function () {
+
+    // Route::middleware('auth')->group(function () {
+
+    Route::get('/user-sso', [SsoController::class, 'getUser']);
+    Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('navigation', NavigationController::class);
@@ -255,6 +274,21 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
 
+                            // Permintaan darah
+                            Route::prefix('permintaan-darah')->group(function () {
+                                Route::name('.permintaan-darah')->group(function () {
+                                    Route::controller(RajalPermintaanDarahController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                             // Resume
                             Route::prefix('rawat-jalan-resume')->group(function () {
                                 Route::name('.rawat-jalan-resume')->group(function () {
@@ -398,6 +432,21 @@ Route::middleware('auth')->group(function () {
                             Route::prefix('edukasi')->group(function () {
                                 Route::name('.edukasi')->group(function () {
                                     Route::controller(RawatInapEdukasiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // permintaan darah
+                            Route::prefix('permintaan-darah')->group(function () {
+                                Route::name('.permintaan-darah')->group(function () {
+                                    Route::controller(RanapPermintaanDarahController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::get('/{data}', 'show')->name('.show');
@@ -593,7 +642,6 @@ Route::middleware('auth')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });
@@ -1064,7 +1112,6 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
-
                     });
                 });
             });
@@ -1112,6 +1159,24 @@ Route::middleware('auth')->group(function () {
                                 });
                             });
                         });
+                    });
+                });
+            });
+        });
+    });
+
+    // TRANSFUSI DARAH
+    Route::prefix('transfusi-darah')->group(function () {
+        Route::name('transfusi-darah')->group(function () {
+            Route::controller(PermintaanController::class)->group(function () {
+                // PERMINTAAN
+                Route::prefix('permintaan')->group(function () {
+                    Route::name('.permintaan')->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                        Route::get('/datatables', 'datatable')->name('.datatable');
+                        Route::get('/show/{data}', 'show')->name('.show');
+                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });

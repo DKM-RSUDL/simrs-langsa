@@ -17,6 +17,11 @@ use Exception;
 
 class RawatJalanEdukasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         // Mengambil data kunjungan dan tanggal triase terkait
@@ -63,7 +68,7 @@ class RawatJalanEdukasiController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        return view('unit-pelayanan.rawat-jalan.pelayanan.edukasi.index', compact(            
+        return view('unit-pelayanan.rawat-jalan.pelayanan.edukasi.index', compact(
             'dataMedis',
             'edukasi',
         ));
@@ -105,18 +110,18 @@ class RawatJalanEdukasiController extends Controller
         try {
 
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
 
 
             if (!$dataMedis) {
@@ -684,18 +689,18 @@ class RawatJalanEdukasiController extends Controller
         try {
 
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
 
 
             if (!$dataMedis) {
@@ -1180,18 +1185,18 @@ class RawatJalanEdukasiController extends Controller
         try {
             // Verify Kunjungan exists
             $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
+                ->join('transaksi as t', function ($join) {
+                    $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                    $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                    $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                    $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+                })
+                ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+                ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+                ->where('kunjungan.kd_unit', $kd_unit)
+                ->where('kunjungan.kd_pasien', $kd_pasien)
+                ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+                ->first();
 
             if (!$dataMedis) {
                 return redirect()->route('rawat-jalan.edukasi.index', [
@@ -1229,7 +1234,7 @@ class RawatJalanEdukasiController extends Controller
                 'urut_masuk' => $urut_masuk,
             ])->with('error', 'Data edukasi tidak ditemukan.');
         } catch (Exception $e) {
-            DB::rollBack();            
+            DB::rollBack();
             return redirect()->route('rawat-jalan.edukasi.index', [
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,

@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Validator;
 
 class FarmasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-jalan');
+    }
+
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -482,5 +487,4 @@ class FarmasiController extends Controller
             'message' => 'Rekonsiliasi obat berhasil dihapus'
         ], 200);
     }
-
 }

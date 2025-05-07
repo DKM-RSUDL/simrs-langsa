@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Validator;
 
 class SiteMarkingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/operasi');
+    }
+
 
     private function formatDateForUrl($date)
     {
@@ -621,5 +626,4 @@ class SiteMarkingController extends Controller
 
         return view('unit-pelayanan.operasi.pelayanan.sitemarking.print', compact('dataMedis', 'siteMarking', 'markingImages'));
     }
-
 }

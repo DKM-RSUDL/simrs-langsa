@@ -30,6 +30,12 @@ use Illuminate\Support\Facades\DB;
 class GawatDaruratController extends Controller
 {
     protected $roleService;
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+    }
+
     public function index(Request $request)
     {
         $tglBatasData = date('Y-m-d', strtotime('-2 days', strtotime(date('Y-m-d'))));

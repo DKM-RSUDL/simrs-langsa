@@ -160,7 +160,7 @@
                         </div>
 
                         <div class="col-md-4 p-2">
-                            <a href="#" class="text-decoration-none card-hover">
+                            <a href="{{ route('hemodialisa.index') }}" class="text-decoration-none card-hover">
                                 <div class="card mb-3" style="background: linear-gradient(to right, #f0f5ff, #f1f5f0);">
                                     <div class="card-body d-flex align-items-center">
                                         <div class="me-2">
@@ -252,10 +252,8 @@
                 <div class="card mb-4 p-4">
                     <h5 class="card-title">Informasi Sistem RME RSUD Langsa</h5>
                     <p class="card-text">
-                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak
-                        pendaftaran hingga pelaporan.
-                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan
-                        pengurangan penggunaan kertas sesuai
+                        Sistem Rekam Medis Elektronik di RSUD Langsa mendukung pengelolaan data pasien secara digital sejak pendaftaran hingga pelaporan.
+                        Dengan teknologi terintegrasi, sistem ini memungkinkan akses cepat, efisiensi administrasi, dan pengurangan penggunaan kertas sesuai
                         Peraturan Menteri Kesehatan No. 24 Tahun 2022.
                     </p>
                     <ul class="list-unstyled">

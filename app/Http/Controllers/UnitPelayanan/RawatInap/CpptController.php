@@ -28,6 +28,11 @@ use Illuminate\Support\Facades\DB;
 
 class CpptController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
+    }
+
     public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
