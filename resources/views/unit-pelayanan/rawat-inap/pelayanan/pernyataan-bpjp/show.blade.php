@@ -53,11 +53,11 @@
             </a>
 
             @if ($order->status == 0)
-            <a href="{{ route('rawat-jalan.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $order->id]) }}"
+            <a href="{{ route('rawat-inap.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $order->id]) }}"
                 class="btn btn-warning btn-sm ms-2" title="Edit">
-                <i class="ti-pencil"></i> Edit
+                <i class="ti-pencil"></i>
             </a>
-            @endif            
+            @endif
         </div>
 
         <div class="accordion-item">

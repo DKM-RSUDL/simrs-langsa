@@ -111,14 +111,19 @@
                                                                     class="btn btn-info btn-sm" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
-                                                                <a href="{{ route('permintaan-darah.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                                    <i class="ti-pencil"></i>
-                                                                </a>
-                                                                {{-- <form action="{{ route('permintaan-darah.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                @if ($item->status == 0)
+                                                                    <a href="{{ route('permintaan-darah.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                        class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                                        <i class="ti-pencil"></i>
+                                                                    </a>
+                                                                @endif
+                                                                {{-- <form
+                                                                    action="{{ route('permintaan-darah.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form" style="display: inline;">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus">
+                                                                    <button type="submit" class="btn btn-danger btn-sm ms-2"
+                                                                        title="Hapus">
                                                                         <i class="ti-trash"></i>
                                                                     </button>
                                                                 </form> --}}

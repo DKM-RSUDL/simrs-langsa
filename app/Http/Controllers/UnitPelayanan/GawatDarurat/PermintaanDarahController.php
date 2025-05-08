@@ -250,13 +250,13 @@ class PermintaanDarahController extends Controller
             ->get();
 
         $gologanDarah = GolonganDarah::all();
-        $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
+        $order = BdrsPermintaanDarah::findOrFail($id);
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-darah.show', compact(
             'dataMedis',
             'dokter',
             'gologanDarah',
-            'permintaanDarah'
+            'order'
         ));
     }
     public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)

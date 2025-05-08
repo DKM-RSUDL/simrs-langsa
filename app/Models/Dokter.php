@@ -16,4 +16,9 @@ class Dokter extends Model
     {
         return $this->belongsTo(HrdKaryawan::class, 'kd_karyawan', 'kd_karyawan');
     }
+
+    public function spesialis()
+    {
+        return $this->hasOne(DokterSpesial::class, 'kd_dokter', 'kd_dokter');
+    }
 }

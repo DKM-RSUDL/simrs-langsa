@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
+use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
+use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
@@ -69,6 +71,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
@@ -90,6 +93,7 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
 use App\Http\Middleware\AssignAdminPermissions;
+use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\CheckUnitAccess;
 
 Auth::routes(['register' => false]); // Nonaktifkan register
@@ -97,11 +101,29 @@ Auth::routes(['register' => false]); // Nonaktifkan register
 
 
 // Auth::routes();
+
+
+
+// Auth::routes();
 Route::middleware('guest')->group(function () {
+
 
     Route::get('/', function () {
         return view('auth.login');
     });
+
+    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
+});
+
+
+Route::middleware('ssoToken')->group(function () {
+
+    // Route::middleware('auth')->group(function () {
+
+    Route::get('/user-sso', [SsoController::class, 'getUser']);
+    Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
+
 
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
@@ -456,6 +478,20 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // pernyataan bpjp
+                            Route::prefix('pernyataan-dpjp')->group(function () {
+                                Route::name('.pernyataan-dpjp')->group(function () {
+                                    Route::controller(RanapPernyataandpjpController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
@@ -1194,6 +1230,24 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+                    });
+                });
+            });
+        });
+    });
+
+    // TRANSFUSI DARAH
+    Route::prefix('transfusi-darah')->group(function () {
+        Route::name('transfusi-darah')->group(function () {
+            Route::controller(PermintaanController::class)->group(function () {
+                // PERMINTAAN
+                Route::prefix('permintaan')->group(function () {
+                    Route::name('.permintaan')->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                        Route::get('/datatables', 'datatable')->name('.datatable');
+                        Route::get('/show/{data}', 'show')->name('.show');
+                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });

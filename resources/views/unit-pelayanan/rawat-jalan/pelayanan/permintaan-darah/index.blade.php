@@ -110,10 +110,12 @@
                                                                 <a href="{{ route('rawat-jalan.permintaan-darah.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm" title="Detail">
                                                                     <i class="ti-eye"></i>
-                                                                </a>
-                                                                <a href="{{ route('rawat-jalan.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                                    <i class="ti-pencil"></i>
-                                                                </a>
+                                                                </a>                                                              
+                                                                @if ($item->status == 0)
+                                                                    <a href="{{ route('rawat-jalan.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                                        <i class="ti-pencil"></i>
+                                                                    </a>
+                                                                @endif
                                                                 {{-- <form action="{{ route('permintaan-darah.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form" style="display: inline;">
                                                                     @csrf
