@@ -62,6 +62,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
@@ -458,6 +459,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            // Farmasi
                             Route::prefix('farmasi')->group(function () {
                                 Route::name('.farmasi')->group(function () {
                                     Route::controller(RawatInapFarmasiController::class)->group(function () {
@@ -484,6 +486,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            // Asesmen
                             Route::prefix('asesmen')->group(function () {
                                 Route::name('.asesmen')->group(function () {
 
@@ -633,12 +636,23 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-
+                            // Hand Over Pasien
                             Route::prefix('serah-terima')->group(function () {
                                 Route::name('.serah-terima')->group(function () {
                                     Route::controller(RawatInapController::class)->group(function () {
                                         Route::get('/', 'serahTerimaPasien');
                                         Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                                    });
+                                });
+                            });
+
+                            // Intake Output Cairan
+                            Route::prefix('intake-cairan')->group(function () {
+                                Route::name('.intake-cairan')->group(function () {
+                                    Route::controller(IntakeCairanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
                                     });
                                 });
                             });

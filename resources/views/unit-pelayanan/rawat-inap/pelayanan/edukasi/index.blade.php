@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                        } */
+                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                            } */
     </style>
 @endpush
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation')
+            @include('components.navigation-ranap')
 
             <div class="row">
                 <div class="d-flex justify-content-between m-3">
@@ -41,9 +41,8 @@
                             <form method="GET" action="#">
 
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Cari nama dokter" aria-label="Cari" value="{{ request('search') }}"
-                                        aria-describedby="basic-addon1">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari nama dokter"
+                                        aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </div>
                             </form>
@@ -110,10 +109,12 @@
                                                 class="btn btn-info btn-sm" title="Detail">
                                                 <i class="ti-eye"></i>
                                             </a>
-                                            <a href="{{ route('rawat-inap.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                            <a href="{{ route('rawat-inap.edukasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-warning btn-sm ms-2" title="Edit">
                                                 <i class="ti-pencil"></i>
                                             </a>
-                                            <form action="{{ route('rawat-inap.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                            <form
+                                                action="{{ route('rawat-inap.edukasi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 method="POST" class="delete-form" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
@@ -145,10 +146,10 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Attach SweetAlert to all delete forms
             document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
