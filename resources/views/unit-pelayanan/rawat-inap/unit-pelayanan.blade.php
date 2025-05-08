@@ -1,7 +1,6 @@
 @extends('layouts.administrator.master')
 
-@section('content')
-    @push('css')
+@push('css')
         <style>
             .badge {
                 width: 30px;
@@ -127,6 +126,7 @@
         </style>
     @endpush
 
+@section('content')
     <div class="row">
         <div class="col-md-12">
             <div class="emergency__container">
@@ -225,22 +225,17 @@
                                                         </ul>
                                                     </li>
                                                     <li class="dropdown-submenu">
-                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
+                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
                                                         <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                            <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                            <li><a class="dropdown-item m-1" href="#">Kematian</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pernyataan-dpjp'}">Pernyataan DPJP</a></li>
                                                         </ul>
                                                     </li>
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
                                                     <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuhan-keperawatan'}">Asuhan Keperawatan</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>                                                    
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>
                                                 </ul>
                                             </div>
                                         </div>
