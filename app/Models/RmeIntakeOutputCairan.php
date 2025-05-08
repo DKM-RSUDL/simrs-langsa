@@ -12,4 +12,9 @@ class RmeIntakeOutputCairan extends Model
     protected $table = 'rme_intake_output_cairan';
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    public function userCreate()
+    {
+        return $this->belongsTo(User::class, 'user_create', 'id');
+    }
 }

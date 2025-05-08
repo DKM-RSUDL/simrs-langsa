@@ -115,8 +115,9 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-inap.intake-cairan.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-inap.intake-cairan.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($intake->id)]) }}">
                 @csrf
+                @method('put')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
@@ -131,8 +132,8 @@
                                 <div class="section-separator">
                                     <div class="form-group">
                                         <label for="tanggal" style="min-width: 200px;">Tanggal</label>
-                                        <input type="text" name="tanggal" id="tanggal" class="form-control date"
-                                            value="{{ date('Y-m-d') }}" required readonly>
+                                        <input type="date" class="form-control"
+                                            value="{{ date('Y-m-d', strtotime($intake->tanggal)) }}" disabled>
                                     </div>
                                 </div>
 
@@ -157,24 +158,24 @@
                                                         <label for="output_pagi_urine"
                                                             style="min-width: 200px;">Urine</label>
                                                         <input type="number" name="output_pagi_urine"
-                                                            id="output_pagi_urine" class="form-control" value="0"
-                                                            required>
+                                                            id="output_pagi_urine" class="form-control"
+                                                            value="{{ $intake->output_pagi_urine ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_pagi_muntah"
                                                             style="min-width: 200px;">Muntah</label>
                                                         <input type="number" name="output_pagi_muntah"
-                                                            id="output_pagi_muntah" class="form-control" value="0"
-                                                            required>
+                                                            id="output_pagi_muntah" class="form-control"
+                                                            value="{{ $intake->output_pagi_muntah ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_pagi_drain"
                                                             style="min-width: 200px;">Drain</label>
                                                         <input type="number" name="output_pagi_drain"
-                                                            id="output_pagi_drain" class="form-control" value="0"
-                                                            required>
+                                                            id="output_pagi_drain" class="form-control"
+                                                            value="{{ $intake->output_pagi_drain ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
@@ -182,7 +183,8 @@
                                                             (Insesible
                                                             water loss)</label>
                                                         <input type="number" name="output_pagi_iwl" id="output_pagi_iwl"
-                                                            class="form-control" value="0" required>
+                                                            class="form-control"
+                                                            value="{{ $intake->output_pagi_iwl ?? '0' }}" required>
                                                     </div>
                                                 </div>
 
@@ -193,29 +195,31 @@
                                                     <div class="form-group">
                                                         <label for="intake_pagi_iufd" style="min-width: 200px;">IUFD</label>
                                                         <input type="number" name="intake_pagi_iufd" id="intake_pagi_iufd"
-                                                            class="form-control" value="0" required>
+                                                            class="form-control"
+                                                            value="{{ $intake->intake_pagi_iufd ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_pagi_minum"
                                                             style="min-width: 200px;">Minum</label>
                                                         <input type="number" name="intake_pagi_minum"
-                                                            id="intake_pagi_minum" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_pagi_minum" class="form-control"
+                                                            value="{{ $intake->intake_pagi_minum ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_pagi_makan"
                                                             style="min-width: 200px;">Makan</label>
                                                         <input type="number" name="intake_pagi_makan"
-                                                            id="intake_pagi_makan" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_pagi_makan" class="form-control"
+                                                            value="{{ $intake->intake_pagi_makan ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_pagi_ngt" style="min-width: 200px;">NGT</label>
                                                         <input type="number" name="intake_pagi_ngt" id="intake_pagi_ngt"
-                                                            class="form-control" value="0" required>
+                                                            class="form-control"
+                                                            value="{{ $intake->intake_pagi_ngt ?? '0' }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,24 +244,24 @@
                                                         <label for="output_siang_urine"
                                                             style="min-width: 200px;">Urine</label>
                                                         <input type="number" name="output_siang_urine"
-                                                            id="output_siang_urine" class="form-control" value="0"
-                                                            required>
+                                                            id="output_siang_urine" class="form-control"
+                                                            value="{{ $intake->output_siang_urine ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_siang_muntah"
                                                             style="min-width: 200px;">Muntah</label>
                                                         <input type="number" name="output_siang_muntah"
-                                                            id="output_siang_muntah" class="form-control" value="0"
-                                                            required>
+                                                            id="output_siang_muntah" class="form-control"
+                                                            value="{{ $intake->output_siang_muntah ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_siang_drain"
                                                             style="min-width: 200px;">Drain</label>
                                                         <input type="number" name="output_siang_drain"
-                                                            id="output_siang_drain" class="form-control" value="0"
-                                                            required>
+                                                            id="output_siang_drain" class="form-control"
+                                                            value="{{ $intake->output_siang_drain ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
@@ -265,8 +269,8 @@
                                                             (Insesible
                                                             water loss)</label>
                                                         <input type="number" name="output_siang_iwl"
-                                                            id="output_siang_iwl" class="form-control" value="0"
-                                                            required>
+                                                            id="output_siang_iwl" class="form-control"
+                                                            value="{{ $intake->output_siang_iwl ?? '0' }}" required>
                                                     </div>
                                                 </div>
 
@@ -278,32 +282,32 @@
                                                         <label for="intake_siang_iufd"
                                                             style="min-width: 200px;">IUFD</label>
                                                         <input type="number" name="intake_siang_iufd"
-                                                            id="intake_siang_iufd" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_siang_iufd" class="form-control"
+                                                            value="{{ $intake->intake_siang_iufd ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_siang_minum"
                                                             style="min-width: 200px;">Minum</label>
                                                         <input type="number" name="intake_siang_minum"
-                                                            id="intake_siang_minum" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_siang_minum" class="form-control"
+                                                            value="{{ $intake->intake_siang_minum ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_siang_makan"
                                                             style="min-width: 200px;">Makan</label>
                                                         <input type="number" name="intake_siang_makan"
-                                                            id="intake_siang_makan" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_siang_makan" class="form-control"
+                                                            value="{{ $intake->intake_siang_makan ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_siang_ngt"
                                                             style="min-width: 200px;">NGT</label>
                                                         <input type="number" name="intake_siang_ngt"
-                                                            id="intake_siang_ngt" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_siang_ngt" class="form-control"
+                                                            value="{{ $intake->intake_siang_ngt ?? '0' }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -328,24 +332,24 @@
                                                         <label for="output_malam_urine"
                                                             style="min-width: 200px;">Urine</label>
                                                         <input type="number" name="output_malam_urine"
-                                                            id="output_malam_urine" class="form-control" value="0"
-                                                            required>
+                                                            id="output_malam_urine" class="form-control"
+                                                            value="{{ $intake->output_malam_urine ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_malam_muntah"
                                                             style="min-width: 200px;">Muntah</label>
                                                         <input type="number" name="output_malam_muntah"
-                                                            id="output_malam_muntah" class="form-control" value="0"
-                                                            required>
+                                                            id="output_malam_muntah" class="form-control"
+                                                            value="{{ $intake->output_malam_muntah ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="output_malam_drain"
                                                             style="min-width: 200px;">Drain</label>
                                                         <input type="number" name="output_malam_drain"
-                                                            id="output_malam_drain" class="form-control" value="0"
-                                                            required>
+                                                            id="output_malam_drain" class="form-control"
+                                                            value="{{ $intake->output_malam_drain ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
@@ -353,8 +357,8 @@
                                                             (Insesible
                                                             water loss)</label>
                                                         <input type="number" name="output_malam_iwl"
-                                                            id="output_malam_iwl" class="form-control" value="0"
-                                                            required>
+                                                            id="output_malam_iwl" class="form-control"
+                                                            value="{{ $intake->output_malam_iwl ?? '0' }}" required>
                                                     </div>
                                                 </div>
 
@@ -366,32 +370,32 @@
                                                         <label for="intake_malam_iufd"
                                                             style="min-width: 200px;">IUFD</label>
                                                         <input type="number" name="intake_malam_iufd"
-                                                            id="intake_malam_iufd" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_malam_iufd" class="form-control"
+                                                            value="{{ $intake->intake_malam_iufd ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_malam_minum"
                                                             style="min-width: 200px;">Minum</label>
                                                         <input type="number" name="intake_malam_minum"
-                                                            id="intake_malam_minum" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_malam_minum" class="form-control"
+                                                            value="{{ $intake->intake_malam_minum ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_malam_makan"
                                                             style="min-width: 200px;">Makan</label>
                                                         <input type="number" name="intake_malam_makan"
-                                                            id="intake_malam_makan" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_malam_makan" class="form-control"
+                                                            value="{{ $intake->intake_malam_makan ?? '0' }}" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="intake_malam_ngt"
                                                             style="min-width: 200px;">NGT</label>
                                                         <input type="number" name="intake_malam_ngt"
-                                                            id="intake_malam_ngt" class="form-control" value="0"
-                                                            required>
+                                                            id="intake_malam_ngt" class="form-control"
+                                                            value="{{ $intake->intake_malam_ngt ?? '0' }}" required>
                                                     </div>
                                                 </div>
                                             </div>
