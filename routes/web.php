@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\SsoController;
-use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\PermissionController;
@@ -17,7 +16,6 @@ use App\Http\Controllers\UnitPelayanan\RawatJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\BedahController;
 use App\Http\Controllers\UnitPelayanan\GawatDaruratController;
 use App\Http\Controllers\MedisGawatDaruratController;
-use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\TransfusiDarah\PermintaanController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikKlinikController;
 use App\Http\Controllers\UnitPelayanan\Forensik\ForensikPatologiController;
@@ -92,7 +90,6 @@ use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\TindakanController as RehamMedisTindakanController;
-use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\AssignAdminPermissions;
 use App\Http\Middleware\CheckUnitAccess;
 
