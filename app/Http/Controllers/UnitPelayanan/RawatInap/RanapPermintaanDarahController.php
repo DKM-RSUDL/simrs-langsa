@@ -219,13 +219,15 @@ class RanapPermintaanDarahController extends Controller
         $dokter = Dokter::where('status', 1)->get();
 
         $gologanDarah = GolonganDarah::all();
-        $permintaanDarah = BdrsPermintaanDarah::findOrFail($id);
+        $golDarah = GolonganDarah::all();
+        $order = BdrsPermintaanDarah::findOrFail($id);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-darah.show', compact(
             'dataMedis',
             'dokter',
             'gologanDarah',
-            'permintaanDarah'
+            'order',
+            'golDarah'
         ));
     }
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)

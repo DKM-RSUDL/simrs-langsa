@@ -512,45 +512,45 @@
                 });
             }
 
-                        // Reset confirmation
-                        const resetButton = document.getElementById('reset_form');
-                        if (resetButton) {
-                            resetButton.addEventListener('click', function(e) {
-                                if (!confirm('Apakah Anda yakin ingin mereset form ini?')) {
-                                    e.preventDefault();
-                                }
-                            });
-                        }
+            // Reset confirmation
+            const resetButton = document.getElementById('reset_form');
+            if (resetButton) {
+                resetButton.addEventListener('click', function (e) {
+                    if (!confirm('Apakah Anda yakin ingin mereset form ini?')) {
+                        e.preventDefault();
+                    }
+                });
+            }
 
-                        // Form submission confirmation
-                        const form = document.getElementById('edukasiForm');
+            // Form submission confirmation
+            const form = document.getElementById('edukasiForm');
 
-                    });
+        });
 
-                    // Khusus Pasien wanita: Pernah hamil?
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Dapatkan referensi ke elemen-elemen yang diperlukan
-                        const radioYa = document.getElementById('radioDefault1Hamil');
-                        const radioTidak = document.getElementById('radioDefault2Hamil');
-                        const jumlahLabel = document.querySelector('label.mx-3');
-                        const jumlahInput = document.getElementById('pernah-hamil-jumlah'); // Gunakan ID yang sudah ada
+        // Khusus Pasien wanita: Pernah hamil?
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dapatkan referensi ke elemen-elemen yang diperlukan
+            const radioYa = document.getElementById('radioDefault1Hamil');
+            const radioTidak = document.getElementById('radioDefault2Hamil');
+            const jumlahLabel = document.querySelector('label.mx-3');
+            const jumlahInput = document.getElementById('pernah-hamil-jumlah'); // Gunakan ID yang sudah ada
 
-                        // Fungsi untuk menampilkan atau menyembunyikan input jumlah
-                        function toggleJumlahInput() {
-                            if (radioYa.checked) {
-                                // Jika Ya dipilih, tampilkan jumlah
-                                jumlahLabel.style.display = 'inline-block';
-                                jumlahInput.style.display = 'inline-block';
-                            } else {
-                                // Jika Tidak dipilih, sembunyikan jumlah
-                                jumlahLabel.style.display = 'none';
-                                jumlahInput.style.display = 'none';
-                            }
-                        }
+            // Fungsi untuk menampilkan atau menyembunyikan input jumlah
+            function toggleJumlahInput() {
+                if (radioYa.checked) {
+                    // Jika Ya dipilih, tampilkan jumlah
+                    jumlahLabel.style.display = 'inline-block';
+                    jumlahInput.style.display = 'inline-block';
+                } else {
+                    // Jika Tidak dipilih, sembunyikan jumlah
+                    jumlahLabel.style.display = 'none';
+                    jumlahInput.style.display = 'none';
+                }
+            }
 
-                        // Tambahkan event listener untuk radio button
-                        radioYa.addEventListener('change', toggleJumlahInput);
-                        radioTidak.addEventListener('change', toggleJumlahInput);
+            // Tambahkan event listener untuk radio button
+            radioYa.addEventListener('change', toggleJumlahInput);
+            radioTidak.addEventListener('change', toggleJumlahInput);
 
             // Jalankan fungsi saat halaman dimuat untuk mengatur tampilan awal
             toggleJumlahInput();
