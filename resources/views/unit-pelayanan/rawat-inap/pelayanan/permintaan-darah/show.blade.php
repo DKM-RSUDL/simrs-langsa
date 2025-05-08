@@ -552,6 +552,12 @@
 
             // Jalankan fungsi saat halaman dimuat untuk mengatur tampilan awal
             toggleJumlahInput();
-        });
+        }); <<
+        <<
+        << < HEAD
     </script>
 @endpush
+=======
+</script>
+@endpush
+>>>>>>> f7ceec91d4c5fdc51fa0b35c47ab001cef76daf4

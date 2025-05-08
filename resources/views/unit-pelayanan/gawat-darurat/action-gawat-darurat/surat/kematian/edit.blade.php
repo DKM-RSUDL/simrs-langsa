@@ -160,14 +160,15 @@
                         <i class="ti-arrow-left"></i> Kembali
                     </a>
 
-                    <h5 class="card-title mb-4">Form Tambah Surat Kematian Pasien</h5>
-                    <p class="text-muted mb-4">Lengkapi data berikut untuk membuat surat kematian pasien.</p>
+                    <h5 class="card-title mb-4">Form Edit Surat Kematian Pasien</h5>
+                    <p class="text-muted mb-4">Ubah data berikut untuk memperbarui surat kematian pasien.</p>
 
                     {{-- The Form --}}
                     <form
-                        action="{{ route('surat-kematian.store', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                        action="{{ route('surat-kematian.update', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $suratKematian->id]) }}"
                         method="POST">
                         @csrf
+                        @method('PUT')
 
                         {{-- Section 1: Data Kematian --}}
                         <div class="section-separator" id="data-kematian">
@@ -179,7 +180,7 @@
                                         <input type="date"
                                             class="form-control @error('tanggal_kematian') is-invalid @enderror"
                                             id="tanggal_kematian" name="tanggal_kematian"
-                                            value="{{ old('tanggal_kematian', date('Y-m-d')) }}" required>
+                                            value="{{ old('tanggal_kematian', $suratKematian->tanggal_kematian) }}" required>
                                         @error('tanggal_kematian')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -193,7 +194,7 @@
                                         <input type="time"
                                             class="form-control @error('jam_kematian') is-invalid @enderror"
                                             id="jam_kematian" name="jam_kematian"
-                                            value="{{ old('jam_kematian', date('H:i')) }}" required>
+                                            value="{{ old('jam_kematian', substr($suratKematian->jam_kematian, 0, 5)) }}" required>
                                         @error('jam_kematian')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -211,27 +212,25 @@
                                             <option value="">Pilih Dokter</option>
                                             @foreach ($dataDokter as $dokter)
                                                 <option value="{{ $dokter->kd_dokter }}"
-                                                    {{ old('dokter') == $dokter->kd_dokter ? 'selected' : '' }}>
+                                                    {{ old('dokter', $suratKematian->kd_dokter) == $dokter->kd_dokter ? 'selected' : '' }}>
                                                     {{ $dokter->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
 
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nomor_surat" class="form-label required">Nomor Surat</label>
                                         <input type="text"
                                             class="form-control @error('nomor_surat') is-invalid @enderror" id="nomor_surat"
-                                            name="nomor_surat" value="{{ old('nomor_surat') }}"
+                                            name="nomor_surat" value="{{ old('nomor_surat', $suratKematian->nomor_surat) }}"
                                             placeholder="Masukkan nomor surat Jika sudah ada">
                                         @error('nomor_surat')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row g-3">
@@ -242,7 +241,7 @@
                                         <input type="text"
                                             class="form-control @error('tempat_kematian') is-invalid @enderror"
                                             id="tempat_kematian" name="tempat_kematian"
-                                            value="{{ old('tempat_kematian') }}" required>
+                                            value="{{ old('tempat_kematian', $suratKematian->tempat_kematian) }}" required>
                                         @error('tempat_kematian')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -254,7 +253,7 @@
                                     <div class="form-group">
                                         <label for="kab_kota" class="form-label">Kabupaten/Kota</label>
                                         <input type="text" class="form-control @error('kab_kota') is-invalid @enderror"
-                                            id="kab_kota" name="kab_kota" value="{{ old('kab_kota') }}">
+                                            id="kab_kota" name="kab_kota" value="{{ old('kab_kota', $suratKematian->kabupaten_kota) }}">
                                         @error('kab_kota')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -270,7 +269,7 @@
                                             <div class="col-md-3">
                                                 <input type="number"
                                                     class="form-control @error('umur_tahun') is-invalid @enderror"
-                                                    id="umur_tahun" name="umur_tahun" value="{{ old('umur_tahun') }}"
+                                                    id="umur_tahun" name="umur_tahun" value="{{ old('umur_tahun', $suratKematian->umur) }}"
                                                     placeholder="Tahun" min="0">
                                                 @error('umur_tahun')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -279,7 +278,7 @@
                                             <div class="col-md-3">
                                                 <input type="number"
                                                     class="form-control @error('umur_bulan') is-invalid @enderror"
-                                                    id="umur_bulan" name="umur_bulan" value="{{ old('umur_bulan') }}"
+                                                    id="umur_bulan" name="umur_bulan" value="{{ old('umur_bulan', $suratKematian->bulan) }}"
                                                     placeholder="Bulan" min="0" max="11">
                                                 @error('umur_bulan')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -288,7 +287,7 @@
                                             <div class="col-md-3">
                                                 <input type="number"
                                                     class="form-control @error('umur_hari') is-invalid @enderror"
-                                                    id="umur_hari" name="umur_hari" value="{{ old('umur_hari') }}"
+                                                    id="umur_hari" name="umur_hari" value="{{ old('umur_hari', $suratKematian->hari) }}"
                                                     placeholder="Hari" min="0" max="30">
                                                 @error('umur_hari')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -297,7 +296,7 @@
                                             <div class="col-md-3">
                                                 <input type="number"
                                                     class="form-control @error('umur_jam') is-invalid @enderror"
-                                                    id="umur_jam" name="umur_jam" value="{{ old('umur_jam') }}"
+                                                    id="umur_jam" name="umur_jam" value="{{ old('umur_jam', $suratKematian->jam) }}"
                                                     placeholder="Jam/Menit" min="0">
                                                 @error('umur_jam')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -317,42 +316,90 @@
                                     <label class="form-label required">I. Penyakit atau keadaan yang langsung mengakibatkan
                                         kematian</label>
                                     <div id="penyakit-sebab-container">
-                                        {{-- Initial Diagnosis Field --}}
-                                        <div class="row g-2 diagnosis-field align-items-end" data-field-id="1">
-                                            <div class="col-md-4">
-                                                <input type="text"
-                                                    class="form-control @error('diagnosa_1') is-invalid @enderror"
-                                                    id="diagnosa_1" name="diagnosa_1" value="{{ old('diagnosa_1') }}"
-                                                    placeholder="Diagnosa" required>
-                                                @error('diagnosa_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                        @if(count($detailType1) > 0)
+                                            @foreach($detailType1 as $index => $detail)
+                                                <div class="row g-2 diagnosis-field align-items-end" data-field-id="{{ $index + 1 }}">
+                                                    <div class="col-md-4">
+                                                        <input type="text"
+                                                            class="form-control @error('diagnosa_'.($index+1)) is-invalid @enderror"
+                                                            id="diagnosa_{{ $index + 1 }}" name="diagnosa_{{ $index + 1 }}" 
+                                                            value="{{ old('diagnosa_'.($index+1), $detail->keterangan) }}"
+                                                            placeholder="Diagnosa" required>
+                                                        @error('diagnosa_'.($index+1))
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text"
+                                                            class="form-control @error('akibat_'.($index+1)) is-invalid @enderror"
+                                                            id="akibat_{{ $index + 1 }}" name="akibat_{{ $index + 1 }}" 
+                                                            value="{{ old('akibat_'.($index+1), $detail->konsekuensi) }}"
+                                                            placeholder="Disebabkan atau akibat dari">
+                                                        @error('akibat_'.($index+1))
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text"
+                                                            class="form-control @error('lama_diagnosa_'.($index+1)) is-invalid @enderror"
+                                                            id="lama_diagnosa_{{ $index + 1 }}" name="lama_diagnosa_{{ $index + 1 }}"
+                                                            value="{{ old('lama_diagnosa_'.($index+1), $detail->estimasi) }}"
+                                                            placeholder="Lamanya (kira-kira)">
+                                                        @error('lama_diagnosa_'.($index+1))
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-1 field-actions">
+                                                        @if($index == 0)
+                                                            <button type="button" class="btn add-field-btn" id="add-field-btn">
+                                                                <i class="ti-plus"></i>
+                                                            </button>
+                                                        @else
+                                                            <button type="button" class="btn remove-field-btn" data-field-id="{{ $index + 1 }}">
+                                                                <i class="ti-trash"></i>
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            {{-- Jika tidak ada data, tampilkan satu field kosong --}}
+                                            <div class="row g-2 diagnosis-field align-items-end" data-field-id="1">
+                                                <div class="col-md-4">
+                                                    <input type="text"
+                                                        class="form-control @error('diagnosa_1') is-invalid @enderror"
+                                                        id="diagnosa_1" name="diagnosa_1" value="{{ old('diagnosa_1') }}"
+                                                        placeholder="Diagnosa" required>
+                                                    @error('diagnosa_1')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text"
+                                                        class="form-control @error('akibat_1') is-invalid @enderror"
+                                                        id="akibat_1" name="akibat_1" value="{{ old('akibat_1') }}"
+                                                        placeholder="Disebabkan atau akibat dari">
+                                                    @error('akibat_1')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text"
+                                                        class="form-control @error('lama_diagnosa_1') is-invalid @enderror"
+                                                        id="lama_diagnosa_1" name="lama_diagnosa_1"
+                                                        value="{{ old('lama_diagnosa_1') }}"
+                                                        placeholder="Lamanya (kira-kira)">
+                                                    @error('lama_diagnosa_1')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-1 field-actions">
+                                                    <button type="button" class="btn add-field-btn" id="add-field-btn">
+                                                        <i class="ti-plus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="text"
-                                                    class="form-control @error('akibat_1') is-invalid @enderror"
-                                                    id="akibat_1" name="akibat_1" value="{{ old('akibat_1') }}"
-                                                    placeholder="Disebabkan atau akibat dari">
-                                                @error('akibat_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="text"
-                                                    class="form-control @error('lama_diagnosa_1') is-invalid @enderror"
-                                                    id="lama_diagnosa_1" name="lama_diagnosa_1"
-                                                    value="{{ old('lama_diagnosa_1') }}"
-                                                    placeholder="Lamanya (kira-kira)">
-                                                @error('lama_diagnosa_1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-1 field-actions">
-                                                <button type="button" class="btn add-field-btn" id="add-field-btn">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -360,34 +407,72 @@
                                     <label class="form-label">II. Penyakit-penyakit lain yang mempengaruhi pula kematian
                                         itu, tetapi tidak ada hubungannya dengan penyakit-penyakit diatas</label>
                                     <div id="penyakit-lain-container">
-                                        <div class="row g-2 diagnosis-field align-items-end" data-field-id="other_2">
-                                            <div class="col-md-5">
-                                                <input type="text"
-                                                    class="form-control @error('penyakit_lain_2') is-invalid @enderror"
-                                                    id="penyakit_lain_2" name="penyakit_lain_2"
-                                                    value="{{ old('penyakit_lain_2') }}"
-                                                    placeholder="Disamping penyakit-penyakit tersebut, Diatas terdapat pula penyakit">
-                                                @error('penyakit_lain_2')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                        @if(count($detailType2) > 0)
+                                            @foreach($detailType2 as $index => $detail)
+                                                <div class="row g-2 diagnosis-field align-items-end" data-field-id="other_{{ $index + 2 }}">
+                                                    <div class="col-md-5">
+                                                        <input type="text"
+                                                            class="form-control @error('penyakit_lain_'.($index+2)) is-invalid @enderror"
+                                                            id="penyakit_lain_{{ $index + 2 }}" name="penyakit_lain_{{ $index + 2 }}"
+                                                            value="{{ old('penyakit_lain_'.($index+2), $detail->keterangan) }}"
+                                                            placeholder="Disamping penyakit-penyakit tersebut, Diatas terdapat pula penyakit">
+                                                        @error('penyakit_lain_'.($index+2))
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text"
+                                                            class="form-control @error('lama_penyakit_lain_'.($index+2)) is-invalid @enderror"
+                                                            id="lama_penyakit_lain_{{ $index + 2 }}" name="lama_penyakit_lain_{{ $index + 2 }}"
+                                                            value="{{ old('lama_penyakit_lain_'.($index+2), $detail->estimasi) }}"
+                                                            placeholder="Lamanya (kira-kira)">
+                                                        @error('lama_penyakit_lain_'.($index+2))
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-1 field-actions">
+                                                        @if($index == 0)
+                                                            <button type="button" class="btn add-field-btn" id="add-other-field-btn">
+                                                                <i class="ti-plus"></i>
+                                                            </button>
+                                                        @else
+                                                            <button type="button" class="btn remove-field-btn" data-field-id="other_{{ $index + 2 }}">
+                                                                <i class="ti-trash"></i>
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            {{-- Jika tidak ada data, tampilkan satu field kosong --}}
+                                            <div class="row g-2 diagnosis-field align-items-end" data-field-id="other_2">
+                                                <div class="col-md-5">
+                                                    <input type="text"
+                                                        class="form-control @error('penyakit_lain_2') is-invalid @enderror"
+                                                        id="penyakit_lain_2" name="penyakit_lain_2"
+                                                        value="{{ old('penyakit_lain_2') }}"
+                                                        placeholder="Disamping penyakit-penyakit tersebut, Diatas terdapat pula penyakit">
+                                                    @error('penyakit_lain_2')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text"
+                                                        class="form-control @error('lama_penyakit_lain_2') is-invalid @enderror"
+                                                        id="lama_penyakit_lain_2" name="lama_penyakit_lain_2"
+                                                        value="{{ old('lama_penyakit_lain_2') }}"
+                                                        placeholder="Lamanya (kira-kira)">
+                                                    @error('lama_penyakit_lain_2')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-1 field-actions">
+                                                    <button type="button" class="btn add-field-btn" id="add-other-field-btn">
+                                                        <i class="ti-plus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <input type="text"
-                                                    class="form-control @error('lama_penyakit_lain_2') is-invalid @enderror"
-                                                    id="lama_penyakit_lain_2" name="lama_penyakit_lain_2"
-                                                    value="{{ old('lama_penyakit_lain_2') }}"
-                                                    placeholder="Lamanya (kira-kira)">
-                                                @error('lama_penyakit_lain_2')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-1 field-actions">
-                                                <button type="button" class="btn add-field-btn"
-                                                    id="add-other-field-btn">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -395,7 +480,7 @@
 
                         {{-- Submit Button --}}
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Perbarui</button>
                         </div>
                     </form>
                 </div>
@@ -409,11 +494,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Section I: Variables for the primary diagnosis fields
             const container = document.getElementById('penyakit-sebab-container');
-            let counter = 1;
+            let counter = {{ count($detailType1) > 0 ? count($detailType1) : 1 }};
 
             // Section II: Variables for "other diseases" fields
             const otherContainer = document.getElementById('penyakit-lain-container');
-            let otherCounter = 2; // Starting from 2 as there's already one field
+            let otherCounter = {{ count($detailType2) > 0 ? count($detailType2) + 1 : 2 }}; // Starting from appropriate index
 
             // Add new diagnosis field for Section I
             document.getElementById('add-field-btn').addEventListener('click', function() {

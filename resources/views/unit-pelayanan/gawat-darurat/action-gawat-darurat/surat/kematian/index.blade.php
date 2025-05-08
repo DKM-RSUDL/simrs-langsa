@@ -21,7 +21,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            @include('components.patient-card')
+            @include('components.patient-card', ['dataMedis' => $dataMedis])
         </div>
 
         <div class="col-md-9">
@@ -35,91 +35,71 @@
                     </div>
                     
                     <div class="row mb-3">
-                        <div class="col-md-3">
-                            <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-secondary rounded-3" id="filterButton">
-                                <i class="bi bi-funnel-fill"></i> Filter
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <form method="GET" action="#">
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Cari nama pasien" aria-label="Cari" value="">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
+                        <form method="GET" action="{{ route('surat-kematian.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal" value="{{ request('start_date') }}">
                                 </div>
-                            </form>
-                        </div>
+                                <div class="col-md-3">
+                                    <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal" value="{{ request('end_date') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" placeholder="Cari nomor surat" aria-label="Cari" value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-primary">Cari</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm table-hover">
                             <thead class="table-primary">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Tanggal Kematian</th>
-                                    <th>Nama Pasien</th>
-                                    <th>Nomor Surat</th>
-                                    <th>Penyebab Kematian</th>
-                                    <th>Aksi</th>
+                                    <th width="5%">No</th>
+                                    <th width="15%">Tanggal Kematian</th>
+                                    <th width="20%">Nomor Surat</th>
+                                    <th width="25%">Dokter</th>
+                                    <th width="20%">Penyebab Kematian</th>
+                                    <th width="15%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>2025-05-01</td>
-                                    <td>John Doe</td>
-                                    <td>SKM/2025/001</td>
-                                    <td>Gagal Jantung</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-info btn-sm" title="Detail">
-                                                <i class="ti-eye"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                <i class="ti-pencil"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>2025-05-03</td>
-                                    <td>Jane Smith</td>
-                                    <td>SKM/2025/002</td>
-                                    <td>Stroke</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-info btn-sm" title="Detail">
-                                                <i class="ti-eye"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                <i class="ti-pencil"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>2025-05-05</td>
-                                    <td>Michael Tan</td>
-                                    <td>SKM/2025/003</td>
-                                    <td>Infeksi Paru</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-info btn-sm" title="Detail">
-                                                <i class="ti-eye"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                <i class="ti-pencil"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @forelse($dataSuratKematian as $index => $surat)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($surat->tanggal_kematian)->format('d-m-Y') }}<br>
+                                            <small class="text-muted">{{ substr($surat->jam_kematian, 0, 5) }}</small>
+                                        </td>
+                                        <td>{{ $surat->nomor_surat }}</td>
+                                        <td>{{ $surat->dokter->nama_lengkap ?? 'Tidak Ada' }}</td>
+                                        <td>
+                                            @if($surat->detailType1->isNotEmpty())
+                                                {{ $surat->detailType1->first()->keterangan }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('surat-kematian.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-info btn-sm" title="Detail">
+                                                    <i class="ti-eye"></i>
+                                                </a>
+                                                <a href="{{ route('surat-kematian.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                    <i class="ti-pencil"></i>
+                                                </a>
+                                                <a href="{{ route('surat-kematian.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-primary btn-sm ms-2" title="Cetak" target="_blank">
+                                                    <i class="ti-printer"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">Tidak ada data surat kematian</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
