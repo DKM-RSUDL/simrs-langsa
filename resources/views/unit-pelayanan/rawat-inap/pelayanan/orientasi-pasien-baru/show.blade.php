@@ -20,6 +20,12 @@
                     class="mb-2 btn btn-sm btn-warning">
                     <i class="ti-pencil"></i>
                 </a>
+                <a href="{{ route('rawat-inap.orientasi-pasien-baru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}" 
+                    class="btn btn-secondary btn-sm" 
+                    target="_blank"
+                    title="Cetak PDF">
+                    <i class="ti-printer"></i>
+                </a>
             </div>
 
             <div class="text-center mt-1 mb-2">
@@ -212,7 +218,7 @@
                                         <input type="text" class="form-control form-control-sm ms-2"
                                             name="fasilitas_lainnya_text"
                                             value="{{ $orientasiPasienBaru->fasilitas_lainnya_text ?? '' }}"
-                                            placeholder="Sebutkan..." disabled>
+                                             disabled>
                                     </label>
                                 </div>
                             </div>

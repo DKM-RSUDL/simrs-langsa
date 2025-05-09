@@ -35,7 +35,7 @@
                                     <div class="mb-3 mb-md-0">
                                         <label class="form-label fw-bold">Tanggal</label>
                                         <input type="date" class="form-control" name="tanggal"
-                                            value="{{ date('Y-m-d', strtotime($orientasiPasienBaru->tgl_masuk)) }}">
+                                               value="{{ old('tanggal', $orientasiPasienBaru->tanggal ?? date('Y-m-d')) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-8">
