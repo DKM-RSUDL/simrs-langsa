@@ -1,130 +1,130 @@
 @extends('layouts.administrator.master')
 
 @push('css')
-        <style>
-            .badge {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-            }
+    <style>
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
 
-            .badge-triage-yellow {
-                background-color: #ffeb3b;
-            }
+        .badge-triage-yellow {
+            background-color: #ffeb3b;
+        }
 
-            .badge-triage-red {
-                background-color: #f44336;
-            }
+        .badge-triage-red {
+            background-color: #f44336;
+        }
 
-            .badge-triage-green {
-                background-color: #4caf50;
-            }
+        .badge-triage-green {
+            background-color: #4caf50;
+        }
 
-            /* Custom CSS for profile */
-            .profile {
-                display: flex;
-                align-items: center;
-            }
+        /* Custom CSS for profile */
+        .profile {
+            display: flex;
+            align-items: center;
+        }
 
-            .profile img {
-                margin-right: 10px;
-                border-radius: 50%;
-            }
+        .profile img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
 
-            .profile .info {
-                display: flex;
-                flex-direction: column;
-            }
+        .profile .info {
+            display: flex;
+            flex-direction: column;
+        }
 
-            .profile .info strong {
-                font-size: 14px;
-            }
+        .profile .info strong {
+            font-size: 14px;
+        }
 
-            .profile .info span {
-                font-size: 12px;
-                color: #777;
-            }
+        .profile .info span {
+            font-size: 12px;
+            color: #777;
+        }
 
-            .emergency__container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
+        .emergency__container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-            .custom__card {
-                border-radius: 15px;
-                padding: 8px 15px;
-                width: fit-content;
-                min-width: 150px;
-                display: flex;
-                align-items: center;
-                gap: 20px
-            }
+        .custom__card {
+            border-radius: 15px;
+            padding: 8px 15px;
+            width: fit-content;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 20px
+        }
 
-            .all__patients {
-                background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
-                border: 2px solid #a100c9;
-            }
+        .all__patients {
+            background: linear-gradient(to bottom, #e0f7ff, #a5d8ff);
+            border: 2px solid #a100c9;
+        }
 
-            .Pending {
-                background: linear-gradient(to bottom, #ffffff, #ffe499);
-                border: 2px solid #ffbb00;
-            }
+        .Pending {
+            background: linear-gradient(to bottom, #ffffff, #ffe499);
+            border: 2px solid #ffbb00;
+        }
 
-            .custom__icon {
-                margin-bottom: 5px;
-            }
+        .custom__icon {
+            margin-bottom: 5px;
+        }
 
-            .card__content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
+        .card__content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-            .check__icon {
-                color: #00cc00;
-                font-style: normal;
-                font-weight: bold;
-                font-size: 14px;
-            }
+        .check__icon {
+            color: #00cc00;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-            .emergency__container a {
-                text-decoration: none;
-                color: #000;
-            }
+        .emergency__container a {
+            text-decoration: none;
+            color: #000;
+        }
 
-            .dropdown-submenu {
-                position: relative;
-            }
+        .dropdown-submenu {
+            position: relative;
+        }
 
-            .dropdown-submenu>.dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -6px;
-                margin-left: -1px;
-            }
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+        }
 
-            .dropdown-submenu:hover>.dropdown-menu {
-                display: block;
-            }
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
 
-            .dropdown-submenu>a.dropdown-toggle {
-                position: relative;
-                padding-right: 30px;
-            }
+        .dropdown-submenu>a.dropdown-toggle {
+            position: relative;
+            padding-right: 30px;
+        }
 
-            .dropdown-submenu>a.dropdown-toggle::after {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
+        .dropdown-submenu>a.dropdown-toggle::after {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-            .dropdown-submenu:hover>a.dropdown-toggle::after {
-                transform: translateY(-50%) rotate(-90deg);
-            }
-        </style>
-    @endpush
+        .dropdown-submenu:hover>a.dropdown-toggle::after {
+            transform: translateY(-50%) rotate(-90deg);
+        }
+    </style>
+@endpush
 
 @section('content')
     <div class="row">
@@ -229,13 +229,14 @@
                                                         <ul class="dropdown-menu shadow-lg">
                                                             <li><a class="dropdown-item m-1" href="#">Kematian</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pernyataan-dpjp'}">Pernyataan DPJP</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/paps'}">PAPS</a></li>
                                                         </ul>
                                                     </li>
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
                                                     <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuhan-keperawatan'}">Asuhan Keperawatan</a></li>
-                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>                                                    
+                                                    <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>
                                                 </ul>
                                             </div>
                                         </div>
