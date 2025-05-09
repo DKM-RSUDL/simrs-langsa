@@ -63,6 +63,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
@@ -97,11 +98,29 @@ Auth::routes(['register' => false]); // Nonaktifkan register
 
 
 // Auth::routes();
+
+
+
+// Auth::routes();
 Route::middleware('guest')->group(function () {
+
 
     Route::get('/', function () {
         return view('auth.login');
     });
+
+    Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
+    Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
+});
+
+
+Route::middleware('ssoToken')->group(function () {
+
+    // Route::middleware('auth')->group(function () {
+
+    Route::get('/user-sso', [SsoController::class, 'getUser']);
+    Route::get('/logout', [SsoController::class, 'logout'])->name('logout');
+
 
     Route::get('/login', [SsoController::class, 'redirectToSso'])->name('login');
     Route::get('/callback', [SsoController::class, 'handleCallback'])->name('callback');
@@ -468,12 +487,13 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/{data}', 'show')->name('.show');
                                         Route::put('/{data}', 'update')->name('.update');
-                                        Route::delete('/{data}', 'destroy')->name('.destroy');                                        
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                     });
                                 });
                             });
 
+                            // Farmasi
                             Route::prefix('farmasi')->group(function () {
                                 Route::name('.farmasi')->group(function () {
                                     Route::controller(RawatInapFarmasiController::class)->group(function () {
@@ -500,6 +520,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            // Asesmen
                             Route::prefix('asesmen')->group(function () {
                                 Route::name('.asesmen')->group(function () {
 
@@ -649,12 +670,28 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-
+                            // Hand Over Pasien
                             Route::prefix('serah-terima')->group(function () {
                                 Route::name('.serah-terima')->group(function () {
                                     Route::controller(RawatInapController::class)->group(function () {
                                         Route::get('/', 'serahTerimaPasien');
                                         Route::put('/{data}', 'serahTerimaPasienCreate')->name('.store');
+                                    });
+                                });
+                            });
+
+                            // Intake Output Cairan
+                            Route::prefix('intake-cairan')->group(function () {
+                                Route::name('.intake-cairan')->group(function () {
+                                    Route::controller(IntakeCairanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf', 'pdf')->name('.pdf');
                                     });
                                 });
                             });
@@ -1191,6 +1228,24 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+                    });
+                });
+            });
+        });
+    });
+
+    // TRANSFUSI DARAH
+    Route::prefix('transfusi-darah')->group(function () {
+        Route::name('transfusi-darah')->group(function () {
+            Route::controller(PermintaanController::class)->group(function () {
+                // PERMINTAAN
+                Route::prefix('permintaan')->group(function () {
+                    Route::name('.permintaan')->group(function () {
+                        Route::get('/', 'index')->name('.index');
+                        Route::get('/datatables', 'datatable')->name('.datatable');
+                        Route::get('/show/{data}', 'show')->name('.show');
+                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });
