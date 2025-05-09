@@ -68,6 +68,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatIn
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -490,6 +491,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    });
+                                });
+                            });
+
+                            // Orientasi Pasien Baru
+                            Route::prefix('orientasi-pasien-baru')->group(function () {
+                                Route::name('.orientasi-pasien-baru')->group(function () {
+                                    Route::controller(OrientasiPasienBaruController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
                             });
