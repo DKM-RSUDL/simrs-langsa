@@ -401,16 +401,8 @@ class SuratKematianController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Get Surat Kematian data with properly eager loaded relations
-        $suratKematian = RmeSuratKematian::with([
-            'dokter',
-            'detailType1' => function ($query) {
-                $query->where('type', 1)->orderBy('id', 'asc');
-            },
-            'detailType2' => function ($query) {
-                $query->where('type', 2)->orderBy('id', 'asc');
-            }
-        ])
+        // Get Surat Kematian data basic data first
+        $suratKematian = RmeSuratKematian::with('dokter')
             ->where('id', $id)
             ->where('kd_pasien', $kd_pasien)
             ->first();
@@ -419,22 +411,16 @@ class SuratKematianController extends Controller
             abort(404, 'Surat kematian tidak ditemukan');
         }
 
-        // Make sure the relationships are properly loaded
-        if ($suratKematian->detailType1->isEmpty()) {
-            // Fallback in case relationship doesn't work
-            $suratKematian->detailType1 = RmeSuratKematianDtl::where('id_surat', $id)
-                ->where('type', 1)
-                ->orderBy('id', 'asc')
-                ->get();
-        }
+        // Manually load the detail relations to avoid SQL ordering issues
+        $suratKematian->detailType1 = RmeSuratKematianDtl::where('id_surat', $id)
+            ->where('type', 1)
+            ->orderBy('id', 'asc')
+            ->get();
 
-        if ($suratKematian->detailType2->isEmpty()) {
-            // Fallback in case relationship doesn't work
-            $suratKematian->detailType2 = RmeSuratKematianDtl::where('id_surat', $id)
-                ->where('type', 2)
-                ->orderBy('id', 'asc')
-                ->get();
-        }
+        $suratKematian->detailType2 = RmeSuratKematianDtl::where('id_surat', $id)
+            ->where('type', 2)
+            ->orderBy('id', 'asc')
+            ->get();
 
         // Persiapkan data untuk PDF
         $data = [
