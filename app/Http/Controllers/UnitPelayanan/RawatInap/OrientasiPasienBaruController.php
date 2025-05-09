@@ -268,14 +268,19 @@ class OrientasiPasienBaruController extends Controller
 
     public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        $orientasiPasienBaru = OrientasiPasienBaru::findOrFail($id);
-        $orientasiPasienBaru->delete();
+        try {
+            $orientasiPasienBaru = OrientasiPasienBaru::findOrFail($id);
+            $orientasiPasienBaru->delete();
 
-        return redirect()->route('rawat-inap.orientasi-pasien-baru.index', [
-            'kd_unit' => $kd_unit,
-            'kd_pasien' => $kd_pasien,
-            'tgl_masuk' => $tgl_masuk,
-            'urut_masuk' => $urut_masuk
-        ])->with('success', 'Data berhasil dihapus');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

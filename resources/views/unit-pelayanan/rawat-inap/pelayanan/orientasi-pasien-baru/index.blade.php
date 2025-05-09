@@ -78,7 +78,7 @@
                                 @foreach ($orientasiPasienBaru as $index => $item)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ date('d M Y', strtotime($item->tgl_masuk)) }}</td>
+                                        <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
                                         <td>{{ $item->nama_penerima ?? '-' }}</td>
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
@@ -91,7 +91,7 @@
                                                 <i class="ti-pencil"></i>
                                             </a>
                                             <button class="mb-2 btn btn-sm btn-danger btn-delete"
-                                                data-id="{{ encrypt($item->id) }}">
+                                                data-id="{{ $item->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
@@ -114,12 +114,13 @@
 @push('js')
     <script>
         $('.btn-delete').click(function(e) {
+            e.preventDefault(); // Prevent default button behavior
             let $this = $(this);
-            let id = $this.attr('data-id');
+            let id = $this.data('id'); // Use .data() instead of .attr() for data attributes
 
             Swal.fire({
                 title: "Anda yakin ingin menghapus?",
-                text: "Data yang dihapus tidak dapat dikembalikan kembali !",
+                text: "Data yang dihapus tidak dapat dikembalikan kembali!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -128,16 +129,16 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Build the URL dynamically by appending the id
-                    let destroyUrl = "{{ route('rawat-inap.orientasi-pasien-baru.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, 'placeholder']) }}";
-                    destroyUrl = destroyUrl.replace('placeholder', id);
+                    // Build the URL dynamically using route helper with all parameters
+                    let destroyUrl = "{{ route('rawat-inap.orientasi-pasien-baru.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}";
+                    destroyUrl = destroyUrl.replace(':id', id);
 
                     $.ajax({
-                        type: "post",
+                        type: "POST", // Use POST with _method delete
                         url: destroyUrl,
                         data: {
                             _token: "{{ csrf_token() }}",
-                            _method: "delete"
+                            _method: "DELETE"
                         },
                         dataType: "json",
                         beforeSend: function() {
@@ -151,33 +152,28 @@
                             });
                         },
                         success: function(res) {
-                            let status = res.status;
-                            let msg = res.message;
-
-                            if (status == 'error') {
+                            if (res.status === 'success') {
+                                Swal.fire({
+                                    title: "Berhasil!",
+                                    text: res.message,
+                                    icon: "success",
+                                    allowOutsideClick: false,
+                                }).then(() => {
+                                    location.reload(); // Reload only after success confirmation
+                                });
+                            } else {
                                 Swal.fire({
                                     title: "Gagal!",
-                                    text: msg,
+                                    text: res.message,
                                     icon: "error",
                                     allowOutsideClick: false,
                                 });
-
-                                return false;
                             }
-
-                            Swal.fire({
-                                title: "Berhasil!",
-                                text: "Data berhasil dihapus !",
-                                icon: "success",
-                                allowOutsideClick: false,
-                            });
-
-                            location.reload();
                         },
-                        error: function() {
+                        error: function(xhr, status, error) {
                             Swal.fire({
                                 title: "Gagal!",
-                                text: "Internal Server Error",
+                                text: "Internal Server Error: " + (xhr.responseJSON ? xhr.responseJSON.message : error),
                                 icon: "error",
                                 allowOutsideClick: false,
                             });

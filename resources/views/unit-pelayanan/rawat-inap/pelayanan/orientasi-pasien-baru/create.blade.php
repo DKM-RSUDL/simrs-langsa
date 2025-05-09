@@ -34,26 +34,37 @@
                                     <div class="mb-3 mb-md-0">
                                         <label class="form-label fw-bold">Tanggal</label>
                                         <input type="date" class="form-control" name="tanggal"
-                                            value="{{ date('Y-m-d') }}" required>
+                                            value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <label class="form-label fw-bold">Hubungan dengan pasien</label>
-                                    <div class="d-flex flex-wrap gap-3">
-                                        <div class="form-group">
-                                            <select class="form-select" name="hubungan" id="hubungan">
-                                                <option value="">Pilih Hubungan...</option>
-                                                <option value="saya_sendiri">Saya (pasien) sendiri</option>
-                                                <option value="ayah">Ayah</option>
-                                                <option value="ibu">Ibu</option>
-                                                <option value="suami">Suami</option>
-                                                <option value="istri">Istri</option>
-                                                <option value="anak">Anak</option>
-                                                <option value="lainnya">Lainnya</option>
-                                            </select>
+                                    <div class="row g-3">
+                                        <!-- Hubungan dengan pasien Section -->
+                                        <div class="col-6">
+                                            <label class="form-label fw-bold">Hubungan dengan pasien</label>
+                                            <div class="row g-2 align-items-center">
+                                                <div class="col-auto">
+                                                    <select class="form-select" name="hubungan" id="hubungan">
+                                                        <option value="">Pilih Hubungan...</option>
+                                                        <option value="saya_sendiri">Saya (pasien) sendiri</option>
+                                                        <option value="ayah">Ayah</option>
+                                                        <option value="ibu">Ibu</option>
+                                                        <option value="suami">Suami</option>
+                                                        <option value="istri">Istri</option>
+                                                        <option value="anak">Anak</option>
+                                                        <option value="lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-auto" id="lainnya_input" style="display: none;">
+                                                    <input type="text" class="form-control" name="hubungan_lainnya" placeholder="Sebutkan...">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group" id="lainnya_input" style="display: none;">
-                                            <input type="text" class="form-control" name="hubungan_lainnya" placeholder="Sebutkan...">
+                                
+                                        <!-- Yang menerima informasi Section -->
+                                        <div class="col-6 mt-3">
+                                            <label class="form-label fw-bold">Yang menerima informasi</label>
+                                            <input type="text" class="form-control" name="nama_penerima" placeholder="Nama dan tanda tangan">
                                         </div>
                                     </div>
                                 </div>
@@ -603,14 +614,7 @@
                         </div>
                     </div>
 
-                    <div class="row my-4">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label fw-bold">Yang menerima informasi</label>
-                                <input type="text" class="form-control" name="nama_penerima"
-                                    placeholder="Nama dan tanda tangan">
-                            </div>
-                        </div>
+                    <div class="row my-4">                        
                         {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label fw-bold">Yang memberikan informasi</label>
