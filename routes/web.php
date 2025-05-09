@@ -69,6 +69,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\ObservasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -708,13 +709,29 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/show/{data}', 'show')->name('.show');
-                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
                                         Route::get('/pdf', 'pdf')->name('.pdf');
                                     });
                                 });
                             });
 
-                            // Intake Output Cairan
+                            //Observasi
+                            Route::prefix('observasi')->group(function () {
+                                Route::name('.observasi')->group(function () {
+                                    Route::controller(ObservasiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/{id}', 'destroy')->name('.destroy');
+                                        Route::get('/print', 'print')->name('.print');
+                                    });
+                                });
+                            });
+
+                            // PAPS
                             Route::prefix('paps')->group(function () {
                                 Route::name('.paps')->group(function () {
                                     Route::controller(PapsController::class)->group(function () {
