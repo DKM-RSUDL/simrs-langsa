@@ -22,7 +22,9 @@
             <hr>
 
             <div class="form-section">
-                <form action="{{ route('rawat-inap.orientasi-pasien-baru.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}" method="post">
+                <form
+                    action="{{ route('rawat-inap.orientasi-pasien-baru.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}"
+                    method="post">
                     @csrf
                     @method('put')
 
@@ -33,30 +35,41 @@
                                     <div class="mb-3 mb-md-0">
                                         <label class="form-label fw-bold">Tanggal</label>
                                         <input type="date" class="form-control" name="tanggal"
-                                            value="{{ date('Y-m-d', strtotime($orientasiPasienBaru->tgl_masuk)) }}"
-                                        >
+                                            value="{{ date('Y-m-d', strtotime($orientasiPasienBaru->tgl_masuk)) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <label class="form-label fw-bold">Hubungan dengan pasien</label>
-                                    <div class="d-flex flex-wrap gap-3">
-                                        <div class="form-group">
-                                            <select class="form-select" name="hubungan" id="hubungan">
-                                                <option value="">Pilih Hubungan...</option>
-                                                <option value="saya_sendiri" {{ $orientasiPasienBaru->hubungan === 'saya_sendiri' ? 'selected' : '' }}>
-                                                    Saya (pasien) sendiri</option>
-                                                <option value="ayah" {{ $orientasiPasienBaru->hubungan === 'ayah' ? 'selected' : '' }}>Ayah</option>
-                                                <option value="ibu" {{ $orientasiPasienBaru->hubungan === 'ibu' ? 'selected' : '' }}>Ibu</option>
-                                                <option value="suami" {{ $orientasiPasienBaru->hubungan === 'suami' ? 'selected' : '' }}>Suami</option>
-                                                <option value="istri" {{ $orientasiPasienBaru->hubungan === 'istri' ? 'selected' : '' }}>Istri</option>
-                                                <option value="anak" {{ $orientasiPasienBaru->hubungan === 'anak' ? 'selected' : '' }}>Anak</option>
-                                                <option value="lainnya" {{ $orientasiPasienBaru->hubungan === 'lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                            </select>
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <label class="form-label fw-bold">Hubungan dengan pasien</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div class="form-group">
+                                                    <select class="form-select" name="hubungan" id="hubungan">
+                                                        <option value="">Pilih Hubungan...</option>
+                                                        <option value="saya_sendiri" {{ $orientasiPasienBaru->hubungan === 'saya_sendiri' ? 'selected' : '' }}>
+                                                            Saya (pasien) sendiri</option>
+                                                        <option value="ayah" {{ $orientasiPasienBaru->hubungan === 'ayah' ? 'selected' : '' }}>Ayah</option>
+                                                        <option value="ibu" {{ $orientasiPasienBaru->hubungan === 'ibu' ? 'selected' : '' }}>Ibu</option>
+                                                        <option value="suami" {{ $orientasiPasienBaru->hubungan === 'suami' ? 'selected' : '' }}>Suami</option>
+                                                        <option value="istri" {{ $orientasiPasienBaru->hubungan === 'istri' ? 'selected' : '' }}>Istri</option>
+                                                        <option value="anak" {{ $orientasiPasienBaru->hubungan === 'anak' ? 'selected' : '' }}>Anak</option>
+                                                        <option value="lainnya" {{ $orientasiPasienBaru->hubungan === 'lainnya' ? 'selected' : '' }}>
+                                                            Lainnya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" id="lainnya_input" style="display: none;">
+                                                    <input type="text" class="form-control" name="hubungan_lainnya"
+                                                        value="{{ $orientasiPasienBaru->hubungan_lainnya ?? '' }}"
+                                                        placeholder="Sebutkan...">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group" id="lainnya_input" style="display: none;">
-                                            <input type="text" class="form-control" name="hubungan_lainnya"
-                                                value="{{ $orientasiPasienBaru->hubungan_lainnya ?? '' }}"
-                                                placeholder="Sebutkan...">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="form-label fw-bold">Yang menerima informasi</label>
+                                                <input type="text" class="form-control" name="nama_penerima"
+                                                    value="{{ $orientasiPasienBaru->nama_penerima ?? '' }}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -564,19 +577,22 @@
                                                 <input class="form-check-input flex-shrink-0" name="informasi_lainnya[]"
                                                     type="checkbox" id="tanggung_jawab_barang" value="tanggung_jawab_barang"
                                                     {{ is_array($orientasiPasienBaru->informasi_lainnya) && in_array('tanggung_jawab_barang', $orientasiPasienBaru->informasi_lainnya) ? 'checked' : '' }}>
-                                                <span>Pasien dan keluarga bertanggung jawab penuh atas barang yang dibawa ke
+                                                <span>Pasien dan keluarga bertanggung jawab penuh atas barang yang
+                                                    dibawa ke
                                                     Rumah Sakit</span>
                                             </label>
                                             <label class="list-group-item d-flex gap-2">
                                                 <input class="form-check-input flex-shrink-0" name="informasi_lainnya[]"
                                                     type="checkbox" id="barang_tidak_perlu" value="barang_tidak_perlu" {{ is_array($orientasiPasienBaru->informasi_lainnya) && in_array('barang_tidak_perlu', $orientasiPasienBaru->informasi_lainnya) ? 'checked' : '' }}>
-                                                <span>Barang yang tidak berhubungan dengan perawatan sebaiknya tidak perlu
+                                                <span>Barang yang tidak berhubungan dengan perawatan sebaiknya tidak
+                                                    perlu
                                                     dibawa</span>
                                             </label>
                                             <label class="list-group-item d-flex gap-2">
                                                 <input class="form-check-input flex-shrink-0" name="informasi_lainnya[]"
                                                     type="checkbox" id="tidak_merekam" value="tidak_merekam" {{ is_array($orientasiPasienBaru->informasi_lainnya) && in_array('tidak_merekam', $orientasiPasienBaru->informasi_lainnya) ? 'checked' : '' }}>
-                                                <span>Tidak merekam / mengambil gambar dilokasi Rumah Sakit tanpa izin pihak
+                                                <span>Tidak merekam / mengambil gambar dilokasi Rumah Sakit tanpa izin
+                                                    pihak
                                                     Rumah Sakit</span>
                                             </label>
                                         </div>
@@ -617,17 +633,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row my-4">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label fw-bold">Yang menerima informasi</label>
-                                <input type="text" class="form-control" name="nama_penerima"
-                                    value="{{ $orientasiPasienBaru->nama_penerima ?? '' }}"
-                                    placeholder="Nama dan tanda tangan">
                             </div>
                         </div>
                     </div>
