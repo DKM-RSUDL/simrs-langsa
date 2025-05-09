@@ -394,14 +394,46 @@ class SuratKematianController extends Controller
             abort(404, 'Data not found');
         }
 
-        // Get Surat Kematian data with relations
-        $suratKematian = RmeSuratKematian::with(['dokter', 'detailType1', 'detailType2'])
+        // Calculate age - make sure this is done
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Get Surat Kematian data with properly eager loaded relations
+        $suratKematian = RmeSuratKematian::with([
+            'dokter',
+            'detailType1' => function ($query) {
+                $query->where('type', 1)->orderBy('id', 'asc');
+            },
+            'detailType2' => function ($query) {
+                $query->where('type', 2)->orderBy('id', 'asc');
+            }
+        ])
             ->where('id', $id)
             ->where('kd_pasien', $kd_pasien)
             ->first();
 
         if (!$suratKematian) {
             abort(404, 'Surat kematian tidak ditemukan');
+        }
+
+        // Make sure the relationships are properly loaded
+        if ($suratKematian->detailType1->isEmpty()) {
+            // Fallback in case relationship doesn't work
+            $suratKematian->detailType1 = RmeSuratKematianDtl::where('id_surat', $id)
+                ->where('type', 1)
+                ->orderBy('id', 'asc')
+                ->get();
+        }
+
+        if ($suratKematian->detailType2->isEmpty()) {
+            // Fallback in case relationship doesn't work
+            $suratKematian->detailType2 = RmeSuratKematianDtl::where('id_surat', $id)
+                ->where('type', 2)
+                ->orderBy('id', 'asc')
+                ->get();
         }
 
         // Persiapkan data untuk PDF

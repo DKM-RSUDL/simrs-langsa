@@ -16,20 +16,33 @@ class RmeSuratKematian extends Model
 
 
     // Di model RmeSuratKematian
+    // Add these relationship methods to your RmeSuratKematian model
+
+    /**
+     * Get the doctor that wrote the death certificate.
+     */
     public function dokter()
     {
         return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
     }
 
+    /**
+     * Get all Type 1 diagnosis details for this death certificate.
+     */
     public function detailType1()
     {
         return $this->hasMany(RmeSuratKematianDtl::class, 'id_surat', 'id')
-            ->where('type', 1);
+            ->where('type', 1)
+            ->orderBy('id', 'asc');
     }
 
+    /**
+     * Get all Type 2 diagnosis details for this death certificate.
+     */
     public function detailType2()
     {
         return $this->hasMany(RmeSuratKematianDtl::class, 'id_surat', 'id')
-            ->where('type', 2);
+            ->where('type', 2)
+            ->orderBy('id', 'asc');
     }
 }

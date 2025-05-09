@@ -178,7 +178,7 @@
 
     <!-- Document Title -->
     <div class="title">SURAT KETERANGAN KEDOKTERAN<br>TENTANG SEBAB KEMATIAN</div>
-    <div class="doc-number">No. {{ $suratKematian->nomor_surat }}</div>
+    <div class="doc-number">No. {{ $suratKematian->nomor_surat ?? '..........................' }}</div>
 
     <!-- Document Content -->
     <div class="content">
@@ -200,7 +200,7 @@
         <tr>
             <td>Jenis Kelamin</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+            <td>{{ $dataMedis->pasien->jenis_kelamin == '1' ? 'Laki-laki' : 'Perempuan' }}</td>
         </tr>
         <tr>
             <td>Pekerjaan</td>
@@ -261,18 +261,19 @@
         </tr>
 
         <!-- Type I Diagnosis -->
-        @if (!empty($suratKematian->detailType1))
+        @if (!empty($suratKematian->detailType1) && $suratKematian->detailType1->count() > 0)
             <tr>
-                <td width="25%" style="vertical-align: top;" rowspan="{{ count($suratKematian->detailType1) }}">
+                <td width="25%" style="vertical-align: top;" rowspan="{{ $suratKematian->detailType1->count() }}">
                     <strong>I</strong><br>
                     Penyakit atau keadaan yang langsung mengakibatkan kematian
                 </td>
                 @foreach ($suratKematian->detailType1 as $index => $detail)
                     @if ($index == 0)
                         <td width="50%">
-                            a. {{ $detail->keterangan ?? '..........................' }}<br>
-                            @if ($index < count($suratKematian->detailType1) - 1)
-                                Disebabkan atau konsekuensi dari:
+                            a. {{ $detail->keterangan ?? '..........................' }}
+                            @if (!empty($detail->konsekuensi))
+                                <br>
+                                Disebabkan atau konsekuensi dari: {{ $detail->konsekuensi }}
                             @endif
                         </td>
                         <td width="25%">
@@ -282,9 +283,10 @@
                     @else
                     <tr>
                         <td width="50%">
-                            {{ chr(98 + $index) }}. {{ $detail->keterangan ?? '..........................' }}<br>
-                            @if ($index < count($suratKematian->detailType1) - 1)
-                                Disebabkan atau konsekuensi dari:
+                            {{ chr(97 + $index) }}. {{ $detail->keterangan ?? '..........................' }}
+                            @if (!empty($detail->konsekuensi))
+                                <br>
+                                Disebabkan atau konsekuensi dari: {{ $detail->konsekuensi }}
                             @endif
                         </td>
                         <td width="25%">
@@ -307,9 +309,9 @@
         @endif
 
         <!-- Type II Diagnosis -->
-        @if (!empty($suratKematian->detailType2))
+        @if (!empty($suratKematian->detailType2) && $suratKematian->detailType2->count() > 0)
             <tr>
-                <td width="25%" style="vertical-align: top;" rowspan="{{ count($suratKematian->detailType2) + 1 }}">
+                <td width="25%" style="vertical-align: top;" rowspan="{{ $suratKematian->detailType2->count() + 1 }}">
                     <strong>II</strong><br>
                     Penyakit-penyakit lain yang mempengaruhi kematian, tetapi tidak ada hubungannya dengan penyakit diatas
                 </td>
