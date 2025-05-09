@@ -115,14 +115,15 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-inap.paps.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-inap.paps.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($paps->id)]) }}">
                 @csrf
+                @method('put')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
                         <div class="card-body">
                             <div class="px-3">
-                                <h4 class="header-asesmen">Tambah Pernyataan PAPS</h4>
+                                <h4 class="header-asesmen">Edit Pernyataan PAPS</h4>
                             </div>
 
                             <div class="px-3">
@@ -132,13 +133,13 @@
                                     <div class="form-group">
                                         <label for="tanggal" style="min-width: 200px;">Tanggal</label>
                                         <input type="text" name="tanggal" id="tanggal" class="form-control date"
-                                            value="{{ date('Y-m-d') }}" required readonly>
+                                            value="{{ date('Y-m-d', strtotime($paps->tanggal)) }}" required readonly>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="jam" style="min-width: 200px;">Jam</label>
                                         <input type="time" name="jam" id="jam" class="form-control time"
-                                            value="{{ date('H:i') }}" required>
+                                            value="{{ date('H:i', strtotime($paps->jam)) }}" required>
                                     </div>
 
                                     <div class="form-group">
@@ -146,7 +147,8 @@
                                         <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
+                                                <option value="{{ $dok->kd_dokter }}" @selected($dok->kd_dokter == $paps->kd_dokter)>
+                                                    {{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -154,20 +156,20 @@
                                     <div class="form-group">
                                         <label for="alasan" style="min-width: 200px;">Alasan Menghentikan
                                             Perawatan</label>
-                                        <textarea name="alasan" id="alasan" class="form-control" required></textarea>
+                                        <textarea name="alasan" id="alasan" class="form-control" required>{{ $paps->alasan }}</textarea>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="status_keluarga" style="min-width: 200px;">Status Keluarga</label>
                                         <select name="status_keluarga" id="status_keluarga" class="form-select" required>
                                             <option value="">--Pilih--</option>
-                                            <option value="1">Diri sendiri</option>
-                                            <option value="2">Istri</option>
-                                            <option value="3">Suami</option>
-                                            <option value="4">Anak</option>
-                                            <option value="5">Ayah</option>
-                                            <option value="6">Ibu</option>
-                                            <option value="7">Lain-lain</option>
+                                            <option value="1" @selected($paps->status_keluarga == 1)>Diri sendiri</option>
+                                            <option value="2" @selected($paps->status_keluarga == 2)>Istri</option>
+                                            <option value="3" @selected($paps->status_keluarga == 3)>Suami</option>
+                                            <option value="4" @selected($paps->status_keluarga == 4)>Anak</option>
+                                            <option value="5" @selected($paps->status_keluarga == 5)>Ayah</option>
+                                            <option value="6" @selected($paps->status_keluarga == 6)>Ibu</option>
+                                            <option value="7" @selected($paps->status_keluarga == 7)>Lain-lain</option>
                                         </select>
                                     </div>
                                 </div>
@@ -178,12 +180,14 @@
 
                                     <div class="form-group">
                                         <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
-                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control" required>
+                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control"
+                                            value="{{ $paps->saksi_1 }}" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
-                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control" required>
+                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control"
+                                            value="{{ $paps->saksi_2 }}" required>
                                     </div>
                                 </div>
 
@@ -192,22 +196,32 @@
                                     <h4 class="fw-semibold">DIAGNOSIS</h4>
 
                                     <div id="diagnose-wrap">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Diagnosis</label>
-                                                    <input type="text" name="diagnosis[]" class="form-control" required>
+                                        @foreach ($paps->detail as $detail)
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label style="min-width: 200px;">Diagnosis</label>
+                                                        <input type="text" name="diagnosis[]" class="form-control"
+                                                            value="{{ $detail->diagnosis }}" required>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Risiko</label>
-                                                    <input type="text" name="risiko[]" class="form-control" required>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label style="min-width: 200px;">Risiko</label>
+                                                        <input type="text" name="risiko[]" class="form-control"
+                                                            value="{{ $detail->risiko }}" required>
+                                                    </div>
+                                                    <div class="btn-delete-wrap text-end">
+                                                        @if ($loop->iteration > 1)
+                                                            <button type="button" class="btn btn-sm btn-danger mt-2">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                                <div class="btn-delete-wrap text-end"></div>
                                             </div>
-                                        </div>
+                                        @endforeach
                                     </div>
 
                                     <div class="text-end mt-3">
@@ -224,13 +238,13 @@
                                     <div class="form-group">
                                         <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
                                         <input type="text" name="keluarga_nama" id="keluarga_nama"
-                                            class="form-control" required>
+                                            class="form-control" value="{{ $paps->keluarga_nama }}" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="keluarga_usia" style="min-width: 200px;">Usia</label>
                                         <input type="number" name="keluarga_usia" id="keluarga_usia"
-                                            class="form-control" required>
+                                            class="form-control" value="{{ $paps->keluarga_usia }}" required>
                                     </div>
 
                                     <div class="form-group">
@@ -239,20 +253,20 @@
                                         <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin"
                                             class="form-select" required>
                                             <option value="">--Pilih--</option>
-                                            <option value="0">Perempuan</option>
-                                            <option value="1">Laki-Laki</option>
+                                            <option value="0" @selected($paps->keluarga_jenis_kelamin == 0)>Perempuan</option>
+                                            <option value="1" @selected($paps->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="keluarga_alamat" style="min-width: 200px;">Alamat</label>
-                                        <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" required></textarea>
+                                        <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" required>{{ $paps->keluarga_alamat }}</textarea>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="keluarga_ktp" style="min-width: 200px;">No. KTP</label>
                                         <input type="number" name="keluarga_ktp" id="keluarga_ktp" class="form-control"
-                                            required>
+                                            value="{{ $paps->keluarga_ktp }}" required>
                                     </div>
                                 </div>
                             </div>
@@ -271,8 +285,12 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            $('#identitas-keluarga').hide();
-            $('#identitas-keluarga input,select,textarea').prop('required', false);
+            let statusKlg = {{ $paps->status_keluarga }}
+
+            if (statusKlg == 1) {
+                $('#identitas-keluarga').hide();
+                $('#identitas-keluarga input,select,textarea').prop('required', false);
+            }
         });
 
         $('#btn-add-diagnosis').on('click', function() {
@@ -312,6 +330,10 @@
                 $('#identitas-keluarga').show();
                 $('#identitas-keluarga input,select,textarea').prop('required', true);
             }
+        });
+
+        $('.btn-delete-wrap button').click(function() {
+            $(this).closest('.row').remove();
         });
     </script>
 @endpush

@@ -725,7 +725,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/show/{data}', 'show')->name('.show');
                                         Route::delete('/', 'delete')->name('.delete');
-                                        Route::get('/pdf', 'pdf')->name('.pdf');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                     });
                                 });
                             });
