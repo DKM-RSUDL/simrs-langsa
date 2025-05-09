@@ -156,7 +156,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="status_keluarga" style="min-width: 200px;">Status Keluarga</label>
+                                    <label for="status_keluarga" style="min-width: 200px;">Status Pasien dgn
+                                        Keluarga</label>
                                     <select name="status_keluarga" id="status_keluarga" class="form-select">
                                         <option value="">--Pilih--</option>
                                         <option value="1" @selected($paps->status_keluarga == 1)>Diri sendiri</option>

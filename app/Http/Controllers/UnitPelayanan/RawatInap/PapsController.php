@@ -274,6 +274,11 @@ class PapsController extends Controller
         $id = decrypt($idEncrypt);
         $paps = RmePaps::find($id);
 
+        // return view('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', compact(
+        //     'dataMedis',
+        //     'paps'
+        // ));
+
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', compact(
             'dataMedis',
             'paps'
