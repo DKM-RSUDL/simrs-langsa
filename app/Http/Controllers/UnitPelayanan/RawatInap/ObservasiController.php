@@ -7,6 +7,7 @@ use App\Models\Kunjungan;
 use App\Models\Perawat;
 use App\Models\RmeObservasi;
 use App\Models\RmeObservasiDtl;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,17 +47,26 @@ class ObservasiController extends Controller
         }
 
         // Fetch all observations for this patient, unit, and visit
-        $observasiList = RmeObservasi::with(['details', 'perawat'])
+        $observasiList = RmeObservasi::with(['details', 'creator'])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('tanggal', 'desc')
             ->get();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.observasi.index', compact(
-            'dataMedis',
-            'observasiList'
-        ));
+        // Get min and max dates for the print modal
+        $dateRange = RmeObservasi::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            ->selectRaw('MIN(tanggal) as min_date, MAX(tanggal) as max_date')
+            ->first();
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.observasi.index', [
+            'dataMedis' => $dataMedis,
+            'observasiList' => $observasiList,
+            'minDate' => $dateRange->min_date ?? null,
+            'maxDate' => $dateRange->max_date ?? null
+        ]);
     }
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
@@ -165,7 +175,6 @@ class ObservasiController extends Controller
                 'catheter' => $request->catheter,
                 'diet' => $request->diet,
                 'alergi' => $request->alergi,
-                'kd_perawat' => $request->kd_perawat,
                 'user_create' => Auth::user()->id,
             ];
 
@@ -391,8 +400,7 @@ class ObservasiController extends Controller
                     'catheter' => $request->catheter,
                     'diet' => $request->diet,
                     'alergi' => $request->alergi,
-                    'kd_perawat' => $request->kd_perawat,
-                    'user_create' => Auth::user()->id,
+                    'user_edit' => Auth::user()->id,
                 ];
 
                 $observasi->update($observasiData);
@@ -501,13 +509,71 @@ class ObservasiController extends Controller
         }
     }
 
-    public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function print(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        // Implement print logic (e.g., generate PDF or view for printing)
-        return view('unit-pelayanan.rawat-inap.pelayanan.observasi.print', [
-            'dataMedis' => Kunjungan::where('kd_pasien', $kd_pasien)->where('kd_unit', $kd_unit)->where('urut_masuk', $urut_masuk)->firstOrFail(),
-            'observasiList' => RmeObservasi::where('kd_pasien', $kd_pasien)->where('kd_unit', $kd_unit)->where('urut_masuk', $urut_masuk)->get(),
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
         ]);
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->firstOrFail();
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Query to get observation data with date filtering
+        $query = RmeObservasi::with(['details', 'creator'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk);
+
+        // Apply date filters if provided
+        if ($request->filled('start_date')) {
+            $query->where('tanggal', '>=', Carbon::parse($request->start_date)->startOfDay());
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('tanggal', '<=', Carbon::parse($request->end_date)->endOfDay());
+        }
+
+        // Get the observations ordered by date
+        $observasiList = $query->orderBy('tanggal', 'asc')->get();
+
+        // Get the logo path for the PDF
+        $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+
+        // Check if the logo file exists, if not use a default
+        if (!file_exists($logoPath)) {
+            $logoPath = null;
+        }
+
+        // Generate PDF
+        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.observasi.print-pdf', [
+            'dataMedis' => $dataMedis,
+            'observasiList' => $observasiList,
+            'startDate' => $request->filled('start_date') ? Carbon::parse($request->start_date)->format('d-m-Y') : null,
+            'endDate' => $request->filled('end_date') ? Carbon::parse($request->end_date)->format('d-m-Y') : null,
+            'logoPath' => $logoPath
+        ]);
+        // Set paper options (A4 landscape for better table display)
+        $pdf->setPaper('a4', 'potrait');
+
+        // Return the PDF for download
+        return $pdf->stream('observasi-' . $kd_pasien . '.pdf');
     }
 
 }

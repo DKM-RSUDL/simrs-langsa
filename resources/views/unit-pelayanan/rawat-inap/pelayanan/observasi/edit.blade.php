@@ -136,21 +136,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="sensorium">Sensorium</label>
-                                                <select name="sensorium" id="sensorium" class="form-control" required>
-                                                    <option value="">Pilih Sensorium</option>
-                                                    <option value="Compos Mentis" {{ $observasi && $observasi->sensorium == 'Compos Mentis' ? 'selected' : '' }}>
-                                                        Compos Mentis</option>
-                                                    <option value="Somnolen" {{ $observasi && $observasi->sensorium == 'Somnolen' ? 'selected' : '' }}>
-                                                        Somnolen</option>
-                                                    <option value="Apatis" {{ $observasi && $observasi->sensorium == 'Apatis' ? 'selected' : '' }}>
-                                                        Apatis</option>
-                                                    <option value="Delirium" {{ $observasi && $observasi->sensorium == 'Delirium' ? 'selected' : '' }}>
-                                                        Delirium</option>
-                                                    <option value="Stupor" {{ $observasi && $observasi->sensorium == 'Stupor' ? 'selected' : '' }}>
-                                                        Stupor</option>
-                                                    <option value="Coma" {{ $observasi && $observasi->sensorium == 'Coma' ? 'selected' : '' }}>
-                                                        Coma</option>
-                                                </select>
+                                                <input type="text" name="sensorium" id="sensorium" class="form-control"
+                                                    value="{{ $observasi->sensorium ?? '' }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -199,18 +186,6 @@
                                         <input type="text" name="alergi" id="alergi" class="form-control"
                                             placeholder="Alergi pasien (jika ada)"
                                             value="{{ $observasi->alergi ?? '' }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="kd_perawat">Nama Perawat</label>
-                                        <select name="kd_perawat" id="kd_perawat" class="form-control">
-                                            <option value="">Pilih Perawat</option>
-                                            @foreach ($perawat as $item)
-                                                <option value="{{ $item->kd_perawat }}"
-                                                    {{ $observasi && $observasi->kd_perawat == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->nama }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
 
@@ -385,7 +360,7 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="respirasi_sore" style="min-width: 200px;">Respirasi (x/mnt)</label>
+                                                        <label for="respirasi_soreatlah" style="min-width: 200px;">Respirasi (x/mnt)</label>
                                                         <input type="number" name="respirasi_sore" id="respirasi_sore"
                                                             class="form-control"
                                                             value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->respirasi : '' }}">
@@ -501,7 +476,6 @@
                         document.getElementById('catheter').value = '';
                         document.getElementById('diet').value = '';
                         document.getElementById('alergi').value = '';
-                        document.getElementById('kd_perawat').value = '';
                         // Clear vital sign inputs
                         ['06:00', '12:00', '18:00', '24:00'].forEach(waktu => {
                             ['suhu', 'nadi', 'tekanan_darah_sistole', 'tekanan_darah_diastole', 'respirasi'].forEach(field => {

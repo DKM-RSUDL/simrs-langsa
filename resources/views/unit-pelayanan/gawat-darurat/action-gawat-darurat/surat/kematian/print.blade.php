@@ -182,7 +182,7 @@
 
     <!-- Document Content -->
     <div class="content">
-        <p>Yang bertanda tangan di bawah ini dr. {{ $suratKematian->dokter->nama_lengkap ?? '..........................' }}, spesialis bagian {{ $suratKematian->dokter->spesialis ?? '..........................' }} pada Rumah Sakit Umum Daerah Kota Langsa menerangkan bahwa pasien kami sebagai berikut:</p>
+        <p>Yang bertanda tangan di bawah ini dr. {{ $suratKematian->nama_dokter ?? '..........................' }}, spesialis bagian {{ $suratKematian->nama_spesialis ?? '..........................' }} pada Rumah Sakit Umum Daerah Kota Langsa menerangkan bahwa pasien kami sebagai berikut:</p>
     </div>
 
     <!-- Patient Information -->
@@ -190,42 +190,38 @@
         <tr>
             <td>Nama</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->nama ?? '..........................' }}</td>
+            <td>{{ $dataMedis->nama ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Tgl lahir/ Usia</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d-m-Y') : '..........................' }} / {{ $dataMedis->pasien->umur ?? '..........' }} Tahun</td>
+            <td>{{ $dataMedis->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->tgl_lahir)->format('d-m-Y') : '..........................' }} / {{ $dataMedis->umur ?? '..........' }} Tahun</td>
         </tr>
         <tr>
             <td>Jenis Kelamin</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->jenis_kelamin == '1' ? 'Laki-laki' : 'Perempuan' }}</td>
+            <td>{{ $dataMedis->jenis_kelamin == '1' ? 'Laki-laki' : 'Perempuan' }}</td>
         </tr>
         <tr>
             <td>Pekerjaan</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->pekerjaan ?? '..........................' }}</td>
+            <td>{{ $dataMedis->nama_pekerjaan ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Suku/Bangsa</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->suku ?? '..........................' }}</td>
+            <td>{{ $dataMedis->nama_suku ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Agama</td>
             <td>:</td>
-            <td>{{ $dataMedis->pasien->agama ?? '..........................' }}</td>
+            <td>{{ $dataMedis->nama_agama ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Alamat</td>
             <td>:</td>
             <td>
-                Jl. {{ $dataMedis->pasien->alamat ?? '..........................' }}<br>
-                Dsn. {{ $dataMedis->pasien->dusun ?? '..........................' }}<br>
-                Desa/Kel. {{ $dataMedis->pasien->desa ?? '..........................' }},<br>
-                Kec. {{ $dataMedis->pasien->kecamatan ?? '..........................' }},<br>
-                Kab/Kota: {{ $dataMedis->pasien->kabupaten ?? '..........................' }}
+                {{ $dataMedis->alamat ?? '..........................' }}<br>
             </td>
         </tr>
     </table>
