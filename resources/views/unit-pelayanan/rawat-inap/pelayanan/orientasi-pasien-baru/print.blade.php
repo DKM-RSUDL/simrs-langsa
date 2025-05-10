@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orientasi Pasien Baru</title>
-    <style>
+<style>
         @page {
             margin: 1cm 1cm;
             size: A4 portrait;
@@ -25,45 +26,41 @@
 
         /* Header/Kop Surat */
         .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 5px;
-        width: 100%;
-    }
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+            width: 100%;
+            position: relative;
+        }
 
-    .logo-rs {
-        display: flex;
-        align-items: flex-start;
-        width: 65%;
-    }
+        .logo-rs {
+            display: flex;
+            align-items: center;
+        }
 
-    .logo {
-        width: 70px;
-        height: auto;
-        margin-right: 10px;
-    }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+        }
 
-    .kop-text {
-        flex: 1;
-    }
+        .kop-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
         .rs-name-1 {
-            font-size: 12pt;
+            font-size: 14pt;
             font-weight: bold;
             margin: 0;
         }
 
         .rs-address {
-            font-size: 8pt;
-            margin: 0;
-            line-height: 1.1;
-        }
-
-        .rs-city {
             font-size: 9pt;
-            font-weight: bold;
             margin: 0;
+            line-height: 1.3;
         }
 
         .border-line {
@@ -182,112 +179,92 @@
             min-height: 15px;
         }
 
-        .signature-label {
-            font-size: 8pt;
-        }
-
-        /* Footer */
-        .footer {
-            font-size: 8pt;
-            font-style: italic;
-            margin-top: 5px;
-        }
-
         /* Patient Info Box */
         .patient-info {
             border: 1px solid #000;
-            padding: 1px;            
-            float: right;
-            width: 240px;
+            padding: 5px;
+            width: 280px;
             font-size: 9pt;
+            position: absolute;
+            top: 0;
+            right: 0;
         }
-        
+
         .patient-info-row {
             display: flex;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
-        
+
         .patient-info-label {
             width: 100px;
+            font-weight: normal;
         }
-        
+
         .patient-info-value {
             flex: 1;
         }
-        
-        .patient-rm {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 3px;
-        }
-        
+
         .rm-digits {
             display: flex;
         }
-        
+
         .rm-box {
             border: 1px solid #000;
             width: 20px;
             height: 20px;
             margin-left: 2px;
+            display: inline-block;
         }
-        
-        .note {
-            font-size: 8pt;
-            font-style: italic;
-        }
-        
+
         .clear {
             clear: both;
         }
-        
+
         .compact-section {
             margin-bottom: 0;
         }
-        
+
         /* Fixed width columns */
         .col-1-3 {
             width: 33.3%;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header/Kop Surat -->
         <div class="header">
-            <img src="{{ public_path('assets/img/logo-dpjp.png') }}" alt="Logo RSUD Langsa" class="logo">
-            <div class="kop-text">
-                <p class="rs-name-1">RSUD LANGSA</p>
-                <p class="rs-address">Jl. Jend. A. Yani, Kota Langsa</p>
-                <p class="rs-address">Telp: 0641- 22051</p>
-                <p class="rs-address">email: rsudlangsa.aceh@gmail.com</p>
-
-                <div class="patient-info">
-
-                    <div class="patient-info-row">
-                        <span class="patient-info-label">No RM</span>
-                        <span class="patient-info-value">: {{ $dataMedis->pasien->kd_pasien }}</span>
-                    </div>
-                    <div class="patient-info-row">
-                        <span class="patient-info-label">Nama</span>
-                        <span class="patient-info-value">: {{ $dataMedis->pasien->nama }}</span>
-                    </div>
-                    <div class="patient-info-row">
-                        <span class="patient-info-label">Jenis Kelamin</span>
-                        <span class="patient-info-value">: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
-                    </div>
-                    <div class="patient-info-row">
-                        <span class="patient-info-label">Tanggal Lahir</span>
-                        <span class="patient-info-value">: {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
-                            ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
-                    </div>                
+            <div class="logo-rs">
+                <img src="{{ public_path('assets/img/logo-dpjp.png') }}" alt="Logo RSUD Langsa" class="logo">
+                <div class="kop-text">
+                    <p class="rs-name-1">RSUD LANGSA</p>
+                    <p class="rs-address">Jl. Jend. A. Yani, Kota Langsa</p>
+                    <p class="rs-address">Telp: 0641- 22051</p>
+                    <p class="rs-address">email: rsudlangsa.aceh@gmail.com</p>
                 </div>
             </div>
-            
-            <!-- Patient Info Box -->
-            
+            <div class="patient-info">
+                <div class="patient-info-row">
+                    <span class="patient-info-label">No RM</span>
+                    <span class="patient-info-value">: {{ $dataMedis->pasien->kd_pasien }}</span>
+                </div>
+                <div class="patient-info-row">
+                    <span class="patient-info-label">Nama</span>
+                    <span class="patient-info-value">: {{ $dataMedis->pasien->nama }}</span>
+                </div>
+                <div class="patient-info-row">
+                    <span class="patient-info-label">Jenis Kelamin</span>
+                    <span class="patient-info-value">: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}</span>
+                </div>
+                <div class="patient-info-row">
+                    <span class="patient-info-label">Tanggal Lahir</span>
+                    <span class="patient-info-value">: {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
+            ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : 'Tidak Diketahui' }})</span>
+                </div>
+            </div>
         </div>
-        
+
         <div class="clear"></div>
         <div class="border-line"></div>
         <div class="border-line-2"></div>
@@ -302,11 +279,17 @@
             <div class="form-section">
                 <div class="form-group">
                     <span class="form-label">Nama</span>
-                    <span class="form-value">: {{ $dataMedis->pasien->nama_pasien ?? '................................' }}, L/P *, Usia: {{ $dataMedis->pasien->umur ?? '........' }} Thn</span>
+                    <span class="form-value">:
+                        {{ $dataMedis->pasien->nama }}, {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'L' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'P' : '') }}, Usia:
+                        {{ $dataMedis->pasien->umur ?? 'Tidak Diketahui' }} Thn
+                    </span>
                 </div>
                 <div class="form-group" style="width: 100%">
                     <span class="form-label">Jenis Kelamin</span>
-                    <span class="form-value">: {{ $dataMedis->pasien->jenis_kelamin ?? '................................' }}, Hub dengan pasien: {{ $orientasiPasienBaru->hubungan ?? 'aya (pasien) sendiri, Ayah, Ibu, Suami, Istri, Anak, Lain2.................' }}</span>
+                    <span class="form-value">:
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}, Hub dengan
+                        pasien:
+                        {{ $orientasiPasienBaru->hubungan ?? 'aya (pasien) sendiri, Ayah, Ibu, Suami, Istri, Anak, Lain2.................' }}</span>
                 </div>
             </div>
 
@@ -423,7 +406,8 @@
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('fasilitas_lainnya', $orientasiPasienBaru->fasilitas ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain2 {{ $orientasiPasienBaru->fasilitas_lainnya_text ?? '..............' }}</span>
+                                <span class="checkbox-text">Lain2
+                                    {{ $orientasiPasienBaru->fasilitas_lainnya_text ?? '..............' }}</span>
                             </div>
                         </td>
                     </tr>
@@ -509,7 +493,8 @@
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('kegiatan_lainnya', $orientasiPasienBaru->kegiatan ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->kegiatan_lainnya_text ?? '......................................' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->kegiatan_lainnya_text ?? '......................................' }}</span>
                             </div>
                         </td>
                     </tr>
@@ -542,7 +527,8 @@
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('lokasi_lainnya', $orientasiPasienBaru->lokasi ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->lokasi_lainnya_text ?? '..................' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->lokasi_lainnya_text ?? '..................' }}</span>
                             </div>
                         </td>
                     </tr>
@@ -591,7 +577,8 @@
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('administrasi_lainnya', $orientasiPasienBaru->administrasi ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->administrasi_lainnya_text ?? '' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->administrasi_lainnya_text ?? '' }}</span>
                             </div>
                         </td>
                     </tr>
@@ -668,19 +655,22 @@
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('barang_lainnya_1', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->barang_lainnya_1_text ?? '....................' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->barang_lainnya_1_text ?? '....................' }}</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('barang_lainnya_2', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->barang_lainnya_2_text ?? '....................' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->barang_lainnya_2_text ?? '....................' }}</span>
                             </div>
                         </td>
                         <td class="col-1-3">
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('barang_lainnya_3', $orientasiPasienBaru->barang ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Lain-lain: {{ $orientasiPasienBaru->barang_lainnya_3_text ?? '....................' }}</span>
+                                <span class="checkbox-text">Lain-lain:
+                                    {{ $orientasiPasienBaru->barang_lainnya_3_text ?? '....................' }}</span>
                             </div>
                         </td>
                     </tr>
@@ -705,7 +695,8 @@
                         <td>
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('tanggung_jawab_barang', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Pasien dan keluarga bertanggung jawab penuh atas barang yang dibawa ke Rumah Sakit</span>
+                                <span class="checkbox-text">Pasien dan keluarga bertanggung jawab penuh atas barang yang
+                                    dibawa ke Rumah Sakit</span>
                             </div>
                         </td>
                     </tr>
@@ -713,7 +704,8 @@
                         <td>
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('barang_tidak_perlu', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Barang yang tidak berhubungan dengan perawatan sebaiknya tidak perlu dibawa</span>
+                                <span class="checkbox-text">Barang yang tidak berhubungan dengan perawatan sebaiknya
+                                    tidak perlu dibawa</span>
                             </div>
                         </td>
                     </tr>
@@ -721,7 +713,8 @@
                         <td>
                             <div class="checkbox-item">
                                 <input type="checkbox" {{ in_array('tidak_merekam', $orientasiPasienBaru->informasi_lainnya ?? []) ? 'checked' : '' }} disabled>
-                                <span class="checkbox-text">Tidak merekam / mengambil gambar di lokasi Rumah Sakit tanpa izin pihak Rumah Sakit</span>
+                                <span class="checkbox-text">Tidak merekam / mengambil gambar di lokasi Rumah Sakit tanpa
+                                    izin pihak Rumah Sakit</span>
                             </div>
                         </td>
                     </tr>
@@ -758,19 +751,20 @@
                     <tr>
                         <td style="width: 50%; text-align: center">
                             <p class="signature-title">Yang menerima informasi</p>
+                            <br><br>
                             <p class="signature-name">{{ $orientasiPasienBaru->nama_penerima ?? '' }}</p>
-                            <p class="signature-label">Nama dan tanda tangan</p>
                         </td>
                         <td style="width: 50%; text-align: center">
                             <p class="signature-title">Yang memberikan informasi</p>
+                            <br><br>
                             <p class="signature-name">{{ $orientasiPasienBaru->nama_pemberi ?? '' }}</p>
-                            <p class="signature-label">Nama dan tanda tangan</p>
                         </td>
                     </tr>
                 </table>
             </div>
-            
+
         </div>
     </div>
 </body>
+
 </html>

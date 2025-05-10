@@ -16,16 +16,18 @@
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
 
-                <a href="{{ route('rawat-inap.orientasi-pasien-baru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}"
-                    class="mb-2 btn btn-sm btn-warning">
-                    <i class="ti-pencil"></i>
-                </a>
-                <a href="{{ route('rawat-inap.orientasi-pasien-baru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}" 
-                    class="btn btn-secondary btn-sm" 
-                    target="_blank"
-                    title="Cetak PDF">
-                    <i class="ti-printer"></i>
-                </a>
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('rawat-inap.orientasi-pasien-baru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}"
+                        class="mb-2 btn btn-warning">
+                        <i class="ti-pencil"></i>
+                    </a>
+                    <a href="{{ route('rawat-inap.orientasi-pasien-baru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $orientasiPasienBaru->id]) }}"
+                        class="btn btn-secondary ms-2"
+                        target="_blank"
+                        title="Cetak PDF">
+                        <i class="ti-printer"></i>
+                    </a>
+                </div>
             </div>
 
             <div class="text-center mt-1 mb-2">
