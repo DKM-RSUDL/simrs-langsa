@@ -65,6 +65,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapF
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
@@ -746,6 +747,22 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // Meninggalkan Perawwatan
+                            Route::prefix('meninggalkan-perawatan')->group(function () {
+                                Route::name('.meninggalkan-perawatan')->group(function () {
+                                    Route::controller(MeninggalkanPerawatanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
@@ -1279,24 +1296,6 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
-                    });
-                });
-            });
-        });
-    });
-
-    // TRANSFUSI DARAH
-    Route::prefix('transfusi-darah')->group(function () {
-        Route::name('transfusi-darah')->group(function () {
-            Route::controller(PermintaanController::class)->group(function () {
-                // PERMINTAAN
-                Route::prefix('permintaan')->group(function () {
-                    Route::name('.permintaan')->group(function () {
-                        Route::get('/', 'index')->name('.index');
-                        Route::get('/datatables', 'datatable')->name('.datatable');
-                        Route::get('/show/{data}', 'show')->name('.show');
-                        Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
-                        Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });
             });

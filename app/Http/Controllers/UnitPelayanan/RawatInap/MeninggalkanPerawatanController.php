@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
-use App\Models\RmePaps;
-use App\Models\RmePapsDtl;
+use App\Models\RmeMeninggalkanPerawatan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -15,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PapsController extends Controller
+class MeninggalkanPerawatanController extends Controller
 {
     public function __construct()
     {
@@ -47,15 +46,16 @@ class PapsController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $paps = RmePaps::where('kd_pasien', $kd_pasien)
+        $pernyataan = RmeMeninggalkanPerawatan::with(['dokter'])
+            ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.paps.index', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.index', compact(
             'dataMedis',
-            'paps'
+            'pernyataan'
         ));
     }
 
@@ -74,11 +74,11 @@ class PapsController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dokter = Dokter::where('status', 1)->get();
 
         if (empty($dataMedis)) return back()->with('error', 'Data kunjungan tidak dapat ditemukan !');
+        $dokter = Dokter::where('status', 1)->get();
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.paps.create', compact('dataMedis', 'dokter'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.create', compact('dataMedis', 'dokter'));
     }
 
     public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -89,43 +89,27 @@ class PapsController extends Controller
             $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
             if (empty($pasien)) throw new Exception('Data pasien tidak ditemukan !');
 
-            $statusKeluarga = $request->status_keluarga;
+            $data = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'     => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'     => $urut_masuk,
+                'tanggal'     => $request->tanggal,
+                'keperluan'     => $request->keperluan,
+                'tgl_awal'     => $request->tgl_awal,
+                'tgl_akhir'     => $request->tgl_akhir,
+                'kd_dokter'     => $request->kd_dokter,
+                'tgl_keluar'     => $request->tgl_keluar,
+                'jam_keluar'     => $request->jam_keluar,
+                'tgl_masuk_kembali'     => $request->tgl_masuk_kembali,
+                'jam_masuk_kembali'     => $request->jam_masuk_kembali,
+                'user_create'           => Auth::id()
+            ];
 
-            $paps = new RmePaps();
-            $paps->kd_pasien = $kd_pasien;
-            $paps->kd_unit = $kd_unit;
-            $paps->tgl_masuk = $tgl_masuk;
-            $paps->urut_masuk = $urut_masuk;
-            $paps->tanggal = $request->tanggal;
-            $paps->jam = $request->jam;
-            $paps->kd_dokter = $request->kd_dokter;
-            $paps->alasan = $request->alasan;
-            $paps->status_keluarga = $request->status_keluarga;
-            $paps->saksi_1 = $request->saksi_1;
-            $paps->saksi_2 = $request->saksi_2;
-            $paps->keluarga_nama = ($statusKeluarga == 1) ? $pasien->nama : $request->keluarga_nama;
-            $paps->keluarga_usia = ($statusKeluarga == 1) ? hitungUmur(date('Y-m-d', strtotime($pasien->tgl_lahir))) : $request->keluarga_usia;
-            $paps->keluarga_jenis_kelamin = ($statusKeluarga == 1) ? $pasien->jenis_kelamin : $request->keluarga_jenis_kelamin;
-            $paps->keluarga_alamat = ($statusKeluarga == 1) ? $pasien->alamat : $request->keluarga_alamat;
-            $paps->keluarga_ktp = ($statusKeluarga == 1) ? $pasien->no_pengenal : $request->keluarga_ktp;
-            $paps->user_create = Auth::id();
-            $paps->save();
-
-            $diagnosis = $request->diagnosis;
-            $risiko = $request->risiko;
-
-            for ($i = 0; $i < count($diagnosis); $i++) {
-                $dataDetail = [
-                    'id_paps'       => $paps->id,
-                    'diagnosis'     => $diagnosis[$i],
-                    'risiko'     => $risiko[$i]
-                ];
-
-                RmePapsDtl::create($dataDetail);
-            }
+            RmeMeninggalkanPerawatan::create($data);
 
             DB::commit();
-            return to_route('rawat-inap.paps.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pernyataan PAPS berhasil di tambah !');
+            return to_route('rawat-inap.meninggalkan-perawatan.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pernyataan Meninggalkan Perawatan berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -151,10 +135,10 @@ class PapsController extends Controller
 
         $dokter = Dokter::where('status', 1)->get();
         $id = decrypt($idEncrypt);
-        $paps = RmePaps::find($id);
+        $pernyataan = RmeMeninggalkanPerawatan::find($id);
 
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.paps.edit', compact('dataMedis', 'dokter', 'paps'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.edit', compact('dataMedis', 'dokter', 'pernyataan'));
     }
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
@@ -165,43 +149,27 @@ class PapsController extends Controller
             $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
             if (empty($pasien)) throw new Exception('Data pasien tidak ditemukan !');
 
-            $statusKeluarga = $request->status_keluarga;
             $id = decrypt($idEncrypt);
+            $pernyataan = RmeMeninggalkanPerawatan::find($id);
+            if (empty($pernyataan)) throw new Exception('Data pernyataan tidak ditemukan !');
 
-            $paps = RmePaps::find($id);
-            $paps->tanggal = $request->tanggal;
-            $paps->jam = $request->jam;
-            $paps->kd_dokter = $request->kd_dokter;
-            $paps->alasan = $request->alasan;
-            $paps->status_keluarga = $request->status_keluarga;
-            $paps->saksi_1 = $request->saksi_1;
-            $paps->saksi_2 = $request->saksi_2;
-            $paps->keluarga_nama = ($statusKeluarga == 1) ? $pasien->nama : $request->keluarga_nama;
-            $paps->keluarga_usia = ($statusKeluarga == 1) ? hitungUmur(date('Y-m-d', strtotime($pasien->tgl_lahir))) : $request->keluarga_usia;
-            $paps->keluarga_jenis_kelamin = ($statusKeluarga == 1) ? $pasien->jenis_kelamin : $request->keluarga_jenis_kelamin;
-            $paps->keluarga_alamat = ($statusKeluarga == 1) ? $pasien->alamat : $request->keluarga_alamat;
-            $paps->keluarga_ktp = ($statusKeluarga == 1) ? $pasien->no_pengenal : $request->keluarga_ktp;
-            $paps->user_edit = Auth::id();
-            $paps->save();
+            $data = [
+                'tanggal'     => $request->tanggal,
+                'keperluan'     => $request->keperluan,
+                'tgl_awal'     => $request->tgl_awal,
+                'tgl_akhir'     => $request->tgl_akhir,
+                'kd_dokter'     => $request->kd_dokter,
+                'tgl_keluar'     => $request->tgl_keluar,
+                'jam_keluar'     => $request->jam_keluar,
+                'tgl_masuk_kembali'     => $request->tgl_masuk_kembali,
+                'jam_masuk_kembali'     => $request->jam_masuk_kembali,
+                'user_edit'           => Auth::id()
+            ];
 
-            $diagnosis = $request->diagnosis;
-            $risiko = $request->risiko;
-
-            // delete old diagnosis
-            RmePapsDtl::where('id_paps', $paps->id)->delete();
-
-            for ($i = 0; $i < count($diagnosis); $i++) {
-                $dataDetail = [
-                    'id_paps'       => $paps->id,
-                    'diagnosis'     => $diagnosis[$i],
-                    'risiko'     => $risiko[$i]
-                ];
-
-                RmePapsDtl::create($dataDetail);
-            }
+            RmeMeninggalkanPerawatan::where('id', $pernyataan->id)->update($data);
 
             DB::commit();
-            return to_route('rawat-inap.paps.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pernyataan PAPS berhasil di ubah !');
+            return to_route('rawat-inap.meninggalkan-perawatan.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pernyataan Meninggalkan Perawatan berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -227,10 +195,10 @@ class PapsController extends Controller
 
         $dokter = Dokter::where('status', 1)->get();
         $id = decrypt($idEncrypt);
-        $paps = RmePaps::find($id);
+        $pernyataan = RmeMeninggalkanPerawatan::find($id);
 
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.paps.show', compact('dataMedis', 'dokter', 'paps'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.show', compact('dataMedis', 'dokter', 'pernyataan'));
     }
 
     public function delete($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
@@ -238,16 +206,14 @@ class PapsController extends Controller
         DB::beginTransaction();
 
         try {
-            $id = decrypt($request->id_paps);
-            $paps = RmePaps::find($id);
+            $id = decrypt($request->id_pernyataan);
+            $pernyataan = RmeMeninggalkanPerawatan::find($id);
 
-            if (empty($paps)) throw new Exception('Data PAPS tidak ditemukan !');
-
-            $paps->delete();
-            RmePapsDtl::where('id_paps', $id)->delete();
+            if (empty($pernyataan)) throw new Exception('Data Pernyataan tidak ditemukan !');
+            $pernyataan->delete();
 
             DB::commit();
-            return back()->with('success', 'Data PAPS berhasil dihapus !');
+            return back()->with('success', 'Data pernyataan berhasil dihapus !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -272,13 +238,13 @@ class PapsController extends Controller
         if (empty($dataMedis)) return back()->with('error', 'Gagal menemukan data kunjungan !');
 
         $id = decrypt($idEncrypt);
-        $paps = RmePaps::find($id);
+        $pernyataan = RmeMeninggalkanPerawatan::find($id);
 
-        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.paps.pdf', compact(
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.meninggalkan-perawatan.pdf', compact(
             'dataMedis',
-            'paps'
+            'pernyataan'
         ))
             ->setPaper('a4', 'potrait');
-        return $pdf->stream('paps' . $dataMedis->kd_pasien . '_' . $dataMedis->tgl_masuk . '.pdf');
+        return $pdf->stream('pernyataan_meninggalkan_perawatan_' . $dataMedis->kd_pasien . '_' . $dataMedis->tgl_masuk . '.pdf');
     }
 }
