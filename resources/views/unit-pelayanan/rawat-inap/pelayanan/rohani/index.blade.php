@@ -18,8 +18,7 @@
                         {{-- Tabs --}}
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a href="#" class="nav-link active" aria-selected="true">Pernyataan Meninggalkan
-                                    Perawatan</a>
+                                <a href="#" class="nav-link active" aria-selected="true">Rohani</a>
                             </li>
                         </ul>
 
@@ -29,7 +28,7 @@
                                 {{-- TAB 1. buatlah list disini --}}
 
                                 <div class="text-end mb-3">
-                                    <a href="{{ route('rawat-inap.meninggalkan-perawatan.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                    <a href="{{ route('rawat-inap.rohani.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                         class="btn btn-primary">
                                         <i class="ti-plus"></i> Tambah
                                     </a>
@@ -41,43 +40,39 @@
                                             <thead class="table-primary">
                                                 <tr align="middle">
                                                     <th width="100px">NO</th>
-                                                    <th>WAKTU KELUAR</th>
-                                                    <th>WAKTU MASUK KEMBALI</th>
-                                                    <th>DPJP</th>
+                                                    <th>TANGGAL</th>
+                                                    <th>NAMA PEMOHON</th>
+                                                    <th>PENYETUJU</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($pernyataan as $item)
+                                                @foreach ($rohani as $item)
                                                     <tr>
                                                         <td align="middle">{{ $loop->iteration }}</td>
                                                         <td>
-                                                            {{ date('d M Y', strtotime($item->tgl_keluar)) . ' ' . date('H:i', strtotime($item->jam_keluar)) }}
-                                                            WIB
+                                                            {{ date('d M Y', strtotime($item->tanggal)) }}
                                                         </td>
+                                                        <td style="max-width: 300px;">{{ $item->keluarga_nama }}</td>
                                                         <td>
-                                                            {{ date('d M Y', strtotime($item->tgl_masuk_kembali)) . ' ' . date('H:i', strtotime($item->jam_masuk_kembali)) }}
-                                                            WIB
-                                                        </td>
-                                                        <td>
-                                                            {{ $item->dokter->nama_lengkap }}
+                                                            {{ $item->penyetuju->gelar_depan . ' ' . str()->title($item->penyetuju->nama) . ' ' . $item->penyetuju->gelar_belakang }}
                                                         </td>
                                                         <td align="middle">
-                                                            <a href="{{ route('rawat-inap.meninggalkan-perawatan.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                            <a href="{{ route('rawat-inap.rohani.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-sm btn-primary" target="_blank">
                                                                 <i class="fa fa-print"></i>
                                                             </a>
-                                                            <a href="{{ route('rawat-inap.meninggalkan-perawatan.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                            <a href="{{ route('rawat-inap.rohani.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-sm btn-success ms-1">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            <a href="{{ route('rawat-inap.meninggalkan-perawatan.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
+                                                            <a href="{{ route('rawat-inap.rohani.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-sm btn-warning mx-1">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
                                                             <button class="btn btn-sm btn-danger btn-delete"
                                                                 data-bs-target="#deleteModal"
-                                                                data-pernyataan="{{ encrypt($item->id) }}">
+                                                                data-rohani="{{ encrypt($item->id) }}">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </td>
@@ -104,18 +99,18 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Hapus Pernyataan Meninggalkan Perawatan</h1>
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Hapus Pernyataan Rohani</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form
-                    action="{{ route('rawat-inap.meninggalkan-perawatan.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
+                    action="{{ route('rawat-inap.rohani.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
                     method="post">
                     @csrf
                     @method('delete')
 
                     <div class="modal-body">
-                        <input type="hidden" id="id_pernyataan" name="id_pernyataan">
-                        <p>Apakah anda yakin ingin menghapus data pernyataan meninggalkan perawatan ? data yang telah
+                        <input type="hidden" id="id_rohani" name="id_rohani">
+                        <p>Apakah anda yakin ingin menghapus data pernyataan permintaan pelayanan rohani ? data yang telah
                             dihapus tidak dapat
                             dikembalikan</p>
                     </div>
@@ -133,10 +128,10 @@
     <script>
         $('.btn-delete').click(function() {
             let $this = $(this);
-            let id = $this.attr('data-pernyataan');
+            let id = $this.attr('data-rohani');
             let target = $this.attr('data-bs-target');
 
-            $(target).find('#id_pernyataan').val(id);
+            $(target).find('#id_rohani').val(id);
             $(target).modal('show');
         });
     </script>

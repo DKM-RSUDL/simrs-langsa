@@ -71,6 +71,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ObservasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PelayananRohaniController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -748,10 +749,26 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // Meninggalkan Perawwatan
+                            // Meninggalkan Perawatan
                             Route::prefix('meninggalkan-perawatan')->group(function () {
                                 Route::name('.meninggalkan-perawatan')->group(function () {
                                     Route::controller(MeninggalkanPerawatanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    });
+                                });
+                            });
+
+                            // Rohani
+                            Route::prefix('rohani')->group(function () {
+                                Route::name('.rohani')->group(function () {
+                                    Route::controller(PelayananRohaniController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::post('/', 'store')->name('.store');

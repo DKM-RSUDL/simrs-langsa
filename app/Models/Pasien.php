@@ -61,4 +61,9 @@ class Pasien extends Model
     {
         return $this->belongsTo(GolonganDarah::class, 'gol_darah', 'kode');
     }
+
+    public function agama()
+    {
+        return $this->belongsTo(Agama::class, 'kd_agama', 'kd_agama');
+    }
 }
