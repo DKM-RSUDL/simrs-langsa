@@ -72,6 +72,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ObservasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PelayananRohaniController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
@@ -712,7 +713,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/show/{data}', 'show')->name('.show');
-                                        Route::delete('/{id}', 'destroy')->name('.destroy');
+                                        Route::delete('/', 'delete')->name('.delete');
                                         Route::get('/pdf', 'pdf')->name('.pdf');
                                     });
                                 });
@@ -786,6 +787,22 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('privasi')->group(function () {
                                 Route::name('.privasi')->group(function () {
                                     Route::controller(PermintaanPrivasiController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    });
+                                });
+                            });
+
+                            // Penundaan Pelayanan
+                            Route::prefix('penundaan')->group(function () {
+                                Route::name('.penundaan')->group(function () {
+                                    Route::controller(PenundaanPelayananController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::post('/', 'store')->name('.store');

@@ -15,6 +15,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrientasiPasienBaruController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
+    }
+
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -333,7 +338,7 @@ class OrientasiPasienBaruController extends Controller
         }
     }
 
-        public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Ambil data orientasi pasien baru
@@ -371,20 +376,20 @@ class OrientasiPasienBaruController extends Controller
                 'informasi_lainnya',
                 'kegawatdaruratan'
             ];
-            
+
             // Penting: Pastikan semua data diproses dengan benar, bukan hanya diambil langsung
             foreach ($checkboxFields as $field) {
                 if (is_string($orientasiPasienBaru->$field) && !empty($orientasiPasienBaru->$field)) {
                     // Jika masih berupa string JSON, decode
                     $orientasiPasienBaru->$field = json_decode($orientasiPasienBaru->$field, true);
                 }
-                
+
                 // Pastikan hasilnya adalah array
                 if (!is_array($orientasiPasienBaru->$field)) {
                     $orientasiPasienBaru->$field = [];
                 }
             }
-            
+
             // Data teks tambahan yang mungkin diperlukan
             $textFields = [
                 'hubungan_lainnya',
@@ -396,7 +401,7 @@ class OrientasiPasienBaruController extends Controller
                 'barang_lainnya_2_text',
                 'barang_lainnya_3_text'
             ];
-            
+
             foreach ($textFields as $field) {
                 if (!isset($orientasiPasienBaru->$field)) {
                     $orientasiPasienBaru->$field = '';
@@ -421,7 +426,7 @@ class OrientasiPasienBaruController extends Controller
 
             // Generate dan download PDF
             return $pdf->stream("orientasi-pasien-baru-{$dataMedis->pasien->no_rm}-{$id}.pdf");
-        } catch (\Exception $e) {            
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
         }
     }
