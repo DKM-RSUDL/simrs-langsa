@@ -498,31 +498,36 @@
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="sistole">TD (Sistole)</label>
-                                                                        <input type="number" name="sistole" id="sistole" class="form-control">
+                                                                        <input type="number" name="sistole"
+                                                                            id="sistole" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="diastole">TD (Diastole)</label>
-                                                                        <input type="number" name="diastole" id="diastole" class="form-control">
+                                                                        <input type="number" name="diastole"
+                                                                            id="diastole" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="nadi">Nadi (x/mnt)</label>
-                                                                        <input type="number" name="nadi" id="nadi" class="form-control">
+                                                                        <input type="number" name="nadi"
+                                                                            id="nadi" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="respiration">Resp (x/mnt)</label>
-                                                                        <input type="number" name="respiration" id="respiration" class="form-control">
+                                                                        <input type="number" name="respiration"
+                                                                            id="respiration" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="suhu">Suhu &deg;C</label>
-                                                                        <input type="number" name="suhu" id="suhu" class="form-control">
+                                                                        <input type="number" name="suhu"
+                                                                            id="suhu" class="form-control">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -531,25 +536,30 @@
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="spo2_tanpa_o2">SpO2 (tanpa O2)</label>
-                                                                        <input type="number" name="spo2_tanpa_o2" id="spo2_tanpa_o2" class="form-control">
+                                                                        <input type="number" name="spo2_tanpa_o2"
+                                                                            id="spo2_tanpa_o2" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
-                                                                        <label for="spo2_dengan_o2">SpO2 (dengan O2)</label>
-                                                                        <input type="number" name="spo2_dengan_o2" id="spo2_dengan_o2" class="form-control">
+                                                                        <label for="spo2_dengan_o2">SpO2 (dengan
+                                                                            O2)</label>
+                                                                        <input type="number" name="spo2_dengan_o2"
+                                                                            id="spo2_dengan_o2" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="tinggi_badan">TB (cm)</label>
-                                                                        <input type="number" name="tinggi_badan" id="tinggi_badan" class="form-control">
+                                                                        <input type="number" name="tinggi_badan"
+                                                                            id="tinggi_badan" class="form-control">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="form-group">
                                                                         <label for="berat_badan">BB (cm)</label>
-                                                                        <input type="number" name="berat_badan" id="berat_badan" class="form-control">
+                                                                        <input type="number" name="berat_badan"
+                                                                            id="berat_badan" class="form-control">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -991,7 +1001,7 @@
                                                     <ul class="dropdown-menu shadow-lg">
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/surat-kematian'}">Kematian</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pernyataan DPJP</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">#</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan'}">Penundaan Pelayanan</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>

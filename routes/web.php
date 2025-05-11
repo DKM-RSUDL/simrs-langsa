@@ -30,6 +30,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
@@ -87,6 +88,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenKeperawatanRajalControl
 use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\PenundaanPelayananController as RawatJalanPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
@@ -348,6 +350,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                         Route::put('/{id}', 'update')->name('.update');
                                         Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                    });
+                                });
+                            });
+
+                            // Penundaan Pelayanan
+                            Route::prefix('penundaan')->group(function () {
+                                Route::name('.penundaan')->group(function () {
+                                    Route::controller(RawatJalanPenundaanPelayananController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                     });
                                 });
                             });
@@ -1017,6 +1035,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::put('/{data}', 'update')->name('.update');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
                                     Route::get('/print/{data}', 'print')->name('.print');
+                                });
+                            });
+                        });
+
+                        // Penundaan Pelayanan
+                        Route::prefix('{urut_masuk}/penundaan')->group(function () {
+                            Route::name('penundaan')->group(function () {
+                                Route::controller(GawatDaruratPenundaanPelayananController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                 });
                             });
                         });

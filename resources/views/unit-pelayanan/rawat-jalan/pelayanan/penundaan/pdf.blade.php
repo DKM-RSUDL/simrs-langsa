@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print PAPS Rawat Inap</title>
+    <title>Print Penundaan Pelayanan Rawat Inap</title>
 
     <style>
         body {
@@ -196,7 +196,7 @@
                 <td>{{ $dataMedis->pasien->jenis_kelamin == '1' ? 'Laki-Laki' : 'Perempuan' }}</td>
             </tr>
             <tr>
-                <td>Ruangan</td>
+                <td>Poli</td>
                 <td>:</td>
                 <td>{{ $dataMedis->unit->nama_unit }}</td>
             </tr>

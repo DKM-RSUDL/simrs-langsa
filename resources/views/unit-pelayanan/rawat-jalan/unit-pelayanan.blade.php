@@ -293,15 +293,9 @@
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
                                                     <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan' }">Penundaan Pelayanan</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
