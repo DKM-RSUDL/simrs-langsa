@@ -27,4 +27,9 @@ class RmeObservasi extends Model
     {
         return $this->belongsTo(Perawat::class, 'kd_perawat', 'kd_perawat');
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_create');
+    }
 }

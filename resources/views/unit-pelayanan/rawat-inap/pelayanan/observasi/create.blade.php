@@ -7,55 +7,67 @@
             font-weight: 500;
             margin-bottom: 0.5rem;
         }
+
         .header-asesmen {
             margin-top: 1rem;
             font-size: 1.5rem;
             font-weight: 600;
         }
+
         .section-separator {
             border-top: 2px solid #097dd6;
             margin: 2rem 0;
             padding-top: 1rem;
         }
+
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
+
         .form-group {
             margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
         }
+
         .form-group label {
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
+
         .form-check {
             margin: 0;
             padding-left: 1.5rem;
             min-height: auto;
         }
+
         .form-check-input {
             margin-top: 0.3rem;
         }
+
         .form-check label {
             margin-right: 0;
             padding-top: 0;
         }
+
         .btn-outline-primary {
             color: #097dd6;
             border-color: #097dd6;
         }
+
         .btn-outline-primary:hover {
             background-color: #097dd6;
             color: white;
         }
+
         .edukasi-cards {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
+
         .edukasi-card {
             background-color: #f8f9fa;
             border: 1px solid #e0e0e0;
@@ -63,22 +75,27 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
         }
+
         .edukasi-card .card-title {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
             color: #333;
         }
+
         .edukasi-card .form-group {
             margin-bottom: 1.5rem;
         }
+
         .edukasi-card .form-check {
             margin-bottom: 0.5rem;
         }
+
         .edukasi-card .form-control {
             border-radius: 5px;
             border: 1px solid #ced4da;
         }
+
         .edukasi-card .form-control:focus {
             border-color: #097dd6;
             box-shadow: 0 0 5px rgba(9, 125, 214, 0.3);
@@ -135,21 +152,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="sensorium">Sensorium</label>
-                                                <select name="sensorium" id="sensorium" class="form-control" required>
-                                                    <option value="">Pilih Sensorium</option>
-                                                    <option value="Compos Mentis" {{ $existingObservasi && $existingObservasi->sensorium == 'Compos Mentis' ? 'selected' : '' }}>
-                                                        Compos Mentis</option>
-                                                    <option value="Somnolen" {{ $existingObservasi && $existingObservasi->sensorium == 'Somnolen' ? 'selected' : '' }}>
-                                                        Somnolen</option>
-                                                    <option value="Apatis" {{ $existingObservasi && $existingObservasi->sensorium == 'Apatis' ? 'selected' : '' }}>
-                                                        Apatis</option>
-                                                    <option value="Delirium" {{ $existingObservasi && $existingObservasi->sensorium == 'Delirium' ? 'selected' : '' }}>
-                                                        Delirium</option>
-                                                    <option value="Stupor" {{ $existingObservasi && $existingObservasi->sensorium == 'Stupor' ? 'selected' : '' }}>
-                                                        Stupor</option>
-                                                    <option value="Coma" {{ $existingObservasi && $existingObservasi->sensorium == 'Coma' ? 'selected' : '' }}>
-                                                        Coma</option>
-                                                </select>
+                                                <input type="text" name="sensorium" id="sensorium" class="form-control"
+                                                    value="{{ $existingObservasi->sensorium ?? '' }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -166,9 +170,11 @@
                                                 <label for="ngt">NGT</label>
                                                 <select name="ngt" id="ngt" class="form-control">
                                                     <option value="">Pilih</option>
-                                                    <option value="Ada" {{ $existingObservasi && $existingObservasi->ngt == 'Ada' ? 'selected' : '' }}>
+                                                    <option value="Ada"
+                                                        {{ $existingObservasi && $existingObservasi->ngt == 'Ada' ? 'selected' : '' }}>
                                                         Ada</option>
-                                                    <option value="Tidak Ada" {{ $existingObservasi && $existingObservasi->ngt == 'Tidak Ada' ? 'selected' : '' }}>
+                                                    <option value="Tidak Ada"
+                                                        {{ $existingObservasi && $existingObservasi->ngt == 'Tidak Ada' ? 'selected' : '' }}>
                                                         Tidak Ada</option>
                                                 </select>
                                             </div>
@@ -178,9 +184,11 @@
                                                 <label for="catheter">Catheter</label>
                                                 <select name="catheter" id="catheter" class="form-control">
                                                     <option value="">Pilih</option>
-                                                    <option value="Ada" {{ $existingObservasi && $existingObservasi->catheter == 'Ada' ? 'selected' : '' }}>
+                                                    <option value="Ada"
+                                                        {{ $existingObservasi && $existingObservasi->catheter == 'Ada' ? 'selected' : '' }}>
                                                         Ada</option>
-                                                    <option value="Tidak Ada" {{ $existingObservasi && $existingObservasi->catheter == 'Tidak Ada' ? 'selected' : '' }}>
+                                                    <option value="Tidak Ada"
+                                                        {{ $existingObservasi && $existingObservasi->catheter == 'Tidak Ada' ? 'selected' : '' }}>
                                                         Tidak Ada</option>
                                                 </select>
                                             </div>
@@ -198,18 +206,6 @@
                                         <input type="text" name="alergi" id="alergi" class="form-control"
                                             placeholder="Alergi pasien (jika ada)"
                                             value="{{ $existingObservasi->alergi ?? '' }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="kd_perawat">Nama Perawat</label>
-                                        <select name="kd_perawat" id="kd_perawat" class="form-control">
-                                            <option value="">Pilih Perawat</option>
-                                            @foreach ($perawat as $item)
-                                                <option value="{{ $item->kd_perawat }}"
-                                                    {{ $existingObservasi && $existingObservasi->kd_perawat == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->nama }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
 
@@ -235,43 +231,48 @@
                                                     <h4 class="mb-3">Vital Sign</h4>
 
                                                     <div class="form-group">
-                                                        <label for="suhu_pagi" style="min-width: 200px;">Suhu/temp (°C)</label>
-                                                        <input type="number" step="0.1" name="suhu_pagi" id="suhu_pagi"
-                                                            class="form-control"
-                                                            value="{{ $existingDetails->has('pagi') ? $existingDetails['pagi']->suhu : '' }}">
+                                                        <label for="suhu_pagi" style="min-width: 200px;">Suhu/temp
+                                                            (°C)</label>
+                                                        <input type="number" step="0.1" name="suhu_pagi"
+                                                            id="suhu_pagi" class="form-control"
+                                                            value="{{ $existingDetails->has('06:00') ? $existingDetails['06:00']->suhu : '' }}">
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="nadi_pagi" style="min-width: 200px;">Nadi (x/mnt)</label>
+                                                        <label for="nadi_pagi" style="min-width: 200px;">Nadi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="nadi_pagi" id="nadi_pagi"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('pagi') ? $existingDetails['pagi']->nadi : '' }}">
+                                                            value="{{ $existingDetails->has('06:00') ? $existingDetails['06:00']->nadi : '' }}">
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_sistole_pagi">Tekanan Darah Sistole (mmHg)</label>
+                                                                <label for="tekanan_darah_sistole_pagi">Tekanan Darah
+                                                                    Sistole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_sistole_pagi"
                                                                     id="tekanan_darah_sistole_pagi" class="form-control"
-                                                                    value="{{ $existingDetails->has('pagi') ? $existingDetails['pagi']->tekanan_darah_sistole : '' }}">
+                                                                    value="{{ $existingDetails->has('06:00') ? $existingDetails['06:00']->tekanan_darah_sistole : '' }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_diastole_pagi">Tekanan Darah Diastole (mmHg)</label>
+                                                                <label for="tekanan_darah_diastole_pagi">Tekanan Darah
+                                                                    Diastole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_diastole_pagi"
                                                                     id="tekanan_darah_diastole_pagi" class="form-control"
-                                                                    value="{{ $existingDetails->has('pagi') ? $existingDetails['pagi']->tekanan_darah_diastole : '' }}">
+                                                                    value="{{ $existingDetails->has('06:00') ? $existingDetails['06:00']->tekanan_darah_diastole : '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="respirasi_pagi" style="min-width: 200px;">Respirasi (x/mnt)</label>
+                                                        <label for="respirasi_pagi" style="min-width: 200px;">Respirasi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="respirasi_pagi" id="respirasi_pagi"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('pagi') ? $existingDetails['pagi']->respirasi : '' }}">
+                                                            value="{{ $existingDetails->has('06:00') ? $existingDetails['06:00']->respirasi : '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,43 +294,48 @@
                                                     <h4 class="mb-3">Vital Sign</h4>
 
                                                     <div class="form-group">
-                                                        <label for="suhu_siang" style="min-width: 200px;">Suhu/temp (°C)</label>
-                                                        <input type="number" step="0.1" name="suhu_siang" id="suhu_siang"
-                                                            class="form-control"
-                                                            value="{{ $existingDetails->has('siang') ? $existingDetails['siang']->suhu : '' }}">
+                                                        <label for="suhu_siang" style="min-width: 200px;">Suhu/temp
+                                                            (°C)</label>
+                                                        <input type="number" step="0.1" name="suhu_siang"
+                                                            id="suhu_siang" class="form-control"
+                                                            value="{{ $existingDetails->has('12:00') ? $existingDetails['12:00']->suhu : '' }}">
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="nadi_siang" style="min-width: 200px;">Nadi (x/mnt)</label>
+                                                        <label for="nadi_siang" style="min-width: 200px;">Nadi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="nadi_siang" id="nadi_siang"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('siang') ? $existingDetails['siang']->nadi : '' }}">
+                                                            value="{{ $existingDetails->has('12:00') ? $existingDetails['12:00']->nadi : '' }}">
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_sistole_siang">Tekanan Darah Sistole (mmHg)</label>
+                                                                <label for="tekanan_darah_sistole_siang">Tekanan Darah
+                                                                    Sistole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_sistole_siang"
                                                                     id="tekanan_darah_sistole_siang" class="form-control"
-                                                                    value="{{ $existingDetails->has('siang') ? $existingDetails['siang']->tekanan_darah_sistole : '' }}">
+                                                                    value="{{ $existingDetails->has('12:00') ? $existingDetails['12:00']->tekanan_darah_sistole : '' }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_diastole_siang">Tekanan Darah Diastole (mmHg)</label>
+                                                                <label for="tekanan_darah_diastole_siang">Tekanan Darah
+                                                                    Diastole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_diastole_siang"
                                                                     id="tekanan_darah_diastole_siang" class="form-control"
-                                                                    value="{{ $existingDetails->has('siang') ? $existingDetails['siang']->tekanan_darah_diastole : '' }}">
+                                                                    value="{{ $existingDetails->has('12:00') ? $existingDetails['12:00']->tekanan_darah_diastole : '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="respirasi_siang" style="min-width: 200px;">Respirasi (x/mnt)</label>
+                                                        <label for="respirasi_siang" style="min-width: 200px;">Respirasi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="respirasi_siang" id="respirasi_siang"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('siang') ? $existingDetails['siang']->respirasi : '' }}">
+                                                            value="{{ $existingDetails->has('12:00') ? $existingDetails['12:00']->respirasi : '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,43 +357,48 @@
                                                     <h4 class="mb-3">Vital Sign</h4>
 
                                                     <div class="form-group">
-                                                        <label for="suhu_sore" style="min-width: 200px;">Suhu/temp (°C)</label>
-                                                        <input type="number" step="0.1" name="suhu_sore" id="suhu_sore"
-                                                            class="form-control"
-                                                            value="{{ $existingDetails->has('sore') ? $existingDetails['sore']->suhu : '' }}">
+                                                        <label for="suhu_sore" style="min-width: 200px;">Suhu/temp
+                                                            (°C)</label>
+                                                        <input type="number" step="0.1" name="suhu_sore"
+                                                            id="suhu_sore" class="form-control"
+                                                            value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->suhu : '' }}">
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="nadi_sore" style="min-width: 200px;">Nadi (x/mnt)</label>
+                                                        <label for="nadi_sore" style="min-width: 200px;">Nadi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="nadi_sore" id="nadi_sore"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('sore') ? $existingDetails['sore']->nadi : '' }}">
+                                                            value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->nadi : '' }}">
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_sistole_sore">Tekanan Darah Sistole (mmHg)</label>
+                                                                <label for="tekanan_darah_sistole_sore">Tekanan Darah
+                                                                    Sistole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_sistole_sore"
                                                                     id="tekanan_darah_sistole_sore" class="form-control"
-                                                                    value="{{ $existingDetails->has('sore') ? $existingDetails['sore']->tekanan_darah_sistole : '' }}">
+                                                                    value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->tekanan_darah_sistole : '' }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_diastole_sore">Tekanan Darah Diastole (mmHg)</label>
+                                                                <label for="tekanan_darah_diastole_sore">Tekanan Darah
+                                                                    Diastole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_diastole_sore"
                                                                     id="tekanan_darah_diastole_sore" class="form-control"
-                                                                    value="{{ $existingDetails->has('sore') ? $existingDetails['sore']->tekanan_darah_diastole : '' }}">
+                                                                    value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->tekanan_darah_diastole : '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="respirasi_sore" style="min-width: 200px;">Respirasi (x/mnt)</label>
+                                                        <label for="respirasi_sore" style="min-width: 200px;">Respirasi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="respirasi_sore" id="respirasi_sore"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('sore') ? $existingDetails['sore']->respirasi : '' }}">
+                                                            value="{{ $existingDetails->has('18:00') ? $existingDetails['18:00']->respirasi : '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -409,43 +420,48 @@
                                                     <h4 class="mb-3">Vital Sign</h4>
 
                                                     <div class="form-group">
-                                                        <label for="suhu_malam" style="min-width: 200px;">Suhu/temp (°C)</label>
-                                                        <input type="number" step="0.1" name="suhu_malam" id="suhu_malam"
-                                                            class="form-control"
-                                                            value="{{ $existingDetails->has('malam') ? $existingDetails['malam']->suhu : '' }}">
+                                                        <label for="suhu_malam" style="min-width: 200px;">Suhu/temp
+                                                            (°C)</label>
+                                                        <input type="number" step="0.1" name="suhu_malam"
+                                                            id="suhu_malam" class="form-control"
+                                                            value="{{ $existingDetails->has('24:00') ? $existingDetails['24:00']->suhu : '' }}">
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="nadi_malam" style="min-width: 200px;">Nadi (x/mnt)</label>
+                                                        <label for="nadi_malam" style="min-width: 200px;">Nadi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="nadi_malam" id="nadi_malam"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('malam') ? $existingDetails['malam']->nadi : '' }}">
+                                                            value="{{ $existingDetails->has('24:00') ? $existingDetails['24:00']->nadi : '' }}">
                                                     </div>
 
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_sistole_malam">Tekanan Darah Sistole (mmHg)</label>
+                                                                <label for="tekanan_darah_sistole_malam">Tekanan Darah
+                                                                    Sistole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_sistole_malam"
                                                                     id="tekanan_darah_sistole_malam" class="form-control"
-                                                                    value="{{ $existingDetails->has('malam') ? $existingDetails['malam']->tekanan_darah_sistole : '' }}">
+                                                                    value="{{ $existingDetails->has('24:00') ? $existingDetails['24:00']->tekanan_darah_sistole : '' }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="tekanan_darah_diastole_malam">Tekanan Darah Diastole (mmHg)</label>
+                                                                <label for="tekanan_darah_diastole_malam">Tekanan Darah
+                                                                    Diastole (mmHg)</label>
                                                                 <input type="number" name="tekanan_darah_diastole_malam"
                                                                     id="tekanan_darah_diastole_malam" class="form-control"
-                                                                    value="{{ $existingDetails->has('malam') ? $existingDetails['malam']->tekanan_darah_diastole : '' }}">
+                                                                    value="{{ $existingDetails->has('24:00') ? $existingDetails['24:00']->tekanan_darah_diastole : '' }}">
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="respirasi_malam" style="min-width: 200px;">Respirasi (x/mnt)</label>
+                                                        <label for="respirasi_malam" style="min-width: 200px;">Respirasi
+                                                            (x/mnt)</label>
                                                         <input type="number" name="respirasi_malam" id="respirasi_malam"
                                                             class="form-control"
-                                                            value="{{ $existingDetails->has('malam') ? $existingDetails['malam']->respirasi : '' }}">
+                                                            value="{{ $existingDetails->has('24:00') ? $existingDetails['24:00']->respirasi : '' }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -467,7 +483,7 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             @if ($hasExistingObservasi)
                 Swal.fire({
                     title: 'Data Observasi Hari Ini Sudah Ada',
@@ -490,11 +506,14 @@
                         document.getElementById('catheter').value = '';
                         document.getElementById('diet').value = '';
                         document.getElementById('alergi').value = '';
-                        document.getElementById('kd_perawat').value = '';
                         // Clear vital sign inputs
-                        ['06:00', '12:00', '18:00', '24:00'].forEach(waktu => {
-                            ['suhu', 'nadi', 'tekanan_darah_sistole', 'tekanan_darah_diastole', 'respirasi'].forEach(field => {
-                                const input = document.getElementById(`${field}_${waktu}`);
+                        const times = ['pagi', 'siang', 'sore', 'malam'];
+                        const fields = ['suhu', 'nadi', 'tekanan_darah_sistole', 'tekanan_darah_diastole',
+                            'respirasi'
+                        ];
+                        times.forEach(time => {
+                            fields.forEach(field => {
+                                const input = document.getElementById(`${field}_${time}`);
                                 if (input) input.value = '';
                             });
                         });

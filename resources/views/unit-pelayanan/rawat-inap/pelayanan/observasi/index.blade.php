@@ -43,7 +43,9 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
                                 <div class="d-flex justify-content-end mb-3">
-
+                                    <button type="button" class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#printModal">
+                                        <i class="fa fa-print"></i> Print Laporan
+                                    </button>
                                     <a href="{{ route('rawat-inap.observasi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                         class="btn btn-primary">
                                         <i class="ti-plus"></i> Tambah
@@ -80,7 +82,7 @@
                                                             <span class="badge {{ in_array('18:00', $details) ? 'badge-filled' : 'badge-empty' }}">18:00</span>
                                                             <span class="badge {{ in_array('24:00', $details) ? 'badge-filled' : 'badge-empty' }}">24:00</span>
                                                         </td>
-                                                        <td>{{ $observasi->perawat ? $observasi->perawat->nama : '-' }}</td>
+                                                        <td>{{ $observasi->creator->name ?? 'Tidak Diketahui' }}</td>
                                                         <td align="middle">
                                                             <a href="{{ route('rawat-inap.observasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $observasi->id]) }}"
                                                                 class="btn btn-sm btn-success ms-1">
@@ -113,11 +115,59 @@
             </div>
         </div>
     </div>
+
+    <!-- Print Modal -->
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printModalLabel">Print Laporan Observasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('rawat-inap.observasi.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" method="GET" target="_blank">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="start_date" class="form-label">Tanggal Mulai</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control" 
+                                        value="{{ $minDate ? date('Y-m-d', strtotime($minDate)) : '' }}"
+                                        min="{{ $minDate ? date('Y-m-d', strtotime($minDate)) : '' }}"
+                                        max="{{ $maxDate ? date('Y-m-d', strtotime($maxDate)) : '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="end_date" class="form-label">Tanggal Akhir</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control"
+                                        value="{{ $maxDate ? date('Y-m-d', strtotime($maxDate)) : '' }}"
+                                        min="{{ $minDate ? date('Y-m-d', strtotime($minDate)) : '' }}"
+                                        max="{{ $maxDate ? date('Y-m-d', strtotime($maxDate)) : '' }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <p class="mb-1"><i class="fa fa-info-circle"></i> Catatan: Pastikan rentang tanggal sudah benar, Data akan diurutkan berdasarkan tanggal (dari terlama ke terbaru)</p>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-print"></i> Generate PDF
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Delete button functionality
             const deleteButtons = document.querySelectorAll('.btn-delete');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function () {
@@ -158,6 +208,26 @@
                         }
                     });
                 });
+            });
+
+            // Print modal date validation
+            document.getElementById('start_date').addEventListener('change', function() {
+                document.getElementById('end_date').min = this.value;
+                
+                // If end date is before start date, update it
+                if (document.getElementById('end_date').value < this.value) {
+                    document.getElementById('end_date').value = this.value;
+                }
+            });
+            
+            // Set maximum start date based on end date selection
+            document.getElementById('end_date').addEventListener('change', function() {
+                document.getElementById('start_date').max = this.value;
+                
+                // If start date is after end date, update it
+                if (document.getElementById('start_date').value > this.value) {
+                    document.getElementById('start_date').value = this.value;
+                }
             });
         });
     </script>

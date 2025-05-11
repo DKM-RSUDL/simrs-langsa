@@ -376,8 +376,18 @@ class SuratKematianController extends Controller
 
     public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        // Get Patient data
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+        // Get Patient data with proper joins for reference tables
+        $dataMedis = Kunjungan::select(
+            'kunjungan.*',
+            'pasien.*',
+            'pekerjaan.pekerjaan as nama_pekerjaan',
+            'suku.suku as nama_suku',
+            'agama.agama as nama_agama'
+        )
+            ->join('pasien', 'kunjungan.kd_pasien', '=', 'pasien.kd_pasien')
+            ->leftJoin('pekerjaan', 'pasien.kd_pekerjaan', '=', 'pekerjaan.kd_pekerjaan')
+            ->leftJoin('suku', 'pasien.kd_suku', '=', 'suku.kd_suku')
+            ->leftJoin('agama', 'pasien.kd_agama', '=', 'agama.kd_agama')
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
@@ -395,16 +405,23 @@ class SuratKematianController extends Controller
         }
 
         // Calculate age - make sure this is done
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        if ($dataMedis && $dataMedis->tgl_lahir) {
+            $dataMedis->umur = Carbon::parse($dataMedis->tgl_lahir)->age;
         } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
+            $dataMedis->umur = 'Tidak Diketahui';
         }
 
-        // Get Surat Kematian data basic data first
-        $suratKematian = RmeSuratKematian::with('dokter')
-            ->where('id', $id)
-            ->where('kd_pasien', $kd_pasien)
+        // Get Surat Kematian data with proper joins for dokter_spesial relationship
+        $suratKematian = RmeSuratKematian::select(
+            'rme_surat_kematian.*',
+            'dokter.nama_lengkap as nama_dokter',
+            'spesialisasi.spesialisasi as nama_spesialis'
+        )
+            ->join('dokter', 'rme_surat_kematian.kd_dokter', '=', 'dokter.kd_dokter')
+            ->join('dokter_spesial', 'dokter.kd_dokter', '=', 'dokter_spesial.kd_dokter')
+            ->join('spesialisasi', 'dokter_spesial.kd_spesial', '=', 'spesialisasi.kd_spesial')
+            ->where('rme_surat_kematian.id', $id)
+            ->where('rme_surat_kematian.kd_pasien', $kd_pasien)
             ->first();
 
         if (!$suratKematian) {
@@ -443,10 +460,9 @@ class SuratKematianController extends Controller
         ]);
 
         // Nama file PDF
-        $filename = 'Surat_Kematian_' . str_replace(' ', '_', $dataMedis->pasien->nama ?? 'Pasien') . '_' . date('Y-m-d') . '.pdf';
+        $filename = 'Surat_Kematian_' . str_replace(' ', '_', $dataMedis->nama ?? 'Pasien') . '_' . date('Y-m-d') . '.pdf';
 
         // Download file PDF
         return $pdf->stream($filename);
     }
-
 }
