@@ -1002,6 +1002,7 @@
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/surat-kematian'}">Kematian</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Pernyataan DPJP</a></li>
                                                         <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan'}">Penundaan Pelayanan</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${medisGawatDaruratIndexUrl + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/dnr'}">Penolakan Resusitasi</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>

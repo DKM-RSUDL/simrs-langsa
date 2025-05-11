@@ -30,6 +30,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\FarmasiController as GawatDa
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenolakanResusitasiController as GawatDaruratPenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
@@ -1060,6 +1061,22 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('{urut_masuk}/penundaan')->group(function () {
                             Route::name('penundaan')->group(function () {
                                 Route::controller(GawatDaruratPenundaanPelayananController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                });
+                            });
+                        });
+
+                        // Penolakan Resusitasi
+                        Route::prefix('{urut_masuk}/dnr')->group(function () {
+                            Route::name('dnr')->group(function () {
+                                Route::controller(GawatDaruratPenolakanResusitasiController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');
