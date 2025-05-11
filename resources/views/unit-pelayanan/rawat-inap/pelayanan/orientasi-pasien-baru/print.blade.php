@@ -236,7 +236,7 @@
         <!-- Header/Kop Surat -->
         <div class="header">
             <div class="logo-rs">
-                <img src="{{ public_path('assets/img/logo-dpjp.png') }}" alt="Logo RSUD Langsa" class="logo">
+                <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
                 <div class="kop-text">
                     <p class="rs-name-1">RSUD LANGSA</p>
                     <p class="rs-address">Jl. Jend. A. Yani, Kota Langsa</p>
@@ -757,7 +757,7 @@
                         <td style="width: 50%; text-align: center">
                             <p class="signature-title">Yang memberikan informasi</p>
                             <br><br>
-                            <p class="signature-name">{{ $orientasiPasienBaru->nama_pemberi ?? '' }}</p>
+                            <p class="signature-name">{{ $orientasiPasienBaru->userCreate->name ?? '' }}</p>
                         </td>
                     </tr>
                 </table>
