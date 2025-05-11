@@ -82,16 +82,19 @@
                                         <td>{{ $item->nama_penerima ?? '-' }}</td>
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
+                                            <a href="{{ route('rawat-inap.orientasi-pasien-baru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-sm btn-success" target="_blank">
+                                                <i class="fa fa-print"></i>
+                                            </a>
                                             <a href="{{ route('rawat-inap.orientasi-pasien-baru.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                class="mb-2 btn btn-sm btn-info">
+                                                class="btn btn-sm btn-info">
                                                 <i class="ti-eye"></i>
                                             </a>
                                             <a href="{{ route('rawat-inap.orientasi-pasien-baru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                class="mb-2 btn btn-sm btn-warning">
+                                                class="btn btn-sm btn-warning">
                                                 <i class="ti-pencil"></i>
                                             </a>
-                                            <button class="mb-2 btn btn-sm btn-danger btn-delete"
-                                                data-id="{{ $item->id }}">
+                                            <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $item->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
@@ -130,7 +133,8 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Build the URL dynamically using route helper with all parameters
-                    let destroyUrl = "{{ route('rawat-inap.orientasi-pasien-baru.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}";
+                    let destroyUrl =
+                        "{{ route('rawat-inap.orientasi-pasien-baru.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}";
                     destroyUrl = destroyUrl.replace(':id', id);
 
                     $.ajax({
@@ -159,7 +163,8 @@
                                     icon: "success",
                                     allowOutsideClick: false,
                                 }).then(() => {
-                                    location.reload(); // Reload only after success confirmation
+                                    location
+                                        .reload(); // Reload only after success confirmation
                                 });
                             } else {
                                 Swal.fire({
@@ -173,7 +178,8 @@
                         error: function(xhr, status, error) {
                             Swal.fire({
                                 title: "Gagal!",
-                                text: "Internal Server Error: " + (xhr.responseJSON ? xhr.responseJSON.message : error),
+                                text: "Internal Server Error: " + (xhr.responseJSON ?
+                                    xhr.responseJSON.message : error),
                                 icon: "error",
                                 allowOutsideClick: false,
                             });
