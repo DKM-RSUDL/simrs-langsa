@@ -229,6 +229,7 @@
                                                         <ul class="dropdown-menu shadow-lg">
                                                             <li><a class="dropdown-item m-1" href="#">Kematian</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pernyataan-dpjp'}">Pernyataan DPJP</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-second-opinion'}">Permintaan Second Opinion</a></li>
                                                         </ul>
                                                     </li>
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
