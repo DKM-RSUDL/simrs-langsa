@@ -33,6 +33,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenolakanResusitasiController as GawatDaruratPenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanAnestesi as GawatDaruratPersetujuanAnestesi;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
@@ -92,6 +93,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\FarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PenundaanPelayananController as RawatJalanPenundaanPelayananController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanAnestesi as RawatJalanPersetujuanAnestesi;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
@@ -361,6 +363,22 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('penundaan')->group(function () {
                                 Route::name('.penundaan')->group(function () {
                                     Route::controller(RawatJalanPenundaanPelayananController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                    });
+                                });
+                            });
+
+                            // Persetujuan Anestesi dan sedasi
+                            Route::prefix('anestesi-sedasi')->group(function () {
+                                Route::name('.anestesi-sedasi')->group(function () {
+                                    Route::controller(RawatJalanPersetujuanAnestesi::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::post('/', 'store')->name('.store');
@@ -1094,6 +1112,22 @@ Route::middleware('ssoToken')->group(function () {
                         Route::prefix('{urut_masuk}/dnr')->group(function () {
                             Route::name('dnr')->group(function () {
                                 Route::controller(GawatDaruratPenolakanResusitasiController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/show/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
+                                    Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                });
+                            });
+                        });
+
+                        // Persetujuan Anestesi dan sedasi
+                        Route::prefix('{urut_masuk}/anestesi-sedasi')->group(function () {
+                            Route::name('anestesi-sedasi')->group(function () {
+                                Route::controller(GawatDaruratPersetujuanAnestesi::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
                                     Route::post('/', 'store')->name('.store');
