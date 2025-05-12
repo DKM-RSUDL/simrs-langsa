@@ -708,7 +708,8 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{data}', 'update')->name('.update');
                                         Route::get('/show/{data}', 'show')->name('.show');
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
-                                        Route::get('/print', 'print')->name('.print');
+                                        // Route::get('/print', 'print')->name('.print');
+                                        Route::get('/print-html', 'print')->name('.print');
                                     });
                                 });
                             });
