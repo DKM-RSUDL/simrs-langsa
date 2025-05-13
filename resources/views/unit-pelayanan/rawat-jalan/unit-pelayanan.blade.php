@@ -302,6 +302,7 @@
                                                         <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
                                                         <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-second-opinion' }">Permintaan Second Opinion</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>

@@ -82,6 +82,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\KonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\LabPatologiKlinikController as RawatJalanLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
@@ -292,6 +293,22 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            // Orientasi Second Opinion
+                            Route::prefix('permintaan-second-opinion')->group(function () {
+                                Route::name('.permintaan-second-opinion')->group(function () {
+                                    Route::controller(RajalPermintaanSecondOpinionController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                             // Resume
                             Route::prefix('rawat-jalan-resume')->group(function () {
                                 Route::name('.rawat-jalan-resume')->group(function () {
@@ -491,7 +508,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // Orientasi Pasien Baru
+                            // Orientasi Second Opinion
                             Route::prefix('permintaan-second-opinion')->group(function () {
                                 Route::name('.permintaan-second-opinion')->group(function () {
                                     Route::controller(PermintaanSecondOpinionController::class)->group(function () {
