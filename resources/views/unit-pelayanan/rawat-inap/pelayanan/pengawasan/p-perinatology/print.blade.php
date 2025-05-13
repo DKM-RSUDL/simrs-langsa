@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Pengawasan Perinatology</title>
+    <title>Pengawasan Perinatology</title>
     <style>
         @page {
             size: A4 landscape;
             margin: 15mm;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -18,20 +18,34 @@
 
         body {
             font-family: Arial, sans-serif;
-            font-size: 9px;
-            line-height: 1.2;
+            font-size: 12px;
+            line-height: 1.3;
+            color: #000;
+            width: 260mm; /* A4 landscape width minus margins */
+            margin: 0 auto;
         }
 
         .header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 8mm;
+        }
+
+        .header-column {
+            width: 33.33%;
+            padding: 0 4mm;
+        }
+
+        .logo-info {
+            display: flex;
+            align-items: center;
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
-            margin-right: 15px;
+            width: 50px;
+            height: 50px;
+            margin-right: 3mm;
         }
 
         .hospital-info {
@@ -39,284 +53,258 @@
         }
 
         .hospital-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 1mm;
         }
 
         .hospital-address {
-            font-size: 10px;
-            margin-bottom: 3px;
+            font-size: 9px;
+            margin-bottom: 1mm;
         }
 
         .title {
-            text-align: center;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
-            margin: 15px 0;
+            text-align: center;
         }
 
         .subtitle {
-            text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 15px;
+            text-align: center;
+            margin-top: 1mm;
+        }
+
+        .no-rm {
+            text-align: right;
+            font-size: 10px;
+        }
+
+        .no-rm-label {
+            font-weight: bold;
+            margin-bottom: 1mm;
+        }
+
+        .no-rm-value {
+            border-bottom: 0.5mm solid #000;
+            display: inline-block;
+            min-width: 40mm;
+            padding-bottom: 1mm;
+            font-weight: bold;
         }
 
         .patient-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8mm;
             font-size: 9px;
         }
 
-        .info-row {
+        .patient-column {
+            width: 33.33%;
+            padding: 0 4mm;
+        }
+
+        .info-item {
             display: flex;
-            margin-bottom: 3px;
+            margin-bottom: 1.5mm;
         }
 
         .info-label {
-            width: 80px;
-            display: inline-block;
+            width: 25mm;
+            font-weight: normal;
         }
 
         .info-value {
-            flex: 1;
             font-weight: bold;
+            flex: 1;
+        }
+
+        .table-container {
+            width: 100%;
+            margin-bottom: 8mm;
         }
 
         .observation-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 8px;
-            margin-bottom: 20px;
         }
 
         .observation-table th,
         .observation-table td {
-            border: 1px solid #000;
-            padding: 3px;
+            border: 0.3mm solid #000;
+            padding: 1.5mm;
             text-align: center;
             vertical-align: middle;
         }
 
         .observation-table th {
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
             font-weight: bold;
         }
 
         .section-header {
-            background-color: #e0e0e0;
+            background-color: #e5e5e5;
+            font-size: 8.5px;
             font-weight: bold;
-            font-size: 9px;
         }
 
-        .print-date {
+        .footer {
             text-align: right;
             font-size: 8px;
-            margin-top: 15px;
+            font-style: italic;
         }
 
         @media print {
-            .no-print {
-                display: none;
+            body {
+                width: 100%;
+                margin: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Print Button -->
-    <div class="no-print" style="margin-bottom: 15px;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-            <i class="ti-printer"></i> Print
-        </button>
-        <button onclick="window.close()" style="padding: 10px 20px; font-size: 14px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
-            Close
-        </button>
-    </div>
-
-    <!-- Header -->
     <div class="header">
-        <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
-        <div class="hospital-info">
-            <div class="hospital-name">RSUD LANGSA</div>
-            <div class="hospital-address">Jl. Jend. A. Yani No. 1</div>
-            <div class="hospital-address">Kota Langsa</div>
+        <div class="header-column">
+            <div class="logo-info">
+                <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
+                <div class="hospital-info">
+                    <div class="hospital-name">RSUD LANGSA</div>
+                    <div class="hospital-address">Jl. Jend. A. Yani No. 1</div>
+                    <div class="hospital-address">Kota Langsa</div>
+                </div>
+            </div>
         </div>
-        <div style="text-align: right;">
-            <div style="font-weight: bold;">NO RM</div>
-            <div style="border-bottom: 1px solid #000; min-width: 150px; height: 20px;">{{ $dataMedis->kd_pasien }}</div>
+        <div class="header-column">
+            <div class="title">PENGAWASAN KHUSUS</div>
+            <div class="subtitle">PERINATOLOGI</div>
+        </div>
+        <div class="header-column no-rm">
+            <div class="no-rm-label">NO RM</div>
+            <div class="no-rm-value">{{ $dataMedis->kd_pasien }}</div>
         </div>
     </div>
 
-    <!-- Title -->
-    <div class="title">PENGAWASAN KHUSUS</div>
-    <div class="subtitle">PERINATOLOGI</div>
-
-    <!-- Patient Information -->
     <div class="patient-info">
-        <div>
-            <div class="info-row">
+        <div class="patient-column">
+            <div class="info-item">
                 <span class="info-label">Nama Keluarga</span>
-                <span>:</span>
                 <span class="info-value">{{ $dataMedis->customer->nama_customer ?? '-' }}</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">Nama pasien</span>
-                <span>:</span>
+            <div class="info-item">
+                <span class="info-label">Nama Pasien</span>
                 <span class="info-value">{{ $dataMedis->pasien->nama_pasien ?? '-' }}</span>
             </div>
-            <div class="info-row">
+            <div class="info-item">
                 <span class="info-label">Ruang</span>
-                <span>:</span>
                 <span class="info-value">{{ $dataMedis->unit->nama_unit ?? '-' }}</span>
             </div>
         </div>
-        <div>
-            <div class="info-row">
+        <div class="patient-column">
+            <div class="info-item">
                 <span class="info-label">BBL</span>
-                <span>:</span>
                 <span class="info-value">
-                    @if($perinatologyData->first())
+                    @if($perinatologyData->first() && $perinatologyData->first()->bbl_formatted)
                         {{ $perinatologyData->first()->bbl_formatted }} gr
                     @else
-                        .................. gr
+                        - gr
                     @endif
                 </span>
             </div>
-            <div class="info-row">
+            <div class="info-item">
                 <span class="info-label">BBS</span>
-                <span>:</span>
                 <span class="info-value">
-                    @if($perinatologyData->last())
+                    @if($perinatologyData->last() && $perinatologyData->last()->bbs_formatted)
                         {{ $perinatologyData->last()->bbs_formatted }} gr
                     @else
-                        .................. gr
+                        - gr
                     @endif
                 </span>
             </div>
         </div>
-        <div>
-            <div class="info-row">
+        <div class="patient-column">
+            <div class="info-item">
                 <span class="info-label">Gestasi</span>
-                <span>:</span>
                 <span class="info-value">
-                    @if($perinatologyData->first())
+                    @if($perinatologyData->first() && $perinatologyData->first()->gestasi)
                         {{ $perinatologyData->first()->gestasi }}
                     @else
-                        ........................
+                        -
                     @endif
                 </span>
             </div>
-            <div class="info-row">
+            <div class="info-item">
                 <span class="info-label">Umur</span>
-                <span>:</span>
                 <span class="info-value">{{ $dataMedis->pasien->umur ?? '-' }}</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">Hari rawat</span>
-                <span>:</span>
+            <div class="info-item">
+                <span class="info-label">Hari Rawat</span>
                 <span class="info-value">{{ Carbon\Carbon::parse($dataMedis->tgl_masuk)->diffInDays(now()) + 1 }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Observation Table -->
-    <table class="observation-table">
-        <thead>
-            <tr>
-                <th rowspan="2" style="width: 8%;">TGL/JAM</th>
-                <th colspan="5" class="section-header">OBSERVASI</th>
-                <th colspan="8" class="section-header">VENTILASI</th>
-            </tr>
-            <tr>
-                <!-- Observasi -->
-                <th style="width: 8%;">KESADARAN</th>
-                <th style="width: 8%;">TD/CRT</th>
-                <th style="width: 6%;">NADI</th>
-                <th style="width: 6%;">NAFAS</th>
-                <th style="width: 6%;">SUHU</th>
-                <!-- Ventilasi -->
-                <th style="width: 8%;">MODUS</th>
-                <th style="width: 6%;">PEP<br>CM H₂O</th>
-                <th style="width: 6%;">BUBLE</th>
-                <th style="width: 6%;">FI O₂</th>
-                <th style="width: 8%;">FLOW<br>liter/mnt</th>
-                <th style="width: 6%;">SPO₂</th>
-                <th style="width: 6%;">AIR</th>
-                <th style="width: 8%;">HUMIDIFIER<br>AIR | SUHU</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if($perinatologyData->count() > 0)
-                @foreach($perinatologyData as $data)
-                    <tr style="height: 25px;">
-                        <td>
-                            <div>{{ date('d/m/Y', strtotime($data->tgl_implementasi)) }}</div>
-                            <div style="font-size: 7px;">{{ date('H:i', strtotime($data->jam_implementasi)) }}</div>
-                        </td>
-                        <!-- Observasi -->
-                        <td>{{ $data->detail->kesadaran ?? '' }}</td>
-                        <td>{{ $data->detail->td_crt ?? '' }}</td>
-                        <td>{{ $data->detail->nadi ?? '' }}</td>
-                        <td>{{ $data->detail->nafas ?? '' }}</td>
-                        <td>{{ $data->detail->suhu_formatted ?? '' }}</td>
-                        <!-- Ventilasi -->
-                        <td>{{ $data->detail->modus ?? '' }}</td>
-                        <td>{{ $data->detail->pep_formatted ?? '' }}</td>
-                        <td>{{ $data->detail->bubble ?? '' }}</td>
-                        <td>{{ $data->detail->fi_o2_formatted ?? '' }}</td>
-                        <td>{{ $data->detail->flow_formatted ?? '' }}</td>
-                        <td>{{ $data->detail->spo2 ?? '' }}</td>
-                        <td>{{ $data->detail->air ?? '' }}</td>
-                        <td>{{ $data->detail->air ?? '' }} | {{ $data->detail->suhu_ventilator_formatted ?? '' }}</td>
+    <div class="table-container">
+        <table class="observation-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 8%;">TGL/JAM</th>
+                    <th colspan="5" class="section-header">OBSERVASI</th>
+                    <th colspan="8" class="section-header">VENTILASI</th>
+                </tr>
+                <tr>
+                    <th style="width: 7%;">KESADARAN</th>
+                    <th style="width: 7%;">TD/CRT</th>
+                    <th style="width: 5%;">NADI</th>
+                    <th style="width: 5%;">NAFAS</th>
+                    <th style="width: 5%;">SUHU</th>
+                    <th style="width: 7%;">MODUS</th>
+                    <th style="width: 5%;">PEP<br>CM H₂O</th>
+                    <th style="width: 5%;">BUBLE</th>
+                    <th style="width: 5%;">FI O₂</th>
+                    <th style="width: 7%;">FLOW<br>liter/mnt</th>
+                    <th style="width: 5%;">SPO₂</th>
+                    <th style="width: 5%;">AIR</th>
+                    <th style="width: 7%;">HUMIDIFIER<br>AIR | SUHU</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if($perinatologyData->count() > 0)
+                    @foreach($perinatologyData as $data)
+                        <tr style="height: 8mm;">
+                            <td>
+                                <div>{{ date('d/m/Y', strtotime($data->tgl_implementasi)) }}</div>
+                                <div style="font-size: 6px;">{{ date('H:i', strtotime($data->jam_implementasi)) }}</div>
+                            </td>
+                            <td>{{ $data->detail->kesadaran ?? '-' }}</td>
+                            <td>{{ $data->detail->td_crt ?? '-' }}</td>
+                            <td>{{ $data->detail->nadi ?? '-' }}</td>
+                            <td>{{ $data->detail->nafas ?? '-' }}</td>
+                            <td>{{ $data->detail->suhu_formatted ?? '-' }}</td>
+                            <td>{{ $data->detail->modus ?? '-' }}</td>
+                            <td>{{ $data->detail->pep_formatted ?? '-' }}</td>
+                            <td>{{ $data->detail->bubble ?? '-' }}</td>
+                            <td>{{ $data->detail->fi_o2_formatted ?? '-' }}</td>
+                            <td>{{ $data->detail->flow_formatted ?? '-' }}</td>
+                            <td>{{ $data->detail->spo2 ?? '-' }}</td>
+                            <td>{{ $data->detail->air ?? '-' }}</td>
+                            <td>{{ $data->detail->air ?? '-' }} | {{ $data->detail->suhu_ventilator_formatted ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr style="height: 8mm;">
+                        <td colspan="14">Tidak ada data tersedia</td>
                     </tr>
-                @endforeach
-                <!-- Add empty rows to fill the page -->
-                @for($i = $perinatologyData->count(); $i < 12; $i++)
-                    <tr style="height: 25px;">
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                @endfor
-            @else
-                @for($i = 0; $i < 12; $i++)
-                    <tr style="height: 25px;">
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                @endfor
-            @endif
-        </tbody>
-    </table>
+                @endif
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Print Date -->
-    <div class="print-date">
+    <div class="footer">
         Periode: {{ date('d/m/Y', strtotime($tanggal_mulai)) }} - {{ date('d/m/Y', strtotime($tanggal_selesai)) }} | 
         Dicetak: {{ date('d/m/Y H:i') }}
     </div>

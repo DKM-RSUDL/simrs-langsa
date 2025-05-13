@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\RmePengawasanPerinatology;
 use App\Models\RmePengawasanPerinatologyDtl;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -424,6 +425,7 @@ class PengawasanController extends Controller
         }
     }
 
+
     public function printPengawasanPerinatology(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -449,7 +451,6 @@ class PengawasanController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Get perinatology data with date range filter
         $tanggal_mulai = $request->tanggal_mulai;
         $tanggal_selesai = $request->tanggal_selesai;
 
@@ -463,13 +464,10 @@ class PengawasanController extends Controller
             ->orderBy('waktu_implementasi', 'asc')
             ->get();
 
-        // Format numeric data for print
         $perinatologyData->transform(function ($item) {
-            // Format data pada main record
             $item->bbl_formatted = $item->bbl ? number_format($item->bbl, 1, '.', '') : null;
             $item->bbs_formatted = $item->bbs ? number_format($item->bbs, 1, '.', '') : null;
 
-            // Format data pada detail record jika ada
             if ($item->detail) {
                 $item->detail->suhu_formatted = $item->detail->suhu ? number_format($item->detail->suhu, 1, '.', '') : null;
                 $item->detail->pep_formatted = $item->detail->pep ? number_format($item->detail->pep, 2, '.', '') : null;
