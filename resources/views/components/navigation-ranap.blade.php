@@ -143,6 +143,15 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
+        ],[
+            'icon' => 'observasi.png',
+            'label' => 'Pengawasan',
+            'link' => route('rawat-inap.pengawasan.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'goal.png',

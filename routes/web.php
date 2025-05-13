@@ -68,6 +68,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatIn
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\ObservasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -710,6 +711,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
                                         // Route::get('/print', 'print')->name('.print');
                                         Route::get('/print-html', 'print')->name('.print');
+                                    });
+                                });
+                            });
+
+
+                            //Pengawasan
+                            Route::prefix('pengawasan')->group(function () {
+                                Route::name('.pengawasan')->group(function () {
+                                    Route::controller(PengawasanController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create-pengawasan-perinatology', 'createPengawasanPerinatology')->name('.create-pengawasan-perinatology');
+                                        Route::post('/store-pengawasan-perinatology', 'storePengawasanPerinatology')->name('.store-pengawasan-perinatology');
+                                        Route::get('/edit-pengawasan-perinatology/{id}', 'editPengawasanPerinatology')->name('.edit-pengawasan-perinatology');
+                                        Route::put('/update-pengawasan-perinatology/{id}', 'updatePengawasanPerinatology')->name('.update-pengawasan-perinatology');
+                                        Route::delete('/destroy-pengawasan-perinatology/{id}', 'destroyPengawasanPerinatology')->name('.destroy-pengawasan-perinatology');
+                                        Route::get('/print-pengawasan-perinatology', 'printPengawasanPerinatology')->name('.print-pengawasan-perinatology');
                                     });
                                 });
                             });
