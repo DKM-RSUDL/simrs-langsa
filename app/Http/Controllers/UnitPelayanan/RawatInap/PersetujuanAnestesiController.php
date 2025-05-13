@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
@@ -14,16 +14,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PersetujuanAnestesi extends Controller
+class PersetujuanAnestesiController extends Controller
 {
-    private $kdUnit_;
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/gawat-darurat');
-        $this->kdUnit_ = 3;
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
-    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -33,7 +31,7 @@ class PersetujuanAnestesi extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -50,18 +48,18 @@ class PersetujuanAnestesi extends Controller
 
         $anestesi = RmePersetujuanAnestesi::with(['dokter'])
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $this->kdUnit_)
+            ->where('kd_unit', $kd_unit)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.persetujuan-anestesi.index', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.persetujuan-anestesi.index', compact(
             'dataMedis',
             'anestesi'
         ));
     }
 
-    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -71,7 +69,7 @@ class PersetujuanAnestesi extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -80,10 +78,10 @@ class PersetujuanAnestesi extends Controller
 
         $dokter = Dokter::where('status', 1)->get();
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.persetujuan-anestesi.create', compact('dataMedis', 'dokter'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.persetujuan-anestesi.create', compact('dataMedis', 'dokter'));
     }
 
-    public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -95,7 +93,7 @@ class PersetujuanAnestesi extends Controller
 
             $anestesi = new RmePersetujuanAnestesi();
             $anestesi->kd_pasien        = $kd_pasien;
-            $anestesi->kd_unit        = $this->kdUnit_;
+            $anestesi->kd_unit        = $kd_unit;
             $anestesi->tgl_masuk        = $tgl_masuk;
             $anestesi->urut_masuk        = $urut_masuk;
             $anestesi->tanggal        = $request->tanggal;
@@ -114,14 +112,14 @@ class PersetujuanAnestesi extends Controller
             $anestesi->save();
 
             DB::commit();
-            return to_route('anestesi-sedasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Persetujuan anestesi dan sedasi berhasil di tambah !');
+            return to_route('rawat-inap.anestesi-sedasi.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Persetujuan anestesi dan sedasi berhasil di tambah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -131,7 +129,7 @@ class PersetujuanAnestesi extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -142,10 +140,10 @@ class PersetujuanAnestesi extends Controller
         $id = decrypt($idEncrypt);
         $anestesi = RmePersetujuanAnestesi::find($id);
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.persetujuan-anestesi.edit', compact('dataMedis', 'dokter', 'anestesi'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.persetujuan-anestesi.edit', compact('dataMedis', 'dokter', 'anestesi'));
     }
 
-    public function update($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
+    public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)
     {
         DB::beginTransaction();
 
@@ -175,14 +173,14 @@ class PersetujuanAnestesi extends Controller
             $anestesi->save();
 
             DB::commit();
-            return to_route('anestesi-sedasi.index', [$kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Persetujuan anestesi dan sedasi berhasil di ubah !');
+            return to_route('rawat-inap.anestesi-sedasi.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Persetujuan anestesi dan sedasi berhasil di ubah !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -192,7 +190,7 @@ class PersetujuanAnestesi extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -203,10 +201,10 @@ class PersetujuanAnestesi extends Controller
         $id = decrypt($idEncrypt);
         $anestesi = RmePersetujuanAnestesi::find($id);
 
-        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.persetujuan-anestesi.show', compact('dataMedis', 'dokter', 'anestesi'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.persetujuan-anestesi.show', compact('dataMedis', 'dokter', 'anestesi'));
     }
 
-    public function delete($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function delete($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         DB::beginTransaction();
 
@@ -226,7 +224,7 @@ class PersetujuanAnestesi extends Controller
         }
     }
 
-    public function pdf($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
+    public function pdf($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -236,7 +234,7 @@ class PersetujuanAnestesi extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $this->kdUnit_)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
@@ -246,7 +244,7 @@ class PersetujuanAnestesi extends Controller
         $id = decrypt($idEncrypt);
         $anestesi = RmePersetujuanAnestesi::find($id);
 
-        $pdf = Pdf::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.persetujuan-anestesi.pdf', compact(
+        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.persetujuan-anestesi.pdf', compact(
             'dataMedis',
             'anestesi'
         ))
