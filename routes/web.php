@@ -31,6 +31,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\GeneralConsentController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\KonsultasiController as GawatDaruratKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaruratLaborController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RujukController;
@@ -889,6 +890,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::post('/', 'store')->name('.store');
                                     Route::put('/{data}', 'update')->name('.update');
                                     Route::delete('/{data}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        // Orientasi Second Opinion
+                        Route::prefix('{urut_masuk}/permintaan-second-opinion')->group(function () {
+                            Route::name('permintaan-second-opinion')->group(function () {
+                                Route::controller(PermintaanSecondOpinionController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                 });
                             });
                         });
