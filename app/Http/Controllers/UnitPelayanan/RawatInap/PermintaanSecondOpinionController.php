@@ -302,6 +302,7 @@ class PermintaanSecondOpinionController extends Controller
 
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        // Fetch medical data with related models
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -315,19 +316,28 @@ class PermintaanSecondOpinionController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
+        // Check if data exists
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan.');
+        }
+
+        // Calculate patient age
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        // Fetch second opinion data
         $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
 
-        $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.pdf', compact(
+        // Load the Blade view and pass data
+        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.print', compact(
             'dataMedis',
             'secondOpinion'
         ));
 
+        // Stream the PDF
         return $pdf->stream('permintaan-second-opinion-' . $id . '.pdf');
     }
 }

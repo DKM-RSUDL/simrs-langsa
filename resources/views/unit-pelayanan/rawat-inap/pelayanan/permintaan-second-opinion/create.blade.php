@@ -210,11 +210,10 @@
                                 <div class="row mb-3 dokumen-item">
                                     <div class="col-md-10">
                                         <div class="form-group">
-                                            <label class="form-label">Nama Dokumen <span
-                                                    class="text-danger">*</span></label>
+                                            <label class="form-label">Nama Dokumen </label>
                                             <input type="text"
                                                 class="form-control @error('nama_dokumen.*') is-invalid @enderror"
-                                                name="nama_dokumen[]" required>
+                                                name="nama_dokumen[]">
                                             @error('nama_dokumen.*')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
