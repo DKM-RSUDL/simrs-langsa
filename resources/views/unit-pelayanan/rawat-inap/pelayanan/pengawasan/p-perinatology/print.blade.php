@@ -197,7 +197,7 @@
             </div>
             <div class="info-item">
                 <span class="info-label">Nama Pasien</span>
-                <span class="info-value">{{ $dataMedis->pasien->nama_pasien ?? '-' }}</span>
+                <span class="info-value">{{ $dataMedis->pasien->nama ?? '-' }}</span>
             </div>
             <div class="info-item">
                 <span class="info-label">Ruang</span>
