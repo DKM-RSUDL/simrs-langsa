@@ -80,6 +80,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -556,7 +557,22 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // Farmasi
+                            // Orientasi Pasien Baru
+                            Route::prefix('permintaan-second-opinion')->group(function () {
+                                Route::name('.permintaan-second-opinion')->group(function () {
+                                    Route::controller(PermintaanSecondOpinionController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                             Route::prefix('farmasi')->group(function () {
                                 Route::name('.farmasi')->group(function () {
                                     Route::controller(RawatInapFarmasiController::class)->group(function () {
