@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,6 +272,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header/Kop Surat -->
@@ -295,7 +297,9 @@
                 </div>
                 <div class="patient-info-row">
                     <span class="patient-info-label">Jenis Kelamin</span>
-                    <span class="patient-info-value">: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }} *</span>
+                    <span class="patient-info-value">:
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : 'Tidak Diketahui') }}
+                        *</span>
                 </div>
                 <div class="patient-info-row">
                     <span class="patient-info-label">Tanggal Lahir</span>
@@ -319,15 +323,19 @@
             <table class="form-table">
                 <tr>
                     <td class="label">Nama</td>
-                    <td class="value">: {{ $secondOpinion->nama_saksi ?? '' }}</td>
+                    <td class="value">: {{ $secondOpinion->peminjam_nama ?? '' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Jenis Kelamin</td>
-                    <td class="value">: {{ $secondOpinion->jenis_kelamin == 1 ? 'Laki-Laki' : ($secondOpinion->jenis_kelamin == 0 ? 'Perempuan' : '') }}</td>
+                    <td class="value">:
+                        {{ $secondOpinion->jenis_kelamin == 1 ? 'Laki-Laki' : ($secondOpinion->jenis_kelamin == 0 ? 'Perempuan' : '') }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Tgl Lahir</td>
-                    <td class="value">: {{ $secondOpinion->tgl_lahir ? \Carbon\Carbon::parse($secondOpinion->tgl_lahir)->format('d/m/Y') : '' }}</td>
+                    <td class="value">:
+                        {{ $secondOpinion->tgl_lahir ? \Carbon\Carbon::parse($secondOpinion->tgl_lahir)->format('d/m/Y') : '' }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">No Kartu Identitas</td>
@@ -339,20 +347,7 @@
                 </tr>
             </table>
 
-            <p>Bertindak atas nama *( <span class="hubungan-pasien">
-                @php
-                    $hubunganPasien = $secondOpinion->hubungan ?? '';
-                    $options = ['diri sendiri', 'isteri', 'suami', 'Ayah', 'Ibu', 'Anak', 'kakak', 'adik'];
-                @endphp
-                @foreach($options as $index => $option)
-                    @if($hubunganPasien === $option || strtolower($hubunganPasien) === strtolower($option))
-                        <span class="option-circle">{{ $option }}</span>
-                    @else
-                        {{ $option }}
-                    @endif
-                    {{ $index < count($options) - 1 ? '/ ' : '/............................ Pasien' }}
-                @endforeach
-            </span>)</p>
+            <p>Bertindak atas nama * {{ $secondOpinion->hubungan ?? '' }}</p>
 
             <table class="form-table">
                 <tr>
@@ -361,11 +356,15 @@
                 </tr>
                 <tr>
                     <td class="label">Jenis Kelamin</td>
-                    <td class="value">: {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'L' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'P' : '') }}</td>
+                    <td class="value">:
+                        {{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-Laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '') }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Tgl Lahir</td>
-                    <td class="value">: {{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : '' }}</td>
+                    <td class="value">:
+                        {{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : '' }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">No Rekam Medis</td>
@@ -376,31 +375,28 @@
             <p>Dengan ini menyatakan dengan sadar dan sesungguhnya bahwa:</p>
 
             <ol style="margin-left: 20px; font-size: 9pt;">
-                <li>Telah menerima dan memahami informasi mengenai penyakit diri saya/pasien dan tindakan penanganan awal yang telah dilakukan dokter RSUD Langsa.</li>
-                <li>Meminta kepada pihak RSUD Langsa untuk diberikan kesempatan mencari second opinion/pendapat kedua terhadap alternatif diagnosa/pengobatan diri saya/pasien tersebut di rumah sakit: {{ $secondOpinion->rs_second_opinion ?? '...................' }}</li>
-                <li>Segala sarana, biaya maupun fasilitas untuk mencari second opinion menjadi tanggung jawab diri saya/pasien/keluarga.</li>
+                <li>Telah menerima dan memahami informasi mengenai penyakit diri saya/pasien dan tindakan penanganan
+                    awal yang telah dilakukan dokter RSUD Langsa.</li>
+                <li>Meminta kepada pihak RSUD Langsa untuk diberikan kesempatan mencari second opinion/pendapat kedua
+                    terhadap alternatif diagnosa/pengobatan diri saya/pasien tersebut di rumah sakit:
+                    {{ $secondOpinion->rs_second_opinion ?? '...................' }}</li>
+                <li>Segala sarana, biaya maupun fasilitas untuk mencari second opinion menjadi tanggung jawab diri
+                    saya/pasien/keluarga.</li>
                 <li>Untuk keperluan tersebut, kami meminjam hasil pemeriksaan penunjang diagnosis antar lain:</li>
                 <ul style="margin-left: 20px; font-size: 9pt;">
                     @if($secondOpinion->nama_dokumen)
                         @php
                             $dokumenArray = json_decode($secondOpinion->nama_dokumen, true);
                         @endphp
-                        @if(is_array($dokumenArray))
+                        @if(is_array($dokumenArray) && !empty($dokumenArray))
                             @foreach($dokumenArray as $index => $dokumen)
                                 <li>{{ chr(97 + $index) }}. {{ $dokumen }}</li>
                             @endforeach
-                            @for($i = count($dokumenArray); $i < 6; $i++)
-                                <li>{{ chr(97 + $i) }}. ....................................................</li>
-                            @endfor
                         @else
-                            @for($i = 0; $i < 6; $i++)
-                                <li>{{ chr(97 + $i) }}. ....................................................</li>
-                            @endfor
+                            <li>Tidak ada dokumen</li>
                         @endif
                     @else
-                        @for($i = 0; $i < 6; $i++)
-                            <li>{{ chr(97 + $i) }}. ....................................................</li>
-                        @endfor
+                        <li>Tidak ada dokumen</li>
                     @endif
                 </ul>
 
@@ -412,26 +408,31 @@
 
                 <div class="signature-location">
                     <span>Kota Langsa, </span>
-                    <span class="location">{{ $secondOpinion->informasi_tanggal ? \Carbon\Carbon::parse($secondOpinion->informasi_tanggal)->locale('id')->isoFormat('D MMMM Y') : '.......................' }}</span>
+                    <span
+                        class="location">{{ $secondOpinion->informasi_tanggal ? \Carbon\Carbon::parse($secondOpinion->informasi_tanggal)->locale('id')->isoFormat('D MMMM Y') : '.......................' }}</span>
                     <span> Pukul:</span>
-                    <span class="time">{{ $secondOpinion->informasi_jam ? date('H:i', strtotime($secondOpinion->informasi_jam)) : '........' }}</span>
+                    <span
+                        class="time">{{ $secondOpinion->informasi_jam ? date('H:i', strtotime($secondOpinion->informasi_jam)) : '........' }}</span>
                 </div>
 
                 <div class="signature-row">
                     <div class="signature-box">
                         <div class="signature-title">Petugas</div>
                         <div class="signature-space"></div>
-                        <div class="signature-line">({{ $secondOpinion->userCreate->name ?? '........................................' }})</div>
+                        <div class="signature-line">
+                            ({{ $secondOpinion->userCreate->name ?? '........................................' }})</div>
                     </div>
                     <div class="signature-box">
                         <div class="signature-title">Saksi</div>
                         <div class="signature-space"></div>
-                        <div class="signature-line">({{ $secondOpinion->nama_saksi ?? '..................................' }})</div>
+                        <div class="signature-line">
+                            ({{ $secondOpinion->nama_saksi ?? '..................................' }})</div>
                     </div>
                     <div class="signature-box">
                         <div class="signature-title">Yang menyatakan:</div>
                         <div class="signature-space"></div>
-                        <div class="signature-line">({{ $secondOpinion->peminjam_nama ?? '.....................................' }})</div>
+                        <div class="signature-line">
+                            ({{ $secondOpinion->peminjam_nama ?? '.....................................' }})</div>
                     </div>
                 </div>
 
@@ -439,7 +440,8 @@
                 <div class="return-section">
                     <div class="return-line">
                         <span>Tanggal/waktu pengembalian dokumen yang dipinjam:</span>
-                        <span class="dotted">{{ $secondOpinion->tanggal_pengembalian ? \Carbon\Carbon::parse($secondOpinion->tanggal_pengembalian)->format('d/m/Y') : '...........................' }}</span>
+                        <span
+                            class="dotted">{{ $secondOpinion->tanggal_pengembalian ? \Carbon\Carbon::parse($secondOpinion->tanggal_pengembalian)->format('d/m/Y') : '...........................' }}</span>
                     </div>
 
                     <div class="return-signatures">
@@ -457,4 +459,5 @@
         </div>
     </div>
 </body>
+
 </html>
