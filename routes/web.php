@@ -66,9 +66,9 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatIn
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
@@ -511,7 +511,7 @@ Route::middleware('ssoToken')->group(function () {
                             // Orientasi Second Opinion
                             Route::prefix('permintaan-second-opinion')->group(function () {
                                 Route::name('.permintaan-second-opinion')->group(function () {
-                                    Route::controller(PermintaanSecondOpinionController::class)->group(function () {
+                                    Route::controller(RanapPermintaanSecondOpinionController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
