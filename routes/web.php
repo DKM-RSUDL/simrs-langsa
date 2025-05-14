@@ -70,6 +70,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KontrolIstimewaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIcuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
@@ -972,6 +973,34 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            //Kriteria Masuk/Keluar Intensive
+                            Route::prefix('kriteria-masuk-keluar')->group(function () {
+                                Route::name('.kriteria-masuk-keluar')->group(function () {
+
+                                    //ICU
+                                    Route::prefix('icu')->group(function () {
+                                        Route::name('.icu')->group(function () {
+                                            Route::controller(MasukKeluarIcuController::class)->group(function () {
+                                                //masuk
+                                                Route::prefix('masuk')->group(function () {
+                                                    Route::name('.masuk')->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                    });
+                                                });
+
+                                                //keluar
+                                                Route::prefix('keluar')->group(function () {
+                                                    Route::name('.keluar')->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });

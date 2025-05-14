@@ -192,6 +192,18 @@
                 $dataMedis->urut_masuk,
             ]),
         ];
+
+        $urlKriteria = '#';
+
+        
+        if ($dataMedis->kd_unit == '10015') $urlKriteria = '#';
+
+
+        $navItems[] = [
+            'icon' => 'monitoring.png',
+            'label' => 'K. Masuk/Keluar',
+            'link' => $urlKriteria,
+        ];
     }
 
 @endphp
