@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-9">
-            @include('components.navigation-ranap')
+            @include('components.navigation')
             <div class="d-flex justify-content-center">
                 <div class="w-100 h-100">
                     <div class="d-flex justify-content-between m-3">
@@ -55,7 +55,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <a href="{{ route('rawat-inap.permintaan-second-opinion.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                <a href="{{ route('permintaan-second-opinion.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                     class="btn btn-primary">
                                     <i class="bi bi-plus-square"></i> Tambah
                                 </a>
@@ -82,11 +82,11 @@
                                         <td>{{ $item->nama_saksi ?? '-' }}</td>
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
-                                            <a href="{{ route('rawat-inap.permintaan-second-opinion.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                            <a href="{{ route('permintaan-second-opinion.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 class="mb-2 btn btn-sm btn-info">
                                                 <i class="ti-eye"></i>
                                             </a>
-                                            <a href="{{ route('rawat-inap.permintaan-second-opinion.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                            <a href="{{ route('permintaan-second-opinion.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 class="mb-2 btn btn-sm btn-warning">
                                                 <i class="ti-pencil"></i>
                                             </a>
@@ -130,7 +130,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let destroyUrl = "{{ route('rawat-inap.permintaan-second-opinion.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}";
+                    let destroyUrl = "{{ route('permintaan-second-opinion.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, ':id']) }}";
                     destroyUrl = destroyUrl.replace(':id', id);
 
                     $.ajax({

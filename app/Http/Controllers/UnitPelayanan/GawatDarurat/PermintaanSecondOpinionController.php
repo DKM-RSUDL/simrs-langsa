@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\RawatInap;
+namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\DokterInap;
 use App\Models\Kunjungan;
-use App\Models\OrientasiPasienBaru;
 use App\Models\PermintaanSecondOpinion;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -16,7 +14,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PermintaanSecondOpinionController extends Controller
 {
-    public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -25,16 +23,18 @@ class PermintaanSecondOpinionController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-        $dataDokter = DokterInap::with(['dokter', 'unit'])
-            ->where('kd_unit', '1001')
-            ->whereRelation('dokter', 'status', 1)
-            ->get();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -42,25 +42,20 @@ class PermintaanSecondOpinionController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
         $permintaanSecondOpinion = PermintaanSecondOpinion::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', $kd_unit)
+            ->where('kd_unit', 3)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.index', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-second-opinion.index', compact(
             'dataMedis',
-            'dataDokter',
             'permintaanSecondOpinion'
         ));
     }
 
-    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -69,26 +64,23 @@ class PermintaanSecondOpinionController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
             ->first();
 
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.create',  compact('dataMedis'));
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-second-opinion.create', compact(
+            'dataMedis',
+        ));
     }
 
-    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         DB::beginTransaction();
         try {
@@ -112,7 +104,7 @@ class PermintaanSecondOpinionController extends Controller
             // Prepare data array for insertion
             $data = [
                 'kd_pasien' => $kd_pasien,
-                'kd_unit' => $kd_unit,
+                'kd_unit' => 3,
                 'tgl_masuk' => Carbon::parse($tgl_masuk)->toDateString(),
                 'urut_masuk' => $urut_masuk,
                 'tanggal' => Carbon::parse($request->informasi_tanggal . ' ' . $request->informasi_jam),
@@ -135,8 +127,8 @@ class PermintaanSecondOpinionController extends Controller
             PermintaanSecondOpinion::create($data);
             DB::commit();
 
-            return redirect()->route('rawat-inap.permintaan-second-opinion.index', [
-                'kd_unit' => $kd_unit,
+            return redirect()->route('permintaan-second-opinion.index', [
+                'kd_unit' => 3,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
@@ -147,7 +139,7 @@ class PermintaanSecondOpinionController extends Controller
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show( $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -157,7 +149,7 @@ class PermintaanSecondOpinionController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -170,13 +162,13 @@ class PermintaanSecondOpinionController extends Controller
 
         $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.show', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-second-opinion.show', compact(
             'dataMedis',
             'secondOpinion'
         ));
     }
 
-    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -186,7 +178,7 @@ class PermintaanSecondOpinionController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -199,13 +191,13 @@ class PermintaanSecondOpinionController extends Controller
 
         $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.edit', compact(
+        return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-second-opinion.edit', compact(
             'dataMedis',
             'secondOpinion'
         ));
     }
 
-    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function update(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
         try {
@@ -250,8 +242,8 @@ class PermintaanSecondOpinionController extends Controller
             $secondOpinion->update($data);
             DB::commit();
 
-            return redirect()->route('rawat-inap.permintaan-second-opinion.index', [
-                'kd_unit' => $kd_unit,
+            return redirect()->route('permintaan-second-opinion.index', [
+                'kd_unit' => 3,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
@@ -262,7 +254,7 @@ class PermintaanSecondOpinionController extends Controller
         }
     }
 
-    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
         try {
@@ -279,8 +271,8 @@ class PermintaanSecondOpinionController extends Controller
                 ]);
             }
 
-            return redirect()->route('rawat-inap.permintaan-second-opinion.index', [
-                'kd_unit' => $kd_unit,
+            return redirect()->route('permintaan-second-opinion.index', [
+                'kd_unit' => 3,
                 'kd_pasien' => $kd_pasien,
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk
@@ -300,7 +292,7 @@ class PermintaanSecondOpinionController extends Controller
         }
     }
 
-    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function generatePDF($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Fetch medical data with related models
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -311,7 +303,7 @@ class PermintaanSecondOpinionController extends Controller
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
             ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_unit', 3)
             ->where('kunjungan.urut_masuk', $urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
@@ -332,7 +324,7 @@ class PermintaanSecondOpinionController extends Controller
         $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
 
         // Load the Blade view and pass data
-        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.permintaan-second-opinion.print', compact(
+        $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.permintaan-second-opinion.print', compact(
             'dataMedis',
             'secondOpinion'
         ));

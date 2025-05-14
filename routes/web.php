@@ -33,6 +33,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\LaborController as GawatDaru
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenolakanResusitasiController as GawatDaruratPenolakanResusitasiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PenundaanPelayananController as GawatDaruratPenundaanPelayananController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\GawatDarurat\PermintaanSecondOpinionController as GawatDaruratPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\PersetujuanAnestesiController as GawatDaruratPersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\RadiologiController as GawatDaruratRadiologiController;
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\ResumeController as GawatDaruratResumeController;
@@ -84,6 +85,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
@@ -99,6 +101,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\PenundaanPelayananController a
 use App\Http\Controllers\UnitPelayanan\RawatJalan\PersetujuanAnestesiController as RawatJalanPersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanDarahController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
@@ -322,6 +325,22 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::post('/', 'store')->name('.store');
                                         Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // Orientasi Second Opinion
+                            Route::prefix('permintaan-second-opinion')->group(function () {
+                                Route::name('.permintaan-second-opinion')->group(function () {
+                                    Route::controller(RajalPermintaanSecondOpinionController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                         Route::delete('/{data}', 'destroy')->name('.destroy');
                                     });
                                 });
@@ -558,10 +577,10 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // Orientasi Pasien Baru
+                            // Orientasi Second Opinion
                             Route::prefix('permintaan-second-opinion')->group(function () {
                                 Route::name('.permintaan-second-opinion')->group(function () {
-                                    Route::controller(PermintaanSecondOpinionController::class)->group(function () {
+                                    Route::controller(RanapPermintaanSecondOpinionController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
@@ -1186,6 +1205,22 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::get('/show/{data}', 'show')->name('.show');
                                     Route::delete('/', 'delete')->name('.delete');
                                     Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                });
+                            });
+                        });
+
+                        // Orientasi Second Opinion
+                        Route::prefix('{urut_masuk}/permintaan-second-opinion')->group(function () {
+                            Route::name('permintaan-second-opinion')->group(function () {
+                                Route::controller(GawatDaruratPermintaanSecondOpinionController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                 });
                             });
                         });
