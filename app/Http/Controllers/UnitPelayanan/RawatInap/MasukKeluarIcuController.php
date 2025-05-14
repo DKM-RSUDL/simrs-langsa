@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class MasukKeluarIcuController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('unit-pelayanan.rawat-inap.masuk-keluar-icu.index');
+    }
 }
