@@ -367,3 +367,20 @@ if (!function_exists('countActivePatientIGD')) {
         return $result;
     }
 }
+
+if (!function_exists('hitungUmur')) {
+    function hitungUmur($tanggalLahir)
+    {
+        // Mengkonversi tanggal lahir menjadi objek DateTime
+        $lahir = new DateTime($tanggalLahir);
+
+        // Mendapatkan tanggal hari ini
+        $sekarang = new DateTime('now');
+
+        // Menghitung selisih antara tanggal lahir dan tanggal sekarang
+        $selisih = $sekarang->diff($lahir);
+
+        // Mengembalikan umur dalam tahun
+        return $selisih->y;
+    }
+}

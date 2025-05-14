@@ -122,7 +122,36 @@
                 $dataMedis->kd_pasien,
                 $tglMasukData,
                 $dataMedis->urut_masuk,
-            ]),            
+            ]),
+        ],
+        [
+            'icon' => 'info.png',
+            'label' => 'Intake Cairan',
+            'link' => route('rawat-inap.intake-cairan.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
+        [
+            'icon' => 'observasi.png',
+            'label' => 'Observasi',
+            'link' => route('rawat-inap.observasi.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],[
+            'icon' => 'observasi.png',
+            'label' => 'Pengawasan',
+            'link' => route('rawat-inap.pengawasan-perinatology.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
         ],
         [
             'icon' => 'goal.png',
@@ -141,10 +170,10 @@
         ],
     ];
 
-    if (in_array($dataMedis->kd_unit, ['10015', '10016', '10031', '10032'])) {
+    if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {
         $navItems[] = [
             'icon' => 'monitoring.png',
-            'label' => 'Monitoring',
+            'label' => 'Monitoring ' . $dataMedis->unit->nama_unit,
             'link' => route('rawat-inap.monitoring.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
@@ -152,10 +181,30 @@
                 $dataMedis->urut_masuk,
             ]),
         ];
+
+        $navItems[] = [
+            'icon' => 'monitoring.png',
+            'label' => 'K. Istimewa',
+            'link' => route('rawat-inap.kontrol-istimewa.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ];
+
+        $urlKriteria = '#';
+
+        
+        if ($dataMedis->kd_unit == '10015') $urlKriteria = '#';
+
+
+        $navItems[] = [
+            'icon' => 'monitoring.png',
+            'label' => 'K. Masuk/Keluar',
+            'link' => $urlKriteria,
+        ];
     }
-
-
-
 
 @endphp
 
@@ -175,8 +224,11 @@
     <div class="card-body p-2">
         <div class="d-flex flex-wrap gap-2">
             @foreach ($navItems as $item)
-                <a href="{{ $item['link'] }}" class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center" style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
-                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18" height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
+                <a href="{{ $item['link'] }}"
+                    class="btn {{ $currentUrl === $item['link'] ? 'btn-primary' : 'btn-light' }} d-flex align-items-center"
+                    style="border-radius: 20px; padding: 6px 12px; font-size: 14px;">
+                    <img src="{{ asset('assets/img/icons/' . $item['icon']) }}" alt="{{ $item['label'] }}" width="18"
+                        height="18" class="{{ $currentUrl === $item['link'] ? '' : '' }} me-1">
                     <span>{{ $item['label'] }}</span>
                 </a>
             @endforeach

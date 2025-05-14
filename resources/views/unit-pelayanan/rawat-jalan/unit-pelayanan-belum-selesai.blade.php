@@ -278,6 +278,12 @@
                                                 <li><a class="dropdown-item m-1" href="#">Update Informasi Pasien</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Identitas Pasien</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">General Concent</a></li>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Persetujuan</a>
+                                                    <ul class="dropdown-menu shadow-lg">
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/anestesi-sedasi' }">Anestesi dan Sedasi</a></li>
+                                                    </ul>
+                                                </li>
                                                 <li><a class="dropdown-item m-1" href="#">Edukasi dan Informasi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Jaminan/Asuransi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Registrasi Rawat Inap</a></li>
@@ -293,20 +299,15 @@
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown-submenu">
-                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Order Pelayanan</a>
+                                                    <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
                                                     <ul class="dropdown-menu shadow-lg">
-                                                        <li><a class="dropdown-item m-1" href="#">Operasi</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rehabilitasi Medis</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Hemodialisa</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Forensik</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Cath Lab</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Rujukan/Ambulance</a></li>
-                                                        <li><a class="dropdown-item m-1" href="#">Tindakan Klinik</a></li>
+                                                        <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/penundaan' }">Penundaan Pelayanan</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                 <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                                <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah' }">Permintaan Darah</a></li>
                                             </ul>
                                         </div>
                                     `;
