@@ -67,7 +67,7 @@
             <hr>
 
             <div class="form-section">
-                <form action="{{ route('rawat-inap.pengawasan.store-pengawasan-perinatology', [
+                <form action="{{ route('rawat-inap.pengawasan-perinatology.store-pengawasan-perinatology', [
                                 'kd_unit' => $kd_unit,
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,

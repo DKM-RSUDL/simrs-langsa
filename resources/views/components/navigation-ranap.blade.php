@@ -146,7 +146,7 @@
         ],[
             'icon' => 'observasi.png',
             'label' => 'Pengawasan',
-            'link' => route('rawat-inap.pengawasan.index', [
+            'link' => route('rawat-inap.pengawasan-perinatology.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
