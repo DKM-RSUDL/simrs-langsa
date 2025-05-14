@@ -252,24 +252,27 @@
         <table class="observation-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="width: 8%;">TGL/JAM</th>
+                    <th rowspan="3" style="width: 8%;">TGL/JAM</th>
                     <th colspan="5" class="section-header">OBSERVASI</th>
                     <th colspan="8" class="section-header">VENTILASI</th>
                 </tr>
                 <tr>
-                    <th style="width: 7%;">KESADARAN</th>
-                    <th style="width: 7%;">TD/CRT</th>
-                    <th style="width: 5%;">NADI</th>
-                    <th style="width: 5%;">NAFAS</th>
-                    <th style="width: 5%;">SUHU</th>
-                    <th style="width: 7%;">MODUS</th>
-                    <th style="width: 5%;">PEP<br>CM H₂O</th>
-                    <th style="width: 5%;">BUBLE</th>
-                    <th style="width: 5%;">FI O₂</th>
-                    <th style="width: 7%;">FLOW<br>liter/mnt</th>
-                    <th style="width: 5%;">SPO₂</th>
-                    <th style="width: 5%;">AIR</th>
-                    <th style="width: 7%;">HUMIDIFIER<br>AIR | SUHU</th>
+                    <th rowspan="2" style="width: 7%;">KESADARAN</th>
+                    <th rowspan="2" style="width: 7%;">TD/CRT</th>
+                    <th rowspan="2" style="width: 5%;">NADI</th>
+                    <th rowspan="2" style="width: 5%;">NAFAS</th>
+                    <th rowspan="2" style="width: 5%;">SUHU</th>
+                    <th rowspan="2" style="width: 7%;">MODUS</th>
+                    <th rowspan="2" style="width: 5%;">PEP<br>CM H₂O</th>
+                    <th rowspan="2" style="width: 5%;">BUBLE</th>
+                    <th rowspan="2" style="width: 5%;">FI O₂</th>
+                    <th rowspan="2" style="width: 7%;">FLOW<br>liter/mnt</th>
+                    <th rowspan="2" style="width: 5%;">SPO₂</th>
+                    <th colspan="2" style="width: 3.5%;">HUMIDIFIER</th>
+                </tr>
+                <tr>
+                    <th style="width: 3.5%;">AIR</th>
+                    <th style="width: 3.5%;">SUHU</th>
                 </tr>
             </thead>
             <tbody>
@@ -292,7 +295,7 @@
                             <td>{{ $data->detail->flow_formatted ?? '-' }}</td>
                             <td>{{ $data->detail->spo2 ?? '-' }}</td>
                             <td>{{ $data->detail->air ?? '-' }}</td>
-                            <td>{{ $data->detail->air ?? '-' }} | {{ $data->detail->suhu_ventilator_formatted ?? '-' }}</td>
+                            <td>{{ $data->detail->suhu_ventilator_formatted ?? '-' }}</td>
                         </tr>
                     @endforeach
                 @else

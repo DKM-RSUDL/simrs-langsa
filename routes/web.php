@@ -717,8 +717,8 @@ Route::middleware('ssoToken')->group(function () {
 
 
                             //Pengawasan
-                            Route::prefix('pengawasan')->group(function () {
-                                Route::name('.pengawasan')->group(function () {
+                            Route::prefix('pengawasan-perinatology')->group(function () {
+                                Route::name('.pengawasan-perinatology')->group(function () {
                                     Route::controller(PengawasanController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create-pengawasan-perinatology', 'createPengawasanPerinatology')->name('.create-pengawasan-perinatology');

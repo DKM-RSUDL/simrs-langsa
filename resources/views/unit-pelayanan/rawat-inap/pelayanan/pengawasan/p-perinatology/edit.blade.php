@@ -85,7 +85,7 @@
             @endif
 
             <div class="form-section">
-                <form action="{{ route('rawat-inap.pengawasan.update-pengawasan-perinatology', [
+                <form action="{{ route('rawat-inap.pengawasan-perinatology.update-pengawasan-perinatology', [
                                 'kd_unit' => $kd_unit,
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,
@@ -348,7 +348,7 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-save me-1"></i> Update
                             </button>
-                            <a href="{{ route('rawat-inap.pengawasan.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk]) }}" class="btn btn-secondary">
+                            <a href="{{ route('rawat-inap.pengawasan-perinatology.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk]) }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i> Batal
                             </a>
                         </div>

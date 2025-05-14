@@ -195,7 +195,7 @@ class PengawasanController extends Controller
 
             // Redirect dengan pesan sukses
             return redirect()
-                ->route('rawat-inap.pengawasan.index', [
+                ->route('rawat-inap.pengawasan-perinatology.index', [
                     'kd_unit' => $kd_unit,
                     'kd_pasien' => $kd_pasien,
                     'tgl_masuk' => $tgl_masuk,
@@ -240,7 +240,7 @@ class PengawasanController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('rawat-inap.pengawasan.index', [
+                ->route('rawat-inap.pengawasan-perinatology.index', [
                     'kd_unit' => $kd_unit,
                     'kd_pasien' => $kd_pasien,
                     'tgl_masuk' => $tgl_masuk,
@@ -407,7 +407,7 @@ class PengawasanController extends Controller
 
             // Redirect with success message
             return redirect()
-                ->route('rawat-inap.pengawasan.index', [
+                ->route('rawat-inap.pengawasan-perinatology.index', [
                     'kd_unit' => $kd_unit,
                     'kd_pasien' => $kd_pasien,
                     'tgl_masuk' => $tgl_masuk,

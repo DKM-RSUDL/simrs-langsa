@@ -57,7 +57,7 @@
                                     <button type="button" class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#printModal">
                                         <i class="ti-printer"></i> Print
                                     </button>
-                                    <a href="{{ route('rawat-inap.pengawasan.create-pengawasan-perinatology', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                    <a href="{{ route('rawat-inap.pengawasan-perinatology.create-pengawasan-perinatology', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                         class="btn btn-primary">
                                         <i class="ti-plus"></i> Tambah
                                     </a>
@@ -134,7 +134,7 @@
                                                         <!-- Aksi -->
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.pengawasan.edit-pengawasan-perinatology', [
+                                                                <a href="{{ route('rawat-inap.pengawasan-perinatology.edit-pengawasan-perinatology', [
                                                                     $data->kd_unit, 
                                                                     $data->kd_pasien, 
                                                                     date('Y-m-d', strtotime($data->tgl_masuk)), 
@@ -185,7 +185,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('rawat-inap.pengawasan.print-pengawasan-perinatology', [
+            <form action="{{ route('rawat-inap.pengawasan-perinatology.print-pengawasan-perinatology', [
                 $dataMedis->kd_unit, 
                 $dataMedis->kd_pasien, 
                 date('Y-m-d', strtotime($dataMedis->tgl_masuk)), 
@@ -246,7 +246,7 @@
                 form.method = 'POST';
                 
                 // Gunakan route helper Laravel dengan parameter yang benar
-                const baseUrl = '{{ route("rawat-inap.pengawasan.destroy-pengawasan-perinatology", [
+                const baseUrl = '{{ route("rawat-inap.pengawasan-perinatology.destroy-pengawasan-perinatology", [
                     $dataMedis->kd_unit, 
                     $dataMedis->kd_pasien, 
                     date("Y-m-d", strtotime($dataMedis->tgl_masuk)), 
