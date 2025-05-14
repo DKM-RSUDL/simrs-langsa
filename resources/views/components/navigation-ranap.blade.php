@@ -195,8 +195,14 @@
 
         $urlKriteria = '#';
 
-        
-        if ($dataMedis->kd_unit == '10015') $urlKriteria = '#';
+
+        if ($dataMedis->kd_unit == '10016') $urlKriteria = '#';
+        if ($dataMedis->kd_unit == '10015') $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.iccu.index', [
+            $dataMedis->kd_unit,
+            $dataMedis->kd_pasien,
+            $tglMasukData,
+            $dataMedis->urut_masuk,
+        ]);
 
 
         $navItems[] = [

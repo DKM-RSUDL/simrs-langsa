@@ -70,6 +70,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KontrolIstimewaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIccuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIcuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
@@ -995,6 +996,22 @@ Route::middleware('ssoToken')->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                     });
                                                 });
+                                            });
+                                        });
+                                    });
+
+                                    //ICCU
+                                    Route::prefix('iccu')->group(function () {
+                                        Route::name('.iccu')->group(function () {
+                                            Route::controller(MasukKeluarIccuController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
                                             });
                                         });
                                     });

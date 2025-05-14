@@ -114,7 +114,6 @@
     </div>
 @endsection
 
-// JavaScript yang sudah diperbaiki
 @push('js')
     <script>
         $('.btn-delete').click(function (e) {
