@@ -986,6 +986,13 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::prefix('masuk')->group(function () {
                                                     Route::name('.masuk')->group(function () {
                                                         Route::get('/', 'index')->name('.index');
+                                                        Route::get('/create', 'createMasuk')->name('.create');
+                                                        Route::post('/', 'storeMasuk')->name('.store');
+                                                        Route::get('/{data}/edit', 'editMasuk')->name('.edit');
+                                                        Route::put('/{data}', 'updateMasuk')->name('.update');
+                                                        Route::get('/show/{data}', 'showMasuk')->name('.show');
+                                                        Route::delete('/{data}', 'destroyMasuk')->name('.destroy');
+                                                        Route::get('/print/{data}', 'printMasuk')->name('.print');
                                                     });
                                                 });
 
@@ -993,6 +1000,13 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::prefix('keluar')->group(function () {
                                                     Route::name('.keluar')->group(function () {
                                                         Route::get('/', 'index')->name('.index');
+                                                        Route::get('/create', 'createKeluar')->name('.create');
+                                                        Route::post('/', 'storeKeluar')->name('.store');
+                                                        Route::get('/{data}/edit', 'editKeluar')->name('.edit');
+                                                        Route::put('/{data}', 'updateKeluar')->name('.update');
+                                                        Route::get('/show/{data}', 'showKeluar')->name('.show');
+                                                        Route::delete('/{data}', 'destroyKeluar')->name('.destroy');
+                                                        Route::get('/print/{data}', 'printKeluar')->name('.print');
                                                     });
                                                 });
                                             });

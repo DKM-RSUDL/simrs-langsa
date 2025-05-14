@@ -140,21 +140,23 @@
 
         <div class="col-md-9">
             <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Kriteria Keluar Ruang ICU</h5>
+                <h5 class="text-secondary fw-bold">Edit Kriteria Keluar Ruang ICU</h5>
             </div>
 
             <hr>
 
             <div class="form-section">
                 <form
-                    action="{{ route('rawat-inap.kriteria-masuk-keluar.icu.keluar.store', [
+                    action="{{ route('rawat-inap.kriteria-masuk-keluar.icu.keluar.update', [
                         'kd_unit' => $kd_unit,
                         'kd_pasien' => $kd_pasien,
                         'tgl_masuk' => $tgl_masuk,
                         'urut_masuk' => $urut_masuk,
+                        'data' => $kriteriaKeluar->id,
                     ]) }}"
                     method="post" id="icuKeluarForm">
                     @csrf
+                    @method('PUT')
 
                     <!-- Section Tanggal & Waktu -->
                     <div class="card mb-4">
@@ -171,14 +173,14 @@
                                     <div class="mb-3">
                                         <label class="form-label required">Tanggal</label>
                                         <input type="date" class="form-control" name="tanggal" id="tanggal"
-                                            value="{{ old('tanggal', date('Y-m-d')) }}" required>
+                                            value="{{ old('tanggal', $kriteriaKeluar->tanggal) }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Jam</label>
                                         <input type="time" class="form-control" name="jam" id="jam"
-                                            value="{{ old('jam', date('H:i')) }}" required>
+                                            value="{{ old('jam', substr($kriteriaKeluar->jam, 0, 5)) }}" required>
                                         <div class="invalid-feedback" id="timeError">
                                             Pastikan format jam benar (HH:MM)
                                         </div>
@@ -199,79 +201,79 @@
                                     <label class="form-label">Respon Mata (E)</label>
                                     <select class="form-control form-select" name="gcs_mata" id="gcs_mata" required>
                                         <option value="">-- Pilih --</option>
-                                        <option value="1" {{ old('gcs_mata') == '1' ? 'selected' : '' }}>1 - Tidak ada
-                                            respon</option>
-                                        <option value="2" {{ old('gcs_mata') == '2' ? 'selected' : '' }}>2 - Respon
-                                            terhadap rangsang nyeri</option>
-                                        <option value="3" {{ old('gcs_mata') == '3' ? 'selected' : '' }}>3 - Respon
-                                            terhadap rangsang suara</option>
-                                        <option value="4" {{ old('gcs_mata') == '4' ? 'selected' : '' }}>4 - Membuka
-                                            mata spontan</option>
+                                        <option value="1" {{ old('gcs_mata', $kriteriaKeluar->gcs_mata) == '1' ? 'selected' : '' }}>
+                                            1 - Tidak ada respon</option>
+                                        <option value="2" {{ old('gcs_mata', $kriteriaKeluar->gcs_mata) == '2' ? 'selected' : '' }}>
+                                            2 - Respon terhadap rangsang nyeri</option>
+                                        <option value="3" {{ old('gcs_mata', $kriteriaKeluar->gcs_mata) == '3' ? 'selected' : '' }}>
+                                            3 - Respon terhadap rangsang suara</option>
+                                        <option value="4" {{ old('gcs_mata', $kriteriaKeluar->gcs_mata) == '4' ? 'selected' : '' }}>
+                                            4 - Membuka mata spontan</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Respon Verbal (V)</label>
                                     <select class="form-control form-select" name="gcs_verbal" id="gcs_verbal" required>
                                         <option value="">-- Pilih --</option>
-                                        <option value="1" {{ old('gcs_verbal') == '1' ? 'selected' : '' }}>1 - Tidak
-                                            ada respon</option>
-                                        <option value="2" {{ old('gcs_verbal') == '2' ? 'selected' : '' }}>2 -
-                                            Mengeluarkan suara</option>
-                                        <option value="3" {{ old('gcs_verbal') == '3' ? 'selected' : '' }}>3 -
-                                            Kata-kata tidak sesuai</option>
-                                        <option value="4" {{ old('gcs_verbal') == '4' ? 'selected' : '' }}>4 -
-                                            Percakapan kacau</option>
-                                        <option value="5" {{ old('gcs_verbal') == '5' ? 'selected' : '' }}>5 -
-                                            Orientasi baik</option>
+                                        <option value="1" {{ old('gcs_verbal', $kriteriaKeluar->gcs_verbal) == '1' ? 'selected' : '' }}>
+                                            1 - Tidak ada respon</option>
+                                        <option value="2" {{ old('gcs_verbal', $kriteriaKeluar->gcs_verbal) == '2' ? 'selected' : '' }}>
+                                            2 - Mengeluarkan suara</option>
+                                        <option value="3" {{ old('gcs_verbal', $kriteriaKeluar->gcs_verbal) == '3' ? 'selected' : '' }}>
+                                            3 - Kata-kata tidak sesuai</option>
+                                        <option value="4" {{ old('gcs_verbal', $kriteriaKeluar->gcs_verbal) == '4' ? 'selected' : '' }}>
+                                            4 - Percakapan kacau</option>
+                                        <option value="5" {{ old('gcs_verbal', $kriteriaKeluar->gcs_verbal) == '5' ? 'selected' : '' }}>
+                                            5 - Orientasi baik</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Respon Motorik (M)</label>
                                     <select class="form-control form-select" name="gcs_motorik" id="gcs_motorik" required>
                                         <option value="">-- Pilih --</option>
-                                        <option value="1" {{ old('gcs_motorik') == '1' ? 'selected' : '' }}>1 - Tidak
-                                            ada respon</option>
-                                        <option value="2" {{ old('gcs_motorik') == '2' ? 'selected' : '' }}>2 -
-                                            Ekstensi abnormal</option>
-                                        <option value="3" {{ old('gcs_motorik') == '3' ? 'selected' : '' }}>3 - Fleksi
-                                            abnormal</option>
-                                        <option value="4" {{ old('gcs_motorik') == '4' ? 'selected' : '' }}>4 -
-                                            Menghindari rangsang nyeri</option>
-                                        <option value="5" {{ old('gcs_motorik') == '5' ? 'selected' : '' }}>5 -
-                                            Melokalisir nyeri</option>
-                                        <option value="6" {{ old('gcs_motorik') == '6' ? 'selected' : '' }}>6 -
-                                            Menuruti perintah</option>
+                                        <option value="1" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '1' ? 'selected' : '' }}>
+                                            1 - Tidak ada respon</option>
+                                        <option value="2" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '2' ? 'selected' : '' }}>
+                                            2 - Ekstensi abnormal</option>
+                                        <option value="3" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '3' ? 'selected' : '' }}>
+                                            3 - Fleksi abnormal</option>
+                                        <option value="4" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '4' ? 'selected' : '' }}>
+                                            4 - Menghindari rangsang nyeri</option>
+                                        <option value="5" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '5' ? 'selected' : '' }}>
+                                            5 - Melokalisir nyeri</option>
+                                        <option value="6" {{ old('gcs_motorik', $kriteriaKeluar->gcs_motorik) == '6' ? 'selected' : '' }}>
+                                            6 - Menuruti perintah</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">Total GCS</label>
                                     <input type="number" class="form-control" name="gcs_total" id="gcs_total"
-                                        value="{{ old('gcs_total') }}" min="3" max="15" readonly>
+                                        value="{{ old('gcs_total', $kriteriaKeluar->gcs_total) }}" min="3" max="15" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">TD Sistole (mmHg)</label>
                                     <input type="number" class="form-control" name="td_sistole" id="td_sistole"
-                                        value="{{ old('td_sistole') }}" placeholder="Contoh: 120" required>
+                                        value="{{ old('td_sistole', $kriteriaKeluar->td_sistole) }}" placeholder="Contoh: 120" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">TD Diastole (mmHg)</label>
                                     <input type="number" class="form-control" name="td_diastole" id="td_diastole"
-                                        value="{{ old('td_diastole') }}" placeholder="Contoh: 80" required>
+                                        value="{{ old('td_diastole', $kriteriaKeluar->td_diastole) }}" placeholder="Contoh: 80" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">Nadi (x/mnt)</label>
                                     <input type="number" class="form-control" name="nadi" id="nadi"
-                                        value="{{ old('nadi') }}" placeholder="Contoh: 80" required>
+                                        value="{{ old('nadi', $kriteriaKeluar->nadi) }}" placeholder="Contoh: 80" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">RR (x/mnt)</label>
                                     <input type="number" class="form-control" name="rr" id="rr"
-                                        value="{{ old('rr') }}" placeholder="Contoh: 20" required>
+                                        value="{{ old('rr', $kriteriaKeluar->rr) }}" placeholder="Contoh: 20" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">Suhu (°C)</label>
                                     <input type="number" class="form-control" name="suhu" step="0.1"
-                                        id="suhu" value="{{ old('suhu') }}" placeholder="Contoh: 36.5" required>
+                                        id="suhu" value="{{ old('suhu', $kriteriaKeluar->suhu) }}" placeholder="Contoh: 36.5" required>
                                 </div>
                             </div>
                         </div>
@@ -303,14 +305,16 @@
                                             <div class="criteria-list">
                                                 <div class="criteria-item">
                                                     <input type="checkbox" class="criteria-checkbox" name="prioritas_1[]"
-                                                        value="kebutuhan_terapi_intensif_tidak_ada" id="p1_terapi">
+                                                        value="kebutuhan_terapi_intensif_tidak_ada" id="p1_terapi"
+                                                        {{ in_array('kebutuhan_terapi_intensif_tidak_ada', old('prioritas_1', $kriteriaKeluar->prioritas_1_array)) ? 'checked' : '' }}>
                                                     <label class="criteria-label" for="p1_terapi">
                                                         Kebutuhan untuk terapi intensif tidak ada lagi / tidak bermanfaat
                                                     </label>
                                                 </div>
                                                 <div class="criteria-item">
                                                     <input type="checkbox" class="criteria-checkbox" name="prioritas_1[]"
-                                                        value="terapi_gagal_prognosa_jelek" id="p1_gagal">
+                                                        value="terapi_gagal_prognosa_jelek" id="p1_gagal"
+                                                        {{ in_array('terapi_gagal_prognosa_jelek', old('prioritas_1', $kriteriaKeluar->prioritas_1_array)) ? 'checked' : '' }}>
                                                     <label class="criteria-label" for="p1_gagal">
                                                         Terapi gagal, sehingga prognosis untuk jangka pendek jelek
                                                     </label>
@@ -330,7 +334,8 @@
                                             <div class="criteria-list">
                                                 <div class="criteria-item">
                                                     <input type="checkbox" class="criteria-checkbox" name="prioritas_2[]"
-                                                        value="pemantauan_tidak_memerlukan_terapi_intensif" id="p2_pemantauan">
+                                                        value="pemantauan_tidak_memerlukan_terapi_intensif" id="p2_pemantauan"
+                                                        {{ in_array('pemantauan_tidak_memerlukan_terapi_intensif', old('prioritas_2', $kriteriaKeluar->prioritas_2_array)) ? 'checked' : '' }}>
                                                     <label class="criteria-label" for="p2_pemantauan">
                                                         Pada pemantauan, ternyata tidak memerlukan terapi intensif
                                                     </label>
@@ -350,7 +355,8 @@
                                             <div class="criteria-list">
                                                 <div class="criteria-item">
                                                     <input type="checkbox" class="criteria-checkbox" name="prioritas_3[]"
-                                                        value="kebutuhan_terapi_intensif_tidak_ada_sembuh" id="p3_sembuh">
+                                                        value="kebutuhan_terapi_intensif_tidak_ada_sembuh" id="p3_sembuh"
+                                                        {{ in_array('kebutuhan_terapi_intensif_tidak_ada_sembuh', old('prioritas_3', $kriteriaKeluar->prioritas_3_array)) ? 'checked' : '' }}>
                                                     <label class="criteria-label" for="p3_sembuh">
                                                         Kebutuhan terapi intensif tidak ada lagi, kemungkinan sembuh atau manfaat dari terapi intensif kontinyu kecil, maka dapat dikeluarkan dari ICU lebih dini. Tapi ini untuk penyakit ini dan terminal, karsinoma yang tersebar luas, tidak ada terapi potensial untuk memperbaiki penyakitnya.
                                                     </label>
@@ -367,7 +373,7 @@
                                         </td>
                                         <td class="priority-criteria">
                                             <textarea class="form-control form-control-textarea" name="diagnosa_kriteria" id="diagnosa_kriteria" rows="5"
-                                                placeholder="Tulis diagnosa dan alasan pasien memenuhi kriteria keluar ICU...">{{ old('diagnosa_kriteria') }}</textarea>
+                                                placeholder="Tulis diagnosa dan alasan pasien memenuhi kriteria keluar ICU...">{{ old('diagnosa_kriteria', $kriteriaKeluar->diagnosa_kriteria) }}</textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -379,7 +385,7 @@
                     <div class="row">
                         <div class="col-12 text-end">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Simpan
+                                <i class="bi bi-save me-1"></i> Update
                             </button>
                             <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/kriteria-masuk-keluar/icu/keluar?tab=keluar") }}"
                                 class="btn btn-secondary">
