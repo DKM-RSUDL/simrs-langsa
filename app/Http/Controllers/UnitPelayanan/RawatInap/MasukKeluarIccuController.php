@@ -454,4 +454,49 @@ class MasukKeluarIccuController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        // Fetch medical data with related models
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+        // Check if data exists
+        if (!$dataMedis) {
+            abort(404, 'Data medis tidak ditemukan.');
+        }
+
+        // Calculate patient age
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Fetch second opinion data        
+        $dataIccu = ICCU::findOrFail($id);
+        $dokter = Dokter::where('status', 1)
+                ->select('kd_dokter', 'nama')
+                ->get();
+
+        // Load the Blade view and pass data
+        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.iccu.print', compact(
+            'dataMedis',
+            'dataIccu',
+            'dokter'
+        ));
+
+        // Stream the PDF
+        return $pdf->stream('kriteria-masuk-keluar-iccu-' . $id . '.pdf');
+    }
 }
