@@ -82,6 +82,10 @@
                                         <td>{{ $item->nama_saksi ?? '-' }}</td>
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
+                                            <a target="_blank" href="{{ route('permintaan-second-opinion.print-pdf', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="mb-2 btn btn-sm btn-secondary">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
                                             <a href="{{ route('permintaan-second-opinion.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 class="mb-2 btn btn-sm btn-info">
                                                 <i class="ti-eye"></i>

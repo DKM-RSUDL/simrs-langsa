@@ -82,6 +82,10 @@
                                         <td>{{ $item->nama_saksi ?? '-' }}</td>
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
+                                            <a href="{{ route('rawat-jalan.permintaan-second-opinion.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                class="btn btn-secondary btn-sm" target="_blank">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
                                             <a href="{{ route('rawat-jalan.permintaan-second-opinion.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                 class="mb-2 btn btn-sm btn-info">
                                                 <i class="ti-eye"></i>
@@ -90,8 +94,7 @@
                                                 class="mb-2 btn btn-sm btn-warning">
                                                 <i class="ti-pencil"></i>
                                             </a>
-                                            <button class="mb-2 btn btn-sm btn-danger btn-delete"
-                                                data-id="{{ $item->id }}">
+                                            <button class="mb-2 btn btn-sm btn-danger btn-delete" data-id="{{ $item->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
@@ -114,7 +117,7 @@
 // JavaScript yang sudah diperbaiki
 @push('js')
     <script>
-        $('.btn-delete').click(function(e) {
+        $('.btn-delete').click(function (e) {
             e.preventDefault();
             let $this = $(this);
             let id = $this.data('id');
@@ -143,7 +146,7 @@
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest' // Ini penting untuk mendeteksi AJAX request
                         },
-                        beforeSend: function() {
+                        beforeSend: function () {
                             Swal.fire({
                                 title: 'Sedang Memproses',
                                 html: 'Mohon tunggu sebentar...',
@@ -153,7 +156,7 @@
                                 }
                             });
                         },
-                        success: function(res) {
+                        success: function (res) {
                             // Jika menggunakan controller dengan JSON response
                             if (res.status === 'success') {
                                 Swal.fire({
@@ -173,7 +176,7 @@
                                 });
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             // Handle both JSON and HTML error responses
                             let errorMessage = "Terjadi kesalahan";
 
