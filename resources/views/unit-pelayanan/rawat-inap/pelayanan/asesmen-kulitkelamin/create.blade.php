@@ -39,8 +39,37 @@
                             @csrf
                             <div class="px-3">
                                 <div>
+
+                                    <div class="section-separator" id="data-masuk">
+                                        <h5 class="section-title">1. Data masuk</h5>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                            <div class="d-flex gap-3" style="width: 100%;">
+                                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                                                <input type="time" class="form-control" name="jam_masuk" id="jam_masuk" value="{{ date('H:i') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Kondisi Masuk</label>
+                                            <select class="form-select" name="kondisi_masuk">
+                                                <option selected disabled>Pilih</option>
+                                                <option value="Mandiri">Mandiri</option>
+                                                <option value="Jalan Kaki">Jalan Kaki</option>
+                                                <option value="Kursi Roda">Kursi Roda</option>
+                                                <option value="Brankar">Brankar</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 200px;">Diagnosis Masuk</label>
+                                            <input type="text" class="form-control" name="diagnosis_masuk">
+                                        </div>
+                                    </div>
+
                                     <div class="section-separator" id="anamnesis">
-                                        <h5 class="section-title">1. Anamnesis</h5>
+                                        <h5 class="section-title">2. Anamnesis</h5>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Anamnesis</label>
@@ -154,7 +183,7 @@
                                     </div>
 
                                     <div class="section-separator" id="skala-nyeri">
-                                        <h5 class="section-title">Skala Nyeri</h5>
+                                        <h5 class="section-title">3. Skala Nyeri</h5>
 
                                         <div class="row">
                                             <div class="col-md-6">
@@ -186,7 +215,7 @@
                                     </div>
 
                                     <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">2. Alergi</h5>
+                                        <h5 class="section-title">4. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
                                             id="openAlergiModal">
@@ -212,7 +241,7 @@
                                     </div>
 
                                     <div class="section-separator" id="pemeriksaan-fisik">
-                                        <h5 class="section-title">3. Pemeriksaan Fisik</h5>
+                                        <h5 class="section-title">5. Pemeriksaan Fisik</h5>
                                         <div class="row g-3">
                                             <div class="pemeriksaan-fisik">
                                                 <h6>Pemeriksaan Fisik</h6>
@@ -270,7 +299,7 @@
                                     </div>
 
                                     <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">4. Discharge Planning</h5>
+                                        <h5 class="section-title">6. Discharge Planning</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
@@ -378,7 +407,7 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">5. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -438,7 +467,7 @@
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">6. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">8. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">
