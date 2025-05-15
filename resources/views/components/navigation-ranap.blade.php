@@ -143,7 +143,8 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
-        ],[
+        ],
+        [
             'icon' => 'observasi.png',
             'label' => 'Pengawasan',
             'link' => route('rawat-inap.pengawasan-perinatology.index', [
@@ -195,15 +196,23 @@
 
         $urlKriteria = '#';
 
+        if ($dataMedis->kd_unit == '10015') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.iccu.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
 
-        if ($dataMedis->kd_unit == '10016') $urlKriteria = '#';
-        if ($dataMedis->kd_unit == '10015') $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.iccu.index', [
-            $dataMedis->kd_unit,
-            $dataMedis->kd_pasien,
-            $tglMasukData,
-            $dataMedis->urut_masuk,
-        ]);
-
+        if ($dataMedis->kd_unit == '10016') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.icu.masuk.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
 
         $navItems[] = [
             'icon' => 'monitoring.png',
