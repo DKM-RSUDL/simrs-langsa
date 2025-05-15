@@ -165,20 +165,56 @@
         }
 
         .kriteria-table .check-column {
-            width: 30px; /* Mengurangi lebar */
+            width: 15%; /* Mengurangi lebar kolom check */
             text-align: center;
         }
 
         .kriteria-table .keterangan-column {
-            width: 120px; /* Mengurangi lebar */
+            width: 40%; /* Memperbesar lebar kolom keterangan */
         }
 
         .kriteria-table .description-column {
-            width: auto;
+            width: 45%; /* Menyesuaikan lebar deskripsi */
         }
 
         .sub-kriteria {
             margin-left: 10px; /* Mengurangi indentasi */
+        }
+
+        /* Checkbox styling */
+        .check-mark {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #000;
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+        }
+
+        /* Alternative checkbox using CSS */
+        .checkbox-checked {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+            background-color: #fff;
+        }
+
+        .checkbox-checked::after {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 0px;
+            width: 6px;
+            height: 10px;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-unchecked {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            background-color: #fff;
         }
 
         /* Fixed Signature Section */
@@ -327,67 +363,145 @@
                 <tbody>
                     <tr>
                         <td><strong>1. Nilai Tanda Vital</strong></td>
-                        <td>{{ $dataIccu->vita_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->vita_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->vita_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>1. Infark Miocard Akut</td>
-                        <td>{{ $dataIccu->infark_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>• Infark Miocard Akut</td>
+                        <td class="check-column">
+                            @if($dataIccu->infark_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->infark_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>2. Angina Tidak Stabil</td>
-                        <td>{{ $dataIccu->angina_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>• Angina Tidak Stabil</td>
+                        <td class="check-column">
+                            @if($dataIccu->angina_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->angina_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td><strong>3. Aritmia yang gawat, mengancam jiwa misalnya:</strong></td>
-                        <td>{{ $dataIccu->aritmia_kriteria_masuk ? '✔' : '' }}</td>
+                        <td><strong>2. Aritmia yang gawat, mengancam jiwa misalnya:</strong></td>
+                        <td class="check-column">
+                            @if($dataIccu->aritmia_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->aritmia_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td class="sub-kriteria">• Blok AV total dengan irama lolos Ventrikuler <40X/Menit</td>
-                        <td>{{ $dataIccu->blokav_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->blokav_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->blokav_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td class="sub-kriteria">• Sinus Bradikardi <40x/Menit</td>
-                        <td>{{ $dataIccu->sinus_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->sinus_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->sinus_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td class="sub-kriteria">• Sick Sinus Sindroma dengan serangan</td>
-                        <td>{{ $dataIccu->sick_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->sick_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->sick_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td class="sub-kriteria">• Takikardia atrial proksimal</td>
-                        <td>{{ $dataIccu->takikardia_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->takikardia_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->takikardia_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td class="sub-kriteria">• Fibrilasi ventrikuler</td>
-                        <td>{{ $dataIccu->fibrilasi_kriteria_masuk ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->fibrilasi_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->fibrilasi_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>4. Edema Paru Akut</td>
-                        <td>{{ $dataIccu->edema_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>3. Edema Paru Akut</td>
+                        <td class="check-column">
+                            @if($dataIccu->edema_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->edema_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>5. Miokarditis</td>
-                        <td>{{ $dataIccu->miokarditis_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>4. Miokarditis</td>
+                        <td class="check-column">
+                            @if($dataIccu->miokarditis_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->miokarditis_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>6. Krisis Hipertensi</td>
-                        <td>{{ $dataIccu->krisis_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>5. Krisis Hipertensi</td>
+                        <td class="check-column">
+                            @if($dataIccu->krisis_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->krisis_keterangan_masuk ?: '-' }}</td>
                     </tr>
                     <tr>
-                        <td>7. Penyakit Jantung lain yang memerlukan pemantauan Hemodinamik</td>
-                        <td>{{ $dataIccu->penyakit_kriteria_masuk ? '✔' : '' }}</td>
+                        <td>6. Penyakit Jantung lain yang memerlukan pemantauan Hemodinamik</td>
+                        <td class="check-column">
+                            @if($dataIccu->penyakit_kriteria_masuk)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->penyakit_keterangan_masuk ?: '-' }}</td>
                     </tr>
                 </tbody>
@@ -406,32 +520,68 @@
                 <tbody>
                     <tr>
                         <td>1. Dianggap keadaan penderita sudah tidak memerlukan perawatan intensif dan dapat dirawat di ruang rawat inap.</td>
-                        <td>{{ $dataIccu->dirawat_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->dirawat_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->dirawat_keterangan_keluar ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td>2. Kegawatan penderita bukan disebabkan oleh penyakit jantung dan dipindahkan ke unit perawatan intensif lain.</td>
-                        <td>{{ $dataIccu->kegawatan_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->kegawatan_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->kegawatan_keterangan_keluar ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td>3. Penderita juga menderita penyakit menular.</td>
-                        <td>{{ $dataIccu->penderita_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->penderita_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->penderita_keterangan_keluar ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td>4. Penderita yang meninggal dan dikeluarkan setelah 2 jam observasi di ICCU.</td>
-                        <td>{{ $dataIccu->iccu_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->iccu_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->iccu_keterangan_keluar ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td>5. Penderita yang ingin dirawat di rumah sakit lain atas permintaan sendiri atau keluarga.</td>
-                        <td>{{ $dataIccu->rslain_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->rslain_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->rslain_keterangan_keluar ?: '-' }}</td>
                     </tr>
                     <tr>
                         <td>6. Yang pulang paksa setelah mendatangani surat pernyataan tidak ingin di rawat di RSUD Langsa.</td>
-                        <td>{{ $dataIccu->rsud_kriteria_keluar ? '✔' : '' }}</td>
+                        <td class="check-column">
+                            @if($dataIccu->rsud_kriteria_keluar)
+                                <div class="checkbox-checked"></div>
+                            @else
+                                <div class="checkbox-unchecked"></div>
+                            @endif
+                        </td>
                         <td>{{ $dataIccu->rsud_keterangan_keluar ?: '-' }}</td>
                     </tr>
                 </tbody>
@@ -448,7 +598,7 @@
             <div class="signature-box">
                 <div class="signature-title">Dokter Jantung</div>
                 <div class="signature-space"></div>
-                <div class="signature-line">({{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama ?? '-' }})</div>                
+                <div class="signature-line">({{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama ?? '-' }})</div>
             </div>
         </div>
     </div>
