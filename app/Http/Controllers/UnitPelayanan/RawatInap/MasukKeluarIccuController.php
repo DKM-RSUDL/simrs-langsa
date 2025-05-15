@@ -109,7 +109,7 @@ class MasukKeluarIccuController extends Controller
         }
 
         $dokter = Dokter::where('status', 1)
-            ->select('kd_dokter', 'nama')
+            ->select('kd_dokter', 'nama_lengkap')
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.iccu.create',  compact('dataMedis', 'dokter'));
@@ -255,7 +255,7 @@ class MasukKeluarIccuController extends Controller
 
         $dataIccu = ICCU::findOrFail($id);
         $dokter = Dokter::where('status', 1)
-            ->select('kd_dokter', 'nama')
+            ->select('kd_dokter', 'nama_lengkap')
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.iccu.show', compact(
@@ -288,7 +288,7 @@ class MasukKeluarIccuController extends Controller
 
         $dataIccu = ICCU::findOrFail($id);
         $dokter = Dokter::where('status', 1)
-            ->select('kd_dokter', 'nama')
+            ->select('kd_dokter', 'nama_lengkap')
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.iccu.edit', compact(
@@ -483,10 +483,10 @@ class MasukKeluarIccuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Fetch second opinion data        
+        // Fetch second opinion data
         $dataIccu = ICCU::findOrFail($id);
         $dokter = Dokter::where('status', 1)
-                ->select('kd_dokter', 'nama')
+                ->select('kd_dokter', 'nama_lengkap')
                 ->get();
 
         // Load the Blade view and pass data

@@ -331,7 +331,7 @@
                                 <option value="">--Pilih--</option>
                                 @foreach ($dokter as $dok)
                                     <option value="{{ $dok->kd_dokter }}" {{ $dataIccu->kd_dokter == $dok->kd_dokter ? 'selected' : '' }}>
-                                        {{ $dok->nama }}
+                                        {{ $dok->nama_lengkap }}
                                     </option>
                                 @endforeach
                             </select>

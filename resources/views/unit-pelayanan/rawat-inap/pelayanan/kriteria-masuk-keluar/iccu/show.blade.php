@@ -252,7 +252,7 @@
                     <div class="">
                         <label for="kd_dokter" class="form-label mb-2">Dokter Jantung</label>
                         <p class="form-control-static">
-                            {{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama ?? '-' }}
+                            {{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama_lengkap ?? '-' }}
                         </p>
                     </div>
                 </div>

@@ -345,7 +345,7 @@
                 <tr>
                     <td class="label">Dokter Jantung</td>
                     <td class="value">
-                        : {{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama ?? '-' }}
+                        : {{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama_lengkap ?? '-' }}
                     </td>
                 </tr>
             </table>
@@ -598,7 +598,7 @@
             <div class="signature-box">
                 <div class="signature-title">Dokter Jantung</div>
                 <div class="signature-space"></div>
-                <div class="signature-line">({{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama ?? '-' }})</div>
+                <div class="signature-line">({{ $dokter->firstWhere('kd_dokter', $dataIccu->kd_dokter)->nama_lengkap ?? '-' }})</div>
             </div>
         </div>
     </div>
