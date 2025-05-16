@@ -37,44 +37,26 @@
 
                         <!-- FORM ASESMEN -->
                         <div class="px-3">
-                            <!-- 1. Data masuk -->
                             <div class="section-separator" id="data-masuk">
                                 <h5 class="section-title">1. Data masuk</h5>
+
                                 <div class="form-group">
-                                    <label>Ruangan</label>
-                                    <input type="text" class="form-control" name="ruangan" placeholder="Nama ruangan">
+                                    <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
+                                    <div class="d-flex gap-3" style="width: 100%;">
+                                        <input type="date" class="form-control" name="tgl_masuk"
+                                            value="{{ date('Y-m-d') }}">
+                                        <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 2. Anamnesis -->
-                            <div class="section-separator" id="anamnesis">
+                            <div class="section-separator" id="alergi">
                                 <h5 class="section-title">2. Anamnesis</h5>
 
                                 <div class="form-group">
-                                    <label>ALERGI</label>
-                                    <textarea class="form-control" name="alergi" rows="3"
-                                        placeholder="Sebutkan alergi pasien jika ada"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>ANAMNESA (auto/allo)</label>
+                                    <label>Anamnesa</label>
                                     <textarea class="form-control" name="anamnesa" rows="3"
                                         placeholder="Keluhan utama pasien"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Keluhan utama</label>
-                                    <select class="form-select" name="keluhan_utama">
-                                        <option value="">Pilih</option>
-                                        <option value="batuk">batuk</option>
-                                        <option value="batuk_darah">batuk darah</option>
-                                        <option value="nyeri_dada">nyeri dada</option>
-                                        <option value="demam">demam</option>
-                                        <option value="keringat_dingin">keringat dingin</option>
-                                        <option value="nafsu_makan">nafsu makan</option>
-                                        <option value="bb">BB</option>
-                                        <option value="lainnya">Lainnya</option>
-                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -82,6 +64,32 @@
                                     <textarea class="form-control" name="riwayat_penyakit" rows="4"
                                         placeholder="Riwayat penyakit sekarang"></textarea>
                                 </div>
+
+                                <label style="min-width: 200px;">Alergi</label>
+                                <input type="hidden" name="alergi" value="[]">
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal">
+                                    <i class="ti-plus"></i> Tambah
+                                </button>
+
+                                <div class="table-responsive">
+                                    <table class="table" id="createAlergiTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Alergen</th>
+                                                <th>Reaksi</th>
+                                                <th>Severe</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table content will be dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @push('modals')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.modal-create-alergi')
+                                @endpush
+
                             </div>
 
                             <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->
@@ -267,9 +275,18 @@
                                                 <td class="label-col">c. Tekanan darah</td>
                                                 <td>
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <input type="text" class="form-control input-inline input-md"
-                                                            name="tekanan_darah">
-                                                        <span>mmHg</span>
+                                                        <div class="form-group">
+                                                            <div class="d-flex gap-3" style="width: 100%;">
+                                                                <div class="flex-grow-1">
+                                                                    <input type="number" class="form-control"
+                                                                        name="darah_sistole" placeholder="Sistole">
+                                                                </div>
+                                                                <div class="flex-grow-1">
+                                                                    <input type="number" class="form-control"
+                                                                        name="darah_diastole" placeholder="Diastole">
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -476,100 +493,106 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="mt-5">
-                                    <div class="form-group">
-                                        <label>gambar radiologi paru</label>
-                                        <input type="file" class="form-control" name="gambar_radiologi_paru"
-                                            placeholder="gambar radiologi paru">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>diagnosis banding</label>
-                                        <textarea class="form-control" name="diagnosis_banding" rows="4"
-                                            placeholder="diagnosis banding"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>diagnosis kerja</label>
-                                        <textarea class="form-control" name="diagnosis_kerja" rows="4"
-                                            placeholder="diagnosis kerja"></textarea>
-                                    </div>
-                                </div>
                             </div>
+
 
                             <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
                             <div class="section-separator" id="rencana-kerja">
                                 <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
                                 <div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thorax</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto
+                                            thorax</label>
                                         <input type="checkbox" name="foto_thoraks">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan darah rutin</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan
+                                            darah
+                                            rutin</label>
                                         <input type="checkbox" name="darah_rutin">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan LED</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan
+                                            LED</label>
                                         <input type="checkbox" name="led">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan sputum BTA</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan
+                                            sputum
+                                            BTA</label>
                                         <input type="checkbox" name="sputum_bta">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan IGDS</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan
+                                            IGDS</label>
                                         <input type="checkbox" name="igds">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal ginjal (RFG)</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan
+                                            faal
+                                            ginjal (RFG)</label>
                                         <input type="checkbox" name="faal_ginjal">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan elektrolit</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan
+                                            elektrolit</label>
                                         <input type="checkbox" name="elektrolit">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan albumin</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
+                                            albumin</label>
                                         <input type="checkbox" name="albumin">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan thorax</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan
+                                            thorax</label>
                                         <input type="checkbox" name="ct_scan_thorax">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">j.</span> Memeriksaan asam urat</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">j.</span> Memeriksaan
+                                            asam
+                                            urat</label>
                                         <input type="checkbox" name="asam_urat">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru ( APE, spirometri )</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru (
+                                            APE,
+                                            spirometri )</label>
                                         <input type="checkbox" name="faal_paru">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan thoraks</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan
+                                            thoraks</label>
                                         <input type="checkbox" name="ct_scan_thoraks">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">m.</span> Bronchoscopy</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">m.</span>
+                                            Bronchoscopy</label>
                                         <input type="checkbox" name="bronchoscopy">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef Punctie</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef
+                                            Punctie</label>
                                         <input type="checkbox" name="proef_punctie">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan pleura</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan
+                                            pleura</label>
                                         <input type="checkbox" name="aspirasi_cairan_pleura">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan WSD</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan
+                                            WSD</label>
                                         <input type="checkbox" name="penanganan_wsd">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan penyakit</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan
+                                            penyakit</label>
                                         <input type="checkbox" name="penanganan_penyakit">
                                     </div>
                                     <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul Tes</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul
+                                            Tes</label>
                                         <input type="checkbox" name="konsul">
                                     </div>
                                     <div class="form-group">
@@ -578,67 +601,289 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-5">
-                                    <div class="form-group">
-                                        <label>Prognosis</label>
-                                        <textarea class="form-control" name="prognosis" rows="4"
-                                            placeholder="prognosis"></textarea>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- 8. Perencanaan Pulang Pasien -->
-                            <div class="section-separator" id="rencana-kerja">
+                            <div class="section-separator" id="discharge-planning">
                                 <h5 class="section-title">8. Perencanaan Pulang Pasien (Discharge Planning)</h5>
-                                <p>Jika salah satu jawaban "Ya" maka perencanaan penuh/khusus</p>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Usia lanjut (>60 th)</label>
-                                    <div>
-                                        <input type="radio" name="usia_lanjut" value="Ya"> Ya
-                                        <input type="radio" name="usia_lanjut" value="Tidak"> Tidak
+
+                                <div class="mb-4">
+                                    <label class="form-label">Diagnosis medis</label>
+                                    <input type="text" class="form-control" name="diagnosis_medis" placeholder="Diagnosis">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Usia lanjut (>60 th)</label>
+                                    <select class="form-select" name="usia_lanjut">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="0">Ya</option>
+                                        <option value="1">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Hambatan mobilitas</label>
+                                    <select class="form-select" name="hambatan_mobilisasi">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="0">Ya</option>
+                                        <option value="1">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Membutuhkan pelayanan medis berkelanjutan</label>
+                                    <select class="form-select" name="penggunaan_media_berkelanjutan">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="ya">Ya</option>
+                                        <option value="tidak">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Keteraturan dalam mengonsumsi obat dalam aktivitas
+                                        harian</label>
+                                    <select class="form-select" name="ketergantungan_aktivitas">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="ya">Ya</option>
+                                        <option value="tidak">Tidak</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Rencana Pulang Khusus</label>
+                                    <input type="text" class="form-control" name="rencana_pulang_khusus"
+                                        placeholder="Rencana Pulang Khusus">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Rencana Lama Perawatan</label>
+                                    <input type="text" class="form-control" name="rencana_lama_perawatan"
+                                        placeholder="Rencana Lama Perawatan">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Rencana Tanggal Pulang</label>
+                                    <input type="date" class="form-control" name="rencana_tgl_pulang">
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="form-label">KESIMPULAN</label>
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="alert alert-info d-none">
+                                            <!-- Alasan akan ditampilkan di sini -->
+                                        </div>
+                                        <div class="alert alert-warning d-none">
+                                            Membutuhkan rencana pulang khusus
+                                        </div>
+                                        <div class="alert alert-success">
+                                            Tidak membutuhkan rencana pulang khusus
+                                        </div>
                                     </div>
+                                    <input type="hidden" id="kesimpulan" name="kesimpulan_planing"
+                                        value="Tidak membutuhkan rencana pulang khusus">
                                 </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Hambatan mobilitas</label>
-                                    <div>
-                                        <input type="radio" name="hambatan_mobilitas" value="Ya"> Ya
-                                        <input type="radio" name="hambatan_mobilitas" value="Tidak"> Tidak
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Membutuhkan pelayanan meds berkelanjutan</label>
-                                    <div>
-                                        <input type="radio" name="pelayanan_meds_berkelanjutan" value="Ya"> Ya
-                                        <input type="radio" name="pelayanan_meds_berkelanjutan" value="Tidak"> Tidak
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Keteraturan dalam mengonsumsi obat dalam aktivitas harian</label>
-                                    <div>
-                                        <input type="radio" name="keteraturan_obat" value="Ya"> Ya
-                                        <input type="radio" name="keteraturan_obat" value="Tidak"> Tidak
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Rencana Pulang Khusus: :</label>
-                                    <input type="text" class="form-control" name="rencana_pulang_khusus:">
-                                </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Renacana Lama Perawatan :</label>
-                                    <input type="text" class="form-control" name="renacana_lama_perawatan">
-                                </div>
-                                <div class="form-group">
-                                    <label style="min-width: 500px;">Rencana Tanggal Pulang :</label>
-                                    <input type="date" class="form-control">
+
+                                <!-- Tombol Reset (Opsional) -->
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-secondary" onclick="resetDischargePlanning()">
+                                        Reset Discharge Planning
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary px-4">
-                                    <i class="fas fa-save me-2"></i>Simpan
-                                </button>
+                            <!-- 9. Diagnosis -->
+                            <div class="section-separator" id="diagnosis">
+                                <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
+
+                                <!-- Diagnosis Banding -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis banding,
+                                        apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis banding yang tidak ditemukan.</small>
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-banding-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Banding">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-banding">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+
+                                    <div id="diagnosis-banding-list" class="diagnosis-list bg-light p-3 rounded">
+                                        <!-- Diagnosis items will be added here dynamically -->
+                                    </div>
+
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
+                                </div>
+
+                                <!-- Diagnosis Kerja -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold mb-2">Diagnosis Kerja</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        diagnosis kerja, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan diagnosis kerja yang tidak ditemukan.</small>
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="diagnosis-kerja-input"
+                                            class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Diagnosis Kerja">
+                                        <span class="input-group-text bg-white" id="add-diagnosis-kerja">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+
+                                    <div id="diagnosis-kerja-list" class="diagnosis-list bg-light p-3 rounded">
+                                        <!-- Diagnosis items will be added here dynamically -->
+                                    </div>
+
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
+                                </div>
+
+                                <div class="mt-5">
+                                    <div class="form-group">
+                                        <label>gambar radiologi paru</label>
+                                        <input type="file" class="form-control" name="gambar_radiologi_paru"
+                                            placeholder="gambar radiologi paru">
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
+                                <h5 class="fw-semibold mb-4">10. Implementasi</h5>
+
+                                <!-- Rencana Penatalaksanaan dan Pengobatan -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
+                                        rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
+                                </div>
+
+                                <!-- Observasi Section -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2">Observasi</label>
+                                    <div class="input-group mt-2">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Observasi">
+                                        <span class="input-group-text bg-white" id="add-observasi">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                    <div id="observasi-list" class="list-group mb-2 bg-light">
+                                        <!-- Items will be added here dynamically -->
+                                    </div>
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="observasi" name="observasi" value="[]">
+                                </div>
+
+                                <!-- Terapeutik Section -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2">Terapeutik</label>
+                                    <div class="input-group mt-2">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Terapeutik">
+                                        <span class="input-group-text bg-white" id="add-terapeutik">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                    <div id="terapeutik-list" class="list-group mb-2">
+                                        <!-- Items will be added here dynamically -->
+                                    </div>
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
+                                </div>
+
+                                <!-- Edukasi Section -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2">Edukasi</label>
+                                    <div class="input-group mt-2">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Edukasi">
+                                        <span class="input-group-text bg-white" id="add-edukasi">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                    <div id="edukasi-list" class="list-group mb-2">
+                                        <!-- Items will be added here dynamically -->
+                                    </div>
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="edukasi" name="edukasi" value="[]">
+                                </div>
+
+                                <!-- Kolaborasi Section -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2">Kolaborasi</label>
+                                    <div class="input-group mt-2">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Kolaborasi">
+                                        <span class="input-group-text bg-white" id="add-kolaborasi">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+                                    <div id="kolaborasi-list" class="list-group mb-2">
+                                        <!-- Items will be added here dynamically -->
+                                    </div>
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
+                                </div>
+
+                                <!-- Kolaborasi Section -->
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Prognosis</label>
+                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
+                                        Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
+                                        keterangan
+                                        Prognosis yang tidak ditemukan.</small>
+                                        <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-search text-secondary"></i>
+                                        </span>
+                                        <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
+                                            placeholder="Cari dan tambah Rencana Penatalaksanaan">
+                                        <span class="input-group-text bg-white" id="add-rencana">
+                                            <i class="bi bi-plus-circle text-primary"></i>
+                                        </span>
+                                    </div>
+
+                                    <div id="rencana-list" class="list-group mb-3">
+                                        <!-- Items will be added here dynamically -->
+                                    </div>
+                                    <!-- Hidden input to store JSON data -->
+                                    <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Simpan
+                            </button>
                         </div>
                     </div>
                 </div>
