@@ -144,21 +144,7 @@
                                         <option value="0">A - Alert (Sadar Baik)</option>
                                         <option value="3">V - Voice (Berespon dengan kata-kata)</option>
                                         <option value="3">P - Pain (Hanya berespon jika dirangsang nyeri)</option>
-                                        <option value="3">U - Unresponsive (Pasien tidak sadar)</option>
-                                        <option value="3">Gelisah atau bingung</option>
-                                        <option value="3">Acute Confusional States</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="min-width: 200px;">Respirasi (per menit)</label>
-                                    <select class="form-select" name="respirasi" id="respirasi">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≤ 8</option>
-                                        <option value="1">9-11</option>
-                                        <option value="0">12-20</option>
-                                        <option value="2">21-24</option>
-                                        <option value="3">≥ 25</option>
+                                        <option value="3">U - Unresponsive (Pasien tidak sadar)</option>                                        
                                     </select>
                                 </div>
 
@@ -166,10 +152,10 @@
                                     <label style="min-width: 200px;">Saturasi O2 (%)</label>
                                     <select class="form-select" name="saturasi_o2" id="saturasi_o2">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≤ 91</option>
-                                        <option value="2">92-93</option>
+                                        <option value="0">≥ 95</option>
                                         <option value="1">94-95</option>
-                                        <option value="0">≥ 96</option>
+                                        <option value="2">92-93</option>
+                                        <option value="3">≤ 91</option>
                                     </select>
                                 </div>
 
@@ -188,11 +174,11 @@
                                     <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
                                     <select class="form-select" name="tekanan_darah" id="tekanan_darah">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≤ 90</option>
-                                        <option value="2">91-100</option>
-                                        <option value="1">101-110</option>
-                                        <option value="0">111-219</option>
                                         <option value="3">≥ 220</option>
+                                        <option value="0">111-219</option>
+                                        <option value="1">101-110</option>
+                                        <option value="2">91-100</option>
+                                        <option value="3">≤ 90</option>
                                     </select>
                                 </div>
 
@@ -200,12 +186,24 @@
                                     <label style="min-width: 200px;">Nadi (per menit)</label>
                                     <select class="form-select" name="nadi" id="nadi">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≤ 40</option>
-                                        <option value="1">41-50</option>
-                                        <option value="0">51-90</option>
-                                        <option value="1">91-110</option>
-                                        <option value="2">111-130</option>
                                         <option value="3">≥ 131</option>
+                                        <option value="2">111-130</option>
+                                        <option value="1">91-110</option>
+                                        <option value="0">51-90</option>
+                                        <option value="1">41-50</option>
+                                        <option value="3">≤ 40</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="min-width: 200px;">Nafas (per menit)</label>
+                                    <select class="form-select" name="nafas" id="nafas">
+                                        <option value="" selected disabled>--Pilih--</option>
+                                        <option value="3">≥ 25</option>
+                                        <option value="2">21-24</option>
+                                        <option value="0">12-20</option>
+                                        <option value="1">9-11</option>
+                                        <option value="3">≤ 8</option>                                        
                                     </select>
                                 </div>
 
@@ -214,12 +212,11 @@
                                     <label style="min-width: 200px;">Temperatur (°C)</label>
                                     <select class="form-select" name="temperatur" id="temperatur">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≤ 35</option>
-                                        <option value="1">35.1-36.0</option>
-                                        <option value="0">36.1-38.0</option>
+                                        <option value="2">≤ 91.1</option>
                                         <option value="1">38.1-39.0</option>
-                                        <option value="2">39.1-39.9</option>
-                                        <option value="3">≥ 40</option>
+                                        <option value="0">36.1-38.0</option>
+                                        <option value="1">36.1-36.0</option>
+                                        <option value="3">≤ 35</option>                                        
                                     </select>
                                 </div>
 

@@ -170,7 +170,7 @@
         ],
         [
             'icon' => 'observasi.png',
-            'label' => 'EWS Dewasa',
+            'label' => 'EWS',
             'link' => route('rawat-inap.ews-pasien-dewasa.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
