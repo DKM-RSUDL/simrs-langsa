@@ -17,4 +17,9 @@ class RmePengawasanTransportasi extends Model
     {
         return $this->belongsTo(User::class, 'user_create', 'id');
     }
+
+    public function detail()
+    {
+        return $this->hasMany(RmePengawasanTransportasiDtl::class, 'id_pengawasan', 'id');
+    }
 }

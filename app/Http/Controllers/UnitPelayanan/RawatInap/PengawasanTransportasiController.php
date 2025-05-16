@@ -12,6 +12,7 @@ use App\Models\RmePengawasanTransportasiDtl;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PengawasanTransportasiController extends Controller
@@ -141,6 +142,7 @@ class PengawasanTransportasiController extends Controller
             $pengawasan->resiko_nafas_sampai = $request->resiko_nafas_sampai;
             $pengawasan->masalah = $request->masalah;
             $pengawasan->tindakan = $request->tindakan;
+            $pengawasan->user_create = Auth::id();
             $pengawasan->save();
 
             // PENGAWASAN DTL
@@ -212,7 +214,7 @@ class PengawasanTransportasiController extends Controller
         $id = decrypt($idEncrypt);
         $pengawasan = RmePengawasanTransportasi::find($id);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.pengawasan-transportasi.create', compact('dataMedis', 'dokter', 'perawat', 'petugas', 'pengawasan'));
+        return view('unit-pelayanan.rawat-inap.pelayanan.pengawasan-transportasi.edit', compact('dataMedis', 'dokter', 'perawat', 'petugas', 'pengawasan'));
     }
 
     public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypt, Request $request)

@@ -138,6 +138,7 @@
                     opacity: 0;
                     transform: scale(0.9);
                 }
+
                 to {
                     opacity: 1;
                     transform: scale(1);
@@ -359,9 +360,8 @@
                                         onchange="toggleKeterangan('tanda_vital', this)">
                                 </div>
                                 <div class="keterangan-input">
-                                    <input type="text" name="vita_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_tanda_vital"
-                                        placeholder="Masukkan keterangan...">
+                                    <input type="text" name="vita_keterangan_masuk" class="form-control keterangan-field"
+                                        id="keterangan_tanda_vital" placeholder="Masukkan keterangan...">
                                 </div>
                             </div>
                         </div>
@@ -391,8 +391,8 @@
                                     • Angina Tidak Stabil
                                 </div>
                                 <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="angina_kriteria_masuk" value="1" id="angina_tidak_stabil"
-                                        onchange="toggleKeterangan('angina_tidak_stabil', this)">
+                                    <input type="checkbox" name="angina_kriteria_masuk" value="1"
+                                        id="angina_tidak_stabil" onchange="toggleKeterangan('angina_tidak_stabil', this)">
                                 </div>
                                 <div class="keterangan-input">
                                     <input type="text" name="angina_keterangan_masuk"
@@ -409,8 +409,8 @@
                                     <strong>3. Aritmia yang gawat, mengancam jiwa misalnya :</strong>
                                 </div>
                                 <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="aritmia_kriteria_masuk" value="1" id="aritmia_gawat"
-                                        onchange="toggleKeterangan('aritmia_gawat', this)">
+                                    <input type="checkbox" name="aritmia_kriteria_masuk" value="1"
+                                        id="aritmia_gawat" onchange="toggleKeterangan('aritmia_gawat', this)">
                                 </div>
                                 <div class="keterangan-input">
                                     <input type="text" name="aritmia_keterangan_masuk"
@@ -424,289 +424,307 @@
                         <div class="kriteria-item sub-kriteria" data-kriteria="blok_av">
                             <div class="kriteria-row">
                                 <div class="kriteria-desc">
-                                    • Blok AV total dengan irama lolos Ventrikuler <40X/Menit
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="blokav_kriteria_masuk" value="1" id="blok_av"
-                                        onchange="toggleKeterangan('blok_av', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="blokav_keterangan_masuk" class="form-control keterangan-field"
-                                        id="keterangan_blok_av" placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="kriteria-item sub-kriteria" data-kriteria="sinus_bradikardi">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    • Sinus Bradikardi <40x/Menit
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="sinus_kriteria_masuk" value="1" id="sinus_bradikardi"
-                                        onchange="toggleKeterangan('sinus_bradikardi', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="sinus_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_sinus_bradikardi"
-                                        placeholder="Masukkan keterangan...">
+                                    • Blok AV total dengan irama lolos Ventrikuler <40X /Menit </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="blokav_kriteria_masuk" value="1"
+                                                id="blok_av" onchange="toggleKeterangan('blok_av', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="blokav_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_blok_av"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="kriteria-item sub-kriteria" data-kriteria="sick_sinus">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    • Sick Sinus Sindroma dengan serangan
+                            <div class="kriteria-item sub-kriteria" data-kriteria="sinus_bradikardi">
+                                <div class="kriteria-row">
+                                    <div class="kriteria-desc">
+                                        • Sinus Bradikardi <40x /Menit </div>
+                                            <div class="kriteria-checkbox">
+                                                <input type="checkbox" name="sinus_kriteria_masuk" value="1"
+                                                    id="sinus_bradikardi"
+                                                    onchange="toggleKeterangan('sinus_bradikardi', this)">
+                                            </div>
+                                            <div class="keterangan-input">
+                                                <input type="text" name="sinus_keterangan_masuk"
+                                                    class="form-control keterangan-field" id="keterangan_sinus_bradikardi"
+                                                    placeholder="Masukkan keterangan...">
+                                            </div>
+                                    </div>
                                 </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="sick_kriteria_masuk" value="1" id="sick_sinus"
-                                        onchange="toggleKeterangan('sick_sinus', this)">
+
+                                <div class="kriteria-item sub-kriteria" data-kriteria="sick_sinus">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            • Sick Sinus Sindroma dengan serangan
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="sick_kriteria_masuk" value="1"
+                                                id="sick_sinus" onchange="toggleKeterangan('sick_sinus', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="sick_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_sick_sinus"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="sick_keterangan_masuk" class="form-control keterangan-field"
-                                        id="keterangan_sick_sinus" placeholder="Masukkan keterangan...">
+
+                                <div class="kriteria-item sub-kriteria" data-kriteria="takikardia_artrial">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            • Takikardia artrial proksimal.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="takikardia_kriteria_masuk" value="1"
+                                                id="takikardia_artrial"
+                                                onchange="toggleKeterangan('takikardia_artrial', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="takikardia_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_takikardia_artrial"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="kriteria-item sub-kriteria" data-kriteria="fibrilasi_ventrikuler">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            • Fibrilasi ventrikuler
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="fibrilasi_kriteria_masuk" value="1"
+                                                id="fibrilasi_ventrikuler"
+                                                onchange="toggleKeterangan('fibrilasi_ventrikuler', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="fibrilasi_keterangan_masuk"
+                                                class="form-control keterangan-field"
+                                                id="keterangan_fibrilasi_ventrikuler"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edema Paru Akut -->
+                                <div class="kriteria-item" data-kriteria="edema_paru">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            4. Edema Paru Akut
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="edema_kriteria_masuk" value="1"
+                                                id="edema_paru" onchange="toggleKeterangan('edema_paru', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="edema_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_edema_paru"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Miokarditis -->
+                                <div class="kriteria-item" data-kriteria="miokarditis">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            5. Miokarditis
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="miokarditis_kriteria_masuk" value="1"
+                                                id="miokarditis" onchange="toggleKeterangan('miokarditis', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="miokarditis_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_miokarditis"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Krisis Hipertensi -->
+                                <div class="kriteria-item" data-kriteria="krisis_hipertensi">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            6. Krisis Hipertensi
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="krisis_kriteria_masuk" value="1"
+                                                id="krisis_hipertensi"
+                                                onchange="toggleKeterangan('krisis_hipertensi', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="krisis_keterangan_masuk"
+                                                class="form-control keterangan-field" id="keterangan_krisis_hipertensi"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Penyakit Jantung lain -->
+                                <div class="kriteria-item" data-kriteria="penyakit_jantung_lain">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            7. Penyakit Jantung lain yang memerlukan pemantauan Hemodinamik
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="penyakit_kriteria_masuk" value="1"
+                                                id="penyakit_jantung_lain"
+                                                onchange="toggleKeterangan('penyakit_jantung_lain', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="penyakit_keterangan_masuk"
+                                                class="form-control keterangan-field"
+                                                id="keterangan_penyakit_jantung_lain"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="kriteria-item sub-kriteria" data-kriteria="takikardia_artrial">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    • Takikardia artrial proksimal.
+                            <!-- KRITERIA KELUAR -->
+                            <div class="kriteria-section">
+                                <div class="kriteria-header">
+                                    <div class="row">
+                                        <div class="col-md-5 col-6">
+                                            <i class="fas fa-sign-out-alt me-2"></i>
+                                            KRITERIA KELUAR
+                                        </div>
+                                        <div class="col-md-2 col-2">CHECK LIST</div>
+                                        <div class="col-md-5 col-4">KETERANGAN</div>
+                                    </div>
                                 </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="takikardia_kriteria_masuk" value="1" id="takikardia_artrial"
-                                        onchange="toggleKeterangan('takikardia_artrial', this)">
+
+                                <!-- Kriteria Keluar 1 -->
+                                <div class="kriteria-item" data-kriteria="tidak_perlu_intensive">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            1. Dianggap keadaan penderita sudah tidak memerlukan perawatan intensive dan
+                                            dapat dirawat
+                                            di ruang rawat inap.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="dirawat_kriteria_keluar" value="1"
+                                                id="tidak_perlu_intensive"
+                                                onchange="toggleKeterangan('tidak_perlu_intensive', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="dirawat_keterangan_keluar"
+                                                class="form-control keterangan-field"
+                                                id="keterangan_tidak_perlu_intensive"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="takikardia_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_takikardia_artrial"
-                                        placeholder="Masukkan keterangan...">
+
+                                <!-- Kriteria Keluar 2 -->
+                                <div class="kriteria-item" data-kriteria="bukan_penyakit_jantung">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            2. Kegawatan penderita bukan disebabkan oleh penyakit jantung dan dipindahkan ke
+                                            unit
+                                            perawatan intensive lain.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="kegawatan_kriteria_keluar" value="1"
+                                                id="bukan_penyakit_jantung"
+                                                onchange="toggleKeterangan('bukan_penyakit_jantung', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="kegawatan_keterangan_keluar"
+                                                class="form-control keterangan-field"
+                                                id="keterangan_bukan_penyakit_jantung"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Kriteria Keluar 3 -->
+                                <div class="kriteria-item" data-kriteria="penyakit_menular">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            3. Penderita juga menderita penyakit menular.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="penderita_kriteria_keluar" value="1"
+                                                id="penyakit_menular"
+                                                onchange="toggleKeterangan('penyakit_menular', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="penderita_keterangan_keluar"
+                                                class="form-control keterangan-field" id="keterangan_penyakit_menular"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Kriteria Keluar 4 -->
+                                <div class="kriteria-item" data-kriteria="meninggal">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            4. Penderita yang meninggal dan dikeluarkan setelah 2 jam observasi di ICCU.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="iccu_kriteria_keluar" value="1"
+                                                id="meninggal" onchange="toggleKeterangan('meninggal', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="iccu_keterangan_keluar"
+                                                class="form-control keterangan-field" id="keterangan_meninggal"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Kriteria Keluar 5 -->
+                                <div class="kriteria-item" data-kriteria="pindah_rs_lain">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            5. Penderita yang ingin dirawat di rumah sakit lain atas permintaan sendiri atau
+                                            keluarga.
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="rslain_kriteria_keluar" value="1"
+                                                id="pindah_rs_lain" onchange="toggleKeterangan('pindah_rs_lain', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="rslain_keterangan_keluar"
+                                                class="form-control keterangan-field" id="keterangan_pindah_rs_lain"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Kriteria Keluar 6 -->
+                                <div class="kriteria-item" data-kriteria="pulang_paksa">
+                                    <div class="kriteria-row">
+                                        <div class="kriteria-desc">
+                                            6. Yang pulang paksa setelah mendatangani surat pernyataan tidak ingin di rawat
+                                            di RSUD
+                                            Langsa
+                                        </div>
+                                        <div class="kriteria-checkbox">
+                                            <input type="checkbox" name="rsud_kriteria_keluar" value="1"
+                                                id="pulang_paksa" onchange="toggleKeterangan('pulang_paksa', this)">
+                                        </div>
+                                        <div class="keterangan-input">
+                                            <input type="text" name="rsud_keterangan_keluar"
+                                                class="form-control keterangan-field" id="keterangan_pulang_paksa"
+                                                placeholder="Masukkan keterangan...">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="kriteria-item sub-kriteria" data-kriteria="fibrilasi_ventrikuler">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    • Fibrilasi ventrikuler
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="fibrilasi_kriteria_masuk" value="1"
-                                        id="fibrilasi_ventrikuler" onchange="toggleKeterangan('fibrilasi_ventrikuler', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="fibrilasi_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_fibrilasi_ventrikuler"
-                                        placeholder="Masukkan keterangan...">
+                            <div class="row mt-4">
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" class="btn btn-primary" id="simpan">
+                                        <i class="ti-save"></i> Simpan
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Edema Paru Akut -->
-                        <div class="kriteria-item" data-kriteria="edema_paru">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    4. Edema Paru Akut
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="edema_kriteria_masuk" value="1" id="edema_paru"
-                                        onchange="toggleKeterangan('edema_paru', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="edema_keterangan_masuk" class="form-control keterangan-field"
-                                        id="keterangan_edema_paru" placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Miokarditis -->
-                        <div class="kriteria-item" data-kriteria="miokarditis">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    5. Miokarditis
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="miokarditis_kriteria_masuk" value="1" id="miokarditis"
-                                        onchange="toggleKeterangan('miokarditis', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="miokarditis_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_miokarditis"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Krisis Hipertensi -->
-                        <div class="kriteria-item" data-kriteria="krisis_hipertensi">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    6. Krisis Hipertensi
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="krisis_kriteria_masuk" value="1" id="krisis_hipertensi"
-                                        onchange="toggleKeterangan('krisis_hipertensi', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="krisis_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_krisis_hipertensi"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Penyakit Jantung lain -->
-                        <div class="kriteria-item" data-kriteria="penyakit_jantung_lain">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    7. Penyakit Jantung lain yang memerlukan pemantauan Hemodinamik
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="penyakit_kriteria_masuk" value="1"
-                                        id="penyakit_jantung_lain" onchange="toggleKeterangan('penyakit_jantung_lain', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="penyakit_keterangan_masuk"
-                                        class="form-control keterangan-field" id="keterangan_penyakit_jantung_lain"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- KRITERIA KELUAR -->
-                    <div class="kriteria-section">
-                        <div class="kriteria-header">
-                            <div class="row">
-                                <div class="col-md-5 col-6">
-                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                    KRITERIA KELUAR
-                                </div>
-                                <div class="col-md-2 col-2">CHECK LIST</div>
-                                <div class="col-md-5 col-4">KETERANGAN</div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 1 -->
-                        <div class="kriteria-item" data-kriteria="tidak_perlu_intensive">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    1. Dianggap keadaan penderita sudah tidak memerlukan perawatan intensive dan dapat dirawat
-                                    di ruang rawat inap.
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="dirawat_kriteria_keluar" value="1"
-                                        id="tidak_perlu_intensive" onchange="toggleKeterangan('tidak_perlu_intensive', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="dirawat_keterangan_keluar"
-                                        class="form-control keterangan-field" id="keterangan_tidak_perlu_intensive"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 2 -->
-                        <div class="kriteria-item" data-kriteria="bukan_penyakit_jantung">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    2. Kegawatan penderita bukan disebabkan oleh penyakit jantung dan dipindahkan ke unit
-                                    perawatan intensive lain.
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="kegawatan_kriteria_keluar" value="1"
-                                        id="bukan_penyakit_jantung" onchange="toggleKeterangan('bukan_penyakit_jantung', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="kegawatan_keterangan_keluar"
-                                        class="form-control keterangan-field" id="keterangan_bukan_penyakit_jantung"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 3 -->
-                        <div class="kriteria-item" data-kriteria="penyakit_menular">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    3. Penderita juga menderita penyakit menular.
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="penderita_kriteria_keluar" value="1" id="penyakit_menular"
-                                        onchange="toggleKeterangan('penyakit_menular', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="penderita_keterangan_keluar"
-                                        class="form-control keterangan-field" id="keterangan_penyakit_menular"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 4 -->
-                        <div class="kriteria-item" data-kriteria="meninggal">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    4. Penderita yang meninggal dan dikeluarkan setelah 2 jam observasi di ICCU.
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="iccu_kriteria_keluar" value="1" id="meninggal"
-                                        onchange="toggleKeterangan('meninggal', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="iccu_keterangan_keluar" class="form-control keterangan-field"
-                                        id="keterangan_meninggal" placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 5 -->
-                        <div class="kriteria-item" data-kriteria="pindah_rs_lain">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    5. Penderita yang ingin dirawat di rumah sakit lain atas permintaan sendiri atau keluarga.
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="rslain_kriteria_keluar" value="1" id="pindah_rs_lain"
-                                        onchange="toggleKeterangan('pindah_rs_lain', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="rslain_keterangan_keluar"
-                                        class="form-control keterangan-field" id="keterangan_pindah_rs_lain"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kriteria Keluar 6 -->
-                        <div class="kriteria-item" data-kriteria="pulang_paksa">
-                            <div class="kriteria-row">
-                                <div class="kriteria-desc">
-                                    6. Yang pulang paksa setelah mendatangani surat pernyataan tidak ingin di rawat di RSUD
-                                    Langsa
-                                </div>
-                                <div class="kriteria-checkbox">
-                                    <input type="checkbox" name="rsud_kriteria_keluar" value="1" id="pulang_paksa"
-                                        onchange="toggleKeterangan('pulang_paksa', this)">
-                                </div>
-                                <div class="keterangan-input">
-                                    <input type="text" name="rsud_keterangan_keluar"
-                                        class="form-control keterangan-field" id="keterangan_pulang_paksa"
-                                        placeholder="Masukkan keterangan...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary" id="simpan">
-                                <i class="ti-save"></i> Simpan
-                            </button>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>
@@ -738,10 +756,10 @@
         }
 
         // Initialize all checkboxes on page load
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-            checkboxes.forEach(function (checkbox) {
+            checkboxes.forEach(function(checkbox) {
                 const id = checkbox.id;
                 const keteranganField = document.getElementById('keterangan_' + id);
 
@@ -758,7 +776,7 @@
             });
 
             // Add smooth transitions for better UX
-            window.addEventListener('beforeunload', function () {
+            window.addEventListener('beforeunload', function() {
                 const checkedItems = document.querySelectorAll('.kriteria-item.checked');
                 if (checkedItems.length > 0) {
                     return 'Anda memiliki item yang telah dicentang. Yakin ingin meninggalkan halaman?';
@@ -767,15 +785,16 @@
         });
 
         // Add validation before submit
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelector('form').addEventListener('submit', function(e) {
             const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
             const emptyKeterangan = [];
 
-            checkedBoxes.forEach(function (checkbox) {
+            checkedBoxes.forEach(function(checkbox) {
                 const id = checkbox.id;
                 const keteranganField = document.getElementById('keterangan_' + id);
                 if (keteranganField && keteranganField.value.trim() === '') {
-                    const label = checkbox.closest('.kriteria-item').querySelector('.kriteria-desc').textContent.trim();
+                    const label = checkbox.closest('.kriteria-item').querySelector('.kriteria-desc')
+                        .textContent.trim();
                     emptyKeterangan.push(label);
                 }
             });
