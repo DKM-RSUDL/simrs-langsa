@@ -57,12 +57,14 @@ use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGinekologikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -680,6 +682,35 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            //Kulit dan kelamin
+                                            Route::prefix('kulit-kelamin')->group(function () {
+                                                Route::name('.kulit-kelamin')->group(function () {
+                                                    Route::controller(AsesmenKulitKelaminController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+                                            //Ginekologik
+                                            Route::prefix('ginekologik')->group(function () {
+                                                Route::name('.ginekologik')->group(function () {
+                                                    Route::controller(AsesmenGinekologikController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
 
