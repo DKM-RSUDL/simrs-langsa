@@ -103,7 +103,7 @@
                                                             </a>
                                                             <button class="btn btn-sm btn-danger btn-delete"
                                                                 data-bs-target="#deleteModal"
-                                                                data-anestesi="{{ encrypt($item->id) }}">
+                                                                data-pengawasan="{{ encrypt($item->id) }}">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </td>
@@ -140,8 +140,8 @@
                     @method('delete')
 
                     <div class="modal-body">
-                        <input type="hidden" id="id_anestesi" name="id_anestesi">
-                        <p>Apakah anda yakin ingin menghapus data persetujuan anestesi dan sedasi ? data yang telah
+                        <input type="hidden" id="id_pengawasan" name="id_pengawasan">
+                        <p>Apakah anda yakin ingin menghapus data pengawasan transportasi ? data yang telah
                             dihapus tidak dapat
                             dikembalikan</p>
                     </div>
@@ -159,10 +159,10 @@
     <script>
         $('.btn-delete').click(function() {
             let $this = $(this);
-            let id = $this.attr('data-anestesi');
+            let id = $this.attr('data-pengawasan');
             let target = $this.attr('data-bs-target');
 
-            $(target).find('#id_anestesi').val(id);
+            $(target).find('#id_pengawasan').val(id);
             $(target).modal('show');
         });
     </script>

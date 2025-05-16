@@ -123,7 +123,7 @@
                     <div class="card w-100 h-100 shadow-sm">
                         <div class="card-body">
                             <div class="px-3">
-                                <h4 class="header-asesmen">Tambah Pengawasan Transportasi</h4>
+                                <h4 class="header-asesmen">Edit Pengawasan Transportasi</h4>
                             </div>
 
                             <div class="px-3">
@@ -374,12 +374,12 @@
                                         <label for="cara_transportasi">Cara Transportasi</label>
                                         <select name="cara_transportasi" id="cara_transportasi" class="form-select">
                                             <option value="">--Pilih--</option>
-                                            <option value="1" @selected($pengawasan->cara_transportasi)>Kursi Roda</option>
-                                            <option value="2" @selected($pengawasan->cara_transportasi)>Brankar RJP</option>
-                                            <option value="3" @selected($pengawasan->cara_transportasi)>Brankar non RJP</option>
-                                            <option value="4" @selected($pengawasan->cara_transportasi)>Ambulans</option>
-                                            <option value="5" @selected($pengawasan->cara_transportasi)>Gawat darurat</option>
-                                            <option value="6" @selected($pengawasan->cara_transportasi)>Non gawat darurat</option>
+                                            <option value="1" @selected($pengawasan->cara_transportasi == 1)>Kursi Roda</option>
+                                            <option value="2" @selected($pengawasan->cara_transportasi == 2)>Brankar RJP</option>
+                                            <option value="3" @selected($pengawasan->cara_transportasi == 3)>Brankar non RJP</option>
+                                            <option value="4" @selected($pengawasan->cara_transportasi == 4)>Ambulans</option>
+                                            <option value="5" @selected($pengawasan->cara_transportasi == 5)>Gawat darurat</option>
+                                            <option value="6" @selected($pengawasan->cara_transportasi == 6)>Non gawat darurat</option>
                                         </select>
                                     </div>
 
@@ -729,6 +729,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
     </div>
@@ -739,14 +740,18 @@
         $(document).ready(function() {
 
             let keperluan = {{ $pengawasan->keperluan }};
+            let cara_transportasi = {{ $pengawasan->cara_transportasi }};
 
             if (keperluan != 1) {
                 $('#rs-tujuan-wrap').hide();
                 $('#rs-tujuan-wrap input').prop('required', false);
             }
 
-            $('#plat-ambulans-wrap').hide();
-            $('#plat-ambulans-wrap input').prop('required', false);
+            if (cara_transportasi != 4) {
+                $('#plat-ambulans-wrap').hide();
+                $('#plat-ambulans-wrap input').prop('required', false);
+            }
+
         });
 
         $('#keperluan').change(function() {

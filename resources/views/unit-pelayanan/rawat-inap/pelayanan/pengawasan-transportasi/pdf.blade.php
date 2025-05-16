@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print Persetujuan Anestesi dan Sedasi Rawat Inap</title>
+    <title>Print Pengawasan Transportasi Rawat Inap</title>
 
     <style>
         body {
@@ -153,160 +153,428 @@
 
     <main>
         <p class="letter-title">
-            PERNYATAAN PERSETUJUAN TINDAKAN ANESTESI DAN SEDASI
+            PENGAWASAN TRANSPORTASI PASIEN
         </p>
 
-        <p>
-            Yang bertanda tangan di bawah ini, saya:
-        </p>
+        <table style="width: 100%" border="1">
+            <tr>
+                <td colspan="3"><strong>Dari : </strong> {{ $pengawasan->asal_keberangkatan }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <strong>Keperluan transportasi : </strong>
+                    @if ($pengawasan->keperluan == 1)
+                        Rujuk ke RS : {{ $pengawasan->rs_rujuk }}
+                    @endif
 
-        <table style="margin-left: 40px;">
-            <tr>
-                <td>Nama</td>
-                <td>:</td>
-                <td>{{ $anestesi->keluarga_nama }}</td>
+                    @if ($pengawasan->keperluan == 2)
+                        Masuk/alih rawat inap
+                    @endif
+
+                    @if ($pengawasan->keperluan == 3)
+                        Pindah RS
+                    @endif
+
+                    @if ($pengawasan->keperluan == 4)
+                        Pra/ pasca tindakan
+                    @endif
+
+                    @if ($pengawasan->keperluan == 5)
+                        Penjemputan
+                    @endif
+
+                    @if ($pengawasan->keperluan == 6)
+                        Evakuasi
+                    @endif
+                </td>
+            </tr>
+            <tr style="background-color: #dadada">
+                <th align="middle" colspan="3">Kondisi Pasien Saat Berangkat</th>
             </tr>
             <tr>
-                <td>Usia</td>
-                <td>:</td>
-                <td>{{ $anestesi->keluarga_usia }} tahun</td>
+                <td colspan="3">
+                    <strong>Waktu : </strong>
+                    {{ date('d-m-Y', strtotime($pengawasan->tanggal_berangkat)) . ' ' . date('H:i', strtotime($pengawasan->jam_berangkat)) }}
+                    WIB
+                </td>
             </tr>
             <tr>
-                <td>Jenis Kelamin</td>
-                <td>:</td>
-                <td>{{ $anestesi->keluarga_jenis_kelamin == 1 ? 'Laki-Laki' : 'Perempuan' }}</td>
+                <td rowspan="2" style="vertical-align: top;">
+                    <strong>Catatan Khusus : </strong>
+                    <br>
+                    {{ $pengawasan->catatan_khusus_berangkat }}
+                </td>
+                <td>
+                    <table border="0" style="width: 100%">
+                        <tr>
+                            <td>Tek. Darah</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->sistole_berangkat . '/' . $pengawasan->diastole_berangkat }}</td>
+                            <td align="right">
+                                mmHg
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Frek. Nadi</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->nadi_berangkat }}</td>
+                            <td align="right">
+                                kali/mnt
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Frek. Nafas</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->nafas_berangkat }}</td>
+                            <td align="right">
+                                kali/mnt
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table border="0" style="width: 100%">
+                        <tr>
+                            <td>Suhu</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->suhu_berangkat }} &deg;C</td>
+                            <td align="right">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Skala nyeri (VAS)</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->skala_nyeri_berangkat }}</td>
+                            <td align="right">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>GCS</td>
+                            <td>:</td>
+                            <td>
+                                E: {{ $pengawasan->gcs_e_berangkat }}
+                                M: {{ $pengawasan->gcs_m_berangkat }}
+                                V: {{ $pengawasan->gcs_v_berangkat }}
+                            </td>
+                            <td align="right"></td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             <tr>
-                <td>Alamat</td>
-                <td>:</td>
-                <td>{{ $anestesi->keluarga_alamat }}</td>
+                <td colspan="2">
+                    Skor resiko nafas :
+
+                    @if ($pengawasan->resiko_nafas_berangkat == 1)
+                        Tidak beresiko
+                    @endif
+                    @if ($pengawasan->resiko_nafas_berangkat == 2)
+                        Resiko rendah
+                    @endif
+                    @if ($pengawasan->resiko_nafas_berangkat == 3)
+                        Resiko tinggi
+                    @endif
+                </td>
             </tr>
         </table>
 
-        <p>
-            Dengan ini menyatakan <strong>PERSETUJUAN</strong> untuk dilakukannya tindakan anestesi berupa:
-        </p>
+        <table style="width: 100%; margin-top: 20px;" border="1">
+            <tr>
+                <td colspan="2">
+                    <strong>Kriteria Transportasi pasien:</strong>
 
-        <ol>
-            @foreach ($anestesi->tindakan as $item)
-                <li>
-                    {{ $item }} {{ $item == 'Lain-lain' ? ': ' . $anestesi->tindakan_lainnya : '' }}
-                </li>
-            @endforeach
-        </ol>
+                    @if ($pengawasan->kriteria == 1)
+                        Emergensi
+                    @endif
 
-        <p>
-            Terhadap
+                    @if ($pengawasan->kriteria == 2)
+                        Urgensi
+                    @endif
 
-            @if ($anestesi->status_keluarga == 1)
-                diri saya sendiri
-            @endif
-            @if ($anestesi->status_keluarga == 2)
-                Istri saya
-            @endif
-            @if ($anestesi->status_keluarga == 3)
-                Suami saya
-            @endif
-            @if ($anestesi->status_keluarga == 4)
-                Anak saya
-            @endif
-            @if ($anestesi->status_keluarga == 5)
-                Ayah saya
-            @endif
-            @if ($anestesi->status_keluarga == 6)
-                Ibu saya
-            @endif
-            @if ($anestesi->status_keluarga == 7)
-                Keluarga saya
-            @endif
-            :
-        </p>
+                    @if ($pengawasan->kriteria == 3)
+                        Non-urgensi
+                    @endif
+                </td>
+            </tr>
 
-        <table style="margin-left: 40px;">
             <tr>
-                <td>Nama</td>
-                <td>:</td>
-                <td>{{ $dataMedis->pasien->nama }}</td>
+                <td style="text-align: center; background-color: #dadada;">
+                    <strong>Nama petugas transportasi</strong>
+                </td>
+                <td style="text-align: center; background-color: #dadada;">
+                    <strong>Cara transportasi</strong>
+                </td>
             </tr>
+
             <tr>
-                <td>Usia</td>
-                <td>:</td>
-                <td>{{ hitungUmur(date('Y-m-d', strtotime($dataMedis->pasien->tgl_lahir))) }} tahun</td>
-            </tr>
-            <tr>
-                <td>Jenis Kelamin</td>
-                <td>:</td>
-                <td>{{ $dataMedis->pasien->jenis_kelamin == '1' ? 'Laki-Laki' : 'Perempuan' }}</td>
-            </tr>
-            <tr>
-                <td>Alamat</td>
-                <td>:</td>
-                <td>{{ $dataMedis->pasien->alamat }}</td>
-            </tr>
-            <tr>
-                <td>No RM</td>
-                <td>:</td>
-                <td>{{ $dataMedis->pasien->kd_pasien }}</td>
+                <td>
+                    <table style="width: 100%;" border="0">
+                        <tr>
+                            <td>Dokter</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->dokter->nama_lengkap ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Perawat</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->perawat->gelar_depan ?? '' }}
+                                {{ str()->title($pengawasan->perawat->nama ?? '') }}
+                                {{ $pengawasan->perawat->gelar_belakang ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Pramu husada</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->pramuhusada->gelar_depan ?? '' }}
+                                {{ str()->title($pengawasan->pramuhusada->nama ?? '') }}
+                                {{ $pengawasan->pramuhusada->gelar_belakang ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Pengemudi</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->pengemudi->gelar_depan ?? '' }}
+                                {{ str()->title($pengawasan->pengemudi->nama ?? '') }}
+                                {{ $pengawasan->pengemudi->gelar_belakang ?? '' }}</td>
+                        </tr>
+                    </table>
+                </td>
+
+                <td style="text-align: center;">
+                    @if ($pengawasan->cara_transportasi == 1)
+                        Kursi roda
+                    @endif
+                    @if ($pengawasan->cara_transportasi == 2)
+                        Brankar RJP
+                    @endif
+                    @if ($pengawasan->cara_transportasi == 3)
+                        Brankar non RJP
+                    @endif
+                    @if ($pengawasan->cara_transportasi == 4)
+                        Ambulans : {{ $pengawasan->plat_ambulans }}
+                    @endif
+                    @if ($pengawasan->cara_transportasi == 5)
+                        Gawat darurat
+                    @endif
+                    @if ($pengawasan->cara_transportasi == 6)
+                        Non gawat darurat
+                    @endif
+                </td>
             </tr>
         </table>
 
-        <p>
-            Saya memahami perlunya dan manfaat tindakan tersebut sebagaimana telah dijelaskan kepada saya
+        <table style="width: 100%; margin-top: 20px;" border="1">
+            <tr style="background-color: #dadada;">
+                <td style="text-align: center;" colspan="{{ count($pengawasan->detail) + 1 }}"><strong>Pengawasan
+                        Selama Transportasi</strong></td>
+            </tr>
 
-            @if ($anestesi->status_keluarga == 2)
-                / Istri saya
-            @endif
-            @if ($anestesi->status_keluarga == 3)
-                / Suami saya
-            @endif
-            @if ($anestesi->status_keluarga == 4)
-                / Anak saya
-            @endif
-            @if ($anestesi->status_keluarga == 5)
-                / Ayah saya
-            @endif
-            @if ($anestesi->status_keluarga == 6)
-                / Ibu saya
-            @endif
-            @if ($anestesi->status_keluarga == 7)
-                / Keluarga saya
-            @endif
-            , termasuk risiko dan komplikasi yang mungkin timbul apabila
-            tindakan tersebut dilakukan.
-        </p>
+            <tr>
+                <td style="text-align: center;"><strong>Jam</strong>
+                </td>
 
-        <p>
-            Saya juga menyadari bahwa ilmu kedokteran bukanlah ilmu pasti, maka keberhasilan dan kesembuhan sangat
-            bergantung atas izin Tuhan Yang Maha Kuasa.
-        </p>
+                @foreach ($pengawasan->detail as $jam)
+                    <td style="text-align: center;">{{ date('H:i', strtotime($jam->jam_pengawasan)) }} WIB</td>
+                @endforeach
+            </tr>
 
-        <p>
-            Kota Langsa, tanggal: {{ date('d-m-Y', strtotime($anestesi->tanggal)) }} / pukul
-            : {{ date('H:i', strtotime($anestesi->jam)) }} WIB
-        </p>
+            <tr>
+                <td>
+                    Tek. Darah (mmHg)
+                </td>
+
+                @foreach ($pengawasan->detail as $darah)
+                    <td style="text-align: center;">
+                        {{ $darah->sistole_pengawasan . '/' . $darah->diastole_pengawasan }}</td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    Frek. Nadi (x/mnt)
+                </td>
+
+                @foreach ($pengawasan->detail as $nadi)
+                    <td style="text-align: center;">
+                        {{ $nadi->nadi_pengawasan }}</td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    Frek. Nafas (x/mnt)
+                </td>
+
+                @foreach ($pengawasan->detail as $nafas)
+                    <td style="text-align: center;">
+                        {{ $nafas->nafas_pengawasan }}</td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    Suhu (&deg;C)
+                </td>
+
+                @foreach ($pengawasan->detail as $suhu)
+                    <td style="text-align: center;">
+                        {{ $suhu->suhu_pengawasan }}</td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    Skor nyeri (1-10)
+                </td>
+
+                @foreach ($pengawasan->detail as $skala_nyeri)
+                    <td style="text-align: center;">
+                        {{ $skala_nyeri->skala_nyeri_pengawasan }}</td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    G C S
+                </td>
+
+                @foreach ($pengawasan->detail as $gcs)
+                    <td style="text-align: center;">
+                        E: {{ $gcs->gcs_e_pengawasan }}
+                        M: {{ $gcs->gcs_m_pengawasan }}
+                        V: {{ $gcs->gcs_v_pengawasan }}
+                    </td>
+                @endforeach
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Masalah</strong>
+                </td>
+                <td colspan="{{ count($pengawasan->detail) + 1 }}">
+                    :
+                    {{ $pengawasan->masalah }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Tindakan</strong>
+                </td>
+                <td colspan="{{ count($pengawasan->detail) + 1 }}">
+                    :
+                    {{ $pengawasan->tindakan }}
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; margin-top: 20px;" border="1">
+            <tr style="background-color: #dadada">
+                <th align="middle" colspan="3">Kondisi Pasien Saat Sampai Tujuan</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <strong>Waktu : </strong>
+                    {{ date('d-m-Y', strtotime($pengawasan->tanggal_sampai)) . ' ' . date('H:i', strtotime($pengawasan->jam_sampai)) }}
+                    WIB
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2" style="vertical-align: top;">
+                    <strong>Catatan Khusus : </strong>
+                    <br>
+                    {{ $pengawasan->catatan_khusus_sampai }}
+                </td>
+                <td>
+                    <table border="0" style="width: 100%">
+                        <tr>
+                            <td>Tek. Darah</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->sistole_sampai . '/' . $pengawasan->diastole_sampai }}</td>
+                            <td align="right">
+                                mmHg
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Frek. Nadi</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->nadi_sampai }}</td>
+                            <td align="right">
+                                kali/mnt
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Frek. Nafas</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->nafas_sampai }}</td>
+                            <td align="right">
+                                kali/mnt
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table border="0" style="width: 100%">
+                        <tr>
+                            <td>Suhu</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->suhu_sampai }} &deg;C</td>
+                            <td align="right">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Skala nyeri (VAS)</td>
+                            <td>:</td>
+                            <td>{{ $pengawasan->skala_nyeri_sampai }}</td>
+                            <td align="right">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>GCS</td>
+                            <td>:</td>
+                            <td>
+                                E: {{ $pengawasan->gcs_e_sampai }}
+                                M: {{ $pengawasan->gcs_m_sampai }}
+                                V: {{ $pengawasan->gcs_v_sampai }}
+                            </td>
+                            <td align="right"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Skor resiko nafas :
+
+                    @if ($pengawasan->resiko_nafas_sampai == 1)
+                        Tidak beresiko
+                    @endif
+                    @if ($pengawasan->resiko_nafas_sampai == 2)
+                        Resiko rendah
+                    @endif
+                    @if ($pengawasan->resiko_nafas_sampai == 3)
+                        Resiko tinggi
+                    @endif
+                </td>
+            </tr>
+        </table>
     </main>
 
     <footer>
-        <div class="">
-            <p style="margin: 0;">Yang menyatakan</p>
-            <p class="name-konsulen">{{ $anestesi->keluarga_nama }}</p>
+        <div>
+            <p>Petugas Penerima Pasien</p>
+            <p class="name-konsulen">
+                {{ $pengawasan->petugas_penerima }}
+            </p>
         </div>
 
-        <div class="">
-            <p style="margin: 0;">Saksi keluarga</p>
-            <p class="name-konsulen">{{ $anestesi->nama_saksi_keluarga }}</p>
-        </div>
-    </footer>
-
-    <footer>
-        <div class="">
-            <p style="margin: 0;">Dokter</p>
-            <p class="name-konsulen">{{ $anestesi->dokter->nama_lengkap }}</p>
-        </div>
-
-        <div class="">
-            <p style="margin: 0;">Saksi</p>
-            <p class="name-konsulen">{{ $anestesi->nama_saksi }}</p>
+        <div>
+            <p>Petugas Transportasi</p>
+            <p class="name-konsulen">
+                {{ $pengawasan->userCreate->karyawan->gelar_depan ?? '' }}
+                {{ str()->title($pengawasan->userCreate->karyawan->nama ?? '') }}
+                {{ $pengawasan->userCreate->karyawan->gelar_belakang ?? '' }}
+            </p>
         </div>
     </footer>
 </body>
