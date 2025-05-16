@@ -162,7 +162,7 @@
                                 <!-- Oksigen Bantuan -->
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Dengan Bantuan O2</label>
-                                    <select class="form-select" name="oksigen_bantuan" id="oksigen_bantuan">
+                                    <select class="form-select" name="dengan_bantuan" id="dengan_bantuan">
                                         <option value="" selected disabled>--Pilih--</option>
                                         <option value="0">Tidak</option>
                                         <option value="2">Ya</option>
@@ -272,7 +272,7 @@
             let totalScore = 0;
             
             // Get all select elements
-            const parameters = ['avpu', 'respirasi', 'saturasi_o2', 'oksigen_bantuan', 'tekanan_darah', 'nadi', 'temperatur'];
+            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
             
             parameters.forEach(function(param) {
                 const select = document.getElementById(param);
@@ -310,7 +310,7 @@
             }
             
             // Check for single parameter score of 3 (also medium risk)
-            const parameters = ['avpu', 'respirasi', 'saturasi_o2', 'oksigen_bantuan', 'tekanan_darah', 'nadi', 'temperatur'];
+            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
             let hasThreeInSingleParam = false;
             
             parameters.forEach(function(param) {
@@ -337,7 +337,7 @@
         
         // Add event listeners to all select elements
         document.addEventListener('DOMContentLoaded', function() {
-            const parameters = ['avpu', 'respirasi', 'saturasi_o2', 'oksigen_bantuan', 'tekanan_darah', 'nadi', 'temperatur'];
+            const parameters = ['avpu', 'saturasi_o2', 'nadi', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
             
             parameters.forEach(function(param) {
                 const select = document.getElementById(param);
