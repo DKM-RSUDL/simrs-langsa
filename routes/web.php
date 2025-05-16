@@ -65,6 +65,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
@@ -643,9 +644,24 @@ Route::middleware('ssoToken')->group(function () {
                                                 });
                                             });
 
+                                            // tht
                                             Route::prefix('tht')->group(function () {
                                                 Route::name('.tht')->group(function () {
                                                     Route::controller(AsesmenKepThtController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+                                            // paru
+                                            Route::prefix('paru')->group(function () {
+                                                Route::name('.paru')->group(function () {
+                                                    Route::controller(AsesmenParuController::class)->group(function () {
                                                         Route::get('/', 'index')->name('.index');
                                                         Route::post('/', 'store')->name('.store');
                                                         Route::get('/{id}', 'show')->name('.show');
@@ -710,7 +726,6 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
@@ -1062,7 +1077,6 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-
                         });
                     });
                 });

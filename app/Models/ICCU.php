@@ -9,7 +9,7 @@ class ICCU extends Model
 {
     use HasFactory;
 
-    protected $table = 'RME_ICCU';
+    protected $table = 'RME_MASUK_KELUAR_ICCU';
     public $timestamps = false;
     protected $guarded = ['id'];
 

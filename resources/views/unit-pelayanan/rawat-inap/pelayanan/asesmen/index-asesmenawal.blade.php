@@ -97,7 +97,14 @@
                                 'urut_masuk' => request()->route('urut_masuk'),
                             ]) }}">Mata/Opthamologi</a>
                     </li>
-                    <li><a class="custom__dropdown__item" href="#">Paru</a></li>
+                    <li><a class="custom__dropdown__item"
+                            href="{{ route('rawat-inap.asesmen.medis.paru.index', [
+                                'kd_unit' => request()->route('kd_unit'),
+                                'kd_pasien' => request()->route('kd_pasien'),
+                                'tgl_masuk' => request()->route('tgl_masuk'),
+                                'urut_masuk' => request()->route('urut_masuk'),
+                            ]) }}">Paru</a>
+                    </li>
                     <li><a class="custom__dropdown__item"
                             href="{{ route('rawat-inap.asesmen.medis.neurologi.index', [
                                 'kd_unit' => request()->route('kd_unit'),
@@ -121,7 +128,8 @@
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Ginekologik</a></li>
+                            ]) }}">Ginekologik</a>
+                    </li>
                 </ul>
             </div>
 
