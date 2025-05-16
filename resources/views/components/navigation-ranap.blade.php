@@ -169,6 +169,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'observasi.png',
+            'label' => 'EWS Dewasa',
+            'link' => route('rawat-inap.ews-pasien-dewasa.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
     if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {

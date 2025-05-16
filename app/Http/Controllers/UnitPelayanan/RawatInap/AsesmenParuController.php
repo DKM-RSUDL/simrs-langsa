@@ -10,6 +10,8 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeMasterDiagnosis;
+use App\Models\RmeMasterImplementasi;
 
 class AsesmenParuController extends Controller
 {
@@ -21,6 +23,9 @@ class AsesmenParuController extends Controller
     public function index(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $itemFisik = MrItemFisik::orderby('urut')->get();
+        $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+        $rmeMasterImplementasi = RmeMasterImplementasi::all();
+
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -62,7 +67,9 @@ class AsesmenParuController extends Controller
             'tgl_masuk',
             'urut_masuk',
             'dataMedis',
-            'itemFisik'
+            'itemFisik',
+            'rmeMasterDiagnosis',
+            'rmeMasterImplementasi'
         ));
     }
 }
