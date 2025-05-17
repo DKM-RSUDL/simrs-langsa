@@ -14,14 +14,15 @@
                 <i class="ti-arrow-left"></i> Kembali
             </a>
             <form id="edukasiForm" method="POST"
-                action="{{ route('rawat-inap.ews-pasien-dewasa.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                action="{{ route('rawat-inap.ews-pasien-dewasa.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $ewsPasienDewasa->id]) }}">
                 @csrf
+                @method('PUT')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
                         <div class="card-body">
                             <div class="px-3">
-                                <h4 class="header-asesmen text-center font-weight-bold mb-4">Early Warning System (EWS)
+                                <h4 class="header-asesmen text-center font-weight-bold mb-4">Edit Early Warning System (EWS)
                                     Pasien Dewasa
                                 </h4>
                             </div>
@@ -31,8 +32,9 @@
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
                                         <input type="date" class="form-control" name="tanggal"
-                                            value="{{ date('Y-m-d') }}">
-                                        <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
+                                            value="{{ Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('Y-m-d') }}">
+                                        <input type="time" class="form-control" name="jam_masuk"
+                                            value="{{ Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('H:i') }}">
                                     </div>
                                 </div>
 
@@ -40,22 +42,22 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Kesadaran (AVPU)</label>
                                     <select class="form-select" name="avpu" id="avpu">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">A - Alert (Sadar Baik)</option>
-                                        <option value="3">V - Voice (Berespon dengan kata-kata)</option>
-                                        <option value="3">P - Pain (Hanya berespon jika dirangsang nyeri)</option>
-                                        <option value="3">U - Unresponsive (Pasien tidak sadar)</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="0" {{ $ewsPasienDewasa->avpu == 0 ? 'selected' : '' }}>A - Alert (Sadar Baik)</option>
+                                        <option value="3" {{ $ewsPasienDewasa->avpu == 3 && strpos($ewsPasienDewasa->avpu_text ?? '', 'V') !== false ? 'selected' : '' }}>V - Voice (Berespon dengan kata-kata)</option>
+                                        <option value="3" {{ $ewsPasienDewasa->avpu == 3 && strpos($ewsPasienDewasa->avpu_text ?? '', 'P') !== false ? 'selected' : '' }}>P - Pain (Hanya berespon jika dirangsang nyeri)</option>
+                                        <option value="3" {{ $ewsPasienDewasa->avpu == 3 && strpos($ewsPasienDewasa->avpu_text ?? '', 'U') !== false ? 'selected' : '' }}>U - Unresponsive (Pasien tidak sadar)</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Saturasi O2 (%)</label>
                                     <select class="form-select" name="saturasi_o2" id="saturasi_o2">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">≥ 95</option>
-                                        <option value="1">94-95</option>
-                                        <option value="2">92-93</option>
-                                        <option value="3">≤ 91</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="0" {{ $ewsPasienDewasa->saturasi_o2 == 0 ? 'selected' : '' }}>≥ 95</option>
+                                        <option value="1" {{ $ewsPasienDewasa->saturasi_o2 == 1 ? 'selected' : '' }}>94-95</option>
+                                        <option value="2" {{ $ewsPasienDewasa->saturasi_o2 == 2 ? 'selected' : '' }}>92-93</option>
+                                        <option value="3" {{ $ewsPasienDewasa->saturasi_o2 == 3 ? 'selected' : '' }}>≤ 91</option>
                                     </select>
                                 </div>
 
@@ -63,9 +65,9 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Dengan Bantuan O2</label>
                                     <select class="form-select" name="dengan_bantuan" id="dengan_bantuan">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">Tidak</option>
-                                        <option value="2">Ya</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="0" {{ $ewsPasienDewasa->dengan_bantuan == 0 ? 'selected' : '' }}>Tidak</option>
+                                        <option value="2" {{ $ewsPasienDewasa->dengan_bantuan == 2 ? 'selected' : '' }}>Ya</option>
                                     </select>
                                 </div>
 
@@ -73,37 +75,37 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
                                     <select class="form-select" name="tekanan_darah" id="tekanan_darah">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 220</option>
-                                        <option value="0">111-219</option>
-                                        <option value="1">101-110</option>
-                                        <option value="2">91-100</option>
-                                        <option value="3">≤ 90</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="3" {{ $ewsPasienDewasa->tekanan_darah == 3 && ($ewsPasienDewasa->tekanan_darah_text ?? 0) >= 220 ? 'selected' : '' }}>≥ 220</option>
+                                        <option value="0" {{ $ewsPasienDewasa->tekanan_darah == 0 ? 'selected' : '' }}>111-219</option>
+                                        <option value="1" {{ $ewsPasienDewasa->tekanan_darah == 1 ? 'selected' : '' }}>101-110</option>
+                                        <option value="2" {{ $ewsPasienDewasa->tekanan_darah == 2 ? 'selected' : '' }}>91-100</option>
+                                        <option value="3" {{ $ewsPasienDewasa->tekanan_darah == 3 && ($ewsPasienDewasa->tekanan_darah_text ?? 0) <= 90 ? 'selected' : '' }}>≤ 90</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (per menit)</label>
                                     <select class="form-select" name="nadi" id="nadi">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 131</option>
-                                        <option value="2">111-130</option>
-                                        <option value="1">91-110</option>
-                                        <option value="0">51-90</option>
-                                        <option value="1">41-50</option>
-                                        <option value="3">≤ 40</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="3" {{ $ewsPasienDewasa->nadi == 3 && ($ewsPasienDewasa->nadi_text ?? 0) >= 131 ? 'selected' : '' }}>≥ 131</option>
+                                        <option value="2" {{ $ewsPasienDewasa->nadi == 2 ? 'selected' : '' }}>111-130</option>
+                                        <option value="1" {{ $ewsPasienDewasa->nadi == 1 && ($ewsPasienDewasa->nadi_text ?? 0) >= 91 ? 'selected' : '' }}>91-110</option>
+                                        <option value="0" {{ $ewsPasienDewasa->nadi == 0 ? 'selected' : '' }}>51-90</option>
+                                        <option value="1" {{ $ewsPasienDewasa->nadi == 1 && ($ewsPasienDewasa->nadi_text ?? 0) <= 50 ? 'selected' : '' }}>41-50</option>
+                                        <option value="3" {{ $ewsPasienDewasa->nadi == 3 && ($ewsPasienDewasa->nadi_text ?? 0) <= 40 ? 'selected' : '' }}>≤ 40</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nafas (per menit)</label>
                                     <select class="form-select" name="nafas" id="nafas">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 25</option>
-                                        <option value="2">21-24</option>
-                                        <option value="0">12-20</option>
-                                        <option value="1">9-11</option>
-                                        <option value="3">≤ 8</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="3" {{ $ewsPasienDewasa->nafas == 3 && ($ewsPasienDewasa->nafas_text ?? 0) >= 25 ? 'selected' : '' }}>≥ 25</option>
+                                        <option value="2" {{ $ewsPasienDewasa->nafas == 2 ? 'selected' : '' }}>21-24</option>
+                                        <option value="0" {{ $ewsPasienDewasa->nafas == 0 ? 'selected' : '' }}>12-20</option>
+                                        <option value="1" {{ $ewsPasienDewasa->nafas == 1 ? 'selected' : '' }}>9-11</option>
+                                        <option value="3" {{ $ewsPasienDewasa->nafas == 3 && ($ewsPasienDewasa->nafas_text ?? 0) <= 8 ? 'selected' : '' }}>≤ 8</option>
                                     </select>
                                 </div>
 
@@ -111,19 +113,19 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Temperatur (°C)</label>
                                     <select class="form-select" name="temperatur" id="temperatur">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="2">≤ 91.1</option>
-                                        <option value="1">38.1-39.0</option>
-                                        <option value="0">36.1-38.0</option>
-                                        <option value="1">36.1-36.0</option>
-                                        <option value="3">≤ 35</option>
+                                        <option value="" disabled>--Pilih--</option>
+                                        <option value="2" {{ $ewsPasienDewasa->temperatur == 2 ? 'selected' : '' }}>≥ 39.1</option>
+                                        <option value="1" {{ $ewsPasienDewasa->temperatur == 1 && ($ewsPasienDewasa->temperatur_text ?? 0) >= 38.1 ? 'selected' : '' }}>38.1-39.0</option>
+                                        <option value="0" {{ $ewsPasienDewasa->temperatur == 0 ? 'selected' : '' }}>36.1-38.0</option>
+                                        <option value="1" {{ $ewsPasienDewasa->temperatur == 1 && ($ewsPasienDewasa->temperatur_text ?? 0) <= 36.0 ? 'selected' : '' }}>35.1-36.0</option>
+                                        <option value="3" {{ $ewsPasienDewasa->temperatur == 3 ? 'selected' : '' }}>≤ 35</option>
                                     </select>
                                 </div>
 
                                 <!-- Total Score Section -->
                                 <div class="total-score-section">
                                     <h5 class="mb-3">TOTAL SKOR</h5>
-                                    <div class="total-score-value" id="total-skor">0</div>
+                                    <div class="total-score-value" id="total-skor">{{ $ewsPasienDewasa->total_skor }}</div>
                                     <p class="mb-0 text-muted">Skor Early Warning System</p>
                                 </div>
 
@@ -132,29 +134,29 @@
                                     <h5 class="mb-3">KESIMPULAN HASIL EWS</h5>
 
                                     <!-- Skor 0-4: Risiko Rendah -->
-                                    <div id="kesimpulan-hijau" class="kesimpulan-card kesimpulan-hijau d-none">
+                                    <div id="kesimpulan-hijau" class="kesimpulan-card kesimpulan-hijau {{ $ewsPasienDewasa->hasil_ews != 'RISIKO RENDAH' ? 'd-none' : '' }}">
                                         <strong>Total Skor 0-4:</strong> RISIKO RENDAH
                                     </div>
 
                                     <!-- Skor 5-6: Risiko Sedang -->
-                                    <div id="kesimpulan-kuning" class="kesimpulan-card kesimpulan-kuning d-none">
+                                    <div id="kesimpulan-kuning" class="kesimpulan-card kesimpulan-kuning {{ $ewsPasienDewasa->hasil_ews != 'RISIKO SEDANG' ? 'd-none' : '' }}">
                                         <strong>Skor 3 dalam satu parameter atau Total Skor 5-6:</strong> RISIKO SEDANG
                                     </div>
 
                                     <!-- Skor ≥7: Risiko Tinggi -->
-                                    <div id="kesimpulan-merah" class="kesimpulan-card kesimpulan-merah d-none">
+                                    <div id="kesimpulan-merah" class="kesimpulan-card kesimpulan-merah {{ $ewsPasienDewasa->hasil_ews != 'RISIKO TINGGI' ? 'd-none' : '' }}">
                                         <strong>Total Skor ≥ 7:</strong> RISIKO TINGGI
                                     </div>
                                 </div>
 
                                 <!-- Hidden inputs untuk backend -->
-                                <input type="hidden" id="ews-total-score" name="total_skor" value="0">
-                                <input type="hidden" id="ews-hasil" name="hasil_ews" value="">
+                                <input type="hidden" id="ews-total-score" name="total_skor" value="{{ $ewsPasienDewasa->total_skor }}">
+                                <input type="hidden" id="ews-hasil" name="hasil_ews" value="{{ $ewsPasienDewasa->hasil_ews }}">
                             </div>
 
                             <div class="d-flex justify-content-end mt-4">
                                 <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-save"></i> Simpan
+                                    <i class="ti-save"></i> Update
                                 </button>
                             </div>
                         </div>
@@ -237,7 +239,7 @@
 
         // Add event listeners to all select elements
         document.addEventListener('DOMContentLoaded', function() {
-            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'nadi', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
+            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
 
             parameters.forEach(function(param) {
                 const select = document.getElementById(param);
