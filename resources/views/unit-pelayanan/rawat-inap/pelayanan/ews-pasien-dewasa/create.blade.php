@@ -30,97 +30,92 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal"
-                                            value="{{ date('Y-m-d') }}">
+                                        <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}">
                                         <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
                                     </div>
                                 </div>
 
-                                <!-- AVPU (yang sebelumnya kurang) -->
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Kesadaran (AVPU)</label>
-                                    <select class="form-select" name="avpu" id="avpu">
-                                        <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">A - Alert (Sadar Baik)</option>
-                                        <option value="3">V - Voice (Berespon dengan kata-kata)</option>
-                                        <option value="3">P - Pain (Hanya berespon jika dirangsang nyeri)</option>
-                                        <option value="3">U - Unresponsive (Pasien tidak sadar)</option>
+                                    <select class="form-select" name="avpu" id="avpu" data-skor="0">
+                                        <option value="A" selected disabled>--Pilih--</option>
+                                        <option value="A" data-skor="0">A - Alert (Sadar Baik)</option>
+                                        <option value="V" data-skor="3">V - Voice (Berespon dengan kata-kata)</option>
+                                        <option value="P" data-skor="3">P - Pain (Hanya berespon jika dirangsang nyeri)
+                                        </option>
+                                        <option value="U" data-skor="3">U - Unresponsive (Pasien tidak sadar)</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Saturasi O2 (%)</label>
-                                    <select class="form-select" name="saturasi_o2" id="saturasi_o2">
+                                    <select class="form-select" name="saturasi_o2" id="saturasi_o2" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">≥ 95</option>
-                                        <option value="1">94-95</option>
-                                        <option value="2">92-93</option>
-                                        <option value="3">≤ 91</option>
+                                        <option value="≥ 95" data-skor="0">≥ 95</option>
+                                        <option value="94-95" data-skor="1">94-95</option>
+                                        <option value="92-93" data-skor="2">92-93</option>
+                                        <option value="≤ 91" data-skor="3">≤ 91</option>
                                     </select>
                                 </div>
 
-                                <!-- Oksigen Bantuan -->
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Dengan Bantuan O2</label>
-                                    <select class="form-select" name="dengan_bantuan" id="dengan_bantuan">
+                                    <select class="form-select" name="dengan_bantuan" id="dengan_bantuan" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="0">Tidak</option>
-                                        <option value="2">Ya</option>
+                                        <option value="Tidak" data-skor="0">Tidak</option>
+                                        <option value="Ya" data-skor="2">Ya</option>
                                     </select>
                                 </div>
 
-                                <!-- Tekanan Darah Sistolik -->
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
-                                    <select class="form-select" name="tekanan_darah" id="tekanan_darah">
+                                    <select class="form-select" name="tekanan_darah" id="tekanan_darah" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 220</option>
-                                        <option value="0">111-219</option>
-                                        <option value="1">101-110</option>
-                                        <option value="2">91-100</option>
-                                        <option value="3">≤ 90</option>
+                                        <option value="≥ 220" data-skor="3">≥ 220</option>
+                                        <option value="111-219" data-skor="0">111-219</option>
+                                        <option value="101-110" data-skor="1">101-110</option>
+                                        <option value="91-100" data-skor="2">91-100</option>
+                                        <option value="≤ 90" data-skor="3">≤ 90</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nadi (per menit)</label>
-                                    <select class="form-select" name="nadi" id="nadi">
+                                    <select class="form-select" name="nadi" id="nadi" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 131</option>
-                                        <option value="2">111-130</option>
-                                        <option value="1">91-110</option>
-                                        <option value="0">51-90</option>
-                                        <option value="1">41-50</option>
-                                        <option value="3">≤ 40</option>
+                                        <option value="≥ 131" data-skor="3">≥ 131</option>
+                                        <option value="111-130" data-skor="2">111-130</option>
+                                        <option value="91-110" data-skor="1">91-110</option>
+                                        <option value="51-90" data-skor="0">51-90</option>
+                                        <option value="41-50" data-skor="1">41-50</option>
+                                        <option value="≤ 40" data-skor="3">≤ 40</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Nafas (per menit)</label>
-                                    <select class="form-select" name="nafas" id="nafas">
+                                    <select class="form-select" name="nafas" id="nafas" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="3">≥ 25</option>
-                                        <option value="2">21-24</option>
-                                        <option value="0">12-20</option>
-                                        <option value="1">9-11</option>
-                                        <option value="3">≤ 8</option>
+                                        <option value="≥ 25" data-skor="3">≥ 25</option>
+                                        <option value="21-24" data-skor="2">21-24</option>
+                                        <option value="12-20" data-skor="0">12-20</option>
+                                        <option value="9-11" data-skor="1">9-11</option>
+                                        <option value="≤ 8" data-skor="3">≤ 8</option>
                                     </select>
                                 </div>
 
-                                <!-- Temperatur -->
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Temperatur (°C)</label>
-                                    <select class="form-select" name="temperatur" id="temperatur">
+                                    <select class="form-select" name="temperatur" id="temperatur" data-skor="0">
                                         <option value="" selected disabled>--Pilih--</option>
-                                        <option value="2">≤ 91.1</option>
-                                        <option value="1">38.1-39.0</option>
-                                        <option value="0">36.1-38.0</option>
-                                        <option value="1">36.1-36.0</option>
-                                        <option value="3">≤ 35</option>
+                                        <option value="≥ 39.1" data-skor="2">≥ 39.1</option>
+                                        <option value="38.1-39.0" data-skor="1">38.1-39.0</option>
+                                        <option value="36.1-38.0" data-skor="0">36.1-38.0</option>
+                                        <option value="35.1-36.0" data-skor="1">35.1-36.0</option>
+                                        <option value="≤ 35" data-skor="3">≤ 35</option>
                                     </select>
                                 </div>
 
-                                <!-- Total Score Section -->
                                 <div class="total-score-section">
                                     <h5 class="mb-3">TOTAL SKOR</h5>
                                     <div class="total-score-value" id="total-skor">0</div>
@@ -174,10 +169,13 @@
             // Get all select elements
             const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
 
-            parameters.forEach(function(param) {
+            parameters.forEach(function (param) {
                 const select = document.getElementById(param);
-                if (select && select.value) {
-                    totalScore += parseInt(select.value);
+                if (select && select.selectedIndex > 0) {
+                    // Get score from data attribute
+                    const selectedOption = select.options[select.selectedIndex];
+                    const score = parseInt(selectedOption.getAttribute('data-skor') || 0);
+                    totalScore += score;
                 }
             });
 
@@ -213,10 +211,14 @@
             const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
             let hasThreeInSingleParam = false;
 
-            parameters.forEach(function(param) {
+            parameters.forEach(function (param) {
                 const select = document.getElementById(param);
-                if (select && select.value === '3') {
-                    hasThreeInSingleParam = true;
+                if (select && select.selectedIndex > 0) {
+                    const selectedOption = select.options[select.selectedIndex];
+                    const score = parseInt(selectedOption.getAttribute('data-skor') || 0);
+                    if (score === 3) {
+                        hasThreeInSingleParam = true;
+                    }
                 }
             });
 
@@ -236,10 +238,10 @@
         }
 
         // Add event listeners to all select elements
-        document.addEventListener('DOMContentLoaded', function() {
-            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'nadi', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
+        document.addEventListener('DOMContentLoaded', function () {
+            const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
 
-            parameters.forEach(function(param) {
+            parameters.forEach(function (param) {
                 const select = document.getElementById(param);
                 if (select) {
                     select.addEventListener('change', calculateEWSScore);

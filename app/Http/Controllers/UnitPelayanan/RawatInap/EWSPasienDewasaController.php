@@ -141,12 +141,12 @@ class EWSPasienDewasaController extends Controller
 
             $request->validate([
                 'avpu' => 'required',
-                'saturasi_o2' => 'required|numeric',
-                'dengan_bantuan' => 'required|numeric',
-                'tekanan_darah' => 'required|numeric',
-                'nadi' => 'required|numeric',
-                'nafas' => 'required|numeric',
-                'temperatur' => 'required|numeric',
+                'saturasi_o2' => 'required',
+                'dengan_bantuan' => 'required',
+                'tekanan_darah' => 'required',
+                'nadi' => 'required',
+                'nafas' => 'required',
+                'temperatur' => 'required',
                 'total_skor' => 'required',
                 'hasil_ews' => 'required',
                 'tanggal' => 'required',
