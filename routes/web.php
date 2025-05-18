@@ -78,6 +78,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIccuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIcuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MppAController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
@@ -1089,6 +1090,27 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::put('/{data}', 'update')->name('.update');
                                                 Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                                 Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
+                            // MPP
+                            Route::prefix('mpp')->group(function () {
+                                Route::name('.mpp')->group(function () {
+                                    //FORM A
+                                    Route::prefix('form-a')->group(function () {
+                                        Route::name('.form-a')->group(function () {
+                                            Route::controller(MppAController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/show/{data}', 'show')->name('.show');
+                                                Route::delete('/', 'delete')->name('.delete');
+                                                Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                             });
                                         });
                                     });
