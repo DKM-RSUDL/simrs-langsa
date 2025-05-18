@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Early Warning System (EWS) Pasien Dewasa</title>
+    <style>
+        @page {
+            margin: 0.5cm 0.5cm;
+            size: A4 portrait;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 8pt;
+            line-height: 1.1;
+        }
+
+        .container {
+            width: 100%;
+            position: relative;
+        }
+
+        /*  */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3px;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo-rs {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px; /* Mengurangi ukuran logo */
+            height: 50px;
+            margin-right: 5px;
+        }
+
+        .kop-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .rs-name-1 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 2;
+        }
+
+        .rs-address {
+            font-size: 9pt;
+            margin: 2;
+            line-height: 1.2;
+        }
+
+        .border-line {
+            border-bottom: 2px solid black;
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+
+        .border-line-2 {
+            border-bottom: 1px solid black;
+            margin-bottom: 2px;
+        }
+
+        /* Judul */
+        .title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 3px 0;
+        }
+
+        /* Content */
+        .content {
+            margin-bottom: 2px;
+        }
+
+        /* Form Fields */
+        p {
+            margin: 2px 0;
+            font-size: 9pt;
+        }
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        .form-table td {
+            padding: 1px 0;
+            font-size: 9pt;
+        }
+
+        .form-table .label {
+            width: 100px;
+            text-align: left;
+            padding-right: 5px;
+        }
+
+        .form-table .value {
+            border-bottom: 1px dotted #000;
+            min-height: 12px;
+            padding-left: 3px;
+        }
+
+        /* Patient Info Box */
+        .patient-info {
+            border: 1px solid #000;
+            padding: 3px;
+            width: 250px;
+            font-size: 9pt;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .patient-info-row {
+            display: flex;
+            margin-bottom: 3px;
+        }
+
+        .patient-info-label {
+            width: 80px;
+            font-weight: normal;
+        }
+
+        .patient-info-value {
+            flex: 1;
+        }
+        /*  */
+
+        .title {
+            text-align: center;
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        table.ews-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 6pt;
+        }
+
+        table.ews-table th, table.ews-table td {
+            border: 1px solid #000;
+            padding: 2px;
+            text-align: center;
+            height: 15px;
+        }
+
+        table.ews-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .parameter-col {
+            width: 100px;
+            text-align: left !important;
+            padding-left: 3px !important;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .nilai-col {
+            width: 80px;
+        }
+
+        .skor-col {
+            width: 25px;
+        }
+
+        .cell-green {
+            background-color: #90EE90;
+        }
+
+        .cell-yellow {
+            background-color: #FFFF00;
+        }
+
+        .cell-red {
+            background-color: #FF6347;
+        }
+
+        .hasil-ews {
+            margin-top: 5px;
+            font-size: 7pt;
+            font-weight: bold;
+        }
+
+        .hasil-ews-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 3px;
+        }
+
+        .hasil-ews-table td {
+            padding: 3px;
+            border: 1px solid #000;
+            font-size: 6pt;
+        }
+
+        .hasil-low {
+            background-color: #90EE90;
+        }
+
+        .hasil-medium {
+            background-color: #FFFF00;
+        }
+
+        .hasil-high {
+            background-color: #FF6347;
+        }
+
+        .keterangan {
+            font-size: 6pt;
+            margin-top: 3px;
+        }
+
+        .keterangan p {
+            margin: 1px 0;
+        }
+
+        .footer {
+            margin-top: 3px;
+            font-size: 6pt;
+            text-align: right;
+        }
+
+        .small-text {
+            font-size: 5pt;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ public_path('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo RSUD Langsa" class="logo">
+            <div class="hospital-info">
+                <p class="hospital-name">RSUD LANGSA</p>
+                <p class="hospital-address">Jl. Jend. A. Yani, Kota Langsa</p>
+                <p class="hospital-address">Telp: 0641- 22051</p>
+                <p class="hospital-address">email: rsudlangsa.aceh@gmail.com</p>
+            </div>
+
+            <div class="patient-info">
+                <div class="patient-row">
+                    <span class="patient-label">No RM :</span>
+                    <span>{{ $dataMedis->pasien->kd_pasien }}</span>
+                </div>
+                <div class="patient-row">
+                    <span class="patient-label">Nama :</span>
+                    <span>{{ $dataMedis->pasien->nama }}</span>
+                </div>
+                <div class="patient-row">
+                    <span class="patient-label">Jenis Kelamin :</span>
+                    <span>{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}</span>
+                </div>
+                <div class="patient-row">
+                    <span class="patient-label">Tanggal Lahir :</span>
+                    <span>{{ $dataMedis->pasien->umur ?? '-' }} Thn ({{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d/m/Y') : '-' }})</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="title">
+            EARLY WARNING SYSTEM (EWS)<br>
+            PASIEN DEWASA
+        </div>
+
+        <table class="ews-table">
+            <thead>
+                <tr>
+                    <th rowspan="3" class="parameter-col">PARAMETER</th>
+                    <th colspan="2" rowspan="2">Tanggal & Jam</th>
+                    @php
+                        $columnCount = $ewsRecords->count();
+                        $maxColumns = 5;
+                        $displayedRecords = $ewsRecords->take($maxColumns);
+                        $remainingColumns = max(0, $maxColumns - $displayedRecords->count());
+                    @endphp
+                    @foreach($displayedRecords as $record)
+                        <th>{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <th></th>
+                    @endfor
+                </tr>
+                <tr>
+                    @foreach($displayedRecords as $record)
+                        <th>{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <th></th>
+                    @endfor
+                </tr>
+                <tr>
+                    <th class="nilai-col">Penilaian</th>
+                    <th class="skor-col">Skor</th>
+                    @foreach($displayedRecords as $record)
+                        <th></th>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <th></th>
+                    @endfor
+                </tr>
+            </thead>
+            <tbody>
+                <!-- AVPU -->
+                <tr>
+                    <td rowspan="2" class="parameter-col">Kesadaran (AVPU)</td>
+                    <td>A*</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>V,P,U*</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ in_array($record->avpu, ['V', 'P', 'U']) ? 'cell-red' : '' }}">{{ in_array($record->avpu, ['V', 'P', 'U']) ? $record->avpu : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Saturasi O2 -->
+                <tr>
+                    <td rowspan="4" class="parameter-col">Saturasi O2 (%)</td>
+                    <td>≥ 95</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->saturasi_o2 == '≥ 95' ? 'cell-green' : '' }}">{{ $record->saturasi_o2 == '≥ 95' ? '≥ 95' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>94-95</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->saturasi_o2 == '94-95' ? 'cell-yellow' : '' }}">{{ $record->saturasi_o2 == '94-95' ? '94-95' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>92-93</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->saturasi_o2 == '92-93' ? 'cell-yellow' : '' }}">{{ $record->saturasi_o2 == '92-93' ? '92-93' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>≤ 91</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->saturasi_o2 == '≤ 91' ? 'cell-red' : '' }}">{{ $record->saturasi_o2 == '≤ 91' ? '≤ 91' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Dengan Bantuan O2 -->
+                <tr>
+                    <td rowspan="2" class="parameter-col">Dengan bantuan O2</td>
+                    <td>Tidak</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->dengan_bantuan == 'Tidak' ? 'cell-green' : '' }}">{{ $record->dengan_bantuan == 'Tidak' ? 'Tidak' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>Ya</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->dengan_bantuan == 'Ya' ? 'cell-yellow' : '' }}">{{ $record->dengan_bantuan == 'Ya' ? 'Ya' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Tekanan Darah Sistolik -->
+                <tr>
+                    <td rowspan="5" class="parameter-col">Tekanan Darah Sistolik (mmHg)</td>
+                    <td>≥ 220</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->tekanan_darah == '≥ 220' ? 'cell-red' : '' }}">{{ $record->tekanan_darah == '≥ 220' ? '≥ 220' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>111-219</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->tekanan_darah == '111-219' ? 'cell-green' : '' }}">{{ $record->tekanan_darah == '111-219' ? '111-219' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>101-110</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->tekanan_darah == '101-110' ? 'cell-yellow' : '' }}">{{ $record->tekanan_darah == '101-110' ? '101-110' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>91-100</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->tekanan_darah == '91-100' ? 'cell-yellow' : '' }}">{{ $record->tekanan_darah == '91-100' ? '91-100' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>≤ 90</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->tekanan_darah == '≤ 90' ? 'cell-red' : '' }}">{{ $record->tekanan_darah == '≤ 90' ? '≤ 90' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Nadi -->
+                <tr>
+                    <td rowspan="6" class="parameter-col">Nadi (per menit)</td>
+                    <td>≥ 131</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '≥ 131' ? 'cell-red' : '' }}">{{ $record->nadi == '≥ 131' ? '≥ 131' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>111-130</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '111-130' ? 'cell-yellow' : '' }}">{{ $record->nadi == '111-130' ? '111-130' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>91-110</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '91-110' ? 'cell-yellow' : '' }}">{{ $record->nadi == '91-110' ? '91-110' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>51-90</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '51-90' ? 'cell-green' : '' }}">{{ $record->nadi == '51-90' ? '51-90' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>41-50</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '41-50' ? 'cell-yellow' : '' }}">{{ $record->nadi == '41-50' ? '41-50' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>≤ 40</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nadi == '≤ 40' ? 'cell-red' : '' }}">{{ $record->nadi == '≤ 40' ? '≤ 40' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Nafas -->
+                <tr>
+                    <td rowspan="5" class="parameter-col">Nafas (per menit)</td>
+                    <td>≥ 25</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nafas == '≥ 25' ? 'cell-red' : '' }}">{{ $record->nafas == '≥ 25' ? '≥ 25' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>21-24</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nafas == '21-24' ? 'cell-yellow' : '' }}">{{ $record->nafas == '21-24' ? '21-24' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>12-20</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nafas == '12-20' ? 'cell-green' : '' }}">{{ $record->nafas == '12-20' ? '12-20' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>9-11</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nafas == '9-11' ? 'cell-yellow' : '' }}">{{ $record->nafas == '9-11' ? '9-11' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>≤ 8</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->nafas == '≤ 8' ? 'cell-red' : '' }}">{{ $record->nafas == '≤ 8' ? '≤ 8' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Temperatur -->
+                <tr>
+                    <td rowspan="5" class="parameter-col">Temperatur (°C)</td>
+                    <td>≥ 39.1</td>
+                    <td>2</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->temperatur == '≥ 39.1' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '≥ 39.1' ? '≥ 39.1' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>38.1-39.0</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->temperatur == '38.1-39.0' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '38.1-39.0' ? '38.1-39.0' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>36.1-38.0</td>
+                    <td>0</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->temperatur == '36.1-38.0' ? 'cell-green' : '' }}">{{ $record->temperatur == '36.1-38.0' ? '36.1-38.0' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>35.1-36.0</td>
+                    <td>1</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->temperatur == '35.1-36.0' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '35.1-36.0' ? '35.1-36.0' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+                <tr>
+                    <td>≤ 35</td>
+                    <td>3</td>
+                    @foreach($displayedRecords as $record)
+                        <td class="{{ $record->temperatur == '≤ 35' ? 'cell-red' : '' }}">{{ $record->temperatur == '≤ 35' ? '≤ 35' : '' }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+
+                <!-- Total Skor -->
+                <tr>
+                    <td colspan="2" style="text-align: center; font-weight: bold;">TOTAL SKOR</td>
+                    <td></td>
+                    @foreach($displayedRecords as $record)
+                        <td style="font-weight: bold;">{{ $record->total_skor }}</td>
+                    @endforeach
+                    @for($i = 0; $i < $remainingColumns; $i++)
+                        <td></td>
+                    @endfor
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
+
+        <table class="hasil-ews-table">
+            <tr>
+                <td class="hasil-low">Total Skor 0-4: RISIKO RENDAH</td>
+                <td class="hasil-medium">Skor 3 dalam satu parameter atau Total Skor 5-6: RISIKO SEDANG</td>
+                <td class="hasil-high">Total Skor ≥ 7: RISIKO TINGGI</td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            <p>Nama dan Paraf:</p>
+            <br><br><br>
+            <p>{{ str()->title($ewsPasienDewasa->userCreate->name) }}</p>
+            <br>
+            <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+        </div>
+    </div>
+</body>
+
+</html>
