@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DokterInap;
+use App\Models\EWSPasienDewasa;
 use App\Models\Kunjungan;
 use App\Models\PermintaanSecondOpinion;
 use Exception;
@@ -35,11 +36,6 @@ class EWSPasienDewasaController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        $dataDokter = DokterInap::with(['dokter', 'unit'])
-            ->where('kd_unit', '1001')
-            ->whereRelation('dokter', 'status', 1)
-            ->get();
-
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
@@ -50,7 +46,7 @@ class EWSPasienDewasaController extends Controller
             abort(404, 'Data not found');
         }
 
-        // start fungsi Tabs        
+        // start fungsi Tabs
         $activeTab = $request->query('tab', 'dewasa');
 
         $allowedTabs = ['dewasa', 'anak', 'obstetri'];
@@ -65,30 +61,34 @@ class EWSPasienDewasaController extends Controller
         } else {
             return $this->obstetriTab($dataMedis, $activeTab);
         }
-        // end code              
+        // end code
     }
 
     private function dewasaTab($dataMedis, $activeTab)
     {
-        $dataDokter = DokterInap::with(['dokter', 'unit'])
-            ->where('kd_unit', '1001')
-            ->whereRelation('dokter', 'status', 1)
-            ->get();
+        // EWSPasienDewasa
+
+        $ewsPasienDewasa = EWSPasienDewasa::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
 
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.index', compact(
             'dataMedis',
-            'dataDokter',            
+            'ewsPasienDewasa',
             'activeTab'
         ));
     }
 
     private function anakTab($dataMedis, $activeTab)
     {
-        // Data khusus untuk tab anak jika diperlukan        
+        // Data khusus untuk tab anak jika diperlukan
 
         // return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
         //     'dataMedis',
-        //     'dataDokter',        
+        //     'dataDokter',
         //     'activeTab',
         //     'dataAnak'
         // ));
@@ -100,7 +100,7 @@ class EWSPasienDewasaController extends Controller
 
         // return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetri.index', compact(
         //     'dataMedis',
-        //     'dataDokter',        
+        //     'dataDokter',
         //     'activeTab',
         //     'dataObstetri'
         // ));
@@ -129,7 +129,201 @@ class EWSPasienDewasaController extends Controller
 
 
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.create', compact(
-            'dataMedis',            
+            'dataMedis',
         ));
+    }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'avpu' => 'required',
+                'saturasi_o2' => 'required|numeric',
+                'dengan_bantuan' => 'required|numeric',
+                'tekanan_darah' => 'required|numeric',
+                'nadi' => 'required|numeric',
+                'nafas' => 'required|numeric',
+                'temperatur' => 'required|numeric',
+                'total_skor' => 'required',
+                'hasil_ews' => 'required',
+                'tanggal' => 'required',
+                'jam_masuk' => 'required',
+            ]);
+
+            $data = [
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'user_create' => auth()->user()->id,
+                'avpu' => $request->avpu,
+                'saturasi_o2' => $request->saturasi_o2,
+                'dengan_bantuan' => $request->dengan_bantuan,
+                'tekanan_darah' => $request->tekanan_darah,
+                'nadi' => $request->nadi,
+                'nafas' => $request->nafas,
+                'temperatur' => $request->temperatur,
+                'total_skor' => $request->total_skor,
+                'hasil_ews' => $request->hasil_ews,
+                'tanggal' => $request->tanggal ? Carbon::parse($request->tanggal) : null,
+                'jam_masuk' => $request->jam_masuk ? Carbon::parse($request->jam_masuk) : null,
+            ];
+
+            EWSPasienDewasa::create($data);
+            DB::commit();
+
+            return to_route('rawat-inap.ews-pasien-dewasa.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data EWS Pasien Dewasa berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.show', compact(
+            'dataMedis',
+            'ewsPasienDewasa'
+        ));
+    }
+
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->first();
+
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
+
+        // Return the edit view, not show view
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.edit', compact(
+            'dataMedis',
+            'ewsPasienDewasa'
+        ));
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'avpu' => 'required',
+                'saturasi_o2' => 'required|numeric',
+                'dengan_bantuan' => 'required|numeric',
+                'tekanan_darah' => 'required|numeric',
+                'nadi' => 'required|numeric',
+                'nafas' => 'required|numeric',
+                'temperatur' => 'required|numeric',
+                'total_skor' => 'required',
+                'hasil_ews' => 'required',
+                'tanggal' => 'required',
+                'jam_masuk' => 'required',
+            ]);
+
+            // Find the record to update
+            $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
+
+            // Combine date and time into a single datetime field
+            $tanggalJam = Carbon::createFromFormat('Y-m-d H:i', $request->tanggal . ' ' . $request->jam_masuk);
+
+            // Update the record
+            $ewsPasienDewasa->kd_pasien = $kd_pasien;
+            $ewsPasienDewasa->kd_unit = $kd_unit;
+            $ewsPasienDewasa->tgl_masuk = $tgl_masuk;
+            $ewsPasienDewasa->urut_masuk = $urut_masuk;
+            $ewsPasienDewasa->user_edit = auth()->user()->id;
+            $ewsPasienDewasa->avpu = $request->avpu;
+            $ewsPasienDewasa->saturasi_o2 = $request->saturasi_o2;
+            $ewsPasienDewasa->dengan_bantuan = $request->dengan_bantuan;
+            $ewsPasienDewasa->tekanan_darah = $request->tekanan_darah;
+            $ewsPasienDewasa->nadi = $request->nadi;
+            $ewsPasienDewasa->nafas = $request->nafas;
+            $ewsPasienDewasa->temperatur = $request->temperatur;
+            $ewsPasienDewasa->total_skor = $request->total_skor;
+            $ewsPasienDewasa->hasil_ews = $request->hasil_ews;
+            $ewsPasienDewasa->tanggal = $tanggalJam;
+
+            $ewsPasienDewasa->save();
+            DB::commit();
+
+            return to_route('rawat-inap.ews-pasien-dewasa.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data EWS Pasien Dewasa berhasil diperbarui');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
+            $ewsPasienDewasa->delete();
+
+            DB::commit();
+
+            return to_route('rawat-inap.ews-pasien-dewasa.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])->with('success', 'Data EWS Pasien Dewasa berhasil dihapus');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

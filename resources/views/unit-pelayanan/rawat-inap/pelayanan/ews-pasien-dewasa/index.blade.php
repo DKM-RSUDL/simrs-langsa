@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                            background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                        } */
+                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                } */
     </style>
 @endpush
 
@@ -101,64 +101,52 @@
                                                     <th>No</th>
                                                     <th>Tgl Pengiriman</th>
                                                     <th>Nama Petugas</th>
-                                                    <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @forelse($permintaanDarah as $index => $item)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ date('d-m-Y', strtotime($item->tgl_pengiriman)) }}</td>
-                                                    <td>{{ $item->petugas_pengambilan_sampel }}</td>
-                                                    <td>
-                                                        @if ($item->status == 0)
-                                                        Diorder
-                                                        @elseif ($item->status == 1)
-                                                        Diterima
-                                                        @elseif ($item->status == 2)
-                                                        Diserahkan
-                                                        @else
-                                                        Tidak Diketahui
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group" role="group">
-                                                            <a href="{{ route('rawat-inap.permintaan-darah.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                class="btn btn-info btn-sm" title="Detail">
-                                                                <i class="ti-eye"></i>
-                                                            </a>
-                                                            @if ($item->status == 0)
-                                                            <a href="{{ route('rawat-inap.permintaan-darah.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                                <i class="ti-pencil"></i>
-                                                            </a>
-                                                            @endif
+                                                @forelse($ewsPasienDewasa as $index => $item)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
+                                                        <td>{{ $item->userCreate->nama }}</td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    class="btn btn-info btn-sm" title="Detail">
+                                                                    <i class="ti-eye"></i>
+                                                                </a>
+                                                                @if ($item->status == 0)
+                                                                    <a href="{{ route('rawat-inap.ews-pasien-dewasa.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                        class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                                        <i class="ti-pencil"></i>
+                                                                    </a>
+                                                                @endif
 
-                                                            <form
-                                                                action="{{ route('permintaan-darah.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                method="POST" class="delete-form" style="display: inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm ms-2"
-                                                                    title="Hapus">
-                                                                    <i class="ti-trash"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                                <form
+                                                                    action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    method="POST" class="delete-form ms-2" style="display: inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                                        title="Hapus">
+                                                                        <i class="ti-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @empty
-                                                <tr>
-                                                    <td colspan="8" class="text-center">Tidak ada data Permintaan Darah</td>
-                                                </tr>
-                                                @endforelse --}}
+                                                    <tr>
+                                                        <td colspan="8" class="text-center">Tidak ada data Permintaan Darah</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
 
                                         <!-- Pagination -->
                                         <div class="d-flex justify-content-end">
-                                            {{-- {{ $permintaanDarah->links() }} --}}
+                                            {{ $ewsPasienDewasa->links() }}
                                         </div>
                                     </div>
                                 </div>
@@ -172,3 +160,30 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach SweetAlert to all delete forms
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data EWS Pasien Dewasa ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@endpush
