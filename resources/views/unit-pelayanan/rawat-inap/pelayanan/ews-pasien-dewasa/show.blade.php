@@ -22,7 +22,7 @@
                 <a
                     href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $ewsPasienDewasa->id]) }}"
                     class="btn btn-danger ms-2" target="_blank">
-                    <i class="ti-file"></i> PDF
+                    <i class="bi bi-printer"></i> PDF
                 </a>
             </div>
 
