@@ -35,7 +35,7 @@
                                         <input type="date" class="form-control" name="tanggal"
                                             value="{{ $ewsPasienDewasa->tanggal ? Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('Y-m-d') : date('Y-m-d') }}">
                                         <input type="time" class="form-control" name="jam_masuk"
-                                            value="{{ $ewsPasienDewasa->jam_masuk ?? date('H:i') }}">
+                                            value="{{ $ewsPasienDewasa->jam_masuk ? (\Carbon\Carbon::hasFormat($ewsPasienDewasa->jam_masuk, 'H:i:s') ? \Carbon\Carbon::parse($ewsPasienDewasa->jam_masuk)->format('H:i') : now()->setTimezone('Asia/Jakarta')->format('H:i')) : now()->setTimezone('Asia/Jakarta')->format('H:i') }}">
                                     </div>
                                 </div>
 
