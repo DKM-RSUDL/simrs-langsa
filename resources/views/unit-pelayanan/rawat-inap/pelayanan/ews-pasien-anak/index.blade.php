@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                        background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                    } */
+                                                                background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                            } */
     </style>
 @endpush
 
@@ -112,24 +112,24 @@
                                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.ews-pasien-anak.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-secondary btn-sm ms-2" target="_blank">
                                                                     <i class="bi bi-printer"></i>
                                                                 </a>
 
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.ews-pasien-anak.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm ms-2" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
                                                                 @if ($item->status == 0)
-                                                                    <a href="{{ route('rawat-inap.ews-pasien-dewasa.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    <a href="{{ route('rawat-inap.ews-pasien-anak.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-warning btn-sm ms-2" title="Edit">
                                                                         <i class="ti-pencil"></i>
                                                                     </a>
                                                                 @endif
 
                                                                 <form
-                                                                    action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    action="{{ route('rawat-inap.ews-pasien-anak.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form ms-2"
                                                                     style="display: inline;">
                                                                     @csrf
@@ -176,7 +176,7 @@
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
-                        text: 'Data EWS Pasien Dewasa ini akan dihapus secara permanen!',
+                        text: 'Data EWS Pasien Anak ini akan dihapus secara permanen!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
