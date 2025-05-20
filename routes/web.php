@@ -68,6 +68,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
@@ -486,10 +487,26 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
-                            // EWSPasienDewasaController
+                            // EWS Pasien Dewasa
                             Route::prefix('ews-pasien-dewasa')->group(function () {
                                 Route::name('.ews-pasien-dewasa')->group(function () {
                                     Route::controller(EWSPasienDewasaController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // EWS Pasien Anak
+                            Route::prefix('ews-pasien-anak')->group(function () {
+                                Route::name('.ews-pasien-anak')->group(function () {
+                                    Route::controller(EWSPasienAnakController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');

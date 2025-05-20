@@ -86,12 +86,10 @@ class EWSPasienDewasaController extends Controller
     {
         // Data khusus untuk tab anak jika diperlukan
 
-        // return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
-        //     'dataMedis',
-        //     'dataDokter',
-        //     'activeTab',
-        //     'dataAnak'
-        // ));
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
+            'dataMedis',
+            'activeTab',
+        ));
     }
 
     private function obstetriTab($dataMedis, $activeTab)
