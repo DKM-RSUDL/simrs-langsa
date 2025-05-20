@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DokterInap;
+use App\Models\EWSPasienAnak;
 use App\Models\EWSPasienDewasa;
 use App\Models\Kunjungan;
 use App\Models\PermintaanSecondOpinion;
@@ -86,9 +87,16 @@ class EWSPasienDewasaController extends Controller
     {
         // Data khusus untuk tab anak jika diperlukan
 
+        $eWSPasienAnak = EWSPasienAnak::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
             'dataMedis',
             'activeTab',
+            'eWSPasienAnak'
         ));
     }
 

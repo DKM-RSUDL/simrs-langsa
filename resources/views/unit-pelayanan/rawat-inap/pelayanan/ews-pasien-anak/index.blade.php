@@ -105,7 +105,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @forelse($ewsPasienDewasa as $index => $item)
+                                                @forelse($eWSPasienAnak as $index => $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
@@ -146,13 +146,13 @@
                                                     <tr>
                                                         <td colspan="8" class="text-center">Tidak ada data Permintaan Darah</td>
                                                     </tr>
-                                                @endforelse --}}
+                                                @endforelse
                                             </tbody>
                                         </table>
 
                                         <!-- Pagination -->
                                         <div class="d-flex justify-content-end">
-                                            {{-- {{ $ewsPasienDewasa->links() }} --}}
+                                            {{ $eWSPasienAnak->links() }}
                                         </div>
                                     </div>
                                 </div>

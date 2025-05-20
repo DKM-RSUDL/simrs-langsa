@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\EWSPasienAnak;
 use App\Models\EWSPasienDewasa;
 use App\Models\Kunjungan;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
-
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 class EWSPasienAnakController extends Controller
 {
     public function __construct()
@@ -80,9 +84,17 @@ class EWSPasienAnakController extends Controller
     {
         // Data khusus untuk tab anak jika diperlukan
 
+        $eWSPasienAnak = EWSPasienAnak::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
             'dataMedis',
             'activeTab',
+            'eWSPasienAnak'
         ));
     }
 
@@ -123,5 +135,52 @@ class EWSPasienAnakController extends Controller
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.create', compact(
             'dataMedis',
         ));
+    }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'keadaan_umum' => 'required',
+                'kardiovaskular' => 'required',
+                'respirasi' => 'required',
+                'total_skor' => 'required',
+                'hasil_ews' => 'required',
+                'tanggal' => 'required',
+                'jam_masuk' => 'required',
+            ]);
+
+            $data = [
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+                'user_create' => auth()->user()->id,
+                'keadaan_umum' => $request->keadaan_umum,
+                'kardiovaskular' => $request->kardiovaskular,
+                'respirasi' => $request->respirasi,
+                'total_skor' => $request->total_skor,
+                'hasil_ews' => $request->hasil_ews,
+                'tanggal' => $request->tanggal ? Carbon::parse($request->tanggal) : null,
+                'jam_masuk' => $request->jam_masuk ? Carbon::parse($request->jam_masuk) : null,
+            ];
+
+            EWSPasienAnak::create($data);
+            DB::commit();
+
+            return to_route('rawat-inap.ews-pasien-anak.index', [
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $urut_masuk,
+            ])
+                ->with('success', 'Data EWS Pasien Anak berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
