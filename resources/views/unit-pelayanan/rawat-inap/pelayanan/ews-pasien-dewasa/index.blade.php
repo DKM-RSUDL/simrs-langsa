@@ -3,8 +3,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         /* .header-background {
-                                                    background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
-                                                } */
+                                                        background-image: url("{{ asset('assets/img/background_gawat_darurat.png') }}");
+                                                    } */
     </style>
 @endpush
 
@@ -109,11 +109,16 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
-                                                        <td>{{ $item->userCreate->nama }}</td>
+                                                        <td>{{ str()->title($item->userCreate->name) }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
+                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    class="btn btn-secondary btn-sm ms-2" target="_blank">
+                                                                    <i class="bi bi-printer"></i>
+                                                                </a>
+
                                                                 <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-info btn-sm" title="Detail">
+                                                                    class="btn btn-info btn-sm ms-2" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
                                                                 @if ($item->status == 0)
@@ -125,7 +130,8 @@
 
                                                                 <form
                                                                     action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    method="POST" class="delete-form ms-2" style="display: inline;">
+                                                                    method="POST" class="delete-form ms-2"
+                                                                    style="display: inline;">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" class="btn btn-danger btn-sm"
