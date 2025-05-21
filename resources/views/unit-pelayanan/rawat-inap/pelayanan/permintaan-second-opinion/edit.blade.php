@@ -69,14 +69,23 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="rs_second_opinion" class="form-label">RS Second Opinion <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('rs_second_opinion') is-invalid @enderror"
-                                            id="rs_second_opinion" name="rs_second_opinion"
-                                            value="{{ old('rs_second_opinion', $secondOpinion->rs_second_opinion) }}" required>
-                                        @error('rs_second_opinion')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Rujukan</label>
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="checkbox" value="1" id="checkRujuk" name="is_rujuk" 
+                                                    {{ old('is_rujuk', $secondOpinion->is_rujuk) == '1' ? 'checked' : '' }}
+                                                    aria-label="Checkbox for rujukan">
+                                            </div>
+                                            <span class="input-group-text bg-light">Rujuk RS Lain</span>
+                                            <input type="text" class="form-control @error('rs_second_opinion') is-invalid @enderror"
+                                                id="rs_second_opinion" name="rs_second_opinion"
+                                                placeholder="Nama RS tujuan" 
+                                                value="{{ old('rs_second_opinion', $secondOpinion->rs_second_opinion) }}">
+                                            @error('rs_second_opinion')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -93,11 +102,27 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="status_peminjam" class="form-label">Status Peminjam <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select @error('status_peminjam') is-invalid @enderror"
+                                            name="status_peminjam" id="status_peminjam" required>
+                                            <option value="">--Pilih--</option>
+                                            <option value="diri_sendiri" {{ old('status_peminjam', $secondOpinion->status_peminjam) == 'diri_sendiri' ? 'selected' : '' }}>Diri Sendiri</option>
+                                            <option value="keluarga" {{ old('status_peminjam', $secondOpinion->status_peminjam) == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
+                                        </select>
+                                        @error('status_peminjam')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card mb-4 border-primary">
+                    <div class="card mb-4 border-primary" id="data-peminjam-card">
                         <div class="card-header text-dark">
                             <h6 class="mb-0">DATA PEMINJAM</h6>
                         </div>
@@ -314,6 +339,81 @@
 
                 // Initial state
                 updateRemoveButtons();
+            }
+        });
+
+        // Show/Hide RS Second Opinion input based on checkbox
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const checkRujuk = document.getElementById('checkRujuk');
+            const rsSecondOpinionInput = document.getElementById('rs_second_opinion');
+            
+            // Set initial state based on existing data or old input
+            const isRujuk = {{ old('is_rujuk', $secondOpinion->is_rujuk) == '1' ? 'true' : 'false' }};
+            
+            if (isRujuk) {
+                rsSecondOpinionInput.style.display = 'block';
+                rsSecondOpinionInput.setAttribute('required', 'required');
+            } else {
+                rsSecondOpinionInput.style.display = 'none';
+                rsSecondOpinionInput.removeAttribute('required');
+            }
+            
+            // Add event listener to checkbox
+            checkRujuk.addEventListener('change', function() {
+                if (this.checked) {
+                    rsSecondOpinionInput.style.display = 'block';
+                    rsSecondOpinionInput.setAttribute('required', 'required');
+                    rsSecondOpinionInput.focus();
+                } else {
+                    rsSecondOpinionInput.style.display = 'none';
+                    rsSecondOpinionInput.removeAttribute('required');
+                    rsSecondOpinionInput.value = '';
+                }
+            });
+        });
+
+                // Initialize the data peminjam visibility
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the status_peminjam select element
+            const statusPeminjam = document.getElementById('status_peminjam');
+            // Get the DATA PEMINJAM card
+            const dataPeminjamCard = document.querySelector('.card.mb-4.border-primary:nth-of-type(2)');
+
+            // Function to toggle DATA PEMINJAM visibility
+            function toggleDataPeminjam() {
+                if (statusPeminjam.value === 'keluarga') {
+                    dataPeminjamCard.style.display = 'block';
+                    // Enable all required fields in the DATA PEMINJAM section
+                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                        field.setAttribute('required', 'required');
+                    });
+                } else {
+                    dataPeminjamCard.style.display = 'none';
+                    // Disable required validation for hidden fields
+                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                        field.removeAttribute('required');
+                    });
+                }
+            }
+
+            // Set initial state based on database value or old input
+            if (statusPeminjam) {
+                // The initial value should reflect the saved status
+                const initialStatus = "{{ old('status_peminjam', $secondOpinion->status_peminjam) }}";
+                
+                if (initialStatus === 'keluarga') {
+                    dataPeminjamCard.style.display = 'block';
+                } else {
+                    dataPeminjamCard.style.display = 'none';
+                    // Remove required attribute
+                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                        field.removeAttribute('required');
+                    });
+                }
+
+                // Add event listener for changes to the select
+                statusPeminjam.addEventListener('change', toggleDataPeminjam);
             }
         });
     </script>

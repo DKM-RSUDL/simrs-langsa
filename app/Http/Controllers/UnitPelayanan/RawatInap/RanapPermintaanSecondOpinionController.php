@@ -107,6 +107,8 @@ class RanapPermintaanSecondOpinionController extends Controller
                 'hubungan' => 'required|string|max:255',
                 'nama_dokumen' => 'required|array|min:1',
                 'nama_dokumen.*' => 'required|string|max:255',
+                'is_rujuk' => 'required',
+                'status_peminjam' => 'required',
             ]);
 
             // Prepare data array for insertion
@@ -129,6 +131,8 @@ class RanapPermintaanSecondOpinionController extends Controller
                 'alamat' => $request->alamat,
                 'hubungan' => $request->hubungan,
                 'nama_dokumen' => json_encode($request->nama_dokumen),
+                'is_rujuk' => $request->is_rujuk,
+                'status_peminjam' => $request->status_peminjam,
             ];
 
             // Create the record
@@ -224,6 +228,8 @@ class RanapPermintaanSecondOpinionController extends Controller
                 'hubungan' => 'required|string|max:255',
                 'nama_dokumen' => 'required|array|min:1',
                 'nama_dokumen.*' => 'required|string|max:255',
+                'is_rujuk' => 'required',
+                'status_peminjam' => 'required',
             ]);
 
             $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
@@ -244,6 +250,8 @@ class RanapPermintaanSecondOpinionController extends Controller
                 'alamat' => $request->alamat,
                 'hubungan' => $request->hubungan,
                 'nama_dokumen' => json_encode($request->nama_dokumen),
+                'is_rujuk' => $request->is_rujuk,
+                'status_peminjam' => $request->status_peminjam,
             ];
 
             // Update the record

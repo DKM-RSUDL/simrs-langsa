@@ -2,8 +2,17 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-    @endpush
+        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">    
+    <style>
+        .form-control:disabled {
+            background-color: #f8f9fa;
+            opacity: 1;
+        }
+        .form-check-input:disabled {
+            opacity: 1;
+        }
+    </style>
+@endpush
 
     <div class="row">
         <div class="col-md-3">
@@ -63,9 +72,25 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="rs_second_opinion" class="form-label">RS Second Opinion</label>
-                                    <input type="text" class="form-control" id="rs_second_opinion"
-                                        value="{{ $secondOpinion->rs_second_opinion }}" disabled>
+                                    <label class="form-label">Rujukan</label>
+                                    <div>
+                                        @if($secondOpinion->is_rujuk == '1')
+                                            <div class="d-flex">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input" type="checkbox" checked disabled>
+                                                    <label class="form-check-label">Rujuk RS Lain</label>
+                                                </div>
+                                                @if($secondOpinion->rs_second_opinion)
+                                                    <span class="fw-bold">: {{ $secondOpinion->rs_second_opinion }}</span>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" disabled>
+                                                <label class="form-check-label">Rujuk RS Lain</label>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -76,6 +101,12 @@
                                     <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian Dokumen</label>
                                     <input type="date" class="form-control" id="tanggal_pengembalian"
                                         value="{{ date('Y-m-d', strtotime($secondOpinion->tanggal_pengembalian)) }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status_peminjam" class="form-label">Status Peminjam</label>
+                                    <input type="text" class="form-control" value="{{ $secondOpinion->status_peminjam == 'diri_sendiri' ? 'Diri Sendiri' : 'Keluarga' }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -197,14 +228,21 @@
 
 @endsection
 
-@push('css')
-    <style>
-        .form-control:disabled {
-            background-color: #f8f9fa;
-            opacity: 1;
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the DATA PEMINJAM card
+        const dataPeminjamCard = document.querySelector('.card.mb-4.border-primary:nth-of-type(2)');
+        
+        // Check status_peminjam value
+        const statusPeminjam = "{{ $secondOpinion->status_peminjam }}";
+        
+        // Show/hide DATA PEMINJAM card based on status
+        if (statusPeminjam === 'keluarga') {
+            dataPeminjamCard.style.display = 'block';
+        } else {
+            dataPeminjamCard.style.display = 'none';
         }
-        .form-check-input:disabled {
-            opacity: 1;
-        }
-    </style>
+    });
+</script>
 @endpush
