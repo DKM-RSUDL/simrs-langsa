@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\UnitPelayanan\GawatDarurat;
+namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\RmeSuratKematian;
 use App\Models\RmeSuratKematianDtl;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,14 +15,13 @@ use Illuminate\Support\Facades\Log;
 
 class SuratKematianController extends Controller
 {
-
     public function __construct()
     {
-        $this->middleware('can:read unit-pelayanan/gawat-darurat');
+        $this->middleware('can:read unit-pelayanan/rawat-inap');
     }
 
     // SuratKematianController.php - method index
-    public function index($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function index($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         // Ambil data pasien/medis
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -32,7 +31,7 @@ class SuratKematianController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -55,7 +54,7 @@ class SuratKematianController extends Controller
 
         // Query untuk data surat kematian
         $query = RmeSuratKematian::where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $kd_unit)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->with(['detailType1', 'dokter']);
@@ -78,12 +77,12 @@ class SuratKematianController extends Controller
         $dataSuratKematian = $query->orderBy('tanggal_kematian', 'desc')->get();
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.surat.kematian.index',
+            'unit-pelayanan.rawat-inap.pelayanan.surat-kematian.index',
             compact('dataMedis', 'dataSuratKematian')
         );
     }
 
-    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -92,7 +91,7 @@ class SuratKematianController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -112,12 +111,12 @@ class SuratKematianController extends Controller
         $dataDokter = Dokter::where('status', 1)->get();
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.surat.kematian.create',
+            'unit-pelayanan.rawat-inap.pelayanan.surat-kematian.create',
             compact('dataMedis', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dataDokter')
         );
     }
 
-    public function store($kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
+    public function store($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         try {
             // Start transaction
@@ -126,7 +125,7 @@ class SuratKematianController extends Controller
             // Create new RmeSuratKematian record
             $suratKematian = new RmeSuratKematian();
             $suratKematian->kd_pasien = $kd_pasien;
-            $suratKematian->kd_unit = 3;
+            $suratKematian->kd_unit = $kd_unit;
             $suratKematian->tgl_masuk = $tgl_masuk;
             $suratKematian->urut_masuk = $urut_masuk;
             $suratKematian->tanggal_kematian = $request->tanggal_kematian;
@@ -178,7 +177,7 @@ class SuratKematianController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->route('rawat-inap.surat-kematian.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Surat kematian berhasil disimpan.');
         } catch (\Exception $e) {
             // Rollback transaction on error
@@ -194,7 +193,7 @@ class SuratKematianController extends Controller
         }
     }
 
-    public function edit($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Get Patient data
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -204,7 +203,7 @@ class SuratKematianController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -223,7 +222,7 @@ class SuratKematianController extends Controller
         // Get Surat Kematian data
         $suratKematian = RmeSuratKematian::where('id', $id)
             ->where('kd_pasien', $kd_pasien)
-            ->where('kd_unit', 3)
+            ->where('kd_unit', $kd_unit)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
             ->first();
@@ -248,7 +247,7 @@ class SuratKematianController extends Controller
         $dataDokter = Dokter::where('status', 1)->get();
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.surat.kematian.edit',
+            'unit-pelayanan.rawat-inap.pelayanan.surat-kematian.edit',
             compact(
                 'dataMedis',
                 'kd_pasien',
@@ -262,7 +261,7 @@ class SuratKematianController extends Controller
         );
     }
 
-    public function update($kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
+    public function update($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id, Request $request)
     {
         try {
             // Start transaction
@@ -322,7 +321,7 @@ class SuratKematianController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->route('surat-kematian.index', [$kd_pasien, $kd_unit, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Surat kematian berhasil diperbarui.');
         } catch (\Exception $e) {
             // Rollback transaction on error
@@ -338,7 +337,7 @@ class SuratKematianController extends Controller
         }
     }
 
-    public function show($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Get Patient data
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -348,7 +347,7 @@ class SuratKematianController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -369,12 +368,12 @@ class SuratKematianController extends Controller
         }
 
         return view(
-            'unit-pelayanan.gawat-darurat.action-gawat-darurat.surat.kematian.show',
+            'unit-pelayanan.rawat-inap.pelayanan.surat-kematian.show',
             compact('dataMedis', 'suratKematian')
         );
     }
 
-    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function print($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Get Patient data with proper joins for reference tables
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -384,7 +383,7 @@ class SuratKematianController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', 3)
+            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->where('kunjungan.urut_masuk', $urut_masuk)
@@ -435,7 +434,7 @@ class SuratKematianController extends Controller
         ];
 
         // Generate PDF dengan DomPDF
-        $pdf = PDF::loadView('unit-pelayanan.gawat-darurat.action-gawat-darurat.surat.kematian.print', $data);
+        $pdf = app('dompdf.wrapper')->loadView('unit-pelayanan.rawat-inap.pelayanan.surat-kematian.print', $data);
 
         // Atur PDF properties
         $pdf->setPaper('a4', 'portrait');
@@ -455,31 +454,31 @@ class SuratKematianController extends Controller
         return $pdf->stream($filename);
     }
 
-    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    public function destroy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
             // Start transaction
             DB::beginTransaction();
 
-            // Find the death certificate record
-            $suratKematian = RmeSuratKematian::where('kd_pasien', $kd_pasien)
-                ->where('kd_unit', 3)
+            // Find the death certificate
+            $suratKematian = RmeSuratKematian::where('id', $id)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
                 ->where('tgl_masuk', $tgl_masuk)
                 ->where('urut_masuk', $urut_masuk)
-                ->where('id', $id)
                 ->firstOrFail();
 
-            // Delete related details (RmeSuratKematianDtl)
+            // Delete related details
             RmeSuratKematianDtl::where('id_surat', $suratKematian->id)->delete();
 
-            // Delete the main death certificate record
+            // Delete the death certificate
             $suratKematian->delete();
 
             // Commit transaction
             DB::commit();
 
             return redirect()
-                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->route('rawat-inap.surat-kematian.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('success', 'Surat kematian berhasil dihapus.');
         } catch (\Exception $e) {
             // Rollback transaction on error
@@ -489,7 +488,7 @@ class SuratKematianController extends Controller
             Log::error('Error deleting death certificate: ' . $e->getMessage());
 
             return redirect()
-                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->route('rawat-inap.surat-kematian.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])
                 ->with('error', 'Terjadi kesalahan saat menghapus surat kematian: ' . $e->getMessage());
         }
     }

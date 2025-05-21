@@ -29,13 +29,13 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title mb-0">Daftar Surat Kematian Pasien</h5>
-                        <a href="{{ route('surat-kematian.create', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                        <a href="{{ route('rawat-inap.surat-kematian.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
                             <i class="ti-plus"></i> Tambah Surat Kematian
                         </a>
                     </div>
                     
                     <div class="row mb-3">
-                        <form method="GET" action="{{ route('surat-kematian.index', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
+                        <form method="GET" action="{{ route('rawat-inap.surat-kematian.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal" value="{{ request('start_date') }}">
@@ -83,19 +83,19 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('surat-kematian.show', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-info btn-sm" title="Detail">
+                                                <a href="{{ route('rawat-inap.surat-kematian.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-info btn-sm" title="Detail">
                                                     <i class="ti-eye"></i>
                                                 </a>
-                                                <a href="{{ route('surat-kematian.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                <a href="{{ route('rawat-inap.surat-kematian.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-warning btn-sm ms-2" title="Edit">
                                                     <i class="ti-pencil"></i>
                                                 </a>
-                                                <a href="{{ route('surat-kematian.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-primary btn-sm ms-2" title="Cetak" target="_blank">
+                                                <a href="{{ route('rawat-inap.surat-kematian.print', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-primary btn-sm ms-2" title="Cetak" target="_blank">
                                                     <i class="ti-printer"></i>
                                                 </a>
-                                                <form action="{{ route('surat-kematian.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" method="POST" style="display: inline;">
+                                                <form action="{{ route('rawat-inap.surat-kematian.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat kematian ini?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus surat kematian ini?')">
+                                                    <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus">
                                                         <i class="ti-trash"></i>
                                                     </button>
                                                 </form>

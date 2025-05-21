@@ -100,6 +100,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
@@ -1148,6 +1149,22 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/pdf/{data}', 'pdf')->name('.pdf');
                                             });
                                         });
+                                    });
+                                });
+                            });
+
+                            //Surat Kematian
+                            Route::prefix('surat-kematian')->group(function () {
+                                Route::name('.surat-kematian')->group(function () {
+                                    Route::controller(RawatInapSuratKematianController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/print/{data}', 'print')->name('.print');
                                     });
                                 });
                             });
