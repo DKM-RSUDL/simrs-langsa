@@ -70,9 +70,11 @@
         }
 
         .doc-number {
-            font-size: 9pt;
+            font-size: 10pt;
             text-align: center;
             margin-bottom: 5px;
+            font-style: bold;
+            font-weight: bold;
         }
 
         /* Content Styling */
@@ -178,11 +180,11 @@
 
     <!-- Document Title -->
     <div class="title">SURAT KETERANGAN KEDOKTERAN<br>TENTANG SEBAB KEMATIAN</div>
-    <div class="doc-number">No. {{ $suratKematian->nomor_surat ?? '..........................' }}</div>
+    <div class="doc-number">(Certificate of Death)</div>
 
     <!-- Document Content -->
     <div class="content">
-        <p>Yang bertanda tangan di bawah ini dr. {{ $suratKematian->nama_dokter ?? '..........................' }}, spesialis bagian {{ $suratKematian->nama_spesialis ?? '..........................' }} pada Rumah Sakit Umum Daerah Kota Langsa menerangkan bahwa pasien kami sebagai berikut:</p>
+        <p>Yang bertanda tangan di bawah ini <b>{{ $suratKematian->nama_dokter ?? '..........................' }}</b>, spesialis bagian {{ $suratKematian->nama_spesialis ?? '..........................' }} pada Rumah Sakit Umum Daerah Kota Langsa menerangkan bahwa pasien kami sebagai berikut:</p>
     </div>
 
     <!-- Patient Information -->
@@ -190,12 +192,22 @@
         <tr>
             <td>Nama</td>
             <td>:</td>
-            <td>{{ $dataMedis->nama ?? '..........................' }}</td>
+            <td>{{ $dataMedis->pasien->nama ?? '..........................' }}</td>
+        </tr>
+        <tr>
+            <td>Nomor RM</td>
+            <td>:</td>
+            <td>{{ $dataMedis->kd_pasien ?? '..........................' }}</td>
+        </tr>
+        <tr>
+            <td>NIK</td>
+            <td>:</td>
+            <td>{{ $dataMedis->pasien->no_pengenal ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Tgl lahir/ Usia</td>
             <td>:</td>
-            <td>{{ $dataMedis->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->tgl_lahir)->format('d-m-Y') : '..........................' }} / {{ $dataMedis->umur ?? '..........' }} Tahun</td>
+            <td>{{ $dataMedis->pasien->tgl_lahir ? \Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d-m-Y') : '..........................' }} / {{ $dataMedis->pasien->umur ?? '..........' }} Tahun</td>
         </tr>
         <tr>
             <td>Jenis Kelamin</td>
@@ -205,24 +217,29 @@
         <tr>
             <td>Pekerjaan</td>
             <td>:</td>
-            <td>{{ $dataMedis->nama_pekerjaan ?? '..........................' }}</td>
+            <td>{{ $dataMedis->pasien->pekerjaan->pekerjaan ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Suku/Bangsa</td>
             <td>:</td>
-            <td>{{ $dataMedis->nama_suku ?? '..........................' }}</td>
+            <td>{{ $dataMedis->pasien->suku->suku ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Agama</td>
             <td>:</td>
-            <td>{{ $dataMedis->nama_agama ?? '..........................' }}</td>
+            <td>{{ $dataMedis->pasien->agama->agama ?? '..........................' }}</td>
         </tr>
         <tr>
             <td>Alamat</td>
             <td>:</td>
             <td>
-                {{ $dataMedis->alamat ?? '..........................' }}<br>
+                {{ str()->title($dataMedis->pasien->alamat) ?? '..........................' }}<br>
+                Desa/Kel. {{ str()->title($dataMedis->pasien->kelurahan->kelurahan) ?? '..........................' }}<br>
+                Kec. {{ str()->title($dataMedis->pasien->kelurahan->kecamatan->kecamatan) ?? '..........................' }}<br>
+                Kab/Kota: {{ str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->kabupaten) ?? '..........................' }}<br>
+                Provinsi: {{ str()->title($dataMedis->pasien->kelurahan->kecamatan->kabupaten->propinsi->propinsi) ?? '..........................' }}<br>
             </td>
+            
         </tr>
     </table>
 
@@ -233,7 +250,7 @@
 
     <table class="patient-data">
         <tr>
-            <td>Tanggal Kematian</td>
+            <td>Tanggal</td>
             <td>:</td>
             <td>{{ \Carbon\Carbon::parse($suratKematian->tanggal_kematian)->format('d/m/Y') }} Jam: {{ substr($suratKematian->jam_kematian, 0, 5) }}</td>
         </tr>
