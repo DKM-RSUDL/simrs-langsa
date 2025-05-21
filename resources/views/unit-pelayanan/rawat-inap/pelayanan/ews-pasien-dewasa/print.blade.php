@@ -643,24 +643,6 @@
             </tr>
         </table>
 
-        <!-- Current Patient Risk Status -->
-        @if(isset($ewsPasienDewasa) && $ewsPasienDewasa)
-            <div style="text-align: center; margin-top: 10px;">
-                <p style="font-weight: bold; margin-bottom: 5px;">STATUS RISIKO PASIEN SAAT INI:</p>
-                @php
-                    $riskClass = '';
-                    if ($ewsPasienDewasa->hasil_ews == 'RISIKO TINGGI') {
-                        $riskClass = 'risk-high';
-                    } elseif ($ewsPasienDewasa->hasil_ews == 'RISIKO SEDANG') {
-                        $riskClass = 'risk-medium';
-                    } elseif ($ewsPasienDewasa->hasil_ews == 'RISIKO RENDAH') {
-                        $riskClass = 'risk-low';
-                    }
-                @endphp
-                <span class="risk-status {{ $riskClass }}">{{ $ewsPasienDewasa->hasil_ews }}</span>
-            </div>
-        @endif
-
         <div class="footer">
             <p>Nama dan Paraf:</p>
             <p style="margin-top: 30px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}</p>
