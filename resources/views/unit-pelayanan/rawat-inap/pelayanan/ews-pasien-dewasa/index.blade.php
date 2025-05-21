@@ -114,7 +114,7 @@
                                                             <div class="btn-group" role="group">
                                                                 <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-secondary btn-sm ms-2" target="_blank">
-                                                                    <i class="bi bi-printer"></i>
+                                                                    <i class="ti-file"></i>
                                                                 </a>
 
                                                                 <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"

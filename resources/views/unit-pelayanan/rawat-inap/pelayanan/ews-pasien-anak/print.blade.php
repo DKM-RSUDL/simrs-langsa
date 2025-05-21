@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Early Warning System (EWS) Pasien Dewasa</title>
+    <title>Early Warning System (EWS) Pasien Anak</title>
     <style>
         @page {
             margin: 0.5cm;
-            size: A4 portrait;
+            size: A4 portrait; /* Sesuai controller: landscape */
         }
 
         body {
@@ -95,6 +95,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 6pt;
+            table-layout: fixed; /* Memastikan kolom proporsional */
         }
 
         table.ews-table th, table.ews-table td {
@@ -102,6 +103,7 @@
             padding: 2px;
             text-align: center;
             height: 14px;
+            word-wrap: break-word; /* Memastikan teks panjang terputus */
         }
 
         table.ews-table th {
@@ -118,11 +120,18 @@
         }
 
         .nilai-col {
-            width: 60px;
+            width: 150px; /* Diperlebar untuk penilaian panjang */
+            text-align: left !important;
+            padding-left: 4px !important;
         }
 
         .skor-col {
             width: 20px;
+        }
+
+        .record-col {
+            width: 40px; /* Lebar kolom record */
+            min-width: 40px; /* Pastikan kolom tidak menyusut terlalu kecil */
         }
 
         .cell-green {
@@ -166,6 +175,15 @@
 
         .hasil-high {
             background-color: #FF6347;
+        }
+
+        .notes-section {
+            margin-top: 8px;
+            font-size: 6pt;
+        }
+
+        .notes-section p {
+            margin: 2px 0;
         }
 
         .footer {
@@ -217,11 +235,11 @@
         <div class="border-line"></div>
 
         <div class="title">
-            EARLY WARNING SYSTEM (EWS)<br>PASIEN DEWASA
+            EARLY WARNING SYSTEM (EWS)<br>PASIEN ANAK
         </div>
 
         @if($ewsRecords->isEmpty())
-            <p style="text-align: center; font-size: 8pt;">Tidak ada data EWS yang tersedia.</p>
+            <p style="text-align: center; font-size: 8pt;">Tidak ada data EWS yang tersedia untuk tanggal {{ \Carbon\Carbon::parse($recordDate)->format('d/m/Y') }}.</p>
         @else
             <table class="ews-table">
                 <thead>
@@ -229,271 +247,146 @@
                         <th rowspan="3" class="parameter-col">PARAMETER</th>
                         <th colspan="2" rowspan="2">Tanggal & Jam</th>
                         @foreach($ewsRecords as $record)
-                            <th>{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
+                            <th class="record-col">{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($ewsRecords as $record)
-                            <th>{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
+                            <th class="record-col">{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         <th class="nilai-col">Penilaian</th>
                         <th class="skor-col">Skor</th>
                         @foreach($ewsRecords as $record)
-                            <th></th>
+                            <th class="record-col"></th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- AVPU -->
+                    <!-- KEADAAN UMUM -->
                     <tr>
-                        <td rowspan="2" class="parameter-col">Kesadaran (AVPU)</td>
-                        <td>A*</td>
-                        <td>0</td>
+                        <td rowspan="4" class="parameter-col">KEADAAN UMUM</td>
+                        <td class="nilai-col">Interaksi biasa</td>
+                        <td class="skor-col cell-green">0</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}</td>
+                            <td class="record-col {{ $record->keadaan_umum == 0 ? 'cell-green' : '' }}">{{ $record->keadaan_umum == 0 ? '0' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>V,P,U*</td>
-                        <td>3</td>
+                        <td class="nilai-col">Somnolen</td>
+                        <td class="skor-col cell-yellow">1</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ in_array($record->avpu, ['V', 'P', 'U']) ? 'cell-red' : '' }}">{{ in_array($record->avpu, ['V', 'P', 'U']) ? $record->avpu : '' }}</td>
-                        @endforeach
-                    </tr>
-
-                    <!-- Saturasi O2 -->
-                    <tr>
-                        <td rowspan="4" class="parameter-col">Saturasi O2 (%)</td>
-                        <td>≥ 95</td>
-                        <td>0</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->saturasi_o2 == '≥ 95' ? 'cell-green' : '' }}">{{ $record->saturasi_o2 == '≥ 95' ? '≥ 95' : '' }}</td>
+                            <td class="record-col {{ $record->keadaan_umum == 1 ? 'cell-yellow' : '' }}">{{ $record->keadaan_umum == 1 ? '1' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>94-95</td>
-                        <td>1</td>
+                        <td class="nilai-col">Iritabel, tidak dapat ditenangkan</td>
+                        <td class="skor-col cell-yellow">2</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->saturasi_o2 == '94-95' ? 'cell-yellow' : '' }}">{{ $record->saturasi_o2 == '94-95' ? '94-95' : '' }}</td>
+                            <td class="record-col {{ $record->keadaan_umum == 2 ? 'cell-yellow' : '' }}">{{ $record->keadaan_umum == 2 ? '2' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>92-93</td>
-                        <td>2</td>
+                        <td class="nilai-col">Letargi, gelisah, penurunan respon terhadap nyeri</td>
+                        <td class="skor-col cell-red">3</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->saturasi_o2 == '92-93' ? 'cell-yellow' : '' }}">{{ $record->saturasi_o2 == '92-93' ? '92-93' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>≤ 91</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->saturasi_o2 == '≤ 91' ? 'cell-red' : '' }}">{{ $record->saturasi_o2 == '≤ 91' ? '≤ 91' : '' }}</td>
+                            <td class="record-col {{ $record->keadaan_umum == 3 ? 'cell-red' : '' }}">{{ $record->keadaan_umum == 3 ? '3' : '' }}</td>
                         @endforeach
                     </tr>
 
-                    <!-- Dengan Bantuan O2 -->
+                    <!-- KARDIOVASKULAR -->
                     <tr>
-                        <td rowspan="2" class="parameter-col">Dengan Bantuan O2</td>
-                        <td>Tidak</td>
-                        <td>0</td>
+                        <td rowspan="4" class="parameter-col">KARDIOVASKULAR</td>
+                        <td class="nilai-col">Tidak sianosis ATAU pengisian kapiler < 2 detik</td>
+                        <td class="skor-col cell-green">0</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->dengan_bantuan == 'Tidak' ? 'cell-green' : '' }}">{{ $record->dengan_bantuan == 'Tidak' ? 'Tidak' : '' }}</td>
+                            <td class="record-col {{ $record->kardiovaskular == 0 ? 'cell-green' : '' }}">{{ $record->kardiovaskular == 0 ? '0' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>Ya</td>
-                        <td>2</td>
+                        <td class="nilai-col">Tampak pucat ATAU pengisian kapiler 2 detik</td>
+                        <td class="skor-col cell-yellow">1</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->dengan_bantuan == 'Ya' ? 'cell-yellow' : '' }}">{{ $record->dengan_bantuan == 'Ya' ? 'Ya' : '' }}</td>
-                        @endforeach
-                    </tr>
-
-                    <!-- Tekanan Darah Sistolik -->
-                    <tr>
-                        <td rowspan="5" class="parameter-col">Tekanan Darah Sistolik (mmHg)</td>
-                        <td>≥ 220</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->tekanan_darah == '≥ 220' ? 'cell-red' : '' }}">{{ $record->tekanan_darah == '≥ 220' ? '≥ 220' : '' }}</td>
+                            <td class="record-col {{ $record->kardiovaskular == 1 ? 'cell-yellow' : '' }}">{{ $record->kardiovaskular == 1 ? '1' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>111-219</td>
-                        <td>0</td>
+                        <td class="nilai-col">Tampak sianotik ATAU pengisian kapiler >2 detik ATAU Takikardi >20 × di atas parameter HR sesuai usia/menit</td>
+                        <td class="skor-col cell-yellow">2</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->tekanan_darah == '111-219' ? 'cell-green' : '' }}">{{ $record->tekanan_darah == '111-219' ? '111-219' : '' }}</td>
+                            <td class="record-col {{ $record->kardiovaskular == 2 ? 'cell-yellow' : '' }}">{{ $record->kardiovaskular == 2 ? '2' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>101-110</td>
-                        <td>1</td>
+                        <td class="nilai-col">Sianotik dan motlet, ATAU pengisian kapiler >5 detik, ATAU Takikardi >30x di atas parameter HR sesuai usia/menit ATAU Bradikardia sesuai usia</td>
+                        <td class="skor-col cell-red">3</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->tekanan_darah == '101-110' ? 'cell-yellow' : '' }}">{{ $record->tekanan_darah == '101-110' ? '101-110' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>91-100</td>
-                        <td>2</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->tekanan_darah == '91-100' ? 'cell-yellow' : '' }}">{{ $record->tekanan_darah == '91-100' ? '91-100' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>≤ 90</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->tekanan_darah == '≤ 90' ? 'cell-red' : '' }}">{{ $record->tekanan_darah == '≤ 90' ? '≤ 90' : '' }}</td>
+                            <td class="record-col {{ $record->kardiovaskular == 3 ? 'cell-red' : '' }}">{{ $record->kardiovaskular == 3 ? '3' : '' }}</td>
                         @endforeach
                     </tr>
 
-                    <!-- Nadi -->
+                    <!-- RESPIRASI -->
                     <tr>
-                        <td rowspan="6" class="parameter-col">Nadi (per menit)</td>
-                        <td>≥ 131</td>
-                        <td>3</td>
+                        <td rowspan="4" class="parameter-col">RESPIRASI</td>
+                        <td class="nilai-col">Respirasi dalam parameter normal, tidak terdapat retraksi</td>
+                        <td class="skor-col cell-green">0</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '≥ 131' ? 'cell-red' : '' }}">{{ $record->nadi == '≥ 131' ? '≥ 131' : '' }}</td>
+                            <td class="record-col {{ $record->respirasi == 0 ? 'cell-green' : '' }}">{{ $record->respirasi == 0 ? '0' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>111-130</td>
-                        <td>2</td>
+                        <td class="nilai-col">Takipnea >10x di atas parameter RR sesuai usia/menit, ATAU Menggunakan otot alat bantu napas, ATAU menggunakan FiO2 lebih dari 30%</td>
+                        <td class="skor-col cell-yellow">1</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '111-130' ? 'cell-yellow' : '' }}">{{ $record->nadi == '111-130' ? '111-130' : '' }}</td>
+                            <td class="record-col {{ $record->respirasi == 1 ? 'cell-yellow' : '' }}">{{ $record->respirasi == 1 ? '1' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>91-110</td>
-                        <td>1</td>
+                        <td class="nilai-col">Takipnea >20x di atas parameter RR sesuai usia/menit, ATAU Ada retraksi, ATAU menggunakan FiO2 lebih dari 40%</td>
+                        <td class="skor-col cell-yellow">2</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '91-110' ? 'cell-yellow' : '' }}">{{ $record->nadi == '91-110' ? '91-110' : '' }}</td>
+                            <td class="record-col {{ $record->respirasi == 2 ? 'cell-yellow' : '' }}">{{ $record->respirasi == 2 ? '2' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        <td>51-90</td>
-                        <td>0</td>
+                        <td class="nilai-col">Laju respirasi >30x di atas parameter normal ATAU Bradipneu di mana frekuensi nafas lebih rendah 5 atau lebih, sesuai usia, disertai dengan retraksi berat ATAU menggunakan FiO2 lebih dari 50% (NRM 8 liter/menit)</td>
+                        <td class="skor-col cell-red">3</td>
                         @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '51-90' ? 'cell-green' : '' }}">{{ $record->nadi == '51-90' ? '51-90' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>41-50</td>
-                        <td>1</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '41-50' ? 'cell-yellow' : '' }}">{{ $record->nadi == '41-50' ? '41-50' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>≤ 40</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nadi == '≤ 40' ? 'cell-red' : '' }}">{{ $record->nadi == '≤ 40' ? '≤ 40' : '' }}</td>
+                            <td class="record-col {{ $record->respirasi == 3 ? 'cell-red' : '' }}">{{ $record->respirasi == 3 ? '3' : '' }}</td>
                         @endforeach
                     </tr>
 
-                    <!-- Nafas -->
-                    <tr>
-                        <td rowspan="5" class="parameter-col">Nafas (per menit)</td>
-                        <td>≥ 25</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nafas == '≥ 25' ? 'cell-red' : '' }}">{{ $record->nafas == '≥ 25' ? '≥ 25' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>21-24</td>
-                        <td>2</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nafas == '21-24' ? 'cell-yellow' : '' }}">{{ $record->nafas == '21-24' ? '21-24' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>12-20</td>
-                        <td>0</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nafas == '12-20' ? 'cell-green' : '' }}">{{ $record->nafas == '12-20' ? '12-20' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>9-11</td>
-                        <td>1</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nafas == '9-11' ? 'cell-yellow' : '' }}">{{ $record->nafas == '9-11' ? '9-11' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>≤ 8</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->nafas == '≤ 8' ? 'cell-red' : '' }}">{{ $record->nafas == '≤ 8' ? '≤ 8' : '' }}</td>
-                        @endforeach
-                    </tr>
-
-                    <!-- Temperatur -->
-                    <tr>
-                        <td rowspan="5" class="parameter-col">Temperatur (°C)</td>
-                        <td>≥ 39.1</td>
-                        <td>2</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->temperatur == '≥ 39.1' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '≥ 39.1' ? '≥ 39.1' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>38.1-39.0</td>
-                        <td>1</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->temperatur == '38.1-39.0' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '38.1-39.0' ? '38.1-39.0' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>36.1-38.0</td>
-                        <td>0</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->temperatur == '36.1-38.0' ? 'cell-green' : '' }}">{{ $record->temperatur == '36.1-38.0' ? '36.1-38.0' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>35.1-36.0</td>
-                        <td>1</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->temperatur == '35.1-36.0' ? 'cell-yellow' : '' }}">{{ $record->temperatur == '35.1-36.0' ? '35.1-36.0' : '' }}</td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>≤ 35</td>
-                        <td>3</td>
-                        @foreach($ewsRecords as $record)
-                            <td class="{{ $record->temperatur == '≤ 35' ? 'cell-red' : '' }}">{{ $record->temperatur == '≤ 35' ? '≤ 35' : '' }}</td>
-                        @endforeach
-                    </tr>
-
-                    <!-- Total Skor -->
+                    <!-- TOTAL SKOR -->
                     <tr>
                         <td colspan="2" style="text-align: center; font-weight: bold;">TOTAL SKOR</td>
-                        <td></td>
+                        <td class="skor-col"></td>
                         @foreach($ewsRecords as $record)
-                            <td style="font-weight: bold;">{{ $record->total_skor ?? '-' }}</td>
+                            <td class="record-col" style="font-weight: bold;">{{ $record->total_skor ?? '-' }}</td>
                         @endforeach
                     </tr>
                 </tbody>
             </table>
-        @endif
 
-        <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
-        <table class="hasil-ews-table">
-            <tr>
-                <td class="hasil-low">Total Skor 0-4: RISIKO RENDAH</td>
-                <td class="hasil-medium">Skor 3 dalam satu parameter atau Total Skor 5-6: RISIKO SEDANG</td>
-                <td class="hasil-high">Total Skor ≥ 7: RISIKO TINGGI</td>
-            </tr>
-        </table>
+            <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
+            <table class="hasil-ews-table">
+                <tr>
+                    <td class="hasil-low">Skor 0-2: PASIEN STABIL</td>
+                    <td class="hasil-medium">Skor 3-4 atau Skor 3 pada Satu Parameter: PENURUNAN KONDISI</td>
+                    <td class="hasil-high">Skor ≥ 5: PERUBAHAN SIGNIFIKAN</td>
+                </tr>
+            </table>
+
+            <div class="notes-section">
+                <p><strong>Skor 0-4:</strong> Pasien dalam keadaan stabil, lakukan evaluasi sesuai rutin tiap 8 jam, jika skor meningkat lakukan evaluasi lebih sering.</p>
+                <p><strong>Skor 5:</strong> Ada penurunan yang signifikan, lakukan evaluasi, monitoring secara kontinyu, lakukan evaluasi ulang 10 menit, informasikan ke dokter ICU/DPICU blue code jika penurunan respon Ti-Med Emergency (TME), maksimal 1 jam.</p>
+                <p><strong>INFORMASI TAMBAHAN:</strong></p>
+            </div>
+        @endif
 
         <div class="footer">
             <p>Nama dan Paraf:</p>
-            <p style="margin-top: 30px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}</p>
+            <p style="margin-top: 30px;">{{ str()->title($eWSPasienAnak->userCreate->name ?? '-') }}</p>
             <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
         </div>
     </div>

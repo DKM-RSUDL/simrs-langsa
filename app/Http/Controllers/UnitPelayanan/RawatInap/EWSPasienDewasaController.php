@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DokterInap;
+use App\Models\EWSPasienAnak;
 use App\Models\EWSPasienDewasa;
 use App\Models\Kunjungan;
 use App\Models\PermintaanSecondOpinion;
@@ -86,9 +87,16 @@ class EWSPasienDewasaController extends Controller
     {
         // Data khusus untuk tab anak jika diperlukan
 
+        $eWSPasienAnak = EWSPasienAnak::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
             'dataMedis',
             'activeTab',
+            'eWSPasienAnak'
         ));
     }
 
@@ -188,6 +196,7 @@ class EWSPasienDewasaController extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -195,13 +204,12 @@ class EWSPasienDewasaController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->leftJoin('dokter', 'kunjungan.kd_dokter', '=', 'dokter.kd_dokter')
+            ->select('kunjungan.*', 't.*', 'dokter.nama as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
-
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
@@ -224,21 +232,31 @@ class EWSPasienDewasaController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->leftJoin('dokter', 'kunjungan.kd_dokter', '=', 'dokter.kd_dokter')
+            ->select('kunjungan.*', 't.*', 'dokter.nama as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk) // Tambahkan filter urut_masuk
             ->first();
-
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
+        // Ambil data EWS pasien dewasa dari database
         $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
 
-        // Return the edit view, not show view
+        // Pastikan semua properti memiliki nilai string yang konsisten
+        $ewsPasienDewasa->avpu = trim($ewsPasienDewasa->avpu ?? '');
+        $ewsPasienDewasa->saturasi_o2 = trim($ewsPasienDewasa->saturasi_o2 ?? '');
+        $ewsPasienDewasa->dengan_bantuan = trim($ewsPasienDewasa->dengan_bantuan ?? '');
+        $ewsPasienDewasa->tekanan_darah = trim($ewsPasienDewasa->tekanan_darah ?? '');
+        $ewsPasienDewasa->nadi = trim($ewsPasienDewasa->nadi ?? '');
+        $ewsPasienDewasa->nafas = trim($ewsPasienDewasa->nafas ?? '');
+        $ewsPasienDewasa->temperatur = trim($ewsPasienDewasa->temperatur ?? '');
+
+        // Return the edit view
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.edit', compact(
             'dataMedis',
             'ewsPasienDewasa'
@@ -252,23 +270,24 @@ class EWSPasienDewasaController extends Controller
 
             $request->validate([
                 'avpu' => 'required',
-                'saturasi_o2' => 'required|numeric',
-                'dengan_bantuan' => 'required|numeric',
-                'tekanan_darah' => 'required|numeric',
-                'nadi' => 'required|numeric',
-                'nafas' => 'required|numeric',
-                'temperatur' => 'required|numeric',
+                'saturasi_o2' => 'required',
+                'dengan_bantuan' => 'required',
+                'tekanan_darah' => 'required',
+                'nadi' => 'required',
+                'nafas' => 'required',
+                'temperatur' => 'required',
                 'total_skor' => 'required',
                 'hasil_ews' => 'required',
-                'tanggal' => 'required',
+                'tanggal' => 'required|date',
                 'jam_masuk' => 'required',
             ]);
 
             // Find the record to update
             $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
 
-            // Combine date and time into a single datetime field
-            $tanggalJam = Carbon::createFromFormat('Y-m-d H:i', $request->tanggal . ' ' . $request->jam_masuk);
+            // Persiapkan nilai tanggal dan jam_masuk
+            $tanggal = Carbon::parse($request->tanggal)->format('Y-m-d');
+            $jam_masuk = $request->jam_masuk;
 
             // Update the record
             $ewsPasienDewasa->kd_pasien = $kd_pasien;
@@ -285,7 +304,8 @@ class EWSPasienDewasaController extends Controller
             $ewsPasienDewasa->temperatur = $request->temperatur;
             $ewsPasienDewasa->total_skor = $request->total_skor;
             $ewsPasienDewasa->hasil_ews = $request->hasil_ews;
-            $ewsPasienDewasa->tanggal = $tanggalJam;
+            $ewsPasienDewasa->tanggal = $tanggal; // Simpan sebagai date
+            $ewsPasienDewasa->jam_masuk = $jam_masuk; // Simpan sebagai time
 
             $ewsPasienDewasa->save();
             DB::commit();
@@ -327,7 +347,6 @@ class EWSPasienDewasaController extends Controller
 
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        // Fetch medical data with related models
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -341,36 +360,29 @@ class EWSPasienDewasaController extends Controller
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-        // Check if data exists
         if (!$dataMedis) {
             abort(404, 'Data medis tidak ditemukan.');
         }
 
-        // Calculate patient age
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Mengambil record EWS yang diminta
         $ewsPasienDewasa = EWSPasienDewasa::findOrFail($id);
 
-        // Dapatkan tanggal dari record yang diminta
         $recordDate = Carbon::parse($ewsPasienDewasa->tanggal)->startOfDay();
 
-        // Mengambil semua record EWS dari pasien tersebut untuk tanggal yang sama dengan record yang diminta
         $ewsRecords = EWSPasienDewasa::where('kd_pasien', $kd_pasien)
             ->whereDate('tanggal', $recordDate)
             ->orderBy('jam_masuk', 'asc')
             ->get();
 
-        // Jika tidak ada catatan untuk tanggal tersebut, minimal tampilkan catatan yang sedang dilihat
         if ($ewsRecords->isEmpty()) {
             $ewsRecords = collect([$ewsPasienDewasa]);
         }
 
-        // Load the Blade view and pass data
         $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-dewasa.print', compact(
             'dataMedis',
             'ewsPasienDewasa',
@@ -378,10 +390,8 @@ class EWSPasienDewasaController extends Controller
             'recordDate'
         ));
 
-        // Set paper size and orientation to landscape
         $pdf->setPaper('a4', 'landscape');
 
-        // Stream the PDF
         return $pdf->stream('ews-pasien-dewasa-' . $kd_pasien . '-' . Carbon::parse($recordDate)->format('d-m-Y') . '.pdf');
     }
 }
