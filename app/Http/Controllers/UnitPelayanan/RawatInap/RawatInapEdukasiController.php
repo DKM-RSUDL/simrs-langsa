@@ -7,6 +7,7 @@ use App\Models\Edukasi;
 use App\Models\EdukasiKebutuhanEdukasi;
 use App\Models\EdukasiKebutuhanEdukasiLanjutan;
 use App\Models\EdukasiPasien;
+use App\Models\RMEEdukasiRoles;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Kunjungan;
@@ -74,7 +75,7 @@ class RawatInapEdukasiController extends Controller
         ));
     }
 
-    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, Request $request)
     {
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -95,11 +96,23 @@ class RawatInapEdukasiController extends Controller
             abort(404, 'Data not found');
         }
 
+        $role = $request->query('role');
+
+        $sectionAccess = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+        if($role == 'dokter') $sectionAccess = [1,2,9,10,13,15,16];
+        if($role == 'farmasi') $sectionAccess = [3,15,16];
+        if($role == 'gizi') $sectionAccess = [4,15,16];
+        if($role == 'perawat') $sectionAccess = [5,6,7,15,16];
+        if($role == 'adc') $sectionAccess = [11,12,14,15,16];
+
         $pendidikan = Pendidikan::all();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.edukasi.create', compact(
             'dataMedis',
-            'pendidikan'
+            'pendidikan',
+            'sectionAccess',
+            'role'
         ));
     }
 
@@ -128,14 +141,41 @@ class RawatInapEdukasiController extends Controller
                 abort(404, 'Data kunjungan tidak ditemukan');
             }
 
-            $edukasi = new Edukasi();
-            $edukasi->kd_pasien = $kd_pasien;
-            $edukasi->kd_unit = $request->kd_unit;
-            $edukasi->tgl_masuk = $tgl_masuk;
-            $edukasi->urut_masuk = $urut_masuk;
-            $edukasi->waktu_edukasi = date('Y-m-d H:i:s');
-            $edukasi->user_create = Auth::id();
-            $edukasi->save();
+            $role = $request->role;
+            $sectionAccess = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+            if($role == 'dokter') $sectionAccess = [1,2,9,10,13,15,16];
+            if($role == 'farmasi') $sectionAccess = [3,15,16];
+            if($role == 'gizi') $sectionAccess = [4,15,16];
+            if($role == 'perawat') $sectionAccess = [5,6,7,15,16];
+            if($role == 'adc') $sectionAccess = [11,12,14,15,16];
+
+
+            // CREATE EDUKASI
+            $edukasi = Edukasi::firstOrCreate([
+                'kd_pasien' => $kd_pasien,
+                'kd_unit' => $kd_unit,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk,
+            ], [
+                'waktu_edukasi' => date('Y-m-d H:i:s'),
+                'user_create' => Auth::id(),
+            ]);
+
+            // CREATE USER_EDUKASI_ROLE
+            $dataRole = [
+                'id_edukasi'    => 10,
+            ];
+
+            $userLogin = Auth::id();
+
+            foreach($sectionAccess as $acc) {
+                $dataRole = array_merge($dataRole, ["user_edukasi_$acc" => $userLogin]);
+            }
+
+            $userEdukasiRole = RMEEdukasiRoles::firstOrCreate([
+                'id_edukasi' => $edukasi->id,
+            ], $dataRole);
 
             // Convert arrays to JSON strings
             $tipe_pembelajaran = null;

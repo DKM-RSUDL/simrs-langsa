@@ -560,7 +560,7 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::name('.edukasi')->group(function () {
                                     Route::controller(RawatInapEdukasiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
-                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/create', 'create')->name('.create');                                        
                                         Route::get('/{data}', 'show')->name('.show');
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::post('/', 'store')->name('.store');
