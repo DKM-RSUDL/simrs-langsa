@@ -13,7 +13,7 @@
             <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            
+
             <form id="edukasiForm" method="POST"
                 action="{{ route('rawat-inap.ews-pasien-dewasa.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $ewsPasienDewasa->id]) }}">
                 @csrf
@@ -61,7 +61,6 @@
                                     <select class="form-select" name="saturasi_o2" id="saturasi_o2">
                                         <option value="" disabled>--Pilih--</option>
                                         @php
-                                            // Cek berbagai kemungkinan format untuk saturasi_o2
                                             $saturasiMatches = [
                                                 '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95'],
                                                 '94-95' => ['94-95'],
@@ -69,7 +68,7 @@
                                                 '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 95" data-skor="0" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≥ 95']) ? 'selected' : '' }}>≥ 95</option>
                                         <option value="94-95" data-skor="1" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['94-95']) ? 'selected' : '' }}>94-95</option>
                                         <option value="92-93" data-skor="2" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['92-93']) ? 'selected' : '' }}>92-93</option>
@@ -91,7 +90,6 @@
                                     <select class="form-select" name="tekanan_darah" id="tekanan_darah">
                                         <option value="" disabled>--Pilih--</option>
                                         @php
-                                            // Cek berbagai kemungkinan format untuk tekanan_darah
                                             $tekananMatches = [
                                                 '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220'],
                                                 '111-219' => ['111-219'],
@@ -100,7 +98,7 @@
                                                 '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 220" data-skor="3" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≥ 220']) ? 'selected' : '' }}>≥ 220</option>
                                         <option value="111-219" data-skor="0" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['111-219']) ? 'selected' : '' }}>111-219</option>
                                         <option value="101-110" data-skor="1" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['101-110']) ? 'selected' : '' }}>101-110</option>
@@ -114,7 +112,6 @@
                                     <select class="form-select" name="nadi" id="nadi">
                                         <option value="" disabled>--Pilih--</option>
                                         @php
-                                            // Cek berbagai kemungkinan format untuk nadi
                                             $nadiMatches = [
                                                 '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131'],
                                                 '111-130' => ['111-130'],
@@ -124,7 +121,7 @@
                                                 '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 131" data-skor="3" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≥ 131']) ? 'selected' : '' }}>≥ 131</option>
                                         <option value="111-130" data-skor="2" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['111-130']) ? 'selected' : '' }}>111-130</option>
                                         <option value="91-110" data-skor="1" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['91-110']) ? 'selected' : '' }}>91-110</option>
@@ -139,7 +136,6 @@
                                     <select class="form-select" name="nafas" id="nafas">
                                         <option value="" disabled>--Pilih--</option>
                                         @php
-                                            // Cek berbagai kemungkinan format untuk nafas
                                             $nafasMatches = [
                                                 '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25'],
                                                 '21-24' => ['21-24'],
@@ -148,7 +144,7 @@
                                                 '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 25" data-skor="3" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≥ 25']) ? 'selected' : '' }}>≥ 25</option>
                                         <option value="21-24" data-skor="2" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['21-24']) ? 'selected' : '' }}>21-24</option>
                                         <option value="12-20" data-skor="0" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['12-20']) ? 'selected' : '' }}>12-20</option>
@@ -162,7 +158,6 @@
                                     <select class="form-select" name="temperatur" id="temperatur">
                                         <option value="" disabled>--Pilih--</option>
                                         @php
-                                            // Cek berbagai kemungkinan format untuk temperatur
                                             $temperaturMatches = [
                                                 '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1'],
                                                 '38.1-39.0' => ['38.1-39.0'],
@@ -171,7 +166,7 @@
                                                 '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 39.1" data-skor="2" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≥ 39.1']) ? 'selected' : '' }}>≥ 39.1</option>
                                         <option value="38.1-39.0" data-skor="1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['38.1-39.0']) ? 'selected' : '' }}>38.1-39.0</option>
                                         <option value="36.1-38.0" data-skor="0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['36.1-38.0']) ? 'selected' : '' }}>36.1-38.0</option>
