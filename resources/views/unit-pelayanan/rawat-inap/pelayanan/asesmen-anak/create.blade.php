@@ -630,6 +630,7 @@
                                             id="openAlergiModal">
                                             <i class="ti-plus"></i> Tambah
                                         </button>
+                                        @include('unit-pelayanan.rawat-inap.pelayanan.observasi.alergi')
                                         <input type="hidden" name="alergis" id="alergisInput">
                                         <div class="table-responsive">
                                             <table class="table" id="createAlergiTable">

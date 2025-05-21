@@ -415,23 +415,18 @@
                     <tr class="field-row">
                         <td>Alat Invasive</td>
                         @foreach($observasiChunk as $observasi)
-                            <td colspan="{{ count($allTimestamps) > 0 ? count($allTimestamps) : 1 }}">{{ $observasi->alat_invasive ?? '-' }}</td>
-                        @endforeach
-                    </tr>
-                    
-                    <!-- NGT -->
-                    <tr class="field-row">
-                        <td>NGT</td>
-                        @foreach($observasiChunk as $observasi)
-                            <td colspan="{{ count($allTimestamps) > 0 ? count($allTimestamps) : 1 }}">{{ $observasi->ngt ?? '-' }}</td>
-                        @endforeach
-                    </tr>
-                    
-                    <!-- Catheter -->
-                    <tr class="field-row">
-                        <td>Catheter</td>
-                        @foreach($observasiChunk as $observasi)
-                            <td colspan="{{ count($allTimestamps) > 0 ? count($allTimestamps) : 1 }}">{{ $observasi->catheter ?? '-' }}</td>
+                            <td colspan="{{ count($allTimestamps) > 0 ? count($allTimestamps) : 1 }}">
+                                @php
+                                    $alatInvasive = [];
+                                    if($observasi->ngt == 'Ada') $alatInvasive[] = 'NGT';
+                                    if($observasi->catheter == 'Ada') $alatInvasive[] = 'Catheter';
+                                    if($observasi->infus == 'Ada') $alatInvasive[] = 'Infus';
+                                    if($observasi->triway == 'Ada') $alatInvasive[] = 'Triway';
+                                    if($observasi->syringe_pump == 'Ada') $alatInvasive[] = 'Syringe Pump';
+                                    if($observasi->infus_pump == 'Ada') $alatInvasive[] = 'Infus Pump';
+                                @endphp
+                                {{ !empty($alatInvasive) ? implode(', ', $alatInvasive) : '-' }}
+                            </td>
                         @endforeach
                     </tr>
                     
@@ -443,11 +438,80 @@
                         @endforeach
                     </tr>
                     
-                    <!-- Alergi -->
+                    <!-- Timestamp headers for vital signs -->
+                    @if(count($allTimestamps) > 0)
+                        <tr class="date-row">
+                            <th>Waktu</th>
+                            @foreach($observasiChunk as $observasi)
+                                @foreach($allTimestamps as $timestamp)
+                                    <th>{{ $timestamp }}</th>
+                                @endforeach
+                            @endforeach
+                        </tr>
+                    @endif
+                    
+                    <!-- Vital Signs: Suhu -->
                     <tr class="field-row">
-                        <td>Alergi</td>
+                        <td>Suhu (°C)</td>
                         @foreach($observasiChunk as $observasi)
-                            <td colspan="{{ count($allTimestamps) > 0 ? count($allTimestamps) : 1 }}">{{ $observasi->alergi ?? '-' }}</td>
+                            @foreach($allTimestamps as $timestamp)
+                                @php
+                                    $detail = $observasi->details->firstWhere('waktu', $timestamp);
+                                @endphp
+                                <td>{{ $detail ? $detail->suhu : '-' }}</td>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                    
+                    <!-- Vital Signs: Nadi -->
+                    <tr class="field-row">
+                        <td>Nadi (x/mnt)</td>
+                        @foreach($observasiChunk as $observasi)
+                            @foreach($allTimestamps as $timestamp)
+                                @php
+                                    $detail = $observasi->details->firstWhere('waktu', $timestamp);
+                                @endphp
+                                <td>{{ $detail ? $detail->nadi : '-' }}</td>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                    
+                    <!-- Vital Signs: Tekanan Darah Sistole -->
+                    <tr class="field-row">
+                        <td>Tekanan Darah Sistole (mmHg)</td>
+                        @foreach($observasiChunk as $observasi)
+                            @foreach($allTimestamps as $timestamp)
+                                @php
+                                    $detail = $observasi->details->firstWhere('waktu', $timestamp);
+                                @endphp
+                                <td>{{ $detail ? $detail->tekanan_darah_sistole : '-' }}</td>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                    
+                    <!-- Vital Signs: Tekanan Darah Diastole -->
+                    <tr class="field-row">
+                        <td>Tekanan Darah Diastole (mmHg)</td>
+                        @foreach($observasiChunk as $observasi)
+                            @foreach($allTimestamps as $timestamp)
+                                @php
+                                    $detail = $observasi->details->firstWhere('waktu', $timestamp);
+                                @endphp
+                                <td>{{ $detail ? $detail->tekanan_darah_diastole : '-' }}</td>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                    
+                    <!-- Vital Signs: Respirasi -->
+                    <tr class="field-row">
+                        <td>Respirasi (x/mnt)</td>
+                        @foreach($observasiChunk as $observasi)
+                            @foreach($allTimestamps as $timestamp)
+                                @php
+                                    $detail = $observasi->details->firstWhere('waktu', $timestamp);
+                                @endphp
+                                <td>{{ $detail ? $detail->respirasi : '-' }}</td>
+                            @endforeach
                         @endforeach
                     </tr>
                     

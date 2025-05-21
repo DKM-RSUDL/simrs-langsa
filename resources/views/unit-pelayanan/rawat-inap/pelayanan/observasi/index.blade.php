@@ -78,16 +78,16 @@
                                                                 $details = $observasi->details->pluck('waktu')->toArray();
                                                             @endphp
                                                             <span class="badge {{ in_array('06:00', $details) ? 'badge-filled' : 'badge-empty' }}">06:00</span>
-                                                            <span class="badge {{ in_array('12:00', $details) ? 'badge-filled' : 'badge-empty' }}">12:00</span>
-                                                            <span class="badge {{ in_array('18:00', $details) ? 'badge-filled' : 'badge-empty' }}">18:00</span>
-                                                            <span class="badge {{ in_array('24:00', $details) ? 'badge-filled' : 'badge-empty' }}">24:00</span>
+                                                            <span class="badge {{ in_array('12:00', $details) ? 'badge-filled' : 'badge-empty' }}">11:00</span>
+                                                            <span class="badge {{ in_array('18:00', $details) ? 'badge-filled' : 'badge-empty' }}">15:00</span>
+                                                            <span class="badge {{ in_array('24:00', $details) ? 'badge-filled' : 'badge-empty' }}">20:00</span>
                                                         </td>
                                                         <td>{{ $observasi->creator->name ?? 'Tidak Diketahui' }}</td>
                                                         <td align="middle">
-                                                            <a href="{{ route('rawat-inap.observasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $observasi->id]) }}"
+                                                            {{-- <a href="{{ route('rawat-inap.observasi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $observasi->id]) }}"
                                                                 class="btn btn-sm btn-success ms-1">
                                                                 <i class="fa fa-eye"></i>
-                                                            </a>
+                                                            </a> --}}
                                                             <a href="{{ route('rawat-inap.observasi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $observasi->id]) }}"
                                                                 class="btn btn-sm btn-warning mx-1">
                                                                 <i class="fa fa-pencil"></i>
