@@ -110,8 +110,8 @@
                                         <select class="form-select @error('status_peminjam') is-invalid @enderror"
                                             name="status_peminjam" id="status_peminjam" required>
                                             <option value="">--Pilih--</option>
-                                            <option value="diri_sendiri" {{ old('status_peminjam', $secondOpinion->status_peminjam) == 'diri_sendiri' ? 'selected' : '' }}>Diri Sendiri</option>
-                                            <option value="keluarga" {{ old('status_peminjam', $secondOpinion->status_peminjam) == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
+                                            <option value="1" {{ old('status_peminjam', $secondOpinion->status_peminjam) == '1' ? 'selected' : '' }}>Diri Sendiri</option>
+                                            <option value="2" {{ old('status_peminjam', $secondOpinion->status_peminjam) == '2' ? 'selected' : '' }}>Keluarga</option>
                                         </select>
                                         @error('status_peminjam')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -373,48 +373,71 @@
             });
         });
 
-                // Initialize the data peminjam visibility
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get the status_peminjam select element
-            const statusPeminjam = document.getElementById('status_peminjam');
-            // Get the DATA PEMINJAM card
-            const dataPeminjamCard = document.querySelector('.card.mb-4.border-primary:nth-of-type(2)');
+        // Initialize the data peminjam visibility
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the status_peminjam select element
+    const statusPeminjam = document.getElementById('status_peminjam');
+    // Get the DATA PEMINJAM card
+    const dataPeminjamCard = document.getElementById('data-peminjam-card');
 
-            // Function to toggle DATA PEMINJAM visibility
-            function toggleDataPeminjam() {
-                if (statusPeminjam.value === 'keluarga') {
-                    dataPeminjamCard.style.display = 'block';
-                    // Enable all required fields in the DATA PEMINJAM section
-                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-                        field.setAttribute('required', 'required');
-                    });
-                } else {
-                    dataPeminjamCard.style.display = 'none';
-                    // Disable required validation for hidden fields
-                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-                        field.removeAttribute('required');
-                    });
-                }
-            }
+    // Function to toggle DATA PEMINJAM visibility
+    function toggleDataPeminjam() {
+        if (statusPeminjam.value === '2') { // Jika value adalah 2 (keluarga)
+            dataPeminjamCard.style.display = 'block';
+            // Enable all required fields in the DATA PEMINJAM section
+            dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                field.setAttribute('required', 'required');
+            });
+        } else {
+            dataPeminjamCard.style.display = 'none';
+            // Disable required validation for hidden fields
+            dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                field.removeAttribute('required');
+            });
+        }
+    }
 
-            // Set initial state based on database value or old input
-            if (statusPeminjam) {
-                // The initial value should reflect the saved status
-                const initialStatus = "{{ old('status_peminjam', $secondOpinion->status_peminjam) }}";
-                
-                if (initialStatus === 'keluarga') {
-                    dataPeminjamCard.style.display = 'block';
-                } else {
-                    dataPeminjamCard.style.display = 'none';
-                    // Remove required attribute
-                    dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-                        field.removeAttribute('required');
-                    });
-                }
+    // Set initial state based on database value or old input
+    if (statusPeminjam) {
+        // Check initial value and trigger the toggle function
+        toggleDataPeminjam();
+        
+        // Add event listener for changes to the select
+        statusPeminjam.addEventListener('change', toggleDataPeminjam);
+    }
+});
+// Initialize the data peminjam visibility
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the status_peminjam select element
+    const statusPeminjam = document.getElementById('status_peminjam');
+    // Get the DATA PEMINJAM card
+    const dataPeminjamCard = document.getElementById('data-peminjam-card');
 
-                // Add event listener for changes to the select
-                statusPeminjam.addEventListener('change', toggleDataPeminjam);
-            }
-        });
+    // Function to toggle DATA PEMINJAM visibility
+    function toggleDataPeminjam() {
+        if (statusPeminjam.value === '2') { // Jika value adalah 2 (keluarga)
+            dataPeminjamCard.style.display = 'block';
+            // Enable all required fields in the DATA PEMINJAM section
+            dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                field.setAttribute('required', 'required');
+            });
+        } else {
+            dataPeminjamCard.style.display = 'none';
+            // Disable required validation for hidden fields
+            dataPeminjamCard.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+                field.removeAttribute('required');
+            });
+        }
+    }
+
+    // Set initial state based on database value or old input
+    if (statusPeminjam) {
+        // Check initial value and trigger the toggle function
+        toggleDataPeminjam();
+        
+        // Add event listener for changes to the select
+        statusPeminjam.addEventListener('change', toggleDataPeminjam);
+    }
+});
     </script>
 @endpush

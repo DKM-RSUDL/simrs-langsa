@@ -118,8 +118,8 @@
                                         <select class="form-select @error('status_peminjam') is-invalid @enderror"
                                             name="status_peminjam" id="status_peminjam" required>
                                             <option value="">--Pilih--</option>
-                                            <option value="diri_sendiri" {{ old('status_peminjam') == 'diri_sendiri' ? 'selected' : '' }}>Diri Sendiri</option>
-                                            <option value="keluarga" {{ old('status_peminjam') == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
+                                            <option value="1" {{ old('status_peminjam') == 'diri_sendiri' ? 'selected' : '' }}>Diri Sendiri</option>
+                                            <option value="2" {{ old('status_peminjam') == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
                                         </select>
                                         @error('status_peminjam')
                                             <div class="invalid-feedback">{{ $message }}</div>
