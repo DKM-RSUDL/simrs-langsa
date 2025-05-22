@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\EWSPasienAnak;
 use App\Models\EWSPasienDewasa;
 use App\Models\EwsPasienObstetrik;
 use App\Models\Kunjungan;
-use Illuminate\Support\Carbon;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class EWSPasienAnakController extends Controller
+class EWSPasienObstetrikController extends Controller
 {
     public function __construct()
     {
@@ -92,7 +92,6 @@ class EWSPasienAnakController extends Controller
             ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
-
         return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.index', compact(
             'dataMedis',
             'activeTab',
@@ -103,7 +102,6 @@ class EWSPasienAnakController extends Controller
     private function obstetriTab($dataMedis, $activeTab)
     {
         // Data khusus untuk tab obstetri jika diperlukan
-
         $ewsPsienObstetrik = EwsPasienObstetrik::where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $dataMedis->kd_unit)
             ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
@@ -140,7 +138,7 @@ class EWSPasienAnakController extends Controller
         }
 
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.create', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.create', compact(
             'dataMedis',
         ));
     }
@@ -152,11 +150,18 @@ class EWSPasienAnakController extends Controller
             DB::beginTransaction();
 
             $request->validate([
-                'keadaan_umum' => 'required',
-                'kardiovaskular' => 'required',
                 'respirasi' => 'required',
+                'saturasi_o2' => 'required',
+                'suplemen_o2' => 'required',
+                'tekanan_darah' => 'required',
+                'detak_jantung' => 'required',
+                'kesadaran' => 'required',
+                'temperatur' => 'required',
+                'discharge' => 'required',
+                'proteinuria' => 'required',
                 'total_skor' => 'required',
                 'hasil_ews' => 'required',
+                'code_blue' => 'required',
                 'tanggal' => 'required',
                 'jam_masuk' => 'required',
             ]);
@@ -167,26 +172,33 @@ class EWSPasienAnakController extends Controller
                 'tgl_masuk' => $tgl_masuk,
                 'urut_masuk' => $urut_masuk,
                 'user_create' => auth()->user()->id,
-                'keadaan_umum' => $request->keadaan_umum,
-                'kardiovaskular' => $request->kardiovaskular,
                 'respirasi' => $request->respirasi,
+                'saturasi_o2' => $request->saturasi_o2,
+                'suplemen_o2' => $request->suplemen_o2,
+                'tekanan_darah' => $request->tekanan_darah,
+                'detak_jantung' => $request->detak_jantung,
+                'kesadaran' => $request->kesadaran,
+                'temperatur' => $request->temperatur,
+                'discharge' => $request->discharge,
+                'proteinuria' => $request->proteinuria,
                 'total_skor' => $request->total_skor,
                 'hasil_ews' => $request->hasil_ews,
+                'code_blue' => $request->code_blue,
                 'tanggal' => $request->tanggal ? Carbon::parse($request->tanggal) : null,
                 'jam_masuk' => $request->jam_masuk ? Carbon::parse($request->jam_masuk) : null,
             ];
 
-            EWSPasienAnak::create($data);
+            EwsPasienObstetrik::create($data);
             DB::commit();
 
-            return to_route('rawat-inap.ews-pasien-anak.index', [
+            return to_route('rawat-inap.ews-pasien-obstetrik.index', [
                 $kd_unit,
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
-                'tab' => 'anak'
+                'tab' => 'obstetri'
             ])
-                ->with('success', 'Data EWS Pasien Anak berhasil disimpan');
+                ->with('success', 'Data EWS Pasien Obstetrik berhasil disimpan');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -195,6 +207,7 @@ class EWSPasienAnakController extends Controller
 
     public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -202,23 +215,22 @@ class EWSPasienAnakController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->leftJoin('dokter', 'kunjungan.kd_dokter', '=', 'dokter.kd_dokter')
+            ->select('kunjungan.*', 't.*', 'dokter.nama as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
-
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        $eWSPasienAnak = EWSPasienAnak::findOrFail($id);
+        $ewsPsienObstetrik = EwsPasienObstetrik::findOrFail($id);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.show', compact(
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.show', compact(
             'dataMedis',
-            'eWSPasienAnak'
+            'ewsPsienObstetrik'
         ));
     }
 
@@ -231,24 +243,27 @@ class EWSPasienAnakController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
-            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->leftJoin('dokter', 'kunjungan.kd_dokter', '=', 'dokter.kd_dokter')
+            ->select('kunjungan.*', 't.*', 'dokter.nama as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk) // Tambahkan filter urut_masuk
             ->first();
-
 
         if (!$dataMedis) {
             abort(404, 'Data not found');
         }
 
-        $eWSPasienAnak = EWSPasienAnak::findOrFail($id);
+        // Ambil data EWS pasien dewasa dari database
+        $ewsPsienObstetrik = EwsPasienObstetrik::findOrFail($id);
 
-        // Return the edit view, not show view
-        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.edit', compact(
+        // Pastikan semua properti memiliki nilai string yang konsisten
+
+        // Return the edit view
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.edit', compact(
             'dataMedis',
-            'eWSPasienAnak'
+            'ewsPsienObstetrik'
         ));
     }
 
@@ -258,44 +273,61 @@ class EWSPasienAnakController extends Controller
             DB::beginTransaction();
 
             $request->validate([
-                'keadaan_umum' => 'required',
-                'kardiovaskular' => 'required',
                 'respirasi' => 'required',
+                'saturasi_o2' => 'required',
+                'suplemen_o2' => 'required',
+                'tekanan_darah' => 'required',
+                'detak_jantung' => 'required',
+                'kesadaran' => 'required',
+                'temperatur' => 'required',
+                'discharge' => 'required',
+                'proteinuria' => 'required',
                 'total_skor' => 'required',
                 'hasil_ews' => 'required',
+                'code_blue' => 'required',
                 'tanggal' => 'required',
                 'jam_masuk' => 'required',
             ]);
 
             // Find the record to update
-            $eWSPasienAnak = EWSPasienAnak::findOrFail($id);
+            $ewsPsienObstetrik = EwsPasienObstetrik::findOrFail($id);
 
-            // Combine date and time into a single datetime field
-            $tanggalJam = Carbon::createFromFormat('Y-m-d H:i', $request->tanggal . ' ' . $request->jam_masuk);
+            // Persiapkan nilai tanggal dan jam_masuk
+            $tanggal = Carbon::parse($request->tanggal)->format('Y-m-d');
+            $jam_masuk = $request->jam_masuk;
 
             // Update the record
-            $eWSPasienAnak->kd_pasien = $kd_pasien;
-            $eWSPasienAnak->kd_unit = $kd_unit;
-            $eWSPasienAnak->tgl_masuk = $tgl_masuk;
-            $eWSPasienAnak->urut_masuk = $urut_masuk;
-            $eWSPasienAnak->user_edit = auth()->user()->id;
-            $eWSPasienAnak->keadaan_umum = $request->keadaan_umum;
-            $eWSPasienAnak->kardiovaskular = $request->kardiovaskular;
-            $eWSPasienAnak->respirasi = $request->respirasi;
-            $eWSPasienAnak->total_skor = $request->total_skor;
-            $eWSPasienAnak->hasil_ews = $request->hasil_ews;
-            $eWSPasienAnak->tanggal = $tanggalJam;
-            $eWSPasienAnak->save();
+            $ewsPsienObstetrik->kd_pasien = $kd_pasien;
+            $ewsPsienObstetrik->kd_unit = $kd_unit;
+            $ewsPsienObstetrik->tgl_masuk = $tgl_masuk;
+            $ewsPsienObstetrik->urut_masuk = $urut_masuk;
+            $ewsPsienObstetrik->user_edit = auth()->user()->id;
+            $ewsPsienObstetrik->respirasi = $request->respirasi;
+            $ewsPsienObstetrik->saturasi_o2 = $request->saturasi_o2;
+            $ewsPsienObstetrik->suplemen_o2 = $request->suplemen_o2;
+            $ewsPsienObstetrik->tekanan_darah = $request->tekanan_darah;
+            $ewsPsienObstetrik->detak_jantung = $request->detak_jantung;
+            $ewsPsienObstetrik->kesadaran = $request->kesadaran;
+            $ewsPsienObstetrik->temperatur = $request->temperatur;
+            $ewsPsienObstetrik->discharge = $request->discharge;
+            $ewsPsienObstetrik->proteinuria = $request->proteinuria;
+            $ewsPsienObstetrik->total_skor = $request->total_skor;
+            $ewsPsienObstetrik->hasil_ews = $request->hasil_ews;
+            $ewsPsienObstetrik->code_blue = $request->code_blue;
+            $ewsPsienObstetrik->tanggal = $tanggal;
+            $ewsPsienObstetrik->jam_masuk = $jam_masuk;
+
+            $ewsPsienObstetrik->save();
             DB::commit();
 
-            return to_route('rawat-inap.ews-pasien-anak.index', [
+            return to_route('rawat-inap.ews-pasien-obstetrik.index', [
                 $kd_unit,
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
-                'tab' => 'anak'
+                'tab' => 'obstetri'
             ])
-                ->with('success', 'Data EWS Pasien Anak berhasil diperbarui');
+                ->with('success', 'Data EWS Pasien Obstetrik berhasil diperbarui');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -307,18 +339,18 @@ class EWSPasienAnakController extends Controller
         try {
             DB::beginTransaction();
 
-            $eWSPasienAnak = EWSPasienAnak::findOrFail($id);
-            $eWSPasienAnak->delete();
+            $ewsPsienObstetrik = EwsPasienObstetrik::findOrFail($id);
+            $ewsPsienObstetrik->delete();
 
             DB::commit();
 
-            return to_route('rawat-inap.ews-pasien-anak.index', [
+            return to_route('rawat-inap.ews-pasien-obstetrik.index', [
                 $kd_unit,
                 $kd_pasien,
                 $tgl_masuk,
                 $urut_masuk,
-                'tab' => 'anak'
-            ])->with('success', 'Data EWS Pasien Anak berhasil dihapus');
+                'tab' => 'obstetri'
+            ])->with('success', 'Data EWS Pasien Obstetrik berhasil dihapus');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -334,15 +366,13 @@ class EWSPasienAnakController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->leftJoin('dokter', 'kunjungan.kd_dokter', '=', 'dokter.kd_dokter')
+            ->select('kunjungan.*', 't.*', 'dokter.nama as nama_dokter')
             ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
-
-        if (!$dataMedis) {
-            abort(404, 'Data medis tidak ditemukan.');
-        }
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->firstOrFail();
 
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
@@ -350,28 +380,28 @@ class EWSPasienAnakController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $eWSPasienAnak = EWSPasienAnak::findOrFail($id);
+        $ewsPsienObstetrik = EwsPasienObstetrik::findOrFail($id);
 
-        $recordDate = Carbon::parse($eWSPasienAnak->tanggal)->startOfDay();
+        $recordDate = Carbon::parse($ewsPsienObstetrik->tanggal)->startOfDay();
 
-        $ewsRecords = EWSPasienAnak::where('kd_pasien', $kd_pasien)
+        $ewsRecords = EwsPasienObstetrik::where('kd_pasien', $kd_pasien)
             ->whereDate('tanggal', $recordDate)
             ->orderBy('jam_masuk', 'asc')
             ->get();
 
         if ($ewsRecords->isEmpty()) {
-            $ewsRecords = collect([$eWSPasienAnak]);
+            $ewsRecords = collect([$ewsPsienObstetrik]);
         }
 
-        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-anak.print', compact(
+        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.print', compact(
             'dataMedis',
-            'eWSPasienAnak',
+            'ewsPsienObstetrik',
             'ewsRecords',
             'recordDate'
         ));
 
-        $pdf->setPaper('a4', 'landscape');
+        $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream('ews-pasien-anak-' . $kd_pasien . '-' . Carbon::parse($recordDate)->format('d-m-Y') . '.pdf');
+        return $pdf->stream('ews-pasien-obstetrik-' . $kd_pasien . '-' . Carbon::parse($recordDate)->format('d-m-Y') . '.pdf');
     }
 }
