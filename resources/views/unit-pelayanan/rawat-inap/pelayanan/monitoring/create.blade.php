@@ -693,7 +693,6 @@
                             </div>
 
                             <!-- Liver Function Parameters -->
-                            <h6 class="mb-3 border-bottom pb-2">Fungsi Hati</h6>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">

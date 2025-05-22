@@ -758,7 +758,8 @@ class MonitoringController extends Controller
             ->first();
 
         // Ambil semua data monitoring dengan urutan ASC untuk daftar dan chart
-        $allMonitoringRecords = $monitoringQuery->orderBy('tgl_implementasi', 'asc')
+        $allMonitoringRecords = $monitoringQuery->with(['detail', 'therapyDoses.therapy']) // therapyDoses.therapy PENTING
+            ->orderBy('tgl_implementasi', 'asc')
             ->orderBy('jam_implementasi', 'asc')
             ->get();
 
@@ -774,6 +775,23 @@ class MonitoringController extends Controller
             ? $unitTitles[$dataMedis->kd_unit]
             : 'Monitoring Intensive Care';
 
+
+        // Get patient's allergies from the Alergi table
+        $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+        // Create JSON format for allergies to initialize the form
+        $allergiesJson = $allergies->map(function ($item) {
+            return [
+                'jenis_alergi' => $item->jenis_alergi,
+                'nama_alergi' => $item->nama_alergi,
+                'reaksi' => $item->reaksi,
+                'severe' => $item->tingkat_keparahan
+            ];
+        });
+
+        // Format allergies for display
+        $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
+
         // Pass semua data ke view
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.monitoring.print',
@@ -786,7 +804,9 @@ class MonitoringController extends Controller
                 'title',
                 'allMonitoringRecords',
                 'start_date',
-                'end_date'
+                'end_date',
+                'allergiesJson',
+                'allergiesDisplay'
             )
         );
     }

@@ -276,7 +276,7 @@
                             
                             // Show filter info
                             $('#filterInfo').show();
-                            $('#filterInfoText').text(`${response.filter_info.start_date} - ${response.filter_info.end_date} (${response.count} data)`);
+                            $('#filterInfoText').text(`${response.filter_info.start_date} - ${response.filter_info.end_date} (${response.count} data monitoring)`);
 
                             // Populate monitoring filter dropdown
                             populateMonitoringFilter(response.data);
