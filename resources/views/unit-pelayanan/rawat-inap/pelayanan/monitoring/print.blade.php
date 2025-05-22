@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Print Monitoring Pasien</title>
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
@@ -226,7 +225,6 @@
 </head>
 
 <body>
-    <!-- Button controls - only visible before print -->
     <div class="no-print d-print-none mb-3 p-3 bg-light">
         <div class="d-flex justify-content-between">
             <button onclick="window.print()" class="btn btn-primary" id="printBtn" disabled>
@@ -238,14 +236,11 @@
         </div>
     </div>
 
-    <!-- Loading indicator -->
     <div id="loadingIndicator">
         <i class="bi bi-hourglass-split me-2"></i> Memuat data monitoring...
     </div>
 
-    <!-- Main content -->
     <div class="print-container" style="display: none;" id="printContent">
-        <!-- RM Number - top left corner -->
         <div class="rm-number">
             <strong>No. RM:</strong> {{ $dataMedis->pasien->kd_pasien ?? '-' }}
         </div>
@@ -253,9 +248,7 @@
             <strong>NO: K.7/IRM/Rev 0/2017</strong>
         </div>
 
-        <!-- New 3-column layout for header row -->
         <div class="header-row">
-            <!-- Left column - Patient info -->
             <div class="patient-column">
                 <div class="patient-info">
                     <div class="patient-info-item"><strong>Nama Pasien:</strong> {{ $dataMedis->pasien->nama ?? '-' }}
@@ -271,7 +264,6 @@
                 </div>
             </div>
 
-            <!-- Center column - Hospital logo and title -->
             <div class="hospital-header">
                 <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo Rumah Sakit"
                     class="hospital-logo">
@@ -282,10 +274,21 @@
                 </div>
             </div>
 
-            <!-- Right column - Diagnosis info -->
             <div class="diagnosis-column">
                 <div class="diagnosis-info">
-                    <div class="patient-info-item"><strong>Tanggal:</strong> <span id="filterDate">-</span></div>
+                    <div class="patient-info-item">
+                        <strong>Tanggal:</strong>
+                        <span id="filterDate">
+                            @if($start_date && $end_date)
+                                {{ \Carbon\Carbon::parse($start_date)->format('d-m-Y') }}
+                                @if($start_date != $end_date)
+                                    s.d {{ \Carbon\Carbon::parse($end_date)->format('d-m-Y') }}
+                                @endif
+                            @else
+                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}
+                            @endif
+                        </span>
+                    </div>
                     <div class="patient-info-item"><strong>Diagnosa:</strong> {{ $latestMonitoring->diagnosa ?? '-' }}
                     </div>
                     <div class="patient-info-item"><strong>Indikasi ICCU:</strong>
@@ -296,19 +299,25 @@
             </div>
         </div>
 
-        <!-- Filter Info -->
         <div class="filter-info" id="filterInfo">
-            <i class="bi bi-funnel me-1"></i>Filter: <span id="filterText">Semua data</span>
+            <i class="bi bi-funnel me-1"></i>Filter: <span id="filterText">
+                @if($start_date && $end_date)
+                    {{ \Carbon\Carbon::parse($start_date)->format('d M Y') }}
+                    @if($start_date != $end_date)
+                        s.d {{ \Carbon\Carbon::parse($end_date)->format('d M Y') }}
+                    @endif
+                    ({{ $allMonitoringRecords->count() }} data)
+                @else
+                    Semua data
+                @endif
+            </span>
         </div>
 
-        <!-- Grafik Vital Signs -->
         <div class="chart-container no-page-break"
             style="position: relative; border: 1px solid #818181; height: 500px; width: 100%; margin-bottom: 20px;">
             <canvas id="vitalSignsChart"></canvas>
         </div>
 
-        <!-- Vital Signs Table - Unchanged -->
-        <!-- Vital Signs Table -->
         <div class="card-header bg-light">
             <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
         </div>
@@ -364,14 +373,23 @@
                         <td>{{ isset($item->detail->map) ? number_format($item->detail->map, 0) : '-' }}</td>
                     @endforeach
                 </tr>
+                <tr>
+                    <td class="parameter-header">CVP (Cm H2O)</td>
+                    {{-- Menggunakan $item->detail->cvp karena di create.blade.php cvp ada di RmeIntesiveMonitoringDtl --}}
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ isset($item->detail->cvp) ? number_format($item->detail->cvp, 0) : '-' }}</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="parameter-header">EKG Record</td>
+                    {{-- Menggunakan $item->detail->ekg_record karena di create.blade.php ekg_record ada di RmeIntesiveMonitoringDtl --}}
+                    @foreach ($allMonitoringRecords as $item)
+                        <td>{{ $item->detail->ekg_record ?? '-' }}</td>
+                    @endforeach
+                </tr>
             </tbody>
         </table>
 
-        <!-- AGD Data Table -->
-        <div class="card-header bg-light">
-            <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring</h5>
-        </div>
-        <!-- AGD Data Table -->
         <div class="card-header bg-light">
             <h5 class="mb-0"><i class="bi bi-flask me-2"></i>Data Analisis Gas Darah (AGD)</h5>
         </div>
@@ -431,7 +449,6 @@
                             <td>{{ isset($item->detail->hco3) ? number_format($item->detail->hco3, 1) : '-' }}</td>
                         @endforeach
                     </tr>
-                    <!-- Add additional AGD parameters from controller -->
                     <tr>
                         <td class="parameter-header">Saturasi O<sub>2</sub> (%)</td>
                         @foreach ($allMonitoringRecords as $item)
@@ -575,7 +592,6 @@
             </table>
         </div>
 
-        <!-- Additional Medical Parameters Table -->
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-clipboard2-pulse me-2"></i>Data Parameter Klinis</h5>
         </div>
@@ -782,40 +798,121 @@
                         @endforeach
                     </tr>
                     <tr>
-                        <td class="parameter-header">BAB (mL)</td>
+                        {{-- Menggunakan $item->detail->oral karena di create.blade.php oral ada di RmeIntesiveMonitoringDtl --}}
+                        <td class="parameter-header">Oral (ml)</td>
                         @foreach ($allMonitoringRecords as $item)
-                            <td>{{ isset($item->bab) && is_numeric($item->bab) ? number_format((float)$item->bab, 0) : '-' }}</td>
+                            <td>{{ isset($item->detail->oral) && is_numeric($item->detail->oral) ? number_format((float)$item->detail->oral, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
+                        {{-- Menggunakan $item->detail->ngt karena di create.blade.php ngt ada di RmeIntesiveMonitoringDtl --}}
+                        <td class="parameter-header">NGT (ml)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->ngt) && is_numeric($item->detail->ngt) ? number_format((float)$item->detail->ngt, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        {{-- Menggunakan $item->detail->bab karena di create.blade.php bab ada di RmeIntesiveMonitoringDtl --}}
+                        <td class="parameter-header">BAB (x)</td>
+                        @foreach ($allMonitoringRecords as $item)
+                            <td>{{ isset($item->detail->bab) && is_numeric($item->detail->bab) ? number_format((float)$item->detail->bab, 0) : '-' }}</td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        {{-- Menggunakan $item->detail->urine karena di create.blade.php urine ada di RmeIntesiveMonitoringDtl --}}
                         <td class="parameter-header">Urine (mL)</td>
                         @foreach ($allMonitoringRecords as $item)
-                            <td>{{ isset($item->urine) && is_numeric($item->urine) ? number_format((float)$item->urine, 0) : '-' }}</td>
+                            <td>{{ isset($item->detail->urine) && is_numeric($item->detail->urine) ? number_format((float)$item->detail->urine, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
+                        {{-- Menggunakan $item->detail->iwl karena di create.blade.php iwl ada di RmeIntesiveMonitoringDtl --}}
                         <td class="parameter-header">IWL (mL)</td>
                         @foreach ($allMonitoringRecords as $item)
-                            <td>{{ isset($item->iwl) && is_numeric($item->iwl) ? number_format((float)$item->iwl, 0) : '-' }}</td>
+                            <td>{{ isset($item->detail->iwl) && is_numeric($item->detail->iwl) ? number_format((float)$item->detail->iwl, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
+                        {{-- Menggunakan $item->detail->muntahan_cms karena di create.blade.php muntahan_cms ada di RmeIntesiveMonitoringDtl --}}
                         <td class="parameter-header">Muntahan (mL)</td>
                         @foreach ($allMonitoringRecords as $item)
-                            <td>{{ isset($item->muntahan_cms) && is_numeric($item->muntahan_cms) ? number_format((float)$item->muntahan_cms, 0) : '-' }}</td>
+                            <td>{{ isset($item->detail->muntahan_cms) && is_numeric($item->detail->muntahan_cms) ? number_format((float)$item->detail->muntahan_cms, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
+                        {{-- Menggunakan $item->detail->drain karena di create.blade.php drain ada di RmeIntesiveMonitoringDtl --}}
                         <td class="parameter-header">Drain (mL)</td>
                         @foreach ($allMonitoringRecords as $item)
-                            <td>{{ isset($item->drain) && is_numeric($item->drain) ? number_format((float)$item->drain, 0) : '-' }}</td>
+                            <td>{{ isset($item->detail->drain) && is_numeric($item->detail->drain) ? number_format((float)$item->detail->drain, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Signature -->
+        {{-- Section for Therapy Doses (New Table) --}}
+        {{-- Pastikan $allMonitoringRecords tidak kosong sebelum mencoba loop untuk therapyDoses --}}
+        @if ($allMonitoringRecords->isNotEmpty())
+            <div class="card-header bg-light mt-4">
+                <h5 class="mb-0"><i class="bi bi-capsule me-2"></i>Dosis Terapi Obat</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="vital-signs-table no-page-break" id="therapyDosesTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px;">Nama Obat</th>
+                            @foreach ($allMonitoringRecords as $item)
+                                @php
+                                    $datetime = \Carbon\Carbon::parse(
+                                        $item->tgl_implementasi . ' ' . $item->jam_implementasi,
+                                    )->format('H:i');
+                                @endphp
+                                <th>{{ $datetime }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            // Collect all unique therapy IDs and their names from all monitoring records
+                            $uniqueTherapies = [];
+                            foreach ($allMonitoringRecords as $record) {
+                                // Pastikan $record->therapyDoses tidak null sebelum di-loop
+                                if ($record->therapyDoses) {
+                                    foreach ($record->therapyDoses as $dose) {
+                                        // Pastikan $dose->therapy tidak null sebelum mengakses id/nama
+                                        if ($dose->therapy && !isset($uniqueTherapies[$dose->therapy->id])) {
+                                            $uniqueTherapies[$dose->therapy->id] = $dose->therapy->nama_obat;
+                                        }
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        @forelse ($uniqueTherapies as $therapyId => $therapyName)
+                            <tr>
+                                <td class="parameter-header">{{ $therapyName }}</td>
+                                @foreach ($allMonitoringRecords as $item)
+                                    @php
+                                        // Pastikan $item->therapyDoses tidak null sebelum melakukan where
+                                        $dose = null;
+                                        if ($item->therapyDoses) {
+                                            $dose = $item->therapyDoses->where('id_therapy', $therapyId)->first();
+                                        }
+                                    @endphp
+                                    <td>{{ isset($dose->nilai) ? number_format($dose->nilai, 1) . ' cc/ml' : '-' }}</td>
+                                @endforeach
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="{{ count($allMonitoringRecords) + 1 }}" class="text-center text-muted">Tidak ada data terapi obat yang dicatat dalam rentang ini.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
+
         <div class="signature">
             <p>{{ $dataMedis->unit->NAMA_UNIT ?? 'Intensive Care' }}, {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
             <p>Penanggung Jawab</p>
@@ -824,16 +921,13 @@
         </div>
     </div>
 
-    <!-- Footer - will appear in print -->
     <div class="print-footer">
         Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i:s') }}
     </div>
 
-    <!-- Scripts - UNCHANGED -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 
     <script>
-        // Fungsi untuk memformat angka float
         // Fungsi untuk memformat angka float - TETAP DIGUNAKAN
         function formatNumber(value, decimals = 1) {
             if (value === null || value === undefined || isNaN(value)) {
@@ -842,58 +936,22 @@
             return parseFloat(value).toFixed(decimals);
         }
 
-        // Fungsi untuk memformat tanggal dan waktu - TETAP DIGUNAKAN UNTUK CHART
-        function formatDateTime(dateTimeStr) {
-            try {
-                const dateTime = new Date(dateTimeStr);
-                const day = String(dateTime.getDate()).padStart(2, '0');
-                const month = String(dateTime.getMonth() + 1).padStart(2, '0');
-                const hours = String(dateTime.getHours()).padStart(2, '0');
-                const minutes = String(dateTime.getMinutes()).padStart(2, '0');
-
-                return {
-                    date: `${day}/${month}`,
-                    time: `${hours}:${minutes}`
-                };
-            } catch (e) {
-                console.error("Error formatting date:", e);
-                return {
-                    date: "--/--",
-                    time: "--:--"
-                };
-            }
-        }
-
-        // Main execution when document is ready -
+        // Main execution when document is ready
         document.addEventListener('DOMContentLoaded', () => {
-            // JIKA MENGGUNAKAN BLADE TEMPLATE, GANTI DENGAN KODE BERIKUT:
-            // Ambil data dari tabel yang sudah dirender oleh Blade
-            const labels = Array.from(document.querySelectorAll('#vitalSignsTable thead th:not(:first-child)'))
-                .map(th => th.textContent.trim());
+            var monitoringData = @json($allMonitoringRecords);
 
-            const sistolikData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(1) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+            // Siapkan data untuk grafik
+            const labels = monitoringData.map(record => {
+                const date = new Date(record.tgl_implementasi + ' ' + record.jam_implementasi);
+                return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            });
 
-            const diastolikData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(2) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
-
-            const hrData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(3) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
-
-            const rrData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(4) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
-
-            const suhuData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(5) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
-
-            const mapData = Array.from(document.querySelectorAll(
-                    '#vitalSignsTable tbody tr:nth-child(6) td:not(:first-child)'))
-                .map(td => td.textContent.trim() !== '-' ? parseFloat(td.textContent.trim()) : null);
+            const sistolikData = monitoringData.map(record => record.detail.sistolik !== undefined ? parseFloat(record.detail.sistolik) : null);
+            const diastolikData = monitoringData.map(record => record.detail.diastolik !== undefined ? parseFloat(record.detail.diastolik) : null);
+            const hrData = monitoringData.map(record => record.detail.hr !== undefined ? parseFloat(record.detail.hr) : null);
+            const rrData = monitoringData.map(record => record.detail.rr !== undefined ? parseFloat(record.detail.rr) : null);
+            const suhuData = monitoringData.map(record => record.detail.temp !== undefined ? parseFloat(record.detail.temp) : null);
+            const mapData = monitoringData.map(record => record.detail.map !== undefined ? parseFloat(record.detail.map) : null);
 
             // Buat grafik dengan data yang sudah diambil
             createChartFromLabels(labels, sistolikData, diastolikData, hrData, rrData, suhuData, mapData);
@@ -904,53 +962,8 @@
 
             // Aktifkan tombol print
             document.getElementById('printBtn').disabled = false;
-
-            // KODE LAMA - DAPAT DIHAPUS JIKA MENGGUNAKAN BLADE TEMPLATE:
-            // Dapatkan data monitoring dari controller PHP
-            var monitoringData = @json($allMonitoringRecords ?? []);
-
-            // Dapatkan info filter dari parameter URL
-            var startDate = '{{ $start_date ?? '' }}';
-            var startTime = '{{ $start_time ?? '' }}';
-            var endDate = '{{ $end_date ?? '' }}';
-            var endTime = '{{ $end_time ?? '' }}';
-
-            // Buat teks filter
-            var filterRangeText = "Semua data";
-            if (startDate && endDate) {
-                filterRangeText = formatReadableDate(startDate) + " " + (startTime || "00:00") + " s.d " +
-                    formatReadableDate(endDate) + " " + (endTime || "23:59");
-            }
-
-            // Proses data untuk ditampilkan
-            if (monitoringData && monitoringData.length > 0) {
-                processPrintData(monitoringData, filterRangeText, '{{ $title }}');
-
-                // Tampilkan tanggal terbaru pada bagian info pasien
-                if (startDate && endDate) {
-                    document.getElementById('filterDate').textContent = formatReadableDate(startDate) +
-                        (startDate === endDate ? "" : " s.d " + formatReadableDate(endDate));
-                } else {
-                    var today = new Date();
-                    var dd = String(today.getDate()).padStart(2, '0');
-                    var mm = String(today.getMonth() + 1).padStart(2, '0');
-                    var yyyy = today.getFullYear();
-                    document.getElementById('filterDate').textContent = dd + "-" + mm + "-" + yyyy;
-                }
-            } else {
-                document.getElementById('loadingIndicator').innerHTML =
-                    '<div class="alert alert-info">Tidak ada data untuk ditampilkan</div>';
-            }
         });
 
-        // Format tanggal menjadi format yang mudah dibaca - TETAP DIGUNAKAN
-        function formatReadableDate(dateString) {
-            var parts = dateString.split('-');
-            if (parts.length === 3) {
-                return parts[2] + '-' + parts[1] + '-' + parts[0];
-            }
-            return dateString;
-        }
 
         // Fungsi untuk membuat grafik monitoring dari label yang sudah disiapkan
         function createChartFromLabels(labels, sistolikData, diastolikData, hrData, rrData, suhuData, mapData) {

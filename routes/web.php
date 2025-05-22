@@ -851,6 +851,11 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{id}', 'update')->name('.update');
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
                                         Route::get('/print', 'print')->name('.print');
+                                        Route::get('/create-therapy', 'createTherapy')->name('.create-therapy');
+                                        Route::post('/store-therapy', 'storeTherapy')->name('.store-therapy');
+                                        Route::delete('/destroy-therapy/{id}', 'destroyTherapy')->name('.destroy-therapy');
+                                        Route::get('/filter-data', 'getFilteredData')->name('.filter-data');
+                                        Route::get('/{id}/detail', 'getMonitoringDetail')->name('.detail');
                                     });
                                 });
                             });
