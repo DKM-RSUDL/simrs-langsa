@@ -3,6 +3,16 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+
+        <style>
+        .form-control:disabled {
+            background-color: #f8f9fa;
+            opacity: 1;
+        }
+        .form-check-input:disabled {
+            opacity: 1;
+        }
+    </style>
     @endpush
 
     <div class="row">
@@ -82,6 +92,7 @@
                     </div>
                 </div>
 
+                @if($secondOpinion->status_peminjam == 2)
                 <div class="card mb-4 border-primary">
                     <div class="card-header text-dark">
                         <h6 class="mb-0">DATA PEMINJAM</h6>
@@ -152,6 +163,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="card mb-4 border-primary">
                     <div class="card-header text-dark">
@@ -197,14 +209,35 @@
 
 @endsection
 
-@push('css')
-    <style>
-        .form-control:disabled {
-            background-color: #f8f9fa;
-            opacity: 1;
-        }
-        .form-check-input:disabled {
-            opacity: 1;
-        }
-    </style>
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Rujukan Checkbox Handling
+            const checkRujuk = document.getElementById('checkRujuk');
+            const rsSecondOpinionInput = document.getElementById('rs_second_opinion');
+
+            if (checkRujuk && rsSecondOpinionInput) {
+                // Set initial state based on checkbox
+                rsSecondOpinionInput.style.display = checkRujuk.checked ? 'block' : 'none';
+                if (checkRujuk.checked) {
+                    rsSecondOpinionInput.setAttribute('required', 'required');
+                } else {
+                    rsSecondOpinionInput.removeAttribute('required');
+                }
+
+                // Toggle input visibility and required attribute on checkbox change
+                checkRujuk.addEventListener('change', function () {
+                    rsSecondOpinionInput.style.display = this.checked ? 'block' : 'none';
+                    if (this.checked) {
+                        rsSecondOpinionInput.setAttribute('required', 'required');
+                        rsSecondOpinionInput.focus();
+                    } else {
+                        rsSecondOpinionInput.removeAttribute('required');
+                        rsSecondOpinionInput.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 @endpush
