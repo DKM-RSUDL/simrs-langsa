@@ -233,7 +233,7 @@
                                                     <li class="dropdown-submenu">
                                                         <a class="dropdown-item m-1 dropdown-toggle" href="#">Surat-Surat</a>
                                                         <ul class="dropdown-menu shadow-lg">
-                                                            <li><a class="dropdown-item m-1" href="#">Kematian</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/surat-kematian'}">Surat Kematian</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pernyataan-dpjp'}">Pernyataan DPJP</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/paps'}">PAPS</a></li>
                                                             <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/meninggalkan-perawatan'}">Meninggalkan Perawatan</a></li>

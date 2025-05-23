@@ -43,8 +43,8 @@
                     Tambah
                 </button>
                 <ul class="custom__dropdown__menu">
-                    <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li>
+                    {{-- <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
+                            data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li> --}}
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
                         <li><a class="custom__dropdown__item"
                                 href="{{ route('rawat-inap.asesmen.keperawatan.umum.index', [

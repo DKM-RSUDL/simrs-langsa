@@ -377,17 +377,7 @@ class SuratKematianController extends Controller
     public function print($kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         // Get Patient data with proper joins for reference tables
-        $dataMedis = Kunjungan::select(
-            'kunjungan.*',
-            'pasien.*',
-            'pekerjaan.pekerjaan as nama_pekerjaan',
-            'suku.suku as nama_suku',
-            'agama.agama as nama_agama'
-        )
-            ->join('pasien', 'kunjungan.kd_pasien', '=', 'pasien.kd_pasien')
-            ->leftJoin('pekerjaan', 'pasien.kd_pekerjaan', '=', 'pekerjaan.kd_pekerjaan')
-            ->leftJoin('suku', 'pasien.kd_suku', '=', 'suku.kd_suku')
-            ->leftJoin('agama', 'pasien.kd_agama', '=', 'agama.kd_agama')
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
                 $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
@@ -404,11 +394,10 @@ class SuratKematianController extends Controller
             abort(404, 'Data not found');
         }
 
-        // Calculate age - make sure this is done
-        if ($dataMedis && $dataMedis->tgl_lahir) {
-            $dataMedis->umur = Carbon::parse($dataMedis->tgl_lahir)->age;
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
-            $dataMedis->umur = 'Tidak Diketahui';
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
         // Get Surat Kematian data with proper joins for dokter_spesial relationship
@@ -464,5 +453,44 @@ class SuratKematianController extends Controller
 
         // Download file PDF
         return $pdf->stream($filename);
+    }
+
+    public function destroy($kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Start transaction
+            DB::beginTransaction();
+
+            // Find the death certificate record
+            $suratKematian = RmeSuratKematian::where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', 3)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->where('id', $id)
+                ->firstOrFail();
+
+            // Delete related details (RmeSuratKematianDtl)
+            RmeSuratKematianDtl::where('id_surat', $suratKematian->id)->delete();
+
+            // Delete the main death certificate record
+            $suratKematian->delete();
+
+            // Commit transaction
+            DB::commit();
+
+            return redirect()
+                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('success', 'Surat kematian berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+
+            // Log the error
+            Log::error('Error deleting death certificate: ' . $e->getMessage());
+
+            return redirect()
+                ->route('surat-kematian.index', [$kd_pasien, $tgl_masuk, $urut_masuk])
+                ->with('error', 'Terjadi kesalahan saat menghapus surat kematian: ' . $e->getMessage());
+        }
     }
 }

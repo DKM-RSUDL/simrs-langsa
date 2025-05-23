@@ -36,7 +36,7 @@ class RmeKriteriaMasukPicu extends Model
     // Relasi dengan user (yang menginput)
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_create', 'id');
     }
 
     // Scope untuk filter berdasarkan kunjungan

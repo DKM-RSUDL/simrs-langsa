@@ -243,6 +243,15 @@
             ]);
         }
 
+        if ($dataMedis->kd_unit == '10131') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.nicu.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
+
         $navItems[] = [
             'icon' => 'monitoring.png',
             'label' => 'K. Masuk/Keluar',

@@ -66,4 +66,20 @@ class Pasien extends Model
     {
         return $this->belongsTo(Agama::class, 'kd_agama', 'kd_agama');
     }
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class, 'kd_pekerjaan', 'kd_pekerjaan');
+    }
+
+    public function suku()
+    {
+        return $this->belongsTo(Suku::class, 'kd_suku', 'kd_suku');
+    }
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class, 'kd_kelurahan', 'kd_kelurahan');
+    }
+    
 }

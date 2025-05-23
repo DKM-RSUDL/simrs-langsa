@@ -160,7 +160,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Dokter</label>
-                                        <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
+                                        <select name="kd_dokter" id="kd_dokter" class="form-select select2"
+                                            style="width: 100%" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
                                                 <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
@@ -192,9 +193,7 @@
                                     <tr>
                                         <td class="criteria-no">1.</td>
                                         <td class="criteria-desc">
-                                            <div class="main-criteria">Pasien Anak Usia 1 bulan s/d 18 tahun dengan Kasus:
-                                            </div>
-                                            <div>Gawat Nafas/ gagal nafas.</div>
+                                            <div class="main-criteria">Gawat Nafas/ gagal nafas.</div>
                                         </td>
                                         <td class="check-col">
                                             <input type="checkbox" name="check_list[]" value="1_main" id="check_1_main">
@@ -279,13 +278,26 @@
                                         <td class="criteria-no">2.</td>
                                         <td class="criteria-desc">
                                             <div class="main-criteria">Syok / kegagalan sirkulasi</div>
-                                            <div>Tekanan Darah tidak terukur</div>
                                         </td>
                                         <td class="check-col">
                                             <input type="checkbox" name="check_list[]" value="2_main" id="check_2_main">
                                         </td>
                                         <td class="keterangan-col">
                                             <textarea class="form-control form-control-textarea" name="keterangan[2_main]" placeholder="Keterangan..."></textarea>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="sub-criteria-row">
+                                        <td class="criteria-no"></td>
+                                        <td class="criteria-desc">
+                                            <div class="sub-criteria-text">• Tekanan Darah tidak terukur</div>
+                                        </td>
+                                        <td class="check-col">
+                                            <input type="checkbox" name="check_list[]" value="2_tekanan_darah"
+                                                id="check_2_tekanan_darah">
+                                        </td>
+                                        <td class="keterangan-col">
+                                            <textarea class="form-control form-control-textarea" name="keterangan[2_tekanan_darah]" placeholder="Keterangan..."></textarea>
                                         </td>
                                     </tr>
 
@@ -398,132 +410,164 @@
                                         </td>
                                     </tr>
 
-                                    <!-- 6. Dehidrasi Berat -->
-                                    <tr>
-                                        <td class="criteria-no">6.</td>
-                                        <td class="criteria-desc">
-                                            <div class="main-criteria">Dehidrasi Berat</div>
-                                            <div>Penurunan kesadaran</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_main" id="check_6_main">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_main]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                    <<!-- 6. Dehidrasi Berat -->
+                                        <tr>
+                                            <td class="criteria-no">6.</td>
+                                            <td class="criteria-desc">
+                                                <div class="main-criteria">Dehidrasi Berat</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_main"
+                                                    id="check_6_main">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_main]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <tr class="sub-criteria-row">
-                                        <td class="criteria-no"></td>
-                                        <td class="criteria-desc">
-                                            <div class="sub-criteria-text">• Takikardia</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_takikardia"
-                                                id="check_6_takikardia">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_takikardia]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Penurunan kesadaran</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_penurunan_kesadaran"
+                                                    id="check_6_penurunan_kesadaran">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_penurunan_kesadaran]"
+                                                    placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <tr class="sub-criteria-row">
-                                        <td class="criteria-no"></td>
-                                        <td class="criteria-desc">
-                                            <div class="sub-criteria-text">• Mata cekung</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_mata" id="check_6_mata">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_mata]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Takikardia</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_takikardia"
+                                                    id="check_6_takikardia">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_takikardia]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <tr class="sub-criteria-row">
-                                        <td class="criteria-no"></td>
-                                        <td class="criteria-desc">
-                                            <div class="sub-criteria-text">• Letargi</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_letargi"
-                                                id="check_6_letargi">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_letargi]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Mata cekung</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_mata"
+                                                    id="check_6_mata">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_mata]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <tr class="sub-criteria-row">
-                                        <td class="criteria-no"></td>
-                                        <td class="criteria-desc">
-                                            <div class="sub-criteria-text">• Anuria</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_anuria"
-                                                id="check_6_anuria">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_anuria]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Letargi</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_letargi"
+                                                    id="check_6_letargi">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_letargi]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <tr class="sub-criteria-row">
-                                        <td class="criteria-no"></td>
-                                        <td class="criteria-desc">
-                                            <div class="sub-criteria-text">• Malas minum</div>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="6_malas_minum"
-                                                id="check_6_malas_minum">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[6_malas_minum]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Anuria</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_anuria"
+                                                    id="check_6_anuria">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_anuria]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <!-- 7. Hipertensi krisis pada anak -->
-                                    <tr>
-                                        <td class="criteria-no">7.</td>
-                                        <td class="criteria-desc">
-                                            <strong>Hipertensi krisis pada anak (&gt;180/120mmHg)</strong>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="7" id="check_7">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[7]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Malas minum</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="6_malas_minum"
+                                                    id="check_6_malas_minum">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[6_malas_minum]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <!-- 8. Kegagalan organ -->
-                                    <tr>
-                                        <td class="criteria-no">8.</td>
-                                        <td class="criteria-desc">
-                                            <strong>Kegagalan organ</strong>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="8" id="check_8">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[8]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <!-- 7. Hipertensi krisis pada anak -->
+                                        <tr>
+                                            <td class="criteria-no">7.</td>
+                                            <td class="criteria-desc">
+                                                <strong>Hipertensi krisis pada anak (&gt;180/120mmHg)</strong>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="7"
+                                                    id="check_7">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[7]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
 
-                                    <!-- 9. Pasien anak pasca bedah -->
-                                    <tr>
-                                        <td class="criteria-no">9.</td>
-                                        <td class="criteria-desc">
-                                            <strong>Pasien anak pasca bedah</strong><br>
-                                            <span class="text-muted">Traumatologi pada anak</span>
-                                        </td>
-                                        <td class="check-col">
-                                            <input type="checkbox" name="check_list[]" value="9" id="check_9">
-                                        </td>
-                                        <td class="keterangan-col">
-                                            <textarea class="form-control form-control-textarea" name="keterangan[9]" placeholder="Keterangan..."></textarea>
-                                        </td>
-                                    </tr>
+                                        <!-- 8. Kegagalan organ -->
+                                        <tr>
+                                            <td class="criteria-no">8.</td>
+                                            <td class="criteria-desc">
+                                                <strong>Kegagalan organ</strong>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="8"
+                                                    id="check_8">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[8]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
+
+                                        <!-- 9. Pasien anak pasca bedah -->
+                                        <tr>
+                                            <td class="criteria-no">9.</td>
+                                            <td class="criteria-desc">
+                                                <div class="main-criteria">Pasien anak pasca bedah</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="9_main"
+                                                    id="check_9_main">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[9_main]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="sub-criteria-row">
+                                            <td class="criteria-no"></td>
+                                            <td class="criteria-desc">
+                                                <div class="sub-criteria-text">• Traumatologi pada anak</div>
+                                            </td>
+                                            <td class="check-col">
+                                                <input type="checkbox" name="check_list[]" value="9_traumatologi"
+                                                    id="check_9_traumatologi">
+                                            </td>
+                                            <td class="keterangan-col">
+                                                <textarea class="form-control form-control-textarea" name="keterangan[9_traumatologi]" placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>

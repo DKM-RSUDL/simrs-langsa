@@ -48,7 +48,7 @@
             </li>
             <li class="timeline-item info">
                 <div class="margin-left-15">
-                    <p>Resume Medis -(belum final)</p>
+                    <p>Resume Medis</p>
                 </div>
             </li>
             <li class="timeline-item info">

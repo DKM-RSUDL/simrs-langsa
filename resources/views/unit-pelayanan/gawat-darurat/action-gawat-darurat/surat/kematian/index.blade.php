@@ -92,6 +92,13 @@
                                                 <a href="{{ route('surat-kematian.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" class="btn btn-primary btn-sm ms-2" title="Cetak" target="_blank">
                                                     <i class="ti-printer"></i>
                                                 </a>
+                                                <form action="{{ route('surat-kematian.destroy', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $surat->id]) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm ms-2" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus surat kematian ini?')">
+                                                        <i class="ti-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

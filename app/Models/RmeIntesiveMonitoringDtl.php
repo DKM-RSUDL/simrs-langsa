@@ -16,6 +16,6 @@ class RmeIntesiveMonitoringDtl extends Model
 
     public function monitoring()
     {
-        return $this->belongsTo(RmeIntesiveMonitoring::class, 'monitoring_id');
+        return $this->belongsTo(RmeIntesiveMonitoring::class, 'monitoring_id', 'id');
     }
 }

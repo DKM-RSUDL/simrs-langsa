@@ -30,4 +30,9 @@ class RmeIntesiveMonitoring extends Model
     {
         return $this->belongsTo(User::class, 'user_edit');
     }
+
+    public function therapyDoses()
+    {
+        return $this->hasMany(RmeIntensiveMonitoringTherapyDtl::class, 'id_monitoring', 'id');
+    }
 }

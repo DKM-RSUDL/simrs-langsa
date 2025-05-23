@@ -145,7 +145,8 @@
                                             <div class="form-group">
                                                 <label for="berat_badan">Berat Badan (kg)</label>
                                                 <input type="number" step="0.1" name="berat_badan" id="berat_badan"
-                                                    class="form-control" value="{{ $existingObservasi->berat_badan ?? '' }}"
+                                                    class="form-control"
+                                                    value="{{ $existingObservasi->berat_badan ?? ($lastWeight ?? '') }}"
                                                     required>
                                             </div>
                                         </div>
@@ -159,43 +160,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="alat_invasive">Alat Invasive</label>
-                                        <input type="text" name="alat_invasive" id="alat_invasive" class="form-control"
-                                            value="{{ $existingObservasi->alat_invasive ?? '' }}">
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="ngt">NGT</label>
-                                                <select name="ngt" id="ngt" class="form-control">
-                                                    <option value="">Pilih</option>
-                                                    <option value="Ada"
-                                                        {{ $existingObservasi && $existingObservasi->ngt == 'Ada' ? 'selected' : '' }}>
-                                                        Ada</option>
-                                                    <option value="Tidak Ada"
-                                                        {{ $existingObservasi && $existingObservasi->ngt == 'Tidak Ada' ? 'selected' : '' }}>
-                                                        Tidak Ada</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="catheter">Catheter</label>
-                                                <select name="catheter" id="catheter" class="form-control">
-                                                    <option value="">Pilih</option>
-                                                    <option value="Ada"
-                                                        {{ $existingObservasi && $existingObservasi->catheter == 'Ada' ? 'selected' : '' }}>
-                                                        Ada</option>
-                                                    <option value="Tidak Ada"
-                                                        {{ $existingObservasi && $existingObservasi->catheter == 'Tidak Ada' ? 'selected' : '' }}>
-                                                        Tidak Ada</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
                                         <label for="diet">Diet</label>
                                         <input type="text" name="diet" id="diet" class="form-control"
                                             value="{{ $existingObservasi->diet ?? '' }}">
@@ -203,9 +167,143 @@
 
                                     <div class="form-group">
                                         <label for="alergi">Alergi</label>
-                                        <input type="text" name="alergi" id="alergi" class="form-control"
-                                            placeholder="Alergi pasien (jika ada)"
-                                            value="{{ $existingObservasi->alergi ?? '' }}">
+                                        <div class="input-group">
+                                            <input type="text" name="alergi_display" id="alergi_display"
+                                                class="form-control" placeholder="Alergi pasien (jika ada)"
+                                                value="{{ $allergiesDisplay ?? '' }}" readonly>
+                                            <input type="hidden" name="alergi" id="alergi"
+                                                value="{{ $allergiesJson ?? '' }}">
+                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                                data-bs-target="#alergiModal">
+                                                <i class="ti-plus"></i> Tambah Alergi
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-separator">
+                                    <h4 class="section-title">Alat Invasive</h4>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">1. NGT</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="ngt" id="ngt_ada"
+                                                    value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->ngt == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="ngt_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="ngt"
+                                                    id="ngt_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->ngt == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="ngt_tidak_ada">Tidak Ada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">2. Catheter</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="catheter"
+                                                    id="catheter_ada" value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->catheter == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="catheter_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="catheter"
+                                                    id="catheter_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->catheter == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="catheter_tidak_ada">Tidak Ada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">3. Infus</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="infus"
+                                                    id="infus_ada" value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->infus == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="infus_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="infus"
+                                                    id="infus_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->infus == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="infus_tidak_ada">Tidak Ada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">4. Triway</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="triway"
+                                                    id="triway_ada" value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->triway == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="triway_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="triway"
+                                                    id="triway_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->triway == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="triway_tidak_ada">Tidak Ada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">5. Syringe Pump</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="syringe_pump"
+                                                    id="syringe_pump_ada" value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->syringe_pump == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="syringe_pump_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="syringe_pump"
+                                                    id="syringe_pump_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->syringe_pump == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="syringe_pump_tidak_ada">Tidak
+                                                    Ada</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">6. Infus Pump</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="infus_pump"
+                                                    id="infus_pump_ada" value="Ada"
+                                                    {{ $existingObservasi && $existingObservasi->infus_pump == 'Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="infus_pump_ada">Ada</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="infus_pump"
+                                                    id="infus_pump_tidak_ada" value="Tidak Ada"
+                                                    {{ $existingObservasi && $existingObservasi->infus_pump == 'Tidak Ada' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="infus_pump_tidak_ada">Tidak
+                                                    Ada</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -283,7 +381,7 @@
                                             <button class="accordion-button collapsed fw-bold" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseTwo2"
                                                 aria-expanded="false" aria-controls="collapseTwo2">
-                                                12:00
+                                                11:00
                                             </button>
                                         </h2>
                                         <div id="collapseTwo2" class="accordion-collapse collapse"
@@ -346,7 +444,7 @@
                                             <button class="accordion-button collapsed fw-bold" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseThree3"
                                                 aria-expanded="false" aria-controls="collapseThree3">
-                                                18:00
+                                                15:00
                                             </button>
                                         </h2>
                                         <div id="collapseThree3" class="accordion-collapse collapse"
@@ -409,7 +507,7 @@
                                             <button class="accordion-button collapsed fw-bold" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseFour4"
                                                 aria-expanded="false" aria-controls="collapseFour4">
-                                                24:00
+                                                20:00
                                             </button>
                                         </h2>
                                         <div id="collapseFour4" class="accordion-collapse collapse"
@@ -481,9 +579,109 @@
     </div>
 @endsection
 
+@include('unit-pelayanan.rawat-inap.pelayanan.observasi.alergi')
+
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle radio button initialization for existing data
+            function initRadioButtons() {
+                // NGT radio buttons
+                if ('{{ $existingObservasi->ngt ?? '' }}' === 'Ada') {
+                    document.getElementById('ngt_ada').checked = true;
+                } else if ('{{ $existingObservasi->ngt ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('ngt_tidak_ada').checked = true;
+                }
+
+                // Catheter radio buttons
+                if ('{{ $existingObservasi->catheter ?? '' }}' === 'Ada') {
+                    document.getElementById('catheter_ada').checked = true;
+                } else if ('{{ $existingObservasi->catheter ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('catheter_tidak_ada').checked = true;
+                }
+
+                // Infus radio buttons
+                if ('{{ $existingObservasi->infus ?? '' }}' === 'Ada') {
+                    document.getElementById('infus_ada').checked = true;
+                } else if ('{{ $existingObservasi->infus ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('infus_tidak_ada').checked = true;
+                }
+
+                // Triway radio buttons
+                if ('{{ $existingObservasi->triway ?? '' }}' === 'Ada') {
+                    document.getElementById('triway_ada').checked = true;
+                } else if ('{{ $existingObservasi->triway ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('triway_tidak_ada').checked = true;
+                }
+
+                // Syringe Pump radio buttons
+                if ('{{ $existingObservasi->syringe_pump ?? '' }}' === 'Ada') {
+                    document.getElementById('syringe_pump_ada').checked = true;
+                } else if ('{{ $existingObservasi->syringe_pump ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('syringe_pump_tidak_ada').checked = true;
+                }
+
+                // Infus Pump radio buttons
+                if ('{{ $existingObservasi->infus_pump ?? '' }}' === 'Ada') {
+                    document.getElementById('infus_pump_ada').checked = true;
+                } else if ('{{ $existingObservasi->infus_pump ?? '' }}' === 'Tidak Ada') {
+                    document.getElementById('infus_pump_tidak_ada').checked = true;
+                }
+            }
+
+            // Initialize radio buttons on page load
+            initRadioButtons();
+
+            // Form validation specific to radio buttons
+            document.getElementById('edukasiForm').addEventListener('submit', function(e) {
+                // Check if at least one option is selected for each radio button group
+                const ngtSelected = document.querySelector('input[name="ngt"]:checked');
+                const catheterSelected = document.querySelector('input[name="catheter"]:checked');
+                const infusSelected = document.querySelector('input[name="infus"]:checked');
+                const triwaySelected = document.querySelector('input[name="triway"]:checked');
+                const syringePumpSelected = document.querySelector('input[name="syringe_pump"]:checked');
+                const infusPumpSelected = document.querySelector('input[name="infus_pump"]:checked');
+
+                let errorMessages = [];
+
+                if (!ngtSelected) {
+                    errorMessages.push('Silakan pilih status NGT (Ada/Tidak Ada)');
+                }
+
+                if (!catheterSelected) {
+                    errorMessages.push('Silakan pilih status Catheter (Ada/Tidak Ada)');
+                }
+
+                if (!infusSelected) {
+                    errorMessages.push('Silakan pilih status Infus (Ada/Tidak Ada)');
+                }
+
+                if (!triwaySelected) {
+                    errorMessages.push('Silakan pilih status Triway (Ada/Tidak Ada)');
+                }
+
+                if (!syringePumpSelected) {
+                    errorMessages.push('Silakan pilih status Syringe Pump (Ada/Tidak Ada)');
+                }
+
+                if (!infusPumpSelected) {
+                    errorMessages.push('Silakan pilih status Infus Pump (Ada/Tidak Ada)');
+                }
+
+                if (errorMessages.length > 0) {
+                    e.preventDefault(); // Prevent form submission
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Data Belum Lengkap',
+                        html: errorMessages.join('<br>'),
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+            // Update the existing Swal confirmation code
+            // Update the existing Swal confirmation code for form reset
             @if ($hasExistingObservasi)
                 Swal.fire({
                     title: 'Data Observasi Hari Ini Sudah Ada',
@@ -498,14 +696,38 @@
                     if (!result.isConfirmed) {
                         // User chose to create new data
                         document.getElementById('force_new').value = '1';
-                        // Clear existing data in the form
-                        document.getElementById('berat_badan').value = '';
+
+                        // Clear existing data in the form EXCEPT allergies and use last weight data
+                        const lastWeight = '{{ $lastWeight ?? '' }}';
+                        if (lastWeight) {
+                            document.getElementById('berat_badan').value = lastWeight;
+                        } else {
+                            document.getElementById('berat_badan').value = '';
+                        }
+
                         document.getElementById('sensorium').value = '';
-                        document.getElementById('alat_invasive').value = '';
-                        document.getElementById('ngt').value = '';
-                        document.getElementById('catheter').value = '';
+
+                        // Reset radio buttons
+                        document.getElementById('ngt_ada').checked = false;
+                        document.getElementById('ngt_tidak_ada').checked = false;
+                        document.getElementById('catheter_ada').checked = false;
+                        document.getElementById('catheter_tidak_ada').checked = false;
+                        document.getElementById('infus_ada').checked = false;
+                        document.getElementById('infus_tidak_ada').checked = false;
+                        document.getElementById('triway_ada').checked = false;
+                        document.getElementById('triway_tidak_ada').checked = false;
+                        document.getElementById('syringe_pump_ada').checked = false;
+                        document.getElementById('syringe_pump_tidak_ada').checked = false;
+                        document.getElementById('infus_pump_ada').checked = false;
+                        document.getElementById('infus_pump_tidak_ada').checked = false;
+
+                        // Clear other fields except allergies
                         document.getElementById('diet').value = '';
-                        document.getElementById('alergi').value = '';
+
+                        // DO NOT clear allergies
+                        // document.getElementById('alergi').value = '';
+                        // document.getElementById('alergi_display').value = '';
+
                         // Clear vital sign inputs
                         const times = ['pagi', 'siang', 'sore', 'malam'];
                         const fields = ['suhu', 'nadi', 'tekanan_darah_sistole', 'tekanan_darah_diastole',
