@@ -3,6 +3,15 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+        <style>
+            .form-control:disabled {
+                background-color: #f8f9fa;
+                opacity: 1;
+            }
+            .form-check-input:disabled {
+                opacity: 1;
+            }
+        </style>
     @endpush
 
     <div class="row">
@@ -63,9 +72,27 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="rs_second_opinion" class="form-label">RS Second Opinion</label>
-                                    <input type="text" class="form-control" id="rs_second_opinion"
-                                        value="{{ $secondOpinion->rs_second_opinion }}" disabled>
+                                    <label class="form-label">Rujukan</label>
+                                    <div>
+                                        @if($secondOpinion->is_rujuk == '1')
+                                            <div class="d-flex">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input" type="checkbox" id="checkRujuk" checked disabled>
+                                                    <label class="form-check-label">Rujuk RS Lain</label>
+                                                </div>
+                                                @if($secondOpinion->rs_second_opinion)
+                                                    <span class="fw-bold">: {{ $secondOpinion->rs_second_opinion }}</span>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="checkRujuk" disabled>
+                                                <label class="form-check-label">Rujuk RS Lain</label>
+                                            </div>
+                                        @endif
+                                        <input type="text" class="form-control mt-2" id="rs_second_opinion"
+                                            value="{{ $secondOpinion->rs_second_opinion ?? '' }}" disabled style="display: {{ $secondOpinion->is_rujuk == '1' ? 'block' : 'none' }};">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -78,80 +105,88 @@
                                         value="{{ date('Y-m-d', strtotime($secondOpinion->tanggal_pengembalian)) }}" disabled>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status_peminjam" class="form-label">Status Peminjam</label>
+                                    <input type="text" class="form-control" id="status_peminjam"
+                                        value="{{ $secondOpinion->status_peminjam == 'diri_sendiri' ? 'Diri Sendiri' : 'Keluarga' }}" disabled>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card mb-4 border-primary">
-                    <div class="card-header text-dark">
-                        <h6 class="mb-0">DATA PEMINJAM</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="peminjam-nama" class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="peminjam-nama"
-                                        value="{{ $secondOpinion->peminjam_nama }}" disabled>
+                @if($secondOpinion->status_peminjam == 2)
+                    <div class="card mb-4 border-primary">
+                        <div class="card-header text-dark">
+                            <h6 class="mb-0">DATA PEMINJAM</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="peminjam-nama" class="form-label">Nama</label>
+                                        <input type="text" class="form-control" id="peminjam-nama"
+                                            value="{{ $secondOpinion->peminjam_nama }}" disabled>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Jenis Kelamin</label>
-                                    <div class="d-flex">
-                                        <div class="form-check me-4">
-                                            <input class="form-check-input" type="radio" disabled
-                                                {{ $secondOpinion->jenis_kelamin == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label">Laki-laki</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" disabled
-                                                {{ $secondOpinion->jenis_kelamin == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label">Perempuan</label>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Jenis Kelamin</label>
+                                        <div class="d-flex">
+                                            <div class="form-check me-4">
+                                                <input class="form-check-input" type="radio" disabled
+                                                    {{ $secondOpinion->jenis_kelamin == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Laki-laki</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled
+                                                    {{ $secondOpinion->jenis_kelamin == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Perempuan</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tgl_lahir"
-                                        value="{{ date('Y-m-d', strtotime($secondOpinion->tgl_lahir)) }}" disabled>
-
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
+                                        <input type="date" class="form-control" id="tgl_lahir"
+                                            value="{{ date('Y-m-d', strtotime($secondOpinion->tgl_lahir)) }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="no_kartu_identitas" class="form-label">No Kartu Identitas</label>
+                                        <input type="text" class="form-control" id="no_kartu_identitas"
+                                            value="{{ $secondOpinion->no_kartu_identitas }}" disabled>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="no_kartu_identitas" class="form-label">No Kartu Identitas</label>
-                                    <input type="text" class="form-control" id="no_kartu_identitas"
-                                        value="{{ $secondOpinion->no_kartu_identitas }}" disabled>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="alamat" class="form-label">Alamat</label>
+                                        <textarea class="form-control" id="alamat" rows="3" disabled>{{ $secondOpinion->alamat }}</textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="alamat" class="form-label">Alamat</label>
-                                    <textarea class="form-control" id="alamat" rows="3" disabled>{{ $secondOpinion->alamat }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="hubungan" class="form-label">Hubungan dengan Pasien</label>
-                                    <input type="text" class="form-control" id="hubungan"
-                                        value="{{ $secondOpinion->hubungan }}" disabled>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="hubungan" class="form-label">Hubungan dengan Pasien</label>
+                                        <input type="text" class="form-control" id="hubungan"
+                                            value="{{ $secondOpinion->hubungan }}" disabled>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 <div class="card mb-4 border-primary">
                     <div class="card-header text-dark">
@@ -160,7 +195,6 @@
                     <div class="card-body">
                         @if($secondOpinion->nama_dokumen)
                             @php
-                                // Decode JSON karena data disimpan sebagai JSON string di database
                                 $dokumenArray = json_decode($secondOpinion->nama_dokumen, true);
                             @endphp
 
@@ -190,21 +224,39 @@
                         @endif
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
 @endsection
 
-@push('css')
-    <style>
-        .form-control:disabled {
-            background-color: #f8f9fa;
-            opacity: 1;
-        }
-        .form-check-input:disabled {
-            opacity: 1;
-        }
-    </style>
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Rujukan Checkbox Handling
+            const checkRujuk = document.getElementById('checkRujuk');
+            const rsSecondOpinionInput = document.getElementById('rs_second_opinion');
+
+            if (checkRujuk && rsSecondOpinionInput) {
+                // Set initial state based on checkbox
+                rsSecondOpinionInput.style.display = checkRujuk.checked ? 'block' : 'none';
+                if (checkRujuk.checked) {
+                    rsSecondOpinionInput.setAttribute('required', 'required');
+                } else {
+                    rsSecondOpinionInput.removeAttribute('required');
+                }
+
+                // Toggle input visibility and required attribute on checkbox change
+                checkRujuk.addEventListener('change', function () {
+                    rsSecondOpinionInput.style.display = this.checked ? 'block' : 'none';
+                    if (this.checked) {
+                        rsSecondOpinionInput.setAttribute('required', 'required');
+                        rsSecondOpinionInput.focus();
+                    } else {
+                        rsSecondOpinionInput.removeAttribute('required');
+                        rsSecondOpinionInput.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 @endpush

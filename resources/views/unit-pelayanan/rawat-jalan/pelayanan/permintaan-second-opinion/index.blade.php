@@ -83,7 +83,7 @@
                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                         <td>
                                             <a href="{{ route('rawat-jalan.permintaan-second-opinion.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                class="btn btn-secondary btn-sm" target="_blank">
+                                                class="mb-2 btn btn-secondary btn-sm" target="_blank">
                                                 <i class="bi bi-printer"></i>
                                             </a>
                                             <a href="{{ route('rawat-jalan.permintaan-second-opinion.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"

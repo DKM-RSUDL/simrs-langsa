@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DokterInap;
 use App\Models\Kunjungan;
+use App\Models\Pasien;
 use App\Models\PermintaanSecondOpinion;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -92,21 +93,23 @@ class RajalPermintaanSecondOpinionController extends Controller
         DB::beginTransaction();
         try {
             // Validate the request data
-            $request->validate([
-                'informasi_tanggal' => 'required|date',
-                'informasi_jam' => 'required',
-                'nama_saksi' => 'required|string|max:255',
-                'rs_second_opinion' => 'required|string|max:255',
-                'tanggal_pengembalian' => 'nullable|date',
-                'peminjam_nama' => 'required|string|max:255',
-                'jenis_kelamin' => 'required|in:0,1',
-                'tgl_lahir' => 'required|date',
-                'no_kartu_identitas' => 'required|string|max:255',
-                'alamat' => 'required|string',
-                'hubungan' => 'required|string|max:255',
-                'nama_dokumen' => 'required|array|min:1',
-                'nama_dokumen.*' => 'required|string|max:255',
-            ]);
+            // $request->validate([
+            //     'informasi_tanggal' => 'required|date',
+            //     'informasi_jam' => 'required',
+            //     'nama_saksi' => 'required|string|max:255',
+            //     'rs_second_opinion' => 'required|string|max:255',
+            //     'tanggal_pengembalian' => 'nullable|date',
+            //     'peminjam_nama' => 'required|string|max:255',
+            //     'jenis_kelamin' => 'required|in:0,1',
+            //     'tgl_lahir' => 'required|date',
+            //     'no_kartu_identitas' => 'required|string|max:255',
+            //     'alamat' => 'required|string',
+            //     'hubungan' => 'required|string|max:255',
+            //     'nama_dokumen' => 'required|array|min:1',
+            //     'nama_dokumen.*' => 'required|string|max:255',
+            // ]);
+
+            $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
 
             // Prepare data array for insertion
             $data = [
@@ -121,13 +124,15 @@ class RajalPermintaanSecondOpinionController extends Controller
                 'nama_saksi' => $request->nama_saksi,
                 'rs_second_opinion' => $request->rs_second_opinion,
                 'tanggal_pengembalian' => $request->tanggal_pengembalian ? Carbon::parse($request->tanggal_pengembalian) : null,
-                'peminjam_nama' => $request->peminjam_nama,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'tgl_lahir' => Carbon::parse($request->tgl_lahir),
-                'no_kartu_identitas' => $request->no_kartu_identitas,
-                'alamat' => $request->alamat,
-                'hubungan' => $request->hubungan,
+                'peminjam_nama' => $request->status_peminjam == '1' ? $pasien->nama : $request->peminjam_nama,
+                'jenis_kelamin' => $request->status_peminjam == '1' ? $pasien->jenis_kelamin : $request->jenis_kelamin,
+                'tgl_lahir' => $request->status_peminjam == '1' ? date('Y-m-d', strtotime($pasien->tgl_lahir)) : Carbon::parse($request->tgl_lahir),
+                'no_kartu_identitas' => $request->status_peminjam == '1' ? $pasien->no_pengenal : $request->no_kartu_identitas,
+                'alamat' => $request->status_peminjam == '1' ? $pasien->alamat : $request->alamat,
+                'hubungan' => $request->status_peminjam == '1' ? 'Diri Sendiri' : $request->hubungan,
                 'nama_dokumen' => json_encode($request->nama_dokumen),
+                'is_rujuk' => $request->is_rujuk,
+                'status_peminjam' => $request->status_peminjam,
             ];
 
             // Create the record
@@ -209,22 +214,23 @@ class RajalPermintaanSecondOpinionController extends Controller
         DB::beginTransaction();
         try {
             // Validate the request data
-            $request->validate([
-                'informasi_tanggal' => 'required|date',
-                'informasi_jam' => 'required',
-                'nama_saksi' => 'required|string|max:255',
-                'rs_second_opinion' => 'required|string|max:255',
-                'tanggal_pengembalian' => 'nullable|date',
-                'peminjam_nama' => 'required|string|max:255',
-                'jenis_kelamin' => 'required|in:0,1',
-                'tgl_lahir' => 'required|date',
-                'no_kartu_identitas' => 'required|string|max:255',
-                'alamat' => 'required|string',
-                'hubungan' => 'required|string|max:255',
-                'nama_dokumen' => 'required|array|min:1',
-                'nama_dokumen.*' => 'required|string|max:255',
-            ]);
+            // $request->validate([
+            //     'informasi_tanggal' => 'required|date',
+            //     'informasi_jam' => 'required',
+            //     'nama_saksi' => 'required|string|max:255',
+            //     'rs_second_opinion' => 'required|string|max:255',
+            //     'tanggal_pengembalian' => 'nullable|date',
+            //     'peminjam_nama' => 'required|string|max:255',
+            //     'jenis_kelamin' => 'required|in:0,1',
+            //     'tgl_lahir' => 'required|date',
+            //     'no_kartu_identitas' => 'required|string|max:255',
+            //     'alamat' => 'required|string',
+            //     'hubungan' => 'required|string|max:255',
+            //     'nama_dokumen' => 'required|array|min:1',
+            //     'nama_dokumen.*' => 'required|string|max:255',
+            // ]);
 
+            $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
             $secondOpinion = PermintaanSecondOpinion::findOrFail($id);
 
             // Prepare data array for update
@@ -236,13 +242,15 @@ class RajalPermintaanSecondOpinionController extends Controller
                 'nama_saksi' => $request->nama_saksi,
                 'rs_second_opinion' => $request->rs_second_opinion,
                 'tanggal_pengembalian' => $request->tanggal_pengembalian ? Carbon::parse($request->tanggal_pengembalian) : null,
-                'peminjam_nama' => $request->peminjam_nama,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'tgl_lahir' => Carbon::parse($request->tgl_lahir),
-                'no_kartu_identitas' => $request->no_kartu_identitas,
-                'alamat' => $request->alamat,
-                'hubungan' => $request->hubungan,
+                'peminjam_nama' => $request->status_peminjam == '1' ? $pasien->nama : $request->peminjam_nama,
+                'jenis_kelamin' => $request->status_peminjam == '1' ? $pasien->jenis_kelamin : $request->jenis_kelamin,
+                'tgl_lahir' => $request->status_peminjam == '1' ? date('Y-m-d', strtotime($pasien->tgl_lahir)) : Carbon::parse($request->tgl_lahir),
+                'no_kartu_identitas' => $request->status_peminjam == '1' ? $pasien->no_pengenal : $request->no_kartu_identitas,
+                'alamat' => $request->status_peminjam == '1' ? $pasien->alamat : $request->alamat,
+                'hubungan' => $request->status_peminjam == '1' ? 'Diri Sendiri' : $request->hubungan,
                 'nama_dokumen' => json_encode($request->nama_dokumen),
+                'is_rujuk' => $request->is_rujuk,
+                'status_peminjam' => $request->status_peminjam,
             ];
 
             // Update the record

@@ -144,7 +144,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data Permintaan Darah</td>
+                                                        <td colspan="8" class="text-center">Tidak ada data EWS Anak</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>

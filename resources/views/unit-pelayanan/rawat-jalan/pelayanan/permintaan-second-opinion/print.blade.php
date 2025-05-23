@@ -383,7 +383,7 @@
                 <li>Segala sarana, biaya maupun fasilitas untuk mencari second opinion menjadi tanggung jawab diri
                     saya/pasien/keluarga.</li>
                 <li>Untuk keperluan tersebut, kami meminjam hasil pemeriksaan penunjang diagnosis antar lain:</li>
-                <ul style="margin-left: 20px; font-size: 9pt;">
+                <ul style="margin-left: 20px; font-size: 9pt; list-style-type: none;">
                     @if($secondOpinion->nama_dokumen)
                         @php
                             $dokumenArray = json_decode($secondOpinion->nama_dokumen, true);

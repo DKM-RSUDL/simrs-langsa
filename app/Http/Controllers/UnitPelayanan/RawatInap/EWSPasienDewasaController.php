@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\DokterInap;
 use App\Models\EWSPasienAnak;
 use App\Models\EWSPasienDewasa;
+use App\Models\EwsPasienObstetrik;
 use App\Models\Kunjungan;
-use App\Models\PermintaanSecondOpinion;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -104,12 +104,18 @@ class EWSPasienDewasaController extends Controller
     {
         // Data khusus untuk tab obstetri jika diperlukan
 
-        // return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetri.index', compact(
-        //     'dataMedis',
-        //     'dataDokter',
-        //     'activeTab',
-        //     'dataObstetri'
-        // ));
+        $ewsPsienObstetrik = EwsPasienObstetrik::where('kd_pasien', $dataMedis->kd_pasien)
+            ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
+            ->where('urut_masuk', $dataMedis->urut_masuk)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.ews-pasien-obstetrik.index', compact(
+            'dataMedis',
+            'activeTab',
+            'ewsPsienObstetrik'
+        ));
     }
 
     public function create($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)

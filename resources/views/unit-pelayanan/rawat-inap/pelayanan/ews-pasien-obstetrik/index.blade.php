@@ -85,7 +85,7 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('rawat-inap.ews-pasien-obstetrik.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
@@ -105,31 +105,31 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse($ewsPasienDewasa as $index => $item)
+                                                @forelse($ewsPsienObstetrik as $index => $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
                                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.ews-pasien-obstetrik.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-secondary btn-sm ms-2" target="_blank">
                                                                     <i class="bi bi-printer"></i>
                                                                 </a>
 
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.ews-pasien-obstetrik.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm ms-2" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
                                                                 @if ($item->status == 0)
-                                                                    <a href="{{ route('rawat-inap.ews-pasien-dewasa.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    <a href="{{ route('rawat-inap.ews-pasien-obstetrik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-warning btn-sm ms-2" title="Edit">
                                                                         <i class="ti-pencil"></i>
                                                                     </a>
                                                                 @endif
 
                                                                 <form
-                                                                    action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    action="{{ route('rawat-inap.ews-pasien-obstetrik.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form ms-2"
                                                                     style="display: inline;">
                                                                     @csrf
@@ -144,7 +144,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data EWS Dewasa</td>
+                                                        <td colspan="8" class="text-center">Tidak ada data EWS Obstetri</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -152,7 +152,7 @@
 
                                         <!-- Pagination -->
                                         <div class="d-flex justify-content-end">
-                                            {{ $ewsPasienDewasa->links() }}
+                                            {{ $ewsPsienObstetrik->links() }}
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
-                        text: 'Data EWS Pasien Dewasa ini akan dihapus secara permanen!',
+                        text: 'Data EWS Pasien Obstetrik ini akan dihapus secara permanen!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
