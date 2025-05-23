@@ -216,9 +216,9 @@
             </div>
             <div class="patient-info">
                 <div class="info-box">
-                    <p>NO RM: {{ $dataMedis->kd_pasien }}</p>
-                    <p>Nama: {{ $dataMedis->pasien->nama ?? 'LAILYAHI' }}</p>
-                    <p>Jenis Kelamin: {{ $dataMedis->pasien->jk == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                    <p><b>NO RM: {{ $dataMedis->kd_pasien ?? 'N/A' }}</b></p>
+                    <p>Nama: {{ $dataMedis->pasien->nama ?? '-' }}</p>
+                    <p>Jenis Kelamin: {{ ($dataMedis->pasien->jenis_kelamin ?? '') == '1' ? 'Laki-laki' : (($dataMedis->pasien->jenis_kelamin ?? '') == '0' ? 'Perempuan' : 'N/A') }}</p>
                     <p>Tanggal Lahir: {{ $dataMedis->pasien->tgl_lahir ? date('d-m-Y', strtotime($dataMedis->pasien->tgl_lahir)) : '01-07-1958' }}</p>
                 </div>
             </div>

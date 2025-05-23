@@ -229,9 +229,9 @@
             </div>
             <div class="patient-info-cell">
                 <div class="patient-info-box">
-                    <p>NO RM: {{ $dataMedis->kd_pasien ?? 'N/A' }}</p>
+                    <p><b>NO RM: {{ $dataMedis->kd_pasien ?? 'N/A' }}</b></p>
                     <p>Nama: {{ $dataMedis->pasien->nama_pasien ?? 'N/A' }}</p>
-                    <p>Jenis Kelamin: {{ ($dataMedis->pasien->jk ?? '') == 'L' ? 'Laki-laki' : (($dataMedis->pasien->jk ?? '') == 'P' ? 'Perempuan' : 'N/A') }}</p>
+                    <p>Jenis Kelamin: {{ ($dataMedis->pasien->jenis_kelamin ?? '') == '1' ? 'Laki-laki' : (($dataMedis->pasien->jenis_kelamin ?? '') == '0' ? 'Perempuan' : 'N/A') }}</p>
                     <p>Tanggal Lahir: {{ $dataMedis->pasien->tgl_lahir ? Carbon\Carbon::parse($dataMedis->pasien->tgl_lahir)->format('d-m-Y') : 'N/A' }}</p>
                 </div>
             </div>
