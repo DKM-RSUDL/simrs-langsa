@@ -218,20 +218,6 @@
                                     </div>
                                 </div>
 
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="nomor_surat" class="form-label required">Nomor Surat</label>
-                                        <input type="text"
-                                            class="form-control @error('nomor_surat') is-invalid @enderror" id="nomor_surat"
-                                            name="nomor_surat" value="{{ old('nomor_surat') }}"
-                                            placeholder="Masukkan nomor surat Jika sudah ada">
-                                        @error('nomor_surat')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
                             </div>
 
                             <div class="row g-3">

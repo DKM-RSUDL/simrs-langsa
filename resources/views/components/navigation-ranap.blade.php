@@ -143,7 +143,8 @@
                 $tglMasukData,
                 $dataMedis->urut_masuk,
             ]),
-        ],[
+        ],
+        [
             'icon' => 'observasi.png',
             'label' => 'Pengawasan',
             'link' => route('rawat-inap.pengawasan-perinatology.index', [
@@ -178,6 +179,16 @@
                 $dataMedis->urut_masuk,
             ]),
         ],
+        [
+            'icon' => 'verified_badge.png',
+            'label' => 'MPP',
+            'link' => route('rawat-inap.mpp.form-a.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]),
+        ],
     ];
 
     if (in_array($dataMedis->kd_unit, ['10015', '10016', '10131', '10132'])) {
@@ -205,15 +216,32 @@
 
         $urlKriteria = '#';
 
+        if ($dataMedis->kd_unit == '10015') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.iccu.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
 
-        if ($dataMedis->kd_unit == '10016') $urlKriteria = '#';
-        if ($dataMedis->kd_unit == '10015') $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.iccu.index', [
-            $dataMedis->kd_unit,
-            $dataMedis->kd_pasien,
-            $tglMasukData,
-            $dataMedis->urut_masuk,
-        ]);
+        if ($dataMedis->kd_unit == '10016') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.icu.masuk.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
 
+        if ($dataMedis->kd_unit == '10132') {
+            $urlKriteria = route('rawat-inap.kriteria-masuk-keluar.picu.index', [
+                $dataMedis->kd_unit,
+                $dataMedis->kd_pasien,
+                $tglMasukData,
+                $dataMedis->urut_masuk,
+            ]);
+        }
 
         $navItems[] = [
             'icon' => 'monitoring.png',

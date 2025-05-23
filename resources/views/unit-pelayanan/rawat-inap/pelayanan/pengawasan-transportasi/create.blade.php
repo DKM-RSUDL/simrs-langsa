@@ -255,8 +255,8 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="gcs_m_berangkat">Respon Verbal (V)</label>
-                                                    <select name="gcs_m_berangkat" id="gcs_m_berangkat"
+                                                    <label for="gcs_v_berangkat">Respon Verbal (V)</label>
+                                                    <select name="gcs_v_berangkat" id="gcs_v_berangkat"
                                                         class="form-select">
                                                         <option value="">--Pilih--</option>
                                                         <option value="5">5 - Orientasi Baik</option>
@@ -409,26 +409,26 @@
 
                                                 <div class="form-group">
                                                     <label for="nadi_pengawasan">Frek. Nadi</label>
-                                                    <input type="number" name="nadi_pengawasan" id="nadi_pengawasan"
+                                                    <input type="number" name="nadi_pengawasan[]" id="nadi_pengawasan"
                                                         class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="nafas_pengawasan">Frek. Nafas</label>
-                                                    <input type="number" name="nafas_pengawasan" id="nafas_pengawasan"
+                                                    <input type="number" name="nafas_pengawasan[]" id="nafas_pengawasan"
                                                         class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="suhu_pengawasan">Frek. Suhu</label>
-                                                    <input type="number" name="suhu_pengawasan" id="suhu_pengawasan"
+                                                    <input type="number" name="suhu_pengawasan[]" id="suhu_pengawasan"
                                                         class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="skor_nyeri_pengawasan">Skor Nyeri (1-10)</label>
-                                                    <input type="number" name="skor_nyeri_pengawasan"
-                                                        id="skor_nyeri_pengawasan" class="form-control">
+                                                    <label for="skala_nyeri_pengawasan">Skor Nyeri (1-10)</label>
+                                                    <input type="number" name="skala_nyeri_pengawasan[]"
+                                                        id="skala_nyeri_pengawasan" class="form-control">
                                                 </div>
 
                                                 <div class="form-group">
@@ -595,8 +595,8 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="gcs_m_sampai">Respon Verbal (V)</label>
-                                                    <select name="gcs_m_sampai" id="gcs_m_sampai" class="form-select">
+                                                    <label for="gcs_v_sampai">Respon Verbal (V)</label>
+                                                    <select name="gcs_v_sampai" id="gcs_v_sampai" class="form-select">
                                                         <option value="">--Pilih--</option>
                                                         <option value="5">5 - Orientasi Baik</option>
                                                         <option value="4">4 - Bingung</option>
@@ -626,6 +626,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
     </div>

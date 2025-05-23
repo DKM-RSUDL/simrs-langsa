@@ -40,7 +40,7 @@
                                             <thead class="table-primary">
                                                 <tr align="middle">
                                                     <th width="100px">NO</th>
-                                                    <th>WAKTU</th>
+                                                    <th>WAKTU BERANGKAT</th>
                                                     <th>KEPERLUAN</th>
                                                     <th>KRITERIA</th>
                                                     <th>PETUGAS</th>
@@ -48,15 +48,46 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @foreach ($anestesi as $item)
+                                                @foreach ($pengawasan as $item)
                                                     <tr>
                                                         <td align="middle">{{ $loop->iteration }}</td>
                                                         <td>
-                                                            {{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
+                                                            {{ date('d M Y', strtotime($item->tanggal_berangkat)) . ' ' . date('H:i', strtotime($item->jam_berangkat)) }}
                                                             WIB
                                                         </td>
-                                                        <td>{{ $item->keluarga_nama }}</td>
-                                                        <td>{{ $item->dokter->nama_lengkap }}</td>
+                                                        <td>
+                                                            @if ($item->keperluan == 1)
+                                                                Rujuk ke RS : {{ $item->rs_rujuk }}
+                                                            @endif
+                                                            @if ($item->keperluan == 2)
+                                                                Masuk/alih rawat inap
+                                                            @endif
+                                                            @if ($item->keperluan == 3)
+                                                                Pindah RS
+                                                            @endif
+                                                            @if ($item->keperluan == 4)
+                                                                Pra/ pasca tindakan
+                                                            @endif
+                                                            @if ($item->keperluan == 5)
+                                                                Penjemputan
+                                                            @endif
+                                                            @if ($item->keperluan == 6)
+                                                                Evakuasi
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($item->kriteria == 1)
+                                                                Emergensi
+                                                            @endif
+                                                            @if ($item->kriteria == 2)
+                                                                Urgensi
+                                                            @endif
+                                                            @if ($item->kriteria == 3)
+                                                                Non-urgensi
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }}
+                                                        </td>
                                                         <td align="middle">
                                                             <a href="{{ route('rawat-inap.pengawasan-transportasi.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-sm btn-primary" target="_blank">
@@ -72,12 +103,12 @@
                                                             </a>
                                                             <button class="btn btn-sm btn-danger btn-delete"
                                                                 data-bs-target="#deleteModal"
-                                                                data-anestesi="{{ encrypt($item->id) }}">
+                                                                data-pengawasan="{{ encrypt($item->id) }}">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach --}}
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -109,8 +140,8 @@
                     @method('delete')
 
                     <div class="modal-body">
-                        <input type="hidden" id="id_anestesi" name="id_anestesi">
-                        <p>Apakah anda yakin ingin menghapus data persetujuan anestesi dan sedasi ? data yang telah
+                        <input type="hidden" id="id_pengawasan" name="id_pengawasan">
+                        <p>Apakah anda yakin ingin menghapus data pengawasan transportasi ? data yang telah
                             dihapus tidak dapat
                             dikembalikan</p>
                     </div>
@@ -128,10 +159,10 @@
     <script>
         $('.btn-delete').click(function() {
             let $this = $(this);
-            let id = $this.attr('data-anestesi');
+            let id = $this.attr('data-pengawasan');
             let target = $this.attr('data-bs-target');
 
-            $(target).find('#id_anestesi').val(id);
+            $(target).find('#id_pengawasan').val(id);
             $(target).modal('show');
         });
     </script>

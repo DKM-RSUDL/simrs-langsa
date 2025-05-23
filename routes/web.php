@@ -57,12 +57,14 @@ use App\Http\Controllers\UnitPelayanan\Operasi\SiteMarkingController;
 use App\Http\Controllers\UnitPelayanan\OperasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenGinekologikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepOpthamologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepThtController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenObstetriMaternitas;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
@@ -76,8 +78,10 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatIn
 use App\Http\Controllers\UnitPelayanan\RawatInap\KontrolIstimewaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIccuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIcuController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarPicuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MppAController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
@@ -97,6 +101,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapLabPatologiKlinikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RawatInapResumeController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\SuratKematianController as RawatInapSuratKematianController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\TindakanController as RawatInapTindakanController;
 use App\Http\Controllers\UnitPelayanan\RawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\AsesmenController as RawatJalanAsesmenController;
@@ -747,6 +752,34 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            //Kulit dan kelamin
+                                            Route::prefix('kulit-kelamin')->group(function () {
+                                                Route::name('.kulit-kelamin')->group(function () {
+                                                    Route::controller(AsesmenKulitKelaminController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
+                                            //Ginekologik
+                                            Route::prefix('ginekologik')->group(function () {
+                                                Route::name('.ginekologik')->group(function () {
+                                                    Route::controller(AsesmenGinekologikController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
                                         });
                                     });
 
@@ -835,6 +868,11 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::put('/{id}', 'update')->name('.update');
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
                                         Route::get('/print', 'print')->name('.print');
+                                        Route::get('/create-therapy', 'createTherapy')->name('.create-therapy');
+                                        Route::post('/store-therapy', 'storeTherapy')->name('.store-therapy');
+                                        Route::delete('/destroy-therapy/{id}', 'destroyTherapy')->name('.destroy-therapy');
+                                        Route::get('/filter-data', 'getFilteredData')->name('.filter-data');
+                                        Route::get('/{id}/detail', 'getMonitoringDetail')->name('.detail');
                                     });
                                 });
                             });
@@ -1054,6 +1092,13 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::prefix('masuk')->group(function () {
                                                     Route::name('.masuk')->group(function () {
                                                         Route::get('/', 'index')->name('.index');
+                                                        Route::get('/create', 'createMasuk')->name('.create');
+                                                        Route::post('/', 'storeMasuk')->name('.store');
+                                                        Route::get('/{data}/edit', 'editMasuk')->name('.edit');
+                                                        Route::put('/{data}', 'updateMasuk')->name('.update');
+                                                        Route::get('/show/{data}', 'showMasuk')->name('.show');
+                                                        Route::delete('/{data}', 'destroyMasuk')->name('.destroy');
+                                                        Route::get('/print/{data}', 'printMasuk')->name('.print');
                                                     });
                                                 });
 
@@ -1061,6 +1106,13 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::prefix('keluar')->group(function () {
                                                     Route::name('.keluar')->group(function () {
                                                         Route::get('/', 'index')->name('.index');
+                                                        Route::get('/create', 'createKeluar')->name('.create');
+                                                        Route::post('/', 'storeKeluar')->name('.store');
+                                                        Route::get('/{data}/edit', 'editKeluar')->name('.edit');
+                                                        Route::put('/{data}', 'updateKeluar')->name('.update');
+                                                        Route::get('/show/{data}', 'showKeluar')->name('.show');
+                                                        Route::delete('/{data}', 'destroyKeluar')->name('.destroy');
+                                                        Route::get('/print/{data}', 'printKeluar')->name('.print');
                                                     });
                                                 });
                                             });
@@ -1082,9 +1134,62 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
+
+                                    //PICU
+                                    Route::prefix('picu')->group(function () {
+                                        Route::name('.picu')->group(function () {
+                                            Route::controller(MasukKeluarPicuController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::get('/{data}', 'show')->name('.show');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
                                 });
                             });
 
+                            // MPP
+                            Route::prefix('mpp')->group(function () {
+                                Route::name('.mpp')->group(function () {
+                                    //FORM A
+                                    Route::prefix('form-a')->group(function () {
+                                        Route::name('.form-a')->group(function () {
+                                            Route::controller(MppAController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{data}/edit', 'edit')->name('.edit');
+                                                Route::put('/{data}', 'update')->name('.update');
+                                                Route::get('/show/{data}', 'show')->name('.show');
+                                                Route::delete('/', 'delete')->name('.delete');
+                                                Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+
+                            //Surat Kematian
+                            Route::prefix('surat-kematian')->group(function () {
+                                Route::name('.surat-kematian')->group(function () {
+                                    Route::controller(RawatInapSuratKematianController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                        Route::get('/print/{data}', 'print')->name('.print');
+                                    });
+                                });
+                            });
                         });
                     });
                 });
