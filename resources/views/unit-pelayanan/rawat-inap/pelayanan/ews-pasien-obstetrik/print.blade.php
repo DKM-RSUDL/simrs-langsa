@@ -6,16 +6,20 @@
     <title>Early Warning System (EWS) Pasien Obstetrik</title>
     <style>
         @page {
-            margin: 0.5cm;
+            margin: 0.3cm;
             size: A4 portrait;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-size: 8pt;
-            line-height: 1.2;
+            font-size: 7.5pt;
+            line-height: 1.1;
         }
 
         .container {
@@ -27,7 +31,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .logo-rs {
@@ -36,30 +40,30 @@
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
-            margin-right: 8px;
+            width: 45px;
+            height: 45px;
+            margin-right: 6px;
         }
 
         .hospital-info {
-            font-size: 9pt;
+            font-size: 8pt;
         }
 
         .hospital-name {
-            font-size: 12pt;
+            font-size: 11pt;
             font-weight: bold;
             margin: 0;
         }
 
         .hospital-address {
-            margin: 2px 0;
+            margin: 1px 0;
         }
 
         .patient-info {
             border: 1px solid #000;
-            padding: 5px;
-            width: 250px;
-            font-size: 9pt;
+            padding: 4px;
+            width: 220px;
+            font-size: 8pt;
             position: absolute;
             top: 0;
             right: 0;
@@ -67,11 +71,11 @@
 
         .patient-row {
             display: flex;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .patient-label {
-            width: 80px;
+            width: 70px;
             font-weight: normal;
         }
 
@@ -80,29 +84,29 @@
         }
 
         .border-line {
-            border-bottom: 2px solid black;
-            margin: 5px 0;
+            border-bottom: 1.5px solid black;
+            margin: 4px 0;
         }
 
         .title {
             text-align: center;
-            font-size: 11pt;
+            font-size: 10pt;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 6px 0;
         }
 
         table.ews-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 6pt;
+            font-size: 5.5pt;
         }
 
         table.ews-table th,
         table.ews-table td {
             border: 1px solid #000;
-            padding: 2px;
+            padding: 1px;
             text-align: center;
-            height: 14px;
+            height: 11px;
         }
 
         table.ews-table th {
@@ -111,19 +115,24 @@
         }
 
         .parameter-col {
-            width: 90px;
+            width: 80px;
             text-align: left !important;
-            padding-left: 4px !important;
+            padding-left: 3px !important;
             font-weight: bold;
             white-space: nowrap;
         }
 
         .nilai-col {
-            width: 60px;
+            width: 50px;
         }
 
         .skor-col {
-            width: 20px;
+            width: 18px;
+        }
+
+        .data-col {
+            width: 30px;
+            white-space: nowrap;
         }
 
         .cell-green {
@@ -138,23 +147,33 @@
             background-color: #FF6347;
         }
 
+        .cell-dark {
+            background-color: #0d23e9;
+            color: #FFFFFF;
+        }
+
         .hasil-ews {
-            margin-top: 8px;
-            font-size: 7pt;
+            margin-top: 6px;
+            font-size: 6.5pt;
             font-weight: bold;
         }
 
         .hasil-ews-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .hasil-ews-table td {
-            padding: 4px;
+            padding: 2px;
             border: 1px solid #000;
-            font-size: 6pt;
+            font-size: 5.5pt;
             text-align: center;
+            line-height: 1.05;
+        }
+
+        .hasil-no-risk {
+            background-color: #90EE90;
         }
 
         .hasil-low {
@@ -169,9 +188,14 @@
             background-color: #FF6347;
         }
 
+        .hasil-code-blue {
+            background-color: #0d23e9;
+            color: #FFFFFF;
+        }
+
         .footer {
-            margin-top: 10px;
-            font-size: 6pt;
+            margin-top: 8px;
+            font-size: 5.5pt;
             text-align: right;
         }
 
@@ -275,15 +299,14 @@
                 '≥ 1' => ['≥ 1', '>= 1', '>=1'],
             ];
 
-            // Sort records by date and time
+            // Sort and limit records to 10 to prevent overflow
             $sortedRecords = $ewsRecords->sortBy(function ($record) {
-                return Carbon\Carbon::parse($record->tanggal)->format('Y-m-d') . ' ' .
-                       Carbon\Carbon::parse($record->jam_masuk)->format('H:i:s');
-            });
+                return \Carbon\Carbon::parse($record->tanggal . ' ' . $record->jam_masuk);
+            })->take(10);
         @endphp
 
         @if($sortedRecords->isEmpty())
-            <p style="text-align: center; font-size: 8pt;">Tidak ada data EWS yang tersedia.</p>
+            <p style="text-align: center; font-size: 7.5pt;">Tidak ada data EWS yang tersedia.</p>
         @else
             <table class="ews-table">
                 <thead>
@@ -291,12 +314,12 @@
                         <th rowspan="3" class="parameter-col">PARAMETER</th>
                         <th colspan="2" rowspan="2">Penilaian & Skor</th>
                         @foreach($sortedRecords as $record)
-                            <th>{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
+                            <th class="data-col">{{ \Carbon\Carbon::parse($record->tanggal)->format('d/m/Y') }}</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($sortedRecords as $record)
-                            <th>{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
+                            <th class="data-col">{{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i') }}</th>
                         @endforeach
                     </tr>
                     <tr>
@@ -527,7 +550,7 @@
                         <td>Unresponsive</td>
                         <td>Code Blue</td>
                         @foreach($sortedRecords as $record)
-                            <td class="{{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'cell-red' : '' }}">
+                            <td class="{{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'cell-dark' : '' }}">
                                 {{ in_array($record->kesadaran, $kesadaranMatches['Unresponsive']) ? 'Unresponsive' : '' }}
                             </td>
                         @endforeach
@@ -621,11 +644,13 @@
                         @foreach($sortedRecords as $record)
                             @php
                                 $riskClass = '';
-                                if ($record->total_skor >= 7 || in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
+                                if (in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
+                                    $riskClass = 'cell-dark';
+                                } elseif ($record->total_skor >= 7) {
                                     $riskClass = 'cell-red';
                                 } elseif ($record->total_skor >= 5 || in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
                                     $riskClass = 'cell-yellow';
-                                } elseif ($record->total_skor <= 4) {
+                                } else {
                                     $riskClass = 'cell-green';
                                 }
                             @endphp
@@ -641,17 +666,20 @@
                             @php
                                 $riskText = '';
                                 $riskClass = '';
-                                if ($record->hasil_ews == 'CODE BLUE - HENTI NAFAS/JANTUNG' || in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
+                                if (in_array($record->hasil_ews, ['HENTI NAFAS/JANTUNG', 'CODE BLUE - HENTI NAFAS/JANTUNG']) || in_array($record->kesadaran, $kesadaranMatches['Unresponsive'])) {
                                     $riskText = 'CODE BLUE';
-                                    $riskClass = 'cell-red';
+                                    $riskClass = 'cell-dark';
                                 } elseif ($record->hasil_ews == 'RISIKO TINGGI' || $record->total_skor >= 7) {
                                     $riskText = 'TINGGI';
                                     $riskClass = 'cell-red';
                                 } elseif ($record->hasil_ews == 'RISIKO SEDANG' || $record->total_skor >= 5 || in_array($record->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
                                     $riskText = 'SEDANG';
                                     $riskClass = 'cell-yellow';
-                                } elseif ($record->hasil_ews == 'RISIKO RENDAH' || $record->total_skor <= 4) {
+                                } elseif ($record->hasil_ews == 'RISIKO RENDAH' || ($record->total_skor > 0 && $record->total_skor <= 4)) {
                                     $riskText = 'RENDAH';
+                                    $riskClass = 'cell-green';
+                                } else {
+                                    $riskText = 'TIDAK ADA';
                                     $riskClass = 'cell-green';
                                 }
                             @endphp
@@ -665,19 +693,34 @@
         <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
         <table class="hasil-ews-table">
             <tr>
-                <td class="hasil-low">Total Skor 1-4: RISIKO RENDAH<br>Assessment segera oleh perawat senior, respon segera (maks 5 menit), eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan assessment oleh dokter jaga bangsal.</td>
-                <td class="hasil-medium">Total Skor 5-6: RISIKO SEDANG<br>Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).</td>
-                <td class="hasil-high">Total Skor ≥ 7 atau Code Blue: RISIKO TINGGI<br>Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), informasikan dan konsultasikan ke DPJP.</td>
+                <td class="hasil-low">
+                    Total Skor 1-4: RISIKO RENDAH<br>
+                    Assessment segera oleh perawat senior, respon segera (maks 5 menit), eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan assessment oleh dokter jaga bangsal.
+                </td>
+                <td class="hasil-medium">
+                    Total Skor 5-6: RISIKO SEDANG<br>
+                    Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                </td>
+                <td class="hasil-high">
+                    Total Skor ≥ 7: RISIKO TINGGI<br>
+                    Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), informasikan dan konsultasikan ke DPJP.
+                </td>
+            </tr>
+            <tr>
+                <td class="hasil-code-blue" colspan="3">
+                    Henti Nafas/Jantung: CODE BLUE<br>
+                    Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.
+                </td>
             </tr>
         </table>
 
         <div class="footer">
             <p>Nama dan Paraf:</p>
-            <p style="margin-top: 30px;">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
-            {{-- <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+            <p style="margin-top: 20px;">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
+            <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
             @if(isset($ewsPsienObstetrik->userCreate->jabatan))
                 <p>{{ $ewsPsienObstetrik->userCreate->jabatan }}</p>
-            @endif --}}
+            @endif
         </div>
     </div>
 </body>
