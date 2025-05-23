@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.administrator.master')
 
 @section('content')
@@ -238,7 +237,7 @@
 
                                     <!-- Code Blue Henti Jantung -->
                                     <div id="kesimpulan-code-blue" class="kesimpulan-card kesimpulan-code-blue {{ $ewsPsienObstetrik->hasil_ews == 'CODE BLUE - HENTI NAFAS/JANTUNG' ? '' : 'd-none' }}">
-                                        <div class="alert alert-dark">
+                                        <div class="alert alert-primary">
                                             <strong>HENTI NAFAS/JANTUNG:</strong>
                                             Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung,
                                             respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit),
@@ -371,4 +370,3 @@
         });
     </script>
 @endpush
-```

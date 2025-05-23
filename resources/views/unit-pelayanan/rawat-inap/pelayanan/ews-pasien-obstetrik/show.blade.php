@@ -223,34 +223,37 @@
                                     @if($ewsPsienObstetrik->hasil_ews == 'RISIKO RENDAH')
                                         <div class="kesimpulan-card kesimpulan-hijau">
                                             <div class="alert alert-success">
-                                                <strong>Skor 1-4:</strong> Assessment segera oleh perawat senior, respon segera (maks 5 menit),
-                                                eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan assessment oleh dokter jaga bangsal.
+                                                <strong>Skor 1-4 (Risiko Rendah):</strong> Assessment segera oleh perawat senior, respon segera (maks 5 menit), eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan, assessment oleh dokter jaga bangsal.
                                             </div>
                                         </div>
                                     @elseif($ewsPsienObstetrik->hasil_ews == 'RISIKO SEDANG')
                                         <div class="kesimpulan-card kesimpulan-kuning">
                                             <div class="alert alert-warning">
-                                                <strong>Skor 5-6:</strong> Assessment segera oleh dokter jaga (respon segera, maks 5 menit),
-                                                konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam,
-                                                pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                                                <strong>Skor 5-6 (Risiko Sedang):</strong> Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
                                             </div>
                                         </div>
                                     @elseif($ewsPsienObstetrik->hasil_ews == 'RISIKO TINGGI')
                                         <div class="kesimpulan-card kesimpulan-merah">
                                             <div class="alert alert-danger">
-                                                <strong>Skor ≥ 7 atau 1 Parameter Kriteria Blue (Risiko Tinggi):</strong>
-                                                Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior,
-                                                Aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit),
-                                                Informasikan dan konsultasikan ke DPJP.
+                                                <strong>Skor ≥ 7 (Risiko Tinggi):</strong> Resusitasi dan monitoring secara kontinu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), informasikan dan konsultasikan ke DPJP.
                                             </div>
                                         </div>
-                                    @elseif($ewsPsienObstetrik->hasil_ews == 'CODE BLUE - HENTI NAFAS/JANTUNG')
+                                    @elseif(in_array($ewsPsienObstetrik->hasil_ews, ['HENTI NAFAS/JANTUNG', 'CODE BLUE - HENTI NAFAS/JANTUNG']))
                                         <div class="kesimpulan-card kesimpulan-code-blue">
-                                            <div class="alert alert-dark">
-                                                <strong>HENTI NAFAS/JANTUNG:</strong>
-                                                Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung,
-                                                respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit),
-                                                informasikan dan konsultasikan dengan DPJP.
+                                            <div class="alert alert-primary">
+                                                <strong>Henti Nafas/Jantung (Code Blue):</strong> Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.
+                                            </div>
+                                        </div>
+                                    @elseif($ewsPsienObstetrik->hasil_ews == 'TIDAK ADA RISIKO' || $ewsPsienObstetrik->total_skor == 0)
+                                        <div class="kesimpulan-card kesimpulan-tidak-ada-risiko">
+                                            <div class="alert alert-info">
+                                                <strong>Skor 0 (Tidak Ada Risiko):</strong> Tidak ada tindakan khusus diperlukan, lanjutkan monitoring sesuai standar.
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="kesimpulan-card kesimpulan-tidak-valid">
+                                            <div class="alert alert-secondary">
+                                                <strong>Data Tidak Valid:</strong> Kesimpulan EWS tidak tersedia. Silakan periksa data atau hubungi administrator.
                                             </div>
                                         </div>
                                     @endif
