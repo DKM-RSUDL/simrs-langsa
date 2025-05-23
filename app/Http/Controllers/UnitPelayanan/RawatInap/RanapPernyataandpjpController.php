@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class RanapPernyataandpjpController extends Controller
 {
@@ -195,49 +196,52 @@ class RanapPernyataandpjpController extends Controller
 
     public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
-        try {
-            // Ambil data pernyataan BPJP
-            $pernyataanDPJP = PernyataanDPJP::where('id', $id)->firstOrFail();
+        // try {
+        // Ambil data pernyataan BPJP
+        $pernyataanDPJP = PernyataanDPJP::where('id', $id)->firstOrFail();
 
-            // Ambil data pasien
-            $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-                ->where('kd_unit', $kd_unit)
-                ->where('kd_pasien', $kd_pasien)
-                ->whereDate('tgl_masuk', $tgl_masuk)
-                ->where('urut_masuk', $urut_masuk)
-                ->firstOrFail();
+        // Ambil data pasien
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->firstOrFail();
 
-            // Hitung umur pasien
-            if ($dataMedis->pasien && $dataMedis->pasien->TGL_LAHIR) {
-                $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->TGL_LAHIR)->age;
-            } else {
-                $dataMedis->pasien->umur = 'Tidak Diketahui';
-            }
-
-            // Generate tanggal dalam format Indonesia (misalnya: 15 Juni 2025)
-            $tglSekarang = Carbon::now()->locale('id');
-            $tglSekarang->settings(['formatFunction' => 'translatedFormat']);
-            $tanggalLengkap = $tglSekarang->format('d F Y');
-
-            // Load view PDF dengan template DPJP RSUD Langsa
-            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.pernyataan-bpjp.print', [
-                'pernyataanDPJP' => $pernyataanDPJP,
-                'dataMedis' => $dataMedis,
-                'tanggalLengkap' => $tanggalLengkap
-            ]);
-
-            // Konfigurasi PDF
-            $pdf->setPaper('a4', 'portrait');
-            $pdf->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled'      => true,
-                'defaultFont'          => 'sans-serif'
-            ]);
-
-            // Generate dan download PDF
-            return $pdf->stream("surat-pernyataan-dpjp-{$id}.pdf");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
+        // Hitung umur pasien
+        if ($dataMedis->pasien && $dataMedis->pasien->TGL_LAHIR) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->TGL_LAHIR)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
+
+        $qrCode = base64_encode(QrCode::format('png')->size(200)->errorCorrection('H')->generate($pernyataanDPJP->dokter->nama_lengkap));
+
+        // Generate tanggal dalam format Indonesia (misalnya: 15 Juni 2025)
+        $tglSekarang = Carbon::now()->locale('id');
+        $tglSekarang->settings(['formatFunction' => 'translatedFormat']);
+        $tanggalLengkap = $tglSekarang->format('d F Y');
+
+        // Load view PDF dengan template DPJP RSUD Langsa
+        $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.pernyataan-bpjp.print', [
+            'pernyataanDPJP' => $pernyataanDPJP,
+            'dataMedis' => $dataMedis,
+            'tanggalLengkap' => $tanggalLengkap,
+            'qrCode' => $qrCode,
+        ]);
+
+        // Konfigurasi PDF
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled'      => true,
+            'defaultFont'          => 'sans-serif'
+        ]);
+
+        // Generate dan download PDF
+        return $pdf->stream("surat-pernyataan-dpjp-{$id}.pdf");
+        // } catch (\Exception $e) {
+        //     return back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
+        // }
     }
 }

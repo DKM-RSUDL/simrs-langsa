@@ -156,72 +156,76 @@
                                             </thead>
                                             <tbody>
                                                 @forelse($pernyataanDPJP as $index => $item)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->diagnosis }}</td>
-                                                    <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
-                                                    <td>
-                                                        @php
-                                                            $dokterData = $dokter->where('kd_dokter', $item->kd_dokter)->first();
-                                                            $namaDokter = $dokterData ? $dokterData->nama : 'Tidak ada data';
-                                                        @endphp
-                                                        {{ $namaDokter }}
-                                                    </td>
-                                                    <td>                                                        
-                                                        <div class="btn-group" role="group">
-                                                            <a href="{{ url('unit-pelayanan/rawat-inap/unit/'.$dataMedis->kd_unit.'/pelayanan/'.$dataMedis->kd_pasien.'/'.date('Y-m-d', strtotime($dataMedis->tgl_masuk)).'/'.$dataMedis->urut_masuk.'/pernyataan-dpjp/'.$item->id.'/print-pdf') }}" 
-                                                                class="btn btn-secondary btn-sm" 
-                                                                target="_blank"
-                                                                title="Cetak PDF">
-                                                                <i class="ti-printer"></i>
-                                                            </a>
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $item->diagnosis }}</td>
+                                                        <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
+                                                        <td>
+                                                            @php
+                                                                $dokterData = $dokter
+                                                                    ->where('kd_dokter', $item->kd_dokter)
+                                                                    ->first();
+                                                                $namaDokter = $dokterData
+                                                                    ? $dokterData->nama
+                                                                    : 'Tidak ada data';
+                                                            @endphp
+                                                            {{ $namaDokter }}
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . '/' . $dataMedis->urut_masuk . '/pernyataan-dpjp/' . $item->id . '/print-pdf') }}"
+                                                                    class="btn btn-secondary btn-sm" target="_blank"
+                                                                    title="Cetak PDF">
+                                                                    <i class="ti-printer"></i>
+                                                                </a>
 
-                                                            <button type="button" class="btn btn-info btn-sm"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#showPernyataanDPJPModal"
-                                                                data-id="{{ $item->id }}"
-                                                                data-diagnosis="{{ $item->diagnosis }}"
-                                                                data-tanggal="{{ date('d-m-Y', strtotime($item->tanggal)) }}"
-                                                                data-bidang="{{ $item->bidang_kewenangan_klinis }}"
-                                                                data-smf="{{ $item->smf }}"
-                                                                data-kd-dokter="{{ $item->kd_dokter }}"
-                                                                data-nama-dokter="{{ $namaDokter }}"
-                                                                data-status="{{ $item->status }}"
-                                                                data-createdby="{{ $item->creator->name ?? 'Sistem' }}"
-                                                                @if($item->user_edit)
-                                                                data-updated="{{ date('d-m-Y H:i', strtotime($item->updated_at)) }}"
-                                                                data-updatedby="{{ $item->editor->name ?? 'Sistem' }}"
-                                                                @endif title="Detail">
-                                                                <i class="ti-eye"></i>
-                                                            </button>
-
-                                                            <button type="button" class="btn btn-warning btn-sm ms-2"
-                                                                data-bs-toggle="modal" data-bs-target="#pernyataanDPJPModal"
-                                                                data-id="{{ $item->id }}"
-                                                                data-diagnosis="{{ $item->diagnosis }}"
-                                                                data-kd-dokter="{{ $item->kd_dokter }}"
-                                                                data-mode="edit"
-                                                                title="Edit">
-                                                                <i class="ti-pencil"></i>
-                                                            </button>
-
-                                                            <form
-                                                                action="{{ url('unit-pelayanan/rawat-inap/unit/'.$dataMedis->kd_unit.'/pelayanan/'.$dataMedis->kd_pasien.'/'.date('Y-m-d', strtotime($dataMedis->tgl_masuk)).'/'.$dataMedis->urut_masuk.'/pernyataan-dpjp/'.$item->id) }}"
-                                                                method="POST" class="delete-form" style="display: inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm ms-2"
-                                                                    title="Hapus">
-                                                                    <i class="ti-trash"></i>
+                                                                <button type="button" class="btn btn-info btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showPernyataanDPJPModal"
+                                                                    data-id="{{ $item->id }}"
+                                                                    data-diagnosis="{{ $item->diagnosis }}"
+                                                                    data-tanggal="{{ date('d-m-Y', strtotime($item->tanggal)) }}"
+                                                                    data-bidang="{{ $item->bidang_kewenangan_klinis }}"
+                                                                    data-smf="{{ $item->smf }}"
+                                                                    data-kd-dokter="{{ $item->kd_dokter }}"
+                                                                    data-nama-dokter="{{ $namaDokter }}"
+                                                                    data-status="{{ $item->status }}"
+                                                                    data-createdby="{{ $item->creator->name ?? 'Sistem' }}"
+                                                                    @if ($item->user_edit) data-updated="{{ date('d-m-Y H:i', strtotime($item->updated_at)) }}"
+                                                                data-updatedby="{{ $item->editor->name ?? 'Sistem' }}" @endif
+                                                                    title="Detail">
+                                                                    <i class="ti-eye"></i>
                                                                 </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+
+                                                                <button type="button" class="btn btn-warning btn-sm ms-2"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#pernyataanDPJPModal"
+                                                                    data-id="{{ $item->id }}"
+                                                                    data-diagnosis="{{ $item->diagnosis }}"
+                                                                    data-kd-dokter="{{ $item->kd_dokter }}"
+                                                                    data-mode="edit" title="Edit">
+                                                                    <i class="ti-pencil"></i>
+                                                                </button>
+
+                                                                <form
+                                                                    action="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . '/' . $dataMedis->urut_masuk . '/pernyataan-dpjp/' . $item->id) }}"
+                                                                    method="POST" class="delete-form"
+                                                                    style="display: inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger btn-sm ms-2" title="Hapus">
+                                                                        <i class="ti-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @empty
-                                                <tr>
-                                                    <td colspan="5" class="text-center">Tidak ada data Pernyataan BPJP</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Tidak ada data Pernyataan
+                                                            BPJP</td>
+                                                    </tr>
                                                 @endforelse
                                             </tbody>
                                         </table>
@@ -251,7 +255,7 @@
                 </div>
                 <!-- Form yang sudah diperbaiki sesuai dengan struktur URI -->
                 <form id="pernyataanDPJPForm" method="POST"
-                    action="{{ url('unit-pelayanan/rawat-inap/unit/'.$dataMedis->kd_unit.'/pelayanan/'.$dataMedis->kd_pasien.'/'.date('Y-m-d', strtotime($dataMedis->tgl_masuk)).'/'.$dataMedis->urut_masuk.'/pernyataan-dpjp') }}">
+                    action="{{ url('unit-pelayanan/rawat-inap/unit/' . $dataMedis->kd_unit . '/pelayanan/' . $dataMedis->kd_pasien . '/' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . '/' . $dataMedis->urut_masuk . '/pernyataan-dpjp') }}">
                     @csrf
                     <div class="modal-body">
                         <div id="methodField"></div>
@@ -268,10 +272,11 @@
 
                         <!-- Only visible field -->
                         <div class="mb-3">
-                            <label for="diagnosis" class="form-label">Diagnosis <span class="text-danger">*</span></label>
+                            <label for="diagnosis" class="form-label">Diagnosis <span
+                                    class="text-danger">*</span></label>
                             <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required></textarea>
                             @error('diagnosis')
-                            <div class="text-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -280,12 +285,25 @@
                             <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
                                 <option value="">--Pilih Dokter--</option>
                                 @foreach ($dokter as $dok)
-                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                    <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
                                 @endforeach
                             </select>
                             @error('kd_dokter')
-                            <div class="text-danger">{{ $message }}</div>
+                                <div class="text-danger">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        <div class="alert alert-light bg-light" role="alert">
+                            <p class="fw-bold">POIN PERNYATAAN</p>
+
+                            <ol>
+                                <li class="fw-semibold">Melaksanakan asuhan pasien diatas dengan penuh tanggungjawab;</li>
+                                <li class="fw-semibold">Bila diperlukan, melakukan konsultasi dengan bidang / kompetensi
+                                    lain;</li>
+                                <li class="fw-semibold">Melaksanakan pembuatan rekam medis dengan lengkap dan benar serta
+                                    menyerahkannya sesuai
+                                    aturan yang berlaku.</li>
+                            </ol>
                         </div>
 
                     </div>
@@ -337,28 +355,28 @@
 @endsection
 
 @push('js')
-<script>
-    $(document).ready(function() {
-        initSelect2();
-    });
-
-    // Reinisialisasi Select2 ketika modal dibuka
-    $('#pernyataanDPJPModal').on('shown.bs.modal', function() {
-        // Destroy existing Select2 instance before reinitializing
-        initSelect2();
-    });
-
-    function initSelect2() {
-        $('#pernyataanDPJPModal .select2').select2({
-            dropdownParent: $('#pernyataanDPJPModal'),
-            width: '100%'
+    <script>
+        $(document).ready(function() {
+            initSelect2();
         });
-    }
 
-    document.addEventListener('DOMContentLoaded', function () {
+        // Reinisialisasi Select2 ketika modal dibuka
+        $('#pernyataanDPJPModal').on('shown.bs.modal', function() {
+            // Destroy existing Select2 instance before reinitializing
+            initSelect2();
+        });
+
+        function initSelect2() {
+            $('#pernyataanDPJPModal .select2').select2({
+                dropdownParent: $('#pernyataanDPJPModal'),
+                width: '100%'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
             // Attach SweetAlert to all delete forms
             document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
@@ -378,78 +396,78 @@
             });
 
             // Handle edit modal dengan field dokter
-                const pernyataanDPJPModal = document.getElementById('pernyataanDPJPModal');
-                if (pernyataanDPJPModal) {
-                    pernyataanDPJPModal.addEventListener('show.bs.modal', function (event) {
-                        const button = event.relatedTarget;
-                        const mode = button.getAttribute('data-mode');
-                        const form = document.getElementById('pernyataanDPJPForm');
-                        const modalTitle = this.querySelector('.modal-title');
-                        const methodFieldDiv = document.getElementById('methodField');
+            const pernyataanDPJPModal = document.getElementById('pernyataanDPJPModal');
+            if (pernyataanDPJPModal) {
+                pernyataanDPJPModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const mode = button.getAttribute('data-mode');
+                    const form = document.getElementById('pernyataanDPJPForm');
+                    const modalTitle = this.querySelector('.modal-title');
+                    const methodFieldDiv = document.getElementById('methodField');
 
-                        // Reset form
-                        form.reset();
-                        methodFieldDiv.innerHTML = '';
+                    // Reset form
+                    form.reset();
+                    methodFieldDiv.innerHTML = '';
 
-                        if (mode === 'edit') {
-                            const id = button.getAttribute('data-id');
-                            const diagnosis = button.getAttribute('data-diagnosis');
-                            const dokter = button.getAttribute('data-kd-dokter');
+                    if (mode === 'edit') {
+                        const id = button.getAttribute('data-id');
+                        const diagnosis = button.getAttribute('data-diagnosis');
+                        const dokter = button.getAttribute('data-kd-dokter');
 
-                            modalTitle.textContent = 'Edit Pernyataan BPJP';
+                        modalTitle.textContent = 'Edit Pernyataan BPJP';
 
-                            // URL untuk edit
-                            form.action = "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
-                                        "{{ $dataMedis->kd_unit }}" +
-                                        "/pelayanan/" +
-                                        "{{ $dataMedis->kd_pasien }}" +
-                                        "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
-                                        "/{{ $dataMedis->urut_masuk }}" +
-                                        "/pernyataan-dpjp/" +
-                                        id;
+                        // URL untuk edit
+                        form.action = "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
+                            "{{ $dataMedis->kd_unit }}" +
+                            "/pelayanan/" +
+                            "{{ $dataMedis->kd_pasien }}" +
+                            "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
+                            "/{{ $dataMedis->urut_masuk }}" +
+                            "/pernyataan-dpjp/" +
+                            id;
 
-                            // Add method PUT
-                            methodFieldDiv.innerHTML = '@method("PUT")';
+                        // Add method PUT
+                        methodFieldDiv.innerHTML = '@method('PUT')';
 
-                            // Fill the form
-                            document.getElementById('diagnosis').value = diagnosis;
+                        // Fill the form
+                        document.getElementById('diagnosis').value = diagnosis;
 
-                            // Mengatur nilai dokter jika ada
-                            if (dokter) {
-                                const dokterSelect = document.getElementById('kd_dokter');
-                                if (dokterSelect) {
-                                    for (let i = 0; i < dokterSelect.options.length; i++) {
-                                        if (dokterSelect.options[i].value === dokter) {
-                                            dokterSelect.options[i].selected = true;
-                                            break;
-                                        }
+                        // Mengatur nilai dokter jika ada
+                        if (dokter) {
+                            const dokterSelect = document.getElementById('kd_dokter');
+                            if (dokterSelect) {
+                                for (let i = 0; i < dokterSelect.options.length; i++) {
+                                    if (dokterSelect.options[i].value === dokter) {
+                                        dokterSelect.options[i].selected = true;
+                                        break;
                                     }
                                 }
                             }
-                        } else {
-                            modalTitle.textContent = 'Tambah Pernyataan DPJP';
-
-                            // URL untuk store
-                            form.action = "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
-                                        "{{ $dataMedis->kd_unit }}" +
-                                        "/pelayanan/" +
-                                        "{{ $dataMedis->kd_pasien }}" +
-                                        "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
-                                        "/{{ $dataMedis->urut_masuk }}" +
-                                        "/pernyataan-dpjp";
                         }
-                    });
-                }
+                    } else {
+                        modalTitle.textContent = 'Tambah Pernyataan DPJP';
+
+                        // URL untuk store
+                        form.action = "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
+                            "{{ $dataMedis->kd_unit }}" +
+                            "/pelayanan/" +
+                            "{{ $dataMedis->kd_pasien }}" +
+                            "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
+                            "/{{ $dataMedis->urut_masuk }}" +
+                            "/pernyataan-dpjp";
+                    }
+                });
+            }
 
             // Handle show/detail modal dengan dokter
             const showPernyataanDPJPModal = document.getElementById('showPernyataanDPJPModal');
             if (showPernyataanDPJPModal) {
-                showPernyataanDPJPModal.addEventListener('show.bs.modal', function (event) {
+                showPernyataanDPJPModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
                     const id = button.getAttribute('data-id');
                     const diagnosis = button.getAttribute('data-diagnosis');
-                    const tanggal = button.getAttribute('data-tanggal');                                        
-                    const namaDokter = button.getAttribute('data-nama-dokter') || 'Tidak ada data';                    
+                    const tanggal = button.getAttribute('data-tanggal');
+                    const namaDokter = button.getAttribute('data-nama-dokter') || 'Tidak ada data';
 
                     // Fill in the data
                     document.getElementById('show-tanggal').textContent = tanggal;
@@ -467,7 +485,8 @@
                     // Handle updated info if available
                     const updatedRow = document.getElementById('updated-row');
                     if (button.hasAttribute('data-updated') && button.hasAttribute('data-updatedby')) {
-                        const updated = button.getAttribute('data-updatedby') + ' (' + button.getAttribute('data-updated') + ')';
+                        const updated = button.getAttribute('data-updatedby') + ' (' + button.getAttribute(
+                            'data-updated') + ')';
                         document.getElementById('show-updated').textContent = updated;
                         updatedRow.style.display = '';
                     } else {
@@ -485,13 +504,14 @@
                         editButton.type = 'button';
                         editButton.className = 'btn btn-warning me-2';
                         editButton.innerHTML = '<i class="ti-pencil"></i> Edit';
-                        editButton.addEventListener('click', function () {
+                        editButton.addEventListener('click', function() {
                             // Close this modal
                             const showModal = bootstrap.Modal.getInstance(showPernyataanDPJPModal);
                             showModal.hide();
 
                             // Open edit modal and populate it
-                            const editButton = document.querySelector(`button[data-id="${id}"][data-mode="edit"]`);
+                            const editButton = document.querySelector(
+                                `button[data-id="${id}"][data-mode="edit"]`);
                             if (editButton) {
                                 setTimeout(() => {
                                     editButton.click();
@@ -504,7 +524,7 @@
                         deleteButton.type = 'button';
                         deleteButton.className = 'btn btn-danger';
                         deleteButton.innerHTML = '<i class="ti-trash"></i> Hapus';
-                        deleteButton.addEventListener('click', function () {
+                        deleteButton.addEventListener('click', function() {
                             Swal.fire({
                                 title: 'Apakah Anda yakin?',
                                 text: 'Data pernyataan BPJP ini akan dihapus secara permanen!',
@@ -519,14 +539,15 @@
                                     // Create and submit a form programmatically
                                     const form = document.createElement('form');
                                     form.method = 'POST';
-                                    form.action = "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
-                                                "{{ $dataMedis->kd_unit }}" +
-                                                "/pelayanan/" +
-                                                "{{ $dataMedis->kd_pasien }}" +
-                                                "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
-                                                "/{{ $dataMedis->urut_masuk }}" +
-                                                "/pernyataan-dpjp/" +
-                                                id;
+                                    form.action =
+                                        "{{ url('unit-pelayanan/rawat-inap/unit') }}/" +
+                                        "{{ $dataMedis->kd_unit }}" +
+                                        "/pelayanan/" +
+                                        "{{ $dataMedis->kd_pasien }}" +
+                                        "/{{ date('Y-m-d', strtotime($dataMedis->tgl_masuk)) }}" +
+                                        "/{{ $dataMedis->urut_masuk }}" +
+                                        "/pernyataan-dpjp/" +
+                                        id;
 
                                     const csrfToken = document.createElement('input');
                                     csrfToken.type = 'hidden';
@@ -552,5 +573,5 @@
                 });
             }
         });
-</script>
+    </script>
 @endpush
