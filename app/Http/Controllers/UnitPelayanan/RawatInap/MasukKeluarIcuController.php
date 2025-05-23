@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\RmeKriteriaKeluarIcu;
 use App\Models\RmeKriteriaMasukIcu;
@@ -58,7 +59,7 @@ class MasukKeluarIcuController extends Controller
     public function masukTabs($kd_unit, $dataMedis)
     {
         // Get data kriteria masuk jika ada
-        $kriteriaMasuk = RmeKriteriaMasukIcu::with(['creator'])->where('kd_pasien', $dataMedis->kd_pasien)
+        $kriteriaMasuk = RmeKriteriaMasukIcu::with(['dokter'])->where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $dataMedis->kd_unit)
             ->where('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -74,7 +75,7 @@ class MasukKeluarIcuController extends Controller
     public function keluarTabs($kd_unit, $dataMedis)
     {
         // Get data kriteria keluar jika ada
-        $kriteriaKeluar = RmeKriteriaKeluarIcu::with(['creator'])->where('kd_pasien', $dataMedis->kd_pasien)
+        $kriteriaKeluar = RmeKriteriaKeluarIcu::with(['dokter'])->where('kd_pasien', $dataMedis->kd_pasien)
             ->where('kd_unit', $dataMedis->kd_unit)
             ->where('tgl_masuk', $dataMedis->tgl_masuk)
             ->where('urut_masuk', $dataMedis->urut_masuk)
@@ -114,12 +115,17 @@ class MasukKeluarIcuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $dokter = Dokter::where('status', 1)
+            ->select('kd_dokter', 'nama')
+            ->get();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.icu.masuk.create', [
             'dataMedis' => $dataMedis,
             'kd_unit' => $kd_unit,
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
+            'dokter' => $dokter,
         ]);
     }
 
@@ -160,6 +166,7 @@ class MasukKeluarIcuController extends Controller
                 'prioritas_3' => $prioritas3,
                 'prioritas_4' => $prioritas4,
                 'diagnosa_kriteria' => $request->diagnosa_kriteria,
+                'kd_dokter' => $request->kd_dokter,
                 'user_create' => auth()->user()->id,
             ]);
 
@@ -210,6 +217,10 @@ class MasukKeluarIcuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $dokter = Dokter::where('status', 1)
+            ->select('kd_dokter', 'nama')
+            ->get();
+
         // Get data kriteria masuk yang akan diedit
         $kriteriaMasuk = RmeKriteriaMasukIcu::findOrFail($id);
 
@@ -226,6 +237,7 @@ class MasukKeluarIcuController extends Controller
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
+            'dokter' => $dokter,
         ]);
     }
 
@@ -265,6 +277,7 @@ class MasukKeluarIcuController extends Controller
                 'prioritas_3' => $prioritas3,
                 'prioritas_4' => $prioritas4,
                 'diagnosa_kriteria' => $request->diagnosa_kriteria,
+                'kd_dokter' => $request->kd_dokter,
                 'user_update' => auth()->user()->id,
             ]);
 
@@ -387,12 +400,17 @@ class MasukKeluarIcuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $dokter = Dokter::where('status', 1)
+            ->select('kd_dokter', 'nama')
+            ->get();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.kriteria-masuk-keluar.icu.keluar.create', [
             'dataMedis' => $dataMedis,
             'kd_unit' => $kd_unit,
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
+            'dokter' => $dokter,
         ]);
     }
 
@@ -445,6 +463,7 @@ class MasukKeluarIcuController extends Controller
                 'prioritas_2' => $prioritas2,
                 'prioritas_3' => $prioritas3,
                 'diagnosa_kriteria' => $request->diagnosa_kriteria,
+                'kd_dokter' => $request->kd_dokter,
                 'user_create' => auth()->user()->id,
             ]);
 
@@ -496,6 +515,10 @@ class MasukKeluarIcuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $dokter = Dokter::where('status', 1)
+            ->select('kd_dokter', 'nama')
+            ->get();
+
         // Get data kriteria keluar yang akan diedit
         $kriteriaKeluar = RmeKriteriaKeluarIcu::findOrFail($id);
 
@@ -511,6 +534,7 @@ class MasukKeluarIcuController extends Controller
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
+            'dokter' => $dokter,
         ]);
     }
 
@@ -548,6 +572,7 @@ class MasukKeluarIcuController extends Controller
                 'prioritas_2' => $prioritas2,
                 'prioritas_3' => $prioritas3,
                 'diagnosa_kriteria' => $request->diagnosa_kriteria,
+                'kd_dokter' => $request->kd_dokter,
                 'user_update' => auth()->user()->id,
             ]);
 

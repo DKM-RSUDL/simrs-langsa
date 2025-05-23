@@ -18,4 +18,9 @@ class RmeKriteriaMasukIcu extends Model
     {
         return $this->belongsTo(User::class, 'user_create', 'id');
     }
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'kd_dokter', 'kd_dokter');
+    }
 }

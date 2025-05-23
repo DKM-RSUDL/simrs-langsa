@@ -1125,11 +1125,11 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::post('/', 'store')->name('.store');
                                                 Route::get('/create', 'create')->name('.create');
-                                                Route::get('/{data}', 'show')->name('.show');
-                                                Route::get('/{data}/edit', 'edit')->name('.edit');
-                                                Route::put('/{data}', 'update')->name('.update');
-                                                Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
-                                                Route::delete('/{data}', 'destroy')->name('.destroy');
+                                                Route::get('/detail', 'show')->name('.show'); // Changed to '/detail'
+                                                Route::get('/edit', 'edit')->name('.edit'); // Changed to '/edit'
+                                                Route::put('/', 'update')->name('.update'); // Kept as '/' to match 'store'
+                                                Route::get('/print', 'printPdf')->name('.print'); 
+                                                Route::delete('/', 'destroy')->name('.destroy'); // Kept as '/'
                                             });
                                         });
                                     });

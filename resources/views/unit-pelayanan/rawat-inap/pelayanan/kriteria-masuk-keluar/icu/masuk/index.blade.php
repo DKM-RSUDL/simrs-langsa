@@ -74,7 +74,7 @@
                                                         <table class="table table-bordered table-sm">
                                                             <tr>
                                                                 <th width="20%">Dokter Penliai</th>
-                                                                <td>{{$kriteriaMasuk->creator->name}}</td>
+                                                                <td>{{$kriteriaMasuk->dokter->nama}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Waktu Masuk</th>
