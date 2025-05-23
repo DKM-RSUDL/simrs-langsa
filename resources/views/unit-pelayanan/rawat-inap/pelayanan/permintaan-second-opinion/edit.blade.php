@@ -11,7 +11,7 @@
         </div>
 
         <div class="col-md-9">
-            <a href="{{ route('rawat-inap.permintaan-second-opinion.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $secondOpinion->id]) }}" class="btn btn-outline-info">
+            <a href="{{ route('rawat-inap.permintaan-second-opinion.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $secondOpinion->id]) }}" class="btn btn-outline-info">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
 
@@ -73,14 +73,14 @@
                                         <label class="form-label">Rujukan</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="1" id="checkRujuk" name="is_rujuk" 
+                                                <input class="form-check-input mt-0" type="checkbox" value="1" id="checkRujuk" name="is_rujuk"
                                                     {{ old('is_rujuk', $secondOpinion->is_rujuk) == '1' ? 'checked' : '' }}
                                                     aria-label="Checkbox for rujukan">
                                             </div>
                                             <span class="input-group-text bg-light">Rujuk RS Lain</span>
                                             <input type="text" class="form-control @error('rs_second_opinion') is-invalid @enderror"
                                                 id="rs_second_opinion" name="rs_second_opinion"
-                                                placeholder="Nama RS tujuan" 
+                                                placeholder="Nama RS tujuan"
                                                 value="{{ old('rs_second_opinion', $secondOpinion->rs_second_opinion) }}">
                                             @error('rs_second_opinion')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -347,10 +347,10 @@
             // Get elements
             const checkRujuk = document.getElementById('checkRujuk');
             const rsSecondOpinionInput = document.getElementById('rs_second_opinion');
-            
+
             // Set initial state based on existing data or old input
             const isRujuk = {{ old('is_rujuk', $secondOpinion->is_rujuk) == '1' ? 'true' : 'false' }};
-            
+
             if (isRujuk) {
                 rsSecondOpinionInput.style.display = 'block';
                 rsSecondOpinionInput.setAttribute('required', 'required');
@@ -358,7 +358,7 @@
                 rsSecondOpinionInput.style.display = 'none';
                 rsSecondOpinionInput.removeAttribute('required');
             }
-            
+
             // Add event listener to checkbox
             checkRujuk.addEventListener('change', function() {
                 if (this.checked) {
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (statusPeminjam) {
         // Check initial value and trigger the toggle function
         toggleDataPeminjam();
-        
+
         // Add event listener for changes to the select
         statusPeminjam.addEventListener('change', toggleDataPeminjam);
     }
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (statusPeminjam) {
         // Check initial value and trigger the toggle function
         toggleDataPeminjam();
-        
+
         // Add event listener for changes to the select
         statusPeminjam.addEventListener('change', toggleDataPeminjam);
     }

@@ -70,16 +70,24 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="rs_second_opinion" class="form-label">RS Second Opinion <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text"
-                                            class="form-control @error('rs_second_opinion') is-invalid @enderror"
-                                            id="rs_second_opinion" name="rs_second_opinion"
-                                            value="{{ old('rs_second_opinion') }}" required>
-                                        @error('rs_second_opinion')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Rujukan</label>
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="checkbox" value="1" id="checkRujuk" name="is_rujuk"
+                                                    {{ old('is_rujuk') == '1' ? 'checked' : '' }}
+                                                    aria-label="Checkbox for rujukan">
+                                            </div>
+                                            <span class="input-group-text bg-light">Rujuk RS Lain</span>
+                                            <input type="text" class="form-control @error('rs_second_opinion') is-invalid @enderror"
+                                                id="rs_second_opinion" name="rs_second_opinion"
+                                                placeholder="Nama RS tujuan"
+                                                value="{{ old('rs_second_opinion') }}"
+                                                style="{{ old('is_rujuk') != '1' ? 'display: none;' : '' }}">
+                                            @error('rs_second_opinion')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -98,11 +106,27 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="status_peminjam" class="form-label">Status Peminjam <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select @error('status_peminjam') is-invalid @enderror"
+                                            name="status_peminjam" id="status_peminjam" required>
+                                            <option value="">--Pilih--</option>
+                                            <option value="1" {{ old('status_peminjam') == 'diri_sendiri' ? 'selected' : '' }}>Diri Sendiri</option>
+                                            <option value="2" {{ old('status_peminjam') == 'keluarga' ? 'selected' : '' }}>Keluarga</option>
+                                        </select>
+                                        @error('status_peminjam')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card mb-4 border-primary">
+                    <div class="card mb-4 border-primary" id="data-peminjam-card">
                         <div class="card-header text-dark">
                             <h6 class="mb-0">DATA PEMINJAM</h6>
                         </div>
@@ -143,10 +167,9 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="tgl_lahir" class="form-label">Tanggal Lahir <span
-                                                class="text-danger">*</span></label>
+                                        <label for="tgl_lahir" class="form-label">Tanggal Lahir <span class="text-danger">*</span></label>
                                         <input type="date" class="form-control @error('tgl_lahir') is-invalid @enderror"
-                                            id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}" required>
+                                            id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') ?? '' }}" required>
                                         @error('tgl_lahir')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -249,10 +272,65 @@
     </div>
 
 @endsection
+
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Dynamic document handling
+            // Rujukan Checkbox Handling
+            const checkRujuk = document.getElementById('checkRujuk');
+            const rsSecondOpinionInput = document.getElementById('rs_second_opinion');
+
+            if (checkRujuk && rsSecondOpinionInput) {
+                // Set initial state
+                rsSecondOpinionInput.style.display = checkRujuk.checked ? 'block' : 'none';
+                if (checkRujuk.checked) {
+                    rsSecondOpinionInput.setAttribute('required', 'required');
+                } else {
+                    rsSecondOpinionInput.removeAttribute('required');
+                }
+
+                // Toggle on change
+                checkRujuk.addEventListener('change', function () {
+                    rsSecondOpinionInput.style.display = this.checked ? 'block' : 'none';
+                    if (this.checked) {
+                        rsSecondOpinionInput.setAttribute('required', 'required');
+                        rsSecondOpinionInput.focus();
+                    } else {
+                        rsSecondOpinionInput.removeAttribute('required');
+                        rsSecondOpinionInput.value = '';
+                    }
+                });
+            }
+
+            // Status Peminjam Handling
+            const statusPeminjam = document.getElementById('status_peminjam');
+            const dataPeminjamCard = document.getElementById('data-peminjam-card');
+
+            function toggleDataPeminjam() {
+                if (statusPeminjam.value === '2') { // 2 = Keluarga
+                    dataPeminjamCard.style.display = 'block';
+                    // Enable required fields
+                    dataPeminjamCard.querySelectorAll('input, textarea').forEach(field => {
+                        field.setAttribute('required', 'required');
+                    });
+                } else { // 1 = Diri Sendiri or empty
+                    dataPeminjamCard.style.display = 'none';
+                    // Disable required fields
+                    dataPeminjamCard.querySelectorAll('input, textarea').forEach(field => {
+                        field.removeAttribute('required');
+                        field.value = ''; // Clear input values
+                    });
+                }
+            }
+
+            if (statusPeminjam && dataPeminjamCard) {
+                // Set initial state based on old input or default
+                toggleDataPeminjam();
+                // Toggle on change
+                statusPeminjam.addEventListener('change', toggleDataPeminjam);
+            }
+
+            // Dynamic Document Handling
             const tambahDokumenBtn = document.getElementById('tambah_dokumen');
             const dokumenContainer = document.getElementById('dokumen_container');
 
