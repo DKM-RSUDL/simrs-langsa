@@ -29,7 +29,7 @@
                                     date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                                     $dataMedis->urut_masuk,
                                 ]) }}"
-                                    class="nav-link active" aria-selected="true">
+                                    class="nav-link" aria-selected="false">
                                     <i class="ti-clipboard me-1"></i>Form A
                                 </a>
                             </li>
@@ -40,7 +40,7 @@
                                     date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                                     $dataMedis->urut_masuk,
                                 ]) }}"
-                                    class="nav-link" aria-selected="false">
+                                    class="nav-link active" aria-selected="true">
                                     <i class="ti-clipboard me-1"></i>Form B
                                 </a>
                             </li>
@@ -51,8 +51,8 @@
                             <div class="tab-pane fade show active">
                                 <!-- Header Actions -->
                                 <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="mb-0">Data Evaluasi Awal MPP - Form A</h5>
-                                    <a href="{{ route('rawat-inap.mpp.form-a.create', [
+                                    <h5 class="mb-0">Data Catatan Implementasi MPP - Form B</h5>
+                                    <a href="{{ route('rawat-inap.mpp.form-b.create', [
                                         $dataMedis->kd_unit,
                                         $dataMedis->kd_pasien,
                                         date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
@@ -65,18 +65,16 @@
 
                                 <!-- Data Table Section -->
                                 <div class="table-responsive">
-                                    @if ($mppDataList->count() > 0)
+                                    @if ($mppDataList && $mppDataList->count() > 0)
                                         <table class="table table-bordered table-striped table-hover">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th width="5%" class="text-center">No</th>
                                                     <th>DPJP Utama</th>
-                                                    <th>DPJP Tambahan</th>
-                                                    <th class="text-center">Status Kriteria</th>
-                                                    <th class="text-center">Tanggal Screening</th>
-                                                    <th class="text-center">Tanggal Assessment</th>
-                                                    <th class="text-center">Tanggal Identifikasi</th>
-                                                    <th class="text-center">Tanggal Planning</th>
+                                                    <th>Tim Dokter</th>
+                                                    <th>Petugas Terkait</th>
+                                                    <th class="text-center">Status Implementasi</th>
+                                                    <th class="text-center">Tanggal Pengisian</th>
                                                     <th width="12%" class="text-center">Aksi</th>
                                                 </tr>
                                             </thead>
@@ -87,136 +85,155 @@
 
                                                         <!-- DPJP Utama -->
                                                         <td>
-                                                            @if ($mppData->dokterUtama)
-                                                                <strong>{{ $mppData->dokterUtama->nama }}</strong>
+                                                            @if ($mppData->dpjpUtama)
+                                                                <strong>{{ $mppData->dpjpUtama->nama }}</strong>
                                                             @else
                                                                 <span class="text-muted fst-italic">Belum ditentukan</span>
                                                             @endif
                                                         </td>
 
-                                                        <!-- DPJP Tambahan -->
+                                                        <!-- Tim Dokter -->
                                                         <td>
-                                                            @if ($mppData->dokterTambahan)
-                                                                {{ $mppData->dokterTambahan->nama }}
+                                                            @php
+                                                                $dokterList = collect([
+                                                                    $mppData->dokter1?->nama,
+                                                                    $mppData->dokter2?->nama,
+                                                                    $mppData->dokter3?->nama,
+                                                                ])->filter()->implode(', ');
+                                                            @endphp
+                                                            
+                                                            @if ($dokterList)
+                                                                {{ $dokterList }}
                                                             @else
                                                                 <span class="text-muted fst-italic">Tidak ada</span>
                                                             @endif
                                                         </td>
 
-                                                        <!-- Status Kriteria -->
-                                                        <td class="text-center">
+                                                        <!-- Petugas Terkait -->
+                                                        <td>
                                                             @php
-                                                                $screeningCount = collect([
-                                                                    $mppData->fungsi_kognitif,
-                                                                    $mppData->risiko_tinggi,
-                                                                    $mppData->potensi_komplain,
-                                                                    $mppData->riwayat_kronis,
-                                                                    $mppData->status_fungsional,
-                                                                    $mppData->peralatan_medis,
-                                                                    $mppData->gangguan_mental,
-                                                                    $mppData->sering_igd,
-                                                                    $mppData->perkiraan_asuhan,
-                                                                    $mppData->sistem_pembiayaan,
-                                                                    $mppData->length_of_stay,
-                                                                    $mppData->rencana_pemulangan,
-                                                                    $mppData->lain_lain,
-                                                                ])->sum();
-
-                                                                $assessmentCount = collect([
-                                                                    $mppData->fisik_fungsional,
-                                                                    $mppData->riwayat_kesehatan,
-                                                                    $mppData->perilaku_psiko,
-                                                                    $mppData->kesehatan_mental,
-                                                                    $mppData->dukungan_keluarga,
-                                                                    $mppData->finansial_asuransi,
-                                                                    $mppData->riwayat_obat,
-                                                                    $mppData->trauma_kekerasan,
-                                                                    $mppData->health_literacy,
-                                                                    $mppData->aspek_legal,
-                                                                    $mppData->harapan_hasil,
-                                                                ])->sum();
-
-                                                                $identificationCount = collect([
-                                                                    $mppData->tingkat_asuhan,
-                                                                    $mppData->over_under_utilization,
-                                                                    $mppData->ketidak_patuhan,
-                                                                    $mppData->edukasi_kurang,
-                                                                    $mppData->kurang_dukungan,
-                                                                    $mppData->penurunan_determinasi,
-                                                                    $mppData->kendala_keuangan,
-                                                                    $mppData->pemulangan_rujukan,
-                                                                ])->sum();
-
-                                                                $planningCount = collect([
-                                                                    $mppData->validasi_rencana,
-                                                                    $mppData->rencana_informasi,
-                                                                    $mppData->rencana_melibatkan,
-                                                                    $mppData->fasilitas_penyelesaian,
-                                                                    $mppData->bantuan_alternatif,
-                                                                ])->sum();
+                                                                $petugasList = collect([
+                                                                    $mppData->petugasTerkait1 ? trim($mppData->petugasTerkait1->gelar_depan . ' ' . $mppData->petugasTerkait1->nama . ' ' . $mppData->petugasTerkait1->gelar_belakang) : null,
+                                                                    $mppData->petugasTerkait2 ? trim($mppData->petugasTerkait2->gelar_depan . ' ' . $mppData->petugasTerkait2->nama . ' ' . $mppData->petugasTerkait2->gelar_belakang) : null,
+                                                                ])->filter()->implode(', ');
                                                             @endphp
+                                                            
+                                                            @if ($petugasList)
+                                                                {{ $petugasList }}
+                                                            @else
+                                                                <span class="text-muted fst-italic">Tidak ada</span>
+                                                            @endif
+                                                        </td>
 
+                                                        <!-- Status Implementasi -->
+                                                        <td class="text-center">
                                                             <div class="d-flex flex-column gap-1">
-                                                                <span class="badge bg-info">
-                                                                    <i class="ti-search me-1"></i>Screening:
-                                                                    {{ $screeningCount }}
-                                                                </span>
-                                                                <span class="badge bg-success">
-                                                                    <i class="ti-check me-1"></i>Assessment:
-                                                                    {{ $assessmentCount }}
-                                                                </span>
-                                                                <span class="badge bg-warning">
-                                                                    <i class="ti-eye me-1"></i>Identifikasi:
-                                                                    {{ $identificationCount }}
-                                                                </span>
-                                                                <span class="badge bg-primary">
-                                                                    <i class="ti-target me-1"></i>Planning:
-                                                                    {{ $planningCount }}
-                                                                </span>
+                                                                <!-- Rencana -->
+                                                                @if ($mppData->rencana_pelayanan)
+                                                                    <span class="badge bg-primary">
+                                                                        <i class="ti-list me-1"></i>Rencana
+                                                                    </span>
+                                                                @endif
+
+                                                                <!-- Monitoring -->
+                                                                @if ($mppData->monitoring_pelayanan)
+                                                                    <span class="badge bg-success">
+                                                                        <i class="ti-eye me-1"></i>Monitoring
+                                                                    </span>
+                                                                @endif
+
+                                                                <!-- Koordinasi -->
+                                                                @php
+                                                                    $koordinasiCount = collect([
+                                                                        $mppData->konsultasi_kolaborasi,
+                                                                        $mppData->second_opinion,
+                                                                        $mppData->rawat_bersama,
+                                                                        $mppData->komunikasi_edukasi,
+                                                                        $mppData->rujukan,
+                                                                    ])->sum();
+                                                                @endphp
+                                                                @if ($koordinasiCount > 0)
+                                                                    <span class="badge bg-info">
+                                                                        <i class="ti-users me-1"></i>Koordinasi ({{ $koordinasiCount }})
+                                                                    </span>
+                                                                @endif
+
+                                                                <!-- Advokasi -->
+                                                                @php
+                                                                    $advokasiCount = collect([
+                                                                        $mppData->diskusi_ppa,
+                                                                        $mppData->fasilitasi_akses,
+                                                                        $mppData->kemandirian_keputusan,
+                                                                        $mppData->pencegahan_disparitas,
+                                                                        $mppData->pemenuhan_kebutuhan,
+                                                                    ])->sum();
+                                                                @endphp
+                                                                @if ($advokasiCount > 0)
+                                                                    <span class="badge bg-warning">
+                                                                        <i class="ti-shield me-1"></i>Advokasi ({{ $advokasiCount }})
+                                                                    </span>
+                                                                @endif
+
+                                                                <!-- Hasil -->
+                                                                @if ($mppData->hasil_pelayanan)
+                                                                    <span class="badge bg-dark">
+                                                                        <i class="ti-check me-1"></i>Hasil
+                                                                    </span>
+                                                                @endif
+
+                                                                <!-- Terminasi -->
+                                                                @php
+                                                                    $terminasiCount = collect([
+                                                                        $mppData->puas,
+                                                                        $mppData->tidak_puas,
+                                                                        $mppData->abstain,
+                                                                        $mppData->konflik_komplain,
+                                                                        $mppData->keuangan,
+                                                                        $mppData->pulang_sembuh,
+                                                                        $mppData->rujuk,
+                                                                        $mppData->meninggal,
+                                                                    ])->sum();
+                                                                @endphp
+                                                                @if ($terminasiCount > 0)
+                                                                    <span class="badge bg-secondary">
+                                                                        <i class="ti-flag me-1"></i>Terminasi
+                                                                    </span>
+                                                                @endif
                                                             </div>
                                                         </td>
 
-                                                        <!-- Date Columns -->
-                                                        @foreach (['screening', 'assessment', 'identification', 'planning'] as $dateType)
-                                                            <td class="text-center">
-                                                                @php
-                                                                    $dateField = $dateType . '_date';
-                                                                    $timeField = $dateType . '_time';
-                                                                @endphp
-
-                                                                @if ($mppData->$dateField)
-                                                                    <div class="text-primary fw-bold">
-                                                                        {{ date('d/m/Y', strtotime($mppData->$dateField)) }}
-                                                                    </div>
-                                                                    @if ($mppData->$timeField)
-                                                                        <small class="text-muted">
-                                                                            <i
-                                                                                class="ti-time me-1"></i>{{ date('H:i', strtotime($mppData->$timeField)) }}
-                                                                        </small>
-                                                                    @endif
-                                                                @else
-                                                                    <span class="text-muted fst-italic">Belum
-                                                                        dilakukan</span>
+                                                        <!-- Tanggal Rencana -->
+                                                        <td class="text-center">
+                                                            @if ($mppData->created_at)
+                                                                <div class="text-primary fw-bold">
+                                                                    {{ date('d/m/Y', strtotime($mppData->created_at)) }}
+                                                                </div>
+                                                                @if ($mppData->created_at->format('H:i') !== '00:00')
+                                                                    <small class="text-muted">
+                                                                        <i class="ti-time me-1"></i>{{ date('H:i', strtotime($mppData->updated_at)) }}
+                                                                    </small>
                                                                 @endif
-                                                            </td>
-                                                        @endforeach
+                                                            @else
+                                                                <span class="text-muted fst-italic">Belum dijadwalkan</span>
+                                                            @endif
+                                                        </td>
 
                                                         <!-- Action Buttons -->
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group">
-
-                                                                <a href="{{ route('rawat-inap.mpp.form-a.print', [
+                                                                <a href="{{ route('rawat-inap.mpp.form-b.print', [
                                                                     'kd_unit' => $kd_unit,
                                                                     'kd_pasien' => $kd_pasien,
                                                                     'tgl_masuk' => $tgl_masuk,
                                                                     'urut_masuk' => $urut_masuk,
                                                                     'id' => $mppData->id,
                                                                 ]) }}"
-                                                                    class="btn btn-info btn-sm me-2" target="_blank">
+                                                                    class="btn btn-info btn-sm me-2" target="_blank"
+                                                                    title="Print Data" data-bs-toggle="tooltip">
                                                                     <i class="ti-printer"></i>
                                                                 </a>
 
-                                                                <a href="{{ route('rawat-inap.mpp.form-a.edit', [
+                                                                <a href="{{ route('rawat-inap.mpp.form-b.edit', [
                                                                     $dataMedis->kd_unit,
                                                                     $dataMedis->kd_pasien,
                                                                     date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
@@ -232,7 +249,7 @@
                                                                     class="btn btn-danger btn-sm btn-delete"
                                                                     title="Hapus Data" data-bs-toggle="tooltip"
                                                                     data-id="{{ $mppData->id }}"
-                                                                    data-url="{{ route('rawat-inap.mpp.form-a.destroy', [
+                                                                    data-url="{{ route('rawat-inap.mpp.form-b.destroy', [
                                                                         $dataMedis->kd_unit,
                                                                         $dataMedis->kd_pasien,
                                                                         date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
@@ -253,12 +270,12 @@
                                             <div class="mb-4">
                                                 <i class="ti-clipboard" style="font-size: 4rem; color: #dee2e6;"></i>
                                             </div>
-                                            <h4 class="text-muted mb-3">Belum Ada Data Form A</h4>
+                                            <h4 class="text-muted mb-3">Belum Ada Data Form B</h4>
                                             <p class="text-muted mb-4">
-                                                Silakan tambah data evaluasi awal MPP dengan mengklik tombol
+                                                Silakan tambah data catatan implementasi MPP dengan mengklik tombol
                                                 <strong>"Tambah Data"</strong> di atas untuk memulai.
                                             </p>
-                                            <a href="{{ route('rawat-inap.mpp.form-a.create', [
+                                            <a href="{{ route('rawat-inap.mpp.form-b.create', [
                                                 $dataMedis->kd_unit,
                                                 $dataMedis->kd_pasien,
                                                 date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
@@ -308,7 +325,7 @@
                     title: 'Konfirmasi Hapus Data',
                     html: `
                         <div class="text-start">
-                            <p class="mb-2">Apakah Anda yakin ingin menghapus data <strong>Form A - Evaluasi Awal MPP</strong> ini?</p>
+                            <p class="mb-2">Apakah Anda yakin ingin menghapus data <strong>Form B - Catatan Implementasi MPP</strong> ini?</p>
                             <div class="alert alert-warning">
                                 <i class="ti-alert-triangle me-2"></i>
                                 <strong>Peringatan:</strong> Data yang telah dihapus tidak dapat dikembalikan lagi.

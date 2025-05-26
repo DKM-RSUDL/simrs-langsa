@@ -83,6 +83,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarPicuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MeninggalkanPerawatanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MppAController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\MppBController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\NeurologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PapsController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\OrientasiPasienBaruController;
@@ -1181,11 +1182,27 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/', 'index')->name('.index');
                                                 Route::get('/create', 'create')->name('.create');
                                                 Route::post('/', 'store')->name('.store');
-                                                Route::get('/{data}/edit', 'edit')->name('.edit');
-                                                Route::put('/{data}', 'update')->name('.update');
-                                                Route::get('/show/{data}', 'show')->name('.show');
-                                                Route::delete('/', 'delete')->name('.delete');
-                                                Route::get('/pdf/{data}', 'pdf')->name('.pdf');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/print/{id}', 'print')->name('.print');
+                                            });
+                                        });
+                                    });
+
+                                    //FORM B
+                                    Route::prefix('form-b')->group(function () {
+                                        Route::name('.form-b')->group(function () {
+                                            Route::controller(MppBController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/print/{id}', 'print')->name('.print');
                                             });
                                         });
                                     });
