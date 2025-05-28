@@ -43,8 +43,7 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tgl_masuk"
-                                            value="{{ date('Y-m-d') }}">
+                                        <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}">
                                         <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}">
                                     </div>
                                 </div>
@@ -65,29 +64,22 @@
                                         placeholder="Riwayat penyakit sekarang"></textarea>
                                 </div>
 
-                                <label style="min-width: 200px;">Alergi</label>
-                                <input type="hidden" name="alergi" value="[]">
-                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openAlergiModal">
-                                    <i class="ti-plus"></i> Tambah
-                                </button>
-
-                                <div class="table-responsive">
-                                    <table class="table" id="createAlergiTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Alergen</th>
-                                                <th>Reaksi</th>
-                                                <th>Severe</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Table content will be dynamically populated -->
-                                        </tbody>
-                                    </table>
+                                <div class="form-group">
+                                        <label for="alergi">Alergi</label>
+                                        <div class="input-group">
+                                            <input type="text" name="alergi_display" id="alergi_display"
+                                                class="form-control" placeholder="Alergi pasien (jika ada)"
+                                                value="{{ $allergiesDisplay ?? '' }}" readonly>
+                                            <input type="hidden" name="alergi" id="alergi"
+                                                value="{{ $allergiesJson ?? '' }}">
+                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                                data-bs-target="#alergiModal">
+                                                <i class="ti-plus"></i> Tambah Alergi
+                                            </button>
+                                        </div>
                                 </div>
                                 @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.modal-create-alergi')
+                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.alergi')
                                 @endpush
 
                             </div>
@@ -136,66 +128,68 @@
                                             <tr>
                                                 <td class="label-col">a. Merokok</td>
                                                 <td>
-                                                    <div class="form-check-group">
+                                                    <div class="form-check-group d-flex align-items-center gap-2">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="merokok"
-                                                                value="tidak" id="merokok_tidak">
-                                                            <label class="form-check-label"
-                                                                for="merokok_tidak">Tidak</label>
+                                                            <input class="form-check-input" type="radio" name="merokok" value="tidak" id="merokok_tidak" checked>
+                                                            <label class="form-check-label" for="merokok_tidak">Tidak</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="merokok"
-                                                                value="ya" id="merokok_ya">
-                                                            <label class="form-check-label" for="merokok_ya">Ya,
-                                                                jumlah:</label>
+                                                            <input class="form-check-input" type="radio" name="merokok" value="ya" id="merokok_ya">
+                                                            <label class="form-check-label" for="merokok_ya">Ya, jumlah:</label>
                                                         </div>
-                                                        <input type="number" class="form-control input-inline input-sm"
-                                                            name="merokok_jumlah">
+                                                        <input type="number" class="form-control input-inline input-sm @error('merokok_jumlah') is-invalid @enderror"
+                                                            name="merokok_jumlah" id="merokok_jumlah" min="0" placeholder="0" disabled>
                                                         <span>batang/hari</span>
-                                                        <span class="ms-3">Lama:</span>
-                                                        <input type="number" class="form-control input-inline input-sm"
-                                                            name="merokok_lama">
+                                                        <span class="ms-2">Lama:</span>
+                                                        <input type="number" class="form-control input-inline input-sm @error('merokok_lama') is-invalid @enderror"
+                                                            name="merokok_lama" id="merokok_lama" min="0" placeholder="0" disabled>
                                                         <span>tahun</span>
+                                                        @error('merokok_jumlah')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        @error('merokok_lama')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="label-col">b. Alkohol</td>
                                                 <td>
-                                                    <div class="form-check-group">
+                                                    <div class="form-check-group d-flex align-items-center gap-2">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="alkohol"
-                                                                value="tidak" id="alkohol_tidak">
-                                                            <label class="form-check-label"
-                                                                for="alkohol_tidak">Tidak</label>
+                                                            <input class="form-check-input" type="radio" name="alkohol" value="tidak" id="alkohol_tidak" checked>
+                                                            <label class="form-check-label" for="alkohol_tidak">Tidak</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="alkohol"
-                                                                value="ya" id="alkohol_ya">
-                                                            <label class="form-check-label" for="alkohol_ya">Ya,
-                                                                jumlah:</label>
+                                                            <input class="form-check-input" type="radio" name="alkohol" value="ya" id="alkohol_ya">
+                                                            <label class="form-check-label" for="alkohol_ya">Ya, jumlah:</label>
                                                         </div>
-                                                        <input type="text" class="form-control input-inline input-lg"
-                                                            name="alkohol_jumlah">
+                                                        <input type="text" class="form-control input-inline input-lg @error('alkohol_jumlah') is-invalid @enderror"
+                                                            name="alkohol_jumlah" id="alkohol_jumlah" placeholder="Jumlah konsumsi" disabled>
+                                                        @error('alkohol_jumlah')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="label-col">c. Obat-obatan</td>
                                                 <td>
-                                                    <div class="form-check-group">
+                                                    <div class="form-check-group d-flex align-items-center gap-2">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="obat_obatan"
-                                                                value="tidak" id="obat_tidak">
+                                                            <input class="form-check-input" type="radio" name="obat_obatan" value="tidak" id="obat_tidak" checked>
                                                             <label class="form-check-label" for="obat_tidak">Tidak</label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="obat_obatan"
-                                                                value="ya" id="obat_ya">
-                                                            <label class="form-check-label" for="obat_ya">Ya</label>
+                                                            <input class="form-check-input" type="radio" name="obat_obatan" value="ya" id="obat_ya">
+                                                            <label class="form-check-label" for="obat_ya">Ya, jenis:</label>
                                                         </div>
-                                                        <input type="text" class="form-control input-inline input-lg"
-                                                            name="obat_jenis">
+                                                        <input type="text" class="form-control input-inline input-lg @error('obat_jenis') is-invalid @enderror"
+                                                            name="obat_jenis" id="obat_jenis" placeholder="Jenis obat" disabled>
+                                                        @error('obat_jenis')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                 </td>
                                             </tr>
@@ -500,107 +494,143 @@
                             <div class="section-separator" id="rencana-kerja">
                                 <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
                                 <div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto
-                                            thorax</label>
-                                        <input type="checkbox" name="foto_thoraks">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thorax</label>
+                                        <input type="checkbox" name="foto_thoraks" value="1" class="form-check-input" id="foto_thoraks">
+                                        @error('foto_thoraks')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan
-                                            darah
-                                            rutin</label>
-                                        <input type="checkbox" name="darah_rutin">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">b.</span> Pemeriksaan darah rutin</label>
+                                        <input type="checkbox" name="darah_rutin" value="1" class="form-check-input" id="darah_rutin">
+                                        @error('darah_rutin')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan
-                                            LED</label>
-                                        <input type="checkbox" name="led">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">c.</span> Pemeriksaan LED</label>
+                                        <input type="checkbox" name="led" value="1" class="form-check-input" id="led">
+                                        @error('led')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan
-                                            sputum
-                                            BTA</label>
-                                        <input type="checkbox" name="sputum_bta">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">d.</span> Pemeriksaan sputum BTA</label>
+                                        <input type="checkbox" name="sputum_bta" value="1" class="form-check-input" id="sputum_bta">
+                                        @error('sputum_bta')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan
-                                            IGDS</label>
-                                        <input type="checkbox" name="igds">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan IGDS</label>
+                                        <input type="checkbox" name="igds" value="1" class="form-check-input" id="igds">
+                                        @error('igds')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan
-                                            faal
-                                            ginjal (RFG)</label>
-                                        <input type="checkbox" name="faal_ginjal">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal ginjal (RFG)</label>
+                                        <input type="checkbox" name="faal_ginjal" value="1" class="form-check-input" id="faal_ginjal">
+                                        @error('faal_ginjal')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan
-                                            elektrolit</label>
-                                        <input type="checkbox" name="elektrolit">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan elektrolit</label>
+                                        <input type="checkbox" name="elektrolit" value="1" class="form-check-input" id="elektrolit">
+                                        @error('elektrolit')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
-                                            albumin</label>
-                                        <input type="checkbox" name="albumin">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan albumin</label>
+                                        <input type="checkbox" name="albumin" value="1" class="form-check-input" id="albumin">
+                                        @error('albumin')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan
-                                            thorax</label>
-                                        <input type="checkbox" name="ct_scan_thorax">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan thorax</label>
+                                        <input type="checkbox" name="ct_scan_thorax" value="1" class="form-check-input" id="ct_scan_thorax">
+                                        @error('ct_scan_thorax')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">j.</span> Memeriksaan
-                                            asam
-                                            urat</label>
-                                        <input type="checkbox" name="asam_urat">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">j.</span> Pemeriksaan asam urat</label>
+                                        <input type="checkbox" name="asam_urat" value="1" class="form-check-input" id="asam_urat">
+                                        @error('asam_urat')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru (
-                                            APE,
-                                            spirometri )</label>
-                                        <input type="checkbox" name="faal_paru">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">k.</span> Faal paru (APE, spirometri)</label>
+                                        <input type="checkbox" name="faal_paru" value="1" class="form-check-input" id="faal_paru">
+                                        @error('faal_paru')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan
-                                            thoraks</label>
-                                        <input type="checkbox" name="ct_scan_thoraks">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">l.</span> CT Scan thoraks</label>
+                                        <input type="checkbox" name="ct_scan_thoraks" value="1" class="form-check-input" id="ct_scan_thoraks">
+                                        @error('ct_scan_thoraks')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">m.</span>
-                                            Bronchoscopy</label>
-                                        <input type="checkbox" name="bronchoscopy">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">m.</span> Bronchoscopy</label>
+                                        <input type="checkbox" name="bronchoscopy" value="1" class="form-check-input" id="bronchoscopy">
+                                        @error('bronchoscopy')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef
-                                            Punctie</label>
-                                        <input type="checkbox" name="proef_punctie">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">n.</span> Proef Punctie</label>
+                                        <input type="checkbox" name="proef_punctie" value="1" class="form-check-input" id="proef_punctie">
+                                        @error('proef_punctie')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan
-                                            pleura</label>
-                                        <input type="checkbox" name="aspirasi_cairan_pleura">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">o.</span> Aspirasi cairan pleura</label>
+                                        <input type="checkbox" name="aspirasi_cairan_pleura" value="1" class="form-check-input" id="aspirasi_cairan_pleura">
+                                        @error('aspirasi_cairan_pleura')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan
-                                            WSD</label>
-                                        <input type="checkbox" name="penanganan_wsd">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">p.</span> Penanganan WSD</label>
+                                        <input type="checkbox" name="penanganan_wsd" value="1" class="form-check-input" id="penanganan_wsd">
+                                        @error('penanganan_wsd')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan
-                                            penyakit</label>
-                                        <input type="checkbox" name="penanganan_penyakit">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan penyakit</label>
+                                        <input type="checkbox" name="penanganan_penyakit" value="1" class="form-check-input" id="penanganan_penyakit">
+                                        @error('penanganan_penyakit')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul
-                                            Tes</label>
-                                        <input type="checkbox" name="konsul">
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul Tes</label>
+                                        <input type="checkbox" name="konsul" value="1" class="form-check-input" id="konsul">
+                                        @error('konsul')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group d-flex align-items-center gap-3">
                                         <label style="min-width: 300px;"><span class="fw-bold">s.</span> Lainnya</label>
-                                        <input type="text" class="form-control" name="lainnya">
+                                        <div class="d-flex gap-2 align-items-center">
+                                            <input type="checkbox" name="lainnya_check" value="1" class="form-check-input" id="lainnya_check">
+                                            <input type="text" class="form-control @error('lainnya') is-invalid @enderror" name="lainnya" id="lainnya" placeholder="Masukkan rencana lainnya" disabled>
+                                            @error('lainnya')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <!-- 8. Perencanaan Pulang Pasien -->
@@ -857,7 +887,7 @@
                                         Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
                                         keterangan
                                         Prognosis yang tidak ditemukan.</small>
-                                        <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
+                                    <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
                                     <div class="input-group mb-3">
                                         <span class="input-group-text bg-white border-end-0">
                                             <i class="bi bi-search text-secondary"></i>
@@ -891,3 +921,137 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        // Function to toggle input fields based on radio button selection
+        function toggleInputFields(radioName, inputIds, yesValue = 'ya') {
+            const radios = document.getElementsByName(radioName);
+            const inputs = inputIds.map(id => document.getElementById(id));
+
+            // Initialize state based on current selection
+            const selectedValue = Array.from(radios).find(radio => radio.checked)?.value;
+            inputs.forEach(input => {
+                input.disabled = selectedValue !== yesValue;
+                if (selectedValue !== yesValue) {
+                    input.value = ''; // Clear input when disabled
+                }
+            });
+
+            // Add event listeners to radio buttons
+            radios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    inputs.forEach(input => {
+                        input.disabled = this.value !== yesValue;
+                        if (this.value !== yesValue) {
+                            input.value = ''; // Clear input when disabled
+                            input.classList.remove('is-invalid'); // Remove validation error styling
+                        }
+                    });
+                });
+            });
+        }
+
+        // Toggle inputs for Merokok
+        toggleInputFields('merokok', ['merokok_jumlah', 'merokok_lama']);
+
+        // Toggle inputs for Alkohol
+        toggleInputFields('alkohol', ['alkohol_jumlah']);
+
+        // Toggle inputs for Obat-obatan
+        toggleInputFields('obat_obatan', ['obat_jenis']);
+
+        // Client-side validation on form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            let errors = [];
+
+            // Check Merokok
+            const merokok = document.querySelector('input[name="merokok"]:checked')?.value;
+            if (merokok === 'ya') {
+                const jumlah = document.getElementById('merokok_jumlah').value;
+                const lama = document.getElementById('merokok_lama').value;
+                if (!jumlah || jumlah < 0) {
+                    errors.push('Jumlah batang/hari harus diisi dan tidak boleh negatif.');
+                    document.getElementById('merokok_jumlah').classList.add('is-invalid');
+                }
+                if (!lama || lama < 0) {
+                    errors.push('Lama merokok harus diisi dan tidak boleh negatif.');
+                    document.getElementById('merokok_lama').classList.add('is-invalid');
+                }
+            }
+
+            // Check Alkohol
+            const alkohol = document.querySelector('input[name="alkohol"]:checked')?.value;
+            if (alkohol === 'ya' && !document.getElementById('alkohol_jumlah').value.trim()) {
+                errors.push('Jumlah konsumsi alkohol harus diisi.');
+                document.getElementById('alkohol_jumlah').classList.add('is-invalid');
+            }
+
+            // Check Obat-obatan
+            const obat = document.querySelector('input[name="obat_obatan"]:checked')?.value;
+            if (obat === 'ya' && !document.getElementById('obat_jenis').value.trim()) {
+                errors.push('Jenis obat-obatan harus diisi.');
+                document.getElementById('obat_jenis').classList.add('is-invalid');
+            }
+
+            // If there are errors, prevent form submission and show alert
+            if (errors.length > 0) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Belum Lengkap',
+                    html: errors.join('<br>'),
+                    confirmButtonColor: '#3085d6',
+                });
+            }
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toggle 'lainnya' input based on checkbox
+        const lainnyaCheck = document.getElementById('lainnya_check');
+        const lainnyaInput = document.getElementById('lainnya');
+
+        // Initialize state
+        lainnyaInput.disabled = !lainnyaCheck.checked;
+        if (!lainnyaCheck.checked) {
+            lainnyaInput.value = '';
+        }
+
+        // Add event listener to checkbox
+        lainnyaCheck.addEventListener('change', function () {
+            lainnyaInput.disabled = !this.checked;
+            if (!this.checked) {
+                lainnyaInput.value = '';
+                lainnyaInput.classList.remove('is-invalid');
+            }
+        });
+
+        // Client-side validation on form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            let errors = [];
+
+            // Validate 'lainnya' field
+            if (lainnyaCheck.checked && !lainnyaInput.value.trim()) {
+                errors.push('Rencana lainnya wajib diisi jika dicentang.');
+                lainnyaInput.classList.add('is-invalid');
+            } else {
+                lainnyaInput.classList.remove('is-invalid');
+            }
+
+            // If there are errors, prevent submission and show alert
+            if (errors.length > 0) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Belum Lengkap',
+                    html: errors.join('<br>'),
+                    confirmButtonColor: '#3085d6',
+                });
+            }
+        });
+    });
+    </script>
+@endpush
