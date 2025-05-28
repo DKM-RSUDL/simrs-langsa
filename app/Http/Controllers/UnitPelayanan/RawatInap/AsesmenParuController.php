@@ -21,6 +21,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class AsesmenParuController extends Controller
 {
@@ -94,6 +95,10 @@ class AsesmenParuController extends Controller
         DB::beginTransaction();
 
         try {
+            $request->validate([
+                'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            ]);
+
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
             $asesmen->kd_pasien = $request->kd_pasien;
@@ -187,6 +192,30 @@ class AsesmenParuController extends Controller
             $paruDiagnosisImplementasi->edukasi = $request->edukasi;
             $paruDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $paruDiagnosisImplementasi->prognosis = $request->prognosis;
+
+            // Array untuk menyimpan path file yang berhasil diupload
+            $uploadedFiles = [];
+
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
+                    }
+                }
+                return null;
+            };
+
+            // Upload files
+            $paruDiagnosisImplementasi->gambar_radiologi_paru = $uploadFile('gambar_radiologi_paru');
+
             $paruDiagnosisImplementasi->save();
 
             // Handle allergies - tetap sama...
@@ -368,6 +397,9 @@ class AsesmenParuController extends Controller
         DB::beginTransaction();
 
         try {
+            $request->validate([
+                'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            ]);
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
             $asesmen->kd_pasien = $request->kd_pasien;
@@ -383,7 +415,7 @@ class AsesmenParuController extends Controller
             // 2. Buat record RmeAsesmenParu
             $asesmenParu = RmeAsesmenParu::firstOrNew(['id_asesmen' => $asesmen->id]);
             $asesmenParu->id_asesmen = $asesmen->id;
-            $asesmenParu->user_create = Auth::id();
+            $asesmenParu->user_edit = Auth::id();
             $asesmenParu->tanggal = Carbon::parse($request->tanggal);
             $asesmenParu->jam_masuk = $request->jam_masuk;
             $asesmenParu->anamnesa = $request->anamnesa;
@@ -461,6 +493,61 @@ class AsesmenParuController extends Controller
             $paruDiagnosisImplementasi->edukasi = $request->edukasi;
             $paruDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $paruDiagnosisImplementasi->prognosis = $request->prognosis;
+
+            $fileFields = [
+                'gambar_radiologi_paru',
+            ];
+
+            // Array untuk menyimpan path file yang berhasil diupload
+            $uploadedFiles = [];
+
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
+                    }
+                }
+                return null;
+            };
+
+            $fileFields = [
+                'gambar_radiologi_paru',
+            ];
+
+            foreach ($fileFields as $field) {
+                if ($request->has("delete_$field")) {
+                    if ($paruDiagnosisImplementasi->$field) {
+                        Storage::disk('public')->delete(
+                            "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
+                        );
+                        $paruDiagnosisImplementasi->$field = null;
+                    }
+                } elseif ($request->hasFile($field)) {
+                    try {
+                        if ($paruDiagnosisImplementasi->$field) {
+                            Storage::disk('public')->delete(
+                                "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
+                            );
+                        }
+
+                        $path = $uploadFile($field);
+                        if ($path) {
+                            $paruDiagnosisImplementasi->$field = basename($path);
+                            $uploadedFiles[$field] = $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
+                    }
+                }
+            }
             $paruDiagnosisImplementasi->save();
 
             // Handle allergies - tetap sama...

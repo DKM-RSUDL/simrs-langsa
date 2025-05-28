@@ -12,6 +12,10 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
+                <a href="{{ route('rawat-inap.asesmen.medis.paru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
             </div>
 
             <div class="card">
@@ -736,7 +740,7 @@
                                                 <div class="mt-2">
                                                     <img src="{{ asset('storage/' . $asesmen->rmeAsesmenParuDiagnosisImplementasi->gambar_radiologi_paru) }}"
                                                         alt="Gambar Radiologi Paru" class="img-fluid rounded border"
-                                                        style="max-width: 500px; max-height: 400px;">
+                                                        style="max-width: 500px; max-height: 250px;">
                                                 </div>
                                             </div>
                                         </div>
