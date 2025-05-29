@@ -215,7 +215,7 @@ class RanapPernyataandpjpController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        $qrCode = base64_encode(QrCode::format('png')->size(200)->errorCorrection('H')->generate($pernyataanDPJP->dokter->nama_lengkap));
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($pernyataanDPJP->dokter->nama_lengkap));
 
         // Generate tanggal dalam format Indonesia (misalnya: 15 Juni 2025)
         $tglSekarang = Carbon::now()->locale('id');

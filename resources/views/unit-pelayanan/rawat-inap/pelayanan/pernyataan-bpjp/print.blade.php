@@ -190,7 +190,7 @@
         }
 
         .signature-title {
-            margin-bottom: 30px;
+            /* margin-bottom: 10px; */
             /* Ruang untuk tanda tangan */
             font-size: 10pt;
         }
@@ -394,7 +394,7 @@
             <div class="signature-title">Yang membuat pernyataan;</div>
             <br>
             <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
-            <div class="signature-name">&nbsp;</div>
+            {{-- <div class="signature-name">&nbsp;</div> --}}
             <div>({{ $pernyataanDPJP->dokter->nama_lengkap ?? '' }})</div>
         </div>
     </div>
