@@ -430,7 +430,8 @@
 
         <div class="signature-box">
             <div class="notes-section">
-                <label>Saya menyatakan bahwa lokasi operasi yang telah ditetapkan pada diagram di atas adalah benar:</label>
+                <label>Saya menyatakan bahwa lokasi operasi yang telah ditetapkan pada diagram di atas adalah
+                    benar:</label>
             </div>
 
             <div class="row">
@@ -440,7 +441,15 @@
                         <span class="underline"></span>
                     </div>
                     <div class="form-group">
-                        <label>Pasien/Keluarga:</label>
+                        <label>
+                            @if ($siteMarking->responsible_person === 'pasien')
+                                Pasien:
+                            @elseif($siteMarking->responsible_person === 'keluarga')
+                                Keluarga ({{ $siteMarking->family_relationship ?: 'Hubungan tidak tersedia' }}):
+                            @else
+                                Pasien/Keluarga:
+                            @endif
+                        </label>
                     </div>
                 </div>
                 <div class="col-6">
@@ -459,30 +468,29 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <br>
-                            @if ($siteMarking->tanda_tangan_pasien && Storage::exists($siteMarking->tanda_tangan_pasien))
-                                <img src="{{ Storage::url($siteMarking->tanda_tangan_pasien) }}" alt="Tanda Tangan Pasien">
-                            @else
-                                <p class="text-muted">Tanda tangan tidak tersedia</p>
-                            @endif
-                            <p>({{ $dataMedis->pasien->nama }})</p>
+                            <!-- Space kosong untuk tanda tangan manual -->
+                            <div style="height: 60px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
+                            <p>
+                                @if ($siteMarking->responsible_person === 'pasien')
+                                    ({{ $siteMarking->patient_name ?: $dataMedis->pasien->nama }})
+                                @elseif($siteMarking->responsible_person === 'keluarga')
+                                    ({{ $siteMarking->family_name ?: 'Nama Keluarga Tidak Tersedia' }})
+                                @else
+                                    ({{ $dataMedis->pasien->nama }})
+                                @endif
+                            </p>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-                            <br>
-                            @if ($siteMarking->tanda_tangan_dokter && Storage::exists($siteMarking->tanda_tangan_dokter))
-                                <img src="{{ Storage::url($siteMarking->tanda_tangan_dokter) }}" alt="Tanda Tangan Dokter">
-                            @else
-                                <p class="text-muted">Tanda tangan tidak tersedia</p>
-                            @endif
+                            <!-- Space kosong untuk tanda tangan dokter manual -->
+                            <div style="height: 60px; border-bottom: 1px solid #000; margin: 10px 0;"></div>
                             <p>({{ $siteMarking->dokter->nama_lengkap ?? 'Tidak Diketahui' }})</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="footer">
             <span>Penandaan daerah operasi ({{ $dataMedis->pasien->jenis_kelamin == 1 ? 'PRIA' : 'WANITA' }})</span>
             <span>Nomor Dokumen: HB-ISM/Rev 0/2017</span>

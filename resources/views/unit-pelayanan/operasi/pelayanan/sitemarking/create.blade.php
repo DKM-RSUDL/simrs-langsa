@@ -18,10 +18,8 @@
             max-width: 800px;
             margin: 0 auto;
             min-height: 400px;
-            /* Ensure container has enough height */
             overflow: hidden;
             background-color: #fff;
-            /* Add background to make it look neat */
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -130,62 +128,38 @@
             margin-bottom: 5px;
         }
 
-        /* Style for active button */
         .template-selector .btn-group .btn.active {
             background-color: #4e73df;
-            /* Blue background for active state */
             color: white !important;
-            /* Force white text color when active */
             border-color: #4e73df;
         }
 
-        /* Style for hover state */
         .template-selector .btn-group .btn:hover {
             background-color: #ffffff;
-            /* Light gray background on hover */
             color: rgb(0, 0, 0) !important;
-            /* Force white text color on hover */
             border-color: #ddd;
         }
 
-        /* Ensure non-active buttons have readable text */
         .template-selector .btn-group .btn {
             color: #4e73df;
-            /* Default text color for non-active buttons */
         }
 
-        /* Optional: If the button is both active and hovered */
         .template-selector .btn-group .btn.active:hover {
             background-color: #3b5bdb;
-            /* Slightly darker blue on hover for active button */
             color: white !important;
-            /* Ensure text remains white */
         }
 
         .body-image {
             display: none;
-            /* Hide images; they are used only as canvas background */
             max-width: 100%;
             margin: 0 auto;
         }
 
-        /* Ensure canvas is centered */
         #drawingCanvas {
             display: block;
             margin: 0 auto;
         }
 
-        /* Style untuk signature pad */
-        .signature-pad {
-            width: 100%;
-            height: 150px;
-            background-color: rgba(255, 255, 255, 0);
-            border-radius: 4px;
-            touch-action: none;
-            display: block;
-        }
-
-        /* Tambahan styling untuk form */
         .card-header {
             background-color: #f8f9fa;
             border-bottom: 1px solid #e3e6f0;
@@ -195,7 +169,6 @@
             font-size: 0.9rem;
         }
 
-        /* Mempercantik tampilan tombol */
         .btn-primary {
             background-color: #4e73df;
             border-color: #4e73df;
@@ -204,6 +177,14 @@
         .btn-primary:hover {
             background-color: #375ad3;
             border-color: #375ad3;
+        }
+
+        .responsible-person-container {
+            display: none;
+        }
+
+        .responsible-person-container.active {
+            display: block;
         }
     </style>
 @endpush
@@ -299,10 +280,8 @@
                                 </div>
 
                                 <div class="drawing-container">
-                                    <!-- Gambar-gambar anatomi (hidden, used as canvas background) -->
                                     <div class="image-templates">
                                         @if ($dataMedis->pasien->jenis_kelamin == 1)
-                                            <!-- Gambar untuk laki-laki -->
                                             <img src="{{ asset('assets/images/sitemarking/7.png') }}" class="body-image"
                                                 id="template-full-body" alt="Seluruh Tubuh">
                                             <img src="{{ asset('assets/images/sitemarking/9.png') }}" class="body-image"
@@ -316,7 +295,6 @@
                                             <img src="{{ asset('assets/images/sitemarking/12.png') }}" class="body-image"
                                                 id="template-foot" alt="Kaki">
                                         @else
-                                            <!-- Gambar untuk perempuan -->
                                             <img src="{{ asset('assets/images/sitemarking/1.png') }}" class="body-image"
                                                 id="template-full-body" alt="Seluruh Tubuh">
                                             <img src="{{ asset('assets/images/sitemarking/3.png') }}" class="body-image"
@@ -332,7 +310,6 @@
                                         @endif
                                     </div>
 
-                                    <!-- Canvas untuk drawing -->
                                     <div class="canvas-container">
                                         <canvas id="drawingCanvas"></canvas>
                                     </div>
@@ -386,57 +363,42 @@
                                                 <textarea name="notes" id="notes" class="form-control" rows="3"
                                                     placeholder="Tambahkan catatan tentang site marking..."></textarea>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-header bg-light">
-                                            <h5 class="card-title mb-0"><i class="fas fa-signature me-2"></i>Konfirmasi
-                                                dan Tanda Tangan</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-4">
-                                                        <label class="form-label fw-bold">Tanda Tangan Dokter</label>
-                                                        <div class="border p-3 mb-2">
-                                                            <canvas id="signatureDoctor" class="signature-pad"></canvas>
-                                                        </div>
-                                                        <input type="hidden" name="tanda_tangan_dokter"
-                                                            id="doctorSignature">
-                                                        <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di
-                                                                atas</span>
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-secondary"
-                                                                id="clearDoctorSignature">
-                                                                <i class="fas fa-eraser me-1"></i>Hapus
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                            <div class="mb-3">
+                                                <label for="responsible_person" class="form-label fw-bold"><i
+                                                        class="fas fa-user me-2"></i>Yang Bertanggung Jawab</label>
+                                                <select class="form-control" name="responsible_person" id="responsible_person" required>
+                                                    <option value="" disabled selected>Pilih Yang Bertanggung Jawab</option>
+                                                    <option value="pasien">Pasien</option>
+                                                    <option value="keluarga">Keluarga</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="responsible-person-container" id="patient_container">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold"><i
+                                                            class="fas fa-user me-2"></i>Nama Pasien</label>
+                                                    <input type="text" name="patient_name" id="patient_name"
+                                                        class="form-control" value="{{ $dataMedis->pasien->nama }}"
+                                                        readonly>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-4">
-                                                        <label class="form-label fw-bold">Tanda Tangan Pasien</label>
-                                                        <div class="border p-3 mb-2">
-                                                            <canvas id="signaturePatient" class="signature-pad"></canvas>
-                                                        </div>
-                                                        <input type="hidden" name="tanda_tangan_pasien"
-                                                            id="patientSignature">
-                                                        <div class="d-flex justify-content-between">
-                                                            <span class="text-muted small">Silakan tanda tangan di area di
-                                                                atas</span>
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-secondary"
-                                                                id="clearPatientSignature">
-                                                                <i class="fas fa-eraser me-1"></i>Hapus
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                            </div>
+
+                                            <div class="responsible-person-container" id="family_container">
+                                                <div class="mb-3">
+                                                    <label for="family_name" class="form-label fw-bold">Nama Keluarga</label>
+                                                    <input type="text" name="family_name" id="family_name"
+                                                        class="form-control" placeholder="Masukkan nama keluarga">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="family_relationship" class="form-label fw-bold">Status Hubungan dengan Pasien</label>
+                                                    <input type="text" name="family_relationship" id="family_relationship"
+                                                        class="form-control" placeholder="Masukkan hubungan (misal: Istri, Anak)">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="family_address" class="form-label fw-bold">Alamat Keluarga</label>
+                                                    <textarea name="family_address" id="family_address" class="form-control" rows="3"
+                                                        placeholder="Masukkan alamat keluarga"></textarea>
                                                 </div>
                                             </div>
 
@@ -464,78 +426,19 @@
                                     </div>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi signature pad untuk dokter
-            const doctorCanvasElement = document.getElementById('signatureDoctor');
-            doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20;
-            doctorCanvasElement.height = 150;
-
-            const doctorSignaturePad = new SignaturePad(doctorCanvasElement, {
-                backgroundColor: 'rgba(255, 255, 255, 0)',
-                penColor: 'black',
-                minWidth: 1,
-                maxWidth: 3
-            });
-
-            // Inisialisasi signature pad untuk pasien
-            const patientCanvasElement = document.getElementById('signaturePatient');
-            patientCanvasElement.width = patientCanvasElement.parentElement.clientWidth - 20;
-            patientCanvasElement.height = 150;
-
-            const patientSignaturePad = new SignaturePad(patientCanvasElement, {
-                backgroundColor: 'rgba(255, 255, 255, 0)',
-                penColor: 'black',
-                minWidth: 1,
-                maxWidth: 3
-            });
-
-            // Clear button untuk tanda tangan dokter
-            document.getElementById('clearDoctorSignature').addEventListener('click', function() {
-                doctorSignaturePad.clear();
-                document.getElementById('doctorSignature').value = '';
-            });
-
-            // Clear button untuk tanda tangan pasien
-            document.getElementById('clearPatientSignature').addEventListener('click', function() {
-                patientSignaturePad.clear();
-                document.getElementById('patientSignature').value = '';
-            });
-
-            // Handle window resize untuk signature pads
-            window.addEventListener('resize', function() {
-                const doctorData = doctorSignaturePad.toData();
-                const patientData = patientSignaturePad.toData();
-
-                doctorCanvasElement.width = doctorCanvasElement.parentElement.clientWidth - 20;
-                doctorCanvasElement.height = 150;
-
-                patientCanvasElement.width = patientCanvasElement.parentElement.clientWidth - 20;
-                patientCanvasElement.height = 150;
-
-                if (doctorData && doctorData.length > 0) {
-                    doctorSignaturePad.fromData(doctorData);
-                }
-
-                if (patientData && patientData.length > 0) {
-                    patientSignaturePad.fromData(patientData);
-                }
-            });
-
             // Variabel untuk menyimpan template yang aktif
             let activeTemplate = 'full-body';
             let canvas;
@@ -843,25 +746,40 @@
                 });
             }
 
+            // Handle responsible person selection
+            const responsiblePersonSelect = document.getElementById('responsible_person');
+            const patientContainer = document.getElementById('patient_container');
+            const familyContainer = document.getElementById('family_container');
+
+            function updateResponsiblePersonFields() {
+                const selectedValue = responsiblePersonSelect.value;
+
+                // Reset visibility
+                patientContainer.classList.remove('active');
+                familyContainer.classList.remove('active');
+
+                // Reset required attributes
+                document.getElementById('patient_name').removeAttribute('required');
+                document.getElementById('family_name').removeAttribute('required');
+                document.getElementById('family_relationship').removeAttribute('required');
+                document.getElementById('family_address').removeAttribute('required');
+
+                if (selectedValue === 'pasien') {
+                    patientContainer.classList.add('active');
+                    document.getElementById('patient_name').setAttribute('required', 'required');
+                } else if (selectedValue === 'keluarga') {
+                    familyContainer.classList.add('active');
+                    document.getElementById('family_name').setAttribute('required', 'required');
+                    document.getElementById('family_relationship').setAttribute('required', 'required');
+                    document.getElementById('family_address').setAttribute('required', 'required');
+                }
+            }
+
+            responsiblePersonSelect.addEventListener('change', updateResponsiblePersonFields);
+
             // Submit form
             document.getElementById('siteMarkingForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                // Cek tanda tangan dokter
-                if (doctorSignaturePad.isEmpty()) {
-                    alert('Harap isi tanda tangan dokter terlebih dahulu!');
-                    return false;
-                }
-
-                // Cek tanda tangan pasien
-                if (patientSignaturePad.isEmpty()) {
-                    alert('Harap isi tanda tangan pasien terlebih dahulu!');
-                    return false;
-                }
-
-                // Simpan data tanda tangan
-                document.getElementById('doctorSignature').value = doctorSignaturePad.toDataURL();
-                document.getElementById('patientSignature').value = patientSignaturePad.toDataURL();
 
                 // Simpan data marking
                 markingDataPerTemplate[activeTemplate] = JSON.stringify(canvas.toJSON(['selectable', 'hasControls']));
