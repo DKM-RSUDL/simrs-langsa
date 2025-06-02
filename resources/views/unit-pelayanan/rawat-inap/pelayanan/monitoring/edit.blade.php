@@ -38,9 +38,34 @@
             @include('components.patient-card')
         </div>
 
+        {{-- Dynamic Title Based on kd_unit --}}
+        @php
+            $unitTitles = [
+                '10015' => 'Monitoring Intensive Coronary Care Unit (ICCU)',
+                '10016' => 'Monitoring Intensive Care Unit (ICU)',
+                '10131' => 'Monitoring Neonatal Intensive Care Unit (NICU)',
+                '10132' => 'Monitoring Pediatric Intensive Care Unit (PICU)',
+            ];
+            $title = isset($unitTitles[$dataMedis->kd_unit])
+                ? $unitTitles[$dataMedis->kd_unit]
+                : 'Monitoring Intensive Care';
+        @endphp
+
+        @php
+        $unitTitlesss = [
+            '10015' => 'ICCU',
+            '10016' => 'ICU',
+            '10131' => 'NICU',
+            '10132' => 'PICU',
+        ];
+        $subTitle = isset($unitTitlesss[$dataMedis->kd_unit])
+            ? $unitTitlesss[$dataMedis->kd_unit]
+            : 'Monitoring Intensive Care';
+        @endphp
+
         <div class="col-md-9">
             <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Edit Monitoring Intensive Care Unit (ICCU)</h5>
+                <h5 class="text-secondary fw-bold">Edit {{ $title }}</h5>
             </div>
 
             <hr>
@@ -92,6 +117,7 @@
                     </div>
 
                     <!-- Patient Information Section -->
+                    <!-- Patient Information Section -->
                     <div class="card mb-4">
                         <div class="card-header bg-primary text-white">
                             <h6 class="mb-0">
@@ -107,56 +133,134 @@
                             
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold required">Indikasi ICCU</label>
-                                        <textarea class="form-control bg-light" name="indikasi_iccu" rows="3" required>{{ $monitoring->indikasi_iccu }}</textarea>
-                                    </div>
+                                    @if(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold required">Indikasi {{ $subTitle }}</label>
+                                            <textarea class="form-control bg-light" name="indikasi_iccu" rows="3" required>{{ $monitoring->indikasi_iccu }}</textarea>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Berat Badan (kg)</label>
-                                                <input type="number" step="0.1" min="0" class="form-control bg-light"
-                                                    name="berat_badan" placeholder="kg" value="{{ $monitoring->berat_badan ? number_format($monitoring->berat_badan, 1) : '' }}">
+
+                                {{-- Field khusus untuk NICU --}}
+                                @if($dataMedis->kd_unit == '10131')
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Hari Rawat Ke-</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="1" class="form-control bg-light" name="hari_rawat" value="{{ $monitoring->hari_rawat ?? '' }}">
+                                                        <span class="input-group-text bg-light" data-bs-toggle="tooltip" title="Hari Rawat Kunjungan">
+                                                            <i class="bi bi-info-circle"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Tinggi Badan (cm)</label>
-                                                <input type="number" step="1" min="0" class="form-control bg-light"
-                                                    name="tinggi_badan" placeholder="cm" value="{{ $monitoring->tinggi_badan ? number_format($monitoring->tinggi_badan, 0) : '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Hari Rawat Ke-</label>
-                                                <div class="input-group">
-                                                    <input type="number" min="1" class="form-control bg-light" name="hari_rawat" value="{{ $monitoring->hari_rawat ?? '' }}">
-                                                    <span class="input-group-text bg-light" data-bs-toggle="tooltip" title="Hari Rawat Kunjungan">
-                                                        <i class="bi bi-info-circle"></i>
-                                                    </span>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Usia Kelahiran</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="0" max="365" class="form-control bg-light" name="usia_kelahiran" placeholder="Hari" value="{{ $monitoring->usia_kelahiran ?? '' }}">
+                                                        <span class="input-group-text">hari</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold required">Diagnosa</label>
-                                                <input type="text" class="form-control bg-light" name="diagnosa" value="{{ $monitoring->diagnosa }}" required>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Umur Bayi</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="0" max="365" class="form-control bg-light" name="umur_bayi" placeholder="Hari" value="{{ $monitoring->umur_bayi ?? '' }}">
+                                                        <span class="input-group-text">hari</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Umur Gestasi</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control bg-light" name="umur_gestasi" placeholder="Minggu" value="{{ $monitoring->umur_gestasi ?? '' }}">
+                                                        <span class="input-group-text">minggu</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Berat Badan Lahir</label>
+                                                    <div class="input-group">
+                                                        <input type="number" step="0.1" class="form-control bg-light" name="berat_badan_lahir" placeholder="Berat lahir" value="{{ $monitoring->berat_badan_lahir ?? '' }}">
+                                                        <span class="input-group-text">gram</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Cara Persalinan</label>
+                                                    <select class="form-select bg-light" name="cara_persalinan">
+                                                        <option value="">- Pilih Cara Persalinan -</option>
+                                                        <option value="Normal" {{ ($monitoring->cara_persalinan ?? '') == 'Normal' ? 'selected' : '' }}>Normal/Spontan</option>
+                                                        <option value="Vacuum" {{ ($monitoring->cara_persalinan ?? '') == 'Vacuum' ? 'selected' : '' }}>Vacuum</option>
+                                                        <option value="Forceps" {{ ($monitoring->cara_persalinan ?? '') == 'Forceps' ? 'selected' : '' }}>Forceps</option>
+                                                        <option value="SC" {{ ($monitoring->cara_persalinan ?? '') == 'SC' ? 'selected' : '' }}>Sectio Caesarea (SC)</option>
+                                                        <option value="Prematur" {{ ($monitoring->cara_persalinan ?? '') == 'Prematur' ? 'selected' : '' }}>Prematur</option>
+                                                        <option value="Lainnya" {{ ($monitoring->cara_persalinan ?? '') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                {{-- End field khusus NICU --}}
+
+                                @if(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Berat Badan (kg)</label>
+                                                    <input type="number" step="0.1" min="0" class="form-control bg-light" name="berat_badan" placeholder="kg" value="{{ $monitoring->berat_badan ? number_format($monitoring->berat_badan, 1) : '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Tinggi Badan (cm)</label>
+                                                    <input type="number" step="1" min="0" class="form-control bg-light" name="tinggi_badan" placeholder="cm" value="{{ $monitoring->tinggi_badan ? number_format($monitoring->tinggi_badan, 0) : '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Hari Rawat Ke-</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="1" class="form-control bg-light" name="hari_rawat" value="{{ $monitoring->hari_rawat ?? '' }}">
+                                                        <span class="input-group-text bg-light" data-bs-toggle="tooltip" title="Hari Rawat Kunjungan">
+                                                            <i class="bi bi-info-circle"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold required">Diagnosa</label>
+                                                    <input type="text" class="form-control bg-light" name="diagnosa" value="{{ $monitoring->diagnosa }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="form-group">
-                                    <label for="alergi">Alergi</label>
+                                    <label class="form-label fw-bold" for="alergi">Alergi</label>
                                     <div class="input-group">
-                                        <input type="text" name="alergi_display" id="alergi_display"
-                                            class="form-control" placeholder="Alergi pasien (jika ada)"
-                                            value="{{ $allergiesDisplay ?? '' }}" readonly>
-                                        <input type="hidden" name="alergi" id="alergi"
-                                            value="{{ $allergiesJson ?? '' }}">
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#alergiModal">
+                                        <input type="text" name="alergi_display" id="alergi_display" class="form-control" placeholder="Alergi pasien (jika ada)" value="{{ $allergiesDisplay ?? '' }}" readonly>
+                                        <input type="hidden" name="alergi" id="alergi" value="{{ $allergiesJson ?? '' }}">
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#alergiModal">
                                             <i class="ti-plus"></i> Tambah Alergi
                                         </button>
                                     </div>
@@ -171,58 +275,142 @@
                                         <i class="bi bi-people-fill me-1"></i> Informasi Tenaga Medis
                                     </h6>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Dokter</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="dokter">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ $monitoring->dokter == $d->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
+                                {{-- Form untuk NICU (10131) --}}
+                                @if($dataMedis->kd_unit == '10131')
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Diagnosa 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_diagnosa_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_diagnosa_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Konsulen</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="konsulen">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ $monitoring->konsulen == $d->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Diagnosa 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_diagnosa_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_diagnosa_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Anastesi/RB</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="anastesi_rb">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ $monitoring->anastesi_rb == $d->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter NICU 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_nicu_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_nicu_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Dokter Jaga</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="dokter_jaga">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ $monitoring->dokter_jaga == $d->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter NICU 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_nicu_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_nicu_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Konsul 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_konsul_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_konsul_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Konsul 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_konsul_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring && $monitoring->dokter_konsul_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                    {{-- Form untuk ICCU (10015), ICU (10016), PICU (10132) --}}
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring->dokter == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Konsulen</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="konsulen">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring->konsulen == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Anastesi/RB</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="anastesi_rb">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring->anastesi_rb == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Jaga</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%" name="dokter_jaga">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}" {{ $monitoring->dokter_jaga == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -232,7 +420,7 @@
                         <div class="card-header bg-success text-white">
                             <h6 class="mb-0">
                                 <i class="bi bi-heart-pulse-fill me-2"></i>
-                                Monitoring ICCU Parameters
+                                Monitoring {{ $subTitle }} Parameters
                             </h6>
                         </div>
                         <div class="card-body mt-3">
@@ -768,7 +956,11 @@
                     <!-- Ventilator Parameters -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
+                            @if ($dataMedis->kd_unit == '10131')
+                                <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
+                            @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
+                            @endif
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">

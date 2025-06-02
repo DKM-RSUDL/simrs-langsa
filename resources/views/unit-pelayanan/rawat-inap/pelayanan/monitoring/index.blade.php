@@ -187,7 +187,6 @@
                                                     <th scope="col" class="text-center">Tanggal</th>
                                                     <th scope="col" class="text-center">Jam</th>
                                                     <th scope="col" class="text-center">Pembuat</th>
-                                                    <th scope="col" class="text-center">Diagnosa</th>
                                                     <th scope="col" class="text-center">Vital Signs</th>
                                                     <th scope="col" class="text-center">Hari Rawat Ke</th>
                                                     <th scope="col" class="text-center" style="width: 150px;">Aksi</th>
@@ -204,7 +203,6 @@
                                                             </span>
                                                         </td>
                                                         <td>{{ $record->userCreator->name ?? 'Unknown' }}</td>
-                                                        <td>{{ $record->diagnosa }}</td>
                                                         <td>
                                                             <div class="vital-statsss">
                                                                 <span class="vital-itemmm">TD: <strong>{{ number_format($record->detail->sistolik ?? 0, 0) }}/{{ number_format($record->detail->diastolik ?? 0, 0) }}</strong></span>

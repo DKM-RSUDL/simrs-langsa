@@ -70,34 +70,104 @@ class MonitoringController extends Controller
         );
     }
 
-    // New method to get filtered monitoring data via AJAX
-    public function getFilteredData(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function getAvailableDays($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // Get distinct hari rawat with counts
+        $hariRawatData = RmeIntesiveMonitoring::where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->selectRaw('hari_rawat, COUNT(*) as count')
+            ->groupBy('hari_rawat')
+            ->orderBy('hari_rawat', 'asc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $hariRawatData
+        ]);
+    }
+
+    public function getFilteredDataByDay(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'hari_rawat' => 'required|integer|min:1'
         ]);
 
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
+        $hariRawat = $request->hari_rawat;
 
-        // Get monitoring records within date range
-        $monitoringRecords = RmeIntesiveMonitoring::with(['detail', 'userCreator'])
+        // Get monitoring records for specific hari rawat with therapy relationships
+        $monitoringRecords = RmeIntesiveMonitoring::with([
+            'detail',
+            'userCreator',
+            'therapyDoses' => function ($query) {
+                $query->with(['therapy' => function ($subQuery) {
+                    $subQuery->select('id', 'nama_obat', 'jenis_terapi', 'dihitung');
+                }]);
+            }
+        ])
             ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
-            ->whereBetween('tgl_implementasi', [$startDate, $endDate])
+            ->where('hari_rawat', $hariRawat)
             ->orderBy('tgl_implementasi', 'asc')
             ->orderBy('jam_implementasi', 'asc')
             ->get();
 
-        // Format data for response
+        // Format data for response including balance calculations
         $formattedData = $monitoringRecords->map(function ($record) {
+            // Calculate balance considering ALL therapies (including oral) with dihitung = 1
+            $totalInput = 0;
+            $totalOutput = 0;
+
+            // Count ALL therapy doses (oral, injection, drip, fluid) only if dihitung = 1
+            if ($record->therapyDoses) {
+                foreach ($record->therapyDoses as $dose) {
+                    if (
+                        $dose->therapy &&
+                        in_array($dose->therapy->jenis_terapi, [1, 2, 3, 4]) && // Include oral therapy (1)
+                        $dose->therapy->dihitung == 1 &&
+                        isset($dose->nilai) &&
+                        $dose->nilai > 0
+                    ) {
+                        $totalInput += floatval($dose->nilai);
+                    }
+                }
+            }
+
+            // Add enteral inputs (always counted)
+            if (isset($record->detail->oral) && is_numeric($record->detail->oral)) {
+                $totalInput += floatval($record->detail->oral);
+            }
+            if (isset($record->detail->ngt) && is_numeric($record->detail->ngt)) {
+                $totalInput += floatval($record->detail->ngt);
+            }
+
+            // Calculate outputs (always counted)
+            if (isset($record->detail->bab) && is_numeric($record->detail->bab)) {
+                $totalOutput += floatval($record->detail->bab);
+            }
+            if (isset($record->detail->urine) && is_numeric($record->detail->urine)) {
+                $totalOutput += floatval($record->detail->urine);
+            }
+            if (isset($record->detail->iwl) && is_numeric($record->detail->iwl)) {
+                $totalOutput += floatval($record->detail->iwl);
+            }
+            if (isset($record->detail->muntahan_cms) && is_numeric($record->detail->muntahan_cms)) {
+                $totalOutput += floatval($record->detail->muntahan_cms);
+            }
+            if (isset($record->detail->drain) && is_numeric($record->detail->drain)) {
+                $totalOutput += floatval($record->detail->drain);
+            }
+
+            $balance = $totalInput - $totalOutput;
+
             return [
                 'id' => $record->id,
                 'tgl_implementasi' => $record->tgl_implementasi,
                 'jam_implementasi' => $record->jam_implementasi,
+                'hari_rawat' => $record->hari_rawat,
                 'formatted_datetime' => Carbon::parse($record->tgl_implementasi)->format('d M Y') . ' ' .
                     Carbon::parse($record->jam_implementasi)->format('H:i'),
                 'detail' => [
@@ -107,6 +177,12 @@ class MonitoringController extends Controller
                     'hr' => $record->detail->hr ?? 0,
                     'rr' => $record->detail->rr ?? 0,
                     'temp' => $record->detail->temp ?? 0,
+                ],
+                'balance_info' => [
+                    'total_input' => $totalInput,
+                    'total_output' => $totalOutput,
+                    'balance' => $balance,
+                    'includes_all_counted_therapies' => true // Updated note
                 ]
             ];
         });
@@ -116,8 +192,110 @@ class MonitoringController extends Controller
             'data' => $formattedData,
             'count' => $formattedData->count(),
             'filter_info' => [
-                'start_date' => Carbon::parse($startDate)->format('d M Y'),
-                'end_date' => Carbon::parse($endDate)->format('d M Y'),
+                'hari_rawat' => $hariRawat,
+            ]
+        ]);
+    }
+
+    public function getAllMonitoringData($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // Get all monitoring records with therapy relationships
+        $monitoringRecords = RmeIntesiveMonitoring::with([
+            'detail',
+            'userCreator',
+            'therapyDoses' => function ($query) {
+                $query->with(['therapy' => function ($subQuery) {
+                    $subQuery->select('id', 'nama_obat', 'jenis_terapi', 'dihitung');
+                }]);
+            }
+        ])
+            ->where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('hari_rawat', 'asc')
+            ->orderBy('tgl_implementasi', 'asc')
+            ->orderBy('jam_implementasi', 'asc')
+            ->get();
+
+        // Format data for response including balance calculations
+        $formattedData = $monitoringRecords->map(function ($record) {
+            // Calculate balance considering ALL therapies (including oral) with dihitung = 1
+            $totalInput = 0;
+            $totalOutput = 0;
+
+            // Count ALL therapy doses (oral, injection, drip, fluid) only if dihitung = 1
+            if ($record->therapyDoses) {
+                foreach ($record->therapyDoses as $dose) {
+                    if (
+                        $dose->therapy &&
+                        in_array($dose->therapy->jenis_terapi, [1, 2, 3, 4]) && // Include oral therapy (1)
+                        $dose->therapy->dihitung == 1 &&
+                        isset($dose->nilai) &&
+                        $dose->nilai > 0
+                    ) {
+                        $totalInput += floatval($dose->nilai);
+                    }
+                }
+            }
+
+            // Add enteral inputs (always counted)
+            if (isset($record->detail->oral) && is_numeric($record->detail->oral)) {
+                $totalInput += floatval($record->detail->oral);
+            }
+            if (isset($record->detail->ngt) && is_numeric($record->detail->ngt)) {
+                $totalInput += floatval($record->detail->ngt);
+            }
+
+            // Calculate outputs (always counted)
+            if (isset($record->detail->bab) && is_numeric($record->detail->bab)) {
+                $totalOutput += floatval($record->detail->bab);
+            }
+            if (isset($record->detail->urine) && is_numeric($record->detail->urine)) {
+                $totalOutput += floatval($record->detail->urine);
+            }
+            if (isset($record->detail->iwl) && is_numeric($record->detail->iwl)) {
+                $totalOutput += floatval($record->detail->iwl);
+            }
+            if (isset($record->detail->muntahan_cms) && is_numeric($record->detail->muntahan_cms)) {
+                $totalOutput += floatval($record->detail->muntahan_cms);
+            }
+            if (isset($record->detail->drain) && is_numeric($record->detail->drain)) {
+                $totalOutput += floatval($record->detail->drain);
+            }
+
+            $balance = $totalInput - $totalOutput;
+
+            return [
+                'id' => $record->id,
+                'tgl_implementasi' => $record->tgl_implementasi,
+                'jam_implementasi' => $record->jam_implementasi,
+                'hari_rawat' => $record->hari_rawat,
+                'formatted_datetime' => Carbon::parse($record->tgl_implementasi)->format('d M Y') . ' ' .
+                    Carbon::parse($record->jam_implementasi)->format('H:i'),
+                'detail' => [
+                    'sistolik' => $record->detail->sistolik ?? 0,
+                    'diastolik' => $record->detail->diastolik ?? 0,
+                    'map' => $record->detail->map ?? 0,
+                    'hr' => $record->detail->hr ?? 0,
+                    'rr' => $record->detail->rr ?? 0,
+                    'temp' => $record->detail->temp ?? 0,
+                ],
+                'balance_info' => [
+                    'total_input' => $totalInput,
+                    'total_output' => $totalOutput,
+                    'balance' => $balance,
+                    'includes_all_counted_therapies' => true // Updated note
+                ]
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $formattedData,
+            'count' => $formattedData->count(),
+            'filter_info' => [
+                'type' => 'all_days',
             ]
         ]);
     }
@@ -146,6 +324,7 @@ class MonitoringController extends Controller
                 'id' => $monitoring->id,
                 'tgl_implementasi' => $monitoring->tgl_implementasi,
                 'jam_implementasi' => $monitoring->jam_implementasi,
+                'hari_rawat' => $monitoring->hari_rawat,
                 'formatted_date' => Carbon::parse($monitoring->tgl_implementasi)->format('d M Y'),
                 'formatted_time' => Carbon::parse($monitoring->jam_implementasi)->format('H:i'),
                 'detail' => [
@@ -232,6 +411,15 @@ class MonitoringController extends Controller
         // Format allergies for display
         $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
 
+        // Dynamic title based on unit
+        $unitTitles = [
+            '10015' => 'Monitoring ICCU',
+            '10016' => 'Monitoring ICU',
+            '10131' => 'Monitoring NICU',
+            '10132' => 'Monitoring PICU',
+        ];
+        $title = isset($unitTitles[$kd_unit]) ? $unitTitles[$kd_unit] : 'Monitoring Intensive Care';
+
         return view(
             'unit-pelayanan.rawat-inap.pelayanan.monitoring.create',
             compact('dataMedis', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'latestMonitoring', 'dokter', 'therapies', 'allergiesJson', 'allergiesDisplay')
@@ -248,8 +436,6 @@ class MonitoringController extends Controller
             $validated = $request->validate([
                 'tgl_implementasi' => 'required|date',
                 'jam_implementasi' => 'required|date_format:H:i',
-                'indikasi_iccu' => 'required|string',
-                'diagnosa' => 'required|string',
                 'sistolik' => 'required|numeric|min:0',
                 'therapy_doses.*' => 'nullable|numeric|min:0', // Validasi dosis obat
             ]);
@@ -271,6 +457,21 @@ class MonitoringController extends Controller
             $monitoring->dokter_jaga = $request->dokter_jaga;
             $monitoring->konsulen = $request->konsulen;
             $monitoring->anastesi_rb = $request->anastesi_rb;
+
+            //NICU BAYI
+            $monitoring->usia_kelahiran = $request->usia_kelahiran;
+            $monitoring->umur_bayi = $request->umur_bayi;
+            $monitoring->umur_gestasi = $request->umur_gestasi;
+            $monitoring->berat_badan_lahir = $request->berat_badan_lahir;
+            $monitoring->cara_persalinan = $request->cara_persalinan;
+            $monitoring->dokter_diagnosa_1 = $request->dokter_diagnosa_1;
+            $monitoring->dokter_diagnosa_2 = $request->dokter_diagnosa_2;
+            $monitoring->dokter_nicu_1 = $request->dokter_nicu_1;
+            $monitoring->dokter_nicu_2 = $request->dokter_nicu_2;
+            $monitoring->dokter_konsul_1 = $request->dokter_konsul_1;
+            $monitoring->dokter_konsul_2 = $request->dokter_konsul_2;
+
+            //USER DETECTED
             $monitoring->user_create = auth()->user()->id;
             $monitoring->user_edit = auth()->user()->id;
             $monitoring->save();
@@ -484,8 +685,6 @@ class MonitoringController extends Controller
             $validated = $request->validate([
                 'tgl_implementasi' => 'required|date',
                 'jam_implementasi' => 'required|date_format:H:i',
-                'indikasi_iccu' => 'required|string',
-                'diagnosa' => 'required|string',
                 'sistolik' => 'required|numeric|min:0',
                 'therapy_doses.*' => 'nullable|numeric|min:0',
             ]);
@@ -510,6 +709,21 @@ class MonitoringController extends Controller
             $monitoring->konsulen = $request->konsulen;
             $monitoring->anastesi_rb = $request->anastesi_rb;
             $monitoring->dokter_jaga = $request->dokter_jaga;
+
+            //NICU BAYI
+            $monitoring->usia_kelahiran = $request->usia_kelahiran;
+            $monitoring->umur_bayi = $request->umur_bayi;
+            $monitoring->umur_gestasi = $request->umur_gestasi;
+            $monitoring->berat_badan_lahir = $request->berat_badan_lahir;
+            $monitoring->cara_persalinan = $request->cara_persalinan;
+            $monitoring->dokter_diagnosa_1 = $request->dokter_diagnosa_1;
+            $monitoring->dokter_diagnosa_2 = $request->dokter_diagnosa_2;
+            $monitoring->dokter_nicu_1 = $request->dokter_nicu_1;
+            $monitoring->dokter_nicu_2 = $request->dokter_nicu_2;
+            $monitoring->dokter_konsul_1 = $request->dokter_konsul_1;
+            $monitoring->dokter_konsul_2 = $request->dokter_konsul_2;
+
+            // Update user information
             $monitoring->user_edit = auth()->user()->id;
             $monitoring->save();
 
@@ -702,16 +916,9 @@ class MonitoringController extends Controller
         );
     }
 
-    public function print(Request $request)
+    public function printMonitoring(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        $kd_unit = $request->kd_unit;
-        $kd_pasien = $request->kd_pasien;
-        $tgl_masuk = $request->tgl_masuk;
-        $urut_masuk = $request->urut_masuk;
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-
-        // Ambil data medis kunjungan
+        // Get patient data
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
                 $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
@@ -719,8 +926,9 @@ class MonitoringController extends Controller
                 $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
                 $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
             })
-            ->where('kunjungan.kd_unit', $kd_unit)
             ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.urut_masuk', (int)$urut_masuk)
             ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
             ->first();
 
@@ -728,140 +936,119 @@ class MonitoringController extends Controller
             abort(404, 'Data not found');
         }
 
-        // Hitung umur pasien
+        // Calculate patient age
         if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
             $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
         } else {
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Filter data monitoring berdasarkan range tanggal jika parameter ada
-        $monitoringQuery = RmeIntesiveMonitoring::with(['detail'])
+        // Build query for monitoring records - UPDATED: Include dihitung field
+        $query = RmeIntesiveMonitoring::with([
+            'detail',
+            'userCreator',
+            'therapyDoses' => function ($query) {
+                $query->with(['therapy' => function ($subQuery) {
+                    // Make sure to include the 'dihitung' field
+                    $subQuery->select('id', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'jenis_terapi', 'nama_obat', 'dihitung');
+                }]);
+            }
+        ])
             ->where('kd_unit', $kd_unit)
             ->where('kd_pasien', $kd_pasien)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk);
 
-        // Terapkan filter tanggal jika ada
-        if ($start_date && $end_date) {
-            $monitoringQuery->whereBetween('tgl_implementasi', [$start_date, $end_date]);
+        // Apply filter based on request parameters
+        $filterType = 'Semua Data';
+        $filterValue = '';
+
+        if ($request->has('hari_rawat') && !empty($request->hari_rawat)) {
+            $hariRawat = $request->hari_rawat;
+            $query->where('hari_rawat', $hariRawat);
+            $filterType = 'Hari Rawat';
+            $filterValue = "Ke-{$hariRawat}";
         }
 
-        // Ambil data monitoring terbaru untuk info pasien di header
-        $latestMonitoring = RmeIntesiveMonitoring::with(['detail'])
-            ->where('kd_unit', $kd_unit)
-            ->where('kd_pasien', $kd_pasien)
-            ->where('tgl_masuk', $tgl_masuk)
-            ->where('urut_masuk', $urut_masuk)
-            ->orderBy('tgl_implementasi', 'desc')
-            ->orderBy('jam_implementasi', 'desc')
-            ->first();
-
-        // Ambil semua data monitoring dengan urutan ASC untuk daftar dan chart
-        $allMonitoringRecords = $monitoringQuery->with(['detail', 'therapyDoses.therapy']) // therapyDoses.therapy PENTING
+        $monitoringRecords = $query->orderBy('hari_rawat', 'asc')
             ->orderBy('tgl_implementasi', 'asc')
             ->orderBy('jam_implementasi', 'asc')
             ->get();
 
-        // Set judul unit
+        // Dynamic title based on unit
         $unitTitles = [
-            '10015' => 'INTENSIVE CORONARY CARE UNIT',
-            '10016' => 'INTENSIVE CARE UNIT',
-            '10131' => 'NEONATAL INTENSIVE CARE UNIT',
-            '10132' => 'PEDIATRIC INTENSIVE CARE UNIT',
+            '10015' => 'ICCU',
+            '10016' => 'ICU',
+            '10131' => 'NICU',
+            '10132' => 'PICU',
+        ];
+        $title = isset($unitTitles[$kd_unit]) ? $unitTitles[$kd_unit] : 'Monitoring Intensive Care';
+
+        $subUnitTitles = [
+            '10015' => 'Intensive Coronary Care Unit',
+            '10016' => 'Intensive Care Unit',
+            '10131' => 'Neonatal Intensive Care Unit',
+            '10132' => 'Pediatric Intensive Care Unit',
+        ];
+        $subTitle = isset($subUnitTitles[$kd_unit]) ? $subUnitTitles[$kd_unit] : 'Monitoring Intensive Care';
+
+        $latestMonitoring = $monitoringRecords->sortByDesc(function ($record) {
+            return \Carbon\Carbon::parse($record->tgl_implementasi . ' ' . $record->jam_implementasi);
+        })->first();
+
+        // Prepare data for view
+        $printData = [
+            'dataMedis' => $dataMedis,
+            'monitoringRecords' => $monitoringRecords,
+            'latestMonitoring' => $latestMonitoring,
+            'title' => $title,
+            'subTitle' => $subTitle,
+            'filterType' => $filterType,
+            'filterValue' => $filterValue,
+            'printDate' => Carbon::now()->format('d M Y H:i'),
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'allergiesDisplay' => $latestMonitoring->allergies ?? 'Tidak Ada Alergi'
         ];
 
-        $title = isset($unitTitles[$dataMedis->kd_unit])
-            ? $unitTitles[$dataMedis->kd_unit]
-            : 'Monitoring Intensive Care';
-
-
-        // Get patient's allergies from the Alergi table
-        $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
-
-        // Create JSON format for allergies to initialize the form
-        $allergiesJson = $allergies->map(function ($item) {
-            return [
-                'jenis_alergi' => $item->jenis_alergi,
-                'nama_alergi' => $item->nama_alergi,
-                'reaksi' => $item->reaksi,
-                'severe' => $item->tingkat_keparahan
-            ];
-        });
-
-        // Format allergies for display
-        $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
-
-        // Pass semua data ke view
-        return view(
-            'unit-pelayanan.rawat-inap.pelayanan.monitoring.print',
-            compact(
-                'dataMedis',
-                'kd_pasien',
-                'tgl_masuk',
-                'urut_masuk',
-                'latestMonitoring', // Ini digunakan untuk data di header
-                'title',
-                'allMonitoringRecords',
-                'start_date',
-                'end_date',
-                'allergiesJson',
-                'allergiesDisplay'
-            )
-        );
-    }
-
-    //Create Therapy Obat
-    public function createTherapy($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
-    {
-        // Ambil data medis kunjungan
-        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
-            ->join('transaksi as t', function ($join) {
-                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
-                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
-                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
-                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
-            })
-            ->where('kunjungan.kd_unit', $kd_unit)
-            ->where('kunjungan.kd_pasien', $kd_pasien)
-            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
-            ->first();
-
-        if (!$dataMedis) {
-            abort(404, 'Data not found');
-        }
-
-        // Hitung umur pasien
-        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
-            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
-        } else {
-            $dataMedis->pasien->umur = 'Tidak Diketahui';
-        }
-
-        return view(
-            'unit-pelayanan.rawat-inap.pelayanan.monitoring.create-therapy',
-            compact('dataMedis', 'kd_unit',  'kd_pasien', 'tgl_masuk', 'urut_masuk')
-        );
+        return view('unit-pelayanan.rawat-inap.pelayanan.monitoring.print', $printData);
     }
 
     // Store therapy data
     public function storeTherapy(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
         $validated = $request->validate([
-            'jenis_terapi' => 'required|in:1,2,3,4',
-            'nama_obat' => 'required|string|max:255',
+            'therapies' => 'required|array|min:1',
+            'therapies.*.jenis_terapi' => 'required|in:1,2,3,4',
+            'therapies.*.nama_obat' => 'required|string|max:255',
+            'therapies.*.dihitung' => 'nullable|boolean',
         ]);
 
-        RmeIntensiveMonitoringTherapy::create([
-            'kd_unit' => $kd_unit,
-            'kd_pasien' => $kd_pasien,
-            'tgl_masuk' => $tgl_masuk,
-            'urut_masuk' => $urut_masuk,
-            'jenis_terapi' => $validated['jenis_terapi'],
-            'nama_obat' => $validated['nama_obat'],
-        ]);
+        try {
+            // Loop through each therapy and save individually
+            foreach ($validated['therapies'] as $therapy) {
+                RmeIntensiveMonitoringTherapy::create([
+                    'kd_unit' => $kd_unit,
+                    'kd_pasien' => $kd_pasien,
+                    'tgl_masuk' => $tgl_masuk,
+                    'urut_masuk' => $urut_masuk,
+                    'jenis_terapi' => $therapy['jenis_terapi'],
+                    'nama_obat' => $therapy['nama_obat'],
+                    'dihitung' => isset($therapy['dihitung']) ? 1 : 0, // Convert checkbox to boolean
+                ]);
+            }
 
-        return redirect()->back()->with('success', 'Terapi obat berhasil disimpan.');
+            $count = count($validated['therapies']);
+            $message = $count > 1
+                ? "Berhasil menyimpan {$count} terapi obat."
+                : "Terapi obat berhasil disimpan.";
+
+            return redirect()->back()->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data terapi obat.');
+        }
     }
 
     // Delete therapy data

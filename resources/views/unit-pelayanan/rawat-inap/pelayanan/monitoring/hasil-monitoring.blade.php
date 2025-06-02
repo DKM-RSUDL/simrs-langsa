@@ -5,19 +5,16 @@
         <div class="mb-4">
             <h6 class="mb-3 fw-bold">Filter Data Monitoring {{ $title }}</h6>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="startDate">
+                        <label class="form-label fw-bold">Pilih Hari Rawat</label>
+                        <select class="form-select" id="hariRawatFilter">
+                            <option value="">-- Pilih Hari Rawat --</option>
+                            {{-- Options akan diisi melalui JavaScript --}}
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="endDate">
-                    </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="mb-3">
                         <label class="form-label fw-bold">&nbsp;</label>
                         <div>
@@ -27,7 +24,10 @@
                             <button type="button" class="btn btn-secondary" id="resetFilter">
                                 <i class="fas fa-refresh"></i> Reset
                             </button>
-                            {{-- Tombol Print Baru --}}
+                            <button type="button" class="btn btn-success" id="loadAllDays">
+                                <i class="fas fa-list"></i> Muat Semua Hari
+                            </button>
+                            {{-- Tombol Print --}}
                             <button type="button" class="btn btn-info text-white" id="printMonitoring">
                                 <i class="fas fa-print"></i> Print
                             </button>
@@ -48,7 +48,7 @@
 
         <div class="alert alert-info" id="noDataState">
             <h6>Tidak Ada Data</h6>
-            <p class="mb-0">Silakan pilih rentang tanggal dan klik "Filter Data" untuk menampilkan hasil monitoring.</p>
+            <p class="mb-0">Silakan pilih hari rawat dan klik "Filter Data" untuk menampilkan hasil monitoring.</p>
         </div>
 
         <div class="alert alert-primary" id="filterInfo" style="display: none;">
@@ -78,6 +78,9 @@
                             </div>
                             <div class="vital-item mb-2">
                                 <strong>Jam:</strong> <span id="detail-time"></span>
+                            </div>
+                            <div class="vital-item mb-2">
+                                <strong>Hari Rawat:</strong> <span id="detail-hari-rawat"></span>
                             </div>
                             <div class="vital-item mb-2">
                                 <strong>Sistolik:</strong> <span id="detail-sistolik"></span> mmHg
@@ -133,6 +136,7 @@
         $(document).ready(function() {
             let vitalSignsChart = null;
             let currentFilteredData = [];
+            let availableHariRawat = [];
 
             // Get current route parameters
             const routeParams = {
@@ -142,39 +146,64 @@
                 urut_masuk: '{{ $urut_masuk }}'
             };
 
-            // Initialize with no data message
+            // Initialize
             $('#noDataState').show();
+            loadAvailableHariRawat();
+
+            // Load available hari rawat options
+            function loadAvailableHariRawat() {
+                $.ajax({
+                    url: `{{ route('rawat-inap.monitoring.available-days', ['kd_unit' => ':kd_unit', 'kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk']) }}`
+                        .replace(':kd_unit', routeParams.kd_unit)
+                        .replace(':kd_pasien', routeParams.kd_pasien)
+                        .replace(':tgl_masuk', routeParams.tgl_masuk)
+                        .replace(':urut_masuk', routeParams.urut_masuk),
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success && response.data.length > 0) {
+                            availableHariRawat = response.data;
+                            populateHariRawatOptions(response.data);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading hari rawat:', error);
+                    }
+                });
+            }
+
+            function populateHariRawatOptions(hariRawatData) {
+                const $select = $('#hariRawatFilter');
+                $select.empty().append('<option value="">-- Pilih Hari Rawat --</option>');
+                
+                hariRawatData.forEach(item => {
+                    $select.append(`<option value="${item.hari_rawat}">Hari Rawat Ke-${item.hari_rawat} (${item.count} data)</option>`);
+                });
+            }
 
             // Filter Data Event
             $('#filterData').on('click', function() {
-                const startDate = $('#startDate').val();
-                const endDate = $('#endDate').val();
+                const selectedHariRawat = $('#hariRawatFilter').val();
                 
-                if (!startDate || !endDate) {
+                if (!selectedHariRawat) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Peringatan',
-                        text: 'Silakan pilih tanggal mulai dan tanggal selesai'
+                        text: 'Silakan pilih hari rawat terlebih dahulu'
                     });
                     return;
                 }
 
-                if (startDate > endDate) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Tanggal mulai tidak boleh lebih besar dari tanggal selesai'
-                    });
-                    return;
-                }
+                filterByHariRawat(selectedHariRawat);
+            });
 
-                filterAndDisplayData(startDate, endDate);
+            // Load All Days Event
+            $('#loadAllDays').on('click', function() {
+                loadAllDaysData();
             });
 
             // Reset Filter Event
             $('#resetFilter').on('click', function() {
-                $('#startDate').val('');
-                $('#endDate').val('');
+                $('#hariRawatFilter').val('');
                 $('#monitoringFilter').empty().append('<option value="">-- Pilih Tanggal dan Jam --</option>');
                 $('#dataSelectionSection').hide();
                 $('#vitalDetails').hide();
@@ -215,8 +244,7 @@
 
             // Print Monitoring Event
             $('#printMonitoring').on('click', function() {
-                const startDate = $('#startDate').val();
-                const endDate = $('#endDate').val();
+                const selectedHariRawat = $('#hariRawatFilter').val();
 
                 let printUrl = `{{ route('rawat-inap.monitoring.print', [
                     'kd_unit' => $kd_unit,
@@ -226,20 +254,9 @@
                 ]) }}`;
 
                 const params = new URLSearchParams();
-                if (startDate) {
-                    params.append('start_date', startDate);
+                if (selectedHariRawat) {
+                    params.append('hari_rawat', selectedHariRawat);
                 }
-                if (endDate) {
-                    params.append('end_date', endDate);
-                }
-                // Jika perlu menambahkan parameter jam dari filter, tambahkan di sini
-                // Contoh:
-                // if ($('#startTime').val()) {
-                //     params.append('start_time', $('#startTime').val());
-                // }
-                // if ($('#endTime').val()) {
-                //     params.append('end_time', $('#endTime').val());
-                // }
                 
                 if (params.toString()) {
                     printUrl += '?' + params.toString();
@@ -248,7 +265,7 @@
                 window.open(printUrl, '_blank');
             });
 
-            function filterAndDisplayData(startDate, endDate) {
+            function filterByHariRawat(hariRawat) {
                 $('#loadingState').show();
                 $('#noDataState').hide();
                 $('#filterInfo').hide();
@@ -256,17 +273,16 @@
                 $('#vitalDetails').hide();
                 $('#chartSection').hide();
 
-                // AJAX call to get filtered data
+                // AJAX call to get filtered data by hari rawat
                 $.ajax({
-                    url: `{{ route('rawat-inap.monitoring.filter-data', ['kd_unit' => ':kd_unit', 'kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk']) }}`
+                    url: `{{ route('rawat-inap.monitoring.filter-by-day', ['kd_unit' => ':kd_unit', 'kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk']) }}`
                         .replace(':kd_unit', routeParams.kd_unit)
                         .replace(':kd_pasien', routeParams.kd_pasien)
                         .replace(':tgl_masuk', routeParams.tgl_masuk)
                         .replace(':urut_masuk', routeParams.urut_masuk),
                     method: 'GET',
                     data: {
-                        start_date: startDate,
-                        end_date: endDate
+                        hari_rawat: hariRawat
                     },
                     success: function(response) {
                         $('#loadingState').hide();
@@ -276,7 +292,7 @@
                             
                             // Show filter info
                             $('#filterInfo').show();
-                            $('#filterInfoText').text(`${response.filter_info.start_date} - ${response.filter_info.end_date} (${response.count} data monitoring)`);
+                            $('#filterInfoText').text(`Hari Rawat Ke-${hariRawat} (${response.count} data monitoring)`);
 
                             // Populate monitoring filter dropdown
                             populateMonitoringFilter(response.data);
@@ -285,7 +301,7 @@
                             $('#dataSelectionSection').show();
                             
                             // Create and display chart
-                            createVitalSignsChart(response.data);
+                            createVitalSignsChart(response.data, hariRawat);
                             $('#chartSection').show();
 
                         } else {
@@ -293,7 +309,66 @@
                             $('#noDataState').html(`
                                 <div class="alert alert-info">
                                     <h6>Tidak Ada Data</h6>
-                                    <p class="mb-0">Tidak ditemukan data monitoring untuk rentang tanggal ${formatDate(startDate)} - ${formatDate(endDate)}.</p>
+                                    <p class="mb-0">Tidak ditemukan data monitoring untuk Hari Rawat Ke-${hariRawat}.</p>
+                                </div>
+                            `);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#loadingState').hide();
+                        console.error('Error:', error);
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi.'
+                        });
+                    }
+                });
+            }
+
+            function loadAllDaysData() {
+                $('#loadingState').show();
+                $('#noDataState').hide();
+                $('#filterInfo').hide();
+                $('#dataSelectionSection').hide();
+                $('#vitalDetails').hide();
+                $('#chartSection').hide();
+
+                // AJAX call to get all monitoring data
+                $.ajax({
+                    url: `{{ route('rawat-inap.monitoring.all-data', ['kd_unit' => ':kd_unit', 'kd_pasien' => ':kd_pasien', 'tgl_masuk' => ':tgl_masuk', 'urut_masuk' => ':urut_masuk']) }}`
+                        .replace(':kd_unit', routeParams.kd_unit)
+                        .replace(':kd_pasien', routeParams.kd_pasien)
+                        .replace(':tgl_masuk', routeParams.tgl_masuk)
+                        .replace(':urut_masuk', routeParams.urut_masuk),
+                    method: 'GET',
+                    success: function(response) {
+                        $('#loadingState').hide();
+
+                        if (response.success && response.data.length > 0) {
+                            currentFilteredData = response.data;
+                            
+                            // Show filter info
+                            $('#filterInfo').show();
+                            $('#filterInfoText').text(`Semua Hari Rawat (${response.count} data monitoring)`);
+
+                            // Populate monitoring filter dropdown
+                            populateMonitoringFilter(response.data);
+                            
+                            // Show data selection section
+                            $('#dataSelectionSection').show();
+                            
+                            // Create and display chart
+                            createVitalSignsChart(response.data, 'all');
+                            $('#chartSection').show();
+
+                        } else {
+                            $('#noDataState').show();
+                            $('#noDataState').html(`
+                                <div class="alert alert-info">
+                                    <h6>Tidak Ada Data</h6>
+                                    <p class="mb-0">Tidak ditemukan data monitoring.</p>
                                 </div>
                             `);
                         }
@@ -342,13 +417,14 @@
                 $select.empty().append('<option value="">-- Pilih Tanggal dan Jam --</option>');
                 
                 data.forEach(record => {
-                    $select.append(`<option value="${record.id}">${record.formatted_datetime}</option>`);
+                    $select.append(`<option value="${record.id}">${record.formatted_datetime} (Hari ${record.hari_rawat})</option>`);
                 });
             }
 
             function displayVitalDetails(data) {
                 $('#detail-date').text(data.formatted_date);
                 $('#detail-time').text(data.formatted_time);
+                $('#detail-hari-rawat').text('Hari Ke-' + data.hari_rawat);
                 $('#detail-sistolik').text(data.detail.sistolik || '-');
                 $('#detail-diastolik').text(data.detail.diastolik || '-');
                 $('#detail-map').text(data.detail.map || '-');
@@ -357,7 +433,7 @@
                 $('#detail-temp').text(data.detail.temp || '-');
             }
 
-            function createVitalSignsChart(data) {
+            function createVitalSignsChart(data, hariRawat) {
                 const ctx = document.getElementById('vitalSignsChart').getContext('2d');
                 
                 // Destroy existing chart if exists
@@ -433,6 +509,8 @@
                     ]
                 };
 
+                const chartTitle = hariRawat === 'all' ? 'Tren Vital Signs - Semua Hari Rawat' : `Tren Vital Signs - Hari Rawat Ke-${hariRawat}`;
+
                 const chartOptions = {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -454,7 +532,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Tren Vital Signs',
+                            text: chartTitle,
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -513,13 +591,6 @@
                     options: chartOptions
                 });
             }
-
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-            }
         });
     </script>
 @endpush
@@ -547,7 +618,7 @@
     
     .vital-item strong {
         color: #495057;
-        min-width: 100px;
+        min-width: 120px;
     }
     
     .vital-item span {
@@ -577,5 +648,5 @@
         border: 1px solid #b8daff;
         background-color: #cce7ff;
     }
-    </style>
+</style>
 @endpush

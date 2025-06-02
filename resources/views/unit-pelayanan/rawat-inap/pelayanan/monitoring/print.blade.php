@@ -27,7 +27,6 @@
             body {
                 width: 100%;
                 font-size: 10px;
-                /* Reduced font size for better fit in landscape */
             }
 
             .table-header {
@@ -81,92 +80,136 @@
 
         .print-container {
             padding: 10px;
-            /* Reduced padding */
         }
 
-        /* New layout for header row */
+        /* Header Layout - Diperbaiki dengan proporsi 35:35:30 */
         .header-row {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            /* Reduced margin */
+            width: 100%;
+            margin-bottom: 15px;
             position: relative;
+            align-items: flex-start;
         }
 
-        /* RM number positioning */
         .rm-number {
             position: absolute;
             bottom: 0;
             left: 0;
             font-weight: bold;
             font-size: 12px;
-            /* Reduced font size */
             z-index: 100;
         }
 
         .no-right {
             position: absolute;
-            bottom: 0;
+            top: 0;
             right: 0;
-            /* Adjusted to right */
             font-weight: bold;
             font-size: 12px;
-            /* Reduced font size */
             z-index: 100;
         }
 
-        /* New header structure */
+        /* Kolom Kiri - Informasi Pasien (35%) */
         .patient-column {
-            flex: 1;
+            width: 35%;
+            padding-right: 10px;
+            box-sizing: border-box;
         }
 
+        /* Kolom Tengah - Header Hospital & Logo (35%) */
         .hospital-header {
-            flex: 2;
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .logo-title-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 10px;
-            /* Reduced margin */
+            margin-bottom: 10px;
         }
 
         .hospital-logo {
-            height: 80px;
-            /* Reduced logo size */
-            margin-right: 10px;
+            height: 70px;
+            width: auto;
+            margin-right: 15px;
+            flex-shrink: 0;
         }
 
         .header-title {
             text-align: center;
+            flex: 1;
         }
 
+        .header-title h5,
         .header-title h2,
-        .header-title h4,
-        .header-title h5 {
-            margin: 3px 0;
-            /* Reduced margin */
+        .header-title h4 {
+            margin: 4px 0;
+            line-height: 1.2;
         }
 
-        /* Patient info styling */
+        .header-title h5 {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .header-title h2 {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .header-title h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        /* Kolom Kanan - Informasi Diagnosis (30%) */
+        .diagnosis-column {
+            width: 30%;
+            padding-left: 10px;
+            box-sizing: border-box;
+        }
+
         .patient-info-container {
             margin-bottom: 10px;
         }
 
         .patient-info-item {
             margin-bottom: 3px;
-            /* Reduced margin */
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .patient-info,
+        .diagnosis-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 11px;
+        }
+
+        .patient-info-item strong {
+            font-weight: 600;
+            color: #2c3e50;
         }
 
         .vital-signs-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            /* Reduced margin */
         }
 
         .vital-signs-table th {
             background-color: #e6e6e6;
             padding: 6px;
-            /* Reduced padding */
             text-align: center;
             border: 1px solid #b8b8b8;
             font-weight: bold;
@@ -174,7 +217,6 @@
 
         .vital-signs-table td {
             padding: 4px;
-            /* Reduced padding */
             text-align: center;
             border: 1px solid #b8b8b8;
         }
@@ -208,39 +250,144 @@
 
         .filter-info {
             margin: 8px 0;
-            /* Reduced margin */
             padding: 4px;
-            /* Reduced padding */
             background-color: #e9ecef;
             border-radius: 3px;
             font-style: italic;
             font-size: 11px;
-            /* Reduced font size */
         }
 
         .print-footer {
             text-align: center;
             font-size: 10px;
-            /* Reduced font size */
             margin-top: 15px;
-            /* Reduced margin */
             color: #6c757d;
         }
 
         .signature {
             margin-top: 40px;
-            /* Reduced margin */
             text-align: right;
             padding-right: 40px;
-            /* Reduced padding */
             font-size: 11px;
-            /* Reduced font size */
         }
 
         #loadingIndicator {
             text-align: center;
             padding: 20px;
             font-size: 18px;
+        }
+
+        /* Medical Staff Info Section */
+        .medical-staff-info {
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .medical-staff-row {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .medical-staff-column {
+            flex: 1;
+            box-sizing: border-box;
+        }
+
+        .medical-staff-column:first-child {
+            flex: 0 0 35%;
+        }
+
+        .medical-staff-column:nth-child(2) {
+            flex: 0 0 35%;
+        }
+
+        .medical-staff-column:last-child {
+            flex: 0 0 30%;
+        }
+
+        .medical-staff-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .medical-staff-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+        }
+
+        .medical-staff-item {
+            font-size: 11px;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            color: #495057;
+        }
+
+        .medical-staff-item strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .medical-staff-item:last-child {
+            margin-bottom: 0;
+        }
+
+        @media print {
+            .medical-staff-box {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        /* Responsive untuk layar kecil */
+        @media screen and (max-width: 1024px) {
+            .medical-staff-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .medical-staff-column,
+            .medical-staff-column:first-child,
+            .medical-staff-column:nth-child(2),
+            .medical-staff-column:last-child {
+                flex: none;
+                width: 100%;
+            }
+        }
+
+        /* Responsive untuk layar kecil */
+        @media screen and (max-width: 1024px) {
+            .header-row {
+                flex-direction: column;
+            }
+
+            .patient-column,
+            .hospital-header,
+            .diagnosis-column {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 0;
+            }
+
+            .logo-title-container {
+                flex-direction: column;
+            }
+
+            .hospital-logo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -262,76 +409,126 @@
     </div>
 
     <div class="print-container" style="display: none;" id="printContent">
-        {{-- <div class="rm-number">
-            <strong>No. RM:</strong> {{ $dataMedis->pasien->kd_pasien ?? '-' }}
-        </div> --}}
         <div class="no-right">
             <strong>NO: K.7/IRM/Rev 0/2017</strong>
         </div>
 
         <div class="header-row">
+            <!-- Kolom Kiri - Informasi Pasien (35%) -->
             <div class="patient-column">
                 <div class="patient-info">
-                    <div class="patient-info-item"><strong>Nama Pasien:</strong> {{ $dataMedis->pasien->nama ?? '-' }}
+                    <div class="patient-info-item">
+                        <strong>Nama Pasien:</strong> {{ $dataMedis->pasien->nama ?? '-' }}
                     </div>
-                    <div class="patient-info-item"><strong>No Rm:</strong> {{ $dataMedis->pasien->kd_pasien ?? '-' }}</div>
-                    <div class="patient-info-item"><strong>Umur:</strong> {{ $dataMedis->pasien->umur ?? '-' }} tahun
+                    <div class="patient-info-item">
+                        <strong>No RM:</strong> {{ $dataMedis->pasien->kd_pasien ?? '-' }}
                     </div>
-                    <div class="patient-info-item"><strong>Berat Badan:</strong>
+                    <div class="patient-info-item">
+                        <strong>Umur:</strong> {{ $dataMedis->pasien->umur ?? '-' }} tahun
+                    </div>
+                    <div class="patient-info-item">
+                        <strong>Berat Badan:</strong>
                         {{ $latestMonitoring ? number_format($latestMonitoring->berat_badan, 1) : '-' }} kg
                     </div>
-                    <div class="patient-info-item"><strong>Tinggi Badan:</strong>
+                    <div class="patient-info-item">
+                        <strong>Tinggi Badan:</strong>
                         {{ $latestMonitoring ? number_format($latestMonitoring->tinggi_badan, 1) : '-' }} cm
                     </div>
                 </div>
             </div>
 
+            <!-- Kolom Tengah - Header Hospital & Logo (35%) -->
             <div class="hospital-header">
-                <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo Rumah Sakit"
-                    class="hospital-logo">
-                <div class="header-title">
-                    <h5>PEMERINTAH KOTA LANGSA <br>RUMAH SAKIT UMUM DAERAH LANGSA </h5>
-                    <h2>MONITORING HARIAN 24 JAM</h2>
-                    <h4 id="unitTitle">{{ $title }}</h4>
+                <div class="logo-title-container">
+                    <img src="{{ asset('assets/img/Logo-RSUD-Langsa-1.png') }}" alt="Logo Rumah Sakit"
+                        class="hospital-logo">
+                    <div class="header-title">
+                        <h5>PEMERINTAH KOTA LANGSA<br>RUMAH SAKIT UMUM DAERAH LANGSA</h5>
+                        <h2>MONITORING HARIAN 24 JAM</h2>
+                        <h4 id="unitTitle"><i>{{ $subTitle }}</i>  ({{ $title }})</h4>
+                    </div>
                 </div>
             </div>
 
+            <!-- Kolom Kanan - Informasi Diagnosis (30%) -->
             <div class="diagnosis-column">
                 <div class="diagnosis-info">
                     <div class="patient-info-item">
                         <strong>Tanggal:</strong>
                         <span id="filterDate">
-                            @if ($start_date && $end_date)
-                                {{ \Carbon\Carbon::parse($start_date)->format('d-m-Y') }}
-                                @if ($start_date != $end_date)
-                                    s.d {{ \Carbon\Carbon::parse($end_date)->format('d-m-Y') }}
-                                @endif
-                            @else
-                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}
-                            @endif
+                            {{ \Carbon\Carbon::parse($tgl_masuk)->format('d-m-Y') }}
                         </span>
                     </div>
-                    <div class="patient-info-item"><strong>Diagnosa:</strong> {{ $latestMonitoring->diagnosa ?? '-' }}
+                    <div class="patient-info-item">
+                        <strong>Diagnosa:</strong> {{ $latestMonitoring->diagnosa ?? '-' }}
                     </div>
-                    <div class="patient-info-item"><strong>Indikasi ICCU:</strong>
-                        {{ $latestMonitoring->indikasi_iccu ?? '-' }}</div>
-                    <div class="patient-info-item"><strong>Alergi:</strong>
-                        {{ $allergiesDisplay ?? 'Tidak Ada Alergi' }}</div>
+                    <div class="patient-info-item">
+                        <strong>Indikasi {{ $title }}:</strong>
+                        {{ $latestMonitoring->indikasi_iccu ?? '-' }}
+                    </div>
+                    <div class="patient-info-item">
+                        <strong>Alergi:</strong>
+                        {{ $allergiesDisplay ?? 'Tidak Ada Alergi' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Informasi Tenaga Medis -->
+        <div class="medical-staff-info">
+            <div class="medical-staff-row">
+                <!-- Kolom Kiri - Dokter (35%) -->
+                <div class="medical-staff-column">
+                    <div class="medical-staff-box">
+                        <h6 class="medical-staff-title">
+                            <i class="bi bi-person-badge me-1"></i>Dokter Penanggung Jawab
+                        </h6>
+                        <div class="medical-staff-item">
+                            <strong>Dokter 1:</strong> dr. Ahmad Fauzi, Sp.An
+                        </div>
+                        <div class="medical-staff-item">
+                            <strong>Dokter 2:</strong> dr. Siti Aminah, Sp.PD
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Tengah - Dokter Konsul (35%) -->
+                <div class="medical-staff-column">
+                    <div class="medical-staff-box">
+                        <h6 class="medical-staff-title">
+                            <i class="bi bi-person-check me-1"></i>Dokter Konsultan
+                        </h6>
+                        <div class="medical-staff-item">
+                            <strong>Konsul 1:</strong> dr. Budi Santoso, Sp.JP
+                        </div>
+                        <div class="medical-staff-item">
+                            <strong>Konsul 2:</strong> dr. Maya Dewi, Sp.S
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan - Perawat (30%) -->
+                <div class="medical-staff-column">
+                    <div class="medical-staff-box">
+                        <h6 class="medical-staff-title">
+                            <i class="bi bi-heart-pulse me-1"></i>Perawat Jaga
+                        </h6>
+                        <div class="medical-staff-item">
+                            <strong>Perawat 1:</strong> Ns. Rina Sari, S.Kep
+                        </div>
+                        <div class="medical-staff-item">
+                            <strong>Perawat 2:</strong> Ns. Agus Wijaya, S.Kep
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="filter-info" id="filterInfo">
             <i class="bi bi-funnel me-1"></i>Filter: <span id="filterText">
-                @if ($start_date && $end_date)
-                    {{ \Carbon\Carbon::parse($start_date)->format('d M Y') }}
-                    @if ($start_date != $end_date)
-                        s.d {{ \Carbon\Carbon::parse($end_date)->format('d M Y') }}
-                    @endif
-                    ({{ $allMonitoringRecords->count() }} data)
-                @else
-                    Semua data
-                @endif
+                {{ $filterType }}: {{ $filterValue ?: 'Semua Data' }} ({{ $monitoringRecords->count() }} data)
             </span>
         </div>
 
@@ -340,7 +537,6 @@
             <canvas id="vitalSignsChart"></canvas>
         </div>
 
-        {{-- Setelah div.header-row dan div.filter-info dan div.chart-container --}}
         <div class="card-header bg-light">
             <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Data Analisis Monitoring Tanda Vital</h5>
         </div>
@@ -348,8 +544,8 @@
             <thead>
                 <tr>
                     <th style="width: 200px;">Parameter</th>
-                    @if ($allMonitoringRecords->isNotEmpty())
-                        @foreach ($allMonitoringRecords as $item)
+                    @if ($monitoringRecords->isNotEmpty())
+                        @foreach ($monitoringRecords as $item)
                             @php
                                 $datetime = \Carbon\Carbon::parse(
                                     $item->tgl_implementasi . ' ' . $item->jam_implementasi,
@@ -364,46 +560,45 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($allMonitoringRecords->isNotEmpty())
+                @if ($monitoringRecords->isNotEmpty())
                     <tr>
                         <td class="parameter-header">Sistolik (mmHg)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->sistolik) ? number_format($item->detail->sistolik, 0) : '-' }}
                             </td>
                         @endforeach
                     </tr>
                     <tr>
                         <td class="parameter-header">Diastolik (mmHg)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->diastolik) ? number_format($item->detail->diastolik, 0) : '-' }}
                             </td>
                         @endforeach
                     </tr>
                     <tr>
                         <td class="parameter-header">MAP (mmHg)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->map) ? number_format($item->detail->map, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
                         <td class="parameter-header">Heart Rate (x/mnt)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->hr) ? number_format($item->detail->hr, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
                         <td class="parameter-header">Respiratory Rate (x/mnt)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->rr) ? number_format($item->detail->rr, 0) : '-' }}</td>
                         @endforeach
                     </tr>
                     <tr>
                         <td class="parameter-header">Suhu (°C)</td>
-                        @foreach ($allMonitoringRecords as $item)
+                        @foreach ($monitoringRecords as $item)
                             <td>{{ isset($item->detail->temp) ? number_format($item->detail->temp, 1) : '-' }}</td>
                         @endforeach
                     </tr>
-                    {{-- CVP dan EKG dipindah sesuai permintaan --}}
                 @else
                     <tr>
                         <td colspan="2" class="text-center text-muted">Tidak ada data tanda vital yang tercatat dalam
@@ -413,9 +608,8 @@
             </tbody>
         </table>
 
-        {{-- Section for Therapy Doses (Oral) --}}
         @php
-            $oralCvPEkgEnteralRecords = $allMonitoringRecords->filter(function ($record) {
+            $oralCvPEkgEnteralRecords = $monitoringRecords->filter(function ($record) {
                 $hasOralTherapyWithValue = false;
                 if ($record->therapyDoses) {
                     foreach ($record->therapyDoses as $dose) {
@@ -431,15 +625,15 @@
                     }
                 }
                 return $hasOralTherapyWithValue ||
-                    isset($record->detail->cvp) || // CVP (Cm H2O)
-                    !empty($record->detail->ekg_record) || // EKG Record
-                    (isset($record->detail->oral) && is_numeric($record->detail->oral)) || // Oral (ml)
-                    (isset($record->detail->ngt) && is_numeric($record->detail->ngt)); // NGT (ml)
+                    isset($record->detail->cvp) ||
+                    !empty($record->detail->ekg_record) ||
+                    (isset($record->detail->oral) && is_numeric($record->detail->oral)) ||
+                    (isset($record->detail->ngt) && is_numeric($record->detail->ngt));
             });
 
-            // Kumpulkan semua jenis terapi oral yang unik dari SEMUA record untuk baris nama obat
+            // Updated: Include dihitung status for oral therapies
             $uniqueOralTherapiesForTable = [];
-            foreach ($allMonitoringRecords as $record) {
+            foreach ($monitoringRecords as $record) {
                 if ($record->therapyDoses) {
                     foreach ($record->therapyDoses as $dose) {
                         if (
@@ -447,12 +641,16 @@
                             $dose->therapy->jenis_terapi == 1 &&
                             !isset($uniqueOralTherapiesForTable[$dose->therapy->id])
                         ) {
-                            $uniqueOralTherapiesForTable[$dose->therapy->id] = $dose->therapy->nama_obat;
+                            $uniqueOralTherapiesForTable[$dose->therapy->id] = [
+                                'nama_obat' => $dose->therapy->nama_obat,
+                                'dihitung' => $dose->therapy->dihitung,
+                            ];
                         }
                     }
                 }
             }
         @endphp
+
 
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-journal-medical me-2"></i>Terapi Oral, CVP, EKG & Input Enteral</h5>
@@ -474,12 +672,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    {{-- CVP & EKG Record --}}
-                    <tr>
-                        {{-- <td class="sub-parameter-header" colspan="{{ $oralCvPEkgEnteralRecords->count() + 1 }}">
-                            Monitoring Jantung & Sirkulasi</td> --}}
-                    </tr>
                     <tr>
                         <td class="parameter-header">CVP (Cm H2O)</td>
                         @foreach ($oralCvPEkgEnteralRecords as $item)
@@ -492,8 +684,6 @@
                             <td>{{ $item->detail->ekg_record ?? '-' }}</td>
                         @endforeach
                     </tr>
-
-                    {{-- Terapi Oral --}}
                     @if (!empty($uniqueOralTherapiesForTable))
                         <tr>
                             <td class="sub-parameter-header-oral" colspan="1">Terapi Oral</td>
@@ -501,16 +691,20 @@
                                 <td></td>
                             @endforeach
                         </tr>
-                        @foreach ($uniqueOralTherapiesForTable as $therapyId => $therapyName)
+                        @foreach ($uniqueOralTherapiesForTable as $therapyId => $therapyData)
                             <tr>
-                                <td class="parameter-header">{{ $therapyName }}</td>
+                                <td class="parameter-header">
+                                    {{ $therapyData['nama_obat'] }}
+                                    @if (!$therapyData['dihitung'])
+                                        <small class="text-muted">(Tidak dihitung)</small>
+                                    @endif
+                                </td>
                                 @foreach ($oralCvPEkgEnteralRecords as $item)
                                     @php
                                         $doseValue = '-';
                                         if ($item->therapyDoses) {
                                             $dose = $item->therapyDoses->where('id_therapy', $therapyId)->first();
                                             if ($dose && isset($dose->nilai) && $dose->nilai > 0) {
-                                                // Hanya tampilkan jika ada nilai
                                                 $doseValue = number_format($dose->nilai, 1) . ' cc/ml';
                                             }
                                         }
@@ -527,11 +721,8 @@
                 tercatat signifikan dalam rentang ini.</div>
         @endif
 
-        {{-- Section for Therapy Doses (Injeksi, Drip, Cairan) --}}
         @php
-            // Filter records yang memiliki data terapi injeksi, drip, cairan dengan nilai, ATAU data oral/NGT
-            // Filter ini TETAP SAMA karena menentukan kolom waktu untuk keseluruhan tabel gabungan ini
-            $nonOralTherapyEnteralRecords = $allMonitoringRecords->filter(function ($record) {
+            $nonOralTherapyEnteralRecords = $monitoringRecords->filter(function ($record) {
                 $hasNonOralTherapyWithValue = false;
                 if ($record->therapyDoses) {
                     foreach ($record->therapyDoses as $dose) {
@@ -547,16 +738,15 @@
                     }
                 }
                 return $hasNonOralTherapyWithValue ||
-                    (isset($record->detail->oral) && is_numeric($record->detail->oral) && $record->detail->oral > 0) || // Oral (ml) - tambahkan cek > 0 jika perlu
-                    (isset($record->detail->ngt) && is_numeric($record->detail->ngt) && $record->detail->ngt > 0); // NGT (ml) - tambahkan cek > 0 jika perlu
+                    (isset($record->detail->oral) && is_numeric($record->detail->oral) && $record->detail->oral > 0) ||
+                    (isset($record->detail->ngt) && is_numeric($record->detail->ngt) && $record->detail->ngt > 0);
             });
 
-            // Kumpulkan jenis terapi UNIK untuk setiap kategori: Injeksi, Drip, Cairan
             $uniqueInjeksiTherapies = [];
             $uniqueDripTherapies = [];
             $uniqueCairanTherapies = [];
 
-            foreach ($allMonitoringRecords as $record) {
+            foreach ($monitoringRecords as $record) {
                 if ($record->therapyDoses) {
                     foreach ($record->therapyDoses as $dose) {
                         if ($dose->therapy) {
@@ -564,66 +754,31 @@
                                 $dose->therapy->jenis_terapi == 2 &&
                                 !isset($uniqueInjeksiTherapies[$dose->therapy->id])
                             ) {
-                                $uniqueInjeksiTherapies[$dose->therapy->id] = $dose->therapy->nama_obat;
+                                $uniqueInjeksiTherapies[$dose->therapy->id] = [
+                                    'nama_obat' => $dose->therapy->nama_obat,
+                                    'dihitung' => $dose->therapy->dihitung,
+                                ];
                             } elseif (
                                 $dose->therapy->jenis_terapi == 3 &&
                                 !isset($uniqueDripTherapies[$dose->therapy->id])
                             ) {
-                                $uniqueDripTherapies[$dose->therapy->id] = $dose->therapy->nama_obat;
+                                $uniqueDripTherapies[$dose->therapy->id] = [
+                                    'nama_obat' => $dose->therapy->nama_obat,
+                                    'dihitung' => $dose->therapy->dihitung,
+                                ];
                             } elseif (
                                 $dose->therapy->jenis_terapi == 4 &&
                                 !isset($uniqueCairanTherapies[$dose->therapy->id])
                             ) {
-                                $uniqueCairanTherapies[$dose->therapy->id] = $dose->therapy->nama_obat;
+                                $uniqueCairanTherapies[$dose->therapy->id] = [
+                                    'nama_obat' => $dose->therapy->nama_obat,
+                                    'dihitung' => $dose->therapy->dihitung,
+                                ];
                             }
                         }
                     }
                 }
             }
-        @endphp
-
-        @php
-            // Filter for the "Output (I/O) Balance" table (BAB, Urine, etc.)
-            $outputOnlyBalanceRecords = $allMonitoringRecords->filter(function ($record) {
-                return (isset($record->detail->bab) && is_numeric($record->detail->bab)) ||
-                    (isset($record->detail->urine) && is_numeric($record->detail->urine)) ||
-                    (isset($record->detail->iwl) && is_numeric($record->detail->iwl)) ||
-                    (isset($record->detail->muntahan_cms) && is_numeric($record->detail->muntahan_cms)) ||
-                    (isset($record->detail->drain) && is_numeric($record->detail->drain));
-            });
-
-            // Filter for "Data Parameter Klinis" table
-            $clinicalParamsRecords = $allMonitoringRecords->filter(function ($record) {
-                return !empty($record->detail->kesadaran) ||
-                    (isset($record->detail->gcs_eye) && is_numeric($record->detail->gcs_eye)) ||
-                    (isset($record->detail->gcs_verbal) && is_numeric($record->detail->gcs_verbal)) ||
-                    (isset($record->detail->gcs_motor) && is_numeric($record->detail->gcs_motor)) ||
-                    (isset($record->detail->gcs_total) && is_numeric($record->detail->gcs_total)) ||
-                    !empty($record->detail->pupil_kanan) ||
-                    !empty($record->detail->pupil_kiri) ||
-                    !empty($record->detail->terapi_oksigen);
-            });
-
-            // Filter for "Parameter Ventilator" table
-            $ventilatorParamsRecords = $allMonitoringRecords->filter(function ($record) {
-                return !empty($record->detail->ventilator_mode) ||
-                    (isset($record->detail->ventilator_mv) && is_numeric($record->detail->ventilator_mv)) ||
-                    (isset($record->detail->ventilator_tv) && is_numeric($record->detail->ventilator_tv)) ||
-                    (isset($record->detail->ventilator_fio2) && is_numeric($record->detail->ventilator_fio2)) ||
-                    !empty($record->detail->ventilator_ie_ratio) ||
-                    (isset($record->detail->ventilator_pmax) && is_numeric($record->detail->ventilator_pmax)) ||
-                    (isset($record->detail->ventilator_peep_ps) && is_numeric($record->detail->ventilator_peep_ps));
-            });
-
-            // Filter for "Catheter & Tube" table
-            $catheterTubeRecords = $allMonitoringRecords->filter(function ($record) {
-                return !empty($record->detail->ett_no) ||
-                    (isset($record->detail->batas_bibir) && is_numeric($record->detail->batas_bibir)) ||
-                    !empty($record->detail->ngt_no) ||
-                    !empty($record->detail->cvc) ||
-                    !empty($record->detail->urine_catch_no) ||
-                    !empty($record->detail->iv_line);
-            });
         @endphp
 
         <div class="card-header bg-light mt-4">
@@ -646,17 +801,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Dosis Terapi Injeksi --}}
                     @if (!empty($uniqueInjeksiTherapies))
                         <tr>
                             <td class="sub-parameter-header-intake" colspan="1">Therapy Injeksi</td>
-                            @foreach ($oralCvPEkgEnteralRecords as $item)
+                            @foreach ($nonOralTherapyEnteralRecords as $item)
                                 <td></td>
                             @endforeach
                         </tr>
-                        @foreach ($uniqueInjeksiTherapies as $therapyId => $therapyName)
+                        @foreach ($uniqueInjeksiTherapies as $therapyId => $therapyData)
                             <tr>
-                                <td class="parameter-header">{{ $therapyName }}</td>
+                                <td class="parameter-header">
+                                    {{ $therapyData['nama_obat'] }}
+                                    @if (!$therapyData['dihitung'])
+                                        <small class="text-muted">(Tidak dihitung)</small>
+                                    @endif
+                                </td>
                                 @foreach ($nonOralTherapyEnteralRecords as $item)
                                     @php
                                         $doseValue = '-';
@@ -676,7 +835,6 @@
                         @endforeach
                     @endif
 
-                    {{-- Dosis Terapi Drip --}}
                     @if (!empty($uniqueDripTherapies))
                         <tr>
                             <td class="sub-parameter-header-intake" colspan="1">Therapy Drip</td>
@@ -684,9 +842,14 @@
                                 <td></td>
                             @endforeach
                         </tr>
-                        @foreach ($uniqueDripTherapies as $therapyId => $therapyName)
+                        @foreach ($uniqueDripTherapies as $therapyId => $therapyData)
                             <tr>
-                                <td class="parameter-header">{{ $therapyName }}</td>
+                                <td class="parameter-header">
+                                    {{ $therapyData['nama_obat'] }}
+                                    @if (!$therapyData['dihitung'])
+                                        <small class="text-muted">(Tidak dihitung)</small>
+                                    @endif
+                                </td>
                                 @foreach ($nonOralTherapyEnteralRecords as $item)
                                     @php
                                         $doseValue = '-';
@@ -706,17 +869,21 @@
                         @endforeach
                     @endif
 
-                    {{-- Dosis Terapi Cairan --}}
                     @if (!empty($uniqueCairanTherapies))
                         <tr>
-                            <td class="sub-parameter-header-intake" colspan="1">Theraoy Cairan</td>
+                            <td class="sub-parameter-header-intake" colspan="1">Therapy Cairan</td>
                             @foreach ($nonOralTherapyEnteralRecords as $item)
                                 <td></td>
                             @endforeach
                         </tr>
-                        @foreach ($uniqueCairanTherapies as $therapyId => $therapyName)
+                        @foreach ($uniqueCairanTherapies as $therapyId => $therapyData)
                             <tr>
-                                <td class="parameter-header">{{ $therapyName }}</td>
+                                <td class="parameter-header">
+                                    {{ $therapyData['nama_obat'] }}
+                                    @if (!$therapyData['dihitung'])
+                                        <small class="text-muted">(Tidak dihitung)</small>
+                                    @endif
+                                </td>
                                 @foreach ($nonOralTherapyEnteralRecords as $item)
                                     @php
                                         $doseValue = '-';
@@ -736,10 +903,8 @@
                         @endforeach
                     @endif
 
-                    {{-- Input Enteral --}}
                     <tr>
-                        <td class="sub-parameter-header-intake" colspan="1">
-                            Enteral</td>
+                        <td class="sub-parameter-header-intake" colspan="1">Enteral</td>
                         @foreach ($nonOralTherapyEnteralRecords as $item)
                             <td></td>
                         @endforeach
@@ -761,12 +926,51 @@
                 </tbody>
             </table>
         @else
-            <div class="text-center text-muted p-3">Tidak ada data Terapi Injeksi, Drip, Cairan, atau Input Enteral yang
+            <div class="text-center text-muted p-3">Tidak ada data Terapi Injeksi, Drip, Cairan, atau Input Enteral
+                yang
                 tercatat signifikan dalam rentang ini.</div>
         @endif
 
+        @php
+            $outputOnlyBalanceRecords = $monitoringRecords->filter(function ($record) {
+                return (isset($record->detail->bab) && is_numeric($record->detail->bab)) ||
+                    (isset($record->detail->urine) && is_numeric($record->detail->urine)) ||
+                    (isset($record->detail->iwl) && is_numeric($record->detail->iwl)) ||
+                    (isset($record->detail->muntahan_cms) && is_numeric($record->detail->muntahan_cms)) ||
+                    (isset($record->detail->drain) && is_numeric($record->detail->drain));
+            });
 
-        {{-- I/O Balance Table - Output Section --}}
+            $clinicalParamsRecords = $monitoringRecords->filter(function ($record) {
+                return !empty($record->detail->kesadaran) ||
+                    (isset($record->detail->gcs_eye) && is_numeric($record->detail->gcs_eye)) ||
+                    (isset($record->detail->gcs_verbal) && is_numeric($record->detail->gcs_verbal)) ||
+                    (isset($record->detail->gcs_motor) && is_numeric($record->detail->gcs_motor)) ||
+                    (isset($record->detail->gcs_total) && is_numeric($record->detail->gcs_total)) ||
+                    !empty($record->detail->pupil_kanan) ||
+                    !empty($record->detail->pupil_kiri) ||
+                    !empty($record->detail->terapi_oksigen);
+            });
+
+            $ventilatorParamsRecords = $monitoringRecords->filter(function ($record) {
+                return !empty($record->detail->ventilator_mode) ||
+                    (isset($record->detail->ventilator_mv) && is_numeric($record->detail->ventilator_mv)) ||
+                    (isset($record->detail->ventilator_tv) && is_numeric($record->detail->ventilator_tv)) ||
+                    (isset($record->detail->ventilator_fio2) && is_numeric($record->detail->ventilator_fio2)) ||
+                    !empty($record->detail->ventilator_ie_ratio) ||
+                    (isset($record->detail->ventilator_pmax) && is_numeric($record->detail->ventilator_pmax)) ||
+                    (isset($record->detail->ventilator_peep_ps) && is_numeric($record->detail->ventilator_peep_ps));
+            });
+
+            $catheterTubeRecords = $monitoringRecords->filter(function ($record) {
+                return !empty($record->detail->ett_no) ||
+                    (isset($record->detail->batas_bibir) && is_numeric($record->detail->batas_bibir)) ||
+                    !empty($record->detail->ngt_no) ||
+                    !empty($record->detail->cvc) ||
+                    !empty($record->detail->urine_catch_no) ||
+                    !empty($record->detail->iv_line);
+            });
+        @endphp
+
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Output</h5>
         </div>
@@ -831,29 +1035,29 @@
             @endif
         </div>
 
-        {{-- Balance Table (I/O Balance) --}}
+        <!-- Updated Balance Calculation Section with Oral Therapy Logic -->
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-balance-scale me-2"></i>Balance (I/O)</h5>
         </div>
         <div class="card-body p-0">
             @php
-                // Filter records yang memiliki data input atau output untuk tabel balance
-                $balanceRecords = $allMonitoringRecords->filter(function ($record) {
-                    $hasNonOralTherapyWithValue = false;
+                $balanceRecords = $monitoringRecords->filter(function ($record) {
+                    $hasCountedTherapyWithValue = false;
                     if ($record->therapyDoses) {
                         foreach ($record->therapyDoses as $dose) {
                             if (
                                 $dose->therapy &&
-                                in_array($dose->therapy->jenis_terapi, [2, 3, 4]) &&
+                                in_array($dose->therapy->jenis_terapi, [1, 2, 3, 4]) && // Include oral therapy (jenis_terapi = 1)
+                                $dose->therapy->dihitung == 1 && // Only count therapies with dihitung = 1
                                 isset($dose->nilai) &&
                                 $dose->nilai > 0
                             ) {
-                                $hasNonOralTherapyWithValue = true;
+                                $hasCountedTherapyWithValue = true;
                                 break;
                             }
                         }
                     }
-                    return $hasNonOralTherapyWithValue ||
+                    return $hasCountedTherapyWithValue ||
                         (isset($record->detail->oral) &&
                             is_numeric($record->detail->oral) &&
                             $record->detail->oral > 0) ||
@@ -865,17 +1069,17 @@
                         (isset($record->detail->drain) && is_numeric($record->detail->drain));
                 });
 
-                // Hitung total input dan output untuk setiap record
                 $balanceData = $balanceRecords->map(function ($record) {
                     $totalInput = 0;
                     $totalOutput = 0;
 
-                    // Hitung total input (Injeksi, Drip, Cairan, Oral, NGT)
+                    // Include ALL therapy doses (oral, injection, drip, fluid) where dihitung = 1
                     if ($record->therapyDoses) {
                         foreach ($record->therapyDoses as $dose) {
                             if (
                                 $dose->therapy &&
-                                in_array($dose->therapy->jenis_terapi, [2, 3, 4]) &&
+                                in_array($dose->therapy->jenis_terapi, [1, 2, 3, 4]) && // Include oral therapy
+                                $dose->therapy->dihitung == 1 && // Check if therapy should be counted
                                 isset($dose->nilai) &&
                                 $dose->nilai > 0
                             ) {
@@ -883,6 +1087,8 @@
                             }
                         }
                     }
+
+                    // Enteral inputs (always counted)
                     if (isset($record->detail->oral) && is_numeric($record->detail->oral)) {
                         $totalInput += floatval($record->detail->oral);
                     }
@@ -890,7 +1096,7 @@
                         $totalInput += floatval($record->detail->ngt);
                     }
 
-                    // Hitung total output (BAB, Urine, IWL, Muntahan, Drain)
+                    // Output calculations (always counted)
                     if (isset($record->detail->bab) && is_numeric($record->detail->bab)) {
                         $totalOutput += floatval($record->detail->bab);
                     }
@@ -907,7 +1113,6 @@
                         $totalOutput += floatval($record->detail->drain);
                     }
 
-                    // Hitung balance
                     $balance = $totalInput - $totalOutput;
 
                     return [
@@ -928,13 +1133,15 @@
                             <th style="width: 200px;">Parameter</th>
                             @foreach ($balanceData as $item)
                                 <th>{{ $item['datetime']->format('H:i') }} <br>
-                                    <small>{{ $item['datetime']->format('d-M') }}</small></th>
+                                    <small>{{ $item['datetime']->format('d-M') }}</small>
+                                </th>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="parameter-header">Total Input (mL)</td>
+                            <td class="parameter-header">Total Input (mL) <small class="text-muted">*termasuk semua
+                                    therapy yang dihitung</small></td>
                             @foreach ($balanceData as $item)
                                 <td>{{ $item['total_input'] > 0 ? number_format($item['total_input'], 0) : '-' }}</td>
                             @endforeach
@@ -960,43 +1167,39 @@
             @endif
         </div>
 
+        @php
+            $agdElektrolitRecords = $monitoringRecords->filter(function ($record) {
+                return isset($record->detail->ph) ||
+                    isset($record->detail->po2) ||
+                    isset($record->detail->pco2) ||
+                    isset($record->detail->be) ||
+                    isset($record->detail->hco3) ||
+                    isset($record->detail->saturasi_o2) ||
+                    isset($record->detail->na) ||
+                    isset($record->detail->k) ||
+                    isset($record->detail->cl) ||
+                    isset($record->detail->ureum) ||
+                    isset($record->detail->creatinin) ||
+                    isset($record->detail->hb) ||
+                    isset($record->detail->ht) ||
+                    isset($record->detail->leukosit) ||
+                    isset($record->detail->trombosit) ||
+                    isset($record->detail->sgot) ||
+                    isset($record->detail->sgpt) ||
+                    isset($record->detail->albumin) ||
+                    isset($record->detail->kdgs);
+            });
+        @endphp
 
-        {{-- Bagian Data Analisis Gas Darah (AGD) pada print.blade.php --}}
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-flask me-2"></i>Data Analisis Gas Darah (AGD)</h5>
         </div>
         <div class="card-body p-0">
-            @php
-                // 1. Filter record yang memiliki data AGD atau Elektrolit yang signifikan
-                $agdElektrolitRecords = $allMonitoringRecords->filter(function ($record) {
-                    return isset($record->detail->ph) ||
-                        isset($record->detail->po2) ||
-                        isset($record->detail->pco2) ||
-                        isset($record->detail->be) ||
-                        isset($record->detail->hco3) ||
-                        isset($record->detail->saturasi_o2) ||
-                        isset($record->detail->na) ||
-                        isset($record->detail->k) ||
-                        isset($record->detail->cl) ||
-                        isset($record->detail->ureum) ||
-                        isset($record->detail->creatinin) ||
-                        isset($record->detail->hb) ||
-                        isset($record->detail->ht) ||
-                        isset($record->detail->leukosit) ||
-                        isset($record->detail->trombosit) ||
-                        isset($record->detail->sgot) ||
-                        isset($record->detail->sgpt) ||
-                        isset($record->detail->albumin) ||
-                        isset($record->detail->kdgs);
-                });
-            @endphp
-
             @if ($agdElektrolitRecords->isNotEmpty())
                 <table class="vital-signs-table no-page-break" id="agdTable">
                     <thead>
                         <tr>
                             <th style="width: 200px;">Parameter</th>
-                            {{-- Buat kolom header HANYA untuk record yang memiliki data AGD/Elektrolit --}}
                             @foreach ($agdElektrolitRecords as $item)
                                 @php
                                     $datetime = \Carbon\Carbon::parse(
@@ -1009,10 +1212,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Sub-header AGD --}}
                         <tr>
-                            <td class="sub-parameter-header" colspan="1">
-                                AGD</td>
+                            <td class="sub-parameter-header" colspan="1">AGD</td>
                         </tr>
                         <tr>
                             <td class="parameter-header">pH</td>
@@ -1026,7 +1227,6 @@
                                 <td>{{ isset($item->detail->po2) ? number_format($item->detail->po2, 0) : '-' }}</td>
                             @endforeach
                         </tr>
-                        {{-- ... (lanjutkan untuk parameter AGD lainnya seperti PCO2, BE, HCO3, Saturasi O2) ... --}}
                         <tr>
                             <td class="parameter-header">PCO<sub>2</sub> (mmHg)</td>
                             @foreach ($agdElektrolitRecords as $item)
@@ -1052,8 +1252,6 @@
                                 </td>
                             @endforeach
                         </tr>
-
-                        {{-- Sub-header Elektrolit --}}
                         <tr>
                             <td class="parameter-header">Na / K / CL</td>
                             @foreach ($agdElektrolitRecords as $item)
@@ -1063,8 +1261,6 @@
                                 </td>
                             @endforeach
                         </tr>
-
-                        {{-- Sub-header Fungsi Ginjal --}}
                         <tr>
                             <td class="parameter-header">Ureum (mg/dL)</td>
                             @foreach ($agdElektrolitRecords as $item)
@@ -1079,8 +1275,6 @@
                                 </td>
                             @endforeach
                         </tr>
-
-                        {{-- Sub-header Hematologi --}}
                         <tr>
                             <td class="parameter-header">Hb / HT / L / Tr</td>
                             @foreach ($agdElektrolitRecords as $item)
@@ -1092,11 +1286,8 @@
                                 </td>
                             @endforeach
                         </tr>
-
-                        {{-- Sub-header Fungsi Hati --}}
                         <tr>
-                            <td class="sub-parameter-header" colspan="1">
-                                Lain-lain</td>
+                            <td class="sub-parameter-header" colspan="1">Lain-lain</td>
                         </tr>
                         <tr>
                             <td class="parameter-header">SGOT (U/L)</td>
@@ -1123,7 +1314,6 @@
                                 <td>{{ isset($item->detail->kdgs) ? number_format($item->detail->kdgs, 0) : '-' }}</td>
                             @endforeach
                         </tr>
-
                     </tbody>
                 </table>
             @else
@@ -1132,7 +1322,6 @@
             @endif
         </div>
 
-        {{-- Data Parameter Klinis Table --}}
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-clipboard2-pulse me-2"></i>Data Parameter Klinis</h5>
         </div>
@@ -1215,9 +1404,12 @@
             @endif
         </div>
 
-        {{-- Ventilator Table --}}
         <div class="card-header bg-light mt-4">
-            <h5 class="mb-0"><i class="bi bi-fan me-2"></i>Parameter Ventilator</h5>
+            @if ($dataMedis->kd_unit == '10131')
+                <h5 class="mb-0"><i class="bi bi-fan me-2"></i>Parameter CPAP</h5>
+            @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                <h5 class="mb-0"><i class="bi bi-fan me-2"></i>Parameter Ventilator</h5>
+            @endif
         </div>
         <div class="card-body p-0">
             @if ($ventilatorParamsRecords->isNotEmpty())
@@ -1294,7 +1486,6 @@
             @endif
         </div>
 
-        {{-- Catheter & Tube Table --}}
         <div class="card-header bg-light mt-4">
             <h5 class="mb-0"><i class="bi bi-bandaid me-2"></i>Catheter & Tube</h5>
         </div>
@@ -1378,7 +1569,7 @@
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 
     <script>
-        // Fungsi untuk memformat angka float - TETAP DIGUNAKAN
+        // Fungsi untuk memformat angka float
         function formatNumber(value, decimals = 1) {
             if (value === null || value === undefined || isNaN(value)) {
                 return '-';
@@ -1388,7 +1579,7 @@
 
         // Main execution when document is ready
         document.addEventListener('DOMContentLoaded', () => {
-            var monitoringData = @json($allMonitoringRecords);
+            var monitoringData = @json($monitoringRecords);
 
             // Siapkan data untuk grafik
             const labels = monitoringData.map(record => {
@@ -1419,7 +1610,6 @@
             // Aktifkan tombol print
             document.getElementById('printBtn').disabled = false;
         });
-
 
         // Fungsi untuk membuat grafik monitoring dari label yang sudah disiapkan
         function createChartFromLabels(labels, sistolikData, diastolikData, hrData, rrData, suhuData, mapData) {
@@ -1543,7 +1733,7 @@
                     maintainAspectRatio: false,
                     title: {
                         display: true,
-                        text: 'Grafik Monitoring Tanda Vital',
+                        text: `Grafik Monitoring Tanda Vital - {{ $filterType }}: {{ $filterValue ?: 'Semua Data' }}`,
                         fontSize: 16,
                         fontStyle: 'bold',
                         padding: 20

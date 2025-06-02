@@ -7,10 +7,35 @@
             @include('components.patient-card')
         </div>
 
+        {{-- Dynamic Title Based on kd_unit --}}
+        @php
+            $unitTitles = [
+                '10015' => 'Monitoring Intensive Coronary Care Unit (ICCU)',
+                '10016' => 'Monitoring Intensive Care Unit (ICU)',
+                '10131' => 'Monitoring Neonatal Intensive Care Unit (NICU)',
+                '10132' => 'Monitoring Pediatric Intensive Care Unit (PICU)',
+            ];
+            $title = isset($unitTitles[$dataMedis->kd_unit])
+                ? $unitTitles[$dataMedis->kd_unit]
+                : 'Monitoring Intensive Care';
+        @endphp
+
+        @php
+        $unitTitlesss = [
+            '10015' => 'ICCU',
+            '10016' => 'ICU',
+            '10131' => 'NICU',
+            '10132' => 'PICU',
+        ];
+        $subTitle = isset($unitTitlesss[$dataMedis->kd_unit])
+            ? $unitTitlesss[$dataMedis->kd_unit]
+            : 'Monitoring Intensive Care';
+        @endphp
+
         <div class="col-lg-9">
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
-                    <h5 class="card-title text-center text-primary fw-bold mb-0">Detail Monitoring Intensive Care Unit (ICCU)</h5>
+                    <h5 class="card-title text-center text-primary fw-bold mb-0">Detail {{ $title }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="accordion" id="iccuMonitoringAccordion">
@@ -54,7 +79,7 @@
                                         <table class="table table-bordered table-striped mb-0">
                                             <tbody>
                                                 <tr>
-                                                    <th class="bg-light">Indikasi ICCU</th>
+                                                    <th class="bg-light">Indikasi {{ $subTitle }} </th>
                                                     <td>{{ $monitoring->indikasi_iccu ?? '-' }}</td>
                                                 </tr>
                                                 <tr>
@@ -123,7 +148,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingParameters">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParameters" aria-expanded="false" aria-controls="collapseParameters">
-                                    <i class="bi bi-heart-pulse-fill me-2"></i>Monitoring ICCU Parameters
+                                    <i class="bi bi-heart-pulse-fill me-2"></i>Monitoring {{ $subTitle }} Parameters
                                 </button>
                             </h2>
                             <div id="collapseParameters" class="accordion-collapse collapse" aria-labelledby="headingParameters" data-bs-parent="#iccuMonitoringAccordion">
