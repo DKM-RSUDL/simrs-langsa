@@ -12,10 +12,16 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('rawat-inap.asesmen.medis.paru.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                    class="btn btn-sm btn-info">
+                    <i class="fas fa-print"></i> print
+                </a>
                 <a href="{{ route('rawat-inap.asesmen.medis.paru.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
-                        class="btn btn-sm btn-secondary">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
+                    class="btn btn-sm btn-secondary ms-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                </div>
             </div>
 
             <div class="card">

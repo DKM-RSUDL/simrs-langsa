@@ -19,6 +19,8 @@ use App\Models\RmeAsesmenParuRencanaKerja;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
@@ -648,6 +650,115 @@ class AsesmenParuController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenParu',
+                'rmeAsesmenParuRencanaKerja',
+                'rmeAsesmenParuPerencanaanPulang',
+                'rmeAsesmenParuDiagnosisImplementasi',
+                'pemeriksaanFisik' => function ($query) {
+                    $query->orderBy('id_item_fisik');
+                },
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.print', [
+                'asesmen'    => $asesmen ?? null,
+                'pasien' => optional($dataMedis)->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
+                // variabel lainnya sesuai kebutuhan
+                'rmeAsesmenParu' => optional($asesmen)->rmeAsesmenParu ?? null,
+                'rmeAsesmenParuRencanaKerja' => optional($asesmen)->rmeAsesmenParuRencanaKerja ?? null,
+                'rmeAsesmenParuPerencanaanPulang' => optional($asesmen)->rmeAsesmenParuPerencanaanPulang ?? null,
+                'rmeAsesmenParuDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenParuDiagnosisImplementasi ?? null,
+                'pemeriksaanFisik' => optional($asesmen)->pemeriksaanFisik ?? null,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-paru-{$id}-print-pdf.pdf");
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
         }
     }
 }
