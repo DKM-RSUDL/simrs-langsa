@@ -13,4 +13,10 @@ class RmeAlergiPasien extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'kd_pasien', 'kd_pasien');
+    }
+
 }

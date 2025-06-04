@@ -5,6 +5,11 @@ namespace App\Http\Controllers\UnitPelayanan\RawatInap;
 use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
+use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenKulitKelamin;
+use App\Models\RmeAsesmenKulitKelaminRencanaPulang;
+use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
@@ -16,6 +21,8 @@ use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AsesmenKulitKelaminController extends Controller
 {
@@ -37,6 +44,7 @@ class AsesmenKulitKelaminController extends Controller
         $jenisnyeri = RmeJenisNyeri::all();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -63,15 +71,6 @@ class AsesmenKulitKelaminController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Mengambil nama alergen dari riwayat_alergi
-        if ($dataMedis->riwayat_alergi) {
-            $dataMedis->riwayat_alergi = collect(json_decode($dataMedis->riwayat_alergi, true))
-                ->pluck('alergen')
-                ->all();
-        } else {
-            $dataMedis->riwayat_alergi = [];
-        }
-
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
         return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.create', compact(
@@ -90,7 +89,141 @@ class AsesmenKulitKelaminController extends Controller
             'jenisnyeri',
             'rmeMasterDiagnosis',
             'rmeMasterImplementasi',
+            'alergiPasien',
             'user'
         ));
     }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        DB::beginTransaction();
+
+        try {
+            $tanggal = $request->tanggal_masuk;
+            $jam = $request->jam_masuk;
+            $waktu_asesmen = $tanggal . ' ' . $jam;
+
+            $dataAsesmen = new RmeAsesmen();
+            $dataAsesmen->kd_pasien = $kd_pasien;
+            $dataAsesmen->kd_unit = $kd_unit;
+            $dataAsesmen->tgl_masuk = $tgl_masuk;
+            $dataAsesmen->urut_masuk = $urut_masuk;
+            $dataAsesmen->user_id = Auth::id();
+            $dataAsesmen->waktu_asesmen = $waktu_asesmen;
+            $dataAsesmen->kategori = 1;
+            $dataAsesmen->sub_kategori = 10;
+            $dataAsesmen->anamnesis = $request->anamnesis;
+            $dataAsesmen->save();
+
+
+            $dataOphtamology = new RmeAsesmenKulitKelamin();
+            $dataOphtamology->id_asesmen = $dataAsesmen->id;
+            $dataOphtamology->waktu_masuk = $waktu_asesmen;
+            $dataOphtamology->diagnosis_masuk = $request->diagnosis_masuk;
+            $dataOphtamology->kondisi_masuk = $request->kondisi_masuk;
+            $dataOphtamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
+            $dataOphtamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
+            $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
+            $dataOphtamology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
+            $dataOphtamology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
+            $dataOphtamology->prognosis = $request->prognosis;
+            $dataOphtamology->observasi = $request->observasi;
+            $dataOphtamology->terapeutik = $request->terapeutik;
+            $dataOphtamology->edukasi = $request->edukasi;
+            $dataOphtamology->kolaborasi = $request->kolaborasi;
+            $dataOphtamology->save();
+
+            //Simpan Diagnosa ke Master
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+            foreach ($allDiagnoses as $diagnosa) {
+                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+                if (!$existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis();
+                    $masterDiagnosa->nama_diagnosis = $diagnosa;
+                    $masterDiagnosa->save();
+                }
+            }
+
+
+            //Simpan ke table RmePemeriksaanFisik
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+                if ($isNormal) $keterangan = '';
+
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $dataAsesmen->id,
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan
+                ]);
+            }
+
+
+            // Simpan ke table RmeAsesmenRencanaPulang
+            $asesmenRencana = new RmeAsesmenKulitKelaminRencanaPulang();
+            $asesmenRencana->id_asesmen = $dataAsesmen->id;
+            $asesmenRencana->diagnosis_medis = $request->diagnosis_medis;
+            $asesmenRencana->usia_lanjut = $request->usia_lanjut;
+            $asesmenRencana->hambatan_mobilisasi = $request->hambatan_mobilisasi;
+            $asesmenRencana->membutuhkan_pelayanan_medis = $request->penggunaan_media_berkelanjutan;
+            $asesmenRencana->memerlukan_keterampilan_khusus = $request->keterampilan_khusus;
+            $asesmenRencana->memerlukan_alat_bantu = $request->alat_bantu;
+            $asesmenRencana->memiliki_nyeri_kronis = $request->nyeri_kronis;
+            $asesmenRencana->perkiraan_lama_dirawat = $request->perkiraan_hari;
+            $asesmenRencana->rencana_pulang = $request->tanggal_pulang;
+            $asesmenRencana->kesimpulan = $request->kesimpulan_planing;
+            $asesmenRencana->save();
+
+
+            // RESUME
+            $resumeData = [
+                'anamnesis'             => $request->anamnesis,
+                'diagnosis'             => [],
+                'tindak_lanjut_code'    => null,
+                'tindak_lanjut_name'    => null,
+                'tgl_kontrol_ulang'     => null,
+                'unit_rujuk_internal'   => null,
+                'rs_rujuk'              => null,
+                'rs_rujuk_bagian'       => null,
+                'konpas'                => [
+                    'sistole'   => [
+                        'hasil' => $request->sistole
+                    ],
+                    'distole'   => [
+                        'hasil' => $request->diastole
+                    ],
+                    'respiration_rate'   => [
+                        'hasil' => ''
+                    ],
+                    'suhu'   => [
+                        'hasil' => $request->suhu
+                    ],
+                    'nadi'   => [
+                        'hasil' => $request->nadi
+                    ],
+                    'tinggi_badan'   => [
+                        'hasil' => $request->tinggi_badan
+                    ],
+                    'berat_badan'   => [
+                        'hasil' => $request->berat_badan
+                    ]
+                ]
+            ];
+
+            $this->createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $resumeData);
+
+            DB::commit();
+
+            return redirect()->to(url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum"))
+                ->with('success', 'Data asesmen anak berhasil disimpan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan data asesmen' . $e->getMessage());
+        }
+    }
+
 }

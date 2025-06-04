@@ -1,7 +1,5 @@
 @extends('layouts.administrator.master')
 
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')
-
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -218,23 +216,25 @@
                                         <h5 class="section-title">4. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openAlergiModal">
-                                            <i class="ti-plus"></i> Tambah
+                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                            <i class="ti-plus"></i> Tambah Alergi
                                         </button>
-                                        <input type="hidden" name="alergis" id="alergisInput">
+                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                         <div class="table-responsive">
-                                            <table class="table" id="createAlergiTable">
-                                                <thead>
+                                            <table class="table table-bordered" id="createAlergiTable">
+                                                <thead class="table-light">
                                                     <tr>
-                                                        <th>Jenis</th>
-                                                        <th>Alergen</th>
-                                                        <th>Reaksi</th>
-                                                        <th>Severe</th>
-                                                        <th></th>
+                                                        <th width="20%">Jenis Alergi</th>
+                                                        <th width="25%">Alergen</th>
+                                                        <th width="25%">Reaksi</th>
+                                                        <th width="20%">Tingkat Keparahan</th>
+                                                        <th width="10%">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Table content will be dynamically populated -->
+                                                    <tr id="no-alergi-row">
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -606,72 +606,6 @@
             </div>
         </div>
     </div>
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-create-alergi')
-
-    <!-- JavaScript untuk interaksi form -->
 @endsection
-
-@push('js')
-    <script>
-        document.getElementById('skala_nyeri').addEventListener('input', function() {
-            const nilai = parseInt(this.value);
-            const kategoriField = document.getElementById('kategori_nyeri');
-
-            if (nilai >= 1 && nilai <= 3) {
-                kategoriField.value = 'Nyeri Ringan';
-            } else if (nilai >= 4 && nilai <= 6) {
-                kategoriField.value = 'Nyeri Sedang';
-            } else if (nilai >= 7 && nilai <= 9) {
-                kategoriField.value = 'Nyeri Berat';
-            } else if (nilai === 10) {
-                kategoriField.value = 'Nyeri Tak Tertahankan';
-            } else {
-                kategoriField.value = '';
-            }
-        });
-
-        // Fungsi untuk handle checkbox riwayat pengobatan
-        function handleRiwayatPengobatan() {
-            const checkboxYa = document.getElementById('riwayat_pengobatan_ya');
-            const checkboxTidak = document.getElementById('riwayat_pengobatan_tidak');
-            const detail = document.getElementById('riwayat_pengobatan_detail');
-
-            // Event listener untuk checkbox Ya
-            checkboxYa.addEventListener('change', function() {
-                if (this.checked) {
-                    checkboxTidak.checked = false;
-                    detail.disabled = false;
-                    detail.required = true;
-                } else {
-                    detail.disabled = true;
-                    detail.required = false;
-                    detail.value = '';
-                }
-            });
-
-            // Event listener untuk checkbox Tidak
-            checkboxTidak.addEventListener('change', function() {
-                if (this.checked) {
-                    checkboxYa.checked = false;
-                    detail.disabled = true;
-                    detail.required = false;
-                    detail.value = '';
-                }
-            });
-        }
-
-        // Panggil fungsi saat DOM loaded
-        document.addEventListener('DOMContentLoaded', handleRiwayatPengobatan);
-
-        // JavaScript untuk biopsi tetap sama
-        document.getElementById('biopsi').addEventListener('change', function() {
-            const hasil = document.getElementById('biopsi_hasil');
-            if (this.value === 'dilakukan' || this.value === 'akan_dilakukan') {
-                hasil.disabled = false;
-            } else {
-                hasil.disabled = true;
-                hasil.value = '';
-            }
-        });
-    </script>
-@endpush
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')
