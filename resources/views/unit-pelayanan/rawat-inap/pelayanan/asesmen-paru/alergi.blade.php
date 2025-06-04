@@ -84,7 +84,7 @@
             // Initialize the allergies data structure
             let allergies = [];
 
-            // Try to load existing allergies from the hidden input
+            // Load existing allergies from hidden input
             const allergiInput = document.getElementById('alergi');
             if (allergiInput && allergiInput.value) {
                 try {
@@ -108,21 +108,35 @@
                     return;
                 }
 
+                let alergenList = '';
+
                 allergies.forEach((alergi, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${alergi.jenis_alergi}</td>
-                    <td>${alergi.nama_alergi}</td>
-                    <td>${alergi.reaksi || '-'}</td>
-                    <td>${alergi.severe || '-'}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger delete-alergi" data-index="${index}">
-                            <i class="ti-trash"></i>
-                        </button>
-                    </td>
-                `;
+                        <td>
+                            ${alergi.jenis_alergi}
+                        </td>
+                        <td>${alergi.nama_alergi}</td>
+                        <td>${alergi.reaksi || '-'}</td>
+                        <td>${alergi.severe || '-'}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-alergi" data-index="${index}">
+                                <i class="ti-trash"></i>
+                            </button>
+                        </td>
+                    `;
                     tbody.appendChild(row);
+
+                    alergenList += `<div>
+                                        <input type="hidden" name="jenis_alergi[]" value="${alergi.jenis_alergi}">
+                                        <input type="hidden" name="nama[]" value="${alergi.nama_alergi}">
+                                        <input type="hidden" name="reaksi[]" value="${alergi.reaksi}">
+                                        <input type="hidden" name="severe[]" value="${alergi.severe}">
+                                    </div>`;
+
                 });
+
+                $('#alergen-list-input').html(alergenList);
 
                 // Add event listeners to delete buttons
                 document.querySelectorAll('.delete-alergi').forEach(button => {
@@ -143,7 +157,7 @@
                 if (allergies.length > 0) {
                     const allergyNames = allergies.map(a => a.nama_alergi).join(', ');
                     allergiDisplay.value = allergyNames;
-                    allergiJson.value = JSON.stringify(allergies);
+                    allergiJson.value = allergies;
                 } else {
                     allergiDisplay.value = '';
                     allergiJson.value = '';
@@ -152,9 +166,12 @@
 
             // Add new allergy
             document.getElementById('tambahAlergi').addEventListener('click', function() {
+                const tambahButton = this;
+                tambahButton.disabled = true; // Disable button to prevent multiple clicks
+
                 const jenisAlergi = document.getElementById('jenis_alergi').value;
-                const namaAlergi = document.getElementById('nama_alergi').value;
-                const reaksi = document.getElementById('reaksi').value;
+                const namaAlergi = document.getElementById('nama_alergi').value.trim();
+                const reaksi = document.getElementById('reaksi').value.trim();
                 const severe = document.getElementById('severe').value;
 
                 if (!jenisAlergi || !namaAlergi) {
@@ -164,12 +181,14 @@
                         text: 'Silakan isi Jenis Alergi dan Alergen terlebih dahulu',
                         confirmButtonColor: '#3085d6',
                     });
+                    tambahButton.disabled = false;
                     return;
                 }
 
-                // Check for duplicate
+                // Case-insensitive duplicate check
                 const isDuplicate = allergies.some(a =>
-                    a.jenis_alergi === jenisAlergi && a.nama_alergi === namaAlergi
+                    a.jenis_alergi.toLowerCase() === jenisAlergi.toLowerCase() &&
+                    a.nama_alergi.toLowerCase() === namaAlergi.toLowerCase()
                 );
 
                 if (isDuplicate) {
@@ -179,6 +198,7 @@
                         text: 'Alergi dengan jenis dan nama yang sama sudah ada',
                         confirmButtonColor: '#3085d6',
                     });
+                    tambahButton.disabled = false;
                     return;
                 }
 
@@ -199,6 +219,15 @@
                 // Update display
                 renderAlergiTable();
                 updateAlergiDisplay();
+                tambahButton.disabled = false;
+            });
+
+            // Reset form when modal is closed
+            $('#alergiModal').on('hidden.bs.modal', function() {
+                document.getElementById('jenis_alergi').value = '';
+                document.getElementById('nama_alergi').value = '';
+                document.getElementById('reaksi').value = '';
+                document.getElementById('severe').value = '';
             });
 
             // Initialize the allergies table when the modal is opened

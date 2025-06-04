@@ -284,15 +284,23 @@
             <tr>
                 <td class="col-header">ALERGI :</td>
                 <td colspan="3">
-                    @if(optional($asesmen->rmeAsesmenParu)->alergi)
-                        @php
-                            $allergies = json_decode($asesmen->rmeAsesmenParu->alergi, true);
-                        @endphp
-                        @if(is_array($allergies) && !empty($allergies))
-                            {{ implode(', ', $allergies) }}
-                        @else
-                            {{ $asesmen->rmeAsesmenParu->alergi }}
-                        @endif
+                    @if($asesmen->rmeAlergiPasien->isNotEmpty())
+                        <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                            <tr>
+                                <th style="border: 1px solid #333; padding: 4px;">Jenis Alergi</th>
+                                <th style="border: 1px solid #333; padding: 4px;">Alergen</th>
+                                <th style="border: 1px solid #333; padding: 4px;">Reaksi</th>
+                                <th style="border: 1px solid #333; padding: 4px;">Tingkat Keparahan</th>
+                            </tr>
+                            @foreach($asesmen->rmeAlergiPasien as $alergi)
+                                <tr>
+                                    <td style="border: 1px solid #333; padding: 4px;">{{ $alergi->jenis_alergi ?? '-' }}</td>
+                                    <td style="border: 1px solid #333; padding: 4px;">{{ $alergi->nama_alergi ?? '-' }}</td>
+                                    <td style="border: 1px solid #333; padding: 4px;">{{ $alergi->reaksi ?? '-' }}</td>
+                                    <td style="border: 1px solid #333; padding: 4px;">{{ $alergi->tingkat_keparahan ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
                     @else
                         -
                     @endif
@@ -460,83 +468,105 @@
     <div class="page-break"></div>
 
     <!-- 6. Pemeriksaan Fisik -->
-    <div class="content-section">
-        <div class="section-title">6. PEMERIKSAAN FISIK</div>
+<div class="content-section">
+    <div class="section-title">6. PEMERIKSAAN FISIK</div>
+    <table class="detail-table">
+        <tr>
+            <td colspan="4">
+                <span style="font-weight: bold;">Pemeriksaan Fisik</span>
+                <br>
+                Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan tidak dilakukan.
+            </td>
+        </tr>
+        @php
+            // Fetch all physical examination items from MrItemFisik
+            $fisikItems = \App\Models\MrItemFisik::orderBy('urut')->get()->pluck('nama', 'id')->toArray();
 
-        @if($pemeriksaanFisik && $pemeriksaanFisik->count() > 0)
-            @php
-                // Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
-                $pemeriksaanFisikMap = [];
-                foreach ($pemeriksaanFisik as $item) {
-                    $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
-                }
+            // Create mapping of pemeriksaan fisik by id_item_fisik
+            $pemeriksaanFisikMap = [];
+            foreach ($pemeriksaanFisik ?? [] as $item) {
+                $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
+            }
 
-                // Mapping nama item fisik sesuai dengan show.blade.php
-                $fisikItems = [
-                    1 => 'Kepala',
-                    2 => 'Mata',
-                    3 => 'THT',
-                    4 => 'Leher',
-                    5 => 'Thoraks - Jantung',
-                    6 => 'Thoraks - Paru'
-                ];
-            @endphp
+            // Split items into two columns
+            $totalItems = count($fisikItems);
+            $halfCount = ceil($totalItems / 2);
+            $firstColumn = array_slice($fisikItems, 0, $halfCount, true);
+            $secondColumn = array_slice($fisikItems, $halfCount, null, true);
+            $maxRows = max(count($firstColumn), count($secondColumn));
+        @endphp
 
-            <table class="detail-table">
-                @foreach($fisikItems as $itemId => $itemName)
-                    @php
-                        $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
-                        $status = optional($pemeriksaan)->is_normal;
-                        $keterangan = optional($pemeriksaan)->keterangan;
-                        $prefix = chr(96 + $itemId); // a, b, c, d, e, f
-                    @endphp
-                    <tr>
-                        <td class="col-header" style="width: 25%;">{{ $prefix }}. {{ $itemName }}</td>
-                        <td>
-                            @if($status === 1 || $status === '1')
-                                Normal
-                            @elseif($status === 0 || $status === '0')
-                                Tidak Normal
-                                @if($keterangan)
-                                    - {{ $keterangan }}
-                                @endif
-                            @else
-                                ................................................................
+        @for ($i = 0; $i < $maxRows; $i++)
+            <tr>
+                <!-- First Column -->
+                <td class="col-header" style="width: 25%;">
+                    @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
+                        @php
+                            $itemId = array_keys($firstColumn)[$i];
+                            $itemName = $firstColumn[$itemId];
+                            $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
+                            $status = optional($pemeriksaan)->is_normal;
+                            $keterangan = optional($pemeriksaan)->keterangan;
+                            $prefix = chr(97 + array_key_first($firstColumn) + $i); // a, b, c, ...
+                        @endphp
+                        {{ $prefix }}. {{ $itemName }}
+                    @else
+                        &nbsp;
+                    @endif
+                </td>
+                <td style="width: 25%;">
+                    @if (isset($firstColumn[array_keys($firstColumn)[$i]]))
+                        @if($status === 1 || $status === '1')
+                            Normal
+                        @elseif($status === 0 || $status === '0')
+                            Tidak Normal
+                            @if($keterangan)
+                                - {{ $keterangan }}
                             @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        @else
-            <!-- Fallback jika tidak ada data pemeriksaan fisik -->
-            <table class="detail-table">
-                <tr>
-                    <td class="col-header">a. Kepala:</td>
-                    <td>................................................................</td>
-                </tr>
-                <tr>
-                    <td class="col-header">b. Mata:</td>
-                    <td>................................................................</td>
-                </tr>
-                <tr>
-                    <td class="col-header">c. THT:</td>
-                    <td>................................................................</td>
-                </tr>
-                <tr>
-                    <td class="col-header">d. Leher:</td>
-                    <td>................................................................</td>
-                </tr>
-                <tr>
-                    <td class="col-header">e. Thoraks - Jantung:</td>
-                    <td>................................................................</td>
-                </tr>
-                <tr>
-                    <td class="col-header">f. Thoraks - Paru:</td>
-                    <td>................................................................</td>
-                </tr>
-            </table>
-        @endif
-    </div>
+                        @else
+                            Tidak Diperiksa
+                        @endif
+                    @else
+                        &nbsp;
+                    @endif
+                </td>
+
+                <!-- Second Column -->
+                <td class="col-header" style="width: 25%;">
+                    @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
+                        @php
+                            $itemId = array_keys($secondColumn)[$i];
+                            $itemName = $secondColumn[$itemId];
+                            $pemeriksaan = $pemeriksaanFisikMap[$itemId] ?? null;
+                            $status = optional($pemeriksaan)->is_normal;
+                            $keterangan = optional($pemeriksaan)->keterangan;
+                            $prefix = chr(97 + array_key_first($secondColumn) + $i); // continues from first column
+                        @endphp
+                        {{ $prefix }}. {{ $itemName }}
+                    @else
+                        &nbsp;
+                    @endif
+                </td>
+                <td style="width: 25%;">
+                    @if (isset($secondColumn[array_keys($secondColumn)[$i]]))
+                        @if($status === 1 || $status === '1')
+                            Normal
+                        @elseif($status === 0 || $status === '0')
+                            Tidak Normal
+                            @if($keterangan)
+                                - {{ $keterangan }}
+                            @endif
+                        @else
+                            Tidak Diperiksa
+                        @endif
+                    @else
+                        &nbsp;
+                    @endif
+                </td>
+            </tr>
+        @endfor
+    </table>
+</div>
 
     <!-- 7. Rencana Kerja dan Penatalaksanaan -->
     <div class="content-section">

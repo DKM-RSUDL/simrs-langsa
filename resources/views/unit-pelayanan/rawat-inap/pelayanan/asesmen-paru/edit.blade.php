@@ -73,31 +73,38 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="alergi">Alergi</label>
-                                    @php
-                                        $allergiesDisplay = '';
-                                        $allergiesJson = '[]';
-                                        if ($asesmen->rmeAsesmenParu->alergi) {
-                                            $allergies = json_decode($asesmen->rmeAsesmenParu->alergi, true);
-                                            if (is_array($allergies)) {
-                                                $allergiesDisplay = collect($allergies)->pluck('nama_alergi')->join(', ');
-                                                $allergiesJson = $asesmen->rmeAsesmenParu->alergi;
-                                            }
-                                        }
-                                    @endphp
-                                    <div class="input-group">
-                                        <input type="text" name="alergi_display" id="alergi_display" class="form-control"
-                                            placeholder="Alergi pasien (jika ada)" value="{{ $allergiesDisplay }}" readonly>
-                                        <input type="hidden" name="alergi" id="alergi" value="{{ $allergiesJson }}">
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                <label for="alergi">Alergi</label>
+                                @php
+                                    $allergiesDisplay = '';
+                                    $allergies = $asesmen->rmeAlergiPasien ? $asesmen->rmeAlergiPasien : [];
+                                    if ($allergies) {
+                                        $allergiesDisplay = collect($allergies)->pluck('nama_alergi')->join(', ');
+                                    }
+                                @endphp
+                                <div class="input-group">
+                                    <input type="text" name="alergi_display" id="alergi_display" class="form-control"
+                                        placeholder="Alergi pasien (jika ada)" value="{{ $allergiesDisplay }}" readonly>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                             data-bs-target="#alergiModal">
-                                            <i class="ti-plus"></i> Tambah Alergi
-                                        </button>
-                                    </div>
+                                        <i class="ti-plus"></i> Tambah Alergi
+                                    </button>
                                 </div>
-                                @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.alergi')
-                                @endpush
+                            </div>
+
+                            <div class="form-group" id="alergen-list-input">
+                                @foreach ($allergies as $alergi)
+                                    <div>
+                                        <input type="hidden" name="jenis_alergi[]" value="{{ $alergi['jenis_alergi'] }}">
+                                        <input type="hidden" name="nama[]" value="{{ $alergi['nama_alergi'] }}">
+                                        <input type="hidden" name="reaksi[]" value="{{ $alergi['reaksi'] }}">
+                                        <input type="hidden" name="severe[]" value="{{ $alergi['tingkat_keparahan'] }}">
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            @push('modals')
+                                @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.edit-alergi')
+                            @endpush
                             </div>
 
                             <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->

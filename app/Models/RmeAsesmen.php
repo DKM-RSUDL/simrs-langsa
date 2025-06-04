@@ -406,5 +406,9 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenParuDiagnosisImplementasi::class, 'id_asesmen', 'id');
     }
+    public function rmeAlergiPasien()
+    {
+        return $this->hasMany(RmeAlergiPasien::class, 'kd_pasien', 'kd_pasien');
+    }
 
 }

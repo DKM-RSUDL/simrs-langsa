@@ -83,20 +83,32 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Alergi:</label>
-                                            <p class="form-control-plaintext border-bottom">
-                                                @if($asesmen->rmeAsesmenParu->alergi)
-                                                    @php
-                                                        $allergies = json_decode($asesmen->rmeAsesmenParu->alergi, true);
-                                                    @endphp
-                                                    @if(is_array($allergies) && !empty($allergies))
-                                                        {{ implode(', ', $allergies) }}
-                                                    @else
-                                                        -
-                                                    @endif
-                                                @else
-                                                    -
-                                                @endif
-                                            </p>
+                                            @if($asesmen->rmeAlergiPasien->isNotEmpty())
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-sm">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th style="width: 25%;">Jenis Alergi</th>
+                                                                <th style="width: 25%;">Alergen</th>
+                                                                <th style="width: 25%;">Reaksi</th>
+                                                                <th style="width: 25%;">Tingkat Keparahan</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($asesmen->rmeAlergiPasien as $alergi)
+                                                                <tr>
+                                                                    <td>{{ $alergi->jenis_alergi ?? '-' }}</td>
+                                                                    <td>{{ $alergi->nama_alergi ?? '-' }}</td>
+                                                                    <td>{{ $alergi->reaksi ?? '-' }}</td>
+                                                                    <td>{{ $alergi->tingkat_keparahan ?? '-' }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @else
+                                                <p class="form-control-plaintext border-bottom">-</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

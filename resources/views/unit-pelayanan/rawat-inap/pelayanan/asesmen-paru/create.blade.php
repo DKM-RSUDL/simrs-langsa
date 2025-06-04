@@ -72,11 +72,15 @@
                                                 value="{{ $allergiesDisplay ?? '' }}" readonly>
                                             <input type="hidden" name="alergi" id="alergi"
                                                 value="{{ $allergiesJson ?? '' }}">
+
                                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                                 data-bs-target="#alergiModal">
                                                 <i class="ti-plus"></i> Tambah Alergi
                                             </button>
                                         </div>
+                                </div>
+
+                                <div class="form-group" id="alergen-list-input">
                                 </div>
                                 @push('modals')
                                     @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.alergi')

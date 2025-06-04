@@ -94,6 +94,9 @@ class AsesmenParuController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+
+        // dd($request);
+
         DB::beginTransaction();
 
         try {
@@ -220,31 +223,50 @@ class AsesmenParuController extends Controller
 
             $paruDiagnosisImplementasi->save();
 
-            // Handle allergies - tetap sama...
-            if ($request->filled('alergi')) {
-                try {
-                    $allergies = json_decode($request->alergi, true);
-                    if (is_array($allergies)) {
-                        foreach ($allergies as $allergy) {
-                            $existingAllergy = RmeAlergiPasien::where('kd_pasien', $kd_pasien)
-                                ->where('jenis_alergi', $allergy['jenis_alergi'])
-                                ->where('nama_alergi', $allergy['nama_alergi'])
-                                ->first();
+            $jenisAlergi = $request->jenis_alergi;
+            $nama = $request->nama;
+            $reaksi = $request->reaksi;
+            $severe = $request->severe;
 
-                            if (!$existingAllergy) {
-                                RmeAlergiPasien::create([
-                                    'kd_pasien' => $kd_pasien,
-                                    'jenis_alergi' => $allergy['jenis_alergi'],
-                                    'nama_alergi' => $allergy['nama_alergi'],
-                                    'reaksi' => $allergy['reaksi'],
-                                    'tingkat_keparahan' => $allergy['severe']
-                                ]);
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {
-                }
+            for($i=0; $i < count($jenisAlergi); $i++) {
+                $dtAlergi = [
+                    'kd_pasien' => $kd_pasien,
+                    'jenis_alergi' => $jenisAlergi[$i],
+                    'nama_alergi' => $nama[$i],
+                    'reaksi' => $reaksi[$i],
+                    'tingkat_keparahan' => $severe[$i]
+                ];
+
+                RmeAlergiPasien::create($dtAlergi);
             }
+
+            // Handle allergies - tetap sama...
+            // if ($request->filled('alergi')) {
+            //     try {
+            //         $allergies = json_decode($request->alergi, true);
+
+            //         if (is_array($allergies)) {
+            //             foreach ($allergies as $allergy) {
+            //                 // Check if this allergy already exists to avoid duplicates
+            //                 $existingAllergy = RmeAlergiPasien::where('kd_pasien', $kd_pasien)
+            //                     ->where('jenis_alergi', $allergy['jenis_alergi'])
+            //                     ->where('nama_alergi', $allergy['nama_alergi'])
+            //                     ->first();
+
+            //                 if (!$existingAllergy) {
+            //                     RmeAlergiPasien::create([
+            //                         'kd_pasien' => $kd_pasien,
+            //                         'jenis_alergi' => $allergy['jenis_alergi'],
+            //                         'nama_alergi' => $allergy['nama_alergi'],
+            //                         'reaksi' => $allergy['reaksi'],
+            //                         'tingkat_keparahan' => $allergy['severe'] // Map 'severe' from the form to 'tingkat_keparahan' in DB
+            //                     ]);
+            //                 }
+            //             }
+            //         }
+            //     } catch (\Exception $e) {
+            //     }
+            // }
 
             // PERBAIKAN UTAMA: Simpan data pemeriksaan fisik dengan ID yang benar
             $itemFisik = MrItemFisik::all();
@@ -329,6 +351,7 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuRencanaKerja',
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -364,6 +387,7 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuRencanaKerja',
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -380,12 +404,30 @@ class AsesmenParuController extends Controller
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
 
+            // Get patient's allergies from the Alergi table
+            $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+            $allergiesJson = $allergies->map(function ($item) {
+                return [
+                    'jenis_alergi' => $item->jenis_alergi,
+                    'nama_alergi' => $item->nama_alergi,
+                    'reaksi' => $item->reaksi,
+                    'severe' => $item->tingkat_keparahan
+                ];
+            });
+
+            // Format allergies for display
+            $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
+
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.edit', compact(
                 'asesmen',
                 'dataMedis',
                 'itemFisik',
                 'rmeMasterDiagnosis',
-                'rmeMasterImplementasi'
+                'rmeMasterImplementasi',
+                'allergies',
+                'allergiesJson',
+                'allergiesDisplay',
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -552,30 +594,57 @@ class AsesmenParuController extends Controller
             }
             $paruDiagnosisImplementasi->save();
 
-            // Handle allergies - tetap sama...
-            if ($request->filled('alergi')) {
-                try {
-                    $allergies = json_decode($request->alergi, true);
-                    if (is_array($allergies)) {
-                        foreach ($allergies as $allergy) {
-                            $existingAllergy = RmeAlergiPasien::where('kd_pasien', $kd_pasien)
-                                ->where('jenis_alergi', $allergy['jenis_alergi'])
-                                ->where('nama_alergi', $allergy['nama_alergi'])
-                                ->first();
+            // Handle allergies
+            $submittedAllergies = [];
+            $jenisAlergi = $request->input('jenis_alergi', []);
+            $nama = $request->input('nama', []);
+            $reaksi = $request->input('reaksi', []);
+            $severe = $request->input('severe', []);
 
-                            if (!$existingAllergy) {
-                                RmeAlergiPasien::create([
-                                    'kd_pasien' => $kd_pasien,
-                                    'jenis_alergi' => $allergy['jenis_alergi'],
-                                    'nama_alergi' => $allergy['nama_alergi'],
-                                    'reaksi' => $allergy['reaksi'],
-                                    'tingkat_keparahan' => $allergy['severe']
-                                ]);
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {
+            // Build array of submitted allergies
+            for ($i = 0; $i < count($jenisAlergi); $i++) {
+                if (!empty($jenisAlergi[$i]) && !empty($nama[$i])) {
+                    $submittedAllergies[] = [
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $jenisAlergi[$i],
+                        'nama_alergi' => $nama[$i],
+                        'reaksi' => $reaksi[$i] ?? '',
+                        'tingkat_keparahan' => $severe[$i] ?? ''
+                    ];
                 }
+            }
+
+            // Get existing allergies for the patient
+            $existingAllergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()->toArray();
+
+            // Delete allergies that are no longer in the submitted list
+            $submittedKeys = array_map(function ($item) {
+                return $item['jenis_alergi'] . '|' . $item['nama_alergi'];
+            }, $submittedAllergies);
+
+            foreach ($existingAllergies as $existing) {
+                $existingKey = $existing['jenis_alergi'] . '|' . $existing['nama_alergi'];
+                if (!in_array($existingKey, $submittedKeys)) {
+                    RmeAlergiPasien::where('kd_pasien', $kd_pasien)
+                        ->where('jenis_alergi', $existing['jenis_alergi'])
+                        ->where('nama_alergi', $existing['nama_alergi'])
+                        ->delete();
+                }
+            }
+
+            // Update or create allergies
+            foreach ($submittedAllergies as $allergy) {
+                RmeAlergiPasien::updateOrCreate(
+                    [
+                        'kd_pasien' => $allergy['kd_pasien'],
+                        'jenis_alergi' => $allergy['jenis_alergi'],
+                        'nama_alergi' => $allergy['nama_alergi']
+                    ],
+                    [
+                        'reaksi' => $allergy['reaksi'],
+                        'tingkat_keparahan' => $allergy['tingkat_keparahan']
+                    ]
+                );
             }
 
             // Update ke table RmePemeriksaanFisik
@@ -662,9 +731,10 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuRencanaKerja',
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
                 'pemeriksaanFisik' => function ($query) {
-                    $query->orderBy('id_item_fisik');
-                },
+                $query->orderBy('id_item_fisik');
+            },
             ])->findOrFail($id);
 
             $dataMedis = Kunjungan::with('pasien')
