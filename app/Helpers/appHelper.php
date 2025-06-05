@@ -69,6 +69,12 @@ if (!function_exists('getKategoriAsesmen')) {
             case 7:
                 $subKategoriLabel = 'Anak';
                 break;
+            case 8:
+                $subKategoriLabel = 'Paru';
+                break;
+            case 9:
+                $subKategoriLabel = 'Ginekologik';
+                break;
         }
 
         return "$kategoriLabel $subKategoriLabel";

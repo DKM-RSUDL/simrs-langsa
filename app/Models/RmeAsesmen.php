@@ -411,4 +411,26 @@ class RmeAsesmen extends Model
         return $this->hasMany(RmeAlergiPasien::class, 'kd_pasien', 'kd_pasien');
     }
 
+    // Asesmen Ginekologik
+    public function rmeAsesmenGinekologik()
+    {
+        return $this->hasOne(RmeAsesmenGinekologik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenGinekologikTandaVital()
+    {
+        return $this->hasOne(RmeAsesmenGinekologikTandaVital::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenGinekologikEkstremitasGinekologik()
+    {
+        return $this->hasOne(RmeAsesmenGinekologikEkstremitasGinekologik::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenGinekologikPemeriksaanDischarge()
+    {
+        return $this->hasOne(RmeAsesmenGinekologikPemeriksaanDischarge::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenGinekologikDiagnosisImplementasi()
+    {
+        return $this->hasOne(RmeAsesmenGinekologikDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
+
 }
