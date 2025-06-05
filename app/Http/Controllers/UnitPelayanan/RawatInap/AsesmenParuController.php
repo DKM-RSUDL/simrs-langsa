@@ -10,8 +10,20 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
+use App\Models\RmeAlergiPasien;
+use App\Models\RmeAsesmen;
+use App\Models\RmeAsesmenParu;
+use App\Models\RmeAsesmenParuDiagnosisImplementasi;
+use App\Models\RmeAsesmenParuPerencanaanPulang;
+use App\Models\RmeAsesmenParuRencanaKerja;
+use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class AsesmenParuController extends Controller
 {
@@ -50,26 +62,773 @@ class AsesmenParuController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Mengambil nama alergen dari riwayat_alergi
-        if ($dataMedis->riwayat_alergi) {
-            $dataMedis->riwayat_alergi = collect(json_decode($dataMedis->riwayat_alergi, true))
-                ->pluck('alergen')
-                ->all();
-        } else {
-            $dataMedis->riwayat_alergi = [];
+        // Get patient's allergies from the Alergi table
+        $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+        // Create JSON format for allergies to initialize the form
+        $allergiesJson = $allergies->map(function ($item) {
+            return [
+                'jenis_alergi' => $item->jenis_alergi,
+                'nama_alergi' => $item->nama_alergi,
+                'reaksi' => $item->reaksi,
+                'severe' => $item->tingkat_keparahan
+            ];
+        });
+
+        // Format allergies for display
+        $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.create', [
+            'kd_unit' => $kd_unit,
+            'kd_pasien' => $kd_pasien,
+            'tgl_masuk' => $tgl_masuk,
+            'urut_masuk' => $urut_masuk,
+            'dataMedis' => $dataMedis,
+            'itemFisik' => $itemFisik,
+            'rmeMasterDiagnosis' => $rmeMasterDiagnosis,
+            'rmeMasterImplementasi' => $rmeMasterImplementasi,
+            'allergiesJson' => $allergiesJson,
+            'allergiesDisplay' => $allergiesDisplay,
+        ]);
+    }
+
+    public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+
+        // dd($request);
+
+        DB::beginTransaction();
+
+        try {
+            $request->validate([
+                'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            ]);
+
+            // 1. Buat record RmeAsesmen
+            $asesmen = new RmeAsesmen();
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 8;
+            $asesmen->save();
+
+            // 2. Buat record RmeAsesmenParu
+            $asesmenParu = new RmeAsesmenParu();
+            $asesmenParu->id_asesmen = $asesmen->id;
+            $asesmenParu->user_create = Auth::id();
+            $asesmenParu->tanggal = Carbon::parse($request->tanggal);
+            $asesmenParu->jam_masuk = $request->jam_masuk;
+            $asesmenParu->anamnesa = $request->anamnesa;
+            $asesmenParu->riwayat_penyakit = $request->riwayat_penyakit;
+            $asesmenParu->riwayat_penyakit_terdahulu = $request->riwayat_penyakit_terdahulu;
+            $asesmenParu->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat;
+            $asesmenParu->merokok = $request->merokok;
+            $asesmenParu->merokok_jumlah = $request->merokok_jumlah;
+            $asesmenParu->merokok_lama = $request->merokok_lama;
+            $asesmenParu->alkohol = $request->alkohol;
+            $asesmenParu->alkohol_jumlah = $request->alkohol_jumlah;
+            $asesmenParu->obat_obatan = $request->obat_obatan;
+            $asesmenParu->obat_jenis = $request->obat_jenis;
+            $asesmenParu->sensorium = $request->sensorium;
+            $asesmenParu->keadaan_umum = $request->keadaan_umum;
+            $asesmenParu->darah_sistole = $request->darah_sistole;
+            $asesmenParu->darah_diastole = $request->darah_diastole;
+            $asesmenParu->nadi = $request->nadi;
+            $asesmenParu->dyspnoe = $request->dyspnoe;
+            $asesmenParu->frekuensi_pernafasan = $request->frekuensi_pernafasan;
+            $asesmenParu->pernafasan_tipe = $request->pernafasan_tipe;
+            $asesmenParu->cyanose = $request->cyanose;
+            $asesmenParu->temperatur = $request->temperatur;
+            $asesmenParu->oedema = $request->oedema;
+            $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
+            $asesmenParu->icterus = $request->icterus;
+            $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->save();
+
+            // 3-5. Records lainnya tetap sama...
+            $asesmenParuRencanaKerja = new RmeAsesmenParuRencanaKerja();
+            $asesmenParuRencanaKerja->id_asesmen = $asesmen->id;
+            $asesmenParuRencanaKerja->foto_thoraks = $request->has('foto_thoraks') ? 1 : 0;
+            $asesmenParuRencanaKerja->darah_rutin = $request->has('darah_rutin') ? 1 : 0;
+            $asesmenParuRencanaKerja->led = $request->has('led') ? 1 : 0;
+            $asesmenParuRencanaKerja->sputum_bta = $request->has('sputum_bta') ? 1 : 0;
+            $asesmenParuRencanaKerja->igds = $request->has('igds') ? 1 : 0;
+            $asesmenParuRencanaKerja->faal_ginjal = $request->has('faal_ginjal') ? 1 : 0;
+            $asesmenParuRencanaKerja->elektrolit = $request->has('elektrolit') ? 1 : 0;
+            $asesmenParuRencanaKerja->albumin = $request->has('albumin') ? 1 : 0;
+            $asesmenParuRencanaKerja->ct_scan_thorax = $request->has('ct_scan_thorax') ? 1 : 0;
+            $asesmenParuRencanaKerja->asam_urat = $request->has('asam_urat') ? 1 : 0;
+            $asesmenParuRencanaKerja->faal_paru = $request->has('faal_paru') ? 1 : 0;
+            $asesmenParuRencanaKerja->ct_scan_thoraks = $request->has('ct_scan_thoraks') ? 1 : 0;
+            $asesmenParuRencanaKerja->bronchoscopy = $request->has('bronchoscopy') ? 1 : 0;
+            $asesmenParuRencanaKerja->proef_punctie = $request->has('proef_punctie') ? 1 : 0;
+            $asesmenParuRencanaKerja->aspirasi_cairan_pleura = $request->has('aspirasi_cairan_pleura') ? 1 : 0;
+            $asesmenParuRencanaKerja->penanganan_wsd = $request->has('penanganan_wsd') ? 1 : 0;
+            $asesmenParuRencanaKerja->penanganan_penyakit = $request->has('penanganan_penyakit') ? 1 : 0;
+            $asesmenParuRencanaKerja->konsul = $request->has('konsul') ? 1 : 0;
+            $asesmenParuRencanaKerja->lainnya_check = $request->has('lainnya_check') ? 1 : 0;
+            $asesmenParuRencanaKerja->lainnya = $request->lainnya;
+            $asesmenParuRencanaKerja->save();
+
+            $asesmenParuPerencanaanPulang = new RmeAsesmenParuPerencanaanPulang();
+            $asesmenParuPerencanaanPulang->id_asesmen = $asesmen->id;
+            $asesmenParuPerencanaanPulang->diagnosis_medis = $request->diagnosis_medis;
+            $asesmenParuPerencanaanPulang->usia_lanjut = $request->usia_lanjut;
+            $asesmenParuPerencanaanPulang->hambatan_mobilisasi = $request->hambatan_mobilisasi;
+            $asesmenParuPerencanaanPulang->penggunaan_media_berkelanjutan = $request->penggunaan_media_berkelanjutan;
+            $asesmenParuPerencanaanPulang->ketergantungan_aktivitas = $request->ketergantungan_aktivitas;
+            $asesmenParuPerencanaanPulang->rencana_pulang_khusus = $request->rencana_pulang_khusus;
+            $asesmenParuPerencanaanPulang->rencana_lama_perawatan = $request->rencana_lama_perawatan;
+            $asesmenParuPerencanaanPulang->rencana_tgl_pulang = $request->rencana_tgl_pulang;
+            $asesmenParuPerencanaanPulang->kesimpulan_planing = $request->kesimpulan_planing;
+            $asesmenParuPerencanaanPulang->save();
+
+            $paruDiagnosisImplementasi = new RmeAsesmenParuDiagnosisImplementasi();
+            $paruDiagnosisImplementasi->id_asesmen = $asesmen->id;
+            $paruDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
+            $paruDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
+            $paruDiagnosisImplementasi->gambar_radiologi_paru = $request->gambar_radiologi_paru;
+            $paruDiagnosisImplementasi->observasi = $request->observasi;
+            $paruDiagnosisImplementasi->terapeutik = $request->terapeutik;
+            $paruDiagnosisImplementasi->edukasi = $request->edukasi;
+            $paruDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
+            $paruDiagnosisImplementasi->prognosis = $request->prognosis;
+
+            // Array untuk menyimpan path file yang berhasil diupload
+            $uploadedFiles = [];
+
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
+                    }
+                }
+                return null;
+            };
+
+            // Upload files
+            $paruDiagnosisImplementasi->gambar_radiologi_paru = $uploadFile('gambar_radiologi_paru');
+
+            $paruDiagnosisImplementasi->save();
+
+            $jenisAlergi = $request->jenis_alergi;
+            $nama = $request->nama;
+            $reaksi = $request->reaksi;
+            $severe = $request->severe;
+
+            for($i=0; $i < count($jenisAlergi); $i++) {
+                $dtAlergi = [
+                    'kd_pasien' => $kd_pasien,
+                    'jenis_alergi' => $jenisAlergi[$i],
+                    'nama_alergi' => $nama[$i],
+                    'reaksi' => $reaksi[$i],
+                    'tingkat_keparahan' => $severe[$i]
+                ];
+
+                RmeAlergiPasien::create($dtAlergi);
+            }
+
+            // Handle allergies - tetap sama...
+            // if ($request->filled('alergi')) {
+            //     try {
+            //         $allergies = json_decode($request->alergi, true);
+
+            //         if (is_array($allergies)) {
+            //             foreach ($allergies as $allergy) {
+            //                 // Check if this allergy already exists to avoid duplicates
+            //                 $existingAllergy = RmeAlergiPasien::where('kd_pasien', $kd_pasien)
+            //                     ->where('jenis_alergi', $allergy['jenis_alergi'])
+            //                     ->where('nama_alergi', $allergy['nama_alergi'])
+            //                     ->first();
+
+            //                 if (!$existingAllergy) {
+            //                     RmeAlergiPasien::create([
+            //                         'kd_pasien' => $kd_pasien,
+            //                         'jenis_alergi' => $allergy['jenis_alergi'],
+            //                         'nama_alergi' => $allergy['nama_alergi'],
+            //                         'reaksi' => $allergy['reaksi'],
+            //                         'tingkat_keparahan' => $allergy['severe'] // Map 'severe' from the form to 'tingkat_keparahan' in DB
+            //                     ]);
+            //                 }
+            //             }
+            //         }
+            //     } catch (\Exception $e) {
+            //     }
+            // }
+
+            // PERBAIKAN UTAMA: Simpan data pemeriksaan fisik dengan ID yang benar
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+
+                // Jika normal, hapus keterangan
+                if ($isNormal) {
+                    $keterangan = '';
+                }
+
+                // PERBAIKAN: Gunakan $asesmen->id bukan $asesmenParu->id
+                RmeAsesmenPemeriksaanFisik::create([
+                    'id_asesmen' => $asesmen->id, // ← INI YANG DIPERBAIKI!
+                    'id_item_fisik' => $item->id,
+                    'is_normal' => $isNormal,
+                    'keterangan' => $keterangan
+                ]);
+            }
+
+            // Simpan diagnosis dan implementasi ke master - tetap sama...
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+
+            foreach ($allDiagnoses as $diagnosa) {
+                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+                if (!$existingDiagnosa) {
+                    RmeMasterDiagnosis::create([
+                        'nama_diagnosis' => $diagnosa
+                    ]);
+                }
+            }
+
+            // Fungsi helper untuk menyimpan implementasi
+            $saveToColumn = function ($dataList, $column) {
+                foreach ($dataList as $item) {
+                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
+                    if (!$existingImplementasi) {
+                        RmeMasterImplementasi::create([
+                            $column => $item
+                        ]);
+                    }
+                }
+            };
+
+            // Simpan implementasi
+            $rppList = json_decode($request->prognosis ?? '[]', true);
+            $observasiList = json_decode($request->observasi ?? '[]', true);
+            $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
+            $edukasiList = json_decode($request->edukasi ?? '[]', true);
+            $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
+
+            $saveToColumn($rppList, 'prognosis');
+            $saveToColumn($observasiList, 'observasi');
+            $saveToColumn($terapeutikList, 'terapeutik');
+            $saveToColumn($edukasiList, 'edukasi');
+            $saveToColumn($kolaborasiList, 'kolaborasi');
+
+            DB::commit();
+
+            return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
         }
+    }
 
-        $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenParu',
+                'rmeAsesmenParuRencanaKerja',
+                'rmeAsesmenParuPerencanaanPulang',
+                'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
+                'pemeriksaanFisik' => function ($query) {
+                    $query->orderBy('id_item_fisik');
+                },
+            ])->findOrFail($id);
 
-        return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.create', compact(
-            'kd_unit',
-            'kd_pasien',
-            'tgl_masuk',
-            'urut_masuk',
-            'dataMedis',
-            'itemFisik',
-            'rmeMasterDiagnosis',
-            'rmeMasterImplementasi'
-        ));
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            $itemFisik = MrItemFisik::orderBy('urut')->get();
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
+                'asesmen',
+                'dataMedis',
+                'itemFisik'
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+    public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            // Ambil data asesmen beserta relasinya
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenParu',
+                'rmeAsesmenParuRencanaKerja',
+                'rmeAsesmenParuPerencanaanPulang',
+                'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
+                'pemeriksaanFisik' => function ($query) {
+                    $query->orderBy('id_item_fisik');
+                },
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_pasien', $kd_pasien)
+                ->where('kd_unit', $kd_unit)
+                ->whereDate('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->firstOrFail();
+
+            $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
+            $rmeMasterImplementasi = RmeMasterImplementasi::all();
+
+            // Get patient's allergies from the Alergi table
+            $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
+            $allergiesJson = $allergies->map(function ($item) {
+                return [
+                    'jenis_alergi' => $item->jenis_alergi,
+                    'nama_alergi' => $item->nama_alergi,
+                    'reaksi' => $item->reaksi,
+                    'severe' => $item->tingkat_keparahan
+                ];
+            });
+
+            // Format allergies for display
+            $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
+
+            return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.edit', compact(
+                'asesmen',
+                'dataMedis',
+                'itemFisik',
+                'rmeMasterDiagnosis',
+                'rmeMasterImplementasi',
+                'allergies',
+                'allergiesJson',
+                'allergiesDisplay',
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $request->validate([
+                'gambar_radiologi_paru' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+            ]);
+            // 1. Buat record RmeAsesmen
+            $asesmen = RmeAsesmen::findOrFail($id);
+            $asesmen->kd_pasien = $request->kd_pasien;
+            $asesmen->kd_unit = $request->kd_unit;
+            $asesmen->tgl_masuk = $request->tgl_masuk;
+            $asesmen->urut_masuk = $request->urut_masuk;
+            $asesmen->user_id = Auth::id();
+            $asesmen->waktu_asesmen = date('Y-m-d H:i:s');
+            $asesmen->kategori = 1;
+            $asesmen->sub_kategori = 8;
+            $asesmen->save();
+
+            // 2. Buat record RmeAsesmenParu
+            $asesmenParu = RmeAsesmenParu::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $asesmenParu->id_asesmen = $asesmen->id;
+            $asesmenParu->user_edit = Auth::id();
+            $asesmenParu->tanggal = Carbon::parse($request->tanggal);
+            $asesmenParu->jam_masuk = $request->jam_masuk;
+            $asesmenParu->anamnesa = $request->anamnesa;
+            $asesmenParu->riwayat_penyakit = $request->riwayat_penyakit;
+            $asesmenParu->riwayat_penyakit_terdahulu = $request->riwayat_penyakit_terdahulu;
+            $asesmenParu->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat;
+            $asesmenParu->merokok = $request->merokok;
+            $asesmenParu->merokok_jumlah = $request->merokok_jumlah;
+            $asesmenParu->merokok_lama = $request->merokok_lama;
+            $asesmenParu->alkohol = $request->alkohol;
+            $asesmenParu->alkohol_jumlah = $request->alkohol_jumlah;
+            $asesmenParu->obat_obatan = $request->obat_obatan;
+            $asesmenParu->obat_jenis = $request->obat_jenis;
+            $asesmenParu->sensorium = $request->sensorium;
+            $asesmenParu->keadaan_umum = $request->keadaan_umum;
+            $asesmenParu->darah_sistole = $request->darah_sistole;
+            $asesmenParu->darah_diastole = $request->darah_diastole;
+            $asesmenParu->nadi = $request->nadi;
+            $asesmenParu->dyspnoe = $request->dyspnoe;
+            $asesmenParu->frekuensi_pernafasan = $request->frekuensi_pernafasan;
+            $asesmenParu->pernafasan_tipe = $request->pernafasan_tipe;
+            $asesmenParu->cyanose = $request->cyanose;
+            $asesmenParu->temperatur = $request->temperatur;
+            $asesmenParu->oedema = $request->oedema;
+            $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
+            $asesmenParu->icterus = $request->icterus;
+            $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->save();
+
+            // 3-5. Records lainnya tetap sama...
+            $asesmenParuRencanaKerja = RmeAsesmenParuRencanaKerja::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $asesmenParuRencanaKerja->id_asesmen = $asesmen->id;
+            $asesmenParuRencanaKerja->foto_thoraks = $request->has('foto_thoraks') ? 1 : 0;
+            $asesmenParuRencanaKerja->darah_rutin = $request->has('darah_rutin') ? 1 : 0;
+            $asesmenParuRencanaKerja->led = $request->has('led') ? 1 : 0;
+            $asesmenParuRencanaKerja->sputum_bta = $request->has('sputum_bta') ? 1 : 0;
+            $asesmenParuRencanaKerja->igds = $request->has('igds') ? 1 : 0;
+            $asesmenParuRencanaKerja->faal_ginjal = $request->has('faal_ginjal') ? 1 : 0;
+            $asesmenParuRencanaKerja->elektrolit = $request->has('elektrolit') ? 1 : 0;
+            $asesmenParuRencanaKerja->albumin = $request->has('albumin') ? 1 : 0;
+            $asesmenParuRencanaKerja->ct_scan_thorax = $request->has('ct_scan_thorax') ? 1 : 0;
+            $asesmenParuRencanaKerja->asam_urat = $request->has('asam_urat') ? 1 : 0;
+            $asesmenParuRencanaKerja->faal_paru = $request->has('faal_paru') ? 1 : 0;
+            $asesmenParuRencanaKerja->ct_scan_thoraks = $request->has('ct_scan_thoraks') ? 1 : 0;
+            $asesmenParuRencanaKerja->bronchoscopy = $request->has('bronchoscopy') ? 1 : 0;
+            $asesmenParuRencanaKerja->proef_punctie = $request->has('proef_punctie') ? 1 : 0;
+            $asesmenParuRencanaKerja->aspirasi_cairan_pleura = $request->has('aspirasi_cairan_pleura') ? 1 : 0;
+            $asesmenParuRencanaKerja->penanganan_wsd = $request->has('penanganan_wsd') ? 1 : 0;
+            $asesmenParuRencanaKerja->penanganan_penyakit = $request->has('penanganan_penyakit') ? 1 : 0;
+            $asesmenParuRencanaKerja->konsul = $request->has('konsul') ? 1 : 0;
+            $asesmenParuRencanaKerja->lainnya_check = $request->has('lainnya_check') ? 1 : 0;
+            $asesmenParuRencanaKerja->lainnya = $request->lainnya;
+            $asesmenParuRencanaKerja->save();
+
+            $asesmenParuPerencanaanPulang = RmeAsesmenParuPerencanaanPulang::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $asesmenParuPerencanaanPulang->id_asesmen = $asesmen->id;
+            $asesmenParuPerencanaanPulang->diagnosis_medis = $request->diagnosis_medis;
+            $asesmenParuPerencanaanPulang->usia_lanjut = $request->usia_lanjut;
+            $asesmenParuPerencanaanPulang->hambatan_mobilisasi = $request->hambatan_mobilisasi;
+            $asesmenParuPerencanaanPulang->penggunaan_media_berkelanjutan = $request->penggunaan_media_berkelanjutan;
+            $asesmenParuPerencanaanPulang->ketergantungan_aktivitas = $request->ketergantungan_aktivitas;
+            $asesmenParuPerencanaanPulang->rencana_pulang_khusus = $request->rencana_pulang_khusus;
+            $asesmenParuPerencanaanPulang->rencana_lama_perawatan = $request->rencana_lama_perawatan;
+            $asesmenParuPerencanaanPulang->rencana_tgl_pulang = $request->rencana_tgl_pulang;
+            $asesmenParuPerencanaanPulang->kesimpulan_planing = $request->kesimpulan_planing;
+            $asesmenParuPerencanaanPulang->save();
+
+            $paruDiagnosisImplementasi = RmeAsesmenParuDiagnosisImplementasi::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $paruDiagnosisImplementasi->id_asesmen = $asesmen->id;
+            $paruDiagnosisImplementasi->diagnosis_banding = $request->diagnosis_banding;
+            $paruDiagnosisImplementasi->diagnosis_kerja = $request->diagnosis_kerja;
+            $paruDiagnosisImplementasi->gambar_radiologi_paru = $request->gambar_radiologi_paru;
+            $paruDiagnosisImplementasi->observasi = $request->observasi;
+            $paruDiagnosisImplementasi->terapeutik = $request->terapeutik;
+            $paruDiagnosisImplementasi->edukasi = $request->edukasi;
+            $paruDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
+            $paruDiagnosisImplementasi->prognosis = $request->prognosis;
+
+            $fileFields = [
+                'gambar_radiologi_paru',
+            ];
+
+            // Array untuk menyimpan path file yang berhasil diupload
+            $uploadedFiles = [];
+
+            // Fungsi helper untuk upload file
+            $uploadFile = function ($fieldName) use ($request, &$uploadedFiles, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk) {
+                if ($request->hasFile($fieldName)) {
+                    try {
+                        $file = $request->file($fieldName);
+                        $path = $file->store("uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk");
+
+                        if ($path) {
+                            return $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file {$fieldName}");
+                    }
+                }
+                return null;
+            };
+
+            $fileFields = [
+                'gambar_radiologi_paru',
+            ];
+
+            foreach ($fileFields as $field) {
+                if ($request->has("delete_$field")) {
+                    if ($paruDiagnosisImplementasi->$field) {
+                        Storage::disk('public')->delete(
+                            "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
+                        );
+                        $paruDiagnosisImplementasi->$field = null;
+                    }
+                } elseif ($request->hasFile($field)) {
+                    try {
+                        if ($paruDiagnosisImplementasi->$field) {
+                            Storage::disk('public')->delete(
+                                "uploads/ranap/asesmen-paru/$kd_unit/$kd_pasien/$tgl_masuk/$urut_masuk/" . $paruDiagnosisImplementasi->$field
+                            );
+                        }
+
+                        $path = $uploadFile($field);
+                        if ($path) {
+                            $paruDiagnosisImplementasi->$field = basename($path);
+                            $uploadedFiles[$field] = $path;
+                        }
+                    } catch (\Exception $e) {
+                        throw new \Exception("Gagal mengupload file $field: " . $e->getMessage());
+                    }
+                }
+            }
+            $paruDiagnosisImplementasi->save();
+
+            // Handle allergies
+            $submittedAllergies = [];
+            $jenisAlergi = $request->input('jenis_alergi', []);
+            $nama = $request->input('nama', []);
+            $reaksi = $request->input('reaksi', []);
+            $severe = $request->input('severe', []);
+
+            // Build array of submitted allergies
+            for ($i = 0; $i < count($jenisAlergi); $i++) {
+                if (!empty($jenisAlergi[$i]) && !empty($nama[$i])) {
+                    $submittedAllergies[] = [
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $jenisAlergi[$i],
+                        'nama_alergi' => $nama[$i],
+                        'reaksi' => $reaksi[$i] ?? '',
+                        'tingkat_keparahan' => $severe[$i] ?? ''
+                    ];
+                }
+            }
+
+            // Get existing allergies for the patient
+            $existingAllergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get()->toArray();
+
+            // Delete allergies that are no longer in the submitted list
+            $submittedKeys = array_map(function ($item) {
+                return $item['jenis_alergi'] . '|' . $item['nama_alergi'];
+            }, $submittedAllergies);
+
+            foreach ($existingAllergies as $existing) {
+                $existingKey = $existing['jenis_alergi'] . '|' . $existing['nama_alergi'];
+                if (!in_array($existingKey, $submittedKeys)) {
+                    RmeAlergiPasien::where('kd_pasien', $kd_pasien)
+                        ->where('jenis_alergi', $existing['jenis_alergi'])
+                        ->where('nama_alergi', $existing['nama_alergi'])
+                        ->delete();
+                }
+            }
+
+            // Update or create allergies
+            foreach ($submittedAllergies as $allergy) {
+                RmeAlergiPasien::updateOrCreate(
+                    [
+                        'kd_pasien' => $allergy['kd_pasien'],
+                        'jenis_alergi' => $allergy['jenis_alergi'],
+                        'nama_alergi' => $allergy['nama_alergi']
+                    ],
+                    [
+                        'reaksi' => $allergy['reaksi'],
+                        'tingkat_keparahan' => $allergy['tingkat_keparahan']
+                    ]
+                );
+            }
+
+            // Update ke table RmePemeriksaanFisik
+            $itemFisik = MrItemFisik::all();
+            foreach ($itemFisik as $item) {
+                $itemName = strtolower($item->nama);
+                $isNormal = $request->has($item->id . '-normal') ? 1 : 0;
+                $keterangan = $request->input($item->id . '_keterangan');
+                if ($isNormal) $keterangan = '';
+
+                RmeAsesmenPemeriksaanFisik::updateOrCreate(
+                    [
+                        'id_asesmen' => $asesmen->id,
+                        'id_item_fisik' => $item->id
+                    ],
+                    [
+                        'is_normal' => $isNormal,
+                        'keterangan' => $keterangan
+                    ]
+                );
+            }
+
+            //Simpan Diagnosa ke Master
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+            foreach ($allDiagnoses as $diagnosa) {
+                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+                if (!$existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis();
+                    $masterDiagnosa->nama_diagnosis = $diagnosa;
+                    $masterDiagnosa->save();
+                }
+            }
+
+            // Simpan Implementasi ke Master
+            $rppList = json_decode($request->prognosis ?? '[]', true);
+            $observasiList = json_decode($request->observasi ?? '[]', true);
+            $terapeutikList = json_decode($request->terapeutik ?? '[]', true);
+            $edukasiList = json_decode($request->edukasi ?? '[]', true);
+            $kolaborasiList = json_decode($request->kolaborasi ?? '[]', true);
+            // Fungsi untuk menyimpan data ke kolom tertentu
+            function updateToColumn($dataList, $column)
+            {
+                foreach ($dataList as $item) {
+                    // Cek apakah sudah ada entri
+                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
+
+                    if (!$existingImplementasi) {
+                        // Jika tidak ada, buat record baru
+                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi->$column = $item;
+                        $masterImplementasi->save();
+                    }
+                }
+            }
+            // Simpan data
+            updateToColumn($rppList, 'prognosis'); // sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis
+            updateToColumn($observasiList, 'observasi');
+            updateToColumn($terapeutikList, 'terapeutik');
+            updateToColumn($edukasiList, 'edukasi');
+            updateToColumn($kolaborasiList, 'kolaborasi');
+
+            DB::commit();
+
+            return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
+                'kd_unit' => $kd_unit,
+                'kd_pasien' => $kd_pasien,
+                'tgl_masuk' => $tgl_masuk,
+                'urut_masuk' => $urut_masuk
+            ])->with('success', 'Data berhasil disimpan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function generatePDF($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        try {
+            $asesmen = RmeAsesmen::with([
+                'user',
+                'rmeAsesmenParu',
+                'rmeAsesmenParuRencanaKerja',
+                'rmeAsesmenParuPerencanaanPulang',
+                'rmeAsesmenParuDiagnosisImplementasi',
+                'rmeAlergiPasien',
+                'pemeriksaanFisik' => function ($query) {
+                $query->orderBy('id_item_fisik');
+            },
+            ])->findOrFail($id);
+
+            $dataMedis = Kunjungan::with('pasien')
+                ->where('kd_unit', $kd_unit)
+                ->where('kd_pasien', $kd_pasien)
+                ->where('tgl_masuk', $tgl_masuk)
+                ->where('urut_masuk', $urut_masuk)
+                ->first();
+
+            $pdf = PDF::loadView('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.print', [
+                'asesmen'    => $asesmen ?? null,
+                'pasien' => optional($dataMedis)->pasien ?? null,
+                'dataMedis' => $dataMedis ?? null,
+                // variabel lainnya sesuai kebutuhan
+                'rmeAsesmenParu' => optional($asesmen)->rmeAsesmenParu ?? null,
+                'rmeAsesmenParuRencanaKerja' => optional($asesmen)->rmeAsesmenParuRencanaKerja ?? null,
+                'rmeAsesmenParuPerencanaanPulang' => optional($asesmen)->rmeAsesmenParuPerencanaanPulang ?? null,
+                'rmeAsesmenParuDiagnosisImplementasi' => optional($asesmen)->rmeAsesmenParuDiagnosisImplementasi ?? null,
+                'pemeriksaanFisik' => optional($asesmen)->pemeriksaanFisik ?? null,
+            ]);
+
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'sans-serif'
+            ]);
+
+            return $pdf->stream("asesmen-paru-{$id}-print-pdf.pdf");
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal generate PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
+        }
     }
 }

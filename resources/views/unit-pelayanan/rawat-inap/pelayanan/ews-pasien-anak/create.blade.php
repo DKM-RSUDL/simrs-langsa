@@ -37,19 +37,19 @@
                                     <label style="min-width: 200px;">KEADAAN UMUM</label>
                                     <div class="d-flex flex-column gap-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku0" value="KU0" data-skor="0" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku0" value="0" data-skor="0" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="ku0">Interaksi biasa.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku1" value="KU1" data-skor="1" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku1" value="1" data-skor="1" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="ku1">Somnolen</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku2" value="KU2" data-skor="2" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku2" value="2" data-skor="2" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="ku2">Iritabel, tidak dapat ditenangkan</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku3" value="KU3" data-skor="3" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="keadaan_umum" id="ku3" value="3" data-skor="3" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="ku3">Letargi, gelisah, penurunan respon terhadap nyeri.</label>
                                         </div>
                                     </div>
@@ -59,19 +59,19 @@
                                     <label style="min-width: 200px;">KARDIOVASKULAR</label>
                                     <div class="d-flex flex-column gap-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv0" value="KV0" data-skor="0" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv0" value="0" data-skor="0" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="kv0">Tidak sianosis ATAU pengisian kapiler < 2 detik.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv1" value="KV1" data-skor="1" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv1" value="1" data-skor="1" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="kv1">Tampak pucat ATAU pengisian kapiler 2 detik.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv2" value="KV2" data-skor="2" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv2" value="2" data-skor="2" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="kv2">Tampak sianotik ATAU pengisian kapiler >2 detik ATAU Takikardi >20 × di atas parameter HR sesuai usia/menit.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv3" value="KV3" data-skor="3" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="kardiovaskular" id="kv3" value="3" data-skor="3" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="kv3">Sianotik dan motlet, ATAU pengisian kapiler >5 detik, ATAU Takikardi >30x di atas parameter HR sesuai usia/menit ATAU Bradikardia sesuai usia.</label>
                                         </div>
                                     </div>
@@ -81,19 +81,19 @@
                                     <label style="min-width: 200px;">RESPIRASI</label>
                                     <div class="d-flex flex-column gap-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="respirasi" id="rs0" value="RS0" data-skor="0" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="respirasi" id="rs0" value="0" data-skor="0" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="rs0">Respirasi dalam parameter normal, tidak terdapat retraksi</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="respirasi" id="rs1" value="RS1" data-skor="1" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="respirasi" id="rs1" value="1" data-skor="1" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="rs1">Takipnea >10x di atas parameter RR sesuai usia/menit, ATAU Menggunakan otot alat bantu napas, ATAU menggunakan FiO2 lebih dari 30%.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="respirasi" id="rs2" value="RS2" data-skor="2" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="respirasi" id="rs2" value="2" data-skor="2" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="rs2">Takipnea >20x di atas parameter RR sesuai usia/menit, ATAU Ada retraksi, ATAU menggunakan FiO2 lebih dari 40%.</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="respirasi" id="rs3" value="RS3" data-skor="3" onchange="calculateEWSScore()">
+                                            <input class="form-check-input" type="radio" name="respirasi" id="rs3" value="3" data-skor="3" onchange="calculateEWSScore()">
                                             <label class="form-check-label" for="rs3">Laju respirasi >30x di atas parameter normal ATAU Bradipneu di mana frekuensi nafas lebih rendah 5 atau lebih, sesuai usia, disertai dengan retraksi berat ATAU menggunakan FiO2 lebih dari 50% (NRM 8 liter/menit)</label>
                                         </div>
                                     </div>

@@ -1,4 +1,3 @@
-```php
 @extends('layouts.administrator.master')
 
 @section('content')
@@ -14,6 +13,7 @@
             <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
+
             <form id="edukasiForm" method="POST"
                 action="{{ route('rawat-inap.ews-pasien-dewasa.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $ewsPasienDewasa->id]) }}">
                 @csrf
@@ -28,14 +28,20 @@
                                 </h4>
                             </div>
 
+                            @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                            @endif
+
                             <div class="section-separator" id="data-masuk">
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
                                         <input type="date" class="form-control" name="tanggal"
-                                            value="{{ $ewsPasienDewasa->tanggal ? Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('Y-m-d') : date('Y-m-d') }}">
+                                            value="{{ $ewsPasienDewasa->tanggal ? \Carbon\Carbon::parse($ewsPasienDewasa->tanggal)->format('Y-m-d') : date('Y-m-d') }}">
                                         <input type="time" class="form-control" name="jam_masuk"
-                                            value="{{ $ewsPasienDewasa->jam_masuk ? (\Carbon\Carbon::hasFormat($ewsPasienDewasa->jam_masuk, 'H:i:s') ? \Carbon\Carbon::parse($ewsPasienDewasa->jam_masuk)->format('H:i') : now()->setTimezone('Asia/Jakarta')->format('H:i')) : now()->setTimezone('Asia/Jakarta')->format('H:i') }}">
+                                            value="{{ $ewsPasienDewasa->jam_masuk ? \Carbon\Carbon::parse($ewsPasienDewasa->jam_masuk)->format('H:i') : now()->setTimezone('Asia/Jakarta')->format('H:i') }}">
                                     </div>
                                 </div>
 
@@ -54,10 +60,19 @@
                                     <label style="min-width: 200px;">Saturasi O2 (%)</label>
                                     <select class="form-select" name="saturasi_o2" id="saturasi_o2">
                                         <option value="" disabled>--Pilih--</option>
-                                        <option value="≥ 95" data-skor="0" {{ $ewsPasienDewasa->saturasi_o2 == '≥ 95' ? 'selected' : '' }}>≥ 95</option>
-                                        <option value="94-95" data-skor="1" {{ $ewsPasienDewasa->saturasi_o2 == '94-95' ? 'selected' : '' }}>94-95</option>
-                                        <option value="92-93" data-skor="2" {{ $ewsPasienDewasa->saturasi_o2 == '92-93' ? 'selected' : '' }}>92-93</option>
-                                        <option value="≤ 91" data-skor="3" {{ $ewsPasienDewasa->saturasi_o2 == '≤ 91' ? 'selected' : '' }}>≤ 91</option>
+                                        @php
+                                            $saturasiMatches = [
+                                                '≥ 95' => ['≥ 95', '>= 95', '= 95', '>=95'],
+                                                '94-95' => ['94-95'],
+                                                '92-93' => ['92-93'],
+                                                '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91'],
+                                            ];
+                                        @endphp
+
+                                        <option value="≥ 95" data-skor="0" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≥ 95']) ? 'selected' : '' }}>≥ 95</option>
+                                        <option value="94-95" data-skor="1" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['94-95']) ? 'selected' : '' }}>94-95</option>
+                                        <option value="92-93" data-skor="2" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['92-93']) ? 'selected' : '' }}>92-93</option>
+                                        <option value="≤ 91" data-skor="3" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≤ 91']) ? 'selected' : '' }}>≤ 91</option>
                                     </select>
                                 </div>
 
@@ -74,11 +89,21 @@
                                     <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
                                     <select class="form-select" name="tekanan_darah" id="tekanan_darah">
                                         <option value="" disabled>--Pilih--</option>
-                                        <option value="≥ 220" data-skor="3" {{ $ewsPasienDewasa->tekanan_darah == '≥ 220' ? 'selected' : '' }}>≥ 220</option>
-                                        <option value="111-219" data-skor="0" {{ $ewsPasienDewasa->tekanan_darah == '111-219' ? 'selected' : '' }}>111-219</option>
-                                        <option value="101-110" data-skor="1" {{ $ewsPasienDewasa->tekanan_darah == '101-110' ? 'selected' : '' }}>101-110</option>
-                                        <option value="91-100" data-skor="2" {{ $ewsPasienDewasa->tekanan_darah == '91-100' ? 'selected' : '' }}>91-100</option>
-                                        <option value="≤ 90" data-skor="3" {{ $ewsPasienDewasa->tekanan_darah == '≤ 90' ? 'selected' : '' }}>≤ 90</option>
+                                        @php
+                                            $tekananMatches = [
+                                                '≥ 220' => ['≥ 220', '>= 220', '= 220', '>=220'],
+                                                '111-219' => ['111-219'],
+                                                '101-110' => ['101-110'],
+                                                '91-100' => ['91-100'],
+                                                '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90'],
+                                            ];
+                                        @endphp
+
+                                        <option value="≥ 220" data-skor="3" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≥ 220']) ? 'selected' : '' }}>≥ 220</option>
+                                        <option value="111-219" data-skor="0" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['111-219']) ? 'selected' : '' }}>111-219</option>
+                                        <option value="101-110" data-skor="1" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['101-110']) ? 'selected' : '' }}>101-110</option>
+                                        <option value="91-100" data-skor="2" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['91-100']) ? 'selected' : '' }}>91-100</option>
+                                        <option value="≤ 90" data-skor="3" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≤ 90']) ? 'selected' : '' }}>≤ 90</option>
                                     </select>
                                 </div>
 
@@ -86,12 +111,23 @@
                                     <label style="min-width: 200px;">Nadi (per menit)</label>
                                     <select class="form-select" name="nadi" id="nadi">
                                         <option value="" disabled>--Pilih--</option>
-                                        <option value="≥ 131" data-skor="3" {{ $ewsPasienDewasa->nadi == '≥ 131' ? 'selected' : '' }}>≥ 131</option>
-                                        <option value="111-130" data-skor="2" {{ $ewsPasienDewasa->nadi == '111-130' ? 'selected' : '' }}>111-130</option>
-                                        <option value="91-110" data-skor="1" {{ $ewsPasienDewasa->nadi == '91-110' ? 'selected' : '' }}>91-110</option>
-                                        <option value="51-90" data-skor="0" {{ $ewsPasienDewasa->nadi == '51-90' ? 'selected' : '' }}>51-90</option>
-                                        <option value="41-50" data-skor="1" {{ $ewsPasienDewasa->nadi == '41-50' ? 'selected' : '' }}>41-50</option>
-                                        <option value="≤ 40" data-skor="3" {{ $ewsPasienDewasa->nadi == '≤ 40' ? 'selected' : '' }}>≤ 40</option>
+                                        @php
+                                            $nadiMatches = [
+                                                '≥ 131' => ['≥ 131', '>= 131', '= 131', '>=131'],
+                                                '111-130' => ['111-130'],
+                                                '91-110' => ['91-110'],
+                                                '51-90' => ['51-90'],
+                                                '41-50' => ['41-50'],
+                                                '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40'],
+                                            ];
+                                        @endphp
+
+                                        <option value="≥ 131" data-skor="3" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≥ 131']) ? 'selected' : '' }}>≥ 131</option>
+                                        <option value="111-130" data-skor="2" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['111-130']) ? 'selected' : '' }}>111-130</option>
+                                        <option value="91-110" data-skor="1" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['91-110']) ? 'selected' : '' }}>91-110</option>
+                                        <option value="51-90" data-skor="0" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['51-90']) ? 'selected' : '' }}>51-90</option>
+                                        <option value="41-50" data-skor="1" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['41-50']) ? 'selected' : '' }}>41-50</option>
+                                        <option value="≤ 40" data-skor="3" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≤ 40']) ? 'selected' : '' }}>≤ 40</option>
                                     </select>
                                 </div>
 
@@ -99,11 +135,21 @@
                                     <label style="min-width: 200px;">Nafas (per menit)</label>
                                     <select class="form-select" name="nafas" id="nafas">
                                         <option value="" disabled>--Pilih--</option>
-                                        <option value="≥ 25" data-skor="3" {{ $ewsPasienDewasa->nafas == '≥ 25' ? 'selected' : '' }}>≥ 25</option>
-                                        <option value="21-24" data-skor="2" {{ $ewsPasienDewasa->nafas == '21-24' ? 'selected' : '' }}>21-24</option>
-                                        <option value="12-20" data-skor="0" {{ $ewsPasienDewasa->nafas == '12-20' ? 'selected' : '' }}>12-20</option>
-                                        <option value="9-11" data-skor="1" {{ $ewsPasienDewasa->nafas == '9-11' ? 'selected' : '' }}>9-11</option>
-                                        <option value="≤ 8" data-skor="3" {{ $ewsPasienDewasa->nafas == '≤ 8' ? 'selected' : '' }}>≤ 8</option>
+                                        @php
+                                            $nafasMatches = [
+                                                '≥ 25' => ['≥ 25', '>= 25', '= 25', '>=25'],
+                                                '21-24' => ['21-24'],
+                                                '12-20' => ['12-20'],
+                                                '9-11' => ['9-11'],
+                                                '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8'],
+                                            ];
+                                        @endphp
+
+                                        <option value="≥ 25" data-skor="3" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≥ 25']) ? 'selected' : '' }}>≥ 25</option>
+                                        <option value="21-24" data-skor="2" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['21-24']) ? 'selected' : '' }}>21-24</option>
+                                        <option value="12-20" data-skor="0" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['12-20']) ? 'selected' : '' }}>12-20</option>
+                                        <option value="9-11" data-skor="1" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['9-11']) ? 'selected' : '' }}>9-11</option>
+                                        <option value="≤ 8" data-skor="3" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≤ 8']) ? 'selected' : '' }}>≤ 8</option>
                                     </select>
                                 </div>
 
@@ -111,11 +157,21 @@
                                     <label style="min-width: 200px;">Temperatur (°C)</label>
                                     <select class="form-select" name="temperatur" id="temperatur">
                                         <option value="" disabled>--Pilih--</option>
-                                        <option value="≥ 39.1" data-skor="2" {{ $ewsPasienDewasa->temperatur == '≥ 39.1' ? 'selected' : '' }}>≥ 39.1</option>
-                                        <option value="38.1-39.0" data-skor="1" {{ $ewsPasienDewasa->temperatur == '38.1-39.0' ? 'selected' : '' }}>38.1-39.0</option>
-                                        <option value="36.1-38.0" data-skor="0" {{ $ewsPasienDewasa->temperatur == '36.1-38.0' ? 'selected' : '' }}>36.1-38.0</option>
-                                        <option value="35.1-36.0" data-skor="1" {{ $ewsPasienDewasa->temperatur == '35.1-36.0' ? 'selected' : '' }}>35.1-36.0</option>
-                                        <option value="≤ 35" data-skor="3" {{ $ewsPasienDewasa->temperatur == '≤ 35' ? 'selected' : '' }}>≤ 35</option>
+                                        @php
+                                            $temperaturMatches = [
+                                                '≥ 39.1' => ['≥ 39.1', '>= 39.1', '= 39.1', '>=39.1'],
+                                                '38.1-39.0' => ['38.1-39.0'],
+                                                '36.1-38.0' => ['36.1-38.0'],
+                                                '35.1-36.0' => ['35.1-36.0'],
+                                                '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35'],
+                                            ];
+                                        @endphp
+
+                                        <option value="≥ 39.1" data-skor="2" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≥ 39.1']) ? 'selected' : '' }}>≥ 39.1</option>
+                                        <option value="38.1-39.0" data-skor="1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['38.1-39.0']) ? 'selected' : '' }}>38.1-39.0</option>
+                                        <option value="36.1-38.0" data-skor="0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['36.1-38.0']) ? 'selected' : '' }}>36.1-38.0</option>
+                                        <option value="35.1-36.0" data-skor="1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['35.1-36.0']) ? 'selected' : '' }}>35.1-36.0</option>
+                                        <option value="≤ 35" data-skor="3" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≤ 35']) ? 'selected' : '' }}>≤ 35</option>
                                     </select>
                                 </div>
 
@@ -250,6 +306,16 @@
         document.addEventListener('DOMContentLoaded', function () {
             const parameters = ['avpu', 'saturasi_o2', 'dengan_bantuan', 'tekanan_darah', 'nafas', 'nadi', 'temperatur'];
 
+            // Debug: Cetak nilai yang dipilih di setiap select box saat halaman dimuat
+            console.log('Current selected values:');
+            parameters.forEach(function(param) {
+                const select = document.getElementById(param);
+                if (select) {
+                    console.log(param + ': ' + select.value + ' (index: ' + select.selectedIndex + ')');
+                }
+            });
+
+            // Tambahkan event listener untuk setiap select
             parameters.forEach(function (param) {
                 const select = document.getElementById(param);
                 if (select) {
@@ -262,4 +328,3 @@
         });
     </script>
 @endpush
-```

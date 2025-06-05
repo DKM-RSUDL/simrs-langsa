@@ -70,6 +70,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapContr
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienDewasaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
@@ -511,6 +512,22 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('ews-pasien-anak')->group(function () {
                                 Route::name('.ews-pasien-anak')->group(function () {
                                     Route::controller(EWSPasienAnakController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // EWS Pasien Obstetrik
+                            Route::prefix('ews-pasien-obstetrik')->group(function () {
+                                Route::name('.ews-pasien-obstetrik')->group(function () {
+                                    Route::controller(EWSPasienObstetrikController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
