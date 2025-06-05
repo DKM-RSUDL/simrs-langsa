@@ -19,6 +19,8 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
+use App\Models\RMEResume;
+use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -116,22 +118,24 @@ class AsesmenKulitKelaminController extends Controller
             $dataAsesmen->save();
 
 
-            $dataOphtamology = new RmeAsesmenKulitKelamin();
-            $dataOphtamology->id_asesmen = $dataAsesmen->id;
-            $dataOphtamology->waktu_masuk = $waktu_asesmen;
-            $dataOphtamology->diagnosis_masuk = $request->diagnosis_masuk;
-            $dataOphtamology->kondisi_masuk = $request->kondisi_masuk;
-            $dataOphtamology->penyakit_yang_diderita = $request->penyakit_diderita ?? '[]';
-            $dataOphtamology->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga ?? '[]';
-            $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
-            $dataOphtamology->diagnosis_banding = $request->diagnosis_banding ?? '[]';
-            $dataOphtamology->diagnosis_kerja = $request->diagnosis_kerja ?? '[]';
-            $dataOphtamology->prognosis = $request->prognosis;
-            $dataOphtamology->observasi = $request->observasi;
-            $dataOphtamology->terapeutik = $request->terapeutik;
-            $dataOphtamology->edukasi = $request->edukasi;
-            $dataOphtamology->kolaborasi = $request->kolaborasi;
-            $dataOphtamology->save();
+            $dataKulitKelamin = new RmeAsesmenKulitKelamin();
+            $dataKulitKelamin->id_asesmen = $dataAsesmen->id;
+            $dataKulitKelamin->waktu_masuk = $waktu_asesmen;
+            $dataKulitKelamin->diagnosis_masuk = $request->diagnosis_masuk;
+            $dataKulitKelamin->kondisi_masuk = $request->kondisi_masuk;
+            $dataKulitKelamin->keluhan_utama = $request->keluhan_utama;
+            $dataKulitKelamin->riwayat_penyakit_sekarang = $request->riwayat_penyakit_sekarang;
+            $dataKulitKelamin->riwayat_penyakit_terdahulu = $request->riwayat_penyakit_terdahulu;
+            $dataKulitKelamin->riwayat_penyakit_keluarga = $request->riwayat_kesehatan_keluarga;
+            $dataKulitKelamin->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat;
+            $dataKulitKelamin->diagnosis_banding = $request->diagnosis_banding;
+            $dataKulitKelamin->diagnosis_kerja = $request->diagnosis_kerja;
+            $dataKulitKelamin->prognosis = $request->prognosis;
+            $dataKulitKelamin->observasi = $request->observasi;
+            $dataKulitKelamin->terapeutik = $request->terapeutik;
+            $dataKulitKelamin->edukasi = $request->edukasi;
+            $dataKulitKelamin->kolaborasi = $request->kolaborasi;
+            $dataKulitKelamin->save();
 
             //Simpan Diagnosa ke Master
             $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
@@ -146,6 +150,25 @@ class AsesmenKulitKelaminController extends Controller
                 }
             }
 
+            // Simpan Implementasi ke Master
+            $implementasiData = [
+                'prognosis' => json_decode($request->prognosis ?? '[]', true),
+                'observasi' => json_decode($request->observasi ?? '[]', true),
+                'terapeutik' => json_decode($request->terapeutik ?? '[]', true),
+                'edukasi' => json_decode($request->edukasi ?? '[]', true),
+                'kolaborasi' => json_decode($request->kolaborasi ?? '[]', true)
+            ];
+
+            foreach ($implementasiData as $column => $dataList) {
+                foreach ($dataList as $item) {
+                    $existingImplementasi = RmeMasterImplementasi::where($column, $item)->first();
+                    if (!$existingImplementasi) {
+                        $masterImplementasi = new RmeMasterImplementasi();
+                        $masterImplementasi->$column = $item;
+                        $masterImplementasi->save();
+                    }
+                }
+            }
 
             //Simpan ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
@@ -160,6 +183,28 @@ class AsesmenKulitKelaminController extends Controller
                     'is_normal' => $isNormal,
                     'keterangan' => $keterangan
                 ]);
+            }
+
+
+            // Validasi data alergi
+            $alergiData = json_decode($request->alergis, true);
+
+            if (!empty($alergiData)) {
+                // Hapus data alergi lama untuk pasien ini
+                RmeAlergiPasien::where('kd_pasien', $kd_pasien)->delete();
+
+                // Simpan data alergi baru
+                foreach ($alergiData as $alergi) {
+                    // Skip data yang sudah ada di database (is_existing = true) 
+                    // kecuali jika ingin update
+                    RmeAlergiPasien::create([
+                        'kd_pasien' => $kd_pasien,
+                        'jenis_alergi' => $alergi['jenis_alergi'],
+                        'nama_alergi' => $alergi['alergen'],
+                        'reaksi' => $alergi['reaksi'],
+                        'tingkat_keparahan' => $alergi['tingkat_keparahan']
+                    ]);
+                }
             }
 
 
@@ -223,6 +268,66 @@ class AsesmenKulitKelaminController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data asesmen' . $e->getMessage());
+        }
+    }
+
+    public function createResume($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $data)
+    {
+        // get resume
+        $resume = RMEResume::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        $resumeDtlData = [
+            'tindak_lanjut_code'    => $data['tindak_lanjut_code'],
+            'tindak_lanjut_name'    => $data['tindak_lanjut_name'],
+            'tgl_kontrol_ulang'     => $data['tgl_kontrol_ulang'],
+            'unit_rujuk_internal'   => $data['unit_rujuk_internal'],
+            'rs_rujuk'              => $data['rs_rujuk'],
+            'rs_rujuk_bagian'       => $data['rs_rujuk_bagian'],
+        ];
+
+        if (empty($resume)) {
+            $resumeData = [
+                'kd_pasien'     => $kd_pasien,
+                'kd_unit'       => $kd_unit,
+                'tgl_masuk'     => $tgl_masuk,
+                'urut_masuk'    => $urut_masuk,
+                'anamnesis'     => $data['anamnesis'],
+                'konpas'        => $data['konpas'],
+                'diagnosis'     => $data['diagnosis'],
+                'status'        => 0
+            ];
+
+            $newResume = RMEResume::create($resumeData);
+            $newResume->refresh();
+
+            // create resume detail
+            $resumeDtlData['id_resume'] = $newResume->id;
+            RmeResumeDtl::create($resumeDtlData);
+        } else {
+            $resume->anamnesis = $data['anamnesis'];
+            $resume->konpas = $data['konpas'];
+            $resume->diagnosis = $data['diagnosis'];
+            $resume->save();
+
+            // get resume dtl
+            $resumeDtl = RmeResumeDtl::where('id_resume', $resume->id)->first();
+            $resumeDtlData['id_resume'] = $resume->id;
+
+            if (empty($resumeDtl)) {
+                RmeResumeDtl::create($resumeDtlData);
+            } else {
+                $resumeDtl->tindak_lanjut_code  = $data['tindak_lanjut_code'];
+                $resumeDtl->tindak_lanjut_name  = $data['tindak_lanjut_name'];
+                $resumeDtl->tgl_kontrol_ulang   = $data['tgl_kontrol_ulang'];
+                $resumeDtl->unit_rujuk_internal = $data['unit_rujuk_internal'];
+                $resumeDtl->rs_rujuk            = $data['rs_rujuk'];
+                $resumeDtl->rs_rujuk_bagian     = $data['rs_rujuk_bagian'];
+                $resumeDtl->save();
+            }
         }
     }
 

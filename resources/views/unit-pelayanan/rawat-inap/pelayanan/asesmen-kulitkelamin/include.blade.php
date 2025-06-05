@@ -172,40 +172,6 @@
                 }
             });
 
-            // Fungsi untuk handle checkbox riwayat pengobatan
-            function handleRiwayatPengobatan() {
-                const checkboxYa = document.getElementById('riwayat_pengobatan_ya');
-                const checkboxTidak = document.getElementById('riwayat_pengobatan_tidak');
-                const detail = document.getElementById('riwayat_pengobatan_detail');
-
-                // Event listener untuk checkbox Ya
-                checkboxYa.addEventListener('change', function() {
-                    if (this.checked) {
-                        checkboxTidak.checked = false;
-                        detail.disabled = false;
-                        detail.required = true;
-                    } else {
-                        detail.disabled = true;
-                        detail.required = false;
-                        detail.value = '';
-                    }
-                });
-
-                // Event listener untuk checkbox Tidak
-                checkboxTidak.addEventListener('change', function() {
-                    if (this.checked) {
-                        checkboxYa.checked = false;
-                        detail.disabled = true;
-                        detail.required = false;
-                        detail.value = '';
-                    }
-                });
-            }
-
-            // Panggil fungsi saat DOM loaded
-            handleRiwayatPengobatan();
-
-
             //====================================================================================//
             // Pemeriksaan Fisik (ditambahkan pengecekan null)
             //===================================================================================//

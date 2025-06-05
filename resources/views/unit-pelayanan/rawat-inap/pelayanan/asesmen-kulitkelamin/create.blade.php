@@ -82,56 +82,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
-                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
-                                                placeholder="Masukkan riwayat penyakit sekarang"></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
-                                                placeholder="Masukkan riwayat penyakit terdahulu">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Keluarga</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_keluarga"
-                                                placeholder="Masukkan riwayat penyakit keluarga">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Pengobatan</label>
-                                            <div class="row">
-                                                <div class="col-md-12 mb-3">
-                                                    <div class="d-flex gap-4">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="riwayat_pengobatan_ya" id="riwayat_pengobatan_ya"
-                                                                value="ya">
-                                                            <label class="form-check-label" for="riwayat_pengobatan_ya">
-                                                                Ya
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="riwayat_pengobatan_tidak"
-                                                                id="riwayat_pengobatan_tidak" value="tidak">
-                                                            <label class="form-check-label" for="riwayat_pengobatan_tidak">
-                                                                Tidak
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control"
-                                                        name="riwayat_pengobatan_detail" id="riwayat_pengobatan_detail"
-                                                        placeholder="Jika ya, sebutkan pengobatan yang pernah dilakukan"
-                                                        disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label style="min-width: 220px;">Sensorium</label>
                                             <select class="form-select" name="sensorium">
                                                 <option value="" selected disabled>--Pilih--</option>
@@ -178,6 +128,65 @@
                                                 min="40" max="200">
                                         </div>
 
+                                    </div>
+
+                                    <div class="section-separator" id="riwayat-kesehatan">
+                                        <h5 class="section-title">5. Riwayat Kesehatan</h5>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
+                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
+                                                placeholder="Masukkan riwayat penyakit sekarang"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
+                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
+                                                placeholder="Masukkan riwayat penyakit terdahulu">
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Kesehatan Keluarga</label>
+                                            <div class="w-100">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                                <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
+                                                    <!-- Empty state message -->
+                                                    <div id="emptyStateRiwayat" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang ditambahkan.</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input to store the JSON data -->
+                                                <input type="hidden" name="riwayat_kesehatan_keluarga" id="riwayatKesehatanInput">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="section-separator" id="riwayatObat">
+                                        <h5 class="section-title">6. Riwayat Penggunaan Obat</h5>
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
+                                            <i class="ti-plus"></i> Tambah
+                                        </button>
+                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" value="[]">
+                                        <div class="table-responsive">
+                                            <table class="table" id="createRiwayatObatTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Obat</th>
+                                                        <th>Dosis</th>
+                                                        <th>Aturan Pakai</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Table content will be dynamically populated -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
 
                                     <div class="section-separator" id="skala-nyeri">
@@ -608,4 +617,6 @@
     </div>
 @endsection
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-riwayatkeluarga')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-obat')
 @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')
