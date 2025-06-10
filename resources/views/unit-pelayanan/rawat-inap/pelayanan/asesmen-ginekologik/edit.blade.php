@@ -83,7 +83,7 @@
                                                 <input type="date" class="form-control" name="tanggal" id="tanggal_masuk"
                                                     value="{{ $asesmen->rmeAsesmenGinekologik->tanggal ?? date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
-                                                    value="{{ $asesmen->rmeAsesmenGinekologik->jam_masuk ?? date('H:i') }}">
+                                                    value="{{ $asesmen->rmeAsesmenGinekologik->jam_masuk_formatted ?? date('H:i') }}">
                                             </div>
                                         </div>
 
