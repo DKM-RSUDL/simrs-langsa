@@ -211,24 +211,27 @@
                                     <div class="section-separator" id="riwayat-obstetrik">
                                         <h5 class="section-title">4. Riwayat Obstetrik</h5>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openObstetrikModal">
-                                            <i class="ti-plus"></i> Tambah Riwayat Obstetrik
-                                        </button>
-                                        <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput"
-                                            value="{{ $asesmen->rmeAsesmenGinekologik->riwayat_obstetrik ?? '[]' }}">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <button type="button" class="btn btn-sm btn-primary" id="openObstetrikModal">
+                                                <i class="fas fa-plus"></i> Tambah Riwayat Obstetrik
+                                            </button>
+                                            <small class="text-muted">Total: <span id="totalObstetrik">0</span> riwayat</small>
+                                        </div>
+                                        
+                                        <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput" value="{{ $asesmen->rmeAsesmenGinekologik->riwayat_obstetrik ?? '[]' }}">
+                                        
                                         <div class="table-responsive">
-                                            <table class="table" id="obstetrikTable">
-                                                <thead>
+                                            <table class="table table-striped table-hover" id="obstetrikTable">
+                                                <thead class="table-light">
                                                     <tr>
-                                                        <th>Keadaan</th>
-                                                        <th>Kehamilan</th>
-                                                        <th>Cara Persalinan</th>
-                                                        <th>Keadaan Nifas</th>
-                                                        <th>Tanggal Lahir</th>
-                                                        <th>Keadaan Anak</th>
-                                                        <th>Tempat dan Penolong</th>
-                                                        <th>Aksi</th>
+                                                        <th width="12%">Keadaan</th>
+                                                        <th width="10%">Kehamilan</th>
+                                                        <th width="15%">Cara Persalinan</th>
+                                                        <th width="12%">Keadaan Nifas</th>
+                                                        <th width="12%">Tanggal Lahir</th>
+                                                        <th width="12%">Keadaan Anak</th>
+                                                        <th width="20%">Tempat dan Penolong</th>
+                                                        <th width="7%">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
