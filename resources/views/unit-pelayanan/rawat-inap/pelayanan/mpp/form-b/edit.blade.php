@@ -285,9 +285,9 @@
                                     <tr class="rencana-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="rencana_date"
-                                                    class="form-control form-control-sm rencana-date"
-                                                    value="{{ $mppData->rencana_date }}">
+                                                <input type="text" name="rencana_date"
+                                                    class="form-control form-control-sm rencana-date date"
+                                                    value="{{ $mppData->rencana_date }}" placeholder="yyyy/mm/dd" readonly>
                                                 <input type="time" name="rencana_time"
                                                     class="form-control form-control-sm rencana-time"
                                                     value="{{ $mppData->rencana_time ? \Carbon\Carbon::parse($mppData->rencana_time)->format('H:i') : '' }}">
@@ -303,9 +303,10 @@
                                     <tr class="monitoring-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="monitoring_date"
-                                                    class="form-control form-control-sm monitoring-date"
-                                                    value="{{ $mppData->monitoring_date }}">
+                                                <input type="text" name="monitoring_date"
+                                                    class="form-control form-control-sm monitoring-date date"
+                                                    value="{{ $mppData->monitoring_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="monitoring_time"
                                                     class="form-control form-control-sm monitoring-time"
                                                     value="{{ $mppData->monitoring_time ? \Carbon\Carbon::parse($mppData->monitoring_time)->format('H:i') : '' }}">
@@ -325,9 +326,10 @@
                                     <tr class="koordinasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="koordinasi_date"
-                                                    class="form-control form-control-sm koordinasi-date"
-                                                    value="{{ $mppData->koordinasi_date }}">
+                                                <input type="text" name="koordinasi_date"
+                                                    class="form-control form-control-sm koordinasi-date date"
+                                                    value="{{ $mppData->koordinasi_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="koordinasi_time"
                                                     class="form-control form-control-sm koordinasi-time"
                                                     value="{{ $mppData->koordinasi_time ? \Carbon\Carbon::parse($mppData->koordinasi_time)->format('H:i') : '' }}">
@@ -373,9 +375,10 @@
                                     <tr class="advokasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="advokasi_date"
-                                                    class="form-control form-control-sm advokasi-date"
-                                                    value="{{ $mppData->advokasi_date }}">
+                                                <input type="text" name="advokasi_date"
+                                                    class="form-control form-control-sm advokasi-date date"
+                                                    value="{{ $mppData->advokasi_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="advokasi_time"
                                                     class="form-control form-control-sm advokasi-time"
                                                     value="{{ $mppData->advokasi_time ? \Carbon\Carbon::parse($mppData->advokasi_time)->format('H:i') : '' }}">
@@ -428,9 +431,9 @@
                                     <tr class="hasil-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="hasil_date"
-                                                    class="form-control form-control-sm hasil-date"
-                                                    value="{{ $mppData->hasil_date }}">
+                                                <input type="text" name="hasil_date"
+                                                    class="form-control form-control-sm hasil-date date"
+                                                    value="{{ $mppData->hasil_date }}" placeholder="yyyy/mm/dd" readonly>
                                                 <input type="time" name="hasil_time"
                                                     class="form-control form-control-sm hasil-time"
                                                     value="{{ $mppData->hasil_time ? \Carbon\Carbon::parse($mppData->hasil_time)->format('H:i') : '' }}">
@@ -446,9 +449,10 @@
                                     <tr class="terminasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="terminasi_date"
-                                                    class="form-control form-control-sm terminasi-date"
-                                                    value="{{ $mppData->terminasi_date }}">
+                                                <input type="text" name="terminasi_date"
+                                                    class="form-control form-control-sm terminasi-date date"
+                                                    value="{{ $mppData->terminasi_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="terminasi_time"
                                                     class="form-control form-control-sm terminasi-time"
                                                     value="{{ $mppData->terminasi_time ? \Carbon\Carbon::parse($mppData->terminasi_time)->format('H:i') : '' }}">
@@ -628,7 +632,8 @@
                 if (!isValid) {
                     e.preventDefault();
                     alert(
-                        'Mohon lengkapi tanggal dan jam untuk setiap seksi yang memiliki data yang diisi.');
+                        'Mohon lengkapi tanggal dan jam untuk setiap seksi yang memiliki data yang diisi.'
+                    );
                 }
             });
 
@@ -694,7 +699,7 @@
                     checkboxes.forEach(checkbox => {
                         checkbox.addEventListener('change', function() {
                             const anyChecked = Array.from(checkboxes).some(cb => cb
-                            .checked);
+                                .checked);
                             if (anyChecked) {
                                 if (!dateInput.value.trim()) {
                                     dateInput.classList.add('is-invalid');

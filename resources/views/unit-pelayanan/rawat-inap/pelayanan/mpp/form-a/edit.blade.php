@@ -218,9 +218,10 @@
                                     <tr class="screening-row">
                                         <td class="datetime-column" rowspan="13">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="screening_date"
-                                                    class="form-control form-control-sm screening-date"
-                                                    value="{{ $mppData->screening_date }}">
+                                                <input type="text" name="screening_date"
+                                                    class="form-control form-control-sm screening-date date"
+                                                    value="{{ $mppData->screening_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="screening_time"
                                                     class="form-control form-control-sm screening-time"
                                                     value="{{ $mppData->screening_time ? \Carbon\Carbon::parse($mppData->screening_time)->format('H:i') : '' }}">
@@ -387,9 +388,10 @@
                                     <tr class="assessment-row">
                                         <td class="datetime-column" rowspan="11">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="assessment_date"
-                                                    class="form-control form-control-sm assessment-date"
-                                                    value="{{ $mppData->assessment_date }}">
+                                                <input type="text" name="assessment_date"
+                                                    class="form-control form-control-sm assessment-date date"
+                                                    value="{{ $mppData->assessment_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="assessment_time"
                                                     class="form-control form-control-sm assessment-time"
                                                     value="{{ $mppData->assessment_time ? \Carbon\Carbon::parse($mppData->assessment_time)->format('H:i') : '' }}">
@@ -535,9 +537,10 @@
                                     <tr class="identification-row">
                                         <td class="datetime-column" rowspan="8">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="identification_date"
-                                                    class="form-control form-control-sm identification-date"
-                                                    value="{{ $mppData->identification_date }}">
+                                                <input type="text" name="identification_date"
+                                                    class="form-control form-control-sm identification-date date"
+                                                    value="{{ $mppData->identification_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="identification_time"
                                                     class="form-control form-control-sm identification-time"
                                                     value="{{ $mppData->identification_time ? \Carbon\Carbon::parse($mppData->identification_time)->format('H:i') : '' }}">
@@ -657,9 +660,10 @@
                                     <tr class="planning-row">
                                         <td class="datetime-column" rowspan="5">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="planning_date"
-                                                    class="form-control form-control-sm planning-date"
-                                                    value="{{ $mppData->planning_date }}">
+                                                <input type="text" name="planning_date"
+                                                    class="form-control form-control-sm planning-date date"
+                                                    value="{{ $mppData->planning_date }}" placeholder="yyyy/mm/dd"
+                                                    readonly>
                                                 <input type="time" name="planning_time"
                                                     class="form-control form-control-sm planning-time"
                                                     value="{{ $mppData->planning_time ? \Carbon\Carbon::parse($mppData->planning_time)->format('H:i') : '' }}">
