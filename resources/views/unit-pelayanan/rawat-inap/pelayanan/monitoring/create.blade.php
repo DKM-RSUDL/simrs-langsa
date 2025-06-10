@@ -38,9 +38,34 @@
             @include('components.patient-card')
         </div>
 
+        {{-- Dynamic Title Based on kd_unit --}}
+        @php
+            $unitTitles = [
+                '10015' => 'Monitoring Intensive Coronary Care Unit (ICCU)',
+                '10016' => 'Monitoring Intensive Care Unit (ICU)',
+                '10131' => 'Monitoring Neonatal Intensive Care Unit (NICU)',
+                '10132' => 'Monitoring Pediatric Intensive Care Unit (PICU)',
+            ];
+            $title = isset($unitTitles[$dataMedis->kd_unit])
+                ? $unitTitles[$dataMedis->kd_unit]
+                : 'Monitoring Intensive Care';
+        @endphp
+
+        @php
+            $unitTitlesss = [
+                '10015' => 'ICCU',
+                '10016' => 'ICU',
+                '10131' => 'NICU',
+                '10132' => 'PICU',
+            ];
+            $subTitle = isset($unitTitlesss[$dataMedis->kd_unit])
+                ? $unitTitlesss[$dataMedis->kd_unit]
+                : 'Monitoring Intensive Care';
+        @endphp
+
         <div class="col-md-9">
             <div class="text-center mt-1 mb-2">
-                <h5 class="text-secondary fw-bold">Monitoring Intensive Care Unit (ICCU)</h5>
+                <h5 class="text-secondary fw-bold">{{ $title }}</h5>
             </div>
 
             <hr>
@@ -66,11 +91,12 @@
                                             <i class="bi bi-exclamation-triangle-fill"></i>
                                             Pastikan jam diisi dengan benar untuk keakuratan dokumentasi medis
                                         </small>
-                                        @if($latestMonitoring)
-                                        <small class="text-info">
-                                            <i class="bi bi-clock-history"></i>
-                                            Pengisian terakhir: {{ date('d-m-Y H:i', strtotime($latestMonitoring->tgl_implementasi . ' ' . $latestMonitoring->jam_implementasi)) }}
-                                        </small>
+                                        @if ($latestMonitoring)
+                                            <small class="text-info">
+                                                <i class="bi bi-clock-history"></i>
+                                                Pengisian terakhir:
+                                                {{ date('d-m-Y H:i', strtotime($latestMonitoring->tgl_implementasi . ' ' . $latestMonitoring->jam_implementasi)) }}
+                                            </small>
                                         @endif
                                     </div>
                                 </div>
@@ -80,13 +106,14 @@
                                         <div class="input-group">
                                             <input type="date" class="form-control" name="tgl_implementasi"
                                                 id="tgl_implementasi" value="{{ date('Y-m-d') }}" required>
-                                            @if($latestMonitoring)
-                                            <span class="input-group-text bg-light">
-                                                <i class="bi bi-calendar-check"></i>
-                                            </span>
-                                            <span class="input-group-text bg-light text-muted">
-                                                Terakhir: {{ date('d-m-Y', strtotime($latestMonitoring->tgl_implementasi)) }}
-                                            </span>
+                                            @if ($latestMonitoring)
+                                                <span class="input-group-text bg-light">
+                                                    <i class="bi bi-calendar-check"></i>
+                                                </span>
+                                                <span class="input-group-text bg-light text-muted">
+                                                    Terakhir:
+                                                    {{ date('d-m-Y', strtotime($latestMonitoring->tgl_implementasi)) }}
+                                                </span>
                                             @endif
                                         </div>
                                     </div>
@@ -97,13 +124,14 @@
                                         <div class="input-group">
                                             <input type="time" class="form-control" name="jam_implementasi"
                                                 id="jam_implementasi" value="{{ date('H:i') }}" required>
-                                            @if($latestMonitoring)
-                                            <span class="input-group-text bg-light">
-                                                <i class="bi bi-clock"></i>
-                                            </span>
-                                            <span class="input-group-text bg-light text-muted">
-                                                Terakhir: {{ date('H:i', strtotime($latestMonitoring->jam_implementasi)) }}
-                                            </span>
+                                            @if ($latestMonitoring)
+                                                <span class="input-group-text bg-light">
+                                                    <i class="bi bi-clock"></i>
+                                                </span>
+                                                <span class="input-group-text bg-light text-muted">
+                                                    Terakhir:
+                                                    {{ date('H:i', strtotime($latestMonitoring->jam_implementasi)) }}
+                                                </span>
                                             @endif
                                             <div class="invalid-feedback" id="timeError">
                                                 Pastikan format jam benar (HH:MM)
@@ -126,51 +154,169 @@
                         <div class="card-body">
                             <div class="alert alert-info mb-3 mt-3" role="alert">
                                 <i class="bi bi-info-circle-fill me-2"></i>
-                                <small>Data di bawah ini diambil dari pengisian terakhir. Jangan diubah jika tidak diperlukan.</small>
+                                <small>Data di bawah ini diambil dari pengisian terakhir. Jangan diubah jika tidak
+                                    diperlukan.</small>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold required">Indikasi ICCU</label>
-                                        <textarea class="form-control bg-light" name="indikasi_iccu" rows="3" required>{{ $latestMonitoring->indikasi_iccu ?? '' }}</textarea>
-                                    </div>
+                                    @if (in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Indikasi {{ $subTitle }}</label>
+                                            <textarea class="form-control bg-light" name="indikasi_iccu" rows="3">{{ $latestMonitoring->indikasi_iccu ?? '' }}</textarea>
+                                        </div>
+                                    @endif
+
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Berat Badan (kg)</label>
-                                                <input type="number" step="0.1" min="0" class="form-control bg-light"
-                                                    name="berat_badan" placeholder="kg" value="{{ $latestMonitoring && $latestMonitoring->berat_badan ? number_format($latestMonitoring->berat_badan, 1) : '' }}">
+
+                                {{-- Field khusus untuk NICU --}}
+                                @if ($dataMedis->kd_unit == '10131')
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Hari Rawat Ke-</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="1" class="form-control bg-light"
+                                                            name="hari_rawat"
+                                                            value="{{ $latestMonitoring->hari_rawat ?? '' }}">
+                                                        <span class="input-group-text bg-light" data-bs-toggle="tooltip"
+                                                            title="Hari Rawat Kunjungan">
+                                                            <i class="bi bi-info-circle"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Tinggi Badan (cm)</label>
-                                                <input type="number" step="1" min="0" class="form-control bg-light"
-                                                    name="tinggi_badan" placeholder="cm" value="{{ $latestMonitoring && $latestMonitoring->tinggi_badan ? number_format($latestMonitoring->tinggi_badan, 0) : '' }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Hari Rawat Ke-</label>
-                                                <div class="input-group">
-                                                    <input type="number" min="1" class="form-control bg-light" name="hari_rawat" value="{{ $latestMonitoring->hari_rawat ?? '' }}">
-                                                    <span class="input-group-text bg-light" data-bs-toggle="tooltip" title="Hari Rawat Kunjungan">
-                                                        <i class="bi bi-info-circle"></i>
-                                                    </span>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Usia Kelahiran</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="0" max="365"
+                                                            class="form-control bg-light" name="usia_kelahiran"
+                                                            placeholder="Hari"
+                                                            value="{{ $latestMonitoring->usia_kelahiran ?? '' }}">
+                                                        <span class="input-group-text">hari</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold required">Diagnosa</label>
-                                                <input type="text" class="form-control bg-light" name="diagnosa" value="{{ $latestMonitoring->diagnosa ?? '' }}" required>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Umur Bayi</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="0" max="365"
+                                                            class="form-control bg-light" name="umur_bayi"
+                                                            placeholder="Hari"
+                                                            value="{{ $latestMonitoring->umur_bayi ?? '' }}">
+                                                        <span class="input-group-text">hari</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Umur Gestasi</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control bg-light"
+                                                            name="umur_gestasi" placeholder="Minggu"
+                                                            value="{{ $latestMonitoring->umur_gestasi ?? '' }}">
+                                                        <span class="input-group-text">minggu</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Berat Badan Lahir</label>
+                                                    <div class="input-group">
+                                                        <input type="number" step="0.1"
+                                                            class="form-control bg-light" name="berat_badan_lahir"
+                                                            placeholder="Berat lahir"
+                                                            value="{{ $latestMonitoring->berat_badan_lahir ?? '' }}">
+                                                        <span class="input-group-text">gram</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Cara Persalinan</label>
+                                                    <select class="form-select bg-light" name="cara_persalinan">
+                                                        <option value="">- Pilih Cara Persalinan -</option>
+                                                        <option value="Normal"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'Normal' ? 'selected' : '' }}>
+                                                            Normal/Spontan</option>
+                                                        <option value="Vacuum"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'Vacuum' ? 'selected' : '' }}>
+                                                            Vacuum</option>
+                                                        <option value="Forceps"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'Forceps' ? 'selected' : '' }}>
+                                                            Forceps</option>
+                                                        <option value="SC"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'SC' ? 'selected' : '' }}>
+                                                            Sectio Caesarea (SC)</option>
+                                                        <option value="Prematur"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'Prematur' ? 'selected' : '' }}>
+                                                            Prematur</option>
+                                                        <option value="Lainnya"
+                                                            {{ ($latestMonitoring->cara_persalinan ?? '') == 'Lainnya' ? 'selected' : '' }}>
+                                                            Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                {{-- End field khusus NICU --}}
+
+                                @if (in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Berat Badan (kg)</label>
+                                                    <input type="number" step="0.1" min="0"
+                                                        class="form-control bg-light" name="berat_badan" placeholder="kg"
+                                                        value="{{ $latestMonitoring && $latestMonitoring->berat_badan ? number_format($latestMonitoring->berat_badan, 1) : '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Tinggi Badan (cm)</label>
+                                                    <input type="number" step="1" min="0"
+                                                        class="form-control bg-light" name="tinggi_badan" placeholder="cm"
+                                                        value="{{ $latestMonitoring && $latestMonitoring->tinggi_badan ? number_format($latestMonitoring->tinggi_badan, 0) : '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Hari Rawat Ke-</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="1" class="form-control bg-light"
+                                                            name="hari_rawat"
+                                                            value="{{ $latestMonitoring->hari_rawat ?? '' }}">
+                                                        <span class="input-group-text bg-light" data-bs-toggle="tooltip"
+                                                            title="Hari Rawat Kunjungan">
+                                                            <i class="bi bi-info-circle"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Diagnosa</label>
+                                                    <input type="text" class="form-control bg-light" name="diagnosa"
+                                                        value="{{ $latestMonitoring->diagnosa ?? '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="form-group">
                                     <label class="form-label fw-bold" for="alergi">Alergi</label>
                                     <div class="input-group">
@@ -187,7 +333,10 @@
                                 </div>
                                 @include('unit-pelayanan.rawat-inap.pelayanan.monitoring.alergi')
                             </div>
-                            
+
+
+
+                            <!-- Informasi Tenaga Medis -->
                             <!-- Informasi Tenaga Medis -->
                             <div class="row mt-3">
                                 <div class="col-md-12">
@@ -195,45 +344,164 @@
                                         <i class="bi bi-people-fill me-1"></i> Informasi Tenaga Medis
                                     </h6>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Dokter</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="dokter">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ ($latestMonitoring && $latestMonitoring->dokter == $d->kd_dokter) ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
+                                {{-- Form untuk NICU (10131) --}}
+                                @if ($dataMedis->kd_unit == '10131')
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Diagnosa 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_diagnosa_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_diagnosa_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Konsulen</label>
-                                        <input type="text" class="form-control bg-light" name="konsulen" value="{{ $latestMonitoring->konsulen ?? '' }}">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Diagnosa 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_diagnosa_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_diagnosa_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Anastesi/RB</label>
-                                        <input type="text" class="form-control bg-light" name="anastesi_rb" value="{{ $latestMonitoring->anastesi_rb ?? '' }}">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter NICU 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_nicu_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_nicu_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Dokter Jaga</label>
-                                        <select class="form-select select2 bg-light" style="width: 100%" name="dokter_jaga">
-                                            <option value="">- Pilih -</option>
-                                            @foreach ($dokter as $d)
-                                                <option value="{{ $d->kd_dokter }}" {{ ($latestMonitoring && $latestMonitoring->dokter_jaga == $d->kd_dokter) ? 'selected' : '' }}>
-                                                    {{ $d->nama_lengkap }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter NICU 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_nicu_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_nicu_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Konsul 1</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_konsul_1">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_konsul_1 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Konsul 2</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_konsul_2">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_konsul_2 == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                    {{-- Form untuk ICCU (10015), ICU (10016), PICU (10132) --}}
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Konsulen</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="konsulen">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->konsulen == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Anastesi/RB</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="anastesi_rb">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->anastesi_rb == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Dokter Jaga</label>
+                                            <select class="form-select select2 bg-light" style="width: 100%"
+                                                name="dokter_jaga">
+                                                <option value="">- Pilih -</option>
+                                                @foreach ($dokter as $d)
+                                                    <option value="{{ $d->kd_dokter }}"
+                                                        {{ $latestMonitoring && $latestMonitoring->dokter_jaga == $d->kd_dokter ? 'selected' : '' }}>
+                                                        {{ $d->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
+
                         </div>
                     </div>
 
@@ -242,7 +510,7 @@
                         <div class="card-header bg-success text-white">
                             <h6 class="mb-0">
                                 <i class="bi bi-heart-pulse-fill me-2"></i>
-                                Monitoring ICCU Parameters
+                                Monitoring {{ $subTitle }} Parameters
                             </h6>
                         </div>
                         <div class="card-body mt-3">
@@ -325,7 +593,8 @@
                         <div class="card-body">
                             <div class="alert alert-info mb-3 mt-3" role="alert">
                                 <i class="bi bi-info-circle-fill me-2"></i>
-                                Masukkan jumlah obat yang diberikan dalam satuan cc/ml untuk setiap terapi obat yang telah ditambahkan.
+                                Masukkan jumlah obat yang diberikan dalam satuan cc/ml untuk setiap terapi obat yang telah
+                                ditambahkan.
                             </div>
 
                             <!-- Terapi Oral -->
@@ -342,10 +611,11 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">{{ $therapy->nama_obat }}</label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.1" min="0" class="form-control"
+                                                        <input type="number" step="0.1" min="0"
+                                                            class="form-control"
                                                             name="therapy_doses[{{ $therapy->id }}]"
-                                                            placeholder="Jumlah dalam cc/ml">
-                                                        <span class="input-group-text">cc/ml</span>
+                                                            placeholder="Jumlah dalam ml/mg">
+                                                        <span class="input-group-text">ml/mg</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -368,7 +638,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">{{ $therapy->nama_obat }}</label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.1" min="0" class="form-control"
+                                                        <input type="number" step="0.1" min="0"
+                                                            class="form-control"
                                                             name="therapy_doses[{{ $therapy->id }}]"
                                                             placeholder="Jumlah dalam cc/ml">
                                                         <span class="input-group-text">cc/ml</span>
@@ -394,7 +665,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">{{ $therapy->nama_obat }}</label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.1" min="0" class="form-control"
+                                                        <input type="number" step="0.1" min="0"
+                                                            class="form-control"
                                                             name="therapy_doses[{{ $therapy->id }}]"
                                                             placeholder="Jumlah dalam cc/ml">
                                                         <span class="input-group-text">cc/ml</span>
@@ -420,7 +692,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">{{ $therapy->nama_obat }}</label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.1" min="0" class="form-control"
+                                                        <input type="number" step="0.1" min="0"
+                                                            class="form-control"
                                                             name="therapy_doses[{{ $therapy->id }}]"
                                                             placeholder="Jumlah dalam cc/ml">
                                                         <span class="input-group-text">cc/ml</span>
@@ -749,7 +1022,11 @@
                     <!-- Ventilator Parameters -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
+                            @if ($dataMedis->kd_unit == '10131')
+                                <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
+                            @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
+                                <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
+                            @endif
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -878,144 +1155,6 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            ///===============================================================================================//
-            // Add random data generation button to the form
-            ///===============================================================================================//
-            $('.row .col-12.text-end').prepend(`
-                <button type="button" id="generateRandomData" class="btn btn-warning me-2">
-                    <i class="bi bi-shuffle me-1"></i> Isi Data Random
-                </button>
-            `);
-
-            // Random data generation functionality
-            $('#generateRandomData').on('click', function() {
-                // Helper function to get random number within range
-                function randomNumber(min, max, decimals = 0) {
-                    const factor = Math.pow(10, decimals);
-                    return Math.round((Math.random() * (max - min) + min) * factor) / factor;
-                }
-
-                // Helper function to get random item from array
-                function randomItem(array) {
-                    return array[Math.floor(Math.random() * array.length)];
-                }
-
-                // Output
-                $('[name="bab"]').val(randomNumber(0, 3));
-                $('[name="urine"]').val(randomNumber(500, 2000));
-                $('[name="iwl"]').val(randomNumber(300, 800));
-                $('[name="muntahan_cms"]').val(randomNumber(0, 200));
-                $('[name="drain"]').val(randomNumber(0, 150));
-
-                // Vital signs
-                const sistolik = randomNumber(90, 180);
-                const diastolik = randomNumber(60, 110);
-                const map = Math.round((sistolik + 2 * diastolik) / 3);
-
-                $('[name="sistolik"]').val(sistolik);
-                $('[name="diastolik"]').val(diastolik);
-                $('[name="map"]').val(map);
-                $('[name="hr"]').val(randomNumber(60, 120));
-                $('[name="rr"]').val(randomNumber(12, 30));
-                $('[name="temp"]').val(randomNumber(36, 39, 1));
-
-                // Therapy Doses (Random values for each therapy)
-                @foreach ($therapies as $therapy)
-                    $('[name="therapy_doses[{{ $therapy->id }}]"]').val(randomNumber(1, 100, 1));
-                @endforeach
-
-                // GCS - Glasgow Coma Scale
-                const eyeValues = ["", "1", "2", "3", "4"];
-                const verbalValues = ["", "1", "2", "3", "4", "5"];
-                const motorValues = ["", "1", "2", "3", "4", "5", "6"];
-
-                const eyeValue = randomItem(eyeValues);
-                const verbalValue = randomItem(verbalValues);
-                const motorValue = randomItem(motorValues);
-
-                $('#gcs_eye').val(eyeValue);
-                $('#gcs_verbal').val(verbalValue);
-                $('#gcs_motor').val(motorValue);
-
-                // Calculate GCS total if all values are selected
-                if (eyeValue && verbalValue && motorValue) {
-                    const totalGCS = parseInt(eyeValue) + parseInt(verbalValue) + parseInt(motorValue);
-                    $('#gcs_total').val(totalGCS);
-                }
-
-                // Pupil status
-                const pupilStatus = ["", "isokor", "anisokor", "midriasis", "miosis", "pinpoint"];
-                $('[name="pupil_kanan"]').val(randomItem(pupilStatus));
-                $('[name="pupil_kiri"]').val(randomItem(pupilStatus));
-
-                // AGD - Analisis Gas Darah
-                $('[name="ph"]').val(randomNumber(7.30, 7.50, 2));
-                $('[name="po2"]').val(randomNumber(80, 100, 1));
-                $('[name="pco2"]').val(randomNumber(35, 45, 1));
-                $('[name="be"]').val(randomNumber(-3, 3, 1));
-                $('[name="hco3"]').val(randomNumber(22, 28, 1));
-                $('[name="saturasi_o2"]').val(randomNumber(90, 99, 1));
-
-                // Elektrolit
-                $('[name="na"]').val(randomNumber(135, 145, 1));
-                $('[name="k"]').val(randomNumber(3.5, 5.5, 1));
-                $('[name="cl"]').val(randomNumber(98, 108, 1));
-
-                // Fungsi Ginjal
-                $('[name="ureum"]').val(randomNumber(15, 40, 1));
-                $('[name="creatinin"]').val(randomNumber(0.6, 1.3, 2));
-
-                // Hematologi
-                $('[name="hb"]').val(randomNumber(11, 17, 1));
-                $('[name="ht"]').val(randomNumber(35, 50, 1));
-                $('[name="leukosit"]').val(randomNumber(4, 11, 2));
-                $('[name="trombosit"]').val(randomNumber(150, 400));
-
-                // Fungsi Hati
-                $('[name="sgot"]').val(randomNumber(10, 40, 1));
-                $('[name="sgpt"]').val(randomNumber(10, 40, 1));
-
-                // Parameter Tambahan
-                $('[name="kdgs"]').val(randomNumber(80, 180));
-
-                const terapiOksigen = ["Nasal Kanula 2 lpm", "Nasal Kanula 4 lpm",
-                    "Non-Rebreathing Mask 10 lpm", "Simple Mask 6 lpm", "Ventilator"
-                ];
-                $('[name="terapi_oksigen"]').val(randomItem(terapiOksigen));
-                $('[name="albumin"]').val(randomNumber(3.5, 5.0, 1));
-
-                const kesadaran = ["", "1", "2", "3", "4", "5"];
-                $('[name="kesadaran"]').val(randomItem(kesadaran));
-
-                // Ventilator Parameters
-                const ventModes = ["SIMV", "CPAP", "BiPAP", "AC", "PC", "PSV"];
-                $('[name="ventilator_mode"]').val(randomItem(ventModes));
-                $('[name="ventilator_mv"]').val(randomNumber(6, 12, 1));
-                $('[name="ventilator_tv"]').val(randomNumber(350, 650));
-                $('[name="ventilator_fio2"]').val(randomNumber(21, 80));
-
-                const ieRatios = ["1:2", "1:1.5", "1:3", "1:4"];
-                $('[name="ventilator_ie_ratio"]').val(randomItem(ieRatios));
-                $('[name="ventilator_pmax"]').val(randomNumber(15, 30));
-                $('[name="ventilator_peep_ps"]').val(randomNumber(5, 12));
-
-                // Medical Devices
-                const ettSizes = ["7.0", "7.5", "8.0", "8.5"];
-                const ngtSizes = ["14", "16", "18"];
-                const cvcTypes = ["Subclavian", "Jugularis", "Femoralis", ""];
-                const ivLineTypes = ["Perifer", "Central", "PICC", ""];
-
-                $('[name="ett_no"]').val(randomItem(ettSizes));
-                $('[name="batas_bibir"]').val(randomNumber(19, 24, 1));
-                $('[name="ngt_no"]').val(randomItem(ngtSizes));
-                $('[name="cvc"]').val(randomItem(cvcTypes));
-                $('[name="urine_catch_no"]').val(randomNumber(14, 18));
-                $('[name="iv_line"]').val(randomItem(ivLineTypes));
-
-                // Trigger input events to calculate derived values
-                $('#sistolik, #diastolik').trigger('input');
-                $('.gcs-component').trigger('change');
-            });
 
             // Validasi jam
             $('#jam_implementasi').on('change', function() {
@@ -1073,8 +1212,6 @@
                 const requiredFields = [
                     'tgl_implementasi',
                     'jam_implementasi',
-                    'indikasi_iccu',
-                    'diagnosa',
                     'sistolik' // Tambahkan sistolik sebagai field wajib
                 ];
 

@@ -81,7 +81,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal_masuk"
+                                                <input type="date" class="form-control" name="tanggal"
                                                     id="tanggal_masuk" value="{{ date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
                                                     value="{{ date('H:i') }}">
@@ -141,7 +141,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Keluhan Utama/Alasan Masuk RS</label>
                                             <textarea class="form-control" name="keluhan_utama" rows="4"
-                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit" required></textarea>
+                                                placeholder="Masukkan keluhan utama atau alasan masuk rumah sakit"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -234,7 +234,7 @@
                                             Berencana</h5>
                                         <div class="form-group">
                                             <textarea class="form-control" name="riwayat_penyakit_dahulu" rows="5"
-                                                placeholder="Masukkan riwayat penyakit dahulu" required></textarea>
+                                                placeholder="Masukkan riwayat penyakit dahulu"></textarea>
                                         </div>
                                     </div>
 
@@ -247,13 +247,13 @@
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
                                                     <input type="number" class="form-control"
-                                                        name="tekanan_darah_sistole" placeholder="120" min="70"
+                                                        name="tekanan_darah_sistole" min="70"
                                                         max="300">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
                                                     <input type="number" class="form-control"
-                                                        name="tekanan_darah_diastole" placeholder="80" min="40"
+                                                        name="tekanan_darah_diastole" min="40"
                                                         max="150">
                                                 </div>
                                             </div>
@@ -262,37 +262,37 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Suhu (°C)</label>
                                             <input type="number" class="form-control" name="suhu" step="0.1"
-                                                placeholder="36.5" min="30" max="45">
+                                                min="30" max="45">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Respirasi (Per Menit)</label>
-                                            <input type="number" class="form-control" name="respirasi" placeholder="20"
+                                            <input type="number" class="form-control" name="respirasi"
                                                 min="10" max="50">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Nadi (Per Menit)</label>
-                                            <input type="number" class="form-control" name="nadi" placeholder="80"
+                                            <input type="number" class="form-control" name="nadi"
                                                 min="40" max="200">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Nafas (Per Menit)</label>
-                                            <input type="number" class="form-control" name="nafas" placeholder="12"
+                                            <input type="number" class="form-control" name="nafas"
                                                 min="6" max="30">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Berat Badan (Kg)</label>
                                             <input type="number" class="form-control" name="berat_badan"
-                                                placeholder="50" min="30" max="190">
+                                                min="30" max="190">
                                         </div>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Tinggi Badan (Cm)</label>
                                             <input type="number" class="form-control" name="tinggi_badan"
-                                                placeholder="150" min="50" max="250">
+                                                min="50" max="250">
                                         </div>
                                     </div>
 

@@ -869,12 +869,15 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                         Route::put('/{id}', 'update')->name('.update');
                                         Route::delete('/{id}', 'destroy')->name('.destroy');
-                                        Route::get('/print', 'print')->name('.print');
+                                        Route::get('/print', 'printMonitoring')->name('.print');
                                         Route::get('/create-therapy', 'createTherapy')->name('.create-therapy');
                                         Route::post('/store-therapy', 'storeTherapy')->name('.store-therapy');
                                         Route::delete('/destroy-therapy/{id}', 'destroyTherapy')->name('.destroy-therapy');
                                         Route::get('/filter-data', 'getFilteredData')->name('.filter-data');
                                         Route::get('/{id}/detail', 'getMonitoringDetail')->name('.detail');
+                                        Route::get('/available-days', 'getAvailableDays')->name('.available-days');
+                                        Route::get('/filter-by-day', 'getFilteredDataByDay')->name('.filter-by-day');
+                                        Route::get('all-data', 'getAllMonitoringData')->name('.all-data');
                                     });
                                 });
                             });

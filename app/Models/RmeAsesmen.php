@@ -389,4 +389,26 @@ class RmeAsesmen extends Model
         return $this->hasOne(RmeAsesmenKepOphtamologyRencanaPulang::class, 'id_asesmen', 'id');
     }
 
+    // asesmen paru
+    public function rmeAsesmenParu()
+    {
+        return $this->hasOne(RmeAsesmenParu::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenParuRencanaKerja()
+    {
+        return $this->hasOne(RmeAsesmenParuRencanaKerja::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenParuPerencanaanPulang()
+    {
+        return $this->hasOne(RmeAsesmenParuPerencanaanPulang::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenParuDiagnosisImplementasi()
+    {
+        return $this->hasOne(RmeAsesmenParuDiagnosisImplementasi::class, 'id_asesmen', 'id');
+    }
+    public function rmeAlergiPasien()
+    {
+        return $this->hasMany(RmeAlergiPasien::class, 'kd_pasien', 'kd_pasien');
+    }
+
 }

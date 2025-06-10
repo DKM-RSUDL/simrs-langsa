@@ -94,24 +94,6 @@
             color: #5a5c69;
         }
 
-        .signature-container {
-            border: 1px solid #e3e6f0;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .signature-container img {
-            max-width: 100%;
-            max-height: 150px;
-        }
-
-        .signature-name {
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
         .btn-back {
             background-color: #f8f9fa;
             border: 1px solid #ddd;
@@ -126,6 +108,27 @@
         .btn-edit {
             background-color: #f6c23e;
             color: white;
+        }
+
+        .responsible-section {
+            background-color: #e8f4fd;
+            border-left: 4px solid #4e73df;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .responsible-section h6 {
+            color: #4e73df;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .responsible-info {
+            background-color: white;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #e3e6f0;
         }
     </style>
 @endpush
@@ -245,33 +248,66 @@
                                 </div>
 
                                 <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <div class="detail-section">
-                                            <h5><i class="fas fa-signature me-2"></i>Tanda Tangan Dokter</h5>
-                                            <div class="signature-container">
-                                                @if($siteMarking->tanda_tangan_dokter)
-                                                    <img src="{{ asset('storage/' . $siteMarking->tanda_tangan_dokter) }}" alt="Tanda Tangan Dokter">
+                                    <div class="col-12">
+                                        <div class="responsible-section">
+                                            <h6><i class="fas fa-user-check me-2"></i>Yang Bertanggung Jawab</h6>
+                                            <div class="responsible-info">
+                                                @if($siteMarking->responsible_person === 'pasien')
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Jenis Penanggung Jawab</div>
+                                                                <div><span class="badge bg-primary">Pasien</span></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Nama</div>
+                                                                <div>{{ $siteMarking->patient_name ?: $dataMedis->pasien->nama }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @elseif($siteMarking->responsible_person === 'keluarga')
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Jenis Penanggung Jawab</div>
+                                                                <div><span class="badge bg-success">Keluarga</span></div>
+                                                            </div>
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Nama Keluarga</div>
+                                                                <div>{{ $siteMarking->family_name ?: 'Tidak tersedia' }}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Hubungan dengan Pasien</div>
+                                                                <div>{{ $siteMarking->family_relationship ?: 'Tidak tersedia' }}</div>
+                                                            </div>
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Alamat Keluarga</div>
+                                                                <div>{{ $siteMarking->family_address ?: 'Tidak tersedia' }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @else
-                                                    <p class="text-muted">Tanda tangan tidak tersedia</p>
+                                                    <div class="text-muted">Data penanggung jawab tidak tersedia</div>
                                                 @endif
-                                                <div class="signature-name">{{ $siteMarking->dokter ? $siteMarking->dokter->nama_lengkap : 'Dokter' }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail-section">
-                                            <h5><i class="fas fa-signature me-2"></i>Tanda Tangan Pasien</h5>
-                                            <div class="signature-container">
-                                                @if($siteMarking->tanda_tangan_pasien)
-                                                    <img src="{{ asset('storage/' . $siteMarking->tanda_tangan_pasien) }}" alt="Tanda Tangan Pasien">
-                                                @else
-                                                    <p class="text-muted">Tanda tangan tidak tersedia</p>
-                                                @endif
-                                                <div class="signature-name">{{ $dataMedis->pasien->nama }}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                @if($siteMarking->confirmation)
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <strong>Konfirmasi:</strong> Lokasi operasi yang telah ditetapkan pada diagram di atas telah dikonfirmasi sebagai benar.
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
             </div>

@@ -154,6 +154,24 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            document.getElementById('skala_nyeri').addEventListener('input', function() {
+                const nilai = parseInt(this.value);
+                const kategoriField = document.getElementById('kategori_nyeri');
+
+                if (nilai >= 1 && nilai <= 3) {
+                    kategoriField.value = 'Nyeri Ringan';
+                } else if (nilai >= 4 && nilai <= 6) {
+                    kategoriField.value = 'Nyeri Sedang';
+                } else if (nilai >= 7 && nilai <= 9) {
+                    kategoriField.value = 'Nyeri Berat';
+                } else if (nilai === 10) {
+                    kategoriField.value = 'Nyeri Tak Tertahankan';
+                } else {
+                    kategoriField.value = '';
+                }
+            });
+
             //====================================================================================//
             // Pemeriksaan Fisik (ditambahkan pengecekan null)
             //===================================================================================//
