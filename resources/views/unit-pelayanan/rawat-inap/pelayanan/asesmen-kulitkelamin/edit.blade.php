@@ -358,6 +358,71 @@
                                         </div>
                                     </div>
 
+                                    <div class="section-separator" id="site-marking">
+                                        <h5 class="section-title">7.1. Site Marking - Penandaan Anatomi</h5>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="site-marking-container position-relative">
+                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" 
+                                                         id="anatomyImage" 
+                                                         class="img-fluid" 
+                                                         style="max-width: 100%;">
+                                                    <canvas id="markingCanvas" 
+                                                            class="position-absolute top-0 start-0" 
+                                                            style="cursor: crosshair; z-index: 10;">
+                                                    </canvas>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <small class="text-muted">
+                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat panah di area yang ingin ditandai.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="marking-controls">
+                                                    <h6>Kontrol Penandaan</h6>
+                                                    
+                                                    <!-- Pilihan Warna -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Pilih Warna:</label>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <button type="button" class="color-btn active" data-color="#dc3545" style="background: #dc3545;"></button>
+                                                            <button type="button" class="color-btn" data-color="#198754" style="background: #198754;"></button>
+                                                            <button type="button" class="color-btn" data-color="#0d6efd" style="background: #0d6efd;"></button>
+                                                            <button type="button" class="color-btn" data-color="#fd7e14" style="background: #fd7e14;"></button>
+                                                            <button type="button" class="color-btn" data-color="#6f42c1" style="background: #6f42c1;"></button>
+                                                            <button type="button" class="color-btn" data-color="#000000" style="background: #000000;"></button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Keterangan -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Keterangan (opsional):</label>
+                                                        <input type="text" id="markingNote" class="form-control" placeholder="Contoh: Ruam merah">
+                                                    </div>
+                                                    
+                                                    <!-- Tombol Kontrol -->
+                                                    <div class="d-grid gap-2">
+                                                        <button type="button" class="btn btn-outline-danger" id="clearAllMarking">
+                                                            <i class="ti-trash"></i> Hapus Semua Penandaan
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <!-- Daftar Penandaan -->
+                                                    <div class="marking-list mt-3">
+                                                        <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
+                                                        <div id="markingsList" class="list-group" style="max-height: 250px; overflow-y: auto;">
+                                                            <div class="text-muted text-center py-3" id="emptyState">
+                                                                <i class="ti-info-alt"></i> Belum ada penandaan
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="site_marking_data" id="siteMarkingData" value="{{ $asesmenKulitKelamin->site_marking_data ?? '[]' }}">
+                                    </div>
+
                                     <div class="section-separator" id="discharge-planning">
                                         <h5 class="section-title">8. Discharge Planning</h5>
 
@@ -1233,6 +1298,59 @@
 
         .text-primary {
             color: #097dd6 !important;
+        }
+
+
+        /* Site Marking Styles */
+        .site-marking-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .color-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+            border-color: #6c757d;
+        }
+
+        .color-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.3);
+            transform: scale(1.1);
+        }
+
+        .marking-list-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: #fff;
+            transition: background-color 0.2s;
+        }
+
+        .marking-list-item:hover {
+            background: #f8f9fa;
+        }
+
+        #markingCanvas {
+            pointer-events: auto;
+        }
+
+        #anatomyImage {
+            display: block;
+            max-width: 100%;
+            height: auto;
         }
 
     </style>
@@ -2521,6 +2639,310 @@
             }
 
             console.log('All Implementation sections initialized in edit mode');
+
+
+            //====================================================================================//
+            // SITE MARKING - EDIT MODE
+            //====================================================================================//
+
+            function initSiteMarkingEdit() {
+                const image = document.getElementById('anatomyImage');
+                const canvas = document.getElementById('markingCanvas');
+                const ctx = canvas.getContext('2d');
+                const markingsList = document.getElementById('markingsList');
+                const siteMarkingData = document.getElementById('siteMarkingData');
+                const markingNote = document.getElementById('markingNote');
+                const clearAllBtn = document.getElementById('clearAllMarking');
+                const markingCount = document.getElementById('markingCount');
+                const emptyState = document.getElementById('emptyState');
+                
+                let markings = [];
+                let markingCounter = 1;
+                let currentColor = '#dc3545';
+                let isDrawing = false;
+                let startX = 0;
+                let startY = 0;
+                
+                // Initialize color selection
+                initColorSelectionEdit();
+                
+                // Setup canvas
+                setupCanvasEdit();
+                
+                // Load existing data
+                loadExistingDataEdit();
+                
+                function setupCanvasEdit() {
+                    function updateCanvasSize() {
+                        const rect = image.getBoundingClientRect();
+                        canvas.width = image.offsetWidth;
+                        canvas.height = image.offsetHeight;
+                        canvas.style.width = image.offsetWidth + 'px';
+                        canvas.style.height = image.offsetHeight + 'px';
+                        
+                        // Redraw all markings
+                        redrawCanvasEdit();
+                    }
+                    
+                    // Update canvas size when image loads
+                    image.onload = updateCanvasSize;
+                    
+                    // Update canvas size when window resizes
+                    window.addEventListener('resize', updateCanvasSize);
+                    
+                    // Initial setup
+                    if (image.complete) {
+                        updateCanvasSize();
+                    }
+                }
+                
+                function initColorSelectionEdit() {
+                    document.querySelectorAll('.color-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            currentColor = this.getAttribute('data-color');
+                            updateColorSelectionEdit();
+                        });
+                    });
+                }
+                
+                function updateColorSelectionEdit() {
+                    document.querySelectorAll('.color-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    const selectedBtn = document.querySelector(`[data-color="${currentColor}"]`);
+                    if (selectedBtn) {
+                        selectedBtn.classList.add('active');
+                    }
+                }
+                
+                // Mouse events for drawing
+                canvas.addEventListener('mousedown', function(e) {
+                    isDrawing = true;
+                    const rect = canvas.getBoundingClientRect();
+                    startX = e.clientX - rect.left;
+                    startY = e.clientY - rect.top;
+                });
+                
+                canvas.addEventListener('mousemove', function(e) {
+                    if (!isDrawing) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const endX = e.clientX - rect.left;
+                    const endY = e.clientY - rect.top;
+                    
+                    // Clear canvas and redraw all markings
+                    redrawCanvasEdit();
+                    
+                    // Draw preview arrow
+                    drawArrowEdit(ctx, startX, startY, endX, endY, currentColor, true);
+                });
+                
+                canvas.addEventListener('mouseup', function(e) {
+                    if (!isDrawing) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const endX = e.clientX - rect.left;
+                    const endY = e.clientY - rect.top;
+                    
+                    // Only create arrow if there's actual movement
+                    const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                    if (distance > 10) { // Minimum distance
+                        addMarkingEdit(startX, startY, endX, endY);
+                    }
+                    
+                    isDrawing = false;
+                    redrawCanvasEdit();
+                });
+                
+                function addMarkingEdit(startX, startY, endX, endY) {
+                    const note = markingNote.value.trim() || `Penandaan ${markingCounter}`;
+                    
+                    // Convert to percentage for responsiveness
+                    const startXPercent = (startX / canvas.width) * 100;
+                    const startYPercent = (startY / canvas.height) * 100;
+                    const endXPercent = (endX / canvas.width) * 100;
+                    const endYPercent = (endY / canvas.height) * 100;
+                    
+                    const marking = {
+                        id: `mark_${Date.now()}`,
+                        startX: startXPercent,
+                        startY: startYPercent,
+                        endX: endXPercent,
+                        endY: endYPercent,
+                        color: currentColor,
+                        note: note,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    markings.push(marking);
+                    
+                    // Add to list
+                    addToMarkingsListEdit(marking);
+                    
+                    // Update hidden input and counter
+                    updateHiddenInputEdit();
+                    updateMarkingCountEdit();
+                    
+                    // Clear note input
+                    markingNote.value = '';
+                    markingCounter++;
+                    
+                    // Redraw canvas
+                    redrawCanvasEdit();
+                }
+                
+                function drawArrowEdit(ctx, startX, startY, endX, endY, color, isPreview = false) {
+                    ctx.strokeStyle = color;
+                    ctx.fillStyle = color;
+                    ctx.lineWidth = isPreview ? 2 : 3;
+                    ctx.lineCap = 'round';
+                    
+                    // Draw line
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                    
+                    // Calculate arrow head
+                    const angle = Math.atan2(endY - startY, endX - startX);
+                    const arrowLength = 15;
+                    const arrowAngle = Math.PI / 6;
+                    
+                    // Draw arrow head
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(
+                        endX - arrowLength * Math.cos(angle - arrowAngle),
+                        endY - arrowLength * Math.sin(angle - arrowAngle)
+                    );
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(
+                        endX - arrowLength * Math.cos(angle + arrowAngle),
+                        endY - arrowLength * Math.sin(angle + arrowAngle)
+                    );
+                    ctx.stroke();
+                }
+                
+                function redrawCanvasEdit() {
+                    // Clear canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw all markings
+                    markings.forEach(marking => {
+                        const startX = (marking.startX / 100) * canvas.width;
+                        const startY = (marking.startY / 100) * canvas.height;
+                        const endX = (marking.endX / 100) * canvas.width;
+                        const endY = (marking.endY / 100) * canvas.height;
+                        
+                        drawArrowEdit(ctx, startX, startY, endX, endY, marking.color);
+                    });
+                }
+                
+                function addToMarkingsListEdit(marking) {
+                    // Hide empty state
+                    emptyState.style.display = 'none';
+                    
+                    const listItem = document.createElement('div');
+                    listItem.className = 'marking-list-item';
+                    listItem.setAttribute('data-marking-id', marking.id);
+                    
+                    listItem.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">${marking.note}</div>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <span class="badge" style="background-color: ${marking.color}; color: white; font-size: 10px;">PANAH</span>
+                                    <small class="text-muted">${new Date(marking.timestamp).toLocaleTimeString('id-ID')}</small>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteMarkingEdit('${marking.id}')">
+                                <i class="ti-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    markingsList.appendChild(listItem);
+                }
+                
+                function updateMarkingCountEdit() {
+                    markingCount.textContent = markings.length;
+                    
+                    // Show/hide empty state
+                    if (markings.length === 0) {
+                        emptyState.style.display = 'block';
+                    } else {
+                        emptyState.style.display = 'none';
+                    }
+                }
+                
+                function updateHiddenInputEdit() {
+                    siteMarkingData.value = JSON.stringify(markings);
+                }
+                
+                function loadExistingDataEdit() {
+                    try {
+                        const existingData = JSON.parse(siteMarkingData.value || '[]');
+                        if (existingData.length > 0) {
+                            markings = existingData;
+                            markingCounter = markings.length + 1;
+                            
+                            // Rebuild list
+                            markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                            markings.forEach(marking => {
+                                addToMarkingsListEdit(marking);
+                            });
+                            
+                            updateMarkingCountEdit();
+                            
+                            // Redraw canvas after a short delay
+                            setTimeout(() => {
+                                redrawCanvasEdit();
+                            }, 100);
+                        }
+                    } catch (e) {
+                        console.error('Error loading existing marking data:', e);
+                    }
+                }
+                
+                // Clear all markings
+                clearAllBtn.addEventListener('click', function() {
+                    if (markings.length === 0) return;
+                    
+                    if (confirm('Hapus semua penandaan?')) {
+                        markings = [];
+                        markingsList.innerHTML = '<div class="text-muted text-center py-3" id="emptyState"><i class="ti-info-alt"></i> Belum ada penandaan</div>';
+                        updateHiddenInputEdit();
+                        updateMarkingCountEdit();
+                        redrawCanvasEdit();
+                        markingCounter = 1;
+                    }
+                });
+                
+                // Global function for delete
+                window.deleteMarkingEdit = function(markingId) {
+                    if (confirm('Hapus penandaan ini?')) {
+                        // Remove from array
+                        markings = markings.filter(m => m.id !== markingId);
+                        
+                        // Remove from list
+                        const listElement = markingsList.querySelector(`[data-marking-id="${markingId}"]`);
+                        if (listElement) {
+                            markingsList.removeChild(listElement);
+                        }
+                        
+                        updateHiddenInputEdit();
+                        updateMarkingCountEdit();
+                        redrawCanvasEdit();
+                    }
+                };
+            }
+
+            // Initialize site marking for edit mode
+            initSiteMarkingEdit();
+
+            console.log('Site Marking Edit Mode: Initialized');
+
 
         });
     </script>

@@ -131,7 +131,7 @@
                                     </div>
 
                                     <div class="section-separator" id="riwayat-kesehatan">
-                                        <h5 class="section-title">5. Riwayat Kesehatan</h5>
+                                        <h5 class="section-title">3. Riwayat Kesehatan</h5>
 
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
@@ -166,7 +166,7 @@
                                     </div>
 
                                     <div class="section-separator" id="riwayatObat">
-                                        <h5 class="section-title">6. Riwayat Penggunaan Obat</h5>
+                                        <h5 class="section-title">4. Riwayat Penggunaan Obat</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
                                             <i class="ti-plus"></i> Tambah
@@ -190,7 +190,7 @@
                                     </div>
 
                                     <div class="section-separator" id="skala-nyeri">
-                                        <h5 class="section-title">3. Skala Nyeri</h5>
+                                        <h5 class="section-title">5. Skala Nyeri</h5>
 
                                         <div class="row">
                                             <div class="col-md-6">
@@ -222,7 +222,7 @@
                                     </div>
 
                                     <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">4. Alergi</h5>
+                                        <h5 class="section-title">6. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
                                             id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
@@ -250,7 +250,7 @@
                                     </div>
 
                                     <div class="section-separator" id="pemeriksaan-fisik">
-                                        <h5 class="section-title">5. Pemeriksaan Fisik</h5>
+                                        <h5 class="section-title">7. Pemeriksaan Fisik</h5>
                                         <div class="row g-3">
                                             <div class="pemeriksaan-fisik">
                                                 <h6>Pemeriksaan Fisik</h6>
@@ -307,8 +307,73 @@
 
                                     </div>
 
+                                    <div class="section-separator" id="site-marking">
+                                        <h5 class="section-title">Site Marking - Penandaan Anatomi</h5>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="site-marking-container position-relative">
+                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" 
+                                                         id="anatomyImage" 
+                                                         class="img-fluid" 
+                                                         style="max-width: 100%;">
+                                                    <canvas id="markingCanvas" 
+                                                            class="position-absolute top-0 start-0" 
+                                                            style="cursor: crosshair; z-index: 10;">
+                                                    </canvas>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <small class="text-muted">
+                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat panah di area yang ingin ditandai.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="marking-controls">
+                                                    <h6>Kontrol Penandaan</h6>
+                                                    
+                                                    <!-- Pilihan Warna -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Pilih Warna:</label>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <button type="button" class="color-btn active" data-color="#dc3545" style="background: #dc3545;"></button>
+                                                            <button type="button" class="color-btn" data-color="#198754" style="background: #198754;"></button>
+                                                            <button type="button" class="color-btn" data-color="#0d6efd" style="background: #0d6efd;"></button>
+                                                            <button type="button" class="color-btn" data-color="#fd7e14" style="background: #fd7e14;"></button>
+                                                            <button type="button" class="color-btn" data-color="#6f42c1" style="background: #6f42c1;"></button>
+                                                            <button type="button" class="color-btn" data-color="#000000" style="background: #000000;"></button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Keterangan -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Keterangan (opsional):</label>
+                                                        <input type="text" id="markingNote" class="form-control" placeholder="Contoh: Ruam merah">
+                                                    </div>
+                                                    
+                                                    <!-- Tombol Kontrol -->
+                                                    <div class="d-grid gap-2">
+                                                        <button type="button" class="btn btn-outline-danger" id="clearAllMarking">
+                                                            <i class="ti-trash"></i> Hapus Semua Penandaan
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <!-- Daftar Penandaan -->
+                                                    <div class="marking-list mt-3">
+                                                        <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
+                                                        <div id="markingsList" class="list-group" style="max-height: 250px; overflow-y: auto;">
+                                                            <div class="text-muted text-center py-3" id="emptyState">
+                                                                <i class="ti-info-alt"></i> Belum ada penandaan
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="site_marking_data" id="siteMarkingData" value="[]">
+                                    </div>
+
                                     <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">6. Discharge Planning</h5>
+                                        <h5 class="section-title">8. Discharge Planning</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
@@ -416,7 +481,7 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -476,7 +541,7 @@
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">8. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">10. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">

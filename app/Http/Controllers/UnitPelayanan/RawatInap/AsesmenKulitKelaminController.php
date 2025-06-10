@@ -142,6 +142,7 @@ class AsesmenKulitKelaminController extends Controller
             $dataKulitKelamin->suhu = $request->suhu;
             $dataKulitKelamin->respirasi = $request->respirasi;
             $dataKulitKelamin->nadi = $request->nadi;
+            $dataKulitKelamin->site_marking_data = $request->site_marking_data;
             $dataKulitKelamin->save();
 
             //Simpan Diagnosa ke Master
@@ -338,7 +339,7 @@ class AsesmenKulitKelaminController extends Controller
         }
     }
 
-    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function show($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $user = auth()->user();
 
@@ -370,7 +371,8 @@ class AsesmenKulitKelaminController extends Controller
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
         // Ambil data asesmen
-        $asesmen = RmeAsesmen::where('kd_pasien', $kd_pasien)
+        $asesmen = RmeAsesmen::where('id', $id) // Gunakan ID spesifik
+            ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
@@ -404,6 +406,8 @@ class AsesmenKulitKelaminController extends Controller
         // Ambil semua item fisik untuk referensi
         $itemFisik = MrItemFisik::orderby('urut')->get();
 
+        $siteMarkingData = json_decode($asesmenKulitKelamin->site_marking_data ?? '[]', true);
+
         // Decode JSON data
         $diagnosisBanding = json_decode($asesmenKulitKelamin->diagnosis_banding ?? '[]', true);
         $diagnosisKerja = json_decode($asesmenKulitKelamin->diagnosis_kerja ?? '[]', true);
@@ -436,6 +440,7 @@ class AsesmenKulitKelaminController extends Controller
             'kolaborasi',
             'riwayatPenggunaanObat',
             'riwayatKesehatanKeluarga',
+            'siteMarkingData',
             'user'
         ));
     }
@@ -596,6 +601,7 @@ class AsesmenKulitKelaminController extends Controller
             $dataKulitKelamin->suhu = $request->suhu;
             $dataKulitKelamin->respirasi = $request->respirasi;
             $dataKulitKelamin->nadi = $request->nadi;
+            $dataKulitKelamin->site_marking_data = $request->site_marking_data;
             $dataKulitKelamin->save();
 
             // Update Diagnosa ke Master (sama seperti store)
