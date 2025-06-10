@@ -50,10 +50,6 @@ class MppBController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
 
-        if ($mppDataList->isEmpty()) {
-            $mppDataList = null;
-        }
-
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-b.index', compact(
             'dataMedis',
             'kd_unit',
@@ -90,7 +86,6 @@ class MppBController extends Controller
         }
 
         $dokter = Dokter::where('status', 1)
-            ->select('kd_dokter', 'nama')
             ->get();
 
         $perawat = HrdKaryawan::where('kd_jenis_tenaga', 2)
@@ -480,7 +475,4 @@ class MppBController extends Controller
 
         return $pdf->stream($filename);
     }
-
-    
-
 }

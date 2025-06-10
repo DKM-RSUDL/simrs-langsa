@@ -181,7 +181,7 @@
                                         <select name="dpjp_utama" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -192,7 +192,7 @@
                                         <select name="dokter_1" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -205,7 +205,7 @@
                                         <select name="dokter_2" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -216,7 +216,7 @@
                                         <select name="dokter_3" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -269,14 +269,16 @@
                                     <tr class="rencana-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="rencana_date" class="form-control form-control-sm rencana-date">
-                                                <input type="time" name="rencana_time" class="form-control form-control-sm rencana-time">
+                                                <input type="text" name="rencana_date"
+                                                    class="form-control form-control-sm rencana-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="rencana_time"
+                                                    class="form-control form-control-sm rencana-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
                                             <strong>1. Rencana Pelayanan Pasien</strong><br><br>
-                                            <textarea name="rencana_pelayanan" class="form-control-textarea" 
-                                                placeholder="Tuliskan rencana pelayanan pasien..."></textarea>
+                                            <textarea name="rencana_pelayanan" class="form-control-textarea" placeholder="Tuliskan rencana pelayanan pasien..."></textarea>
                                         </td>
                                     </tr>
 
@@ -284,13 +286,18 @@
                                     <tr class="monitoring-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="monitoring_date" class="form-control form-control-sm monitoring-date">
-                                                <input type="time" name="monitoring_time" class="form-control form-control-sm monitoring-time">
+                                                <input type="text" name="monitoring_date"
+                                                    class="form-control form-control-sm monitoring-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="monitoring_time"
+                                                    class="form-control form-control-sm monitoring-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
                                             <strong>2. Monitoring Pelayanan/Asuhan Pasien Seluruh PPA</strong><br>
-                                            <small class="text-muted">(Perkembangan, Kolaborasi, Verifikasi respon terhadap intervensi yang diberikan, revisi rencana asuhan termasuk preferensi perubahan, transisi pelayanan dan kendala pelayanan)</small><br><br>
+                                            <small class="text-muted">(Perkembangan, Kolaborasi, Verifikasi respon terhadap
+                                                intervensi yang diberikan, revisi rencana asuhan termasuk preferensi
+                                                perubahan, transisi pelayanan dan kendala pelayanan)</small><br><br>
                                             <textarea name="monitoring_pelayanan" class="form-control-textarea"
                                                 placeholder="Tuliskan hasil monitoring pelayanan/asuhan pasien..."></textarea>
                                         </td>
@@ -300,8 +307,11 @@
                                     <tr class="koordinasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="koordinasi_date" class="form-control form-control-sm koordinasi-date">
-                                                <input type="time" name="koordinasi_time" class="form-control form-control-sm koordinasi-time">
+                                                <input type="text" name="koordinasi_date"
+                                                    class="form-control form-control-sm koordinasi-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="koordinasi_time"
+                                                    class="form-control form-control-sm koordinasi-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
@@ -319,7 +329,8 @@
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="koordinasi[]" value="rawat_bersama"
                                                     class="criteria-checkbox koordinasi-checkbox" id="k3">
-                                                <label class="criteria-label" for="k3">Rawat Bersama/Alih Rawat</label>
+                                                <label class="criteria-label" for="k3">Rawat Bersama/Alih
+                                                    Rawat</label>
                                             </div>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="koordinasi[]" value="komunikasi_edukasi"
@@ -338,8 +349,11 @@
                                     <tr class="advokasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="advokasi_date" class="form-control form-control-sm advokasi-date">
-                                                <input type="time" name="advokasi_time" class="form-control form-control-sm advokasi-time">
+                                                <input type="text" name="advokasi_date"
+                                                    class="form-control form-control-sm advokasi-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="advokasi_time"
+                                                    class="form-control form-control-sm advokasi-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
@@ -347,27 +361,35 @@
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="advokasi[]" value="diskusi_ppa"
                                                     class="criteria-checkbox advokasi-checkbox" id="a1">
-                                                <label class="criteria-label" for="a1">Diskusi dengan PPA staf lain tentang kebutuhan pasien</label>
+                                                <label class="criteria-label" for="a1">Diskusi dengan PPA staf lain
+                                                    tentang kebutuhan pasien</label>
                                             </div>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="advokasi[]" value="fasilitasi_akses"
                                                     class="criteria-checkbox advokasi-checkbox" id="a2">
-                                                <label class="criteria-label" for="a2">Memfasilitasi akses ke pelayanan sesuai kebutuhan pasien berkoordinasi dengan PPA dan pemangku kepentingan</label>
+                                                <label class="criteria-label" for="a2">Memfasilitasi akses ke
+                                                    pelayanan sesuai kebutuhan pasien berkoordinasi dengan PPA dan pemangku
+                                                    kepentingan</label>
                                             </div>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="advokasi[]" value="kemandirian_keputusan"
                                                     class="criteria-checkbox advokasi-checkbox" id="a3">
-                                                <label class="criteria-label" for="a3">Meningkatkan kemandirian untuk menentukan pilihan/pengambilan keputusan</label>
+                                                <label class="criteria-label" for="a3">Meningkatkan kemandirian
+                                                    untuk menentukan pilihan/pengambilan keputusan</label>
                                             </div>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="advokasi[]" value="pencegahan_disparitas"
                                                     class="criteria-checkbox advokasi-checkbox" id="a4">
-                                                <label class="criteria-label" for="a4">Mengenali, mencegah, menghindari disparitas untuk mengakses mutu dan hasil pelayanan terkait dengan ras, etnik, agama, gender, budaya, status pernikahan, usia, politik, disabilitas fisik mental-kognitif</label>
+                                                <label class="criteria-label" for="a4">Mengenali, mencegah,
+                                                    menghindari disparitas untuk mengakses mutu dan hasil pelayanan terkait
+                                                    dengan ras, etnik, agama, gender, budaya, status pernikahan, usia,
+                                                    politik, disabilitas fisik mental-kognitif</label>
                                             </div>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="advokasi[]" value="pemenuhan_kebutuhan"
                                                     class="criteria-checkbox advokasi-checkbox" id="a5">
-                                                <label class="criteria-label" for="a5">Pemenuhan kebutuhan pelayanan yang berkembang/bertambah karena perubahan kondisi</label>
+                                                <label class="criteria-label" for="a5">Pemenuhan kebutuhan pelayanan
+                                                    yang berkembang/bertambah karena perubahan kondisi</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -376,14 +398,16 @@
                                     <tr class="hasil-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="hasil_date" class="form-control form-control-sm hasil-date">
-                                                <input type="time" name="hasil_time" class="form-control form-control-sm hasil-time">
+                                                <input type="text" name="hasil_date"
+                                                    class="form-control form-control-sm hasil-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="hasil_time"
+                                                    class="form-control form-control-sm hasil-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
                                             <strong>5. Hasil Pelayanan</strong><br><br>
-                                            <textarea name="hasil_pelayanan" class="form-control-textarea"
-                                                placeholder="Tuliskan hasil pelayanan..."></textarea>
+                                            <textarea name="hasil_pelayanan" class="form-control-textarea" placeholder="Tuliskan hasil pelayanan..."></textarea>
                                         </td>
                                     </tr>
 
@@ -391,12 +415,16 @@
                                     <tr class="terminasi-row">
                                         <td class="datetime-column">
                                             <div class="datetime-inputs">
-                                                <input type="date" name="terminasi_date" class="form-control form-control-sm terminasi-date">
-                                                <input type="time" name="terminasi_time" class="form-control form-control-sm terminasi-time">
+                                                <input type="text" name="terminasi_date"
+                                                    class="form-control form-control-sm terminasi-date date"
+                                                    placeholder="yyyy/mm/dd" readonly>
+                                                <input type="time" name="terminasi_time"
+                                                    class="form-control form-control-sm terminasi-time">
                                             </div>
                                         </td>
                                         <td class="criteria-column">
-                                            <strong>6. Terminasi Manajemen Pelayanan Pasien, Catatan kepuasan pasien/keluarga dengan MPP</strong><br>
+                                            <strong>6. Terminasi Manajemen Pelayanan Pasien, Catatan kepuasan
+                                                pasien/keluarga dengan MPP</strong><br>
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="terminasi[]" value="puas"
                                                     class="criteria-checkbox terminasi-checkbox" id="t1">
@@ -455,7 +483,8 @@
                                 'kd_pasien' => $kd_pasien,
                                 'tgl_masuk' => $tgl_masuk,
                                 'urut_masuk' => $urut_masuk,
-                            ]) }}" class="btn btn-secondary">
+                            ]) }}"
+                                class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i> Batal
                             </a>
                         </div>
@@ -482,13 +511,36 @@
                 let isValid = true;
 
                 // Define sections for validation
-                const sections = [
-                    { textareaName: 'rencana_pelayanan', dateClass: 'rencana-date', timeClass: 'rencana-time' },
-                    { textareaName: 'monitoring_pelayanan', dateClass: 'monitoring-date', timeClass: 'monitoring-time' },
-                    { checkboxClass: 'koordinasi-checkbox', dateClass: 'koordinasi-date', timeClass: 'koordinasi-time' },
-                    { checkboxClass: 'advokasi-checkbox', dateClass: 'advokasi-date', timeClass: 'advokasi-time' },
-                    { textareaName: 'hasil_pelayanan', dateClass: 'hasil-date', timeClass: 'hasil-time' },
-                    { checkboxClass: 'terminasi-checkbox', dateClass: 'terminasi-date', timeClass: 'terminasi-time' }
+                const sections = [{
+                        textareaName: 'rencana_pelayanan',
+                        dateClass: 'rencana-date',
+                        timeClass: 'rencana-time'
+                    },
+                    {
+                        textareaName: 'monitoring_pelayanan',
+                        dateClass: 'monitoring-date',
+                        timeClass: 'monitoring-time'
+                    },
+                    {
+                        checkboxClass: 'koordinasi-checkbox',
+                        dateClass: 'koordinasi-date',
+                        timeClass: 'koordinasi-time'
+                    },
+                    {
+                        checkboxClass: 'advokasi-checkbox',
+                        dateClass: 'advokasi-date',
+                        timeClass: 'advokasi-time'
+                    },
+                    {
+                        textareaName: 'hasil_pelayanan',
+                        dateClass: 'hasil-date',
+                        timeClass: 'hasil-time'
+                    },
+                    {
+                        checkboxClass: 'terminasi-checkbox',
+                        dateClass: 'terminasi-date',
+                        timeClass: 'terminasi-time'
+                    }
                 ];
 
                 sections.forEach(section => {
@@ -497,10 +549,12 @@
                     let hasContent = false;
 
                     if (section.textareaName) {
-                        const textarea = document.querySelector(`textarea[name="${section.textareaName}"]`);
+                        const textarea = document.querySelector(
+                            `textarea[name="${section.textareaName}"]`);
                         hasContent = textarea.value.trim();
                     } else if (section.checkboxClass) {
-                        const checkboxes = document.querySelectorAll(`.${section.checkboxClass}:checked`);
+                        const checkboxes = document.querySelectorAll(
+                            `.${section.checkboxClass}:checked`);
                         hasContent = checkboxes.length > 0;
                     }
 
@@ -533,18 +587,43 @@
 
                 if (!isValid) {
                     e.preventDefault();
-                    alert('Mohon lengkapi tanggal dan jam untuk setiap seksi yang memiliki data yang diisi.');
+                    alert(
+                        'Mohon lengkapi tanggal dan jam untuk setiap seksi yang memiliki data yang diisi.'
+                    );
                 }
             });
 
             // Real-time validation
-            const sections = [
-                { textareaName: 'rencana_pelayanan', dateClass: 'rencana-date', timeClass: 'rencana-time' },
-                { textareaName: 'monitoring_pelayanan', dateClass: 'monitoring-date', timeClass: 'monitoring-time' },
-                { checkboxClass: 'koordinasi-checkbox', dateClass: 'koordinasi-date', timeClass: 'koordinasi-time' },
-                { checkboxClass: 'advokasi-checkbox', dateClass: 'advokasi-date', timeClass: 'advokasi-time' },
-                { textareaName: 'hasil_pelayanan', dateClass: 'hasil-date', timeClass: 'hasil-time' },
-                { checkboxClass: 'terminasi-checkbox', dateClass: 'terminasi-date', timeClass: 'terminasi-time' }
+            const sections = [{
+                    textareaName: 'rencana_pelayanan',
+                    dateClass: 'rencana-date',
+                    timeClass: 'rencana-time'
+                },
+                {
+                    textareaName: 'monitoring_pelayanan',
+                    dateClass: 'monitoring-date',
+                    timeClass: 'monitoring-time'
+                },
+                {
+                    checkboxClass: 'koordinasi-checkbox',
+                    dateClass: 'koordinasi-date',
+                    timeClass: 'koordinasi-time'
+                },
+                {
+                    checkboxClass: 'advokasi-checkbox',
+                    dateClass: 'advokasi-date',
+                    timeClass: 'advokasi-time'
+                },
+                {
+                    textareaName: 'hasil_pelayanan',
+                    dateClass: 'hasil-date',
+                    timeClass: 'hasil-time'
+                },
+                {
+                    checkboxClass: 'terminasi-checkbox',
+                    dateClass: 'terminasi-date',
+                    timeClass: 'terminasi-time'
+                }
             ];
 
             sections.forEach(section => {
@@ -573,7 +652,8 @@
                     const checkboxes = document.querySelectorAll(`.${section.checkboxClass}`);
                     checkboxes.forEach(checkbox => {
                         checkbox.addEventListener('change', function() {
-                            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                            const anyChecked = Array.from(checkboxes).some(cb => cb
+                                .checked);
                             if (anyChecked) {
                                 if (!dateInput.value.trim()) {
                                     dateInput.classList.add('is-invalid');
@@ -593,7 +673,8 @@
                 dateInput.addEventListener('change', function() {
                     let hasContent = false;
                     if (section.textareaName) {
-                        const textarea = document.querySelector(`textarea[name="${section.textareaName}"]`);
+                        const textarea = document.querySelector(
+                            `textarea[name="${section.textareaName}"]`);
                         hasContent = textarea.value.trim();
                     } else if (section.checkboxClass) {
                         const checkboxes = document.querySelectorAll(`.${section.checkboxClass}`);
@@ -609,13 +690,15 @@
                 timeInput.addEventListener('change', function() {
                     let hasContent = false;
                     if (section.textareaName) {
-                        const textarea = document.querySelector(`textarea[name="${section.textareaName}"]`);
+                        const textarea = document.querySelector(
+                            `textarea[name="${section.textareaName}"]`);
                         hasContent = textarea.value.trim();
                     } else if (section.checkboxClass) {
                         const checkboxes = document.querySelectorAll(`.${section.checkboxClass}`);
                         hasContent = Array.from(checkboxes).some(cb => cb.checked);
                     }
-                    if (hasContent && this.value.trim() && /^([01]\d|2[0-3]):([0-5]\d)$/.test(this.value)) {
+                    if (hasContent && this.value.trim() && /^([01]\d|2[0-3]):([0-5]\d)$/.test(this
+                            .value)) {
                         this.classList.remove('is-invalid');
                     } else if (hasContent && !this.value.trim()) {
                         this.classList.add('is-invalid');

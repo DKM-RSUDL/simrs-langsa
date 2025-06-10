@@ -47,12 +47,14 @@ class MppAController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
-        if ($mppDataList->isEmpty()) {
-            $mppDataList = null;
-        }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-a.index', compact(
-            'dataMedis', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'mppDataList'
+            'dataMedis',
+            'kd_unit',
+            'kd_pasien',
+            'tgl_masuk',
+            'urut_masuk',
+            'mppDataList'
         ));
     }
 
@@ -86,7 +88,12 @@ class MppAController extends Controller
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-a.create', compact(
-            'dataMedis', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'dokter'
+            'dataMedis',
+            'kd_unit',
+            'kd_pasien',
+            'tgl_masuk',
+            'urut_masuk',
+            'dokter'
         ));
     }
 
@@ -433,5 +440,4 @@ class MppAController extends Controller
 
         return $pdf->stream($filename);
     }
-
 }
