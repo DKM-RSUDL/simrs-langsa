@@ -579,7 +579,7 @@ class AsesmenPsikiatriController extends Controller
     }
 
 
-    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
+    public function show(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         $user = auth()->user();
 
@@ -603,7 +603,8 @@ class AsesmenPsikiatriController extends Controller
         }
 
         // Mengambil data asesmen psikiatri
-        $asesmen = RmeAsesmen::where('kd_pasien', $kd_pasien)
+        $asesmen = RmeAsesmen::where('id', $id) // TAMBAHKAN PARAMETER ID
+            ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->where('tgl_masuk', $tgl_masuk)
             ->where('urut_masuk', $urut_masuk)
