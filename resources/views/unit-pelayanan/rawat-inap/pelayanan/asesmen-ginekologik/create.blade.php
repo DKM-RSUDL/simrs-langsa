@@ -202,8 +202,7 @@
                                     <div class="section-separator" id="riwayat-obstetrik">
                                         <h5 class="section-title">4. Riwayat Obstetrik</h5>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openObstetrikModal">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObstetrikModal">
                                             <i class="ti-plus"></i> Tambah Riwayat Obstetrik
                                         </button>
                                         <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput">

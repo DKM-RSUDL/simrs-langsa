@@ -67,6 +67,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPsikiatriController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenTerminalController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienAnakController;
@@ -797,7 +798,6 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
-
                                         });
                                     });
 
@@ -850,6 +850,19 @@ Route::middleware('ssoToken')->group(function () {
                                                         Route::get('/{id}', 'show')->name('.show');
                                                         Route::get('/{id}/edit', 'edit')->name('.edit');
                                                         Route::put('/{id}', 'update')->name('.update');
+                                                    });
+                                                });
+                                            });
+
+                                            Route::prefix('terminal')->group(function () {
+                                                Route::name('.terminal')->group(function () {
+                                                    Route::controller(AsesmenTerminalController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
                                                     });
                                                 });
                                             });
@@ -1166,7 +1179,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/detail', 'show')->name('.show'); // Changed to '/detail'
                                                 Route::get('/edit', 'edit')->name('.edit'); // Changed to '/edit'
                                                 Route::put('/', 'update')->name('.update'); // Kept as '/' to match 'store'
-                                                Route::get('/print', 'printPdf')->name('.print'); 
+                                                Route::get('/print', 'printPdf')->name('.print');
                                                 Route::delete('/', 'destroy')->name('.destroy'); // Kept as '/'
                                             });
                                         });
@@ -1187,7 +1200,6 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
-
                                 });
                             });
 
