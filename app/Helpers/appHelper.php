@@ -77,6 +77,9 @@ if (!function_exists('getKategoriAsesmen')) {
                 break;
             case 10:
                 $subKategoriLabel = 'Kulit Kelamin';
+            case 11:
+                $subKategoriLabel = 'Psikiatri';
+                break;
         }
 
         return "$kategoriLabel $subKategoriLabel";

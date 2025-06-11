@@ -66,6 +66,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepPerinatologyControlle
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKepUmumController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenKulitKelaminController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenParuController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPsikiatriController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\AsuhanKeperawatanRawatInapController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\CpptController as RawatInapCpptController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienAnakController;
@@ -782,6 +783,21 @@ Route::middleware('ssoToken')->group(function () {
                                                     });
                                                 });
                                             });
+
+                                            //Psikiatri
+                                            Route::prefix('psikiatri')->group(function () {
+                                                Route::name('.psikiatri')->group(function () {
+                                                    Route::controller(AsesmenPsikiatriController::class)->group(function () {
+                                                        Route::get('/', 'index')->name('.index');
+                                                        Route::post('/', 'store')->name('.store');
+                                                        Route::get('/{id}', 'show')->name('.show');
+                                                        Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                        Route::put('/{id}', 'update')->name('.update');
+                                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                                    });
+                                                });
+                                            });
+
                                         });
                                     });
 
