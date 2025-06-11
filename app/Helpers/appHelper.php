@@ -80,6 +80,9 @@ if (!function_exists('getKategoriAsesmen')) {
             case 11:
                 $subKategoriLabel = 'Psikiatri';
                 break;
+            case 12:
+                $subKategoriLabel = 'Geriatri';
+                break;
         }
 
         return "$kategoriLabel $subKategoriLabel";
