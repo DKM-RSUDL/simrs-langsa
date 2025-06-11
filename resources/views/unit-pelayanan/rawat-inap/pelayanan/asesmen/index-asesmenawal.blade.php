@@ -131,12 +131,12 @@
                             ]) }}">Ginekologik</a>
                     </li>
                     <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.ginekologik.index', [
+                            href="{{ route('rawat-inap.asesmen.medis.psikiatri.index', [
                                 'kd_unit' => request()->route('kd_unit'),
                                 'kd_pasien' => request()->route('kd_pasien'),
                                 'tgl_masuk' => request()->route('tgl_masuk'),
                                 'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Ginekologik</a>
+                            ]) }}">Psikiatri</a>
                     </li>
                 </ul>
             </div>
@@ -288,6 +288,18 @@
                     </a>
 
                     <a href="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                @endif
+
+                @if ($item->kategori == 2 && $item->sub_kategori == 11)
+                    <a href="{{ route('rawat-inap.asesmen.medis.psikiatri.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-eye me-1"></i> Lihat
+                    </a>
+
+                    <a href="{{ route('rawat-inap.asesmen.medis.psikiatri.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                         class="btn btn-sm btn-secondary">
                         <i class="fas fa-edit"></i> Edit
                     </a>

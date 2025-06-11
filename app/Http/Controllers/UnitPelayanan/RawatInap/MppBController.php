@@ -50,9 +50,6 @@ class MppBController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
 
-        if ($mppDataList->isEmpty()) {
-            $mppDataList = null;
-        }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-b.index', compact(
             'dataMedis',
@@ -452,11 +449,11 @@ class MppBController extends Controller
         $perawat2 = null;
 
         if ($mppData->petugas_terkait_1) {
-            $perawat1 = HrdKaryawan::where('nip', $mppData->petugas_terkait_1)->first();
+            $perawat1 = HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait_1)->first();
         }
 
         if ($mppData->petugas_terkait_2) {
-            $perawat2 = HrdKaryawan::where('nip', $mppData->petugas_terkait_2)->first();
+            $perawat2 = HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait_2)->first();
         }
 
         // Logo path

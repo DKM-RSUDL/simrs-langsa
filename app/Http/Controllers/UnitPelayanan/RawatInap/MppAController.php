@@ -47,9 +47,6 @@ class MppAController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
-        if ($mppDataList->isEmpty()) {
-            $mppDataList = null;
-        }
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-a.index', compact(
             'dataMedis', 'kd_unit', 'kd_pasien', 'tgl_masuk', 'urut_masuk', 'mppDataList'

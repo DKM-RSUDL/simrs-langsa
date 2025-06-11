@@ -477,53 +477,101 @@
         <hr>
 
         <!-- Informasi Tenaga Medis -->
+        <!-- Informasi Tenaga Medis -->
         <div class="medical-staff-info">
-            <div class="medical-staff-row">
-                <!-- Kolom Kiri - Dokter (35%) -->
-                <div class="medical-staff-column">
-                    <div class="medical-staff-box">
-                        <h6 class="medical-staff-title">
-                            <i class="bi bi-person-badge me-1"></i>Dokter Penanggung Jawab
-                        </h6>
-                        <div class="medical-staff-item">
-                            <strong>Dokter 1:</strong> dr. Ahmad Fauzi, Sp.An
+            @if($dataMedis->kd_unit == '10131')
+                <!-- Layout khusus untuk NICU (6 dokter dalam 3 kolom) -->
+                <div class="medical-staff-row">
+                    <!-- Kolom 1 - Dokter Diagnosa -->
+                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
+                        <div class="medical-staff-box">
+                            <h6 class="medical-staff-title">
+                                <i class="bi bi-person-badge me-1"></i>Dokter Diagnosa
+                            </h6>
+                            <div class="medical-staff-item">
+                                <strong>Dokter Diagnosa 1:</strong> 
+                                {{ $latestMonitoring->dokter_diagnosa_1 ?? '-' }}
+                            </div>
+                            <div class="medical-staff-item">
+                                <strong>Dokter Diagnosa 2:</strong> 
+                                {{ $latestMonitoring->dokter_diagnosa_2 ?? '-' }}
+                            </div>
                         </div>
-                        <div class="medical-staff-item">
-                            <strong>Dokter 2:</strong> dr. Siti Aminah, Sp.PD
+                    </div>
+
+                    <!-- Kolom 2 - Dokter NICU -->
+                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
+                        <div class="medical-staff-box">
+                            <h6 class="medical-staff-title">
+                                <i class="bi bi-person-check me-1"></i>Dokter NICU
+                            </h6>
+                            <div class="medical-staff-item">
+                                <strong>Dokter NICU 1:</strong> 
+                                {{ $latestMonitoring->dokter_nicu_1 ?? '-' }}
+                            </div>
+                            <div class="medical-staff-item">
+                                <strong>Dokter NICU 2:</strong> 
+                                {{ $latestMonitoring->dokter_nicu_2 ?? '-' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom 3 - Dokter Konsultan -->
+                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
+                        <div class="medical-staff-box">
+                            <h6 class="medical-staff-title">
+                                <i class="bi bi-person-heart me-1"></i>Dokter Konsultan
+                            </h6>
+                            <div class="medical-staff-item">
+                                <strong>Konsultan 1:</strong> 
+                                {{ $latestMonitoring->dokter_konsul_1 ?? '-' }}
+                            </div>
+                            <div class="medical-staff-item">
+                                <strong>Konsultan 2:</strong> 
+                                {{ $latestMonitoring->dokter_konsul_2 ?? '-' }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kolom Tengah - Dokter Konsul (35%) -->
-                <div class="medical-staff-column">
-                    <div class="medical-staff-box">
-                        <h6 class="medical-staff-title">
-                            <i class="bi bi-person-check me-1"></i>Dokter Konsultan
-                        </h6>
-                        <div class="medical-staff-item">
-                            <strong>Konsul 1:</strong> dr. Budi Santoso, Sp.JP
-                        </div>
-                        <div class="medical-staff-item">
-                            <strong>Konsul 2:</strong> dr. Maya Dewi, Sp.S
+            @else
+                <!-- Layout untuk ICU, ICCU, PICU (4 dokter dalam 2 kolom) -->
+                <div class="medical-staff-row">
+                    <!-- Kolom Kiri - Dokter Utama -->
+                    <div class="medical-staff-column" style="flex: 0 0 50%;">
+                        <div class="medical-staff-box">
+                            <h6 class="medical-staff-title">
+                                <i class="bi bi-person-badge me-1"></i>Dokter Penanggung Jawab
+                            </h6>
+                            <div class="medical-staff-item">
+                                <strong>Dokter:</strong> 
+                                {{ $latestMonitoring->dokter ?? '-' }}
+                            </div>
+                            <div class="medical-staff-item">
+                                <strong>Dokter Jaga:</strong> 
+                                {{ $latestMonitoring->dokter_jaga ?? '-' }}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Kolom Kanan - Perawat (30%) -->
-                <div class="medical-staff-column">
-                    <div class="medical-staff-box">
-                        <h6 class="medical-staff-title">
-                            <i class="bi bi-heart-pulse me-1"></i>Perawat Jaga
-                        </h6>
-                        <div class="medical-staff-item">
-                            <strong>Perawat 1:</strong> Ns. Rina Sari, S.Kep
-                        </div>
-                        <div class="medical-staff-item">
-                            <strong>Perawat 2:</strong> Ns. Agus Wijaya, S.Kep
+                    <!-- Kolom Kanan - Dokter Konsultan -->
+                    <div class="medical-staff-column" style="flex: 0 0 50%;">
+                        <div class="medical-staff-box">
+                            <h6 class="medical-staff-title">
+                                <i class="bi bi-person-check me-1"></i>Dokter Konsultan
+                            </h6>
+                            <div class="medical-staff-item">
+                                <strong>Konsulen:</strong> 
+                                {{ $latestMonitoring->konsulen ?? '-' }}
+                            </div>
+                            <div class="medical-staff-item">
+                                <strong>Anestesi/RB:</strong> 
+                                {{ $latestMonitoring->anastesi_rb ?? '-' }}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
 
         <div class="filter-info" id="filterInfo">
