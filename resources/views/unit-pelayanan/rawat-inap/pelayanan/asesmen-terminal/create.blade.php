@@ -9,7 +9,11 @@
         </div>
 
         <div class="col-md-9">
-            <div class="d-flex justify-content-center">
+            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/asesmen/medis/umum") }}"
+                class="btn btn-outline-info">
+                <i class="ti-arrow-left"></i> Kembali
+            </a>
+            <div class="d-flex justify-content-center mt-2">
                 <div class="card w-100 h-100">
                     <div class="card-body">
                         <div class="px-3">
@@ -570,7 +574,7 @@
                                         </div>
 
                                         <textarea class="form-control" name="masalah_keperawatan_pasien" rows="3" 
-                                                placeholder="Sebutkan masalah keperawatan pasien..." required></textarea>
+                                                placeholder="Sebutkan masalah keperawatan pasien..."></textarea>
                                     </div>
 
                                     <div class="subsection-title mt-4">6.4. Reaksi keluarga atas penyakit pasien:</div>
