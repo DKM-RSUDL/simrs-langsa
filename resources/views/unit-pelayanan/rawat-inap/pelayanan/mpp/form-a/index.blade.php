@@ -1,143 +1,374 @@
 @extends('layouts.administrator.master')
+
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endpush
 
 @section('content')
     <div class="row">
+        <!-- Patient Card Section -->
         <div class="col-md-3">
             @include('components.patient-card')
         </div>
 
+        <!-- Main Content Section -->
         <div class="col-md-9">
             @include('components.navigation-ranap')
 
             <div class="d-flex justify-content-center">
                 <div class="card w-100 h-100">
                     <div class="card-body">
-                        {{-- Tabs --}}
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <!-- Navigation Tabs -->
+                        <ul class="nav nav-tabs" id="mppTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a href="{{ route('rawat-inap.mpp.form-a.index', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
-                                    class="nav-link active" aria-selected="true">Form A</a>
+                                <a href="{{ route('rawat-inap.mpp.form-a.index', [
+                                    $dataMedis->kd_unit,
+                                    $dataMedis->kd_pasien,
+                                    date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                    $dataMedis->urut_masuk,
+                                ]) }}"
+                                    class="nav-link active" aria-selected="true">
+                                    <i class="ti-clipboard me-1"></i>Form A
+                                </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a href="#" class="nav-link" aria-selected="true">Form B</a>
+                                <a href="{{ route('rawat-inap.mpp.form-b.index', [
+                                    $dataMedis->kd_unit,
+                                    $dataMedis->kd_pasien,
+                                    date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                    $dataMedis->urut_masuk,
+                                ]) }}"
+                                    class="nav-link" aria-selected="false">
+                                    <i class="ti-clipboard me-1"></i>Form B
+                                </a>
                             </li>
                         </ul>
 
-                        {{-- Tab Content --}}
-                        <div class="tab-content" id="myTabContent">
+                        <!-- Tab Content -->
+                        <div class="tab-content mt-3" id="mppTabContent">
                             <div class="tab-pane fade show active">
-                                {{-- TAB 1. buatlah list disini --}}
-
-                                <div class="text-end mb-3">
-                                    <a href="{{ route('rawat-inap.mpp.form-a.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                <!-- Header Actions -->
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0">Data Evaluasi Awal MPP - Form A</h5>
+                                    <a href="{{ route('rawat-inap.mpp.form-a.create', [
+                                        $dataMedis->kd_unit,
+                                        $dataMedis->kd_pasien,
+                                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                        $dataMedis->urut_masuk,
+                                    ]) }}"
                                         class="btn btn-primary">
-                                        <i class="ti-plus"></i> Tambah
+                                        <i class="ti-plus me-1"></i>Tambah Data
                                     </a>
                                 </div>
 
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-sm table-hover">
+                                <!-- Data Table Section -->
+                                <div class="table-responsive">
+                                    @if ($mppDataList->count() > 0)
+                                        <table class="table table-bordered table-striped table-hover">
                                             <thead class="table-primary">
-                                                <tr align="middle">
-                                                    <th width="100px">NO</th>
-                                                    <th>DPJP UTAMA</th>
-                                                    <th>DPJP TAMBAHAN</th>
-                                                    <th>PETUGAS</th>
-                                                    <th>AKSI</th>
+                                                <tr>
+                                                    <th width="5%" class="text-center">No</th>
+                                                    <th>DPJP Utama</th>
+                                                    <th>DPJP Tambahan</th>
+                                                    <th class="text-center">Status Kriteria</th>
+                                                    <th class="text-center">Tanggal Screening</th>
+                                                    <th class="text-center">Tanggal Assessment</th>
+                                                    <th class="text-center">Tanggal Identifikasi</th>
+                                                    <th class="text-center">Tanggal Planning</th>
+                                                    <th width="12%" class="text-center">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @foreach ($penundaan as $item)
+                                                @foreach ($mppDataList as $index => $mppData)
                                                     <tr>
-                                                        <td align="middle">{{ $loop->iteration }}</td>
+                                                        <td class="text-center">{{ $index + 1 }}</td>
+
+                                                        <!-- DPJP Utama -->
                                                         <td>
-                                                            {{ date('d M Y', strtotime($item->tanggal)) . ' ' . date('H:i', strtotime($item->jam)) }}
-                                                            WIB
+                                                            @if ($mppData->dokterUtama)
+                                                                <strong>{{ $mppData->dokterUtama->nama }}</strong>
+                                                            @else
+                                                                <span class="text-muted fst-italic">Belum ditentukan</span>
+                                                            @endif
                                                         </td>
-                                                        <td style="max-width: 300px;">{{ $item->dokter->nama_lengkap }}</td>
+
+                                                        <!-- DPJP Tambahan -->
                                                         <td>
-                                                            {{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }}
+                                                            @if ($mppData->dokterTambahan)
+                                                                {{ $mppData->dokterTambahan->nama }}
+                                                            @else
+                                                                <span class="text-muted fst-italic">Tidak ada</span>
+                                                            @endif
                                                         </td>
-                                                        <td align="middle">
-                                                            <a href="{{ route('rawat-inap.penundaan.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-primary" target="_blank">
-                                                                <i class="fa fa-print"></i>
-                                                            </a>
-                                                            <a href="{{ route('rawat-inap.penundaan.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-success ms-1">
-                                                                <i class="fa fa-eye"></i>
-                                                            </a>
-                                                            <a href="{{ route('rawat-inap.penundaan.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
-                                                                class="btn btn-sm btn-warning mx-1">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            <button class="btn btn-sm btn-danger btn-delete"
-                                                                data-bs-target="#deleteModal"
-                                                                data-penundaan="{{ encrypt($item->id) }}">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
+
+                                                        <!-- Status Kriteria -->
+                                                        <td class="text-center">
+                                                            @php
+                                                                $screeningCount = collect([
+                                                                    $mppData->fungsi_kognitif,
+                                                                    $mppData->risiko_tinggi,
+                                                                    $mppData->potensi_komplain,
+                                                                    $mppData->riwayat_kronis,
+                                                                    $mppData->status_fungsional,
+                                                                    $mppData->peralatan_medis,
+                                                                    $mppData->gangguan_mental,
+                                                                    $mppData->sering_igd,
+                                                                    $mppData->perkiraan_asuhan,
+                                                                    $mppData->sistem_pembiayaan,
+                                                                    $mppData->length_of_stay,
+                                                                    $mppData->rencana_pemulangan,
+                                                                    $mppData->lain_lain,
+                                                                ])->sum();
+
+                                                                $assessmentCount = collect([
+                                                                    $mppData->fisik_fungsional,
+                                                                    $mppData->riwayat_kesehatan,
+                                                                    $mppData->perilaku_psiko,
+                                                                    $mppData->kesehatan_mental,
+                                                                    $mppData->dukungan_keluarga,
+                                                                    $mppData->finansial_asuransi,
+                                                                    $mppData->riwayat_obat,
+                                                                    $mppData->trauma_kekerasan,
+                                                                    $mppData->health_literacy,
+                                                                    $mppData->aspek_legal,
+                                                                    $mppData->harapan_hasil,
+                                                                ])->sum();
+
+                                                                $identificationCount = collect([
+                                                                    $mppData->tingkat_asuhan,
+                                                                    $mppData->over_under_utilization,
+                                                                    $mppData->ketidak_patuhan,
+                                                                    $mppData->edukasi_kurang,
+                                                                    $mppData->kurang_dukungan,
+                                                                    $mppData->penurunan_determinasi,
+                                                                    $mppData->kendala_keuangan,
+                                                                    $mppData->pemulangan_rujukan,
+                                                                ])->sum();
+
+                                                                $planningCount = collect([
+                                                                    $mppData->validasi_rencana,
+                                                                    $mppData->rencana_informasi,
+                                                                    $mppData->rencana_melibatkan,
+                                                                    $mppData->fasilitas_penyelesaian,
+                                                                    $mppData->bantuan_alternatif,
+                                                                ])->sum();
+                                                            @endphp
+
+                                                            <div class="d-flex flex-column gap-1">
+                                                                <span class="badge bg-info">
+                                                                    <i class="ti-search me-1"></i>Screening:
+                                                                    {{ $screeningCount }}
+                                                                </span>
+                                                                <span class="badge bg-success">
+                                                                    <i class="ti-check me-1"></i>Assessment:
+                                                                    {{ $assessmentCount }}
+                                                                </span>
+                                                                <span class="badge bg-warning">
+                                                                    <i class="ti-eye me-1"></i>Identifikasi:
+                                                                    {{ $identificationCount }}
+                                                                </span>
+                                                                <span class="badge bg-primary">
+                                                                    <i class="ti-target me-1"></i>Planning:
+                                                                    {{ $planningCount }}
+                                                                </span>
+                                                            </div>
+                                                        </td>
+
+                                                        <!-- Date Columns -->
+                                                        @foreach (['screening', 'assessment', 'identification', 'planning'] as $dateType)
+                                                            <td class="text-center">
+                                                                @php
+                                                                    $dateField = $dateType . '_date';
+                                                                    $timeField = $dateType . '_time';
+                                                                @endphp
+
+                                                                @if ($mppData->$dateField)
+                                                                    <div class="text-primary fw-bold">
+                                                                        {{ date('d/m/Y', strtotime($mppData->$dateField)) }}
+                                                                    </div>
+                                                                    @if ($mppData->$timeField)
+                                                                        <small class="text-muted">
+                                                                            <i
+                                                                                class="ti-time me-1"></i>{{ date('H:i', strtotime($mppData->$timeField)) }}
+                                                                        </small>
+                                                                    @endif
+                                                                @else
+                                                                    <span class="text-muted fst-italic">Belum
+                                                                        dilakukan</span>
+                                                                @endif
+                                                            </td>
+                                                        @endforeach
+
+                                                        <!-- Action Buttons -->
+                                                        <td class="text-center">
+                                                            <div class="btn-group" role="group">
+
+                                                                <a href="{{ route('rawat-inap.mpp.form-a.print', [
+                                                                    'kd_unit' => $kd_unit,
+                                                                    'kd_pasien' => $kd_pasien,
+                                                                    'tgl_masuk' => $tgl_masuk,
+                                                                    'urut_masuk' => $urut_masuk,
+                                                                    'id' => $mppData->id,
+                                                                ]) }}"
+                                                                    class="btn btn-info btn-sm me-2" target="_blank">
+                                                                    <i class="ti-printer"></i>
+                                                                </a>
+
+                                                                <a href="{{ route('rawat-inap.mpp.form-a.edit', [
+                                                                    $dataMedis->kd_unit,
+                                                                    $dataMedis->kd_pasien,
+                                                                    date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                                                    $dataMedis->urut_masuk,
+                                                                    $mppData->id,
+                                                                ]) }}"
+                                                                    class="btn btn-warning btn-sm me-2" title="Edit Data"
+                                                                    data-bs-toggle="tooltip">
+                                                                    <i class="ti-pencil"></i>
+                                                                </a>
+
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm btn-delete"
+                                                                    title="Hapus Data" data-bs-toggle="tooltip"
+                                                                    data-id="{{ $mppData->id }}"
+                                                                    data-url="{{ route('rawat-inap.mpp.form-a.destroy', [
+                                                                        $dataMedis->kd_unit,
+                                                                        $dataMedis->kd_pasien,
+                                                                        date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                                                        $dataMedis->urut_masuk,
+                                                                        $mppData->id,
+                                                                    ]) }}">
+                                                                    <i class="ti-trash"></i>
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                @endforeach --}}
+                                                @endforeach
                                             </tbody>
                                         </table>
-                                    </div>
+                                    @else
+                                        <!-- Empty State -->
+                                        <div class="text-center py-5">
+                                            <div class="mb-4">
+                                                <i class="ti-clipboard" style="font-size: 4rem; color: #dee2e6;"></i>
+                                            </div>
+                                            <h4 class="text-muted mb-3">Belum Ada Data Form A</h4>
+                                            <p class="text-muted mb-4">
+                                                Silakan tambah data evaluasi awal MPP dengan mengklik tombol
+                                                <strong>"Tambah Data"</strong> di atas untuk memulai.
+                                            </p>
+                                            <a href="{{ route('rawat-inap.mpp.form-a.create', [
+                                                $dataMedis->kd_unit,
+                                                $dataMedis->kd_pasien,
+                                                date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
+                                                $dataMedis->urut_masuk,
+                                            ]) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti-plus me-2"></i>Tambah Data Pertama
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
-
-    <!-- Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Hapus Penundaan Pelayanan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form
-                    action="{{ route('rawat-inap.penundaan.delete', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}"
-                    method="post">
-                    @csrf
-                    @method('delete')
-
-                    <div class="modal-body">
-                        <input type="hidden" id="id_penundaan" name="id_penundaan">
-                        <p>Apakah anda yakin ingin menghapus data pernyataan penundaan pelayanan ? data yang telah
-                            dihapus tidak dapat
-                            dikembalikan</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Hidden form for delete action -->
+    <form id="deleteForm" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
 
 @push('js')
-    <script>
-        $('.btn-delete').click(function() {
-            let $this = $(this);
-            let id = $this.attr('data-penundaan');
-            let target = $this.attr('data-bs-target');
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            $(target).find('#id_penundaan').val(id);
-            $(target).modal('show');
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Handle delete button click
+            $('.btn-delete').on('click', function(e) {
+                e.preventDefault();
+
+                const deleteUrl = $(this).data('url');
+                const dataId = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Konfirmasi Hapus Data',
+                    html: `
+                        <div class="text-start">
+                            <p class="mb-2">Apakah Anda yakin ingin menghapus data <strong>Form A - Evaluasi Awal MPP</strong> ini?</p>
+                            <div class="alert alert-warning">
+                                <i class="ti-alert-triangle me-2"></i>
+                                <strong>Peringatan:</strong> Data yang telah dihapus tidak dapat dikembalikan lagi.
+                            </div>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Hapus Data',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    customClass: {
+                        confirmButton: 'btn btn-danger ms-2',
+                        cancelButton: 'btn btn-secondary me-2',
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Menghapus Data...',
+                            html: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Set form action and submit
+                        $('#deleteForm').attr('action', deleteUrl);
+                        $('#deleteForm').submit();
+                    }
+                });
+            });
+
+            // Show success message if data was deleted successfully
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonColor: '#198754',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+
+            // Show error message if deletion failed
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: '{{ session('error') }}',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'OK'
+                });
+            @endif
         });
     </script>
 @endpush

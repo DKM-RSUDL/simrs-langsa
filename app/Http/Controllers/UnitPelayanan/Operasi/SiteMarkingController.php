@@ -100,38 +100,9 @@ class SiteMarkingController extends Controller
 
     public function store(Request $request, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
-        // dd($request->all());
-
         DB::beginTransaction();
 
         try {
-            // Validasi input
-            $validator = Validator::make($request->all(), [
-                'kd_pasien' => 'required|string|max:255',
-                'tgl_masuk' => 'required',
-                'urut_masuk' => 'required|integer',
-                'active_template' => 'required|string|max:255',
-                'marking_data' => 'required',
-                'waktu' => 'required',
-                'prosedur_operasi' => 'required|string',
-                'notes' => 'nullable|string',
-                'tanda_tangan_dokter' => 'required',
-                'tanda_tangan_pasien' => 'required',
-                'confirmation' => 'required',
-                'template_png_full_body' => 'nullable',
-                'template_png_head_front_back' => 'nullable',
-                'template_png_head_side' => 'nullable',
-                'template_png_hand_dorsal' => 'nullable',
-                'template_png_hand_palmar' => 'nullable',
-                'template_png_foot' => 'nullable',
-            ]);
-
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput();
-            }
-
             // Format tanggal
             $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
             $waktuProsedure = date('Y-m-d H:i:s', strtotime($request->waktu));
@@ -149,61 +120,14 @@ class SiteMarkingController extends Controller
                 'notes' => $request->notes,
                 'confirmation' => $request->has('confirmation') ? 1 : 0,
                 'user_create' => auth()->user()->id,
+                'responsible_person' => $request->responsible_person,
+                'patient_name' => $request->responsible_person === 'pasien' ? $request->patient_name : null,
+                'family_name' => $request->responsible_person === 'keluarga' ? $request->family_name : null,
+                'family_relationship' => $request->responsible_person === 'keluarga' ? $request->family_relationship : null,
+                'family_address' => $request->responsible_person === 'keluarga' ? $request->family_address : null,
             ];
 
-            // Simpan tanda tangan dokter (konversi dari base64 ke file)
-            if ($request->tanda_tangan_dokter) {
-                // Hapus header base64 jika ada
-                $imageData = $request->tanda_tangan_dokter;
-                if (strpos($imageData, ';base64,') !== false) {
-                    list(, $imageData) = explode(';base64,', $imageData);
-                }
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageData = base64_decode($imageData);
-
-                // Buat nama file unik
-                $filename = 'ttd_dokter_' . time() . '_' . uniqid() . '.png';
-                $path = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}";
-
-                // Pastikan direktori ada
-                if (!Storage::exists($path)) {
-                    Storage::makeDirectory($path);
-                }
-
-                // Simpan gambar
-                Storage::put($path . '/' . $filename, $imageData);
-
-                // Simpan path ke database
-                $data['tanda_tangan_dokter'] = $path . '/' . $filename;
-            }
-
-            // Simpan tanda tangan pasien (konversi dari base64 ke file)
-            if ($request->tanda_tangan_pasien) {
-                // Hapus header base64 jika ada
-                $imageData = $request->tanda_tangan_pasien;
-                if (strpos($imageData, ';base64,') !== false) {
-                    list(, $imageData) = explode(';base64,', $imageData);
-                }
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageData = base64_decode($imageData);
-
-                // Buat nama file unik
-                $filename = 'ttd_pasien_' . time() . '_' . uniqid() . '.png';
-                $path = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}";
-
-                // Pastikan direktori ada
-                if (!Storage::exists($path)) {
-                    Storage::makeDirectory($path);
-                }
-
-                // Simpan gambar
-                Storage::put($path . '/' . $filename, $imageData);
-
-                // Simpan path ke database
-                $data['tanda_tangan_pasien'] = $path . '/' . $filename;
-            }
-
-            // BAGIAN BARU: Simpan gambar PNG untuk setiap template
+            // Simpan gambar PNG untuk setiap template
             $markingPath = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}/marking";
 
             // Pastikan direktori ada
@@ -362,30 +286,6 @@ class SiteMarkingController extends Controller
         DB::beginTransaction();
 
         try {
-            // Validasi input
-            $validator = Validator::make($request->all(), [
-                'active_template' => 'required|string|max:255',
-                'marking_data' => 'required',
-                'waktu' => 'required',
-                'prosedur_operasi' => 'required|string',
-                'notes' => 'nullable|string',
-                'tanda_tangan_dokter' => 'nullable',
-                'tanda_tangan_pasien' => 'nullable',
-                'confirmation' => 'required',
-                'template_png_full_body' => 'nullable',
-                'template_png_head_front_back' => 'nullable',
-                'template_png_head_side' => 'nullable',
-                'template_png_hand_dorsal' => 'nullable',
-                'template_png_hand_palmar' => 'nullable',
-                'template_png_foot' => 'nullable',
-            ]);
-
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput();
-            }
-
             // Format tanggal
             $formatTglMasuk = date('Y-m-d', strtotime($tgl_masuk));
             $waktuProsedure = date('Y-m-d H:i:s', strtotime($request->waktu));
@@ -403,72 +303,15 @@ class SiteMarkingController extends Controller
                 'notes' => $request->notes,
                 'confirmation' => $request->has('confirmation') ? 1 : 0,
                 'user_update' => auth()->user()->id,
+                'responsible_person' => $request->responsible_person,
+                'patient_name' => $request->responsible_person === 'pasien' ? $request->patient_name : null,
+                'family_name' => $request->responsible_person === 'keluarga' ? $request->family_name : null,
+                'family_relationship' => $request->responsible_person === 'keluarga' ? $request->family_relationship : null,
+                'family_address' => $request->responsible_person === 'keluarga' ? $request->family_address : null,
             ];
 
-            // Update tanda tangan dokter jika disediakan
-            if ($request->tanda_tangan_dokter && strpos($request->tanda_tangan_dokter, 'data:image') === 0) {
-                // Hapus header base64 jika ada
-                $imageData = $request->tanda_tangan_dokter;
-                if (strpos($imageData, ';base64,') !== false) {
-                    list(, $imageData) = explode(';base64,', $imageData);
-                }
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageData = base64_decode($imageData);
-
-                // Buat nama file unik
-                $filename = 'ttd_dokter_' . time() . '_' . uniqid() . '.png';
-                $path = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}";
-
-                // Pastikan direktori ada
-                if (!Storage::exists($path)) {
-                    Storage::makeDirectory($path);
-                }
-
-                // Hapus file tanda tangan lama jika ada
-                if ($siteMarking->tanda_tangan_dokter && Storage::exists($siteMarking->tanda_tangan_dokter)) {
-                    Storage::delete($siteMarking->tanda_tangan_dokter);
-                }
-
-                // Simpan gambar baru
-                Storage::put($path . '/' . $filename, $imageData);
-
-                // Simpan path ke database
-                $data['tanda_tangan_dokter'] = $path . '/' . $filename;
-            }
-
-            // Update tanda tangan pasien jika disediakan
-            if ($request->tanda_tangan_pasien && strpos($request->tanda_tangan_pasien, 'data:image') === 0) {
-                // Hapus header base64 jika ada
-                $imageData = $request->tanda_tangan_pasien;
-                if (strpos($imageData, ';base64,') !== false) {
-                    list(, $imageData) = explode(';base64,', $imageData);
-                }
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageData = base64_decode($imageData);
-
-                // Buat nama file unik
-                $filename = 'ttd_pasien_' . time() . '_' . uniqid() . '.png';
-                $path = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}";
-
-                // Pastikan direktori ada
-                if (!Storage::exists($path)) {
-                    Storage::makeDirectory($path);
-                }
-
-                // Hapus file tanda tangan lama jika ada
-                if ($siteMarking->tanda_tangan_pasien && Storage::exists($siteMarking->tanda_tangan_pasien)) {
-                    Storage::delete($siteMarking->tanda_tangan_pasien);
-                }
-
-                // Simpan gambar baru
-                Storage::put($path . '/' . $filename, $imageData);
-
-                // Simpan path ke database
-                $data['tanda_tangan_pasien'] = $path . '/' . $filename;
-            }
-
-            // BAGIAN BARU: Update gambar PNG untuk setiap template
-            $markingPath = "uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}/marking";
+            // Update gambar PNG untuk setiap template
+            $markingPath = "Uploads/operasi/site-marking/{$formatTglMasuk}/{$kd_pasien}/{$urut_masuk}/marking";
 
             // Pastikan direktori ada
             if (!Storage::exists($markingPath)) {

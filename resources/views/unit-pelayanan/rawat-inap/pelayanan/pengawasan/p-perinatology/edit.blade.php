@@ -257,14 +257,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Modus</label>
-                                        <select class="form-control" name="modus" id="modus">
-                                            <option value="">-- Pilih Modus --</option>
-                                            <option value="IMV" {{ old('modus', $perinatologyData->detail->modus ?? '') == 'IMV' ? 'selected' : '' }}>IMV</option>
-                                            <option value="SIMV" {{ old('modus', $perinatologyData->detail->modus ?? '') == 'SIMV' ? 'selected' : '' }}>SIMV</option>
-                                            <option value="CPAP" {{ old('modus', $perinatologyData->detail->modus ?? '') == 'CPAP' ? 'selected' : '' }}>CPAP</option>
-                                            <option value="PEEP" {{ old('modus', $perinatologyData->detail->modus ?? '') == 'PEEP' ? 'selected' : '' }}>PEEP</option>
-                                            <option value="spontan" {{ old('modus', $perinatologyData->detail->modus ?? '') == 'spontan' ? 'selected' : '' }}>Spontan</option>
-                                        </select>
+                                        <input type="text" class="form-control" name="modus" id="modus" 
+                                            placeholder="Masukkan Modus" value="{{ old('modus', $perinatologyData->detail->modus ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -348,7 +342,7 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-save me-1"></i> Update
                             </button>
-                            <a href="{{ route('rawat-inap.pengawasan-perinatology.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk]) }}" class="btn btn-secondary">
+                            <a href="{{ url("unit-pelayanan/rawat-inap/unit/$kd_unit/pelayanan/$kd_pasien/$tgl_masuk/$urut_masuk/pengawasan-perinatology") }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i> Batal
                             </a>
                         </div>

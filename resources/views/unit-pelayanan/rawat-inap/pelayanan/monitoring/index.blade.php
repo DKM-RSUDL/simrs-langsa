@@ -187,8 +187,8 @@
                                                     <th scope="col" class="text-center">Tanggal</th>
                                                     <th scope="col" class="text-center">Jam</th>
                                                     <th scope="col" class="text-center">Pembuat</th>
-                                                    <th scope="col" class="text-center">Diagnosa</th>
                                                     <th scope="col" class="text-center">Vital Signs</th>
+                                                    <th scope="col" class="text-center">Hari Rawat Ke</th>
                                                     <th scope="col" class="text-center" style="width: 150px;">Aksi</th>
                                                 </tr>
                                             </thead>
@@ -203,7 +203,6 @@
                                                             </span>
                                                         </td>
                                                         <td>{{ $record->userCreator->name ?? 'Unknown' }}</td>
-                                                        <td>{{ $record->diagnosa }}</td>
                                                         <td>
                                                             <div class="vital-statsss">
                                                                 <span class="vital-itemmm">TD: <strong>{{ number_format($record->detail->sistolik ?? 0, 0) }}/{{ number_format($record->detail->diastolik ?? 0, 0) }}</strong></span>
@@ -211,9 +210,10 @@
                                                                 <span class="vital-itemmm">RR: <strong>{{ number_format($record->detail->rr ?? 0, 0) }}</strong></span>
                                                                 <span class="vital-itemmm">Suhu: <strong>{{ number_format($record->detail->temp ?? 0, 1) }}°C</strong></span>
                                                                 <span class="vital-itemmm">MAP: <strong>{{ number_format($record->detail->map ?? 0, 0) }}</strong></span>
-                                                                <span class="vital-itemmm">GCS: <strong>E{{ number_format($record->detail->gcs_eye ?? 0, 0) }}V{{ number_format($record->detail->gcs_verbal ?? 0, 0) }}M{{ number_format($record->detail->gcs_motor ?? 0, 0) }}</strong> ({{ number_format($record->detail->gcs_total ?? 0, 0) }})</span>
                                                             </div>
                                                         </td>
+                                                        <td class="text-center">
+                                                            <span class="badge bg-purple">{{ $record->hari_rawat }}</span>
                                                         <td class="text-center">
                                                             <div class="d-flex gap-2 justify-content-center">
                                                                 <a href="{{ route('rawat-inap.monitoring.show', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $kd_pasien, 'tgl_masuk' => $tgl_masuk, 'urut_masuk' => $urut_masuk, 'id' => $record->id]) }}"

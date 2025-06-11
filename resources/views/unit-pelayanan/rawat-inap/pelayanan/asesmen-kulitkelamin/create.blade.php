@@ -1,7 +1,5 @@
 @extends('layouts.administrator.master')
 
-@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')
-
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -84,56 +82,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
-                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
-                                                placeholder="Masukkan riwayat penyakit sekarang"></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
-                                                placeholder="Masukkan riwayat penyakit terdahulu">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Penyakit Keluarga</label>
-                                            <input type="text" class="form-control" name="riwayat_penyakit_keluarga"
-                                                placeholder="Masukkan riwayat penyakit keluarga">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label style="min-width: 220px;">Riwayat Pengobatan</label>
-                                            <div class="row">
-                                                <div class="col-md-12 mb-3">
-                                                    <div class="d-flex gap-4">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="riwayat_pengobatan_ya" id="riwayat_pengobatan_ya"
-                                                                value="ya">
-                                                            <label class="form-check-label" for="riwayat_pengobatan_ya">
-                                                                Ya
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="riwayat_pengobatan_tidak"
-                                                                id="riwayat_pengobatan_tidak" value="tidak">
-                                                            <label class="form-check-label" for="riwayat_pengobatan_tidak">
-                                                                Tidak
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control"
-                                                        name="riwayat_pengobatan_detail" id="riwayat_pengobatan_detail"
-                                                        placeholder="Jika ya, sebutkan pengobatan yang pernah dilakukan"
-                                                        disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label style="min-width: 220px;">Sensorium</label>
                                             <select class="form-select" name="sensorium">
                                                 <option value="" selected disabled>--Pilih--</option>
@@ -182,8 +130,67 @@
 
                                     </div>
 
+                                    <div class="section-separator" id="riwayat-kesehatan">
+                                        <h5 class="section-title">3. Riwayat Kesehatan</h5>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Penyakit Sekarang</label>
+                                            <textarea class="form-control" name="riwayat_penyakit_sekarang" rows="4"
+                                                placeholder="Masukkan riwayat penyakit sekarang"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Penyakit Terdahulu</label>
+                                            <input type="text" class="form-control" name="riwayat_penyakit_terdahulu"
+                                                placeholder="Masukkan riwayat penyakit terdahulu">
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label style="min-width: 220px;">Riwayat Kesehatan Keluarga</label>
+                                            <div class="w-100">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#riwayatKeluargaModal">
+                                                    <i class="ti-plus"></i> Tambah
+                                                </button>
+                                                <div id="selectedRiwayatList" class="d-flex flex-column gap-2">
+                                                    <!-- Empty state message -->
+                                                    <div id="emptyStateRiwayat" class="border border-dashed border-secondary rounded p-3 text-center text-muted">
+                                                        <i class="ti-info-circle mb-2"></i>
+                                                        <p class="mb-0">Belum ada riwayat kesehatan keluarga yang ditambahkan.</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Hidden input to store the JSON data -->
+                                                <input type="hidden" name="riwayat_kesehatan_keluarga" id="riwayatKesehatanInput">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="section-separator" id="riwayatObat">
+                                        <h5 class="section-title">4. Riwayat Penggunaan Obat</h5>
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObatModal">
+                                            <i class="ti-plus"></i> Tambah
+                                        </button>
+                                        <input type="hidden" name="riwayat_penggunaan_obat" id="riwayatObatData" value="[]">
+                                        <div class="table-responsive">
+                                            <table class="table" id="createRiwayatObatTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Obat</th>
+                                                        <th>Dosis</th>
+                                                        <th>Aturan Pakai</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Table content will be dynamically populated -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                     <div class="section-separator" id="skala-nyeri">
-                                        <h5 class="section-title">3. Skala Nyeri</h5>
+                                        <h5 class="section-title">5. Skala Nyeri</h5>
 
                                         <div class="row">
                                             <div class="col-md-6">
@@ -215,33 +222,35 @@
                                     </div>
 
                                     <div class="section-separator" id="alergi">
-                                        <h5 class="section-title">4. Alergi</h5>
+                                        <h5 class="section-title">6. Alergi</h5>
 
                                         <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
-                                            id="openAlergiModal">
-                                            <i class="ti-plus"></i> Tambah
+                                            id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                            <i class="ti-plus"></i> Tambah Alergi
                                         </button>
-                                        <input type="hidden" name="alergis" id="alergisInput">
+                                        <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                         <div class="table-responsive">
-                                            <table class="table" id="createAlergiTable">
-                                                <thead>
+                                            <table class="table table-bordered" id="createAlergiTable">
+                                                <thead class="table-light">
                                                     <tr>
-                                                        <th>Jenis</th>
-                                                        <th>Alergen</th>
-                                                        <th>Reaksi</th>
-                                                        <th>Severe</th>
-                                                        <th></th>
+                                                        <th width="20%">Jenis Alergi</th>
+                                                        <th width="25%">Alergen</th>
+                                                        <th width="25%">Reaksi</th>
+                                                        <th width="20%">Tingkat Keparahan</th>
+                                                        <th width="10%">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Table content will be dynamically populated -->
+                                                    <tr id="no-alergi-row">
+                                                        <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
                                     <div class="section-separator" id="pemeriksaan-fisik">
-                                        <h5 class="section-title">5. Pemeriksaan Fisik</h5>
+                                        <h5 class="section-title">7. Pemeriksaan Fisik</h5>
                                         <div class="row g-3">
                                             <div class="pemeriksaan-fisik">
                                                 <h6>Pemeriksaan Fisik</h6>
@@ -298,8 +307,73 @@
 
                                     </div>
 
+                                    <div class="section-separator" id="site-marking">
+                                        <h5 class="section-title">Site Marking - Penandaan Anatomi</h5>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="site-marking-container position-relative">
+                                                    <img src="{{ asset('assets/images/sitemarking/kulit-kelamin.png') }}" 
+                                                         id="anatomyImage" 
+                                                         class="img-fluid" 
+                                                         style="max-width: 100%;">
+                                                    <canvas id="markingCanvas" 
+                                                            class="position-absolute top-0 start-0" 
+                                                            style="cursor: crosshair; z-index: 10;">
+                                                    </canvas>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <small class="text-muted">
+                                                        <strong>Cara Pakai:</strong> Pilih warna, klik dan drag untuk membuat panah di area yang ingin ditandai.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="marking-controls">
+                                                    <h6>Kontrol Penandaan</h6>
+                                                    
+                                                    <!-- Pilihan Warna -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Pilih Warna:</label>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <button type="button" class="color-btn active" data-color="#dc3545" style="background: #dc3545;"></button>
+                                                            <button type="button" class="color-btn" data-color="#198754" style="background: #198754;"></button>
+                                                            <button type="button" class="color-btn" data-color="#0d6efd" style="background: #0d6efd;"></button>
+                                                            <button type="button" class="color-btn" data-color="#fd7e14" style="background: #fd7e14;"></button>
+                                                            <button type="button" class="color-btn" data-color="#6f42c1" style="background: #6f42c1;"></button>
+                                                            <button type="button" class="color-btn" data-color="#000000" style="background: #000000;"></button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Keterangan -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Keterangan (opsional):</label>
+                                                        <input type="text" id="markingNote" class="form-control" placeholder="Contoh: Ruam merah">
+                                                    </div>
+                                                    
+                                                    <!-- Tombol Kontrol -->
+                                                    <div class="d-grid gap-2">
+                                                        <button type="button" class="btn btn-outline-danger" id="clearAllMarking">
+                                                            <i class="ti-trash"></i> Hapus Semua Penandaan
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <!-- Daftar Penandaan -->
+                                                    <div class="marking-list mt-3">
+                                                        <h6>Daftar Penandaan (<span id="markingCount">0</span>):</h6>
+                                                        <div id="markingsList" class="list-group" style="max-height: 250px; overflow-y: auto;">
+                                                            <div class="text-muted text-center py-3" id="emptyState">
+                                                                <i class="ti-info-alt"></i> Belum ada penandaan
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="site_marking_data" id="siteMarkingData" value="[]">
+                                    </div>
+
                                     <div class="section-separator" id="discharge-planning">
-                                        <h5 class="section-title">6. Discharge Planning</h5>
+                                        <h5 class="section-title">8. Discharge Planning</h5>
 
                                         <div class="mb-4">
                                             <label class="form-label">Diagnosis medis</label>
@@ -407,7 +481,7 @@
                                     </div>
 
                                     <div class="section-separator" id="diagnosis">
-                                        <h5 class="fw-semibold mb-4">7. Diagnosis</h5>
+                                        <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
                                         <!-- Diagnosis Banding -->
                                         <div class="mb-4">
@@ -467,7 +541,7 @@
                                     </div>
 
                                     <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                        <h5 class="fw-semibold mb-4">8. Implementasi</h5>
+                                        <h5 class="fw-semibold mb-4">10. Implementasi</h5>
 
                                         <!-- Rencana Penatalaksanaan dan Pengobatan -->
                                         <div class="mb-4">
@@ -606,72 +680,8 @@
             </div>
         </div>
     </div>
-    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-perinatology.modal-create-alergi')
-
-    <!-- JavaScript untuk interaksi form -->
 @endsection
-
-@push('js')
-    <script>
-        document.getElementById('skala_nyeri').addEventListener('input', function() {
-            const nilai = parseInt(this.value);
-            const kategoriField = document.getElementById('kategori_nyeri');
-
-            if (nilai >= 1 && nilai <= 3) {
-                kategoriField.value = 'Nyeri Ringan';
-            } else if (nilai >= 4 && nilai <= 6) {
-                kategoriField.value = 'Nyeri Sedang';
-            } else if (nilai >= 7 && nilai <= 9) {
-                kategoriField.value = 'Nyeri Berat';
-            } else if (nilai === 10) {
-                kategoriField.value = 'Nyeri Tak Tertahankan';
-            } else {
-                kategoriField.value = '';
-            }
-        });
-
-        // Fungsi untuk handle checkbox riwayat pengobatan
-        function handleRiwayatPengobatan() {
-            const checkboxYa = document.getElementById('riwayat_pengobatan_ya');
-            const checkboxTidak = document.getElementById('riwayat_pengobatan_tidak');
-            const detail = document.getElementById('riwayat_pengobatan_detail');
-
-            // Event listener untuk checkbox Ya
-            checkboxYa.addEventListener('change', function() {
-                if (this.checked) {
-                    checkboxTidak.checked = false;
-                    detail.disabled = false;
-                    detail.required = true;
-                } else {
-                    detail.disabled = true;
-                    detail.required = false;
-                    detail.value = '';
-                }
-            });
-
-            // Event listener untuk checkbox Tidak
-            checkboxTidak.addEventListener('change', function() {
-                if (this.checked) {
-                    checkboxYa.checked = false;
-                    detail.disabled = true;
-                    detail.required = false;
-                    detail.value = '';
-                }
-            });
-        }
-
-        // Panggil fungsi saat DOM loaded
-        document.addEventListener('DOMContentLoaded', handleRiwayatPengobatan);
-
-        // JavaScript untuk biopsi tetap sama
-        document.getElementById('biopsi').addEventListener('change', function() {
-            const hasil = document.getElementById('biopsi_hasil');
-            if (this.value === 'dilakukan' || this.value === 'akan_dilakukan') {
-                hasil.disabled = false;
-            } else {
-                hasil.disabled = true;
-                hasil.value = '';
-            }
-        });
-    </script>
-@endpush
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-riwayatkeluarga')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-obat')
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.include')

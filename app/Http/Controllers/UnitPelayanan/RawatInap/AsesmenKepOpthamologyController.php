@@ -156,6 +156,19 @@ class AsesmenKepOpthamologyController extends Controller
             $dataOphtamology->riwayat_penggunaan_obat = $request->riwayat_penggunaan_obat ?? '[]';
             $dataOphtamology->save();
 
+            //Simpan Diagnosa ke Master
+            $diagnosisBandingList = json_decode($request->diagnosis_banding ?? '[]', true);
+            $diagnosisKerjaList = json_decode($request->diagnosis_kerja ?? '[]', true);
+            $allDiagnoses = array_merge($diagnosisBandingList, $diagnosisKerjaList);
+            foreach ($allDiagnoses as $diagnosa) {
+                $existingDiagnosa = RmeMasterDiagnosis::where('nama_diagnosis', $diagnosa)->first();
+                if (!$existingDiagnosa) {
+                    $masterDiagnosa = new RmeMasterDiagnosis();
+                    $masterDiagnosa->nama_diagnosis = $diagnosa;
+                    $masterDiagnosa->save();
+                }
+            }
+
 
             $dataOpthamologyFisik = new RmeAsesmenKepOphtamologyFisik();
             $dataOpthamologyFisik->id_asesmen = $dataAsesmen->id;

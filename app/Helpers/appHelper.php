@@ -75,9 +75,16 @@ if (!function_exists('getKategoriAsesmen')) {
             case 9:
                 $subKategoriLabel = 'Ginekologik';
                 break;
+            case 10:
+                $subKategoriLabel = 'Kulit Kelamin';
+            case 11:
+                $subKategoriLabel = 'Psikiatri';
+                break;
+            case 12:
+                $subKategoriLabel = 'Geriatri';
+                break;
             case 13:
                 $subKategoriLabel = 'Terminal & Keluarga';
-                break;
         }
 
         return "$kategoriLabel $subKategoriLabel";
