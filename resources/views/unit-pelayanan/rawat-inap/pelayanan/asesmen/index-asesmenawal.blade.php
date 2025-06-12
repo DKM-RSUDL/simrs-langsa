@@ -46,106 +46,101 @@
                     {{-- <li><a class="custom__dropdown__item" href="#" data-bs-toggle="modal"
                             data-bs-target="#detailPasienModal">Medis Umum/Dewasa</a></li> --}}
                     @canany(['is-admin', 'is-perawat', 'is-bidan'])
-                        <li><a class="custom__dropdown__item"
-                                href="{{ route('rawat-inap.asesmen.keperawatan.umum.index', [
-                                    'kd_unit' => request()->route('kd_unit'),
-                                    'kd_pasien' => request()->route('kd_pasien'),
-                                    'tgl_masuk' => request()->route('tgl_masuk'),
-                                    'urut_masuk' => request()->route('urut_masuk'),
-                                ]) }}">Keperawatan
-                                Umum/Dewasa</a>
-                        </li>
-                        <li><a class="custom__dropdown__item"
-                                href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
-                                    'kd_unit' => request()->route('kd_unit'),
-                                    'kd_pasien' => request()->route('kd_pasien'),
-                                    'tgl_masuk' => request()->route('tgl_masuk'),
-                                    'urut_masuk' => request()->route('urut_masuk'),
-                                ]) }}">Anak</a>
-                        </li>
-                    @endcanany
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Obstetri/Maternitas</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Perinatology</a>
-                    </li>
-                    <li><a class="custom__dropdown__item" href="#">Geriatri</a></li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.tht.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">THT</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Mata/Opthamologi</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.paru.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Paru</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.neurologi.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Neurologi</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Kulit
-                            dan Kelamin</a></li>
-
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.ginekologik.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Ginekologik</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                            href="{{ route('rawat-inap.asesmen.medis.psikiatri.index', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                            ]) }}">Psikiatri</a>
-                    </li>
-                    <li><a class="custom__dropdown__item"
-                        href="{{ route('rawat-inap.asesmen.medis.geriatri.index', [
+                                        <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.umum.index', [
                             'kd_unit' => request()->route('kd_unit'),
                             'kd_pasien' => request()->route('kd_pasien'),
                             'tgl_masuk' => request()->route('tgl_masuk'),
                             'urut_masuk' => request()->route('urut_masuk'),
-                        ]) }}">Geriatri</a>
-                </li>
+                        ]) }}">Keperawatan
+                                                Umum/Dewasa</a>
+                                        </li>
+                                        <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.anak.index', [
+                            'kd_unit' => request()->route('kd_unit'),
+                            'kd_pasien' => request()->route('kd_pasien'),
+                            'tgl_masuk' => request()->route('tgl_masuk'),
+                            'urut_masuk' => request()->route('urut_masuk'),
+                        ]) }}">Anak</a>
+                                        </li>
+                    @endcanany
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.obstetri-maternitas.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Obstetri/Maternitas</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.perinatology.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Perinatology</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="#">Geriatri</a></li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.tht.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">THT</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.opthamology.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Mata/Opthamologi</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.paru.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Paru</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.neurologi.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Neurologi</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.kulit-kelamin.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Kulit
+                            dan Kelamin</a></li>
+
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.ginekologik.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Ginekologik</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.psikiatri.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Psikiatri</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.medis.geriatri.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Geriatri</a>
+                    </li>
+                    <li><a class="custom__dropdown__item" href="{{ route('rawat-inap.asesmen.keperawatan.terminal.index', [
+    'kd_unit' => request()->route('kd_unit'),
+    'kd_pasien' => request()->route('kd_pasien'),
+    'tgl_masuk' => request()->route('tgl_masuk'),
+    'urut_masuk' => request()->route('urut_masuk'),
+]) }}">Terminal</a>
+                    </li>
                 </ul>
             </div>
 
@@ -366,7 +361,7 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Get all filter elements
             const startDateInput = document.getElementById('start_date');
             const endDateInput = document.getElementById('end_date');

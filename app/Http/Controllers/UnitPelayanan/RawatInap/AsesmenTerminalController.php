@@ -13,6 +13,7 @@ use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
 use App\Models\RmeAsesmenGinekologikTandaVital;
 use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeAsesmenTerminal;
+use App\Models\RmeAsesmenTerminalFmo;
 use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
@@ -161,6 +162,25 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminal->nadi_lambat = $request->nadi_lambat;
             $asesmenTerminal->tak3 = $request->tak3 ? 1 : 0;
             $asesmenTerminal->save();
+
+            // 3. RmeAsesmen FMO
+            $asesmenTerminalFmo = new RmeAsesmenTerminalFmo();
+            $asesmenTerminalFmo->id_asesmen = $asesmen->id;
+            $asesmenTerminalFmo->melakukan_aktivitas = $request->melakukan_aktivitas ? 1 : 0;
+            $asesmenTerminalFmo->pindah_posisi = $request->pindah_posisi ? 1 : 0;
+            $asesmenTerminalFmo->faktor_lainnya = $request->faktor_lainnya;
+            $asesmenTerminalFmo->masalah_mual = $request->masalah_mual ? 1 : 0;
+            $asesmenTerminalFmo->masalah_perubahan_persepsi = $request->masalah_perubahan_persepsi ? 1 : 0;
+            $asesmenTerminalFmo->masalah_pola_nafas = $request->masalah_pola_nafas ? 1 : 0;
+            $asesmenTerminalFmo->masalah_konstipasi = $request->masalah_konstipasi ? 1 : 0;
+            $asesmenTerminalFmo->masalah_bersihan_jalan_nafas = $request->masalah_bersihan_jalan_nafas ? 1 : 0;
+            $asesmenTerminalFmo->masalah_defisit_perawatan = $request->masalah_defisit_perawatan ? 1 : 0;
+            $asesmenTerminalFmo->masalah_nyeri_akut = $request->masalah_nyeri_akut ? 1 : 0;
+            $asesmenTerminalFmo->masalah_nyeri_kronis = $request->masalah_nyeri_kronis ? 1 : 0;
+            $asesmenTerminalFmo->masalah_keperawatan_lainnya = $request->masalah_keperawatan_lainnya;
+            $asesmenTerminalFmo->perlu_pelayanan_spiritual = $request->perlu_pelayanan_spiritual ? 1 : 0;
+            $asesmenTerminalFmo->spiritual_keterangan = $request->spiritual_keterangan;
+            $asesmenTerminalFmo->save();
 
         return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
