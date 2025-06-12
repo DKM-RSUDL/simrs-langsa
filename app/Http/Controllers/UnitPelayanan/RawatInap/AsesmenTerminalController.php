@@ -6,14 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\MrItemFisik;
 use App\Models\RmeAsesmen;
-use App\Models\RmeAsesmenGinekologik;
-use App\Models\RmeAsesmenGinekologikDiagnosisImplementasi;
-use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
-use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
-use App\Models\RmeAsesmenGinekologikTandaVital;
-use App\Models\RmeAsesmenPemeriksaanFisik;
 use App\Models\RmeAsesmenTerminal;
+use App\Models\RmeAsesmenTerminalAf;
 use App\Models\RmeAsesmenTerminalFmo;
+use App\Models\RmeAsesmenTerminalUsk;
 use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
@@ -23,8 +19,6 @@ use App\Models\RmeKualitasNyeri;
 use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RmeMenjalar;
-use App\Models\RMEResume;
-use App\Models\RmeResumeDtl;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -124,7 +118,7 @@ class AsesmenTerminalController extends Controller
             $asesmen->sub_kategori = 13; // Asesmen Terminal
             $asesmen->save();
 
-            // 2. RmeAsesmen terminal
+            // 2. RmeAsesmen terminal (section 1)
             $asesmenTerminal = new RmeAsesmenTerminal();
             $asesmenTerminal->id_asesmen = $asesmen->id;
             $asesmenTerminal->user_create = Auth::id();
@@ -163,12 +157,14 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminal->tak3 = $request->tak3 ? 1 : 0;
             $asesmenTerminal->save();
 
-            // 3. RmeAsesmen FMO
+            // 3. RmeAsesmen FMO (section 2,3,4)
             $asesmenTerminalFmo = new RmeAsesmenTerminalFmo();
             $asesmenTerminalFmo->id_asesmen = $asesmen->id;
+            // section 2
             $asesmenTerminalFmo->melakukan_aktivitas = $request->melakukan_aktivitas ? 1 : 0;
             $asesmenTerminalFmo->pindah_posisi = $request->pindah_posisi ? 1 : 0;
             $asesmenTerminalFmo->faktor_lainnya = $request->faktor_lainnya;
+            // section 3
             $asesmenTerminalFmo->masalah_mual = $request->masalah_mual ? 1 : 0;
             $asesmenTerminalFmo->masalah_perubahan_persepsi = $request->masalah_perubahan_persepsi ? 1 : 0;
             $asesmenTerminalFmo->masalah_pola_nafas = $request->masalah_pola_nafas ? 1 : 0;
@@ -178,9 +174,78 @@ class AsesmenTerminalController extends Controller
             $asesmenTerminalFmo->masalah_nyeri_akut = $request->masalah_nyeri_akut ? 1 : 0;
             $asesmenTerminalFmo->masalah_nyeri_kronis = $request->masalah_nyeri_kronis ? 1 : 0;
             $asesmenTerminalFmo->masalah_keperawatan_lainnya = $request->masalah_keperawatan_lainnya;
+            // section 4
             $asesmenTerminalFmo->perlu_pelayanan_spiritual = $request->perlu_pelayanan_spiritual ? 1 : 0;
             $asesmenTerminalFmo->spiritual_keterangan = $request->spiritual_keterangan;
             $asesmenTerminalFmo->save();
+
+            // 3 RmeAsesmen USK (section 5,6,7)
+            $asesmenterminalUsk = new RmeAsesmenTerminalUsk();
+            $asesmenterminalUsk->id_asesmen = $asesmen->id;
+            // section 5
+            $asesmenterminalUsk->perlu_didoakan = $request->perlu_didoakan ? 1 : 0;
+            $asesmenterminalUsk->perlu_bimbingan_rohani = $request->perlu_bimbingan_rohani ? 1 : 0;
+            $asesmenterminalUsk->perlu_pendampingan_rohani = $request->perlu_pendampingan_rohani ? 1 : 0;
+            // section 6
+            $asesmenterminalUsk->orang_dihubungi = $request->orang_dihubungi ? 1 : 0;
+            $asesmenterminalUsk->nama_dihubungi = $request->nama_dihubungi;
+            $asesmenterminalUsk->hubungan_pasien = $request->hubungan_pasien;
+            $asesmenterminalUsk->dinama = $request->dinama;
+            $asesmenterminalUsk->no_telp_hp = $request->no_telp_hp;
+            $asesmenterminalUsk->tetap_dirawat_rs = $request->tetap_dirawat_rs ? 1 : 0;
+            $asesmenterminalUsk->dirawat_rumah = $request->dirawat_rumah ? 1 : 0;
+            $asesmenterminalUsk->lingkungan_rumah_siap = $request->lingkungan_rumah_siap ? 1 : 0;
+            $asesmenterminalUsk->mampu_merawat_rumah = $request->mampu_merawat_rumah ? 1 : 0;
+            $asesmenterminalUsk->perawat_rumah_oleh = $request->perawat_rumah_oleh;
+            $asesmenterminalUsk->perlu_home_care = $request->perlu_home_care ? 1 : 0;
+            $asesmenterminalUsk->reaksi_menyangkal = $request->reaksi_menyangkal;
+            $asesmenterminalUsk->reaksi_marah = $request->reaksi_marah ? 1 : 0;
+            $asesmenterminalUsk->reaksi_takut = $request->reaksi_takut ? 1 : 0;
+            $asesmenterminalUsk->reaksi_sedih_menangis = $request->reaksi_sedih_menangis ? 1 : 0;
+            $asesmenterminalUsk->reaksi_rasa_bersalah = $request->reaksi_rasa_bersalah ? 1 : 0;
+            $asesmenterminalUsk->reaksi_ketidak_berdayaan = $request->reaksi_ketidak_berdayaan ? 1 : 0;
+            $asesmenterminalUsk->reaksi_anxietas = $request->reaksi_anxietas ? 1 : 0;
+            $asesmenterminalUsk->reaksi_distress_spiritual = $request->reaksi_distress_spiritual ? 1 : 0;
+            $asesmenterminalUsk->keluarga_marah = $request->keluarga_marah ? 1 : 0;
+            $asesmenterminalUsk->keluarga_gangguan_tidur = $request->keluarga_gangguan_tidur ? 1 : 0;
+            $asesmenterminalUsk->keluarga_penurunan_konsentrasi = $request->keluarga_penurunan_konsentrasi ? 1 : 0;
+            $asesmenterminalUsk->keluarga_ketidakmampuan_memenuhi_peran = $request->keluarga_ketidakmampuan_memenuhi_peran ? 1 : 0;
+            $asesmenterminalUsk->keluarga_kurang_berkomunikasi = $request->keluarga_kurang_berkomunikasi ? 1 : 0;
+            $asesmenterminalUsk->keluarga_leth_lelah = $request->keluarga_leth_lelah ? 1 : 0;
+            $asesmenterminalUsk->keluarga_rasa_bersalah = $request->keluarga_rasa_bersalah ? 1 : 0;
+            $asesmenterminalUsk->keluarga_perubahan_pola_komunikasi = $request->keluarga_perubahan_pola_komunikasi ? 1 : 0;
+            $asesmenterminalUsk->keluarga_kurang_berpartisipasi = $request->keluarga_kurang_berpartisipasi ? 1 : 0;
+            $asesmenterminalUsk->masalah_koping_individu_tidak_efektif = $request->masalah_koping_individu_tidak_efektif ? 1 : 0;
+            $asesmenterminalUsk->masalah_distress_spiritual = $request->masalah_distress_spiritual ? 1 : 0;
+            // section 7
+            $asesmenterminalUsk->pasien_perlu_didampingi = $request->pasien_perlu_didampingi ? 1 : 0;
+            $asesmenterminalUsk->keluarga_dapat_mengunjungi_luar_waktu = $request->keluarga_dapat_mengunjungi_luar_waktu ? 1 : 0;
+            $asesmenterminalUsk->sahabat_dapat_mengunjungi = $request->sahabat_dapat_mengunjungi ? 1 : 0;
+            $asesmenterminalUsk->kebutuhan_dukungan_lainnya = $request->kebutuhan_dukungan_lainnya;
+            $asesmenterminalUsk->save();
+            
+            // 4. RmeAsesmen AF (section 8,9)
+            $asesmenTerminalAF = new RmeAsesmenTerminalAf();
+            $asesmenTerminalAF->id_asesmen = $asesmen->id;
+            // section 8
+            $asesmenTerminalAF->alternatif_tidak = $request->alternatif_tidak ? 0 : 1;
+            $asesmenTerminalAF->alternatif_autopsi = $request->alternatif_autopsi ? 1 : 0;
+            $asesmenTerminalAF->alternatif_donasi_organ = $request->alternatif_donasi_organ ? 1 : 0;
+            $asesmenTerminalAF->donasi_organ_detail = $request->donasi_organ_detail;
+            $asesmenTerminalAF->alternatif_pelayanan_lainnya = $request->alternatif_pelayanan_lainnya;
+            // section 9
+            $asesmenTerminalAF->faktor_resiko_marah = $request->faktor_resiko_marah ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_depresi = $request->faktor_resiko_depresi ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_rasa_bersalah = $request->faktor_resiko_rasa_bersalah ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_perubahan_kebiasaan = $request->faktor_resiko_perubahan_kebiasaan ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_tidak_mampu_memenuhi = $request->faktor_resiko_tidak_mampu_memenuhi ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_leth_lelah = $request->faktor_resiko_leth_lelah ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_gangguan_tidur = $request->faktor_resiko_gangguan_tidur ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_sedih_menangis = $request->faktor_resiko_sedih_menangis ? 1 : 0;
+            $asesmenTerminalAF->faktor_resiko_penurunan_konsentrasi = $request->faktor_resiko_penurunan_konsentrasi ? 1 : 0;
+            $asesmenTerminalAF->masalah_koping_keluarga_tidak_efektif = $request->masalah_koping_keluarga_tidak_efektif ? 1 : 0;
+            $asesmenTerminalAF->masalah_distress_spiritual_keluarga = $request->masalah_distress_spiritual_keluarga ? 1 : 0;
+            $asesmenTerminalAF->save();
 
         return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
