@@ -193,8 +193,7 @@
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="bercerak_sianosis" id="bercerak_sianosis"
                                                         value="1">
-                                                    <label for="bercerak_sianosis">Bercerak dan sianosis pada
-                                                        ekstremitas</label>
+                                                    <label for="bercerak_sianosis">Bercak dan sianosis pada ekstremitas</label>
                                                 </div>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="gelisah" id="gelisah" value="1">
@@ -213,13 +212,13 @@
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="tekanan_darah" id="tekanan_darah"
                                                         value="1">
-                                                    <label for="tekanan_darah">Tekanan Darah menurun</label>
+                                                    <label for="tekanan_darah">Tekanan Darah menurun Nadi lambat dan lemah</label>
                                                 </div>
-                                                <div class="text-input-group">
+                                                {{-- <div class="text-input-group">
                                                     <label class="form-label">Nadi lambat dan lemah:</label>
                                                     <input type="text" class="form-control" name="nadi_lambat"
                                                         placeholder="Masukkan nilai...">
-                                                </div>
+                                                </div> --}}
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" name="tak3" id="tak3" value="1">
                                                     <label for="tak3">T.A.K</label>
@@ -327,11 +326,11 @@
                                     </div>
 
                                     <!-- Text area untuk masalah lainnya -->
-                                    <div class="text-input-group mt-3">
+                                    {{-- <div class="text-input-group mt-3">
                                         <label class="form-label">Masalah keperawatan lainnya:</label>
                                         <textarea class="form-control" name="masalah_keperawatan_lainnya" rows="3"
                                             placeholder="Sebutkan masalah keperawatan lainnya yang ditemukan..."></textarea>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <!-- Section 4 -->
@@ -424,29 +423,29 @@
                                             <label for="orang_dihubungi_ya">Ya siapa:</label>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="text-input-group" id="orang_dihubungi_keterangan" style="display: none;">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Nama:</label>
-                                                <input type="text" class="form-control" name="nama_dihubungi" 
+                                                <input type="text" class="form-control" name="nama_dihubungi"
                                                     placeholder="Masukkan nama...">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Hubungan dengan pasien sebagai:</label>
-                                                <input type="text" class="form-control" name="hubungan_pasien" 
+                                                <input type="text" class="form-control" name="hubungan_pasien"
                                                     placeholder="Contoh: Anak, Suami, Istri, dll...">
                                             </div>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">Dinama:</label>
-                                                <input type="text" class="form-control" name="dinama" 
+                                                <input type="text" class="form-control" name="dinama"
                                                     placeholder="Lokasi/tempat...">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">No. Telp/HP:</label>
-                                                <input type="text" class="form-control" name="no_telp_hp" 
+                                                <input type="text" class="form-control" name="no_telp_hp"
                                                     placeholder="Nomor telepon/HP...">
                                             </div>
                                         </div>
@@ -466,7 +465,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="text-input-group mt-3">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -499,7 +498,7 @@
                                             </div>
                                             <div class="text-input-group" id="perawat_rumah_keterangan" style="display: none;">
                                                 <label class="form-label">Oleh siapa:</label>
-                                                <input type="text" class="form-control" name="perawat_rumah_oleh" 
+                                                <input type="text" class="form-control" name="perawat_rumah_oleh"
                                                     placeholder="Sebutkan siapa yang akan merawat...">
                                             </div>
                                         </div>
@@ -554,7 +553,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
 
                                     <div class="text-input-group mt-3">
                                         <label class="form-label required-field">Masalah keperawatan:</label>
@@ -572,9 +571,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <textarea class="form-control" name="masalah_keperawatan_pasien" rows="3" 
-                                                placeholder="Sebutkan masalah keperawatan pasien..."></textarea>
                                     </div>
 
                                     <div class="subsection-title mt-4">6.4. Reaksi keluarga atas penyakit pasien:</div>
@@ -616,7 +612,7 @@
                                                     </div>
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_perubahan_pola_komunikasi" id="keluarga_perubahan_pola_komunikasi" value="1">
-                                                        <label for="keluarga_perubahan_pola_komunikasi">Perubahan/kurang pola komunikasi</label>
+                                                        <label for="keluarga_perubahan_pola_komunikasi">Perubahan kebiasaan pola komunikasi</label>
                                                     </div>
                                                     <div class="checkbox-item">
                                                         <input type="checkbox" name="keluarga_kurang_berpartisipasi" id="keluarga_kurang_berpartisipasi" value="1">
@@ -672,7 +668,7 @@
 
                                     <div class="text-input-group mt-3">
                                         <label class="form-label">Lainnya:</label>
-                                        <textarea class="form-control" name="kebutuhan_dukungan_lainnya" rows="3" 
+                                        <textarea class="form-control" name="kebutuhan_dukungan_lainnya" rows="3"
                                                 placeholder="Sebutkan kebutuhan dukungan lainnya..."></textarea>
                                     </div>
                                 </div>
@@ -703,7 +699,7 @@
                                                 </div>
                                                 <!-- Field keterangan donasi organ langsung di bawah checkbox -->
                                                 <div class="text-input-group mt-2" id="donasi_organ_keterangan" style="display: none;">
-                                                    <input type="text" class="form-control" name="donasi_organ_detail" 
+                                                    <input type="text" class="form-control" name="donasi_organ_detail"
                                                         placeholder="Sebutkan organ yang akan didonasikan...">
                                                 </div>
                                             </div>
@@ -712,7 +708,7 @@
 
                                     <div class="text-input-group mt-3">
                                         <label class="form-label">Lainnya:</label>
-                                        <textarea class="form-control" name="alternatif_pelayanan_lainnya" rows="3" 
+                                        <textarea class="form-control" name="alternatif_pelayanan_lainnya" rows="3"
                                                 placeholder="Sebutkan alternatif pelayanan lainnya..."></textarea>
                                     </div>
                                 </div>

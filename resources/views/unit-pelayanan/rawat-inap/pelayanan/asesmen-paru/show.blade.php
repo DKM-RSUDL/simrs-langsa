@@ -458,37 +458,37 @@
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">e. Pemeriksaan IGDS:</label>
-                                                <span class="badge {{ $rencanaKerja->igds ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $rencanaKerja->igds ? 'Ya' : 'Tidak' }}
+                                                <label class="fw-bold">e. Pemeriksaan KGDS:</label>
+                                                <span class="badge {{ $rencanaKerja->kgds ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $rencanaKerja->kgds ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">f. Pemeriksaan faal ginjal (RFG):</label>
+                                                <label class="fw-bold">f. Pemeriksaan faal hati (LFT):</label>
+                                                <span
+                                                    class="badge {{ $rencanaKerja->faal_hati ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $rencanaKerja->faal_hati ? 'Ya' : 'Tidak' }}
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="fw-bold">g. Pemeriksaan faal ginjal (RFG):</label>
                                                 <span
                                                     class="badge {{ $rencanaKerja->faal_ginjal ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->faal_ginjal ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">g. Pemeriksaan elektrolit:</label>
+                                                <label class="fw-bold">h. Pemeriksaan elektrolit:</label>
                                                 <span
                                                     class="badge {{ $rencanaKerja->elektrolit ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->elektrolit ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">h. Pemeriksaan albumin:</label>
+                                                <label class="fw-bold">i. Pemeriksaan albumin:</label>
                                                 <span
                                                     class="badge {{ $rencanaKerja->albumin ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $rencanaKerja->albumin ? 'Ya' : 'Tidak' }}
-                                                </span>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="fw-bold">i. CT Scan thorax:</label>
-                                                <span
-                                                    class="badge {{ $rencanaKerja->ct_scan_thorax ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $rencanaKerja->ct_scan_thorax ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                         </div>
@@ -543,16 +543,16 @@
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">q. Penanganan penyakit:</label>
+                                                <label class="fw-bold">q. Biopsi Kelenjar:</label>
                                                 <span
-                                                    class="badge {{ $rencanaKerja->penanganan_penyakit ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $rencanaKerja->penanganan_penyakit ? 'Ya' : 'Tidak' }}
+                                                    class="badge {{ $rencanaKerja->biopsi_kelenjar ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $rencanaKerja->biopsi_kelenjar ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="fw-bold">r. Konsul Tes:</label>
-                                                <span class="badge {{ $rencanaKerja->konsul ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $rencanaKerja->konsul ? 'Ya' : 'Tidak' }}
+                                                <label class="fw-bold">r. Mantoux Tes:</label>
+                                                <span class="badge {{ $rencanaKerja->mantoux_tes ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $rencanaKerja->mantoux_tes ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
                                             @if($rencanaKerja->lainnya)
@@ -597,7 +597,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Hambatan mobilitas:</label>
                                                 <span
-                                                    class="badge {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'bg-warning text-dark' : 'bg-success' }}">
+                                                    class="badge {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ $dischargePlanning->hambatan_mobilisasi == '0' ? 'Ya' : 'Tidak' }}
                                                 </span>
                                             </div>
@@ -605,7 +605,7 @@
                                                 <label class="form-label fw-bold">Membutuhkan pelayanan medis
                                                     berkelanjutan:</label>
                                                 <span
-                                                    class="badge {{ $dischargePlanning->penggunaan_media_berkelanjutan == 'ya' ? 'bg-warning text-dark' : 'bg-success' }}">
+                                                    class="badge {{ $dischargePlanning->penggunaan_media_berkelanjutan == 'ya' ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ ucfirst($dischargePlanning->penggunaan_media_berkelanjutan ?? 'Tidak') }}
                                                 </span>
                                             </div>
@@ -615,7 +615,7 @@
                                                 <label class="form-label fw-bold">Keteraturan dalam mengonsumsi obat dalam
                                                     aktivitas harian:</label>
                                                 <span
-                                                    class="badge {{ $dischargePlanning->ketergantungan_aktivitas == 'ya' ? 'bg-success' : 'bg-warning text-dark' }}">
+                                                    class="badge {{ $dischargePlanning->ketergantungan_aktivitas == 'ya' ? 'bg-success' : 'bg-secondary' }}">
                                                     {{ ucfirst($dischargePlanning->ketergantungan_aktivitas ?? 'Tidak') }}
                                                 </span>
                                             </div>

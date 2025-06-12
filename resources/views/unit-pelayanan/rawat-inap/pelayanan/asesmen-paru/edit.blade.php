@@ -573,32 +573,31 @@
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
                                         <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan
-                                            IGDS</label>
-                                        <input type="checkbox" name="igds" value="1" class="form-check-input" id="igds" {{ ($rencanaKerja->igds ?? 0) ? 'checked' : '' }}>
+                                            KGDS</label>
+                                        <input type="checkbox" name="kgds" value="1" class="form-check-input" id="kgds" {{ ($rencanaKerja->kgds ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal
+                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal hati (LFT)</label>
+                                        <input type="checkbox" name="faal_hati" value="1" class="form-check-input"
+                                            id="faal_hati" {{ ($rencanaKerja->faal_hati ?? 0) ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan faal
                                             ginjal (RFG)</label>
                                         <input type="checkbox" name="faal_ginjal" value="1" class="form-check-input"
                                             id="faal_ginjal" {{ ($rencanaKerja->faal_ginjal ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan
+                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
                                             elektrolit</label>
                                         <input type="checkbox" name="elektrolit" value="1" class="form-check-input"
                                             id="elektrolit" {{ ($rencanaKerja->elektrolit ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan
+                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> Pemeriksaan
                                             albumin</label>
                                         <input type="checkbox" name="albumin" value="1" class="form-check-input"
                                             id="albumin" {{ ($rencanaKerja->albumin ?? 0) ? 'checked' : '' }}>
-                                    </div>
-                                    <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan
-                                            thorax</label>
-                                        <input type="checkbox" name="ct_scan_thorax" value="1" class="form-check-input"
-                                            id="ct_scan_thorax" {{ ($rencanaKerja->ct_scan_thorax ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
                                         <label style="min-width: 300px;"><span class="fw-bold">j.</span> Pemeriksaan asam
@@ -643,15 +642,14 @@
                                             id="penanganan_wsd" {{ ($rencanaKerja->penanganan_wsd ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan
-                                            penyakit</label>
-                                        <input type="checkbox" name="penanganan_penyakit" value="1" class="form-check-input"
-                                            id="penanganan_penyakit" {{ ($rencanaKerja->penanganan_penyakit ?? 0) ? 'checked' : '' }}>
+                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Biopsi Kelenjar</label>
+                                        <input type="checkbox" name="biopsi_kelenjar" value="1" class="form-check-input"
+                                            id="biopsi_kelenjar" {{ ($rencanaKerja->biopsi_kelenjar ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul Tes</label>
-                                        <input type="checkbox" name="konsul" value="1" class="form-check-input" id="konsul"
-                                            {{ ($rencanaKerja->konsul ?? 0) ? 'checked' : '' }}>
+                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Mantoux Tes</label>
+                                        <input type="checkbox" name="mantoux_tes" value="1" class="form-check-input" id="mantoux_tes"
+                                            {{ ($rencanaKerja->mantoux_tes ?? 0) ? 'checked' : '' }}>
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
                                         <label style="min-width: 300px;"><span class="fw-bold">s.</span> Lainnya</label>
