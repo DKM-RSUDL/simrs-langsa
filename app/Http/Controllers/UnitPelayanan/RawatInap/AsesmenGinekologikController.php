@@ -28,6 +28,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AsesmenGinekologikController extends Controller
 {
@@ -108,6 +109,8 @@ class AsesmenGinekologikController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        DB::beginTransaction();
+
         try {
             // 1. Buat record RmeAsesmen
             $asesmen = new RmeAsesmen();
@@ -262,6 +265,8 @@ class AsesmenGinekologikController extends Controller
             $saveToColumn($edukasiList, 'edukasi');
             $saveToColumn($kolaborasiList, 'kolaborasi');
 
+            DB::commit();
+
             return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
                 'kd_pasien' => $kd_pasien,
@@ -351,6 +356,8 @@ class AsesmenGinekologikController extends Controller
 
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
+        DB::beginTransaction();
+        
         try {
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
@@ -506,6 +513,8 @@ class AsesmenGinekologikController extends Controller
             updateToColumn($terapeutikList, 'terapeutik');
             updateToColumn($edukasiList, 'edukasi');
             updateToColumn($kolaborasiList, 'kolaborasi');
+
+            DB::commit();
 
             return redirect()->route('rawat-inap.asesmen.medis.umum.index', [
                 'kd_unit' => $kd_unit,
