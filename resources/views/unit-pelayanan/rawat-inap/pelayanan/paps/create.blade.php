@@ -127,6 +127,24 @@
 
                             <div class="px-3">
 
+                                <div class="section-separator bg-light p-3">
+                                    <p class="fw-bold">PERNYATAAN</p>
+
+                                    <ol class="fw-bold">
+                                        <li>
+                                            Menyatakan dengan sesungguhnya bahwa saya telah mendapat penjelasan dari dokter/
+                                            perawat dan mengerti kemungkinan- kemungkinan bahaya serta resiko yang akan
+                                            timbul apabila menghentikan perawatan (pulang paksa) terhadap pasien yang belum
+                                            sembuh dari penyakitnya.
+                                        </li>
+                                        <li>
+                                            Memahami dengan dengan sesungguhnya bahwa pembiayaan perawatan mengikuti
+                                            ketentuan BPJS Kesehatan tentang pulang APS termasuk tidak dijamin apabila
+                                            dirawat kembali.
+                                        </li>
+                                    </ol>
+                                </div>
+
                                 {{-- Info Umum --}}
                                 <div class="section-separator">
                                     <div class="form-group">
@@ -173,65 +191,20 @@
                                     </div>
                                 </div>
 
-                                {{-- SAKSI --}}
-                                <div class="section-separator">
-                                    <h4 class="fw-semibold">SAKSI</h4>
-
-                                    <div class="form-group">
-                                        <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
-                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
-                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control" required>
-                                    </div>
-                                </div>
-
-                                {{-- DIANOSIS --}}
-                                <div class="section-separator">
-                                    <h4 class="fw-semibold">DIAGNOSIS</h4>
-
-                                    <div id="diagnose-wrap">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Diagnosis</label>
-                                                    <input type="text" name="diagnosis[]" class="form-control" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Risiko</label>
-                                                    <input type="text" name="risiko[]" class="form-control" required>
-                                                </div>
-                                                <div class="btn-delete-wrap text-end"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-end mt-3">
-                                        <button type="button" class="btn btn-sm btn-success" id="btn-add-diagnosis">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
                                 {{-- IDENTITAS KELUARGA --}}
                                 <div class="section-separator" id="identitas-keluarga">
                                     <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
 
                                     <div class="form-group">
                                         <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
-                                        <input type="text" name="keluarga_nama" id="keluarga_nama"
-                                            class="form-control" required>
+                                        <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
+                                            required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="keluarga_usia" style="min-width: 200px;">Usia</label>
-                                        <input type="number" name="keluarga_usia" id="keluarga_usia"
-                                            class="form-control" required>
+                                        <input type="number" name="keluarga_usia" id="keluarga_usia" class="form-control"
+                                            required>
                                     </div>
 
                                     <div class="form-group">
@@ -253,6 +226,54 @@
                                     <div class="form-group">
                                         <label for="keluarga_ktp" style="min-width: 200px;">No. KTP</label>
                                         <input type="number" name="keluarga_ktp" id="keluarga_ktp" class="form-control"
+                                            required>
+                                    </div>
+                                </div>
+
+                                {{-- DIANOSIS --}}
+                                <div class="section-separator">
+                                    <h4 class="fw-semibold">DIAGNOSIS</h4>
+
+                                    <div id="diagnose-wrap">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 200px;">Diagnosis</label>
+                                                    <input type="text" name="diagnosis[]" class="form-control"
+                                                        required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 200px;">Risiko</label>
+                                                    <input type="text" name="risiko[]" class="form-control" required>
+                                                </div>
+                                                <div class="btn-delete-wrap text-end"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end mt-3">
+                                        <button type="button" class="btn btn-sm btn-success" id="btn-add-diagnosis">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {{-- SAKSI --}}
+                                <div class="section-separator">
+                                    <h4 class="fw-semibold">SAKSI</h4>
+
+                                    <div class="form-group">
+                                        <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
+                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
+                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control"
                                             required>
                                     </div>
                                 </div>

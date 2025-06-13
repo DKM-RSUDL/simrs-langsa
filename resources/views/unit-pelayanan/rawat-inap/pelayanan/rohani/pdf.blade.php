@@ -243,7 +243,7 @@
         </div>
 
         <div class="">
-            <p>Yang menyetujui</p>
+            <p>PPA Yang menyetujui</p>
             <p class="name-konsulen">
                 {{ $rohani->penyetuju->gelar_depan . ' ' . str()->title($rohani->penyetuju->nama) . ' ' . $rohani->penyetuju->gelar_belakang }}
             </p>

@@ -128,6 +128,24 @@
 
                             <div class="px-3">
 
+                                <div class="section-separator bg-light p-3">
+                                    <p class="fw-bold">PERNYATAAN</p>
+
+                                    <ol class="fw-bold">
+                                        <li>
+                                            Menyatakan dengan sesungguhnya bahwa saya telah mendapat penjelasan dari dokter/
+                                            perawat dan mengerti kemungkinan- kemungkinan bahaya serta resiko yang akan
+                                            timbul apabila menghentikan perawatan (pulang paksa) terhadap pasien yang belum
+                                            sembuh dari penyakitnya.
+                                        </li>
+                                        <li>
+                                            Memahami dengan dengan sesungguhnya bahwa pembiayaan perawatan mengikuti
+                                            ketentuan BPJS Kesehatan tentang pulang APS termasuk tidak dijamin apabila
+                                            dirawat kembali.
+                                        </li>
+                                    </ol>
+                                </div>
+
                                 {{-- Info Umum --}}
                                 <div class="section-separator">
                                     <div class="form-group">
@@ -175,20 +193,42 @@
                                     </div>
                                 </div>
 
-                                {{-- SAKSI --}}
-                                <div class="section-separator">
-                                    <h4 class="fw-semibold">SAKSI</h4>
+                                {{-- IDENTITAS KELUARGA --}}
+                                <div class="section-separator" id="identitas-keluarga">
+                                    <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
 
                                     <div class="form-group">
-                                        <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
-                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control"
-                                            value="{{ $paps->saksi_1 }}" required>
+                                        <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
+                                        <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
+                                            value="{{ $paps->keluarga_nama }}" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
-                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control"
-                                            value="{{ $paps->saksi_2 }}" required>
+                                        <label for="keluarga_usia" style="min-width: 200px;">Usia</label>
+                                        <input type="number" name="keluarga_usia" id="keluarga_usia" class="form-control"
+                                            value="{{ $paps->keluarga_usia }}" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_jenis_kelamin" style="min-width: 200px;">Jenis
+                                            Kelamin</label>
+                                        <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin"
+                                            class="form-select" required>
+                                            <option value="">--Pilih--</option>
+                                            <option value="0" @selected($paps->keluarga_jenis_kelamin == 0)>Perempuan</option>
+                                            <option value="1" @selected($paps->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_alamat" style="min-width: 200px;">Alamat</label>
+                                        <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" required>{{ $paps->keluarga_alamat }}</textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_ktp" style="min-width: 200px;">No. KTP</label>
+                                        <input type="number" name="keluarga_ktp" id="keluarga_ktp" class="form-control"
+                                            value="{{ $paps->keluarga_ktp }}" required>
                                     </div>
                                 </div>
 
@@ -232,42 +272,20 @@
                                     </div>
                                 </div>
 
-                                {{-- IDENTITAS KELUARGA --}}
-                                <div class="section-separator" id="identitas-keluarga">
-                                    <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
+                                {{-- SAKSI --}}
+                                <div class="section-separator">
+                                    <h4 class="fw-semibold">SAKSI</h4>
 
                                     <div class="form-group">
-                                        <label for="keluarga_nama" style="min-width: 200px;">Nama</label>
-                                        <input type="text" name="keluarga_nama" id="keluarga_nama"
-                                            class="form-control" value="{{ $paps->keluarga_nama }}" required>
+                                        <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
+                                        <input type="text" name="saksi_1" id="saksi_1" class="form-control"
+                                            value="{{ $paps->saksi_1 }}" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="keluarga_usia" style="min-width: 200px;">Usia</label>
-                                        <input type="number" name="keluarga_usia" id="keluarga_usia"
-                                            class="form-control" value="{{ $paps->keluarga_usia }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="keluarga_jenis_kelamin" style="min-width: 200px;">Jenis
-                                            Kelamin</label>
-                                        <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin"
-                                            class="form-select" required>
-                                            <option value="">--Pilih--</option>
-                                            <option value="0" @selected($paps->keluarga_jenis_kelamin == 0)>Perempuan</option>
-                                            <option value="1" @selected($paps->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="keluarga_alamat" style="min-width: 200px;">Alamat</label>
-                                        <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" required>{{ $paps->keluarga_alamat }}</textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="keluarga_ktp" style="min-width: 200px;">No. KTP</label>
-                                        <input type="number" name="keluarga_ktp" id="keluarga_ktp" class="form-control"
-                                            value="{{ $paps->keluarga_ktp }}" required>
+                                        <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
+                                        <input type="text" name="saksi_2" id="saksi_2" class="form-control"
+                                            value="{{ $paps->saksi_2 }}" required>
                                     </div>
                                 </div>
                             </div>

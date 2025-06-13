@@ -147,9 +147,19 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="jam_awal" style="min-width: 200px;">Jam Awal</label>
+                                        <input type="time" name="jam_awal" id="jam_awal" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="tgl_akhir" style="min-width: 200px;">Tanggal Akhir</label>
                                         <input type="text" name="tgl_akhir" id="tgl_akhir" class="form-control date"
                                             required readonly>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="jam_akhir" style="min-width: 200px;">Jam Akhir</label>
+                                        <input type="time" name="jam_akhir" id="jam_akhir" class="form-control" required>
                                     </div>
 
                                     <div class="form-group">

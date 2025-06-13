@@ -168,8 +168,10 @@
             untuk sementara waktu untuk keperluan : {{ $pernyataan->keperluan }}
         </p>
         <p>
-            Dari tanggal {{ date('d-m-Y', strtotime($pernyataan->tgl_awal)) }} s/d tanggal
-            {{ date('d-m-Y', strtotime($pernyataan->tgl_akhir)) }}
+            Dari tanggal
+            {{ date('d-m-Y', strtotime($pernyataan->tgl_awal)) . ' ' . date('H:i', strtotime($pernyataan->jam_awal)) }}
+            s/d tanggal
+            {{ date('d-m-Y', strtotime($pernyataan->tgl_akhir)) . ' ' . date('H:i', strtotime($pernyataan->jam_akhir)) }}
         </p>
         <p>
             Dengan demikian segala resiko yang berkaitan dengan keselamatan dan gangguan terhadap
@@ -204,15 +206,6 @@
                     <td align="middle" style="padding-top: 80px;">{{ $dataMedis->pasien->nama }}</td>
                     <td>{{ date('d-m-Y', strtotime($pernyataan->tgl_keluar)) }}</td>
                     <td>{{ date('H:i', strtotime($pernyataan->jam_keluar)) }} WIB</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td style="padding-top: 80px;">{{ $pernyataan->dokter->nama_lengkap }}</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td align="middle" style="padding-top: 80px;">{{ $dataMedis->pasien->nama }}</td>
-                    <td>-</td>
-                    <td>-</td>
                     <td>{{ date('d-m-Y', strtotime($pernyataan->tgl_masuk_kembali)) }}</td>
                     <td>{{ date('H:i', strtotime($pernyataan->jam_masuk_kembali)) }} WIB</td>
                     <td style="padding-top: 80px;">{{ $pernyataan->dokter->nama_lengkap }}</td>

@@ -124,6 +124,24 @@
 
                         <div class="px-3">
 
+                            <div class="section-separator bg-light p-3">
+                                <p class="fw-bold">PERNYATAAN</p>
+
+                                <ol class="fw-bold">
+                                    <li>
+                                        Menyatakan dengan sesungguhnya bahwa saya telah mendapat penjelasan dari dokter/
+                                        perawat dan mengerti kemungkinan- kemungkinan bahaya serta resiko yang akan
+                                        timbul apabila menghentikan perawatan (pulang paksa) terhadap pasien yang belum
+                                        sembuh dari penyakitnya.
+                                    </li>
+                                    <li>
+                                        Memahami dengan dengan sesungguhnya bahwa pembiayaan perawatan mengikuti
+                                        ketentuan BPJS Kesehatan tentang pulang APS termasuk tidak dijamin apabila
+                                        dirawat kembali.
+                                    </li>
+                                </ol>
+                            </div>
+
                             {{-- Info Umum --}}
                             <div class="section-separator">
                                 <div class="form-group">
@@ -171,50 +189,6 @@
                                 </div>
                             </div>
 
-                            {{-- SAKSI --}}
-                            <div class="section-separator">
-                                <h4 class="fw-semibold">SAKSI</h4>
-
-                                <div class="form-group">
-                                    <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
-                                    <input type="text" name="saksi_1" id="saksi_1" class="form-control"
-                                        value="{{ $paps->saksi_1 }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
-                                    <input type="text" name="saksi_2" id="saksi_2" class="form-control"
-                                        value="{{ $paps->saksi_2 }}" disabled>
-                                </div>
-                            </div>
-
-                            {{-- DIANOSIS --}}
-                            <div class="section-separator">
-                                <h4 class="fw-semibold">DIAGNOSIS</h4>
-
-                                <div id="diagnose-wrap">
-                                    @foreach ($paps->detail as $detail)
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Diagnosis</label>
-                                                    <input type="text" name="diagnosis[]" class="form-control"
-                                                        value="{{ $detail->diagnosis }}" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label style="min-width: 200px;">Risiko</label>
-                                                    <input type="text" name="risiko[]" class="form-control"
-                                                        value="{{ $detail->risiko }}" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
                             {{-- IDENTITAS KELUARGA --}}
                             <div class="section-separator" id="identitas-keluarga">
                                 <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
@@ -251,6 +225,50 @@
                                     <label for="keluarga_ktp" style="min-width: 200px;">No. KTP</label>
                                     <input type="number" name="keluarga_ktp" id="keluarga_ktp" class="form-control"
                                         value="{{ $paps->keluarga_ktp }}" disabled>
+                                </div>
+                            </div>
+
+                            {{-- DIANOSIS --}}
+                            <div class="section-separator">
+                                <h4 class="fw-semibold">DIAGNOSIS</h4>
+
+                                <div id="diagnose-wrap">
+                                    @foreach ($paps->detail as $detail)
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 200px;">Diagnosis</label>
+                                                    <input type="text" name="diagnosis[]" class="form-control"
+                                                        value="{{ $detail->diagnosis }}" disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label style="min-width: 200px;">Risiko</label>
+                                                    <input type="text" name="risiko[]" class="form-control"
+                                                        value="{{ $detail->risiko }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            {{-- SAKSI --}}
+                            <div class="section-separator">
+                                <h4 class="fw-semibold">SAKSI</h4>
+
+                                <div class="form-group">
+                                    <label for="saksi_1" style="min-width: 200px;">Nama Saksi 1</label>
+                                    <input type="text" name="saksi_1" id="saksi_1" class="form-control"
+                                        value="{{ $paps->saksi_1 }}" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="saksi_2" style="min-width: 200px;">Nama Saksi 2</label>
+                                    <input type="text" name="saksi_2" id="saksi_2" class="form-control"
+                                        value="{{ $paps->saksi_2 }}" disabled>
                                 </div>
                             </div>
                         </div>

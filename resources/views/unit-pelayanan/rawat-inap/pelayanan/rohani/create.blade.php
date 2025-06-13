@@ -136,7 +136,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="kd_penyetuju" style="min-width: 200px;">Yang Menyetujui</label>
+                                        <label for="kd_penyetuju" style="min-width: 200px;">PPA Yang Menyetujui</label>
                                         <select name="kd_penyetuju" id="kd_penyetuju" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($pegawai as $peg)
