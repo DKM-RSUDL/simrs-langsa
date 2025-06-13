@@ -432,5 +432,22 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenGinekologikDiagnosisImplementasi::class, 'id_asesmen', 'id');
     }
-
+    
+    // Asesmen Terminal
+    public function rmeAsesmenTerminal()
+    {
+        return $this->hasOne(RmeAsesmenTerminal::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenTerminalFmo()
+    {
+        return $this->hasOne(RmeAsesmenTerminalFmo::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenTerminalUsk()
+    {
+        return $this->hasOne(RmeAsesmenTerminalUsk::class, 'id_asesmen', 'id');
+    }
+    public function rmeAsesmenTerminalAf()
+    {
+        return $this->hasOne(RmeAsesmenTerminalAf::class, 'id_asesmen', 'id');
+    }
 }
