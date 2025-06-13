@@ -225,6 +225,104 @@
                     </div>
                 </div>
             </form>
-        </div>
+            <p class="fw-bold text-center">INTERVENSI PENIALAIAN EARLY WARNING SYSTEM</p>
+            <div class="container mt-2">
+                <!-- Risk Assessment Table -->
+                <div class="mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr class="bg-success text-white">
+                                    <td class="text-center fw-bold">Total Skor 0-4</td>
+                                    <td class="text-center fw-bold">RISIKO RENDAH</td>
+                                </tr>
+                                <tr class="bg-warning text-dark">
+                                    <td class="text-center fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
+                                    <td class="text-center fw-bold">RISIKO SEDANG</td>
+                                </tr>
+                                <tr class="bg-danger text-white">
+                                    <td class="text-center fw-bold">Total Skor ≥ 7</td>
+                                    <td class="text-center fw-bold">RISIKO TINGGI</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Warning Levels Description -->
+                    <div class="mt-3">
+                        <p class="mb-1 fw-bold">Keterangan Tingkat kesadaran AVPU :</p>
+                        <p class="mb-1"><span class="fw-bold">A : ALERT</span> &nbsp;&nbsp;&nbsp; Pasien sadar penuh</p>
+                        <p class="mb-1"><span class="fw-bold">V : VOICE</span> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa
+                            jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata,
+                            suara atau motorik</p>
+                        <p class="mb-1"><span class="fw-bold">P : PAIN</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan
+                            berespon jika dirangsang sakit</p>
+                        <p class="mb-1"><span class="fw-bold">U : UNRESPONSIVE</span> &nbsp;&nbsp;&nbsp; Tidak berespon,
+                            jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
+                    </div>
+                </div>
+
+                <!-- Intervention Table -->
+                <div class="mt-0">                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center fw-bold" style="width: 5%;">NO</th>
+                                    <th class="text-center fw-bold" style="width: 15%;">NILAI EWS</th>
+                                    <th class="text-center fw-bold" style="width: 20%;">FREKUENSI MONITORING</th>
+                                    <th class="text-center fw-bold" style="width: 60%;">ASUHAN YANG DIBERIKAN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center">Minimal setiap 12 jam sekali</td>
+                                    <td>Lanjutkan observasi/ monitoring secara rutin/per shift</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">TOTAL SCORE<br>1 - 4</td>
+                                    <td class="text-center">Minimal Setiap<br>4 - 6 Jam Sekali</td>
+                                    <td>
+                                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung
+                                        jawab jaga ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
+                                        <strong>2.</strong> Ketua Tim / penanggunggjawab harus membuat keputusan:<br>
+                                        &nbsp;&nbsp;&nbsp; a. Meningkatkan frekuensi observasi / monitoring<br>
+                                        &nbsp;&nbsp;&nbsp; b. Perawatan asuhan yang dibutuhkan oleh pasien
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">TOTAL SCORE<br>5 DAN 6 ATAU 3<br>DALAM 1 (SATU)<br>PARAMETER
+                                    </td>
+                                    <td class="text-center">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya
+                                        Setiap<br>1 Jam Sekali</td>
+                                    <td>
+                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
+                                        pasien kepada dokter jaga atau DPJP<br>
+                                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya
+                                        dan menentukan kondisi pasien apakah dalam penyakit akut,<br>
+                                        <strong>3.</strong> Siapkan fasilitas monitoring yang lebih canggih.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">TOTAL SCORE 7<br>ATAU LEBIH</td>
+                                    <td class="text-center">Lanjutkan Observasi / Monitoring<br>Tanda-Tanda Vital</td>
+                                    <td>
+                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
+                                        pasien kepada dokter jaga atau DPJP<br>
+                                        <strong>2.</strong> Rencanakan transfer pasien ke ruang intensive<br>
+                                        <strong>3.</strong> Aktivasi code blue bila pasien henti jantung/henti nafas
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>        
     </div>
 @endsection

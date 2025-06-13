@@ -11,6 +11,16 @@
             size: A4 portrait;
         }
 
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .no-break {
+                page-break-inside: avoid;
+            }
+        }
+
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             margin: 0;
@@ -180,13 +190,30 @@
             font-size: 5pt;
         }
 
-        /* Tambahan styles untuk highlight status risiko pasien */
-        .risk-status {
-            padding: 3px 6px;
-            border-radius: 3px;
+        /* Styles untuk halaman kedua */
+        .intervention-page {
+            font-size: 8pt;
+        }
+
+        .intervention-title {
+            text-align: center;
+            font-size: 14pt;
             font-weight: bold;
-            display: inline-block;
-            margin-top: 5px;
+            margin: 20px 0;
+        }
+
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .risk-table td {
+            border: 2px solid #000;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
         }
 
         .risk-low {
@@ -199,11 +226,63 @@
 
         .risk-high {
             background-color: #FF6347;
+            color: white;
+        }
+
+        .avpu-explanation {
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+
+        .avpu-explanation p {
+            margin: 3px 0;
+        }
+
+        .intervention-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .intervention-table th,
+        .intervention-table td {
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 8pt;
+        }
+
+        .intervention-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .intervention-table td {
+            vertical-align: top;
+        }
+
+        .revision-note {
+            text-align: right;
+            font-size: 7pt;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- Halaman Pertama: Tabel EWS -->
     <div class="container">
         <div class="header">
             <div class="logo-rs">
@@ -226,8 +305,7 @@
                 </div>
                 <div class="patient-row">
                     <span class="patient-label">Jenis Kelamin:</span>
-                    <span
-                        class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</span>
+                    <span class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</span>
                 </div>
                 <div class="patient-row">
                     <span class="patient-label">Tanggal Lahir:</span>
@@ -311,8 +389,7 @@
                         <td>A*</td>
                         <td>0</td>
                         @foreach($sortedRecords as $record)
-                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}
-                            </td>
+                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}</td>
                         @endforeach
                     </tr>
                     <tr>
@@ -320,7 +397,8 @@
                         <td>3</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ in_array($record->avpu, ['V', 'P', 'U']) ? 'cell-red' : '' }}">
-                                {{ in_array($record->avpu, ['V', 'P', 'U']) ? $record->avpu : '' }}</td>
+                                {{ in_array($record->avpu, ['V', 'P', 'U']) ? $record->avpu : '' }}
+                            </td>
                         @endforeach
                     </tr>
 
@@ -340,7 +418,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->saturasi_o2 == '94-95' ? 'cell-yellow' : '' }}">
-                                {{ $record->saturasi_o2 == '94-95' ? '94-95' : '' }}</td>
+                                {{ $record->saturasi_o2 == '94-95' ? '94-95' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -348,7 +427,8 @@
                         <td>2</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->saturasi_o2 == '92-93' ? 'cell-yellow' : '' }}">
-                                {{ $record->saturasi_o2 == '92-93' ? '92-93' : '' }}</td>
+                                {{ $record->saturasi_o2 == '92-93' ? '92-93' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -368,7 +448,8 @@
                         <td>0</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->dengan_bantuan == 'Tidak' ? 'cell-green' : '' }}">
-                                {{ $record->dengan_bantuan == 'Tidak' ? 'Tidak' : '' }}</td>
+                                {{ $record->dengan_bantuan == 'Tidak' ? 'Tidak' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -376,7 +457,8 @@
                         <td>2</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->dengan_bantuan == 'Ya' ? 'cell-yellow' : '' }}">
-                                {{ $record->dengan_bantuan == 'Ya' ? 'Ya' : '' }}</td>
+                                {{ $record->dengan_bantuan == 'Ya' ? 'Ya' : '' }}
+                            </td>
                         @endforeach
                     </tr>
 
@@ -396,7 +478,8 @@
                         <td>0</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '111-219' ? 'cell-green' : '' }}">
-                                {{ $record->tekanan_darah == '111-219' ? '111-219' : '' }}</td>
+                                {{ $record->tekanan_darah == '111-219' ? '111-219' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -404,7 +487,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '101-110' ? 'cell-yellow' : '' }}">
-                                {{ $record->tekanan_darah == '101-110' ? '101-110' : '' }}</td>
+                                {{ $record->tekanan_darah == '101-110' ? '101-110' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -412,7 +496,8 @@
                         <td>2</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->tekanan_darah == '91-100' ? 'cell-yellow' : '' }}">
-                                {{ $record->tekanan_darah == '91-100' ? '91-100' : '' }}</td>
+                                {{ $record->tekanan_darah == '91-100' ? '91-100' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -441,7 +526,8 @@
                         <td>2</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nadi == '111-130' ? 'cell-yellow' : '' }}">
-                                {{ $record->nadi == '111-130' ? '111-130' : '' }}</td>
+                                {{ $record->nadi == '111-130' ? '111-130' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -449,7 +535,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nadi == '91-110' ? 'cell-yellow' : '' }}">
-                                {{ $record->nadi == '91-110' ? '91-110' : '' }}</td>
+                                {{ $record->nadi == '91-110' ? '91-110' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -457,7 +544,8 @@
                         <td>0</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nadi == '51-90' ? 'cell-green' : '' }}">
-                                {{ $record->nadi == '51-90' ? '51-90' : '' }}</td>
+                                {{ $record->nadi == '51-90' ? '51-90' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -465,7 +553,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nadi == '41-50' ? 'cell-yellow' : '' }}">
-                                {{ $record->nadi == '41-50' ? '41-50' : '' }}</td>
+                                {{ $record->nadi == '41-50' ? '41-50' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -494,7 +583,8 @@
                         <td>2</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nafas == '21-24' ? 'cell-yellow' : '' }}">
-                                {{ $record->nafas == '21-24' ? '21-24' : '' }}</td>
+                                {{ $record->nafas == '21-24' ? '21-24' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -502,7 +592,8 @@
                         <td>0</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nafas == '12-20' ? 'cell-green' : '' }}">
-                                {{ $record->nafas == '12-20' ? '12-20' : '' }}</td>
+                                {{ $record->nafas == '12-20' ? '12-20' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -510,7 +601,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->nafas == '9-11' ? 'cell-yellow' : '' }}">
-                                {{ $record->nafas == '9-11' ? '9-11' : '' }}</td>
+                                {{ $record->nafas == '9-11' ? '9-11' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -539,7 +631,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '38.1-39.0' ? 'cell-yellow' : '' }}">
-                                {{ $record->temperatur == '38.1-39.0' ? '38.1-39.0' : '' }}</td>
+                                {{ $record->temperatur == '38.1-39.0' ? '38.1-39.0' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -547,7 +640,8 @@
                         <td>0</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '36.1-38.0' ? 'cell-green' : '' }}">
-                                {{ $record->temperatur == '36.1-38.0' ? '36.1-38.0' : '' }}</td>
+                                {{ $record->temperatur == '36.1-38.0' ? '36.1-38.0' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -555,7 +649,8 @@
                         <td>1</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ $record->temperatur == '35.1-36.0' ? 'cell-yellow' : '' }}">
-                                {{ $record->temperatur == '35.1-36.0' ? '35.1-36.0' : '' }}</td>
+                                {{ $record->temperatur == '35.1-36.0' ? '35.1-36.0' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -651,6 +746,91 @@
                 <p>{{ $ewsPasienDewasa->userCreate->jabatan }}</p>
             @endif
         </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Halaman Kedua: Intervensi dan Keterangan -->
+    <div class="intervention-page">
+        <div class="intervention-title">INTERVENSI PENILAIAN EARLY WARNING SYSTEM</div>
+        
+        <!-- Risk Assessment Table -->
+        <table class="risk-table">
+            <tr class="risk-low">
+                <td>Total Skor 0-4</td>
+                <td>RISIKO RENDAH</td>
+            </tr>
+            <tr class="risk-medium">
+                <td>Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
+                <td>RISIKO SEDANG</td>
+            </tr>
+            <tr class="risk-high">
+                <td>Total Skor ≥ 7</td>
+                <td>RISIKO TINGGI</td>
+            </tr>
+        </table>
+
+        <!-- AVPU Explanation -->
+        <div class="avpu-explanation">
+            <p><strong>Keterangan Tingkat kesadaran AVPU :</strong></p>
+            <p><strong>A : ALERT</strong> &nbsp;&nbsp;&nbsp; Pasien sadar penuh</p>
+            <p><strong>V : VOICE</strong> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata, suara atau motorik</p>
+            <p><strong>P : PAIN</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan berespon jika dirangsang sakit</p>
+            <p><strong>U : UNRESPONSIVE</strong> &nbsp;&nbsp;&nbsp; Tidak berespon, jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
+        </div>
+
+        <div class="revision-note">K.12/JBM/Rev 0/2023</div>
+
+        <!-- Intervention Table -->
+        <table class="intervention-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">NO</th>
+                    <th style="width: 15%;">NILAI EWS</th>
+                    <th style="width: 20%;">FREKUENSI MONITORING</th>
+                    <th style="width: 60%;">ASUHAN YANG DIBERIKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">Minimal setiap 12 jam sekali</td>
+                    <td>Lanjutkan observasi/ monitoring secara rutin/per shift</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">TOTAL SCORE<br>1 - 4</td>
+                    <td style="text-align: center;">Minimal Setiap<br>4 - 6 Jam Sekali</td>
+                    <td>
+                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung jawab jaga ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
+                        <strong>2.</strong> Ketua Tim / penanggunggjawab harus membuat keputusan:<br>
+                        &nbsp;&nbsp;&nbsp; a. Meningkatkan frekuensi observasi / monitoring<br>
+                        &nbsp;&nbsp;&nbsp; b. Perawatan asuhan yang dibutuhkan oleh pasien
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center;">TOTAL SCORE<br>5 DAN 6 ATAU 3<br>DALAM 1 (SATU)<br>PARAMETER</td>
+                    <td style="text-align: center;">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya Setiap<br>1 Jam Sekali</td>
+                    <td>
+                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien kepada dokter jaga atau DPJP<br>
+                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya dan menentukan kondisi pasien apakah dalam penyakit akut,<br>
+                        <strong>3.</strong> Siapkan fasilitas monitoring yang lebih canggih.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">TOTAL SCORE 7<br>ATAU LEBIH</td>
+                    <td style="text-align: center;">Lanjutkan Observasi / Monitoring<br>Tanda-Tanda Vital</td>
+                    <td>
+                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien kepada dokter jaga atau DPJP<br>
+                        <strong>2.</strong> Rencanakan transfer pasien ke ruang intensive<br>
+                        <strong>3.</strong> Aktivasi code blue bila pasien henti jantung/henti nafas
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 
