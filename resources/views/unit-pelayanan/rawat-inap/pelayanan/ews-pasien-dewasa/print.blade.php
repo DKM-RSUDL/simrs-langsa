@@ -777,9 +777,7 @@
             <p><strong>V : VOICE</strong> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata, suara atau motorik</p>
             <p><strong>P : PAIN</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan berespon jika dirangsang sakit</p>
             <p><strong>U : UNRESPONSIVE</strong> &nbsp;&nbsp;&nbsp; Tidak berespon, jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
-        </div>
-
-        <div class="revision-note">K.12/JBM/Rev 0/2023</div>
+        </div>        
 
         <!-- Intervention Table -->
         <table class="intervention-table">
