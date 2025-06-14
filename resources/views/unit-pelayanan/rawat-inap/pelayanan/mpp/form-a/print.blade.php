@@ -273,7 +273,15 @@
                 <td style="width: 15%;"><strong>DPJP Utama:</strong></td>
                 <td style="width: 35%;">{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
                 <td style="width: 15%;"><strong>DPJP Tambahan:</strong></td>
-                <td style="width: 35%;">{{ $dpjpTambahan ? $dpjpTambahan->nama : '-' }}</td>
+                <td style="width: 35%;">
+                    @if($dpjpTambahan && count($dpjpTambahan) > 0)
+                        @foreach($dpjpTambahan as $index => $dokter)
+                            {{ $index + 1 }}. {{ $dokter->nama }}@if(!$loop->last)<br>@endif
+                        @endforeach
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
         </table>
     </div>
@@ -756,7 +764,9 @@
                 <p style="margin: 0; font-size: 9pt;">Langsa, {{ date('d/m/Y') }}</p>
                 <p style="margin: 5px 0 0 0; font-size: 9pt; font-weight: bold;">Manajer Pelayanan Pasien</p>
                 <div style="border-bottom: 1px solid #000; width: 200px; margin: 50px auto 5px;"></div>
-                <p style="margin: 0; font-size: 9pt; font-weight: bold;">{{ $dpjpUtama ? $dpjpUtama->nama : '.............................' }}</p>
+                <p style="margin: 0; font-size: 9pt; font-weight: bold;">
+                    {{ $userCreate ? $userCreate->name : '...............................' }}
+                </p>
                 <p style="margin: 2px 0 0 0; font-size: 9pt;">NIP. ...............................</p>
             </div>
         </div>

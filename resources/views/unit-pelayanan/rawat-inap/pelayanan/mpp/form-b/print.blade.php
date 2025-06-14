@@ -244,11 +244,46 @@
         .page-break-after {
             page-break-after: always;
         }
+
+        /* Styles for staff table */
+        .staff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 9pt;
+        }
+
+        .staff-table th,
+        .staff-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .staff-table th {
+            background-color: #e9ecef;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .staff-table .ppa-col {
+            width: 25%;
+        }
+
+        .staff-table .nama-col {
+            width: 50%;
+        }
+
+        .staff-table .ttd-col {
+            width: 25%;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
-    <!-- PAGE 1: HEADER + SECTION 1-3 -->
+    <!-- PAGE 1: HEADER + SECTION 1-4 -->
     <div class="header">
         <div class="header-row">
             <div class="hospital-info">
@@ -288,25 +323,23 @@
     <div class="doctor-info">
         <table>
             <tr>
-                <td style="width: 12%;"><strong>DPJP Utama:</strong></td>
-                <td style="width: 22%;">{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
-                <td style="width: 12%;"><strong>Dokter 1:</strong></td>
-                <td style="width: 22%;">{{ $dokter1 ? $dokter1->nama : '-' }}</td>
-                <td style="width: 12%;"><strong>Dokter 2:</strong></td>
-                <td style="width: 20%;">{{ $dokter2 ? $dokter2->nama : '-' }}</td>
-            </tr>
-            <tr>
-                <td><strong>Dokter 3:</strong></td>
-                <td>{{ $dokter3 ? $dokter3->nama : '-' }}</td>
-                <td><strong>Petugas 1:</strong></td>
-                <td>{{ $perawat1 ? "$perawat1->gelar_depan $perawat1->nama $perawat1->gelar_belakang" : '-' }}</td>
-                <td><strong>Petugas 2:</strong></td>
-                <td>{{ $perawat2 ? "$perawat2->gelar_depan $perawat2->nama $perawat2->gelar_belakang" : '-' }}</td>
+                <td style="width: 15%;"><strong>DPJP Utama:</strong></td>
+                <td style="width: 35%;">{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
+                <td style="width: 15%;"><strong>Dokter Tambahan:</strong></td>
+                <td style="width: 35%;">
+                    @if($dokterTambahan && count($dokterTambahan) > 0)
+                        @foreach($dokterTambahan as $index => $dokter)
+                            {{ $index + 1 }}. {{ $dokter->nama }}@if(!$loop->last)<br>@endif
+                        @endforeach
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
         </table>
     </div>
 
-    <!-- Main MPP Table - Section 1-3 -->
+    <!-- Main MPP Table - Section 1-4 -->
     <table class="table">
         <thead>
             <tr>
@@ -398,13 +431,56 @@
                     </div>
                 </td>
             </tr>
+
+            <!-- Section 4: Advokasi Pelayanan Pasien -->
+            <tr class="advokasi-row">
+                <td class="datetime-col">
+                    <div class="datetime-display">
+                        @if ($mppData->advokasi_date)
+                            {{ \Carbon\Carbon::parse($mppData->advokasi_date)->format('d-m-Y') }}<br>
+                        @endif
+                        @if ($mppData->advokasi_time)
+                            {{ \Carbon\Carbon::parse($mppData->advokasi_time)->format('H:i') }}
+                        @endif
+                    </div>
+                </td>
+                <td>
+                    <strong>4. Advokasi Pelayanan Pasien</strong>
+                    <br><br>
+                    <div class="criteria-item">
+                        <input type="checkbox" class="criteria-checkbox"
+                            {{ $mppData->diskusi_ppa ? 'checked' : '' }} disabled>
+                        <span class="criteria-label">Diskusi dengan PPA staf lain tentang kebutuhan pasien</span>
+                    </div>
+                    <div class="criteria-item">
+                        <input type="checkbox" class="criteria-checkbox"
+                            {{ $mppData->fasilitasi_akses ? 'checked' : '' }} disabled>
+                        <span class="criteria-label">Memfasilitasi akses ke pelayanan sesuai kebutuhan pasien berkoordinasi dengan PPA dan pemangku kepentingan</span>
+                    </div>
+                    <div class="criteria-item">
+                        <input type="checkbox" class="criteria-checkbox"
+                            {{ $mppData->kemandirian_keputusan ? 'checked' : '' }} disabled>
+                        <span class="criteria-label">Meningkatkan kemandirian untuk menentukan pilihan/pengambilan keputusan</span>
+                    </div>
+                    <div class="criteria-item">
+                        <input type="checkbox" class="criteria-checkbox"
+                            {{ $mppData->pencegahan_disparitas ? 'checked' : '' }} disabled>
+                        <span class="criteria-label">Mengenali, mencegah, menghindari disparitas untuk mengakses mutu dan hasil pelayanan terkait dengan ras, etnik, agama, gender, budaya, status pernikahan, usia, politik, disabilitas fisik mental-kognitif</span>
+                    </div>
+                    <div class="criteria-item">
+                        <input type="checkbox" class="criteria-checkbox"
+                            {{ $mppData->pemenuhan_kebutuhan ? 'checked' : '' }} disabled>
+                        <span class="criteria-label">Pemenuhan kebutuhan pelayanan yang berkembang/bertambah karena perubahan kondisi</span>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 
-    <!-- PAGE 2: SECTION 4-6 dengan Header ulang -->
+    <!-- PAGE 2: SECTION 5-6 dengan Header ulang -->
     <div class="page-break">
 
-        <!-- Table Section 4-6 -->
+        <!-- Table Section 5-6 -->
         <table class="table">
             <thead>
                 <tr>
@@ -413,49 +489,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Section 4: Advokasi Pelayanan Pasien -->
-                <tr class="advokasi-row">
-                    <td class="datetime-col">
-                        <div class="datetime-display">
-                            @if ($mppData->advokasi_date)
-                                {{ \Carbon\Carbon::parse($mppData->advokasi_date)->format('d-m-Y') }}<br>
-                            @endif
-                            @if ($mppData->advokasi_time)
-                                {{ \Carbon\Carbon::parse($mppData->advokasi_time)->format('H:i') }}
-                            @endif
-                        </div>
-                    </td>
-                    <td>
-                        <strong>4. Advokasi Pelayanan Pasien</strong>
-                        <br><br>
-                        <div class="criteria-item">
-                            <input type="checkbox" class="criteria-checkbox"
-                                {{ $mppData->diskusi_ppa ? 'checked' : '' }} disabled>
-                            <span class="criteria-label">Diskusi dengan PPA staf lain tentang kebutuhan pasien</span>
-                        </div>
-                        <div class="criteria-item">
-                            <input type="checkbox" class="criteria-checkbox"
-                                {{ $mppData->fasilitasi_akses ? 'checked' : '' }} disabled>
-                            <span class="criteria-label">Memfasilitasi akses ke pelayanan sesuai kebutuhan pasien berkoordinasi dengan PPA dan pemangku kepentingan</span>
-                        </div>
-                        <div class="criteria-item">
-                            <input type="checkbox" class="criteria-checkbox"
-                                {{ $mppData->kemandirian_keputusan ? 'checked' : '' }} disabled>
-                            <span class="criteria-label">Meningkatkan kemandirian untuk menentukan pilihan/pengambilan keputusan</span>
-                        </div>
-                        <div class="criteria-item">
-                            <input type="checkbox" class="criteria-checkbox"
-                                {{ $mppData->pencegahan_disparitas ? 'checked' : '' }} disabled>
-                            <span class="criteria-label">Mengenali, mencegah, menghindari disparitas untuk mengakses mutu dan hasil pelayanan terkait dengan ras, etnik, agama, gender, budaya, status pernikahan, usia, politik, disabilitas fisik mental-kognitif</span>
-                        </div>
-                        <div class="criteria-item">
-                            <input type="checkbox" class="criteria-checkbox"
-                                {{ $mppData->pemenuhan_kebutuhan ? 'checked' : '' }} disabled>
-                            <span class="criteria-label">Pemenuhan kebutuhan pelayanan yang berkembang/bertambah karena perubahan kondisi</span>
-                        </div>
-                    </td>
-                </tr>
-
                 <!-- Section 5: Hasil Pelayanan -->
                 <tr class="hasil-row">
                     <td class="datetime-col">
@@ -542,13 +575,68 @@
             </tbody>
         </table>
 
+        <!-- Tabel Daftar Tenaga Medis -->
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th class="ppa-col">PPA</th>
+                    <th class="nama-col">NAMA</th>
+                    <th class="ttd-col">TANDA TANGAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- DPJP Utama -->
+                <tr>
+                    <td><strong>DPJP Utama</strong></td>
+                    <td>{{ $dpjpUtama ? $dpjpUtama->nama : '-' }}</td>
+                    <td style="height: 40px;"></td>
+                </tr>
+                
+                <!-- Dokter Tambahan -->
+                @if($dokterTambahan && count($dokterTambahan) > 0)
+                    @foreach($dokterTambahan as $index => $dokter)
+                        <tr>
+                            <td>{{ $index == 0 ? 'Dokter Tambahan' : '' }}</td>
+                            <td>{{ $dokter->nama }}</td>
+                            <td style="height: 40px;"></td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td><strong>Dokter Tambahan</strong></td>
+                        <td>-</td>
+                        <td style="height: 40px;"></td>
+                    </tr>
+                @endif
+                
+                <!-- Petugas Terkait -->
+                @if($petugasTerkait && count($petugasTerkait) > 0)
+                    @foreach($petugasTerkait as $index => $petugas)
+                        <tr>
+                            <td>{{ $index == 0 ? 'Petugas Terkait' : '' }}</td>
+                            <td>{{ trim("$petugas->gelar_depan $petugas->nama $petugas->gelar_belakang") }}</td>
+                            <td style="height: 40px;"></td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td><strong>Petugas Terkait</strong></td>
+                        <td>-</td>
+                        <td style="height: 40px;"></td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+
         <!-- Signature pada halaman 2 -->
         <div style="text-align: right; margin-top: 30px; width: 100%;">
             <div style="display: inline-block; text-align: center; width: 250px;">
                 <p style="margin: 0; font-size: 9pt;">Langsa, {{ date('d/m/Y') }}</p>
                 <p style="margin: 5px 0 0 0; font-size: 9pt; font-weight: bold;">Manajer Pelayanan Pasien</p>
                 <div style="border-bottom: 1px solid #000; width: 200px; margin: 50px auto 5px;"></div>
-                <p style="margin: 0; font-size: 9pt; font-weight: bold;">{{ $dpjpUtama ? $dpjpUtama->nama : '.............................' }}</p>
+                <p style="margin: 0; font-size: 9pt; font-weight: bold;">
+                    {{ $userCreate ? $userCreate->name : '...............................' }}
+                </p>
                 <p style="margin: 2px 0 0 0; font-size: 9pt;">NIP. ...............................</p>
             </div>
         </div>

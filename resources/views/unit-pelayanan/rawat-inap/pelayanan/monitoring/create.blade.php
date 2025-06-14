@@ -1022,11 +1022,7 @@
                     <!-- Ventilator Parameters -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            @if ($dataMedis->kd_unit == '10131')
-                                <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
-                            @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
                                 <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
-                            @endif
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -1048,28 +1044,36 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label">FiO2 (%)</label>
-                                        <input type="number" step="1" class="form-control"
-                                            name="ventilator_fio2">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">I:E Ratio</label>
                                         <input type="text" class="form-control" name="ventilator_ie_ratio"
                                             placeholder="e.g., 1:2">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">P Max (cmH2O)</label>
                                         <input type="number" step="1" class="form-control"
                                             name="ventilator_pmax">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                                <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">FiO2 (%)</label>
+                                        <input type="number" step="1" class="form-control"
+                                            name="ventilator_fio2">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">PEEP/PS (cmH2O)</label>
                                         <input type="number" step="1" class="form-control"

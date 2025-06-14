@@ -131,6 +131,45 @@
                 resize: vertical;
                 width: 100%;
             }
+            
+            .dpjp-tambahan-item {
+                position: relative;
+            }
+
+            .dpjp-tambahan-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .dpjp-tambahan-item .form-select {
+                flex: 1;
+            }
+
+            .dpjp-tambahan-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .select2-tambahan + .select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .input-group .select2-container {
+                flex: 1;
+            }
+
+            .input-group .select2-container .select2-selection {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                height: calc(2.25rem + 2px);
+                border-right: 0;
+            }
+
+            .input-group .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         </style>
     @endpush
 
@@ -164,28 +203,71 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Utama</label>
-                                        <select name="dpjp_utama" class="form-select select2"
-                                            style="width: 100%">
+                                        <select name="dpjp_utama" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}" 
+                                                    {{ (isset($mppData) && $mppData->dpjp_utama == $dok->kd_dokter) ? 'selected' : '' }}>
+                                                    {{ $dok->nama }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Tambahan</label>
-                                        <select name="dpjp_tambahan" class="form-select select2"
-                                            style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div id="dpjp-tambahan-container">
+                                            @if(isset($mppData) && $mppData->dpjp_tambahan)
+                                                @php
+                                                    $dpjpTambahanArray = is_array($mppData->dpjp_tambahan) ? $mppData->dpjp_tambahan : json_decode($mppData->dpjp_tambahan, true);
+                                                    if (!is_array($dpjpTambahanArray)) {
+                                                        $dpjpTambahanArray = [$mppData->dpjp_tambahan];
+                                                    }
+                                                @endphp
+                                                @foreach($dpjpTambahanArray as $index => $dpjpTambahan)
+                                                    <div class="dpjp-tambahan-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                                                                <option value="">--Pilih--</option>
+                                                                @foreach ($dokter as $dok)
+                                                                    <option value="{{ $dok->kd_dokter }}" 
+                                                                        {{ $dpjpTambahan == $dok->kd_dokter ? 'selected' : '' }}>
+                                                                        {{ $dok->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan" 
+                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="dpjp-tambahan-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                                                            <option value="">--Pilih--</option>
+                                                            @foreach ($dokter as $dok)
+                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-dpjp-tambahan">
+                                            <i class="bi bi-plus"></i> Tambah Dokter
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -648,8 +730,142 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            let dpjpTambahanIndex = document.querySelectorAll('.dpjp-tambahan-item').length;
+    
+            // Store doctor options for dynamic creation - safer approach
+            const doctorOptions = [];
+            @foreach ($dokter as $dok)
+                doctorOptions.push({
+                    value: '{{ addslashes($dok->kd_dokter) }}', 
+                    text: '{{ addslashes($dok->nama) }}'
+                });
+            @endforeach
+
+            // Function to build options HTML
+            function buildOptionsHtml(selectedValue = '') {
+                let html = '<option value="">--Pilih--</option>';
+                doctorOptions.forEach(function(doctor) {
+                    const selected = selectedValue === doctor.value ? 'selected' : '';
+                    html += `<option value="${doctor.value}" ${selected}>${doctor.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to initialize Select2 for new elements
+            function initializeSelect2(element) {
+                if (typeof $.fn.select2 !== 'undefined') {
+                    $(element).select2({
+                        theme: 'bootstrap-5',
+                        placeholder: '--Pilih--',
+                        width: '100%'
+                    });
+                }
+            }
+
+            // Function to reinitialize existing selects with proper data
+            function reinitializeExistingSelects() {
+                $('.select2-tambahan').each(function() {
+                    const currentValue = $(this).val();
+                    
+                    // Destroy existing Select2 if exists
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+                    
+                    // Rebuild options with current value preserved
+                    $(this).html(buildOptionsHtml(currentValue));
+                    
+                    // Re-initialize Select2
+                    initializeSelect2(this);
+                });
+            }
+
+            // Initialize existing Select2 elements
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('.select2').select2({
+                    theme: 'bootstrap-5',
+                    placeholder: '--Pilih--'
+                });
+                
+                // Fix existing DPJP Tambahan selects after a short delay to ensure DOM is ready
+                setTimeout(function() {
+                    reinitializeExistingSelects();
+                }, 100);
+            }
+
+            // Add new DPJP Tambahan
+            document.getElementById('add-dpjp-tambahan').addEventListener('click', function() {
+                const container = document.getElementById('dpjp-tambahan-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'dpjp-tambahan-item mb-2';
+                newItem.setAttribute('data-index', dpjpTambahanIndex);
+                
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                            ${buildOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(newItem);
+                
+                // Initialize Select2 for the new element
+                const newSelect = newItem.querySelector('select');
+                initializeSelect2(newSelect);
+                
+                dpjpTambahanIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove DPJP Tambahan
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-dpjp-tambahan') || e.target.closest('.remove-dpjp-tambahan')) {
+                    const button = e.target.classList.contains('remove-dpjp-tambahan') ? e.target : e.target.closest('.remove-dpjp-tambahan');
+                    const item = button.closest('.dpjp-tambahan-item');
+                    
+                    // Destroy Select2 before removing element
+                    const select = item.querySelector('select');
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                        $(select).select2('destroy');
+                    }
+                    
+                    item.remove();
+                    updateRemoveButtons();
+                }
+            });
+
+            // Update remove buttons visibility
+            function updateRemoveButtons() {
+                const items = document.querySelectorAll('.dpjp-tambahan-item');
+                items.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-dpjp-tambahan');
+                    if (index === 0 && items.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+            }
+
+            // Initial update of remove buttons
+            updateRemoveButtons();
+
             // Form validation
             document.getElementById('mppEvaluationForm').addEventListener('submit', function(e) {
+
+                // Remove empty dpjp_tambahan values before submission
+                const dpjpTambahanSelects = document.querySelectorAll('select[name="dpjp_tambahan[]"]');
+                dpjpTambahanSelects.forEach(select => {
+                    if (!select.value || select.value === '') {
+                        select.remove();
+                    }
+                });
+
                 let isValid = true;
 
                 // Validate Screening Section

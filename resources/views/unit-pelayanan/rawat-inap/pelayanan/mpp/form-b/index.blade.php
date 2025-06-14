@@ -94,16 +94,14 @@
 
                                                         <!-- Tim Dokter -->
                                                         <td>
-                                                            @php
-                                                                $dokterList = collect([
-                                                                    $mppData->dokter1?->nama,
-                                                                    $mppData->dokter2?->nama,
-                                                                    $mppData->dokter3?->nama,
-                                                                ])->filter()->implode(', ');
-                                                            @endphp
-                                                            
-                                                            @if ($dokterList)
-                                                                {{ $dokterList }}
+                                                            @if(!empty($mppData->dokterTambahanNames))
+                                                                @foreach($mppData->dokterTambahanNames as $nama)
+                                                                    <div class="mb-1">
+                                                                        <span class="badge bg-light text-dark border">
+                                                                            <i class="ti-user me-1"></i>{{ $nama }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endforeach
                                                             @else
                                                                 <span class="text-muted fst-italic">Tidak ada</span>
                                                             @endif
@@ -111,15 +109,14 @@
 
                                                         <!-- Petugas Terkait -->
                                                         <td>
-                                                            @php
-                                                                $petugasList = collect([
-                                                                    $mppData->petugasTerkait1 ? trim($mppData->petugasTerkait1->gelar_depan . ' ' . $mppData->petugasTerkait1->nama . ' ' . $mppData->petugasTerkait1->gelar_belakang) : null,
-                                                                    $mppData->petugasTerkait2 ? trim($mppData->petugasTerkait2->gelar_depan . ' ' . $mppData->petugasTerkait2->nama . ' ' . $mppData->petugasTerkait2->gelar_belakang) : null,
-                                                                ])->filter()->implode(', ');
-                                                            @endphp
-                                                            
-                                                            @if ($petugasList)
-                                                                {{ $petugasList }}
+                                                            @if(!empty($mppData->petugasTerkaitNames))
+                                                                @foreach($mppData->petugasTerkaitNames as $nama)
+                                                                    <div class="mb-1">
+                                                                        <span class="badge bg-success-subtle text-success border border-success">
+                                                                            <i class="ti-stethoscope me-1"></i>{{ $nama }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endforeach
                                                             @else
                                                                 <span class="text-muted fst-italic">Tidak ada</span>
                                                             @endif

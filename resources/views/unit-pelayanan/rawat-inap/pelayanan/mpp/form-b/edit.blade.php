@@ -142,6 +142,68 @@
                 color: #495057;
                 cursor: pointer;
             }
+
+            .dokter-tambahan-item {
+                position: relative;
+            }
+
+            .dokter-tambahan-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .dokter-tambahan-item .form-select {
+                flex: 1;
+            }
+
+            .dokter-tambahan-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .petugas-terkait-item {
+                position: relative;
+            }
+
+            .petugas-terkait-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .petugas-terkait-item .form-select {
+                flex: 1;
+            }
+
+            .petugas-terkait-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .select2-dokter-tambahan + .select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .select2-petugas-terkait + .select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .input-group .select2-container {
+                flex: 1;
+            }
+
+            .input-group .select2-container .select2-selection {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                height: calc(2.25rem + 2px);
+                border-right: 0;
+            }
+
+            .input-group .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         </style>
     @endpush
 
@@ -177,13 +239,13 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Utama</label>
                                         <select name="dpjp_utama" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}"
+                                                <option value="{{ $dok->kd_dokter }}" 
                                                     {{ $mppData->dpjp_utama == $dok->kd_dokter ? 'selected' : '' }}>
                                                     {{ $dok->nama }}
                                                 </option>
@@ -191,78 +253,114 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Dokter 1</label>
-                                        <select name="dokter_1" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}"
-                                                    {{ $mppData->dokter_1 == $dok->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->nama }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <label class="form-label">Dokter Tambahan</label>
+                                        <div id="dokter-tambahan-container">
+                                            @if($mppData->dokter_tambahan)
+                                                @php
+                                                    $dokterTambahanArray = json_decode($mppData->dokter_tambahan, true);
+                                                    if (!is_array($dokterTambahanArray)) {
+                                                        // Handle old format
+                                                        $dokterTambahanArray = [$mppData->dokter_tambahan];
+                                                    }
+                                                @endphp
+                                                @foreach($dokterTambahanArray as $index => $dokterTambahan)
+                                                    <div class="dokter-tambahan-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
+                                                                <option value="">--Pilih--</option>
+                                                                @foreach ($dokter as $dok)
+                                                                    <option value="{{ $dok->kd_dokter }}" 
+                                                                        {{ $dokterTambahan == $dok->kd_dokter ? 'selected' : '' }}>
+                                                                        {{ $dok->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-danger remove-dokter-tambahan" 
+                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="dokter-tambahan-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
+                                                            <option value="">--Pilih--</option>
+                                                            @foreach ($dokter as $dok)
+                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-danger remove-dokter-tambahan" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-dokter-tambahan">
+                                            <i class="bi bi-plus"></i> Tambah Dokter
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Dokter 2</label>
-                                        <select name="dokter_2" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}"
-                                                    {{ $mppData->dokter_2 == $dok->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->nama }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Dokter 3</label>
-                                        <select name="dokter_3" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}"
-                                                    {{ $mppData->dokter_3 == $dok->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->nama }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Petugas Terkait 1</label>
-                                        <select name="petugas_terkait_1" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($perawat as $prwt)
-                                                <option value="{{ $prwt->kd_karyawan }}"
-                                                    {{ $mppData->petugas_terkait_1 == $prwt->kd_karyawan ? 'selected' : '' }}>
-                                                    {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Petugas Terkait 2</label>
-                                        <select name="petugas_terkait_2" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($perawat as $prwt)
-                                                <option value="{{ $prwt->kd_karyawan }}"
-                                                    {{ $mppData->petugas_terkait_2 == $prwt->kd_karyawan ? 'selected' : '' }}>
-                                                    {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <label class="form-label">Petugas Terkait</label>
+                                        <div id="petugas-terkait-container">
+                                            @if($mppData->petugas_terkait)
+                                                @php
+                                                    $petugasTerkaitArray = json_decode($mppData->petugas_terkait, true);
+                                                    if (!is_array($petugasTerkaitArray)) {
+                                                        // Handle old format
+                                                        $petugasTerkaitArray = [$mppData->petugas_terkait];
+                                                    }
+                                                @endphp
+                                                @foreach($petugasTerkaitArray as $index => $petugasTerkait)
+                                                    <div class="petugas-terkait-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
+                                                                <option value="">--Pilih--</option>
+                                                                @foreach ($perawat as $prwt)
+                                                                    <option value="{{ $prwt->kd_karyawan }}" 
+                                                                        {{ $petugasTerkait == $prwt->kd_karyawan ? 'selected' : '' }}>
+                                                                        {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-danger remove-petugas-terkait" 
+                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="petugas-terkait-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
+                                                            <option value="">--Pilih--</option>
+                                                            @foreach ($perawat as $prwt)
+                                                                <option value="{{ $prwt->kd_karyawan }}">
+                                                                    {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-danger remove-petugas-terkait" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-petugas-terkait">
+                                            <i class="bi bi-plus"></i> Tambah Petugas
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -538,6 +636,207 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            let dokterTambahanIndex = document.querySelectorAll('.dokter-tambahan-item').length;
+            let petugasTerkaitIndex = document.querySelectorAll('.petugas-terkait-item').length;
+            
+            // Store doctor options
+            const doctorOptions = [];
+            @foreach ($dokter as $dok)
+                doctorOptions.push({
+                    value: '{{ addslashes($dok->kd_dokter) }}', 
+                    text: '{{ addslashes($dok->nama) }}'
+                });
+            @endforeach
+
+            // Store perawat options
+            const perawatOptions = [];
+            @foreach ($perawat as $prwt)
+                perawatOptions.push({
+                    value: '{{ addslashes($prwt->kd_karyawan) }}', 
+                    text: '{{ addslashes("$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang") }}'
+                });
+            @endforeach
+
+            // Function to build doctor options HTML
+            function buildDoctorOptionsHtml(selectedValue = '') {
+                let html = '<option value="">--Pilih--</option>';
+                doctorOptions.forEach(function(doctor) {
+                    const selected = selectedValue === doctor.value ? 'selected' : '';
+                    html += `<option value="${doctor.value}" ${selected}>${doctor.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to build perawat options HTML
+            function buildPerawatOptionsHtml(selectedValue = '') {
+                let html = '<option value="">--Pilih--</option>';
+                perawatOptions.forEach(function(perawat) {
+                    const selected = selectedValue === perawat.value ? 'selected' : '';
+                    html += `<option value="${perawat.value}" ${selected}>${perawat.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to initialize Select2
+            function initializeSelect2(element, type = 'default') {
+                if (typeof $.fn.select2 !== 'undefined') {
+                    $(element).select2({
+                        theme: 'bootstrap-5',
+                        placeholder: '--Pilih--',
+                        width: '100%'
+                    });
+                }
+            }
+
+            // Function to reinitialize existing selects
+            function reinitializeExistingSelects() {
+                $('.select2-dokter-tambahan').each(function() {
+                    const currentValue = $(this).val();
+                    
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+                    
+                    $(this).html(buildDoctorOptionsHtml(currentValue));
+                    initializeSelect2(this);
+                });
+
+                $('.select2-petugas-terkait').each(function() {
+                    const currentValue = $(this).val();
+                    
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+                    
+                    $(this).html(buildPerawatOptionsHtml(currentValue));
+                    initializeSelect2(this);
+                });
+            }
+
+            // Initialize existing Select2 elements
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('.select2').select2({
+                    theme: 'bootstrap-5',
+                    placeholder: '--Pilih--'
+                });
+                
+                setTimeout(function() {
+                    reinitializeExistingSelects();
+                }, 100);
+            }
+
+            // Add new Dokter Tambahan
+            document.getElementById('add-dokter-tambahan').addEventListener('click', function() {
+                const container = document.getElementById('dokter-tambahan-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'dokter-tambahan-item mb-2';
+                newItem.setAttribute('data-index', dokterTambahanIndex);
+                
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="dokter_tambahan[]" class="form-select select2-dokter-tambahan">
+                            ${buildDoctorOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-dokter-tambahan">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(newItem);
+                
+                const newSelect = newItem.querySelector('select');
+                initializeSelect2(newSelect);
+                
+                dokterTambahanIndex++;
+                updateRemoveButtons();
+            });
+
+            // Add new Petugas Terkait
+            document.getElementById('add-petugas-terkait').addEventListener('click', function() {
+                const container = document.getElementById('petugas-terkait-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'petugas-terkait-item mb-2';
+                newItem.setAttribute('data-index', petugasTerkaitIndex);
+                
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="petugas_terkait[]" class="form-select select2-petugas-terkait">
+                            ${buildPerawatOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-petugas-terkait">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(newItem);
+                
+                const newSelect = newItem.querySelector('select');
+                initializeSelect2(newSelect);
+                
+                petugasTerkaitIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-dokter-tambahan') || e.target.closest('.remove-dokter-tambahan')) {
+                    const button = e.target.classList.contains('remove-dokter-tambahan') ? e.target : e.target.closest('.remove-dokter-tambahan');
+                    const item = button.closest('.dokter-tambahan-item');
+                    
+                    const select = item.querySelector('select');
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                        $(select).select2('destroy');
+                    }
+                    
+                    item.remove();
+                    updateRemoveButtons();
+                }
+
+                if (e.target.classList.contains('remove-petugas-terkait') || e.target.closest('.remove-petugas-terkait')) {
+                    const button = e.target.classList.contains('remove-petugas-terkait') ? e.target : e.target.closest('.remove-petugas-terkait');
+                    const item = button.closest('.petugas-terkait-item');
+                    
+                    const select = item.querySelector('select');
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                        $(select).select2('destroy');
+                    }
+                    
+                    item.remove();
+                    updateRemoveButtons();
+                }
+            });
+
+            // Update remove buttons visibility
+            function updateRemoveButtons() {
+                // Update dokter tambahan buttons
+                const dokterItems = document.querySelectorAll('.dokter-tambahan-item');
+                dokterItems.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-dokter-tambahan');
+                    if (index === 0 && dokterItems.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+
+                // Update petugas terkait buttons
+                const petugasItems = document.querySelectorAll('.petugas-terkait-item');
+                petugasItems.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-petugas-terkait');
+                    if (index === 0 && petugasItems.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+            }
+
+            // Initial update of remove buttons
+            updateRemoveButtons();
+
             // Initialize Select2 if available
             if (typeof $.fn.select2 !== 'undefined') {
                 $('.select2').select2({

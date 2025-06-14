@@ -12,6 +12,28 @@ class RmeMppB extends Model
     protected $table = 'RME_MPP_B';
     protected $guarded = ['id'];
 
+    public function __set($key, $value)
+    {
+        // Allow setting dynamic properties
+        if (in_array($key, ['dpjpUtama', 'dokterTambahanNames', 'petugasTerkaitNames'])) {
+            $this->attributes[$key] = $value;
+            return;
+        }
+
+        parent::__set($key, $value);
+    }
+
+    public function __get($key)
+    {
+        // Allow getting dynamic properties
+        if (in_array($key, ['dpjpUtama', 'dokterTambahanNames', 'petugasTerkaitNames'])) {
+            return $this->attributes[$key] ?? null;
+        }
+
+        return parent::__get($key);
+    }
+
+
     public function dpjpUtama()
     {
         return $this->belongsTo(Dokter::class, 'dpjp_utama', 'kd_dokter');

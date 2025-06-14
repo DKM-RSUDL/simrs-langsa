@@ -96,10 +96,12 @@
 
                                                         <!-- DPJP Tambahan -->
                                                         <td>
-                                                            @if ($mppData->dokterTambahan)
-                                                                {{ $mppData->dokterTambahan->nama }}
+                                                            @if(!empty($mppData->dpjp_tambahan_names))
+                                                                @foreach($mppData->dpjp_tambahan_names as $nama)
+                                                                    <span class="badge bg-secondary me-1 mb-1">{{ $nama }}</span>
+                                                                @endforeach
                                                             @else
-                                                                <span class="text-muted fst-italic">Tidak ada</span>
+                                                                <em class="text-muted">Tidak ada</em>
                                                             @endif
                                                         </td>
 
