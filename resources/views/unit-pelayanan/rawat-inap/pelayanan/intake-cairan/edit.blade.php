@@ -2,6 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         .form-label {
             font-weight: 500;
@@ -20,12 +21,6 @@
             padding-top: 1rem;
         }
 
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
         .form-group {
             margin-bottom: 1rem;
             display: flex;
@@ -35,21 +30,6 @@
         .form-group label {
             margin-bottom: 0.5rem;
             font-weight: 500;
-        }
-
-        .form-check {
-            margin: 0;
-            padding-left: 1.5rem;
-            min-height: auto;
-        }
-
-        .form-check-input {
-            margin-top: 0.3rem;
-        }
-
-        .form-check label {
-            margin-right: 0;
-            padding-top: 0;
         }
 
         .btn-outline-primary {
@@ -62,44 +42,27 @@
             color: white;
         }
 
-        /* Styling untuk kartu edukasi */
-        .edukasi-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .edukasi-card {
+        .output-section, .intake-section {
             background-color: #f8f9fa;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .edukasi-card .card-title {
-            font-size: 1.1rem;
+        .section-header {
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: #333;
         }
 
-        .edukasi-card .form-group {
+        .shift-info {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1rem;
             margin-bottom: 1.5rem;
-        }
-
-        .edukasi-card .form-check {
-            margin-bottom: 0.5rem;
-        }
-
-        .edukasi-card .form-control {
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-        }
-
-        .edukasi-card .form-control:focus {
-            border-color: #097dd6;
-            box-shadow: 0 0 5px rgba(9, 125, 214, 0.3);
         }
     </style>
 @endpush
@@ -114,298 +77,104 @@
             <a href="{{ url()->previous() }}" class="btn btn-outline-primary mb-3">
                 <i class="ti-arrow-left"></i> Kembali
             </a>
-            <form id="edukasiForm" method="POST"
+            <form id="intakeCairanEditForm" method="POST"
                 action="{{ route('rawat-inap.intake-cairan.update', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, encrypt($intake->id)]) }}">
                 @csrf
-                @method('put')
+                @method('PUT')
 
                 <div class="d-flex justify-content-center">
                     <div class="card w-100 h-100 shadow-sm">
                         <div class="card-body">
                             <div class="px-3">
-                                <h4 class="header-asesmen">Intake dan Output Cairan</h4>
+                                <h4 class="header-asesmen">Edit Intake dan Output Cairan per Shift</h4>
+                                <p class="text-muted mb-0">Ubah data asupan dan keluaran cairan pasien</p>
                             </div>
 
                             <div class="px-3">
-
-                                {{-- Info Umum --}}
-                                <div class="section-separator">
-                                    <div class="form-group">
-                                        <label for="tanggal" style="min-width: 200px;">Tanggal</label>
-                                        <input type="date" class="form-control"
-                                            value="{{ date('Y-m-d', strtotime($intake->tanggal)) }}" disabled>
+                                {{-- Info Shift --}}
+                                <div class="shift-info">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Tanggal:</strong> {{ date('d/m/Y', strtotime($intake->tanggal)) }}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Shift:</strong> {{ $intake->shift_name }}
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="accordion accordion-space" id="accordionExample2">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingOne1">
-                                            <button class="accordion-button collapsed fw-bold" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseOne2"
-                                                aria-expanded="false" aria-controls="collapseOne2">
-                                                07:00 s/d 14:00
-                                            </button>
-                                        </h2>
-                                        <div id="collapseOne2" class="accordion-collapse collapse"
-                                            aria-labelledby="headingOne1" data-bs-parent="#accordionExample2"
-                                            style="">
-                                            <div class="accordion-body">
-                                                {{-- Output --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Output</h4>
+                                {{-- Form Input Intake dan Output --}}
+                                <div id="intakeOutputContainer" class="intake-output-container">
+                                    {{-- Output Section --}}
+                                    <div class="output-section">
+                                        <h4 class="section-header">Output</h4>
 
-                                                    <div class="form-group">
-                                                        <label for="output_pagi_urine"
-                                                            style="min-width: 200px;">Urine</label>
-                                                        <input type="number" name="output_pagi_urine"
-                                                            id="output_pagi_urine" class="form-control"
-                                                            value="{{ $intake->output_pagi_urine ?? '0' }}" required>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="output_urine" style="min-width: 200px;">Urine (ml)</label>
+                                            <input type="number" name="output_urine" id="output_urine" 
+                                                class="form-control" value="{{ $intake->output_urine ?? '' }}" 
+                                                min="0" placeholder="0" required>
+                                        </div>
 
-                                                    <div class="form-group">
-                                                        <label for="output_pagi_muntah"
-                                                            style="min-width: 200px;">Muntah</label>
-                                                        <input type="number" name="output_pagi_muntah"
-                                                            id="output_pagi_muntah" class="form-control"
-                                                            value="{{ $intake->output_pagi_muntah ?? '0' }}" required>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="output_muntah" style="min-width: 200px;">Muntah (ml)</label>
+                                            <input type="number" name="output_muntah" id="output_muntah" 
+                                                class="form-control" value="{{ $intake->output_muntah ?? '' }}" 
+                                                min="0" placeholder="0" required>
+                                        </div>
 
-                                                    <div class="form-group">
-                                                        <label for="output_pagi_drain"
-                                                            style="min-width: 200px;">Drain</label>
-                                                        <input type="number" name="output_pagi_drain"
-                                                            id="output_pagi_drain" class="form-control"
-                                                            value="{{ $intake->output_pagi_drain ?? '0' }}" required>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="output_drain" style="min-width: 200px;">Drain (ml)</label>
+                                            <input type="number" name="output_drain" id="output_drain" 
+                                                class="form-control" value="{{ $intake->output_drain ?? '' }}" 
+                                                min="0" placeholder="0" required>
+                                        </div>
 
-                                                    <div class="form-group">
-                                                        <label for="output_pagi_iwl" style="min-width: 200px;">IWL
-                                                            (Insesible
-                                                            water loss)</label>
-                                                        <input type="number" name="output_pagi_iwl" id="output_pagi_iwl"
-                                                            class="form-control"
-                                                            value="{{ $intake->output_pagi_iwl ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Intake --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Intake</h4>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_pagi_iufd" style="min-width: 200px;">IUFD</label>
-                                                        <input type="number" name="intake_pagi_iufd" id="intake_pagi_iufd"
-                                                            class="form-control"
-                                                            value="{{ $intake->intake_pagi_iufd ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_pagi_minum"
-                                                            style="min-width: 200px;">Minum</label>
-                                                        <input type="number" name="intake_pagi_minum"
-                                                            id="intake_pagi_minum" class="form-control"
-                                                            value="{{ $intake->intake_pagi_minum ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_pagi_makan"
-                                                            style="min-width: 200px;">Makan</label>
-                                                        <input type="number" name="intake_pagi_makan"
-                                                            id="intake_pagi_makan" class="form-control"
-                                                            value="{{ $intake->intake_pagi_makan ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_pagi_ngt" style="min-width: 200px;">NGT</label>
-                                                        <input type="number" name="intake_pagi_ngt" id="intake_pagi_ngt"
-                                                            class="form-control"
-                                                            value="{{ $intake->intake_pagi_ngt ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="output_iwl" style="min-width: 200px;">IWL (Insensible Water Loss) (ml)</label>
+                                            <input type="number" name="output_iwl" id="output_iwl" 
+                                                class="form-control" value="{{ $intake->output_iwl ?? '' }}" 
+                                                min="0" placeholder="0" required>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingTwo2">
-                                            <button class="accordion-button collapsed fw-bold" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo2"
-                                                aria-expanded="false" aria-controls="collapseTwo2">
-                                                14:00 s/d 20:00
-                                            </button>
-                                        </h2>
-                                        <div id="collapseTwo2" class="accordion-collapse collapse"
-                                            aria-labelledby="headingTwo2" data-bs-parent="#accordionExample2">
-                                            <div class="accordion-body">
-                                                {{-- Output --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Output</h4>
 
-                                                    <div class="form-group">
-                                                        <label for="output_siang_urine"
-                                                            style="min-width: 200px;">Urine</label>
-                                                        <input type="number" name="output_siang_urine"
-                                                            id="output_siang_urine" class="form-control"
-                                                            value="{{ $intake->output_siang_urine ?? '0' }}" required>
-                                                    </div>
+                                    {{-- Intake Section --}}
+                                    <div class="intake-section">
+                                        <h4 class="section-header">Intake</h4>
 
-                                                    <div class="form-group">
-                                                        <label for="output_siang_muntah"
-                                                            style="min-width: 200px;">Muntah</label>
-                                                        <input type="number" name="output_siang_muntah"
-                                                            id="output_siang_muntah" class="form-control"
-                                                            value="{{ $intake->output_siang_muntah ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="output_siang_drain"
-                                                            style="min-width: 200px;">Drain</label>
-                                                        <input type="number" name="output_siang_drain"
-                                                            id="output_siang_drain" class="form-control"
-                                                            value="{{ $intake->output_siang_drain ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="output_siang_iwl" style="min-width: 200px;">IWL
-                                                            (Insesible
-                                                            water loss)</label>
-                                                        <input type="number" name="output_siang_iwl"
-                                                            id="output_siang_iwl" class="form-control"
-                                                            value="{{ $intake->output_siang_iwl ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Intake --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Intake</h4>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_siang_iufd"
-                                                            style="min-width: 200px;">IUFD</label>
-                                                        <input type="number" name="intake_siang_iufd"
-                                                            id="intake_siang_iufd" class="form-control"
-                                                            value="{{ $intake->intake_siang_iufd ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_siang_minum"
-                                                            style="min-width: 200px;">Minum</label>
-                                                        <input type="number" name="intake_siang_minum"
-                                                            id="intake_siang_minum" class="form-control"
-                                                            value="{{ $intake->intake_siang_minum ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_siang_makan"
-                                                            style="min-width: 200px;">Makan</label>
-                                                        <input type="number" name="intake_siang_makan"
-                                                            id="intake_siang_makan" class="form-control"
-                                                            value="{{ $intake->intake_siang_makan ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_siang_ngt"
-                                                            style="min-width: 200px;">NGT</label>
-                                                        <input type="number" name="intake_siang_ngt"
-                                                            id="intake_siang_ngt" class="form-control"
-                                                            value="{{ $intake->intake_siang_ngt ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="intake_iufd" style="min-width: 200px;">IUFD (ml)</label>
+                                            <input type="number" name="intake_iufd" id="intake_iufd" 
+                                                class="form-control" value="{{ $intake->intake_iufd ?? '' }}" 
+                                                min="0" placeholder="0" required>
                                         </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingThree3">
-                                            <button class="accordion-button collapsed fw-bold" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseThree3"
-                                                aria-expanded="false" aria-controls="collapseThree3">
-                                                20:00 s/d 07:00
-                                            </button>
-                                        </h2>
-                                        <div id="collapseThree3" class="accordion-collapse collapse"
-                                            aria-labelledby="headingThree3" data-bs-parent="#accordionExample2">
-                                            <div class="accordion-body">
-                                                {{-- Output --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Output</h4>
 
-                                                    <div class="form-group">
-                                                        <label for="output_malam_urine"
-                                                            style="min-width: 200px;">Urine</label>
-                                                        <input type="number" name="output_malam_urine"
-                                                            id="output_malam_urine" class="form-control"
-                                                            value="{{ $intake->output_malam_urine ?? '0' }}" required>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="intake_minum" style="min-width: 200px;">Minum (ml)</label>
+                                            <input type="number" name="intake_minum" id="intake_minum" 
+                                                class="form-control" value="{{ $intake->intake_minum ?? '' }}" 
+                                                min="0" placeholder="0" required>
+                                        </div>
 
-                                                    <div class="form-group">
-                                                        <label for="output_malam_muntah"
-                                                            style="min-width: 200px;">Muntah</label>
-                                                        <input type="number" name="output_malam_muntah"
-                                                            id="output_malam_muntah" class="form-control"
-                                                            value="{{ $intake->output_malam_muntah ?? '0' }}" required>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="intake_makan" style="min-width: 200px;">Makan (ml)</label>
+                                            <input type="number" name="intake_makan" id="intake_makan" 
+                                                class="form-control" value="{{ $intake->intake_makan ?? '' }}" 
+                                                min="0" placeholder="0" required>
+                                        </div>
 
-                                                    <div class="form-group">
-                                                        <label for="output_malam_drain"
-                                                            style="min-width: 200px;">Drain</label>
-                                                        <input type="number" name="output_malam_drain"
-                                                            id="output_malam_drain" class="form-control"
-                                                            value="{{ $intake->output_malam_drain ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="output_malam_iwl" style="min-width: 200px;">IWL
-                                                            (Insesible
-                                                            water loss)</label>
-                                                        <input type="number" name="output_malam_iwl"
-                                                            id="output_malam_iwl" class="form-control"
-                                                            value="{{ $intake->output_malam_iwl ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Intake --}}
-                                                <div class="section-separator">
-                                                    <h4 class="mb-3">Intake</h4>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_malam_iufd"
-                                                            style="min-width: 200px;">IUFD</label>
-                                                        <input type="number" name="intake_malam_iufd"
-                                                            id="intake_malam_iufd" class="form-control"
-                                                            value="{{ $intake->intake_malam_iufd ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_malam_minum"
-                                                            style="min-width: 200px;">Minum</label>
-                                                        <input type="number" name="intake_malam_minum"
-                                                            id="intake_malam_minum" class="form-control"
-                                                            value="{{ $intake->intake_malam_minum ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_malam_makan"
-                                                            style="min-width: 200px;">Makan</label>
-                                                        <input type="number" name="intake_malam_makan"
-                                                            id="intake_malam_makan" class="form-control"
-                                                            value="{{ $intake->intake_malam_makan ?? '0' }}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="intake_malam_ngt"
-                                                            style="min-width: 200px;">NGT</label>
-                                                        <input type="number" name="intake_malam_ngt"
-                                                            id="intake_malam_ngt" class="form-control"
-                                                            value="{{ $intake->intake_malam_ngt ?? '0' }}" required>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="intake_ngt" style="min-width: 200px;">NGT (ml)</label>
+                                            <input type="number" name="intake_ngt" id="intake_ngt" 
+                                                class="form-control" value="{{ $intake->intake_ngt ?? '' }}" 
+                                                min="0" placeholder="0" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">Simpan</button>
+                                <button type="submit" class="btn btn-primary" id="simpan">Update</button>
                             </div>
                         </div>
                     </div>
@@ -413,4 +182,6 @@
             </form>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

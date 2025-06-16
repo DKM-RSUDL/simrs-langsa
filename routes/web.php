@@ -933,6 +933,7 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/{data}/edit', 'edit')->name('.edit');
                                         Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/check-duplicate', 'checkDuplicate')->name('.check-duplicate');
                                         Route::get('/show/{data}', 'show')->name('.show');
                                         Route::delete('/', 'delete')->name('.delete');
                                         Route::get('/pdf', 'pdf')->name('.pdf');
@@ -1088,6 +1089,23 @@ Route::middleware('ssoToken')->group(function () {
                             // Kontrol Istimewwa
                             Route::prefix('kontrol-istimewa')->group(function () {
                                 Route::name('.kontrol-istimewa')->group(function () {
+                                    Route::controller(KontrolIstimewaController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/show/{data}', 'show')->name('.show');
+                                        Route::delete('/', 'delete')->name('.delete');
+                                        Route::post('/pdf', 'pdf')->name('.pdf');
+
+
+                                    });
+                                });
+                            });
+
+                            Route::prefix('kontrol-istimewa-jam')->group(function () {
+                                Route::name('.kontrol-istimewa-jam')->group(function () {
                                     Route::controller(KontrolIstimewaController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
