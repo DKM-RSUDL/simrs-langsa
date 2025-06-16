@@ -63,14 +63,12 @@
                         </div>
 
                         {{-- FORM ASESMEN MEDIS GINEKOLOGIK --}}
-                        <form method="POST"
-                            action="{{ route('rawat-inap.asesmen.medis.ginekologik.index', [
-                                'kd_unit' => $kd_unit,
-                                'kd_pasien' => $kd_pasien,
-                                'tgl_masuk' => $tgl_masuk,
-                                'urut_masuk' => $urut_masuk,
-                            ]) }}"
-                            enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('rawat-inap.asesmen.medis.ginekologik.index', [
+        'kd_unit' => $kd_unit,
+        'kd_pasien' => $kd_pasien,
+        'tgl_masuk' => $tgl_masuk,
+        'urut_masuk' => $urut_masuk,
+    ]) }}" enctype="multipart/form-data">
                             @csrf
                             <div class="px-3">
                                 <div>
@@ -81,8 +79,8 @@
                                         <div class="form-group">
                                             <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
-                                                <input type="date" class="form-control" name="tanggal"
-                                                    id="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                                                <input type="date" class="form-control" name="tanggal" id="tanggal_masuk"
+                                                    value="{{ date('Y-m-d') }}">
                                                 <input type="time" class="form-control" name="jam_masuk" id="jam_masuk"
                                                     value="{{ date('H:i') }}">
                                             </div>
@@ -113,22 +111,22 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>G</label>
-                                                    <input type="number" class="form-control" name="gravida"
-                                                        placeholder="0" min="0" max="20">
+                                                    <input type="number" class="form-control" name="gravida" placeholder="0"
+                                                        min="0" max="20">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>P</label>
-                                                    <input type="number" class="form-control" name="para"
-                                                        placeholder="0" min="0" max="20">
+                                                    <input type="number" class="form-control" name="para" placeholder="0"
+                                                        min="0" max="20">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>A</label>
-                                                    <input type="number" class="form-control" name="abortus"
-                                                        placeholder="0" min="0" max="20">
+                                                    <input type="number" class="form-control" name="abortus" placeholder="0"
+                                                        min="0" max="20">
                                                 </div>
                                             </div>
                                         </div>
@@ -153,23 +151,50 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Haid</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
+                                                <!-- Siklus -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Siklus</label>
                                                     <div class="input-group">
                                                         <input type="number" name="siklus" class="form-control"
-                                                            placeholder="Hari" min="1">
+                                                            placeholder="Hari" min="1" value="28">
                                                         <span class="input-group-text">Hari</span>
                                                     </div>
                                                 </div>
+
+                                                <!-- HPHT -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">HPHT</label>
-                                                    <input type="number" class="form-control" name="hpht"
-                                                        placeholder="Hari Pertama Haid Terakhir">
+                                                    <input type="date" class="form-control" name="hpht" id="hpht"
+                                                        value="{{ date('Y-m-d') }}" onchange="hitungUsiaKehamilan()">
                                                 </div>
+
+                                                <!-- Usia Kehamilan -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Usia Kehamilan</label>
-                                                    <input type="number" class="form-control" name="usia_kehamilan"
-                                                        placeholder="Usia Kehamilan">
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" name="usia_minggu"
+                                                                    id="usiaMinggu" placeholder="0" min="0" max="42"
+                                                                    readonly>
+                                                                <span class="input-group-text">Minggu</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" name="usia_hari"
+                                                                    id="usiaHari" placeholder="0" min="0" max="6" readonly>
+                                                                <span class="input-group-text">Hari</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted mt-1 d-block" id="displayUsia">
+                                                        Pilih tanggal HPHT untuk menghitung
+                                                    </small>
+
+                                                    <!-- Hidden inputs untuk form submission -->
+                                                    <input type="hidden" name="usia_kehamilan_total_hari" id="totalHari">
+                                                    <input type="hidden" name="usia_kehamilan_display" id="usiaDisplay">
                                                 </div>
                                             </div>
                                         </div>
@@ -188,8 +213,7 @@
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Suami Sekarang</label>
                                                     <div class="input-group">
-                                                        <input type="number" name="tahun" class="form-control"
-                                                            placeholder="berapa tahun" min="1">
+                                                        <input type="date" class="form-control" name="tahun" value="{{ date('Y-m-d') }}">                                                        
                                                         <span class="input-group-text">Tahun</span>
                                                     </div>
                                                 </div>
@@ -202,7 +226,8 @@
                                     <div class="section-separator" id="riwayat-obstetrik">
                                         <h5 class="section-title">4. Riwayat Obstetrik</h5>
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="openObstetrikModal">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                            id="openObstetrikModal">
                                             <i class="ti-plus"></i> Tambah Riwayat Obstetrik
                                         </button>
                                         <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput">
@@ -245,13 +270,11 @@
                                             <div class="d-flex gap-3" style="width: 100%;">
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Sistole</label>
-                                                    <input type="number" class="form-control"
-                                                        name="tekanan_darah_sistole">
+                                                    <input type="number" class="form-control" name="tekanan_darah_sistole">
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Diastole</label>
-                                                    <input type="number" class="form-control"
-                                                        name="tekanan_darah_diastole">
+                                                    <input type="number" class="form-control" name="tekanan_darah_diastole">
                                                 </div>
                                             </div>
                                         </div>
@@ -272,7 +295,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Nafas (Per Menit)</label>
+                                            <label style="min-width: 220px;">saturasi oksigen</label>
                                             <input type="number" class="form-control" name="nafas">
                                         </div>
 
@@ -308,17 +331,14 @@
                                                             <div class="d-flex flex-column gap-3">
                                                                 @foreach ($chunk as $item)
                                                                     <div class="pemeriksaan-item">
-                                                                        <div
-                                                                            class="d-flex align-items-center border-bottom pb-2">
+                                                                        <div class="d-flex align-items-center border-bottom pb-2">
                                                                             <div class="flex-grow-1">
                                                                                 {{ $item->nama }}
                                                                             </div>
                                                                             <div class="form-check me-3">
-                                                                                <input type="checkbox"
-                                                                                    class="form-check-input"
+                                                                                <input type="checkbox" class="form-check-input"
                                                                                     id="{{ $item->id }}-normal"
-                                                                                    name="{{ $item->id }}-normal"
-                                                                                    checked>
+                                                                                    name="{{ $item->id }}-normal" checked>
                                                                                 <label class="form-check-label"
                                                                                     for="{{ $item->id }}-normal">Normal</label>
                                                                             </div>
@@ -329,8 +349,7 @@
                                                                                 <i class="bi bi-plus"></i>
                                                                             </button>
                                                                         </div>
-                                                                        <div class="keterangan mt-2"
-                                                                            id="{{ $item->id }}-keterangan"
+                                                                        <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
                                                                             style="display:none;">
                                                                             <input type="text" class="form-control"
                                                                                 name="{{ $item->id }}_keterangan"
@@ -364,8 +383,7 @@
                                                             <div class="d-flex gap-3">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="edema_atas" id="edema_atas_ada"
-                                                                        value="ada">
+                                                                        name="edema_atas" id="edema_atas_ada" value="ada">
                                                                     <label class="form-check-label" for="edema_atas_ada">
                                                                         Ada
                                                                     </label>
@@ -374,8 +392,7 @@
                                                                     <input class="form-check-input" type="radio"
                                                                         name="edema_atas" id="edema_atas_tidak"
                                                                         value="tidak">
-                                                                    <label class="form-check-label"
-                                                                        for="edema_atas_tidak">
+                                                                    <label class="form-check-label" for="edema_atas_tidak">
                                                                         Tidak
                                                                     </label>
                                                                 </div>
@@ -389,8 +406,7 @@
                                                                     <input class="form-check-input" type="radio"
                                                                         name="varises_atas" id="varises_atas_ada"
                                                                         value="ada">
-                                                                    <label class="form-check-label"
-                                                                        for="varises_atas_ada">
+                                                                    <label class="form-check-label" for="varises_atas_ada">
                                                                         Ada
                                                                     </label>
                                                                 </div>
@@ -445,8 +461,7 @@
                                                             <div class="d-flex gap-3">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="edema_bawah" id="edema_bawah_ada"
-                                                                        value="ada">
+                                                                        name="edema_bawah" id="edema_bawah_ada" value="ada">
                                                                     <label class="form-check-label" for="edema_bawah_ada">
                                                                         Ada
                                                                     </label>
@@ -455,8 +470,7 @@
                                                                     <input class="form-check-input" type="radio"
                                                                         name="edema_bawah" id="edema_bawah_tidak"
                                                                         value="tidak">
-                                                                    <label class="form-check-label"
-                                                                        for="edema_bawah_tidak">
+                                                                    <label class="form-check-label" for="edema_bawah_tidak">
                                                                         Tidak
                                                                     </label>
                                                                 </div>
@@ -470,8 +484,7 @@
                                                                     <input class="form-check-input" type="radio"
                                                                         name="varises_bawah" id="varises_bawah_ada"
                                                                         value="ada">
-                                                                    <label class="form-check-label"
-                                                                        for="varises_bawah_ada">
+                                                                    <label class="form-check-label" for="varises_bawah_ada">
                                                                         Ada
                                                                     </label>
                                                                 </div>
@@ -543,8 +556,7 @@
                                                     <div class="card-body">
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">Keadaan Umum</label>
-                                                            <input type="text" class="form-control"
-                                                                name="keadaan_umum"
+                                                            <input type="text" class="form-control" name="keadaan_umum"
                                                                 placeholder="Masukkan keadaan umum pasien">
                                                         </div>
 
@@ -574,21 +586,24 @@
                                                     <div class="card-body">
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">Inspekulo</label>
-                                                            <textarea class="form-control" name="inspekulo" rows="4" placeholder="Hasil pemeriksaan inspekulo..."></textarea>
+                                                            <textarea class="form-control" name="inspekulo" rows="4"
+                                                                placeholder="Hasil pemeriksaan inspekulo..."></textarea>
                                                             <small class="text-muted">Pemeriksaan dengan spekulum</small>
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">VT (Vaginal
                                                                 Toucher)</label>
-                                                            <textarea class="form-control" name="vt" rows="4" placeholder="Hasil pemeriksaan VT/vaginal toucher..."></textarea>
+                                                            <textarea class="form-control" name="vt" rows="4"
+                                                                placeholder="Hasil pemeriksaan VT/vaginal toucher..."></textarea>
                                                             <small class="text-muted">Pemeriksaan dalam per vagina</small>
                                                         </div>
 
                                                         <div class="mb-0">
                                                             <label class="form-label fw-semibold">RT (Rectal
                                                                 Toucher)</label>
-                                                            <textarea class="form-control" name="rt" rows="4" placeholder="Hasil pemeriksaan RT/rectal toucher..."></textarea>
+                                                            <textarea class="form-control" name="rt" rows="4"
+                                                                placeholder="Hasil pemeriksaan RT/rectal toucher..."></textarea>
                                                             <small class="text-muted">Pemeriksaan dalam per rektal</small>
                                                         </div>
                                                     </div>
@@ -614,7 +629,8 @@
                                         <div class="row mb-4">
                                             <div class="col-12">
                                                 <label class="form-label fw-semibold">2. USG</label>
-                                                <textarea class="form-control" name="usg" rows="6" placeholder="Masukkan hasil pemeriksaan USG..."></textarea>
+                                                <textarea class="form-control" name="usg" rows="6"
+                                                    placeholder="Masukkan hasil pemeriksaan USG..."></textarea>
                                                 <small class="text-muted">Hasil USG abdomen, transvaginal, atau USG
                                                     lainnya</small>
                                             </div>
@@ -776,8 +792,7 @@
                                             </div>
 
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding"
-                                                value="[]">
+                                            <input type="hidden" id="diagnosis_banding" name="diagnosis_banding" value="[]">
                                         </div>
 
                                         <!-- Diagnosis Kerja -->
@@ -804,8 +819,7 @@
                                             </div>
 
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
-                                                value="[]">
+                                            <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja" value="[]">
                                         </div>
                                     </div>
 
@@ -929,8 +943,7 @@
                                                 <!-- Items will be added here dynamically -->
                                             </div>
                                             <!-- Hidden input to store JSON data -->
-                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis"
-                                                value="[]">
+                                            <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                         </div>
                                     </div>
 
@@ -956,17 +969,17 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Function untuk mengatur warna card berdasarkan selection
             function updateCardStatus() {
                 const cards = document.querySelectorAll('#pemeriksaan-ekstremitas .card');
 
-                cards.forEach(function(card) {
+                cards.forEach(function (card) {
                     const radioButtons = card.querySelectorAll('input[type="radio"]');
                     let hasSelection = false;
                     let hasAbnormal = false;
 
-                    radioButtons.forEach(function(radio) {
+                    radioButtons.forEach(function (radio) {
                         if (radio.checked) {
                             hasSelection = true;
                             // Check jika ada nilai abnormal (ada, positif)
@@ -992,7 +1005,7 @@
 
             // Add event listeners to all radio buttons
             const allRadios = document.querySelectorAll('#pemeriksaan-ekstremitas input[type="radio"]');
-            allRadios.forEach(function(radio) {
+            allRadios.forEach(function (radio) {
                 radio.addEventListener('change', updateCardStatus);
             });
 
@@ -1005,7 +1018,7 @@
 
                 let incompleteFields = [];
 
-                requiredGroups.forEach(function(groupName) {
+                requiredGroups.forEach(function (groupName) {
                     const checked = document.querySelector(`input[name="${groupName}"]:checked`);
                     if (!checked) {
                         incompleteFields.push(groupName.replace('_', ' ').toUpperCase());
@@ -1055,7 +1068,7 @@
             }
 
             // Update summary on radio change
-            allRadios.forEach(function(radio) {
+            allRadios.forEach(function (radio) {
                 radio.addEventListener('change', updateSummary);
             });
 
@@ -1069,21 +1082,21 @@
 
             // Apply auto-resize to all textareas in ginekologik section
             const textareas = document.querySelectorAll('#status-ginekologik textarea');
-            textareas.forEach(function(textarea) {
+            textareas.forEach(function (textarea) {
                 // Initial resize
                 autoResize(textarea);
 
                 // Add event listener for dynamic resizing
-                textarea.addEventListener('input', function() {
+                textarea.addEventListener('input', function () {
                     autoResize(this);
                 });
 
                 // Add focus effect
-                textarea.addEventListener('focus', function() {
+                textarea.addEventListener('focus', function () {
                     this.parentNode.querySelector('.form-label').classList.add('text-primary');
                 });
 
-                textarea.addEventListener('blur', function() {
+                textarea.addEventListener('blur', function () {
                     this.parentNode.querySelector('.form-label').classList.remove('text-primary');
                 });
             });
@@ -1091,34 +1104,34 @@
             // Function untuk validation
             function validateGinekologik() {
                 const fields = [{
-                        name: 'keadaan_umum',
-                        label: 'Keadaan Umum'
-                    },
-                    {
-                        name: 'status_ginekologik',
-                        label: 'Status Ginekologik'
-                    },
-                    {
-                        name: 'pemeriksaan',
-                        label: 'Pemeriksaan'
-                    },
-                    {
-                        name: 'inspekulo',
-                        label: 'Inspekulo'
-                    },
-                    {
-                        name: 'vt',
-                        label: 'VT'
-                    },
-                    {
-                        name: 'rt',
-                        label: 'RT'
-                    }
+                    name: 'keadaan_umum',
+                    label: 'Keadaan Umum'
+                },
+                {
+                    name: 'status_ginekologik',
+                    label: 'Status Ginekologik'
+                },
+                {
+                    name: 'pemeriksaan',
+                    label: 'Pemeriksaan'
+                },
+                {
+                    name: 'inspekulo',
+                    label: 'Inspekulo'
+                },
+                {
+                    name: 'vt',
+                    label: 'VT'
+                },
+                {
+                    name: 'rt',
+                    label: 'RT'
+                }
                 ];
 
                 let emptyFields = [];
 
-                fields.forEach(function(field) {
+                fields.forEach(function (field) {
                     const element = document.querySelector(`[name="${field.name}"]`);
                     if (element && !element.value.trim()) {
                         emptyFields.push(field.label);
@@ -1133,8 +1146,8 @@
 
             // Add validation indicators
             const inputs = document.querySelectorAll('#status-ginekologik input, #status-ginekologik textarea');
-            inputs.forEach(function(input) {
-                input.addEventListener('input', function() {
+            inputs.forEach(function (input) {
+                input.addEventListener('input', function () {
                     if (this.value.trim()) {
                         this.classList.remove('border-warning');
                         this.classList.add('border-success');
@@ -1173,7 +1186,7 @@
             }
 
             // Add character counters to textareas
-            textareas.forEach(function(textarea) {
+            textareas.forEach(function (textarea) {
                 if (textarea.name !== 'catatan_ginekologik') {
                     addCharCounter(textarea);
                 }
@@ -1184,8 +1197,8 @@
 
             // Auto-capitalize first letter untuk text inputs
             const textInputs = document.querySelectorAll('#status-ginekologik input[type="text"]');
-            textInputs.forEach(function(input) {
-                input.addEventListener('input', function() {
+            textInputs.forEach(function (input) {
+                input.addEventListener('input', function () {
                     let value = this.value;
                     if (value.length > 0) {
                         this.value = value.charAt(0).toUpperCase() + value.slice(1);
@@ -1194,5 +1207,111 @@
             });
 
         });
+
+        // Riwayat Penyakit        
+        // Set tanggal hari ini saat halaman load
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('hpht').value = today;
+            hitungUsiaKehamilan();
+        });
+
+        // Fungsi untuk menghitung usia kehamilan dari HPHT
+        function hitungUsiaKehamilan() {
+            const hphtInput = document.getElementById('hpht').value;
+
+            if (!hphtInput) {
+                clearUsiaKehamilan();
+                return;
+            }
+
+            const hphtDate = new Date(hphtInput);
+            const today = new Date();
+
+            // Reset waktu ke 00:00:00 untuk perhitungan yang akurat
+            hphtDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            // Hitung selisih hari
+            const diffTime = today.getTime() - hphtDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                // HPHT di masa depan
+                document.getElementById('displayUsia').innerHTML =
+                    '<span class="text-warning">HPHT tidak boleh di masa depan</span>';
+                clearUsiaKehamilan();
+                return;
+            }
+
+            // Konversi ke minggu dan hari
+            const weeks = Math.floor(diffDays / 7);
+            const days = diffDays % 7;
+
+            // Update input fields
+            document.getElementById('usiaMinggu').value = weeks;
+            document.getElementById('usiaHari').value = days;
+            document.getElementById('totalHari').value = diffDays;
+
+            // Format display
+            let displayText = '';
+            if (weeks === 0 && days === 0) {
+                displayText = 'Hari ini (HPHT)';
+            } else if (weeks === 0) {
+                displayText = `${days} hari`;
+            } else if (days === 0) {
+                displayText = `${weeks} minggu`;
+            } else {
+                displayText = `${weeks} minggu ${days} hari`;
+            }
+
+            document.getElementById('usiaDisplay').value = displayText;
+            document.getElementById('displayUsia').innerHTML =
+                `<span class="text-success"><strong>${displayText}</strong></span>`;
+
+            // Update informasi tambahan
+            updateInfoTambahan(weeks, days, diffDays, hphtDate);
+
+            // Tampilkan info tambahan
+            document.getElementById('infoTambahan').style.display = 'block';
+        }
+
+        // Update informasi tambahan
+        function updateInfoTambahan(weeks, days, totalDays, hphtDate) {
+            // Tentukan trimester
+            let trimester = '';
+            if (weeks < 13) {
+                trimester = 'I (0-12 minggu)';
+            } else if (weeks < 27) {
+                trimester = 'II (13-26 minggu)';
+            } else {
+                trimester = 'III (27+ minggu)';
+            }
+
+            document.getElementById('trimester').textContent = trimester;
+            document.getElementById('totalHariDisplay').textContent = totalDays + ' hari';
+
+            // Hitung perkiraan tanggal lahir (HPHT + 280 hari)
+            const perkiraanLahir = new Date(hphtDate);
+            perkiraanLahir.setDate(perkiraanLahir.getDate() + 280);
+
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('perkiraanLahir').textContent =
+                perkiraanLahir.toLocaleDateString('id-ID', options);
+        }
+
+        // Clear usia kehamilan
+        function clearUsiaKehamilan() {
+            document.getElementById('usiaMinggu').value = '';
+            document.getElementById('usiaHari').value = '';
+            document.getElementById('totalHari').value = '';
+            document.getElementById('usiaDisplay').value = '';
+            document.getElementById('displayUsia').textContent = 'Pilih tanggal HPHT untuk menghitung';
+            document.getElementById('infoTambahan').style.display = 'none';
+        }
     </script>
 @endpush
