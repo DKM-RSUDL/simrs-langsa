@@ -15,7 +15,7 @@
             .page-break {
                 page-break-before: always;
             }
-            
+
             .no-break {
                 page-break-inside: avoid;
             }
@@ -305,7 +305,8 @@
                 </div>
                 <div class="patient-row">
                     <span class="patient-label">Jenis Kelamin:</span>
-                    <span class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</span>
+                    <span
+                        class="patient-value">{{ $dataMedis->pasien->jenis_kelamin == 1 ? 'Laki-laki' : ($dataMedis->pasien->jenis_kelamin == 0 ? 'Perempuan' : '-') }}</span>
                 </div>
                 <div class="patient-row">
                     <span class="patient-label">Tanggal Lahir:</span>
@@ -389,7 +390,8 @@
                         <td>A*</td>
                         <td>0</td>
                         @foreach($sortedRecords as $record)
-                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}</td>
+                            <td class="{{ $record->avpu == 'A' ? 'cell-green' : '' }}">{{ $record->avpu == 'A' ? 'A' : '' }}
+                            </td>
                         @endforeach
                     </tr>
                     <tr>
@@ -732,16 +734,47 @@
         <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
         <table class="hasil-ews-table">
             <tr>
-                <td class="hasil-low">Total Skor 0-4: RISIKO RENDAH</td>
-                <td class="hasil-medium">Skor 3 dalam satu parameter atau Total Skor 5-6: RISIKO SEDANG</td>
-                <td class="hasil-high">Total Skor ≥ 7: RISIKO TINGGI</td>
+                @php
+                    // Tentukan risiko berdasarkan data pasien terakhir
+                    $latestRecord = $sortedRecords->last();
+                    $riskLevel = '';
+                    $riskClass = '';
+                    $riskText = '';
+
+                    if ($latestRecord) {
+                        if ($latestRecord->total_skor >= 7) {
+                            $riskLevel = 'TINGGI';
+                            $riskClass = 'hasil-high';
+                            $riskText = 'Total Skor ≥ 7: RISIKO TINGGI';
+                        } elseif (
+                            $latestRecord->total_skor >= 5 ||
+                            (in_array($latestRecord->avpu, ['V', 'P', 'U']) && $latestRecord->avpu != null) ||
+                            compareEwsValue($latestRecord->saturasi_o2, '≤ 91') ||
+                            compareEwsValue($latestRecord->tekanan_darah, '≤ 90') ||
+                            compareEwsValue($latestRecord->tekanan_darah, '≥ 220') ||
+                            compareEwsValue($latestRecord->nadi, '≤ 40') ||
+                            compareEwsValue($latestRecord->nadi, '≥ 131') ||
+                            compareEwsValue($latestRecord->nafas, '≤ 8') ||
+                            compareEwsValue($latestRecord->nafas, '≥ 25')
+                        ) {
+                            $riskLevel = 'SEDANG';
+                            $riskClass = 'hasil-medium';
+                            $riskText = 'Skor 3 dalam satu parameter atau Total Skor 5-6: RISIKO SEDANG';
+                        } else {
+                            $riskLevel = 'RENDAH';
+                            $riskClass = 'hasil-low';
+                            $riskText = 'Total Skor 0-4: RISIKO RENDAH';
+                        }
+                    }
+                @endphp
+                <td class="{{ $riskClass }}">{{ $riskText }}</td>
             </tr>
         </table>
 
         <div class="footer">
-            <p>Nama dan Paraf:</p>
-            <p style="margin-top: 30px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}</p>
-            <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+            <p style="font-size: 12px">Nama dan Paraf:</p>
+            <p style="margin-top: 40px; font-size: 12px;">{{ str()->title($ewsPasienDewasa->userCreate->name ?? '-') }}</p>
+            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
             @if(isset($ewsPasienDewasa) && $ewsPasienDewasa->userCreate && $ewsPasienDewasa->userCreate->jabatan)
                 <p>{{ $ewsPasienDewasa->userCreate->jabatan }}</p>
             @endif
@@ -753,7 +786,7 @@
     <!-- Halaman Kedua: Intervensi dan Keterangan -->
     <div class="intervention-page">
         <div class="intervention-title">INTERVENSI PENILAIAN EARLY WARNING SYSTEM</div>
-        
+
         <!-- Risk Assessment Table -->
         <table class="risk-table">
             <tr class="risk-low">
@@ -774,10 +807,12 @@
         <div class="avpu-explanation">
             <p><strong>Keterangan Tingkat kesadaran AVPU :</strong></p>
             <p><strong>A : ALERT</strong> &nbsp;&nbsp;&nbsp; Pasien sadar penuh</p>
-            <p><strong>V : VOICE</strong> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata, suara atau motorik</p>
+            <p><strong>V : VOICE</strong> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa jenis respon saat dipanggil
+                berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata, suara atau motorik</p>
             <p><strong>P : PAIN</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan berespon jika dirangsang sakit</p>
-            <p><strong>U : UNRESPONSIVE</strong> &nbsp;&nbsp;&nbsp; Tidak berespon, jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
-        </div>        
+            <p><strong>U : UNRESPONSIVE</strong> &nbsp;&nbsp;&nbsp; Tidak berespon, jika pasien tidak memberikan respon
+                terhadap suara, nyeri dsb</p>
+        </div>
 
         <!-- Intervention Table -->
         <table class="intervention-table">
@@ -801,7 +836,8 @@
                     <td style="text-align: center;">TOTAL SCORE<br>1 - 4</td>
                     <td style="text-align: center;">Minimal Setiap<br>4 - 6 Jam Sekali</td>
                     <td>
-                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung jawab jaga ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
+                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung jawab jaga
+                        ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
                         <strong>2.</strong> Ketua Tim / penanggunggjawab harus membuat keputusan:<br>
                         &nbsp;&nbsp;&nbsp; a. Meningkatkan frekuensi observasi / monitoring<br>
                         &nbsp;&nbsp;&nbsp; b. Perawatan asuhan yang dibutuhkan oleh pasien
@@ -810,10 +846,13 @@
                 <tr>
                     <td style="text-align: center;">3</td>
                     <td style="text-align: center;">TOTAL SCORE<br>5 DAN 6 ATAU 3<br>DALAM 1 (SATU)<br>PARAMETER</td>
-                    <td style="text-align: center;">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya Setiap<br>1 Jam Sekali</td>
+                    <td style="text-align: center;">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya
+                        Setiap<br>1 Jam Sekali</td>
                     <td>
-                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien kepada dokter jaga atau DPJP<br>
-                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya dan menentukan kondisi pasien apakah dalam penyakit akut,<br>
+                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien
+                        kepada dokter jaga atau DPJP<br>
+                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya dan
+                        menentukan kondisi pasien apakah dalam penyakit akut,<br>
                         <strong>3.</strong> Siapkan fasilitas monitoring yang lebih canggih.
                     </td>
                 </tr>
@@ -822,7 +861,8 @@
                     <td style="text-align: center;">TOTAL SCORE 7<br>ATAU LEBIH</td>
                     <td style="text-align: center;">Lanjutkan Observasi / Monitoring<br>Tanda-Tanda Vital</td>
                     <td>
-                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien kepada dokter jaga atau DPJP<br>
+                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi pasien
+                        kepada dokter jaga atau DPJP<br>
                         <strong>2.</strong> Rencanakan transfer pasien ke ruang intensive<br>
                         <strong>3.</strong> Aktivasi code blue bila pasien henti jantung/henti nafas
                     </td>

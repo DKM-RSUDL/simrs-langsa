@@ -77,7 +77,7 @@
                                                 '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 95" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≥ 95']) ? 'selected' : '' }}>≥ 95</option>
                                         <option value="94-95" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['94-95']) ? 'selected' : '' }}>94-95</option>
                                         <option value="92-93" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['92-93']) ? 'selected' : '' }}>92-93</option>
@@ -109,7 +109,7 @@
                                                 '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 220" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≥ 220']) ? 'selected' : '' }}>≥ 220</option>
                                         <option value="111-219" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['111-219']) ? 'selected' : '' }}>111-219</option>
                                         <option value="101-110" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['101-110']) ? 'selected' : '' }}>101-110</option>
@@ -133,7 +133,7 @@
                                                 '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 131" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≥ 131']) ? 'selected' : '' }}>≥ 131</option>
                                         <option value="111-130" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['111-130']) ? 'selected' : '' }}>111-130</option>
                                         <option value="91-110" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['91-110']) ? 'selected' : '' }}>91-110</option>
@@ -157,7 +157,7 @@
                                                 '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 25" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≥ 25']) ? 'selected' : '' }}>≥ 25</option>
                                         <option value="21-24" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['21-24']) ? 'selected' : '' }}>21-24</option>
                                         <option value="12-20" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['12-20']) ? 'selected' : '' }}>12-20</option>
@@ -180,7 +180,7 @@
                                                 '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 39.1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≥ 39.1']) ? 'selected' : '' }}>≥ 39.1</option>
                                         <option value="38.1-39.0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['38.1-39.0']) ? 'selected' : '' }}>38.1-39.0</option>
                                         <option value="36.1-38.0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['36.1-38.0']) ? 'selected' : '' }}>36.1-38.0</option>
@@ -226,23 +226,23 @@
                 </div>
             </form>
             <p class="fw-bold text-center">INTERVENSI PENIALAIAN EARLY WARNING SYSTEM</p>
-            <div class="container mt-2">
+            <div class="mt-2">
                 <!-- Risk Assessment Table -->
                 <div class="mb-4">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <tbody>
                                 <tr class="bg-success text-white">
-                                    <td class="text-center fw-bold">Total Skor 0-4</td>
-                                    <td class="text-center fw-bold">RISIKO RENDAH</td>
+                                    <td class="text-start fw-bold">Total Skor 0-4</td>
+                                    <td class="text-start fw-bold">RISIKO RENDAH</td>
                                 </tr>
                                 <tr class="bg-warning text-dark">
-                                    <td class="text-center fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
-                                    <td class="text-center fw-bold">RISIKO SEDANG</td>
+                                    <td class="text-start fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
+                                    <td class="text-start fw-bold">RISIKO SEDANG</td>
                                 </tr>
                                 <tr class="bg-danger text-white">
-                                    <td class="text-center fw-bold">Total Skor ≥ 7</td>
-                                    <td class="text-center fw-bold">RISIKO TINGGI</td>
+                                    <td class="text-start fw-bold">Total Skor ≥ 7</td>
+                                    <td class="text-start fw-bold">RISIKO TINGGI</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -263,7 +263,7 @@
                 </div>
 
                 <!-- Intervention Table -->
-                <div class="mt-0">                    
+                <div class="mt-0">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
@@ -323,6 +323,6 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 @endsection

@@ -162,23 +162,23 @@
             </form>
 
             <p class="fw-bold text-center">INTERVENSI PENIALAIAN EARLY WARNING SYSTEM</p>
-            <div class="container mt-2">
+            <div class="mt-2">
                 <!-- Risk Assessment Table -->
                 <div class="mb-4">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <tbody>
                                 <tr class="bg-success text-white">
-                                    <td class="text-center fw-bold">Total Skor 0-4</td>
-                                    <td class="text-center fw-bold">RISIKO RENDAH</td>
+                                    <td class="text-start fw-bold">Total Skor 0-4</td>
+                                    <td class="text-start fw-bold">RISIKO RENDAH</td>
                                 </tr>
                                 <tr class="bg-warning text-dark">
-                                    <td class="text-center fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
-                                    <td class="text-center fw-bold">RISIKO SEDANG</td>
+                                    <td class="text-start fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
+                                    <td class="text-start fw-bold">RISIKO SEDANG</td>
                                 </tr>
                                 <tr class="bg-danger text-white">
-                                    <td class="text-center fw-bold">Total Skor ≥ 7</td>
-                                    <td class="text-center fw-bold">RISIKO TINGGI</td>
+                                    <td class="text-start fw-bold">Total Skor ≥ 7</td>
+                                    <td class="text-start fw-bold">RISIKO TINGGI</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -199,7 +199,7 @@
                 </div>
 
                 <!-- Intervention Table -->
-                <div class="mt-0">                    
+                <div class="mt-0">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">

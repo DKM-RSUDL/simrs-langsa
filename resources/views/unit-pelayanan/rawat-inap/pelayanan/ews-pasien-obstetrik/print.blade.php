@@ -10,13 +10,14 @@
             size: A4 portrait;
         }
 
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Print-specific styles */
         @media print {
             .page-break {
                 page-break-before: always;
-            }
-            
-            .no-break {
-                page-break-inside: avoid;
             }
         }
 
@@ -224,7 +225,7 @@
 
         .protocol-title {
             text-align: center;
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
             margin: 20px 0;
         }
@@ -772,7 +773,7 @@
             $latestRecord = $sortedRecords->last();
             $resultText = '';
             $resultClass = '';
-            
+
             if ($latestRecord) {
                 if (in_array($latestRecord->kesadaran, $kesadaranMatches['Unresponsive'])) {
                     $resultText = 'Henti Nafas/Jantung: CODE BLUE<br>Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.';
@@ -803,9 +804,9 @@
         </table>
 
         <div class="footer">
-            <p>Nama dan Paraf:</p>
-            <p style="margin-top: 20px;">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
-            <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+            <p style="font-size: 12px">Nama dan Paraf:</p>
+            <p style="margin-top: 30px; font-size: 12px">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
+            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
             @if(isset($ewsPsienObstetrik->userCreate->jabatan))
                 <p>{{ $ewsPsienObstetrik->userCreate->jabatan }}</p>
             @endif
@@ -816,7 +817,7 @@
     <div class="page-break"></div>
     <div class="protocol-page">
         <p class="protocol-title">PROTOKOL ASSESSMENT DAN INTERVENSI EWS</p>
-        
+
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
             <table class="protocol-table">
                 <thead>
