@@ -133,6 +133,7 @@ class MppAController extends Controller
             'identification_time' => $request->identification_time,
             'planning_date' => $request->planning_date,
             'planning_time' => $request->planning_time,
+            'lain_lain_text' => $request->lain_lain_text,
             'user_create' => auth()->user()->id,
         ];
 
@@ -142,9 +143,13 @@ class MppAController extends Controller
             'risiko_tinggi',
             'potensi_komplain',
             'riwayat_kronis',
+            'kasus_katastropik',    // NEW
+            'kasus_terminal',       // NEW
             'status_fungsional',
             'peralatan_medis',
             'gangguan_mental',
+            'krisis_keluarga',      // NEW
+            'isu_sosial',           // NEW
             'sering_igd',
             'perkiraan_asuhan',
             'sistem_pembiayaan',
@@ -158,7 +163,10 @@ class MppAController extends Controller
 
         // Handle assessment criteria
         $assessmentCriteria = [
-            'fisik_fungsional',
+            'assessment_fisik',     // NEW (was fisik_fungsional)
+            'assessment_fungsional', // NEW
+            'assessment_kognitif',   // NEW
+            'assessment_kemandirian', // NEW
             'riwayat_kesehatan',
             'perilaku_psiko',
             'kesehatan_mental',
@@ -177,7 +185,8 @@ class MppAController extends Controller
         // Handle identification criteria
         $identificationCriteria = [
             'tingkat_asuhan',
-            'over_under_utilization',
+            'over_utilization',     // NEW (was over_under_utilization)
+            'under_utilization',    // NEW
             'ketidak_patuhan',
             'edukasi_kurang',
             'kurang_dukungan',
@@ -298,6 +307,7 @@ class MppAController extends Controller
             'identification_time' => $request->identification_time,
             'planning_date' => $request->planning_date,
             'planning_time' => $request->planning_time,
+            'lain_lain_text' => $request->lain_lain_text,
             'user_update' => auth()->user()->id,
         ];
 
@@ -307,9 +317,13 @@ class MppAController extends Controller
             'risiko_tinggi',
             'potensi_komplain',
             'riwayat_kronis',
+            'kasus_katastropik',    // NEW
+            'kasus_terminal',       // NEW
             'status_fungsional',
             'peralatan_medis',
             'gangguan_mental',
+            'krisis_keluarga',      // NEW
+            'isu_sosial',           // NEW
             'sering_igd',
             'perkiraan_asuhan',
             'sistem_pembiayaan',
@@ -323,7 +337,10 @@ class MppAController extends Controller
 
         // Handle assessment criteria
         $assessmentCriteria = [
-            'fisik_fungsional',
+            'assessment_fisik',     // NEW (was fisik_fungsional)
+            'assessment_fungsional', // NEW
+            'assessment_kognitif',   // NEW
+            'assessment_kemandirian', // NEW
             'riwayat_kesehatan',
             'perilaku_psiko',
             'kesehatan_mental',
@@ -342,7 +359,8 @@ class MppAController extends Controller
         // Handle identification criteria
         $identificationCriteria = [
             'tingkat_asuhan',
-            'over_under_utilization',
+            'over_utilization',     // NEW (was over_under_utilization)
+            'under_utilization',    // NEW
             'ketidak_patuhan',
             'edukasi_kurang',
             'kurang_dukungan',

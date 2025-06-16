@@ -292,7 +292,7 @@
                                     
                                     <!-- Row dengan tanggal jam dan semua kriteria -->
                                     <tr class="screening-row">
-                                        <td class="datetime-column" rowspan="13">
+                                        <td class="datetime-column" rowspan="17"> <!-- Updated rowspan from 13 to 18 -->
                                             <div class="datetime-inputs">
                                                 <input type="date" name="screening_date" class="form-control form-control-sm screening-date">
                                                 <input type="time" name="screening_time" class="form-control form-control-sm screening-time">
@@ -306,7 +306,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -316,7 +316,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -326,17 +326,38 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <!-- SEPARATED: Kasus dengan riwayat kronis, katastropik, terminal -->
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="riwayat_kronis" 
                                                        class="criteria-checkbox screening-checkbox" id="s4">
-                                                <label class="criteria-label" for="s4">Kasus dengan riwayat kronis, katastropik, terminal</label>
+                                                <label class="criteria-label" for="s4">Kasus dengan riwayat kronis</label>
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="kasus_katastropik" 
+                                                       class="criteria-checkbox screening-checkbox" id="s4b">
+                                                <label class="criteria-label" for="s4b">Kasus katastropik</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="kasus_terminal" 
+                                                       class="criteria-checkbox screening-checkbox" id="s4c">
+                                                <label class="criteria-label" for="s4c">Kasus terminal</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -346,7 +367,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -356,17 +377,38 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <!-- SEPARATED: Riwayat gangguan mental, krisis keluarga, isu sosial -->
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="gangguan_mental" 
                                                        class="criteria-checkbox screening-checkbox" id="s7">
-                                                <label class="criteria-label" for="s7">Riwayat gangguan mental, krisis keluarga, isu sosial (terlantar, tinggal sendiri, narkoba)</label>
+                                                <label class="criteria-label" for="s7">Riwayat gangguan mental</label>
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="krisis_keluarga" 
+                                                       class="criteria-checkbox screening-checkbox" id="s7b">
+                                                <label class="criteria-label" for="s7b">Krisis keluarga</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="isu_sosial" 
+                                                       class="criteria-checkbox screening-checkbox" id="s7c">
+                                                <label class="criteria-label" for="s7c">Isu sosial (terlantar, tinggal sendiri, narkoba)</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -376,7 +418,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -386,7 +428,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -396,7 +438,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -406,7 +448,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -421,8 +463,14 @@
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="lain_lain" 
-                                                       class="criteria-checkbox screening-checkbox" id="s13">
+                                                    class="criteria-checkbox screening-checkbox" id="s13">
                                                 <label class="criteria-label" for="s13">Lain-lain</label>
+                                            </div>
+                                            <!-- Tambahkan textarea untuk free text -->
+                                            <div class="mt-2" id="lain-lain-text-container" style="display: none;">
+                                                <textarea name="lain_lain_text" class="form-control form-control-sm" 
+                                                        rows="2" placeholder="Jelaskan lain-lain..."
+                                                        id="lain-lain-textarea">{{ isset($mppData) ? $mppData->lain_lain_text : '' }}</textarea>
                                             </div>
                                         </td>
                                     </tr>
@@ -433,21 +481,52 @@
                                     </tr>
                                     
                                     <tr class="assessment-row">
-                                        <td class="datetime-column" rowspan="11">
+                                        <td class="datetime-column" rowspan="14"> <!-- Updated rowspan from 11 to 14 -->
                                             <div class="datetime-inputs">
                                                 <input type="date" name="assessment_date" class="form-control form-control-sm assessment-date">
                                                 <input type="time" name="assessment_time" class="form-control form-control-sm assessment-time">
                                             </div>
                                         </td>
+                                        <!-- SEPARATED: Fisik, Fungsional, Kognitif, Kemandirian -->
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]" value="fisik_fungsional" 
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_fisik" 
                                                        class="criteria-checkbox assessment-checkbox" id="a1">
-                                                <label class="criteria-label" for="a1">Fisik, Fungsional, Kognitif, Kemandirian</label>
+                                                <label class="criteria-label" for="a1">Assessment fisik</label>
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_fungsional" 
+                                                       class="criteria-checkbox assessment-checkbox" id="a1b">
+                                                <label class="criteria-label" for="a1b">Assessment fungsional</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_kognitif" 
+                                                       class="criteria-checkbox assessment-checkbox" id="a1c">
+                                                <label class="criteria-label" for="a1c">Assessment kognitif</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_kemandirian" 
+                                                       class="criteria-checkbox assessment-checkbox" id="a1d">
+                                                <label class="criteria-label" for="a1d">Assessment kemandirian</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -457,7 +536,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -467,7 +546,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -477,7 +556,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -487,7 +566,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -497,7 +576,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -507,7 +586,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -517,7 +596,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -527,7 +606,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -537,7 +616,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -554,7 +633,7 @@
                                     </tr>
                                     
                                     <tr class="identification-row">
-                                        <td class="datetime-column" rowspan="8">
+                                        <td class="datetime-column" rowspan="9"> <!-- Updated rowspan from 8 to 9 -->
                                             <div class="datetime-inputs">
                                                 <input type="date" name="identification_date" class="form-control form-control-sm identification-date">
                                                 <input type="time" name="identification_time" class="form-control form-control-sm identification-time">
@@ -568,17 +647,28 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <!-- SEPARATED: Over/under utilization -->
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]" value="over_under_utilization" 
-                                                       class="criteria-checkbox identification-checkbox" id="i2">
-                                                <label class="criteria-label" for="i2">Over/under utilization pelayanan dengan dasar panduan norma yang digunakan</label>
+                                                <input type="checkbox" name="identification_criteria[]" value="over_utilization" 
+                                                       class="criteria-checkbox identification-checkbox" id="i2a">
+                                                <label class="criteria-label" for="i2a">Over utilization pelayanan dengan dasar panduan norma yang digunakan</label>
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
+                                    <tr class="identification-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="identification_criteria[]" value="under_utilization" 
+                                                       class="criteria-checkbox identification-checkbox" id="i2b">
+                                                <label class="criteria-label" for="i2b">Under utilization pelayanan dengan dasar panduan norma yang digunakan</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -588,7 +678,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -598,7 +688,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -608,7 +698,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -618,7 +708,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -628,7 +718,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
+                                    
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
@@ -730,6 +820,41 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            // Handle show/hide lain-lain text area
+            const lainLainCheckbox = document.getElementById('s13');
+            const lainLainContainer = document.getElementById('lain-lain-text-container');
+            const lainLainTextarea = document.getElementById('lain-lain-textarea');
+
+            if (lainLainCheckbox && lainLainContainer) {
+                // Check initial state for edit mode
+                if (lainLainCheckbox.checked) {
+                    lainLainContainer.style.display = 'block';
+                }
+
+                lainLainCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        lainLainContainer.style.display = 'block';
+                        lainLainTextarea.focus();
+                    } else {
+                        lainLainContainer.style.display = 'none';
+                        lainLainTextarea.value = '';
+                    }
+                });
+            }
+
+            // Update form validation untuk lain-lain
+            // Di bagian form validation yang sudah ada, tambahkan:
+            // Validate lain-lain text when checkbox is checked
+            if (lainLainCheckbox && lainLainCheckbox.checked && lainLainTextarea) {
+                if (!lainLainTextarea.value.trim()) {
+                    lainLainTextarea.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    lainLainTextarea.classList.remove('is-invalid');
+                }
+            }
+
 
             let dpjpTambahanIndex = document.querySelectorAll('.dpjp-tambahan-item').length;
     
