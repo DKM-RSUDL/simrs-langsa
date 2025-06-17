@@ -235,13 +235,6 @@
                                                         <div class="col-lg-6">
                                                             {{ $asesmen->rmeAsesmenParu->nadi ?? '-' }} x/menit
                                                         </div>
-                                                        <div class="col-lg-6">
-                                                            Dyspnoe:
-                                                            <span
-                                                                class="badge {{ $asesmen->rmeAsesmenParu->dyspnoe == 'ya' ? 'bg-warning' : 'bg-success' }}">
-                                                                {{ ucfirst($asesmen->rmeAsesmenParu->dyspnoe ?? 'Tidak') }}
-                                                            </span>
-                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -253,14 +246,7 @@
                                                             {{ $asesmen->rmeAsesmenParu->frekuensi_pernafasan ?? '-' }}
                                                             x/menit
                                                             ({{ ucfirst($asesmen->rmeAsesmenParu->pernafasan_tipe ?? '-') }})
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            Cyanose:
-                                                            <span
-                                                                class="badge {{ $asesmen->rmeAsesmenParu->cyanose == 'ya' ? 'bg-warning' : 'bg-success' }}">
-                                                                {{ ucfirst($asesmen->rmeAsesmenParu->cyanose ?? 'Tidak') }}
-                                                            </span>
-                                                        </div>
+                                                        </div>                                                        
                                                     </div>
                                                 </td>
                                             </tr>
@@ -271,13 +257,6 @@
                                                         <div class="col-lg-4">
                                                             {{ $asesmen->rmeAsesmenParu->temperatur ?? '-' }} °C
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            Oedema:
-                                                            <span
-                                                                class="badge {{ $asesmen->rmeAsesmenParu->oedema == 'ya' ? 'bg-warning' : 'bg-success' }}">
-                                                                {{ ucfirst($asesmen->rmeAsesmenParu->oedema ?? 'Tidak') }}
-                                                            </span>
-                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -287,21 +266,72 @@
                                                     <div class="row">
                                                         <div class="col-lg-4">
                                                             {{ $asesmen->rmeAsesmenParu->saturasi_oksigen ?? '-' }}%
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col fw-bold">Cyanosis</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <span
+                                                                class="badge {{ $asesmen->rmeAsesmenParu->cyanose == 'ya' ? 'bg-warning' : 'bg-success' }}">
+                                                                {{ ucfirst($asesmen->rmeAsesmenParu->cyanose ?? 'Tidak') }}
+                                                            </span>
                                                         </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col fw-bold">Dyspnea</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">                                                            
+                                                            <span
+                                                                class="badge {{ $asesmen->rmeAsesmenParu->dyspnoe == 'ya' ? 'bg-warning' : 'bg-success' }}">
+                                                                {{ ucfirst($asesmen->rmeAsesmenParu->dyspnoe ?? 'Tidak') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>                                            
+                                            <tr>
+                                                <td class="label-col fw-bold">Oedema</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-4">
-                                                            Icterus:
+                                                            <span
+                                                                class="badge {{ $asesmen->rmeAsesmenParu->oedema == 'ya' ? 'bg-warning' : 'bg-success' }}">
+                                                                {{ ucfirst($asesmen->rmeAsesmenParu->oedema ?? 'Tidak') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col fw-bold">Icterus</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
                                                             <span
                                                                 class="badge {{ $asesmen->rmeAsesmenParu->icterus == 'ya' ? 'bg-warning' : 'bg-success' }}">
                                                                 {{ ucfirst($asesmen->rmeAsesmenParu->icterus ?? 'Tidak') }}
                                                             </span>
-                                                        </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col fw-bold">Anemia</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-4">
-                                                            Anemia:
                                                             <span
                                                                 class="badge {{ $asesmen->rmeAsesmenParu->anemia == 'ya' ? 'bg-warning' : 'bg-success' }}">
                                                                 {{ ucfirst($asesmen->rmeAsesmenParu->anemia ?? 'Tidak') }}
                                                             </span>
-                                                        </div>
+                                                        </div>                                                      
                                                     </div>
                                                 </td>
                                             </tr>
@@ -324,12 +354,7 @@
 
                                 @if($pemeriksaanFisikParu)
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th class="text-center fw-bold" style="background-color: #f8f9fa;">PEMERIKSAAN FISIK PARU</th>
-                                                </tr>
-                                            </thead>
+                                        <table class="table table-bordered">                                            
                                             <tbody>
                                                 <!-- Kepala -->
                                                 <tr>
@@ -574,7 +599,7 @@
                             </div>
                         </div>
                         {{-- end baru --}}
-                        <div class="card">
+                        {{-- <div class="card">
                             <div class="card-body">
                                 <p class="mb-3 small bg-info bg-opacity-10 text-dark rounded-3 p-2">
                                     <i class="bi bi-info-circle me-2"></i>
@@ -677,7 +702,7 @@
                                     </div>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
@@ -914,9 +939,40 @@
 
                     <!-- 9. Diagnosis -->
                     <div class="section-separator mb-4">
-                        <h5 class="section-title">9. Diagnosis</h5>
+                        <h5 class="section-title">9. Diagnosis</h5>                        
                         <div class="card">
                             <div class="card-body">
+
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Prognosis</label>
+                                    
+                                    @php
+                                        $prognosisValue = null;
+                                        $prognosisId = null;
+                                        
+                                        // Ambil ID prognosis yang tersimpan
+                                        if (isset($asesmen->rmeAsesmenParu)) {
+                                            $prognosisId = $asesmen->rmeAsesmenParu->paru_prognosis ?? 
+                                                        $asesmen->rmeAsesmenParu->prognosis ?? 
+                                                        $asesmen->rmeAsesmenParu->prognosis_id ?? null;
+                                        }
+                                        
+                                        // Cari nilai prognosis berdasarkan ID
+                                        if ($prognosisId && isset($satsetPrognosis)) {
+                                            $selectedPrognosis = $satsetPrognosis->where('prognosis_id', $prognosisId)->first();
+                                            $prognosisValue = $selectedPrognosis->value ?? null;
+                                        }
+                                    @endphp
+                                    
+                                    <div class="form-control bg-light" style="min-height: 38px; display: flex; align-items: center;">
+                                        @if($prognosisValue)
+                                            <span class="text-dark">{{ $prognosisValue }}</span>
+                                        @else
+                                            <span class="text-muted">Belum ada data prognosis</span>
+                                        @endif
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -1023,198 +1079,6 @@
                                         </div>
                                     </div>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 10. Implementasi -->
-                    <div class="section-separator mb-4">
-                        <h5 class="section-title">10. Implementasi</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                        rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Observasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($observasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Observasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($observasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Terapeutik:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($terapeutik))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Terapeutik</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($terapeutik as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Edukasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($edukasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Edukasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($edukasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Kolaborasi:</label>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($kolaborasi))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Kolaborasi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($kolaborasi as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Prognosis:</label>
-                                            <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                                Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                                keterangan Prognosis yang tidak ditemukan.</small>
-                                            @php
-                                                // Already defined above
-                                            @endphp
-
-                                            @if (!empty($prognosis))
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-sm">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Prognosis</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($prognosis as $index => $item)
-                                                                <tr>
-                                                                    <td>{{ $index + 1 }}</td>
-                                                                    <td>{{ $item }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="form-control-plaintext border-bottom">
-                                                    <span class="text-muted">Tidak ada</span>
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

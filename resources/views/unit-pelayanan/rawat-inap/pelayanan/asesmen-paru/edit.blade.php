@@ -330,25 +330,7 @@
                                                                     value="{{ $asesmen->rmeAsesmenParu->nadi ?? '' }}">
                                                                 <span>x/menit</span>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Dyspnoe</span>
-                                                                @php $currentDyspnoe = $asesmen->rmeAsesmenParu->dyspnoe ?? 'tidak'; @endphp
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="dyspnoe" value="tidak" id="dyspnoe_tidak" {{ $currentDyspnoe == 'tidak' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="dyspnoe_tidak">Tidak</label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="dyspnoe" value="ya" id="dyspnoe_ya" {{ $currentDyspnoe == 'ya' ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="dyspnoe_ya">Ya</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        </div>                                                        
                                                     </div>
                                                 </td>
                                             </tr>
@@ -371,10 +353,48 @@
                                                                     </option>
                                                                 </select>
                                                             </div>
-                                                        </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">f. Temperatur</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Cyanose</span>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="number"
+                                                                    class="form-control input-inline input-sm"
+                                                                    name="temperatur" step="0.1"
+                                                                    value="{{ $asesmen->rmeAsesmenParu->temperatur ?? '' }}">
+                                                                <span>°C</span>
+                                                            </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">g. Saturasi Oksigen</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="number"
+                                                                    class="form-control input-inline input-sm"
+                                                                    name="saturasi_oksigen" min="0" max="100"
+                                                                    value="{{ $asesmen->rmeAsesmenParu->saturasi_oksigen ?? '' }}">
+                                                                <span>%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">Cyanosis</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 @php $currentCyanose = $asesmen->rmeAsesmenParu->cyanose ?? 'tidak'; @endphp
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
@@ -394,21 +414,35 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="label-col">f. Temperatur</td>
+                                                <td class="label-col">Dyspnea</td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                <input type="number"
-                                                                    class="form-control input-inline input-sm"
-                                                                    name="temperatur" step="0.1"
-                                                                    value="{{ $asesmen->rmeAsesmenParu->temperatur ?? '' }}">
-                                                                <span>°C</span>
+                                                            <div class="form-check-group">                                                                
+                                                                @php $currentDyspnoe = $asesmen->rmeAsesmenParu->dyspnoe ?? 'tidak'; @endphp
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="dyspnoe" value="tidak" id="dyspnoe_tidak" {{ $currentDyspnoe == 'tidak' ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="dyspnoe_tidak">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="dyspnoe" value="ya" id="dyspnoe_ya" {{ $currentDyspnoe == 'ya' ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="dyspnoe_ya">Ya</label>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">Oedema</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Oedema</span>
+                                                            <div class="form-check-group">                                                                
                                                                 @php $currentOedema = $asesmen->rmeAsesmenParu->oedema ?? 'tidak'; @endphp
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
@@ -428,21 +462,11 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="label-col">g. Saturasi Oksigen</td>
+                                                <td class="label-col">Icterus</td>
                                                 <td>
                                                     <div class="row">
-                                                        <div class="col-lg-4">
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                <input type="number"
-                                                                    class="form-control input-inline input-sm"
-                                                                    name="saturasi_oksigen" min="0" max="100"
-                                                                    value="{{ $asesmen->rmeAsesmenParu->saturasi_oksigen ?? '' }}">
-                                                                <span>%</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="form-check-group">
-                                                                <span>Icterus</span>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 @php $currentIcterus = $asesmen->rmeAsesmenParu->icterus ?? 'tidak'; @endphp
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
@@ -458,9 +482,15 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="form-check-group">
-                                                                <span>Anemia</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">Anemia</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 @php $currentAnemia = $asesmen->rmeAsesmenParu->anemia ?? 'tidak'; @endphp
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
@@ -488,14 +518,9 @@
                             <div class="section-separator" id="pemeriksaan-fisik">
                                 <h5 class="section-title">6. Pemeriksaan Fisik</h5>
                                 {{-- baru --}}
-                                <div class="section-separator" id="pemeriksaan-fisik-paru">                                
+                                <div class="" id="pemeriksaan-fisik-paru">                                
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-asesmen">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th class="text-center fw-bold" style="background-color: #f8f9fa;">PEMERIKSAAN FISIK PARU</th>
-                                                </tr>
-                                            </thead>
+                                        <table class="table table-bordered table-asesmen">                                            
                                             <tbody>
                                                 <!-- Kepala -->
                                                 <tr>
@@ -664,8 +689,7 @@
                                                                                     <label class="text-muted">Inspeksi</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
-                                                                                    <div class="d-flex align-items-center gap-2">
-                                                                                        <span>: (simetris/ asimetris):</span>
+                                                                                    <div class="d-flex align-items-center gap-2">                                                                                        
                                                                                         <div class="form-check">
                                                                                             <input class="form-check-input" type="radio" name="paru_inspeksi" value="simetris" id="paru_inspeksi_simetris"
                                                                                                 {{ ($pemeriksaanFisikParu->paru_inspeksi ?? 'simetris') == 'simetris' ? 'checked' : '' }}>
@@ -728,12 +752,9 @@
                                                                             <!-- Suara Pernafasan (SP) -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Suara Pernafasan (SP)</label>
+                                                                                    <label class="text-muted">Suara Pernafasan (SP):</label>
                                                                                 </div>
-                                                                                <div class="col-md-9">
-                                                                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                                                                        <span class="text-muted small">(Vesikuler/ vesikuler melemah, ekspirasi memanjang, vesikuler mengeras/ bronkial):</span>
-                                                                                    </div>
+                                                                                <div class="col-md-9">                                                                                    
                                                                                     <div class="d-flex flex-wrap gap-3">
                                                                                         @php
                                                                                             $suaraPernafasanData = [];
@@ -778,10 +799,7 @@
                                                                                 <div class="col-md-3">
                                                                                     <label class="text-muted">Suara Tambahan (ST):</label>
                                                                                 </div>
-                                                                                <div class="col-md-9">
-                                                                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                                                                        <span class="text-muted small">(Rhonkhi basah (halus/kasar), rhonkhi kering, wheezing, amforik):</span>
-                                                                                    </div>
+                                                                                <div class="col-md-9">                                                                                    
                                                                                     <div class="d-flex flex-wrap gap-3">
                                                                                         @php
                                                                                             $suaraTambahanData = [];
@@ -832,7 +850,7 @@
                                     </div>
                                 </div>
                                 {{-- end baru --}}
-                                <div class="row g-3">
+                                {{-- <div class="row g-3">
                                     <div class="pemeriksaan-fisik">
                                         <p class="text-small">Centang normal jika fisik yang dinilai normal,
                                             pilih tanda tambah untuk menambah keterangan fisik yang ditemukan tidak normal.
@@ -886,7 +904,7 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <!-- 7. Rencana Kerja Dan Penatalaksanaan -->
@@ -1130,6 +1148,22 @@
                             <div class="section-separator" id="diagnosis">
                                 <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Prognosis</label>
+                                    
+                                    <select class="form-select" name="paru_prognosis">
+                                        <option value="" disabled>--Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)
+                                            <option value="{{ $item->prognosis_id }}" 
+                                                {{ old('paru_prognosis', $asesmen->rmeAsesmenParu->paru_prognosis ?? '') == $item->prognosis_id ? 'selected' : '' }}>
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+
                                 @php
                                     // PERBAIKAN: Parse existing diagnosis data dengan aman
                                     $diagnosisImplementasi = $asesmen->rmeAsesmenParuDiagnosisImplementasi;
@@ -1226,176 +1260,6 @@
                                             placeholder="gambar radiologi paru">
                                         <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah gambar</small>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- 10. Implementasi - PERBAIKAN -->
-                            <div class="section-separator" id="implementasi" style="margin-bottom: 2rem;">
-                                <h5 class="fw-semibold mb-4">10. Implementasi</h5>
-
-                                @php
-                                    // PERBAIKAN: Parse existing implementation data dengan aman
-                                    $observasiList = [];
-                                    $terapeutikList = [];
-                                    $edukasiList = [];
-                                    $kolaborasiList = [];
-                                    $prognosisList = [];
-
-                                    if ($diagnosisImplementasi) {
-                                        $observasiList = json_decode($diagnosisImplementasi->observasi ?? '[]', true) ?: [];
-                                        $terapeutikList = json_decode($diagnosisImplementasi->terapeutik ?? '[]', true) ?: [];
-                                        $edukasiList = json_decode($diagnosisImplementasi->edukasi ?? '[]', true) ?: [];
-                                        $kolaborasiList = json_decode($diagnosisImplementasi->kolaborasi ?? '[]', true) ?: [];
-                                        $prognosisList = json_decode($diagnosisImplementasi->prognosis ?? '[]', true) ?: [];
-                                    }
-                                @endphp
-
-                                <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                        rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                </div>
-
-                                <!-- Observasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Observasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Observasi">
-                                        <span class="input-group-text bg-white" id="add-observasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="observasi-list" class="list-group mb-2 bg-light p-3 rounded">
-                                        @foreach($observasiList as $index => $item)
-                                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="observasi" name="observasi" value="{{ json_encode($observasiList) }}">
-                                </div>
-
-                                <!-- Terapeutik Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Terapeutik</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Terapeutik">
-                                        <span class="input-group-text bg-white" id="add-terapeutik">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="terapeutik-list" class="list-group mb-2 bg-light p-3 rounded">
-                                        @foreach($terapeutikList as $index => $item)
-                                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="terapeutik" name="terapeutik" value="{{ json_encode($terapeutikList) }}">
-                                </div>
-
-                                <!-- Edukasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Edukasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Edukasi">
-                                        <span class="input-group-text bg-white" id="add-edukasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="edukasi-list" class="list-group mb-2 bg-light p-3 rounded">
-                                        @foreach($edukasiList as $index => $item)
-                                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="edukasi" name="edukasi" value="{{ json_encode($edukasiList) }}">
-                                </div>
-
-                                <!-- Kolaborasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Kolaborasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Kolaborasi">
-                                        <span class="input-group-text bg-white" id="add-kolaborasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="kolaborasi-list" class="list-group mb-2 bg-light p-3 rounded">
-                                        @foreach($kolaborasiList as $index => $item)
-                                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="kolaborasi" name="kolaborasi" value="{{ json_encode($kolaborasiList) }}">
-                                </div>
-
-                                <!-- Prognosis Section -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                        keterangan Prognosis yang tidak ditemukan.</small>
-                                    <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                        <span class="input-group-text bg-white" id="add-rencana">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-
-                                    <div id="rencana-list" class="list-group mb-3 bg-light p-3 rounded">
-                                        @foreach($prognosisList as $index => $item)
-                                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ $index + 1 }}. {{ $item }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="{{ json_encode($prognosisList) }}">
                                 </div>
                             </div>
 

@@ -22,6 +22,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +39,7 @@ class AsesmenParuController extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -90,6 +92,7 @@ class AsesmenParuController extends Controller
             'rmeMasterImplementasi' => $rmeMasterImplementasi,
             'allergiesJson' => $allergiesJson,
             'allergiesDisplay' => $allergiesDisplay,
+            'satsetPrognosis' => $satsetPrognosis
         ]);
     }
 
@@ -148,6 +151,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->paru_prognosis = $request->paru_prognosis;
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...
@@ -391,11 +395,13 @@ class AsesmenParuController extends Controller
                 ->firstOrFail();
 
             $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -430,6 +436,7 @@ class AsesmenParuController extends Controller
             $itemFisik = MrItemFisik::orderBy('urut')->get();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             // Get patient's allergies from the Alergi table
             $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
@@ -455,6 +462,7 @@ class AsesmenParuController extends Controller
                 'allergies',
                 'allergiesJson',
                 'allergiesDisplay',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -514,6 +522,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->paru_prognosis = $request->paru_prognosis;
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...

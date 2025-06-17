@@ -299,23 +299,6 @@
                                                                 <span>x/menit</span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Dyspnoe</span>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="dyspnoe" value="tidak" id="dyspnoe_tidak">
-                                                                    <label class="form-check-label"
-                                                                        for="dyspnoe_tidak">Tidak</label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="dyspnoe" value="ya" id="dyspnoe_ya">
-                                                                    <label class="form-check-label"
-                                                                        for="dyspnoe_ya">Ya</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -336,10 +319,46 @@
                                                                     <option value="irreguler">Irreguler</option>
                                                                 </select>
                                                             </div>
-                                                        </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">f. Temperatur</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Cyanose</span>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="number"
+                                                                    class="form-control input-inline input-sm"
+                                                                    name="temperatur" step="0.1">
+                                                                <span>°C</span>
+                                                            </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">g. Saturasi Oksigen</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="number"
+                                                                    class="form-control input-inline input-sm"
+                                                                    name="saturasi_oksigen" min="0" max="100">
+                                                                <span>%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">Cyanosis</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="cyanose" value="tidak" id="cyanose_tidak">
@@ -358,20 +377,34 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="label-col">f. Temperatur</td>
+                                                <td class="label-col">Dyspnea</td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                <input type="number"
-                                                                    class="form-control input-inline input-sm"
-                                                                    name="temperatur" step="0.1">
-                                                                <span>°C</span>
+                                                            <div class="form-check-group">                                                                
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="dyspnoe" value="tidak" id="dyspnoe_tidak">
+                                                                    <label class="form-check-label"
+                                                                        for="dyspnoe_tidak">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="dyspnoe" value="ya" id="dyspnoe_ya">
+                                                                    <label class="form-check-label"
+                                                                        for="dyspnoe_ya">Ya</label>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </td>
+                                            </tr>                                            
+                                            <tr>
+                                                <td class="label-col">Oedema</td>
+                                                <td>
+                                                    <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="form-check-group">
-                                                                <span>Oedema</span>
+                                                            <div class="form-check-group">                                                                
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="oedema" value="tidak" id="oedema_tidak">
@@ -390,20 +423,11 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="label-col">g. Saturasi Oksigen</td>
+                                                <td class="label-col">Icterus</td>
                                                 <td>
                                                     <div class="row">
-                                                        <div class="col-lg-4">
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                <input type="number"
-                                                                    class="form-control input-inline input-sm"
-                                                                    name="saturasi_oksigen" min="0" max="100">
-                                                                <span>%</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="form-check-group">
-                                                                <span>Icterus</span>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="icterus" value="tidak" id="icterus_tidak">
@@ -418,9 +442,15 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="form-check-group">
-                                                                <span>Anemia</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label-col">Anemia</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check-group">                                                                
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="anemia" value="tidak" id="anemia_tidak">
@@ -447,14 +477,9 @@
                             <div class="section-separator" id="pemeriksaan-fisik">
                                 <h5 class="section-title">6. Pemeriksaan Fisik</h5>
                                 {{-- baru --}}
-                                <div class="section-separator" id="pemeriksaan-fisik-paru">                                
+                                <div class="" id="pemeriksaan-fisik-paru">                                
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-asesmen">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th class="text-center fw-bold" style="background-color: #f8f9fa;">PEMERIKSAAN FISIK PARU</th>
-                                                </tr>
-                                            </thead>
                                             <tbody>
                                                 <!-- Kepala -->
                                                 <tr>
@@ -601,7 +626,6 @@
                                                                                 </div>
                                                                                 <div class="col-md-9">
                                                                                     <div class="d-flex align-items-center gap-2">
-                                                                                        <span>: (simetris/ asimetris</span>
                                                                                         <span>:</span>
                                                                                         <div class="form-check">
                                                                                             <input class="form-check-input" type="radio" name="paru_inspeksi" value="simetris" id="paru_inspeksi_simetris">
@@ -659,12 +683,9 @@
                                                                             <!-- Suara Pernafasan (SP) -->
                                                                             <div class="row mb-2">
                                                                                 <div class="col-md-3">
-                                                                                    <label class="text-muted">Suara Pernafasan (SP)</label>
+                                                                                    <label class="text-muted">Suara Pernafasan (SP):</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
-                                                                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                                                                        <span class="text-muted small">(Vesikuler/ vesikuler melemah, ekspirasi memanjang, vesikuler mengeras/ bronkial):</span>
-                                                                                    </div>
                                                                                     <div class="d-flex flex-wrap gap-3">
                                                                                         <div class="form-check">
                                                                                             <input class="form-check-input paru-suara-pernafasan" type="checkbox" value="vesikuler" id="sp_vesikuler">
@@ -698,9 +719,6 @@
                                                                                     <label class="text-muted">Suara Tambahan (ST):</label>
                                                                                 </div>
                                                                                 <div class="col-md-9">
-                                                                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                                                                        <span class="text-muted small">(Rhonkhi basah (halus/kasar), rhonkhi kering, wheezing, amforik):</span>
-                                                                                    </div>
                                                                                     <div class="d-flex flex-wrap gap-3">
                                                                                         <div class="form-check">
                                                                                             <input class="form-check-input paru-suara-tambahan" type="checkbox" value="rhonkhi_basah_halus" id="st_rhonkhi_basah_halus">
@@ -740,7 +758,7 @@
                                 </div>
                             </div>
                                 {{-- end baru --}}
-                                <div class="row g-3">
+                                {{-- <div class="row g-3">
                                     <div class="pemeriksaan-fisik">
                                         <p class="text-small">Centang normal jika fisik yang dinilai
                                             normal,
@@ -784,7 +802,7 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
 
@@ -928,6 +946,7 @@
                                             @enderror
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -1023,6 +1042,21 @@
                             <div class="section-separator" id="diagnosis">
                                 <h5 class="fw-semibold mb-4">9. Diagnosis</h5>
 
+                                <div class="mb-4">
+                                    <label class="text-primary fw-semibold">Prognosis</label>
+                                    
+                                    <select class="form-select" name="paru_prognosis">
+                                        <option value="" selected disabled>--Pilih Prognosis--</option>
+                                        @forelse ($satsetPrognosis as $item)                                            
+                                            <option value="{{ $item->prognosis_id }}">
+                                                {{ $item->value ?? 'Field tidak ditemukan' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Tidak ada data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+
                                 <!-- Diagnosis Banding -->
                                 <div class="mb-4">
                                     <label class="text-primary fw-semibold mb-2">Diagnosis Banding</label>
@@ -1084,124 +1118,6 @@
                                         <input type="file" class="form-control" name="gambar_radiologi_paru"
                                             placeholder="gambar radiologi paru">
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="section-separator" id="implemetasi" style="margin-bottom: 2rem;">
-                                <h5 class="fw-semibold mb-4">10. Implementasi</h5>
-
-                                <!-- Rencana Penatalaksanaan dan Pengobatan -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Rencana Penatalaksanaan dan Pengobatan</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        rencana, apabila tidak ada, Pilih tanda tambah untuk menambah keterangan
-                                        rencana Penatalaksanaan dan Pengobatan kerja yang tidak ditemukan.</small>
-                                </div>
-
-                                <!-- Observasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Observasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="observasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Observasi">
-                                        <span class="input-group-text bg-white" id="add-observasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="observasi-list" class="list-group mb-2 bg-light">
-                                        <!-- Items will be added here dynamically -->
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="observasi" name="observasi" value="[]">
-                                </div>
-
-                                <!-- Terapeutik Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Terapeutik</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="terapeutik-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Terapeutik">
-                                        <span class="input-group-text bg-white" id="add-terapeutik">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="terapeutik-list" class="list-group mb-2">
-                                        <!-- Items will be added here dynamically -->
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="terapeutik" name="terapeutik" value="[]">
-                                </div>
-
-                                <!-- Edukasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Edukasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="edukasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Edukasi">
-                                        <span class="input-group-text bg-white" id="add-edukasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="edukasi-list" class="list-group mb-2">
-                                        <!-- Items will be added here dynamically -->
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="edukasi" name="edukasi" value="[]">
-                                </div>
-
-                                <!-- Kolaborasi Section -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2">Kolaborasi</label>
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="kolaborasi-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Kolaborasi">
-                                        <span class="input-group-text bg-white" id="add-kolaborasi">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div id="kolaborasi-list" class="list-group mb-2">
-                                        <!-- Items will be added here dynamically -->
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="kolaborasi" name="kolaborasi" value="[]">
-                                </div>
-
-                                <!-- Kolaborasi Section -->
-                                <div class="mb-4">
-                                    <label class="text-primary fw-semibold">Prognosis</label>
-                                    <small class="d-block text-secondary mb-3">Pilih tanda dokumen untuk mencari
-                                        Prognosis, apabila tidak ada, Pilih tanda tambah untuk menambah
-                                        keterangan
-                                        Prognosis yang tidak ditemukan.</small>
-                                    <!-- sudah terlanjut buat ke rpp jadi yang di ubah hanya name sesuai DB saja ke prognosis -->
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-search text-secondary"></i>
-                                        </span>
-                                        <input type="text" id="rencana-input" class="form-control border-start-0 ps-0"
-                                            placeholder="Cari dan tambah Rencana Penatalaksanaan">
-                                        <span class="input-group-text bg-white" id="add-rencana">
-                                            <i class="bi bi-plus-circle text-primary"></i>
-                                        </span>
-                                    </div>
-
-                                    <div id="rencana-list" class="list-group mb-3">
-                                        <!-- Items will be added here dynamically -->
-                                    </div>
-                                    <!-- Hidden input to store JSON data -->
-                                    <input type="hidden" id="rencana_penatalaksanaan" name="prognosis" value="[]">
                                 </div>
                             </div>
 
