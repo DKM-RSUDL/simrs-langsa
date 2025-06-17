@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print PAPS Rawat Inap</title>
+    <title>Print Privasi Rawat Inap</title>
 
     <style>
         body {
@@ -180,7 +180,29 @@
             <tr>
                 <td>Hubungan dengan pasien</td>
                 <td>:</td>
-                <td>{{ $privasi->keluarga_hubungan_pasien }}</td>
+                <td>
+                    @if ($privasi->keluarga_hubungan_pasien == 1)
+                        Pasien sendiri
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 2)
+                        Istri
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 3)
+                        Suami
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 4)
+                        Anak
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 5)
+                        Ayah
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 6)
+                        Ibu
+                    @endif
+                    @if ($privasi->keluarga_hubungan_pasien == 7)
+                        Keluarga
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td>Alamat rumah</td>
@@ -190,22 +212,35 @@
         </table>
 
         <ol>
-            <li>
-                Dengan ini meminta privasi khusus bahwa
-                <strong>{{ $privasi->status_privasi == 1 ? 'mengizinkan' : 'tidak mengizinkan' }}</strong>
-                sdr/i {{ $privasi->privasi_nama }}
-                untuk menjenguk/ menemui saya/ keluarga saya selama dirawat di RSUD Langsa
-            </li>
-            <li>
-                Saya menginginkan privasi khusus pada saat :
+            @if (!empty($privasi->privasi_nama))
+                <li>
+                    Dengan ini meminta privasi khusus bahwa
+                    <strong>{{ $privasi->status_privasi == 1 ? 'mengizinkan' : 'tidak mengizinkan' }}</strong>
+                    sdr/i {{ $privasi->privasi_nama }}
+                    untuk menjenguk/ menemui saya/ keluarga saya selama dirawat di RSUD Langsa
+                </li>
+            @endif
 
-                <ol type="a">
-                    <li>Wawancara klinis</li>
-                    <li>Pemeriksaan fisik</li>
-                    <li>Perawatan/ tindakan: {{ $privasi->tindakan_privasi }}</li>
-                    <li>Lainnya: {{ $privasi->privasi_lainnya }}</li>
-                </ol>
-            </li>
+            @if (!empty($privasi->privasi_khusus) || is_array($privasi->privasi_khusus))
+                <li>
+                    Saya menginginkan privasi khusus pada saat :
+
+                    <ol type="a">
+                        @if (in_array('wawancara', $privasi->privasi_khusus))
+                            <li>Wawancara klinis</li>
+                        @endif
+                        @if (in_array('fisik', $privasi->privasi_khusus))
+                            <li>Pemeriksaan fisik</li>
+                        @endif
+                        @if (in_array('perawatan', $privasi->privasi_khusus))
+                            <li>Perawatan/ tindakan: {{ $privasi->tindakan_privasi }}</li>
+                        @endif
+                        @if (in_array('lainnya', $privasi->privasi_khusus))
+                            <li>Lainnya: {{ $privasi->privasi_lainnya }}</li>
+                        @endif
+                    </ol>
+                </li>
+            @endif
         </ol>
 
         <p>

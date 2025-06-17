@@ -134,55 +134,66 @@
                             </div>
 
                             {{-- IDENTITAS KELUARGA --}}
-                            <div class="section-separator" id="identitas-keluarga">
+                            <div class="section-separator">
                                 <h4 class="fw-semibold">IDENTITAS KELUARGA</h4>
 
                                 <div class="form-group">
-                                    <label for="keluarga_nama">Nama</label>
-                                    <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
-                                        value="{{ $privasi->keluarga_nama }}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_tempat_lahir">Tempat Lahir</label>
-                                    <input type="text" name="keluarga_tempat_lahir" id="keluarga_tempat_lahir"
-                                        value="{{ $privasi->keluarga_tempat_lahir }}" class="form-control" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_tgl_lahir">Tanggal Lahir</label>
-                                    <input type="text" name="keluarga_tgl_lahir" id="keluarga_tgl_lahir"
-                                        value="{{ date('Y-m-d', strtotime($privasi->keluarga_tgl_lahir)) }}"
-                                        class="form-control date" disabled readonly>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="keluarga_jenis_kelamin">Jenis
-                                        Kelamin</label>
-                                    <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin" class="form-select"
-                                        disabled>
+                                    <label for="keluarga_hubungan_pasien" style="min-width: 200px;">Status keluarga dgn
+                                        pasien</label>
+                                    <select name="keluarga_hubungan_pasien" id="keluarga_hubungan_pasien"
+                                        class="form-select" disabled>
                                         <option value="">--Pilih--</option>
-                                        <option value="0" @selected($privasi->keluarga_jenis_kelamin == 0)>Perempuan</option>
-                                        <option value="1" @selected($privasi->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
+                                        <option value="1" @selected($privasi->keluarga_hubungan_pasien == '1')>Diri sendiri</option>
+                                        <option value="2" @selected($privasi->keluarga_hubungan_pasien == '2')>Istri</option>
+                                        <option value="3" @selected($privasi->keluarga_hubungan_pasien == '3')>Suami</option>
+                                        <option value="4" @selected($privasi->keluarga_hubungan_pasien == '4')>Anak</option>
+                                        <option value="5" @selected($privasi->keluarga_hubungan_pasien == '5')>Ayah</option>
+                                        <option value="6" @selected($privasi->keluarga_hubungan_pasien == '6')>Ibu</option>
+                                        <option value="7" @selected($privasi->keluarga_hubungan_pasien == '7')>Lain-lain</option>
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="keluarga_hubungan_pasien">Hubungan dengan
-                                        pasien</label>
-                                    <input type="text" name="keluarga_hubungan_pasien" id="keluarga_hubungan_pasien"
-                                        value="{{ $privasi->keluarga_hubungan_pasien }}" class="form-control" disabled>
-                                </div>
+                                <div id="identitas-keluarga">
+                                    <div class="form-group">
+                                        <label for="keluarga_nama">Nama</label>
+                                        <input type="text" name="keluarga_nama" id="keluarga_nama" class="form-control"
+                                            value="{{ $privasi->keluarga_nama }}" disabled>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label for="keluarga_alamat">Alamat rumah</label>
-                                    <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" disabled>{{ $privasi->keluarga_alamat }}</textarea>
+                                    <div class="form-group">
+                                        <label for="keluarga_tempat_lahir">Tempat Lahir</label>
+                                        <input type="text" name="keluarga_tempat_lahir" id="keluarga_tempat_lahir"
+                                            value="{{ $privasi->keluarga_tempat_lahir }}" class="form-control" disabled>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_tgl_lahir">Tanggal Lahir</label>
+                                        <input type="text" name="keluarga_tgl_lahir" id="keluarga_tgl_lahir"
+                                            value="{{ date('Y-m-d', strtotime($privasi->keluarga_tgl_lahir)) }}"
+                                            class="form-control date" disabled>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_jenis_kelamin">Jenis
+                                            Kelamin</label>
+                                        <select name="keluarga_jenis_kelamin" id="keluarga_jenis_kelamin"
+                                            class="form-select" disabled>
+                                            <option value="">--Pilih--</option>
+                                            <option value="0" @selected($privasi->keluarga_jenis_kelamin == 0)>Perempuan</option>
+                                            <option value="1" @selected($privasi->keluarga_jenis_kelamin == 1)>Laki-Laki</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="keluarga_alamat">Alamat rumah</label>
+                                        <textarea name="keluarga_alamat" id="keluarga_alamat" class="form-control" disabled>{{ $privasi->keluarga_alamat }}</textarea>
+                                    </div>
                                 </div>
 
                             </div>
 
-                            {{-- KONDISI PASIEN --}}
-                            <div class="section-separator" id="identitas-keluarga">
+                            {{-- PRIVASI --}}
+                            <div class="section-separator">
                                 <h4 class="fw-semibold mb-3">PRIVASI</h4>
 
                                 <div class="form-group">
@@ -199,14 +210,54 @@
                                     <input type="text" class="form-control" name="privasi_nama" id="privasi_nama"
                                         value="{{ $privasi->privasi_nama }}" disabled>
                                 </div>
+                            </div>
+
+                            {{-- PRIVASI KHUSUS --}}
+                            <div class="section-separator">
+                                <h4 class="fw-semibold mb-3">PRIVASI KHUSUS</h4>
 
                                 <div class="form-group">
+                                    <div class="d-flex">
+                                        <label style="min-width: 200px;">Privasi Khusus</label>
+                                        <div class="">
+                                            <div class="">
+                                                <input type="checkbox" name="privasi_khusus[]" id="privasi_wawancara"
+                                                    class="form-check-input" value="wawancara"
+                                                    @checked(in_array('wawancara', $privasi->privasi_khusus)) disabled>
+                                                <label for="privasi_wawancara">Wawancara Klinis</label>
+                                            </div>
+
+                                            <div class="">
+                                                <input type="checkbox" name="privasi_khusus[]" id="privasi_fisik"
+                                                    class="form-check-input" value="fisik" @checked(in_array('fisik', $privasi->privasi_khusus))
+                                                    disabled>
+                                                <label for="privasi_fisik">Pemeriksaan Fisik</label>
+                                            </div>
+
+                                            <div class="">
+                                                <input type="checkbox" name="privasi_khusus[]" id="privasi_perawatan"
+                                                    class="form-check-input" value="perawatan"
+                                                    @checked(in_array('perawatan', $privasi->privasi_khusus)) disabled>
+                                                <label for="privasi_perawatan">Perawatan/Tindakan</label>
+                                            </div>
+
+                                            <div class="">
+                                                <input type="checkbox" name="privasi_khusus[]" id="privasi_lain"
+                                                    class="form-check-input" value="lainnya" @checked(in_array('lainnya', $privasi->privasi_khusus))
+                                                    disabled>
+                                                <label for="privasi_lain">Lainnya</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="privasi_perawatan_input">
                                     <label for="tindakan_privasi">Nama perawatan/tindakan privasi</label>
                                     <input type="text" class="form-control" name="tindakan_privasi"
                                         value="{{ $privasi->tindakan_privasi }}" id="tindakan_privasi" disabled>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="privasi_lainnya_input">
                                     <label for="privasi_lainnya">Privasi Lainnya</label>
                                     <input type="text" class="form-control" name="privasi_lainnya"
                                         value="{{ $privasi->privasi_lainnya }}" id="privasi_lainnya" disabled>
@@ -220,3 +271,53 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            let statusKeluarga = {{ $privasi->keluarga_hubungan_pasien }};
+
+            if (statusKeluarga == '1') {
+                $('#identitas-keluarga').hide();
+                $('#identitas-keluarga input,select,textarea').prop('required', false);
+            }
+
+            $('#keluarga_hubungan_pasien').prop('required', true);
+
+            let isCheckPrivasiPerawatan = $('#privasi_perawatan').is(':checked');
+            let isCheckPrivasiLainnya = $('#privasi_lain').is(':checked');
+
+            if (!isCheckPrivasiPerawatan) $('.form-group#privasi_perawatan_input').hide();
+            if (!isCheckPrivasiLainnya) $('.form-group#privasi_lainnya_input').hide();
+        });
+
+        $('#keluarga_hubungan_pasien').change(function() {
+            let nilai = $(this).val();
+
+            if (nilai == 1) {
+                $('#identitas-keluarga').hide();
+                $('#identitas-keluarga input,select,textarea').prop('required', false);
+            } else {
+                $('#identitas-keluarga').show();
+                $('#identitas-keluarga input,select,textarea').prop('required', true);
+            }
+        });
+
+
+        $('input[name="privasi_khusus[]"]').change(function() {
+            let $this = $(this);
+            let privasi = $this.val();
+            let isChecked = $this.is(':checked');
+
+            if (privasi == 'perawatan') {
+                (isChecked) ? $('.form-group#privasi_perawatan_input').show(): $(
+                    '.form-group#privasi_perawatan_input').hide();
+            }
+
+            if (privasi == 'lainnya') {
+                (isChecked) ? $('.form-group#privasi_lainnya_input').show(): $('.form-group#privasi_lainnya_input')
+                    .hide();
+            }
+        });
+    </script>
+@endpush

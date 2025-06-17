@@ -13,6 +13,10 @@ class RmePermintaanPrivasi extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'privasi_khusus'    => 'array'
+    ];
+
     public function userCreate()
     {
         return $this->belongsTo(User::class, 'user_create', 'id');

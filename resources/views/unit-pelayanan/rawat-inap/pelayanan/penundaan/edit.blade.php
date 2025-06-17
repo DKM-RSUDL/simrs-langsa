@@ -161,7 +161,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="kd_dokter">Dokter Pengirim</label>
+                                        <label for="kd_dokter">Dokter DPJP</label>
                                         <select name="kd_dokter" id="kd_dokter" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)

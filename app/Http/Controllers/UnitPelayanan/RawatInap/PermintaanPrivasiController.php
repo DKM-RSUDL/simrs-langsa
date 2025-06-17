@@ -85,23 +85,27 @@ class PermintaanPrivasiController extends Controller
             $pasien = Pasien::where('kd_pasien', $kd_pasien)->first();
             if (empty($pasien)) throw new Exception('Data pasien tidak ditemukan !');
 
+            $statusKeluarga = $request->keluarga_hubungan_pasien;
+            $alamat = str()->title($pasien->alamat) . ', ' . str()->title($pasien->kelurahan->kelurahan) . ', ' . str()->title($pasien->kelurahan->kecamatan->kecamatan) . ', ' . str()->title($pasien->kelurahan->kecamatan->kabupaten->kabupaten) . ', ' . str()->title($pasien->kelurahan->kecamatan->kabupaten->propinsi->propinsi);
+
             $data = [
                 'kd_pasien'         => $kd_pasien,
                 'kd_unit'         => $kd_unit,
                 'tgl_masuk'         => $tgl_masuk,
                 'urut_masuk'         => $urut_masuk,
                 'tanggal'         => $request->tanggal,
-                'keluarga_nama'         => $request->keluarga_nama,
-                'keluarga_tempat_lahir'         => $request->keluarga_tempat_lahir,
-                'keluarga_tgl_lahir'         => $request->keluarga_tgl_lahir,
-                'keluarga_jenis_kelamin'         => $request->keluarga_jenis_kelamin,
+                'keluarga_nama'         => ($statusKeluarga == 1) ? str()->title($pasien->nama) : $request->keluarga_nama,
+                'keluarga_tempat_lahir'         => ($statusKeluarga == 1) ? str()->title($pasien->tempat_lahir) : $request->keluarga_tempat_lahir,
+                'keluarga_tgl_lahir'         => ($statusKeluarga == 1) ? date('Y-m-d', strtotime($pasien->tgl_lahir)) : $request->keluarga_tgl_lahir,
+                'keluarga_jenis_kelamin'         => ($statusKeluarga == 1) ? $pasien->jenis_kelamin : $request->keluarga_jenis_kelamin,
                 'keluarga_hubungan_pasien'         => $request->keluarga_hubungan_pasien,
-                'keluarga_alamat'         => $request->keluarga_alamat,
+                'keluarga_alamat'         => ($statusKeluarga == 1) ? $alamat : $request->keluarga_alamat,
                 'status_privasi'         => $request->status_privasi,
                 'privasi_nama'         => $request->privasi_nama,
                 'tindakan_privasi'         => $request->tindakan_privasi,
                 'privasi_lainnya'         => $request->privasi_lainnya,
                 'user_create'         => Auth::id(),
+                'privasi_khusus'        => $request->privasi_khusus
             ];
 
             RmePermintaanPrivasi::create($data);
@@ -149,22 +153,23 @@ class PermintaanPrivasiController extends Controller
             $privasi = RmePermintaanPrivasi::find($id);
             if (empty($privasi)) throw new Exception('Data permintaan tidak ditemukan !');
 
-            $data = [
-                'tanggal'         => $request->tanggal,
-                'keluarga_nama'         => $request->keluarga_nama,
-                'keluarga_tempat_lahir'         => $request->keluarga_tempat_lahir,
-                'keluarga_tgl_lahir'         => $request->keluarga_tgl_lahir,
-                'keluarga_jenis_kelamin'         => $request->keluarga_jenis_kelamin,
-                'keluarga_hubungan_pasien'         => $request->keluarga_hubungan_pasien,
-                'keluarga_alamat'         => $request->keluarga_alamat,
-                'status_privasi'         => $request->status_privasi,
-                'privasi_nama'         => $request->privasi_nama,
-                'tindakan_privasi'         => $request->tindakan_privasi,
-                'privasi_lainnya'         => $request->privasi_lainnya,
-                'user_edit'         => Auth::id(),
-            ];
+            $statusKeluarga = $request->keluarga_hubungan_pasien;
+            $alamat = str()->title($pasien->alamat) . ', ' . str()->title($pasien->kelurahan->kelurahan) . ', ' . str()->title($pasien->kelurahan->kecamatan->kecamatan) . ', ' . str()->title($pasien->kelurahan->kecamatan->kabupaten->kabupaten) . ', ' . str()->title($pasien->kelurahan->kecamatan->kabupaten->propinsi->propinsi);
 
-            RmePermintaanPrivasi::where('id', $privasi->id)->update($data);
+            $privasi->tanggal        = $request->tanggal;
+            $privasi->keluarga_nama        = ($statusKeluarga == 1) ? str()->title($pasien->nama) : $request->keluarga_nama;
+            $privasi->keluarga_tempat_lahir        = ($statusKeluarga == 1) ? str()->title($pasien->tempat_lahir) : $request->keluarga_tempat_lahir;
+            $privasi->keluarga_tgl_lahir        = ($statusKeluarga == 1) ? date('Y-m-d', strtotime($pasien->tgl_lahir)) : $request->keluarga_tgl_lahir;
+            $privasi->keluarga_jenis_kelamin        = ($statusKeluarga == 1) ? $pasien->jenis_kelamin : $request->keluarga_jenis_kelamin;
+            $privasi->keluarga_hubungan_pasien        = $request->keluarga_hubungan_pasien;
+            $privasi->keluarga_alamat        = ($statusKeluarga == 1) ? $alamat : $request->keluarga_alamat;
+            $privasi->status_privasi        = $request->status_privasi;
+            $privasi->privasi_nama        = $request->privasi_nama;
+            $privasi->tindakan_privasi        = $request->tindakan_privasi;
+            $privasi->privasi_lainnya        = $request->privasi_lainnya;
+            $privasi->user_edit        = Auth::id();
+            $privasi->privasi_khusus       = $request->privasi_khusus;
+            $privasi->save();
 
             DB::commit();
             return to_route('rawat-inap.privasi.index', [$kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk])->with('success', 'Pernyataan permintaan privasi dan keamanan berhasil di ubah !');

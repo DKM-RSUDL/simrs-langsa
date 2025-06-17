@@ -97,7 +97,6 @@
         }
 
         footer div .name-konsulen {
-            margin: 80px 0 0 0;
             font-weight: 600;
             text-decoration: underline;
         }
@@ -244,7 +243,8 @@
             <tr>
                 <td>Nomor Induk Dokter</td>
                 <td>:</td>
-                <td>{{ $dnr->dokter->kd_karyawan }}</td>
+                <td>{{ empty($dnr->dokter->detail->nip_baru) ? $dnr->dokter->detail->kd_karyawan : $dnr->dokter->detail->nip_baru }}
+                </td>
             </tr>
             <tr>
                 <td>Nomor HP Dokter</td>
@@ -258,6 +258,7 @@
         <div class="">
             <p style="margin: 0;">Langsa, {{ date('d-m-Y', strtotime($dnr->tanggal)) }}</p>
             <p style="margin: 0;">Dokter yg menyatakan</p>
+            <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
             <p class="name-konsulen">{{ $dnr->dokter->nama_lengkap }}</p>
         </div>
     </footer>

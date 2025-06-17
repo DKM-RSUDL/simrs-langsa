@@ -384,12 +384,12 @@
                     saya/pasien/keluarga.</li>
                 <li>Untuk keperluan tersebut, kami meminjam hasil pemeriksaan penunjang diagnosis antar lain:</li>
                 <ul style="margin-left: 20px; font-size: 9pt; list-style-type: none;">
-                    @if($secondOpinion->nama_dokumen)
+                    @if ($secondOpinion->nama_dokumen)
                         @php
                             $dokumenArray = json_decode($secondOpinion->nama_dokumen, true);
                         @endphp
-                        @if(is_array($dokumenArray) && !empty($dokumenArray))
-                            @foreach($dokumenArray as $index => $dokumen)
+                        @if (is_array($dokumenArray) && !empty($dokumenArray))
+                            @foreach ($dokumenArray as $index => $dokumen)
                                 <li>{{ chr(97 + $index) }}. {{ $dokumen }}</li>
                             @endforeach
                         @else
@@ -417,10 +417,11 @@
 
                 <div class="signature-row">
                     <div class="signature-box">
-                        <div class="signature-title">Petugas</div>
+                        <div class="signature-title">PPA</div>
                         <div class="signature-space"></div>
                         <div class="signature-line">
-                            ({{ $secondOpinion->userCreate->name ?? '........................................' }})</div>
+                            ({{ $secondOpinion->userCreate->name ?? '........................................' }})
+                        </div>
                     </div>
                     <div class="signature-box">
                         <div class="signature-title">Saksi</div>

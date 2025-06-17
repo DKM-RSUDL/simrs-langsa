@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PenolakanResusitasiController extends Controller
 {
@@ -233,9 +234,12 @@ class PenolakanResusitasiController extends Controller
         $id = decrypt($idEncrypt);
         $dnr = RmeDnr::find($id);
 
+        $qrCode = base64_encode(QrCode::format('png')->size(100)->errorCorrection('H')->generate($dnr->dokter->nama_lengkap));
+
         $pdf = Pdf::loadView('unit-pelayanan.rawat-inap.pelayanan.dnr.pdf', compact(
             'dataMedis',
-            'dnr'
+            'dnr',
+            'qrCode'
         ))
             ->setPaper('a4', 'potrait');
         return $pdf->stream('DNR_' . $dataMedis->kd_pasien . '_' . $dataMedis->tgl_masuk . '.pdf');
