@@ -198,6 +198,37 @@
                 margin: 5px 0;
             }
         }
+
+        /* pemeriksaan fisik baru */
+        .input-inline {
+            width: auto;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .table-asesmen td {
+            vertical-align: middle;
+        }
+
+        .form-check {
+            margin-bottom: 0;
+        }
+
+        .text-muted {
+            font-size: 0.9em;
+        }
+
+        .section-separator {
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
     </style>
 @endpush
 

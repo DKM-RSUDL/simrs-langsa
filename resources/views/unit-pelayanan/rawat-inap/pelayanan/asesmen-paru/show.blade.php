@@ -315,6 +315,265 @@
                     <!-- 6. Pemeriksaan Fisik -->
                     <div class="section-separator mb-4">
                         <h5 class="section-title">6. Pemeriksaan Fisik</h5>
+                        {{-- baru --}}
+                        <div class="card">
+                            <div class="card-body">
+                                @php
+                                    $pemeriksaanFisikParu = $asesmen->rmeAsesmenParuPemeriksaanFisik->first();
+                                @endphp
+
+                                @if($pemeriksaanFisikParu)
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="text-center fw-bold" style="background-color: #f8f9fa;">PEMERIKSAAN FISIK PARU</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Kepala -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label class="fw-semibold">a. Kepala:</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if($pemeriksaanFisikParu->paru_kepala == 1)
+                                                                        <span class="badge bg-success">Normal</span>
+                                                                    @else
+                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                        @if($pemeriksaanFisikParu->paru_kepala_keterangan)
+                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_kepala_keterangan }}</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Mata -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label class="fw-semibold">b. Mata:</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if($pemeriksaanFisikParu->paru_mata == 1)
+                                                                        <span class="badge bg-success">Normal</span>
+                                                                    @else
+                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                        @if($pemeriksaanFisikParu->paru_mata_keterangan)
+                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_mata_keterangan }}</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- THT -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label class="fw-semibold">c. THT:</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if($pemeriksaanFisikParu->paru_tht == 1)
+                                                                        <span class="badge bg-success">Normal</span>
+                                                                    @else
+                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                        @if($pemeriksaanFisikParu->paru_tht_keterangan)
+                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_tht_keterangan }}</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Leher -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label class="fw-semibold">d. Leher:</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                    @if($pemeriksaanFisikParu->paru_leher == 1)
+                                                                        <span class="badge bg-success">Normal</span>
+                                                                    @else
+                                                                        <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                        @if($pemeriksaanFisikParu->paru_leher_keterangan)
+                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_leher_keterangan }}</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Thoraks -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label class="fw-semibold">e. Thoraks</label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <!-- Jantung -->
+                                                                <div class="mb-3">
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <label class="fw-medium">Jantung:</label>
+                                                                        </div>
+                                                                        <div class="col-md-10">
+                                                                            <div class="d-flex align-items-center gap-3">
+                                                                                @if($pemeriksaanFisikParu->paru_jantung == 1)
+                                                                                    <span class="badge bg-success">Normal</span>
+                                                                                @else
+                                                                                    <span class="badge bg-warning text-dark">Tidak Normal</span>
+                                                                                    @if($pemeriksaanFisikParu->paru_jantung_keterangan)
+                                                                                        <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_jantung_keterangan }}</span>
+                                                                                    @endif
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Paru -->
+                                                                <div class="mb-3">
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <label class="fw-medium">Paru:</label>
+                                                                        </div>
+                                                                        <div class="col-md-10">
+                                                                            <!-- Inspeksi -->
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Inspeksi:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    <div class="d-flex align-items-center gap-2">
+                                                                                        @if($pemeriksaanFisikParu->paru_inspeksi == 'simetris' || $pemeriksaanFisikParu->paru_inspeksi == 1)
+                                                                                            <span class="badge bg-success">Simetris</span>
+                                                                                        @else
+                                                                                            <span class="badge bg-warning text-dark">Asimetris</span>
+                                                                                        @endif
+                                                                                        @if($pemeriksaanFisikParu->paru_inspeksi_keterangan)
+                                                                                            <span class="text-muted">- {{ $pemeriksaanFisikParu->paru_inspeksi_keterangan }}</span>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Palpasi -->
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Palpasi:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    <span>{{ $pemeriksaanFisikParu->paru_palpasi ?: '-' }}</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Perkusi -->
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Perkusi:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    <span>{{ $pemeriksaanFisikParu->paru_perkusi ?: '-' }}</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Auskultasi -->
+                                                                            <div class="row mb-3">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Auskultasi:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    <span>{{ $pemeriksaanFisikParu->paru_auskultasi ?: '-' }}</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Suara Pernafasan (SP) -->
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Suara Pernafasan:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    @php
+                                                                                        $suaraPernafasanData = [];
+                                                                                        if($pemeriksaanFisikParu->paru_suara_pernafasan) {
+                                                                                            $suaraPernafasanData = json_decode($pemeriksaanFisikParu->paru_suara_pernafasan, true) ?: [];
+                                                                                        }
+                                                                                    @endphp
+                                                                                    @if(!empty($suaraPernafasanData))
+                                                                                        <div class="d-flex flex-wrap gap-2">
+                                                                                            @foreach($suaraPernafasanData as $suara)
+                                                                                                <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
+                                                                                            @endforeach
+                                                                                        </div>
+                                                                                    @else
+                                                                                        <span class="text-muted">-</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Suara Tambahan (ST) -->
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-3">
+                                                                                    <label class="text-muted">Suara Tambahan:</label>
+                                                                                </div>
+                                                                                <div class="col-md-9">
+                                                                                    @php
+                                                                                        $suaraTambahanData = [];
+                                                                                        if($pemeriksaanFisikParu->paru_suara_tambahan) {
+                                                                                            $suaraTambahanData = json_decode($pemeriksaanFisikParu->paru_suara_tambahan, true) ?: [];
+                                                                                        }
+                                                                                    @endphp
+                                                                                    @if(!empty($suaraTambahanData))
+                                                                                        <div class="d-flex flex-wrap gap-2">
+                                                                                            @foreach($suaraTambahanData as $suara)
+                                                                                                <span class="badge bg-warning text-dark">{{ ucfirst(str_replace('_', ' ', $suara)) }}</span>
+                                                                                            @endforeach
+                                                                                        </div>
+                                                                                    @else
+                                                                                        <span class="text-muted">-</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Data pemeriksaan fisik paru tidak tersedia.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        {{-- end baru --}}
                         <div class="card">
                             <div class="card-body">
                                 <p class="mb-3 small bg-info bg-opacity-10 text-dark rounded-3 p-2">
