@@ -7,7 +7,9 @@ use App\Models\Dokter;
 use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\Perawat;
+use App\Models\RmeMppA;
 use App\Models\RmeMppB;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -48,7 +50,56 @@ class MppBController extends Controller
             ->where('kd_unit', $kd_unit)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
+            ->orderBy('created_at', 'desc')
             ->get();
+
+        // Transform collection to add processed data
+        $mppDataList = $mppDataList->map(function ($mppData) {
+            // Process DPJP Utama
+            $dpjpUtama = null;
+            if ($mppData->dpjp_utama) {
+                $dpjpUtama = \App\Models\Dokter::where('kd_dokter', $mppData->dpjp_utama)->first();
+            }
+
+            // Process Dokter Tambahan
+            $dokterTambahanNames = [];
+            if ($mppData->dokter_tambahan) {
+                $dokterTambahanArray = json_decode($mppData->dokter_tambahan, true);
+                if (is_array($dokterTambahanArray)) {
+                    // New format: JSON array
+                    $dokterTambahanNames = \App\Models\Dokter::whereIn('kd_dokter', $dokterTambahanArray)
+                        ->pluck('nama')->toArray();
+                } else {
+                    // Old format: single doctor code
+                    $dokter = \App\Models\Dokter::where('kd_dokter', $mppData->dokter_tambahan)->first();
+                    $dokterTambahanNames = $dokter ? [$dokter->nama] : [];
+                }
+            }
+
+            // Process Petugas Terkait
+            $petugasTerkaitNames = [];
+            if ($mppData->petugas_terkait) {
+                $petugasTerkaitArray = json_decode($mppData->petugas_terkait, true);
+                if (is_array($petugasTerkaitArray)) {
+                    // New format: JSON array
+                    $petugasData = \App\Models\HrdKaryawan::whereIn('kd_karyawan', $petugasTerkaitArray)->get();
+                    foreach ($petugasData as $petugas) {
+                        $petugasTerkaitNames[] = trim($petugas->gelar_depan . ' ' . $petugas->nama . ' ' . $petugas->gelar_belakang);
+                    }
+                } else {
+                    // Old format: single staff code
+                    $petugas = \App\Models\HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait)->first();
+                    $petugasTerkaitNames = $petugas ? [trim($petugas->gelar_depan . ' ' . $petugas->nama . ' ' . $petugas->gelar_belakang)] : [];
+                }
+            }
+
+            // Add properties to existing model instance (better approach)
+            $mppData->dpjpUtama = $dpjpUtama;
+            $mppData->dokterTambahanNames = $dokterTambahanNames;
+            $mppData->petugasTerkaitNames = $petugasTerkaitNames;
+
+            return $mppData;
+        });
 
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-b.index', compact(
             'dataMedis',
@@ -93,6 +144,14 @@ class MppBController extends Controller
             ->where('status_peg', 1)
             ->get();
 
+        // Get latest Form A data to auto-fill doctors
+        $latestFormA = RmeMppA::where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-b.create', compact(
             'dataMedis',
             'kd_unit',
@@ -100,23 +159,37 @@ class MppBController extends Controller
             'tgl_masuk',
             'urut_masuk',
             'dokter',
-            'perawat'
+            'perawat',
+            'latestFormA'
         ));
     }
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        // Process Dokter Tambahan array
+        $dokterTambahanArray = [];
+        if ($request->has('dokter_tambahan') && is_array($request->dokter_tambahan)) {
+            $dokterTambahanArray = array_filter($request->dokter_tambahan, function ($value) {
+                return !empty($value);
+            });
+        }
+
+        // Process Petugas Terkait array
+        $petugasTerkaitArray = [];
+        if ($request->has('petugas_terkait') && is_array($request->petugas_terkait)) {
+            $petugasTerkaitArray = array_filter($request->petugas_terkait, function ($value) {
+                return !empty($value);
+            });
+        }
+
         $data = [
             'kd_unit' => $kd_unit,
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
             'dpjp_utama' => $request->dpjp_utama,
-            'dokter_1' => $request->dokter_1,
-            'dokter_2' => $request->dokter_2,
-            'dokter_3' => $request->dokter_3,
-            'petugas_terkait_1' => $request->petugas_terkait_1,
-            'petugas_terkait_2' => $request->petugas_terkait_2,
+            'dokter_tambahan' => !empty($dokterTambahanArray) ? json_encode(array_values($dokterTambahanArray)) : null,
+            'petugas_terkait' => !empty($petugasTerkaitArray) ? json_encode(array_values($petugasTerkaitArray)) : null,
 
             // 1. Rencana Pelayanan Pasien
             'rencana_date' => $request->rencana_date,
@@ -187,15 +260,15 @@ class MppBController extends Controller
             $data[$criteria] = in_array($criteria, (array)$request->terminasi) ? 1 : 0;
         }
 
+        // Create new record (FIXED: was using update instead of create)
         RmeMppB::create($data);
-
 
         return redirect()->route('rawat-inap.mpp.form-b.index', [
             'kd_unit' => $kd_unit,
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk
-        ])->with('success', 'Data MPP Form B berhasil diupdate.');
+        ])->with('success', 'Data MPP Form B berhasil disimpan.');
     }
 
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
@@ -271,13 +344,26 @@ class MppBController extends Controller
             abort(404, 'MPP Form B data not found');
         }
 
+        // Process Dokter Tambahan array
+        $dokterTambahanArray = [];
+        if ($request->has('dokter_tambahan') && is_array($request->dokter_tambahan)) {
+            $dokterTambahanArray = array_filter($request->dokter_tambahan, function ($value) {
+                return !empty($value);
+            });
+        }
+
+        // Process Petugas Terkait array
+        $petugasTerkaitArray = [];
+        if ($request->has('petugas_terkait') && is_array($request->petugas_terkait)) {
+            $petugasTerkaitArray = array_filter($request->petugas_terkait, function ($value) {
+                return !empty($value);
+            });
+        }
+
         $data = [
             'dpjp_utama' => $request->dpjp_utama,
-            'dokter_1' => $request->dokter_1,
-            'dokter_2' => $request->dokter_2,
-            'dokter_3' => $request->dokter_3,
-            'petugas_terkait_1' => $request->petugas_terkait_1,
-            'petugas_terkait_2' => $request->petugas_terkait_2,
+            'dokter_tambahan' => !empty($dokterTambahanArray) ? json_encode(array_values($dokterTambahanArray)) : null,
+            'petugas_terkait' => !empty($petugasTerkaitArray) ? json_encode(array_values($petugasTerkaitArray)) : null,
 
             // 1. Rencana Pelayanan Pasien
             'rencana_date' => $request->rencana_date,
@@ -422,36 +508,43 @@ class MppBController extends Controller
 
         // Get doctor names
         $dpjpUtama = null;
-        $dokter1 = null;
-        $dokter2 = null;
-        $dokter3 = null;
+        $dokterTambahan = [];
 
         if ($mppData->dpjp_utama) {
             $dpjpUtama = Dokter::where('kd_dokter', $mppData->dpjp_utama)->first();
         }
 
-        if ($mppData->dokter_1) {
-            $dokter1 = Dokter::where('kd_dokter', $mppData->dokter_1)->first();
+        if ($mppData->dokter_tambahan) {
+            $dokterTambahanArray = json_decode($mppData->dokter_tambahan, true);
+            if (is_array($dokterTambahanArray)) {
+                // New format: JSON array
+                $dokterTambahan = Dokter::whereIn('kd_dokter', $dokterTambahanArray)->get();
+            } else {
+                // Old format: single doctor code (for backward compatibility)
+                $dokter = Dokter::where('kd_dokter', $mppData->dokter_tambahan)->first();
+                $dokterTambahan = $dokter ? collect([$dokter]) : collect([]);
+            }
         }
 
-        if ($mppData->dokter_2) {
-            $dokter2 = Dokter::where('kd_dokter', $mppData->dokter_2)->first();
+        // Get petugas names
+        $petugasTerkait = [];
+
+        if ($mppData->petugas_terkait) {
+            $petugasTerkaitArray = json_decode($mppData->petugas_terkait, true);
+            if (is_array($petugasTerkaitArray)) {
+                // New format: JSON array
+                $petugasTerkait = HrdKaryawan::whereIn('kd_karyawan', $petugasTerkaitArray)->get();
+            } else {
+                // Old format: single petugas code (for backward compatibility)
+                $petugas = HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait)->first();
+                $petugasTerkait = $petugas ? collect([$petugas]) : collect([]);
+            }
         }
 
-        if ($mppData->dokter_3) {
-            $dokter3 = Dokter::where('kd_dokter', $mppData->dokter_3)->first();
-        }
-
-        // Get perawat names
-        $perawat1 = null;
-        $perawat2 = null;
-
-        if ($mppData->petugas_terkait_1) {
-            $perawat1 = HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait_1)->first();
-        }
-
-        if ($mppData->petugas_terkait_2) {
-            $perawat2 = HrdKaryawan::where('kd_karyawan', $mppData->petugas_terkait_2)->first();
+        // Get user who created the record
+        $userCreate = null;
+        if ($mppData->user_create) {
+            $userCreate = \App\Models\User::find($mppData->user_create);
         }
 
         // Logo path
@@ -461,11 +554,9 @@ class MppBController extends Controller
             'dataMedis',
             'mppData',
             'dpjpUtama',
-            'dokter1',
-            'dokter2',
-            'dokter3',
-            'perawat1',
-            'perawat2',
+            'dokterTambahan',
+            'petugasTerkait',
+            'userCreate',
             'logoPath'
         ));
 

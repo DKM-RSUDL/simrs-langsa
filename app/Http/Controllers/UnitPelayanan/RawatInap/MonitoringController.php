@@ -11,6 +11,7 @@ use App\Models\RmeIntensiveMonitoringTherapyDtl;
 use App\Models\RmeIntesiveMonitoring;
 use App\Models\RmeIntesiveMonitoringDtl;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -386,6 +387,26 @@ class MonitoringController extends Controller
             ->orderBy('jam_implementasi', 'desc')
             ->first();
 
+
+        // Decode konsulen JSON if exists
+        if ($latestMonitoring && $latestMonitoring->konsulen) {
+            try {
+                $konsulenArray = json_decode($latestMonitoring->konsulen, true);
+                if (!is_array($konsulenArray)) {
+                    // Handle old format (single doctor)
+                    $latestMonitoring->konsulen_array = [$latestMonitoring->konsulen];
+                } else {
+                    $latestMonitoring->konsulen_array = $konsulenArray;
+                }
+            } catch (Exception $e) {
+                // Handle invalid JSON
+                $latestMonitoring->konsulen_array = [$latestMonitoring->konsulen];
+            }
+        } else if ($latestMonitoring) {
+            $latestMonitoring->konsulen_array = [];
+        }
+        
+
         // Ambil daftar terapi obat untuk pasien dan kunjungan ini
         $therapies = RmeIntensiveMonitoringTherapy::where([
             'kd_unit' => $kd_unit,
@@ -440,6 +461,15 @@ class MonitoringController extends Controller
                 'therapy_doses.*' => 'nullable|numeric|min:0', // Validasi dosis obat
             ]);
 
+
+            // Process Konsulen array
+            $konsulenArray = [];
+            if ($request->has('konsulen') && is_array($request->konsulen)) {
+                $konsulenArray = array_filter($request->konsulen, function ($value) {
+                    return !empty($value);
+                });
+            }
+
             // Create main monitoring record
             $monitoring = new RmeIntesiveMonitoring();
             $monitoring->kd_unit = $kd_unit;
@@ -454,8 +484,8 @@ class MonitoringController extends Controller
             $monitoring->tinggi_badan = $request->tinggi_badan;
             $monitoring->hari_rawat = $request->hari_rawat;
             $monitoring->dokter = $request->dokter;
-            $monitoring->dokter_jaga = $request->dokter_jaga;
-            $monitoring->konsulen = $request->konsulen;
+            // Store konsulen as JSON array
+            $monitoring->konsulen = !empty($konsulenArray) ? json_encode(array_values($konsulenArray)) : null;
             $monitoring->anastesi_rb = $request->anastesi_rb;
 
             //NICU BAYI
@@ -639,6 +669,26 @@ class MonitoringController extends Controller
             ->where('urut_masuk', $urut_masuk)
             ->firstOrFail();
 
+
+        // Decode konsulen JSON for edit form
+        if ($monitoring->konsulen) {
+            try {
+                $konsulenArray = json_decode($monitoring->konsulen, true);
+                if (!is_array($konsulenArray)) {
+                    // Handle old format (single doctor)
+                    $monitoring->konsulen_array = [$monitoring->konsulen];
+                } else {
+                    $monitoring->konsulen_array = $konsulenArray;
+                }
+            } catch (Exception $e) {
+                // Handle invalid JSON
+                $monitoring->konsulen_array = [$monitoring->konsulen];
+            }
+        } else {
+            $monitoring->konsulen_array = [];
+        }
+
+
         // Ambil daftar dokter
         $dokter = Dokter::where('status', 1)->get();
 
@@ -689,6 +739,15 @@ class MonitoringController extends Controller
                 'therapy_doses.*' => 'nullable|numeric|min:0',
             ]);
 
+            // Process Konsulen array
+            $konsulenArray = [];
+            if ($request->has('konsulen') && is_array($request->konsulen)) {
+                $konsulenArray = array_filter($request->konsulen, function ($value) {
+                    return !empty($value);
+                });
+            }
+
+
             // Cari dan update record monitoring utama
             $monitoring = RmeIntesiveMonitoring::where('id', $id)
                 ->where('kd_unit', $kd_unit)
@@ -706,9 +765,9 @@ class MonitoringController extends Controller
             $monitoring->tinggi_badan = $request->tinggi_badan;
             $monitoring->hari_rawat = $request->hari_rawat;
             $monitoring->dokter = $request->dokter;
-            $monitoring->konsulen = $request->konsulen;
+            // Update konsulen as JSON array
+            $monitoring->konsulen = !empty($konsulenArray) ? json_encode(array_values($konsulenArray)) : null;
             $monitoring->anastesi_rb = $request->anastesi_rb;
-            $monitoring->dokter_jaga = $request->dokter_jaga;
 
             //NICU BAYI
             $monitoring->usia_kelahiran = $request->usia_kelahiran;
@@ -996,6 +1055,22 @@ class MonitoringController extends Controller
             return \Carbon\Carbon::parse($record->tgl_implementasi . ' ' . $record->jam_implementasi);
         })->first();
 
+        // Decode konsulen untuk latest monitoring
+        if ($latestMonitoring && $latestMonitoring->konsulen) {
+            $latestMonitoring->konsulen_names = $this->getKonsulenNamesForPrint($latestMonitoring->konsulen);
+            $latestMonitoring->konsulen_display = implode(', ', $latestMonitoring->konsulen_names);
+        } else if ($latestMonitoring) {
+            $latestMonitoring->konsulen_names = [];
+            $latestMonitoring->konsulen_display = '-';
+        }
+
+        // Get dokter name untuk latest monitoring
+        if ($latestMonitoring && $latestMonitoring->dokter) {
+            $latestMonitoring->dokter_name = $this->getDokterNameForPrint($latestMonitoring->dokter);
+        } else if ($latestMonitoring) {
+            $latestMonitoring->dokter_name = '-';
+        }
+
         // Prepare data for view
         $printData = [
             'dataMedis' => $dataMedis,
@@ -1066,4 +1141,48 @@ class MonitoringController extends Controller
 
         return redirect()->back()->with('success', 'Terapi obat berhasil dihapus.');
     }
+
+
+    private function getKonsulenNamesForPrint($konsulenJson)
+    {
+        if (empty($konsulenJson)) {
+            return [];
+        }
+
+        try {
+            $konsulenArray = json_decode($konsulenJson, true);
+            if (!is_array($konsulenArray)) {
+                // Handle old format (single doctor)
+                $konsulenArray = [$konsulenJson];
+            }
+
+            $konsulenNames = [];
+            foreach ($konsulenArray as $konsulenId) {
+                $dokter = Dokter::where('kd_dokter', $konsulenId)->first();
+                if ($dokter) {
+                    $konsulenNames[] = $dokter->nama_lengkap;
+                } else {
+                    $konsulenNames[] = $konsulenId; // Fallback ke kode dokter
+                }
+            }
+
+            return $konsulenNames;
+        } catch (Exception $e) {
+            // Handle invalid JSON - treat as single doctor
+            $dokter = Dokter::where('kd_dokter', $konsulenJson)->first();
+            return $dokter ? [$dokter->nama_lengkap] : [$konsulenJson];
+        }
+    }
+
+    // Method helper untuk mendapatkan nama dokter dari kode
+    private function getDokterNameForPrint($kodeDokter)
+    {
+        if (empty($kodeDokter)) {
+            return '-';
+        }
+
+        $dokter = Dokter::where('kd_dokter', $kodeDokter)->first();
+        return $dokter ? $dokter->nama_lengkap : $kodeDokter;
+    }
+
 }

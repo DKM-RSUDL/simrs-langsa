@@ -131,6 +131,78 @@
                 resize: vertical;
                 width: 100%;
             }
+
+            .dpjp-tambahan-item {
+                position: relative;
+            }
+
+            .dpjp-tambahan-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .dpjp-tambahan-item .form-select {
+                flex: 1;
+            }
+
+            .dpjp-tambahan-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .select2-tambahan + .select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .input-group .select2-container {
+                flex: 1;
+            }
+
+            .input-group .select2-container .select2-selection {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                height: calc(2.25rem + 2px);
+                border-right: 0;
+            }
+
+            .input-group .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            /* Tambahkan di bagian CSS yang sudah ada */
+
+            .lain-lain-textarea {
+                min-height: 60px;
+                resize: vertical;
+                font-size: 0.85rem;
+                border: 1px solid #ced4da;
+            }
+
+            .lain-lain-textarea:focus {
+                border-color: #86b7fe;
+                outline: 0;
+                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            }
+
+            .lain-lain-textarea.is-invalid {
+                border-color: #dc3545;
+            }
+
+            .lain-lain-textarea.is-invalid:focus {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            }
+
+            #lain-lain-text-container {
+                transition: all 0.3s ease;
+            }
+
+            .criteria-item .mt-2 {
+                margin-left: 24px; /* Align with label text */
+            }
+            
         </style>
     @endpush
 
@@ -166,7 +238,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Utama</label>
                                         <select name="dpjp_utama" class="form-select select2" style="width: 100%">
@@ -180,18 +252,58 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Tambahan</label>
-                                        <select name="dpjp_tambahan" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}"
-                                                    {{ $mppData->dpjp_tambahan == $dok->kd_dokter ? 'selected' : '' }}>
-                                                    {{ $dok->nama }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <div id="dpjp-tambahan-container">
+                                            @if($mppData->dpjp_tambahan)
+                                                @php
+                                                    $dpjpTambahanArray = json_decode($mppData->dpjp_tambahan, true);
+                                                    if (!is_array($dpjpTambahanArray)) {
+                                                        // Handle old format (single doctor)
+                                                        $dpjpTambahanArray = [$mppData->dpjp_tambahan];
+                                                    }
+                                                @endphp
+                                                @foreach($dpjpTambahanArray as $index => $dpjpTambahan)
+                                                    <div class="dpjp-tambahan-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                                                                <option value="">--Pilih--</option>
+                                                                @foreach ($dokter as $dok)
+                                                                    <option value="{{ $dok->kd_dokter }}" 
+                                                                        {{ $dpjpTambahan == $dok->kd_dokter ? 'selected' : '' }}>
+                                                                        {{ $dok->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan" 
+                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="dpjp-tambahan-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                                                            <option value="">--Pilih--</option>
+                                                            @foreach ($dokter as $dok)
+                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-dpjp-tambahan">
+                                            <i class="bi bi-plus"></i> Tambah Dokter
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -209,14 +321,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Section I: Identifikasi/Screening Pasien -->
+                                    <!-- Section I: Identifikasi/Screening Pasien - UPDATED -->
                                     <tr class="section-header">
                                         <td colspan="2">I. IDENTIFIKASI/SCREENING PASIEN</td>
                                     </tr>
 
-                                    <!-- Row dengan tanggal jam dan semua kriteria -->
                                     <tr class="screening-row">
-                                        <td class="datetime-column" rowspan="13">
+                                        <td class="datetime-column" rowspan="18"> <!-- Updated from 13 to 18 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="screening_date"
                                                     class="form-control form-control-sm screening-date date"
@@ -259,14 +370,36 @@
                                         </td>
                                     </tr>
 
+                                    <!-- SEPARATED: Kasus dengan riwayat kronis, katastropik, terminal -->
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="riwayat_kronis"
                                                     class="criteria-checkbox screening-checkbox" id="s4"
                                                     {{ $mppData->riwayat_kronis ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s4">Kasus dengan riwayat kronis,
-                                                    katastropik, terminal</label>
+                                                <label class="criteria-label" for="s4">Kasus dengan riwayat kronis</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="kasus_katastropik"
+                                                    class="criteria-checkbox screening-checkbox" id="s4b"
+                                                    {{ (isset($mppData->kasus_katastropik) && $mppData->kasus_katastropik) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s4b">Kasus katastropik</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="kasus_terminal"
+                                                    class="criteria-checkbox screening-checkbox" id="s4c"
+                                                    {{ (isset($mppData->kasus_terminal) && $mppData->kasus_terminal) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s4c">Kasus terminal</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -277,8 +410,7 @@
                                                 <input type="checkbox" name="screening_criteria[]" value="status_fungsional"
                                                     class="criteria-checkbox screening-checkbox" id="s5"
                                                     {{ $mppData->status_fungsional ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s5">Status fungsional rendah,
-                                                    kebutuhan ADL tinggi</label>
+                                                <label class="criteria-label" for="s5">Status fungsional rendah, kebutuhan ADL tinggi</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -286,11 +418,22 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]"
-                                                    value="peralatan_medis" class="criteria-checkbox screening-checkbox"
-                                                    id="s6" {{ $mppData->peralatan_medis ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s6">Riwayat penggunaan peralatan
-                                                    medis di masa lalu</label>
+                                                <input type="checkbox" name="screening_criteria[]" value="peralatan_medis"
+                                                    class="criteria-checkbox screening-checkbox" id="s6"
+                                                    {{ $mppData->peralatan_medis ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s6">Riwayat penggunaan peralatan medis di masa lalu</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- SEPARATED: Riwayat gangguan mental, krisis keluarga, isu sosial -->
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="gangguan_mental"
+                                                    class="criteria-checkbox screening-checkbox" id="s7"
+                                                    {{ $mppData->gangguan_mental ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s7">Riwayat gangguan mental</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -298,12 +441,21 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]"
-                                                    value="gangguan_mental" class="criteria-checkbox screening-checkbox"
-                                                    id="s7" {{ $mppData->gangguan_mental ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s7">Riwayat gangguan mental,
-                                                    krisis keluarga, isu sosial (terlantar, tinggal sendiri,
-                                                    narkoba)</label>
+                                                <input type="checkbox" name="screening_criteria[]" value="krisis_keluarga"
+                                                    class="criteria-checkbox screening-checkbox" id="s7b"
+                                                    {{ (isset($mppData->krisis_keluarga) && $mppData->krisis_keluarga) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s7b">Krisis keluarga</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="isu_sosial"
+                                                    class="criteria-checkbox screening-checkbox" id="s7c"
+                                                    {{ (isset($mppData->isu_sosial) && $mppData->isu_sosial) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s7c">Isu sosial (terlantar, tinggal sendiri, narkoba)</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -314,8 +466,7 @@
                                                 <input type="checkbox" name="screening_criteria[]" value="sering_igd"
                                                     class="criteria-checkbox screening-checkbox" id="s8"
                                                     {{ $mppData->sering_igd ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s8">Sering masuk IGD, readmisi
-                                                    RS</label>
+                                                <label class="criteria-label" for="s8">Sering masuk IGD, readmisi RS</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -323,11 +474,10 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]"
-                                                    value="perkiraan_asuhan" class="criteria-checkbox screening-checkbox"
-                                                    id="s9" {{ $mppData->perkiraan_asuhan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s9">Perkiraan asuhan dengan biaya
-                                                    tinggi</label>
+                                                <input type="checkbox" name="screening_criteria[]" value="perkiraan_asuhan"
+                                                    class="criteria-checkbox screening-checkbox" id="s9"
+                                                    {{ $mppData->perkiraan_asuhan ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s9">Perkiraan asuhan dengan biaya tinggi</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -335,11 +485,10 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]"
-                                                    value="sistem_pembiayaan" class="criteria-checkbox screening-checkbox"
-                                                    id="s10" {{ $mppData->sistem_pembiayaan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s10">Kemungkinan sistem pembiayaan
-                                                    komplek, masalah finansial</label>
+                                                <input type="checkbox" name="screening_criteria[]" value="sistem_pembiayaan"
+                                                    class="criteria-checkbox screening-checkbox" id="s10"
+                                                    {{ $mppData->sistem_pembiayaan ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="s10">Kemungkinan sistem pembiayaan komplek, masalah finansial</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -350,8 +499,7 @@
                                                 <input type="checkbox" name="screening_criteria[]" value="length_of_stay"
                                                     class="criteria-checkbox screening-checkbox" id="s11"
                                                     {{ $mppData->length_of_stay ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s11">Kasus yang melebihi rata-rata
-                                                    length of stay</label>
+                                                <label class="criteria-label" for="s11">Kasus yang melebihi rata-rata length of stay</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -359,12 +507,10 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]"
-                                                    value="rencana_pemulangan"
+                                                <input type="checkbox" name="screening_criteria[]" value="rencana_pemulangan"
                                                     class="criteria-checkbox screening-checkbox" id="s12"
                                                     {{ $mppData->rencana_pemulangan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="s12">Kasus yang rencana
-                                                    pemulangannya berisiko/membutuhkan kontinuitas pelayanan</label>
+                                                <label class="criteria-label" for="s12">Kasus yang rencana pemulangannya berisiko/membutuhkan kontinuitas pelayanan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -377,16 +523,22 @@
                                                     {{ $mppData->lain_lain ? 'checked' : '' }}>
                                                 <label class="criteria-label" for="s13">Lain-lain</label>
                                             </div>
+                                            <!-- Tambahkan textarea untuk free text -->
+                                            <div class="mt-2" id="lain-lain-text-container" style="display: {{ $mppData->lain_lain ? 'block' : 'none' }};">
+                                                <textarea name="lain_lain_text" class="form-control form-control-sm" 
+                                                          rows="2" placeholder="Jelaskan lain-lain..."
+                                                          id="lain-lain-textarea">{{ $mppData->lain_lain_text ?? '' }}</textarea>
+                                            </div>
                                         </td>
                                     </tr>
 
-                                    <!-- Section II: Assessment -->
+                                    <!-- Section II: Assessment - UPDATED -->
                                     <tr class="section-header">
                                         <td colspan="2">II. ASSESSMENT</td>
                                     </tr>
 
                                     <tr class="assessment-row">
-                                        <td class="datetime-column" rowspan="11">
+                                        <td class="datetime-column" rowspan="14"> <!-- Updated from 11 to 14 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="assessment_date"
                                                     class="form-control form-control-sm assessment-date date"
@@ -397,13 +549,13 @@
                                                     value="{{ $mppData->assessment_time ? \Carbon\Carbon::parse($mppData->assessment_time)->format('H:i') : '' }}">
                                             </div>
                                         </td>
+                                        <!-- SEPARATED: Fisik, Fungsional, Kognitif, Kemandirian -->
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="fisik_fungsional" class="criteria-checkbox assessment-checkbox"
-                                                    id="a1" {{ $mppData->fisik_fungsional ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a1">Fisik, Fungsional, Kognitif,
-                                                    Kemandirian</label>
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_fisik"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1"
+                                                    {{ (isset($mppData->assessment_fisik) && $mppData->assessment_fisik) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a1">Assessment fisik</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -411,8 +563,40 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="riwayat_kesehatan"
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_fungsional"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1b"
+                                                    {{ (isset($mppData->assessment_fungsional) && $mppData->assessment_fungsional) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a1b">Assessment fungsional</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_kognitif"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1c"
+                                                    {{ (isset($mppData->assessment_kognitif) && $mppData->assessment_kognitif) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a1c">Assessment kognitif</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="assessment_kemandirian"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1d"
+                                                    {{ (isset($mppData->assessment_kemandirian) && $mppData->assessment_kemandirian) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a1d">Assessment kemandirian</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]" value="riwayat_kesehatan"
                                                     class="criteria-checkbox assessment-checkbox" id="a2"
                                                     {{ $mppData->riwayat_kesehatan ? 'checked' : '' }}>
                                                 <label class="criteria-label" for="a2">Riwayat Kesehatan</label>
@@ -423,11 +607,10 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="perilaku_psiko" class="criteria-checkbox assessment-checkbox"
-                                                    id="a3" {{ $mppData->perilaku_psiko ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a3">Perilaku
-                                                    psiko-sosio-kultural</label>
+                                                <input type="checkbox" name="assessment_criteria[]" value="perilaku_psiko"
+                                                    class="criteria-checkbox assessment-checkbox" id="a3"
+                                                    {{ $mppData->perilaku_psiko ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a3">Perilaku psiko-sosio-kultural</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -435,9 +618,9 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="kesehatan_mental" class="criteria-checkbox assessment-checkbox"
-                                                    id="a4" {{ $mppData->kesehatan_mental ? 'checked' : '' }}>
+                                                <input type="checkbox" name="assessment_criteria[]" value="kesehatan_mental"
+                                                    class="criteria-checkbox assessment-checkbox" id="a4"
+                                                    {{ $mppData->kesehatan_mental ? 'checked' : '' }}>
                                                 <label class="criteria-label" for="a4">Kesehatan mental</label>
                                             </div>
                                         </td>
@@ -446,12 +629,10 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="dukungan_keluarga"
+                                                <input type="checkbox" name="assessment_criteria[]" value="dukungan_keluarga"
                                                     class="criteria-checkbox assessment-checkbox" id="a5"
                                                     {{ $mppData->dukungan_keluarga ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a5">Tersedianya dukungan
-                                                    keluarga, kemampuan merawat dari pemberi asuhan</label>
+                                                <label class="criteria-label" for="a5">Tersedianya dukungan keluarga, kemampuan merawat dari pemberi asuhan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -459,12 +640,10 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="finansial_asuransi"
+                                                <input type="checkbox" name="assessment_criteria[]" value="finansial_asuransi"
                                                     class="criteria-checkbox assessment-checkbox" id="a6"
                                                     {{ $mppData->finansial_asuransi ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a6">Finansial/status
-                                                    asuransi</label>
+                                                <label class="criteria-label" for="a6">Finansial/status asuransi</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -475,8 +654,7 @@
                                                 <input type="checkbox" name="assessment_criteria[]" value="riwayat_obat"
                                                     class="criteria-checkbox assessment-checkbox" id="a7"
                                                     {{ $mppData->riwayat_obat ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a7">Riwayat penggunaan obat,
-                                                    alternatif</label>
+                                                <label class="criteria-label" for="a7">Riwayat penggunaan obat, alternatif</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -484,11 +662,10 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="trauma_kekerasan" class="criteria-checkbox assessment-checkbox"
-                                                    id="a8" {{ $mppData->trauma_kekerasan ? 'checked' : '' }}>
-                                                <label class="criteria-label"
-                                                    for="a8">Riwayat/trauma/kekerasan</label>
+                                                <input type="checkbox" name="assessment_criteria[]" value="trauma_kekerasan"
+                                                    class="criteria-checkbox assessment-checkbox" id="a8"
+                                                    {{ $mppData->trauma_kekerasan ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a8">Riwayat/trauma/kekerasan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -496,11 +673,10 @@
                                     <tr class="assessment-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="assessment_criteria[]"
-                                                    value="health_literacy" class="criteria-checkbox assessment-checkbox"
-                                                    id="a9" {{ $mppData->health_literacy ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a9">Pemahaman tentang kesehatan
-                                                    (health literacy)</label>
+                                                <input type="checkbox" name="assessment_criteria[]" value="health_literacy"
+                                                    class="criteria-checkbox assessment-checkbox" id="a9"
+                                                    {{ $mppData->health_literacy ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="a9">Pemahaman tentang kesehatan (health literacy)</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -522,20 +698,18 @@
                                                 <input type="checkbox" name="assessment_criteria[]" value="harapan_hasil"
                                                     class="criteria-checkbox assessment-checkbox" id="a11"
                                                     {{ $mppData->harapan_hasil ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="a11">Harapan terhadap hasil
-                                                    asuhan, kemampuan untuk menerima perubahan</label>
+                                                <label class="criteria-label" for="a11">Harapan terhadap hasil asuhan, kemampuan untuk menerima perubahan</label>
                                             </div>
                                         </td>
                                     </tr>
 
-                                    <!-- Section III: Identifikasi Masalah -->
-                                    <!-- Section III: Identifikasi Masalah -->
+                                    <!-- Section III: Identifikasi Masalah - UPDATED -->
                                     <tr class="section-header">
                                         <td colspan="2">III. IDENTIFIKASI MASALAH</td>
                                     </tr>
 
                                     <tr class="identification-row">
-                                        <td class="datetime-column" rowspan="8">
+                                        <td class="datetime-column" rowspan="9"> <!-- Updated from 8 to 9 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="identification_date"
                                                     class="form-control form-control-sm identification-date date"
@@ -544,17 +718,26 @@
                                                 <input type="time" name="identification_time"
                                                     class="form-control form-control-sm identification-time"
                                                     value="{{ $mppData->identification_time ? \Carbon\Carbon::parse($mppData->identification_time)->format('H:i') : '' }}">
-
                                             </div>
                                         </td>
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="tingkat_asuhan"
+                                                <input type="checkbox" name="identification_criteria[]" value="tingkat_asuhan"
                                                     class="criteria-checkbox identification-checkbox" id="i1"
                                                     {{ $mppData->tingkat_asuhan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i1">Tingkat asuhan yang tidak
-                                                    sesuai dengan panduan, norma yang digunakan</label>
+                                                <label class="criteria-label" for="i1">Tingkat asuhan yang tidak sesuai dengan panduan, norma yang digunakan</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- SEPARATED: Over/under utilization -->
+                                    <tr class="identification-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="identification_criteria[]" value="over_utilization"
+                                                    class="criteria-checkbox identification-checkbox" id="i2a"
+                                                    {{ (isset($mppData->over_utilization) && $mppData->over_utilization) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="i2a">Over utilization pelayanan dengan dasar panduan norma yang digunakan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -562,12 +745,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="over_under_utilization"
-                                                    class="criteria-checkbox identification-checkbox" id="i2"
-                                                    {{ $mppData->over_under_utilization ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i2">Over/under utilization
-                                                    pelayanan dengan dasar panduan norma yang digunakan</label>
+                                                <input type="checkbox" name="identification_criteria[]" value="under_utilization"
+                                                    class="criteria-checkbox identification-checkbox" id="i2b"
+                                                    {{ (isset($mppData->under_utilization) && $mppData->under_utilization) ? 'checked' : '' }}>
+                                                <label class="criteria-label" for="i2b">Under utilization pelayanan dengan dasar panduan norma yang digunakan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -575,12 +756,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="ketidak_patuhan"
+                                                <input type="checkbox" name="identification_criteria[]" value="ketidak_patuhan"
                                                     class="criteria-checkbox identification-checkbox" id="i3"
                                                     {{ $mppData->ketidak_patuhan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i3">Ketidak patuhan
-                                                    pasien</label>
+                                                <label class="criteria-label" for="i3">Ketidak patuhan pasien</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -588,13 +767,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="edukasi_kurang"
+                                                <input type="checkbox" name="identification_criteria[]" value="edukasi_kurang"
                                                     class="criteria-checkbox identification-checkbox" id="i4"
                                                     {{ $mppData->edukasi_kurang ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i4">Edukasi kurang memadai atau
-                                                    pemahamannya yang belum memadai tentang proses penyakit, kondisi terkini
-                                                    dan daftar obat</label>
+                                                <label class="criteria-label" for="i4">Edukasi kurang memadai atau pemahamannya yang belum memadai tentang proses penyakit, kondisi terkini dan daftar obat</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -602,12 +778,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="kurang_dukungan"
+                                                <input type="checkbox" name="identification_criteria[]" value="kurang_dukungan"
                                                     class="criteria-checkbox identification-checkbox" id="i5"
                                                     {{ $mppData->kurang_dukungan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i5">Kurangnya dukungan keluarga,
-                                                    tidak ada keluarga</label>
+                                                <label class="criteria-label" for="i5">Kurangnya dukungan keluarga, tidak ada keluarga</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -615,12 +789,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="penurunan_determinasi"
+                                                <input type="checkbox" name="identification_criteria[]" value="penurunan_determinasi"
                                                     class="criteria-checkbox identification-checkbox" id="i6"
                                                     {{ $mppData->penurunan_determinasi ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i6">Penurunan determinasi pasien
-                                                    (ketika tingkat keparahan/komplikasi meningkat)</label>
+                                                <label class="criteria-label" for="i6">Penurunan determinasi pasien (ketika tingkat keparahan/komplikasi meningkat)</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -628,12 +800,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="kendala_keuangan"
+                                                <input type="checkbox" name="identification_criteria[]" value="kendala_keuangan"
                                                     class="criteria-checkbox identification-checkbox" id="i7"
                                                     {{ $mppData->kendala_keuangan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i7">Kendala keuangan ketika
-                                                    keparahan/komplikasi meningkat</label>
+                                                <label class="criteria-label" for="i7">Kendala keuangan ketika keparahan/komplikasi meningkat</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -641,13 +811,10 @@
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="identification_criteria[]"
-                                                    value="pemulangan_rujukan"
+                                                <input type="checkbox" name="identification_criteria[]" value="pemulangan_rujukan"
                                                     class="criteria-checkbox identification-checkbox" id="i8"
                                                     {{ $mppData->pemulangan_rujukan ? 'checked' : '' }}>
-                                                <label class="criteria-label" for="i8">Pemulangan/rujukan yang belum
-                                                    memenuhi kriteria atau sebaliknya, pemulangan/rujukan yang
-                                                    ditunda</label>
+                                                <label class="criteria-label" for="i8">Pemulangan/rujukan yang belum memenuhi kriteria atau sebaliknya, pemulangan/rujukan yang ditunda</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -761,8 +928,185 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+
+            // Tambahkan di dalam document.addEventListener('DOMContentLoaded', function() {
+            // Setelah kode yang sudah ada di edit form
+
+            // Handle show/hide lain-lain text area
+            const lainLainCheckbox = document.getElementById('s13');
+            const lainLainContainer = document.getElementById('lain-lain-text-container');
+            const lainLainTextarea = document.getElementById('lain-lain-textarea');
+
+            if (lainLainCheckbox && lainLainContainer) {
+                // Event listener untuk checkbox lain-lain
+                lainLainCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        lainLainContainer.style.display = 'block';
+                        lainLainTextarea.focus();
+                    } else {
+                        lainLainContainer.style.display = 'none';
+                        lainLainTextarea.value = '';
+                    }
+                });
+
+                // Real-time validation untuk textarea lain-lain
+                lainLainTextarea.addEventListener('input', function() {
+                    if (lainLainCheckbox.checked && this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            }
+
+            // Update form validation untuk lain-lain
+            // Di bagian form validation yang sudah ada, sebelum if (!isValid), tambahkan:
+
+            // Validate lain-lain text when checkbox is checked
+            if (lainLainCheckbox && lainLainCheckbox.checked && lainLainTextarea) {
+                if (!lainLainTextarea.value.trim()) {
+                    lainLainTextarea.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    lainLainTextarea.classList.remove('is-invalid');
+                }
+            } else if (lainLainTextarea) {
+                lainLainTextarea.classList.remove('is-invalid');
+            }
+
+            let dpjpTambahanIndex = document.querySelectorAll('.dpjp-tambahan-item').length;
+    
+            // Store doctor options - safer approach
+            const doctorOptions = [];
+            @foreach ($dokter as $dok)
+                doctorOptions.push({
+                    value: '{{ addslashes($dok->kd_dokter) }}', 
+                    text: '{{ addslashes($dok->nama) }}'
+                });
+            @endforeach
+
+            // Function to build options HTML
+            function buildOptionsHtml(selectedValue = '') {
+                let html = '<option value="">--Pilih--</option>';
+                doctorOptions.forEach(function(doctor) {
+                    const selected = selectedValue === doctor.value ? 'selected' : '';
+                    html += `<option value="${doctor.value}" ${selected}>${doctor.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to initialize Select2 for new elements
+            function initializeSelect2(element) {
+                if (typeof $.fn.select2 !== 'undefined') {
+                    $(element).select2({
+                        theme: 'bootstrap-5',
+                        placeholder: '--Pilih--',
+                        width: '100%'
+                    });
+                }
+            }
+
+            // Function to reinitialize existing selects with proper data
+            function reinitializeExistingSelects() {
+                $('.select2-tambahan').each(function() {
+                    const currentValue = $(this).val();
+                    
+                    // Destroy existing Select2 if exists
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+                    
+                    // Rebuild options with current value preserved
+                    $(this).html(buildOptionsHtml(currentValue));
+                    
+                    // Re-initialize Select2
+                    initializeSelect2(this);
+                });
+            }
+
+            // Initialize existing Select2 elements
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('.select2').select2({
+                    theme: 'bootstrap-5',
+                    placeholder: '--Pilih--'
+                });
+                
+                // Fix existing DPJP Tambahan selects after a short delay to ensure DOM is ready
+                setTimeout(function() {
+                    reinitializeExistingSelects();
+                }, 100);
+            }
+
+            // Add new DPJP Tambahan
+            document.getElementById('add-dpjp-tambahan').addEventListener('click', function() {
+                const container = document.getElementById('dpjp-tambahan-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'dpjp-tambahan-item mb-2';
+                newItem.setAttribute('data-index', dpjpTambahanIndex);
+                
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                            ${buildOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(newItem);
+                
+                // Initialize Select2 for the new element
+                const newSelect = newItem.querySelector('select');
+                initializeSelect2(newSelect);
+                
+                dpjpTambahanIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove DPJP Tambahan
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-dpjp-tambahan') || e.target.closest('.remove-dpjp-tambahan')) {
+                    const button = e.target.classList.contains('remove-dpjp-tambahan') ? e.target : e.target.closest('.remove-dpjp-tambahan');
+                    const item = button.closest('.dpjp-tambahan-item');
+                    
+                    // Destroy Select2 before removing element
+                    const select = item.querySelector('select');
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                        $(select).select2('destroy');
+                    }
+                    
+                    item.remove();
+                    updateRemoveButtons();
+                }
+            });
+
+            // Update remove buttons visibility
+            function updateRemoveButtons() {
+                const items = document.querySelectorAll('.dpjp-tambahan-item');
+                items.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-dpjp-tambahan');
+                    if (index === 0 && items.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+            }
+
+            // Initial update of remove buttons
+            updateRemoveButtons();
+
             // Form validation
             document.getElementById('mppEvaluationForm').addEventListener('submit', function(e) {
+
+                const dpjpTambahanSelects = document.querySelectorAll('select[name="dpjp_tambahan[]"]');
+                dpjpTambahanSelects.forEach(select => {
+                    if (!select.value || select.value === '') {
+                        select.remove();
+                    }
+                });
+
                 let isValid = true;
 
                 // Validate Screening Section

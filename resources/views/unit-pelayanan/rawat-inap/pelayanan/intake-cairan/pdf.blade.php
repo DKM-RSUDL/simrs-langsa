@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print Intake dan Outpur Cairan Rawat Inap</title>
+    <title>Print Intake dan Output Cairan Rawat Inap</title>
 
     <style>
         body {
@@ -78,7 +78,6 @@
             border-collapse: collapse;
             font-size: 12px;
             table-layout: fixed;
-            /* page-break-inside: avoid; */
         }
 
         main table thead {
@@ -119,6 +118,15 @@
             color: #555;
             background-color: #f5f5f5;
         }
+
+        .total-cell {
+            background-color: #888888;
+        }
+
+        .summary-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -147,14 +155,12 @@
                     <td>
                         @php
                             $gender = '-';
-
                             if ($dataMedis->pasien->jenis_kelamin == 1) {
                                 $gender = 'Laki-Laki';
                             }
                             if ($dataMedis->pasien->jenis_kelamin == 0) {
                                 $gender = 'Perempuan';
                             }
-
                             echo $gender;
                         @endphp
                     </td>
@@ -199,74 +205,111 @@
             </thead>
 
             <tbody>
-                @foreach ($intakeData as $intake)
-                    <tr>
-                        <td class="date-cell">{{ date('d M Y', strtotime($intake->tanggal)) }}</td>
-                        <td>07:00 s.d 14:00</td>
-                        <td>{{ $intake->output_pagi_urine }}</td>
-                        <td>{{ $intake->output_pagi_muntah }}</td>
-                        <td>{{ $intake->output_pagi_drain }}</td>
-                        <td>{{ $intake->output_pagi_iwl }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td>{{ $intake->intake_pagi_iufd }}</td>
-                        <td>{{ $intake->intake_pagi_minum }}</td>
-                        <td>{{ $intake->intake_pagi_makan }}</td>
-                        <td>{{ $intake->intake_pagi_ngt }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td style="background-color: #888888"></td>
-                    </tr>
+                @php
+                    // Group data by tanggal untuk menampilkan per hari
+                    $groupedData = $intakeData->groupBy('tanggal');
+                    $totalIntakeAll = 0;
+                    $totalOutputAll = 0;
+                    $totalBalanceAll = 0;
+                @endphp
 
-                    <tr>
-                        <td class="date-cell date-repeat">
-                            {{ date('d M Y', strtotime($intake->tanggal)) }}</td>
-                        <td>14:00 s.d 20:00</td>
-                        <td>{{ $intake->output_siang_urine }}</td>
-                        <td>{{ $intake->output_siang_muntah }}</td>
-                        <td>{{ $intake->output_siang_drain }}</td>
-                        <td>{{ $intake->output_siang_iwl }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td>{{ $intake->intake_siang_iufd }}</td>
-                        <td>{{ $intake->intake_siang_minum }}</td>
-                        <td>{{ $intake->intake_siang_makan }}</td>
-                        <td>{{ $intake->intake_siang_ngt }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td style="background-color: #888888"></td>
-                    </tr>
+                @foreach ($groupedData as $tanggal => $dataPerTanggal)
+                    @php
+                        // Inisialisasi data untuk setiap shift
+                        $shiftData = [
+                            1 => ['shift_time' => '07:00 s.d 14:00', 'data' => null],
+                            2 => ['shift_time' => '14:00 s.d 20:00', 'data' => null],
+                            3 => ['shift_time' => '20:00 s.d 07:00', 'data' => null]
+                        ];
 
-                    <tr>
-                        <td class="date-cell date-repeat">
-                            {{ date('d M Y', strtotime($intake->tanggal)) }}</td>
-                        <td>20:00 s.d 07:00</td>
-                        <td>{{ $intake->output_malam_urine }}</td>
-                        <td>{{ $intake->output_malam_muntah }}</td>
-                        <td>{{ $intake->output_malam_drain }}</td>
-                        <td>{{ $intake->output_malam_iwl }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td>{{ $intake->intake_malam_iufd }}</td>
-                        <td>{{ $intake->intake_malam_minum }}</td>
-                        <td>{{ $intake->intake_malam_makan }}</td>
-                        <td>{{ $intake->intake_malam_ngt }}</td>
-                        <td style="background-color: #888888"></td>
-                        <td style="background-color: #888888"></td>
-                    </tr>
+                        // Isi data yang ada
+                        foreach ($dataPerTanggal as $data) {
+                            $shiftData[$data->shift]['data'] = $data;
+                        }
 
-                    <tr class="sum-row">
-                        <td class="date-cell date-repeat">
-                            {{ date('d M Y', strtotime($intake->tanggal)) }}</td>
-                        <td>Jumlah</td>
-                        <td>{{ $intake->jml_urine }}</td>
-                        <td>{{ $intake->jml_muntah }}</td>
-                        <td>{{ $intake->jml_drain }}</td>
-                        <td>{{ $intake->jml_iwl }}</td>
-                        <td>{{ $intake->total_output }}</td>
-                        <td>{{ $intake->jml_iufd }}</td>
-                        <td>{{ $intake->jml_minum }}</td>
-                        <td>{{ $intake->jml_makan }}</td>
-                        <td>{{ $intake->jml_ngt }}</td>
-                        <td>{{ $intake->total_intake }}</td>
-                        <td>{{ $intake->balance_cairan }}</td>
+                        // Hitung total per hari
+                        $dailyTotalOutput = $dataPerTanggal->sum('total_output');
+                        $dailyTotalIntake = $dataPerTanggal->sum('total_intake');
+                        $dailyBalance = $dailyTotalIntake - $dailyTotalOutput;
+
+                        $totalIntakeAll += $dailyTotalIntake;
+                        $totalOutputAll += $dailyTotalOutput;
+                        $totalBalanceAll += $dailyBalance;
+                    @endphp
+
+                    {{-- Tampilkan data per shift --}}
+                    @foreach ($shiftData as $shift => $shiftInfo)
+                        <tr>
+                            <td class="date-cell {{ $shift > 1 ? 'date-repeat' : '' }}">
+                                {{ $shift == 1 ? date('d M Y', strtotime($tanggal)) : date('d M Y', strtotime($tanggal)) }}
+                            </td>
+                            <td>{{ $shiftInfo['shift_time'] }}</td>
+                            
+                            @if ($shiftInfo['data'])
+                                {{-- Jika ada data untuk shift ini --}}
+                                <td>{{ $shiftInfo['data']->output_urine ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->output_muntah ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->output_drain ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->output_iwl ?? 0 }}</td>
+                                <td class="total-cell"></td>
+                                <td>{{ $shiftInfo['data']->intake_iufd ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->intake_minum ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->intake_makan ?? 0 }}</td>
+                                <td>{{ $shiftInfo['data']->intake_ngt ?? 0 }}</td>
+                                <td class="total-cell"></td>
+                                <td class="total-cell"></td>
+                            @else
+                                {{-- Jika tidak ada data untuk shift ini --}}
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td class="total-cell"></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td class="total-cell"></td>
+                                <td class="total-cell"></td>
+                            @endif
+                        </tr>
+                    @endforeach
+
+                    {{-- Row Summary per hari --}}
+                    <tr class="sum-row summary-row">
+                        <td class="date-cell date-repeat">{{ date('d M Y', strtotime($tanggal)) }}</td>
+                        <td><strong>Jumlah</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('output_urine') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('output_muntah') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('output_drain') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('output_iwl') }}</strong></td>
+                        <td><strong>{{ $dailyTotalOutput }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('intake_iufd') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('intake_minum') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('intake_makan') }}</strong></td>
+                        <td><strong>{{ $dataPerTanggal->sum('intake_ngt') }}</strong></td>
+                        <td><strong>{{ $dailyTotalIntake }}</strong></td>
+                        <td><strong>{{ $dailyBalance > 0 ? '+' : '' }}{{ $dailyBalance }}</strong></td>
                     </tr>
                 @endforeach
+
+                {{-- Grand Total --}}
+                @if ($groupedData->count() > 1)
+                    <tr class="sum-row" style="background-color: #d0d0d0; font-weight: bold;">
+                        <td colspan="2" style="text-align: center;"><strong>GRAND TOTAL</strong></td>
+                        <td><strong>{{ $intakeData->sum('output_urine') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('output_muntah') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('output_drain') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('output_iwl') }}</strong></td>
+                        <td><strong>{{ $totalOutputAll }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('intake_iufd') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('intake_minum') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('intake_makan') }}</strong></td>
+                        <td><strong>{{ $intakeData->sum('intake_ngt') }}</strong></td>
+                        <td><strong>{{ $totalIntakeAll }}</strong></td>
+                        <td><strong>{{ $totalBalanceAll > 0 ? '+' : '' }}{{ $totalBalanceAll }}</strong></td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     </main>

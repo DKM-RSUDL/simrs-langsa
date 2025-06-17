@@ -30,6 +30,47 @@
             .form-section {
                 max-width: 100%;
             }
+
+            /* Tambahkan CSS ini di bagian style yang sudah ada */
+
+            .konsulen-item {
+                position: relative;
+            }
+
+            .konsulen-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .konsulen-item .form-select {
+                flex: 1;
+            }
+
+            .konsulen-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .select2-konsulen + .select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .konsulen-item .input-group .select2-container {
+                flex: 1;
+            }
+
+            .konsulen-item .input-group .select2-container .select2-selection {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                height: calc(2.25rem + 2px);
+                border-right: 0;
+            }
+
+            .konsulen-item .input-group .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         </style>
     @endpush
 
@@ -288,7 +329,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Tinggi Badan (cm)</label>
                                                     <input type="number" step="1" min="0"
-                                                        class="form-control bg-light" name="tinggi_badan" placeholder="cm"
+                                                        class="form-control bg-light" name="tinggi_badan"
+                                                        placeholder="cm"
                                                         value="{{ $latestMonitoring && $latestMonitoring->tinggi_badan ? number_format($latestMonitoring->tinggi_badan, 0) : '' }}">
                                                 </div>
                                             </div>
@@ -296,8 +338,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Hari Rawat Ke-</label>
                                                     <div class="input-group">
-                                                        <input type="number" min="1" class="form-control bg-light"
-                                                            name="hari_rawat"
+                                                        <input type="number" min="1"
+                                                            class="form-control bg-light" name="hari_rawat"
                                                             value="{{ $latestMonitoring->hari_rawat ?? '' }}">
                                                         <span class="input-group-text bg-light" data-bs-toggle="tooltip"
                                                             title="Hari Rawat Kunjungan">
@@ -337,7 +379,7 @@
 
 
                             <!-- Informasi Tenaga Medis -->
-                            <!-- Informasi Tenaga Medis -->
+                            <!-- Informasi Tenaga Medis - Updated Version -->
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <h6 class="mb-3 border-bottom pb-2 fw-bold">
@@ -345,161 +387,69 @@
                                     </h6>
                                 </div>
 
-                                {{-- Form untuk NICU (10131) --}}
-                                @if ($dataMedis->kd_unit == '10131')
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter Diagnosa 1</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_diagnosa_1">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_diagnosa_1 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                <!-- Dokter (Single Selection) -->
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Dokter</label>
+                                        <select class="form-select select2 bg-light" style="width: 100%" name="dokter">
+                                            <option value="">- Pilih -</option>
+                                            @foreach ($dokter as $d)
+                                                <option value="{{ $d->kd_dokter }}"
+                                                    {{ $latestMonitoring && $latestMonitoring->dokter == $d->kd_dokter ? 'selected' : '' }}>
+                                                    {{ $d->nama_lengkap }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter Diagnosa 2</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_diagnosa_2">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_diagnosa_2 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
+                                </div>
+
+                                <!-- Konsulen (Multiple Selection like DPJP Tambahan) -->
+                                <!-- Update untuk create form - menampilkan konsulen array dari latest monitoring -->
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Konsulen</label>
+                                        <div id="konsulen-container">
+                                            @if($latestMonitoring && isset($latestMonitoring->konsulen_array) && count($latestMonitoring->konsulen_array) > 0)
+                                                @foreach($latestMonitoring->konsulen_array as $index => $konsulenId)
+                                                    <div class="konsulen-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="konsulen[]" class="form-select select2-konsulen bg-light">
+                                                                <option value="">- Pilih -</option>
+                                                                @foreach ($dokter as $d)
+                                                                    <option value="{{ $d->kd_dokter }}" 
+                                                                        {{ $konsulenId == $d->kd_dokter ? 'selected' : '' }}>
+                                                                        {{ $d->nama_lengkap }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-danger remove-konsulen" 
+                                                                    {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 @endforeach
-                                            </select>
+                                            @else
+                                                <div class="konsulen-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="konsulen[]" class="form-select select2-konsulen bg-light">
+                                                            <option value="">- Pilih -</option>
+                                                            @foreach ($dokter as $d)
+                                                                <option value="{{ $d->kd_dokter }}">{{ $d->nama_lengkap }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-danger remove-konsulen" style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-konsulen">
+                                            <i class="bi bi-plus"></i> Tambah Konsulen
+                                        </button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter NICU 1</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_nicu_1">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_nicu_1 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter NICU 2</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_nicu_2">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_nicu_2 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter Konsul 1</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_konsul_1">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_konsul_1 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter Konsul 2</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_konsul_2">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_konsul_2 == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
-                                    {{-- Form untuk ICCU (10015), ICU (10016), PICU (10132) --}}
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Konsulen</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="konsulen">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->konsulen == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Anastesi/RB</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="anastesi_rb">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->anastesi_rb == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Dokter Jaga</label>
-                                            <select class="form-select select2 bg-light" style="width: 100%"
-                                                name="dokter_jaga">
-                                                <option value="">- Pilih -</option>
-                                                @foreach ($dokter as $d)
-                                                    <option value="{{ $d->kd_dokter }}"
-                                                        {{ $latestMonitoring && $latestMonitoring->dokter_jaga == $d->kd_dokter ? 'selected' : '' }}>
-                                                        {{ $d->nama_lengkap }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                @endif
+                                </div>
                             </div>
 
                         </div>
@@ -1022,11 +972,7 @@
                     <!-- Ventilator Parameters -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            @if ($dataMedis->kd_unit == '10131')
-                                <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
-                            @elseif(in_array($dataMedis->kd_unit, ['10015', '10016', '10132']))
-                                <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
-                            @endif
+                            <h6 class="mb-3 border-bottom pb-2">Parameter Ventilator</h6>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -1048,28 +994,36 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="mb-3">
-                                        <label class="form-label">FiO2 (%)</label>
-                                        <input type="number" step="1" class="form-control"
-                                            name="ventilator_fio2">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">I:E Ratio</label>
                                         <input type="text" class="form-control" name="ventilator_ie_ratio"
                                             placeholder="e.g., 1:2">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">P Max (cmH2O)</label>
                                         <input type="number" step="1" class="form-control"
                                             name="ventilator_pmax">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="mb-3 border-bottom pb-2">Parameter CPAP</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">FiO2 (%)</label>
+                                        <input type="number" step="1" class="form-control"
+                                            name="ventilator_fio2">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">PEEP/PS (cmH2O)</label>
                                         <input type="number" step="1" class="form-control"
@@ -1206,6 +1160,122 @@
                     $('#gcs_total').val('');
                 }
             }
+
+
+            // Konsulen Management (Similar to DPJP Tambahan)
+            let konsulenIndex = document.querySelectorAll('.konsulen-item').length;
+
+            // Store doctor options for konsulen
+            const doctorOptions = [];
+            @foreach ($dokter as $dok)
+                doctorOptions.push({
+                    value: '{{ addslashes($dok->kd_dokter) }}', 
+                    text: '{{ addslashes($dok->nama_lengkap) }}'
+                });
+            @endforeach
+
+            // Function to build konsulen options HTML
+            function buildKonsulenOptionsHtml(selectedValue = '') {
+                let html = '<option value="">- Pilih -</option>';
+                doctorOptions.forEach(function(doctor) {
+                    const selected = selectedValue === doctor.value ? 'selected' : '';
+                    html += `<option value="${doctor.value}" ${selected}>${doctor.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to initialize Select2 for konsulen elements
+            function initializeKonsulenSelect2(element) {
+                if (typeof $.fn.select2 !== 'undefined') {
+                    $(element).select2({
+                        theme: 'bootstrap-5',
+                        placeholder: '- Pilih -',
+                        width: '100%'
+                    });
+                }
+            }
+
+            // Function to reinitialize existing konsulen selects
+            function reinitializeExistingKonsulenSelects() {
+                $('.select2-konsulen').each(function() {
+                    const currentValue = $(this).val();
+                    
+                    // Destroy existing Select2 if exists
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+                    
+                    // Rebuild options with current value preserved
+                    $(this).html(buildKonsulenOptionsHtml(currentValue));
+                    
+                    // Re-initialize Select2
+                    initializeKonsulenSelect2(this);
+                });
+            }
+
+            // Initialize konsulen Select2 elements
+            setTimeout(function() {
+                reinitializeExistingKonsulenSelects();
+            }, 100);
+
+            // Add new Konsulen
+            $(document).on('click', '#add-konsulen', function() {
+                const container = document.getElementById('konsulen-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'konsulen-item mb-2';
+                newItem.setAttribute('data-index', konsulenIndex);
+                
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="konsulen[]" class="form-select select2-konsulen bg-light">
+                            ${buildKonsulenOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-konsulen">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(newItem);
+                
+                // Initialize Select2 for the new element
+                const newSelect = newItem.querySelector('select');
+                initializeKonsulenSelect2(newSelect);
+                
+                konsulenIndex++;
+                updateRemoveKonsulenButtons();
+            });
+
+            // Remove Konsulen
+            $(document).on('click', '.remove-konsulen', function(e) {
+                const button = e.target.classList.contains('remove-konsulen') ? e.target : e.target.closest('.remove-konsulen');
+                const item = button.closest('.konsulen-item');
+                
+                // Destroy Select2 before removing element
+                const select = item.querySelector('select');
+                if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass('select2-hidden-accessible')) {
+                    $(select).select2('destroy');
+                }
+                
+                item.remove();
+                updateRemoveKonsulenButtons();
+            });
+
+            // Update remove buttons visibility for konsulen
+            function updateRemoveKonsulenButtons() {
+                const items = document.querySelectorAll('.konsulen-item');
+                items.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-konsulen');
+                    if (index === 0 && items.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+            }
+
+            // Initial update of remove buttons for konsulen
+            updateRemoveKonsulenButtons();
 
             // Validasi form sebelum submit
             $('#iccuForm').on('submit', function(e) {

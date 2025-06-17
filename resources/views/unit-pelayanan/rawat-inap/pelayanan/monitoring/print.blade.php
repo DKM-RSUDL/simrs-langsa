@@ -343,6 +343,42 @@
             margin-bottom: 0;
         }
 
+        .konsulen-list-item {
+            font-size: 11px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+            color: #495057;
+            padding-left: 0;
+        }
+
+        .konsulen-list-item strong {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 4px;
+        }
+
+        /* Print specific styling */
+        @media print {
+            .medical-staff-item {
+                font-size: 11px !important;
+                line-height: 1.4 !important;
+                margin-bottom: 4px !important;
+                color: #495057 !important;
+                page-break-inside: avoid;
+            }
+            
+            .konsulen-list-item {
+                font-size: 11px !important;
+                line-height: 1.3 !important;
+                margin-bottom: 2px !important;
+                page-break-inside: avoid;
+            }
+            
+            .medical-staff-box {
+                page-break-inside: avoid;
+            }
+        }
+
         @media print {
             .medical-staff-box {
                 background-color: #f8f9fa !important;
@@ -477,101 +513,84 @@
         <hr>
 
         <!-- Informasi Tenaga Medis -->
-        <!-- Informasi Tenaga Medis -->
+        <!-- Informasi Tenaga Medis - Updated untuk Semua Unit -->
         <div class="medical-staff-info">
-            @if($dataMedis->kd_unit == '10131')
-                <!-- Layout khusus untuk NICU (6 dokter dalam 3 kolom) -->
-                <div class="medical-staff-row">
-                    <!-- Kolom 1 - Dokter Diagnosa -->
-                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
-                        <div class="medical-staff-box">
-                            <h6 class="medical-staff-title">
-                                <i class="bi bi-person-badge me-1"></i>Dokter Diagnosa
-                            </h6>
-                            <div class="medical-staff-item">
-                                <strong>Dokter Diagnosa 1:</strong> 
-                                {{ $latestMonitoring->dokter_diagnosa_1 ?? '-' }}
-                            </div>
-                            <div class="medical-staff-item">
-                                <strong>Dokter Diagnosa 2:</strong> 
-                                {{ $latestMonitoring->dokter_diagnosa_2 ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kolom 2 - Dokter NICU -->
-                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
-                        <div class="medical-staff-box">
-                            <h6 class="medical-staff-title">
-                                <i class="bi bi-person-check me-1"></i>Dokter NICU
-                            </h6>
-                            <div class="medical-staff-item">
-                                <strong>Dokter NICU 1:</strong> 
-                                {{ $latestMonitoring->dokter_nicu_1 ?? '-' }}
-                            </div>
-                            <div class="medical-staff-item">
-                                <strong>Dokter NICU 2:</strong> 
-                                {{ $latestMonitoring->dokter_nicu_2 ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kolom 3 - Dokter Konsultan -->
-                    <div class="medical-staff-column" style="flex: 0 0 33.333%;">
-                        <div class="medical-staff-box">
-                            <h6 class="medical-staff-title">
-                                <i class="bi bi-person-heart me-1"></i>Dokter Konsultan
-                            </h6>
-                            <div class="medical-staff-item">
-                                <strong>Konsultan 1:</strong> 
-                                {{ $latestMonitoring->dokter_konsul_1 ?? '-' }}
-                            </div>
-                            <div class="medical-staff-item">
-                                <strong>Konsultan 2:</strong> 
-                                {{ $latestMonitoring->dokter_konsul_2 ?? '-' }}
-                            </div>
+            <!-- Layout Uniform untuk Semua Unit (NICU, ICCU, ICU, PICU) -->
+            <div class="medical-staff-row">
+                <!-- Kolom Kiri - Dokter Utama (50%) -->
+                <div class="medical-staff-column" style="flex: 0 0 50%;">
+                    <div class="medical-staff-box">
+                        <h6 class="medical-staff-title">
+                            <i class="bi bi-person-badge me-1"></i>Dokter Penanggung Jawab
+                        </h6>
+                        <div class="medical-staff-item">
+                            <strong>Dokter:</strong> 
+                            @if($latestMonitoring && $latestMonitoring->dokter)
+                                @php
+                                    $dokterUtama = \App\Models\Dokter::where('kd_dokter', $latestMonitoring->dokter)->first();
+                                @endphp
+                                {{ $dokterUtama ? $dokterUtama->nama_lengkap : $latestMonitoring->dokter }}
+                            @else
+                                -
+                            @endif
                         </div>
                     </div>
                 </div>
 
-            @else
-                <!-- Layout untuk ICU, ICCU, PICU (4 dokter dalam 2 kolom) -->
-                <div class="medical-staff-row">
-                    <!-- Kolom Kiri - Dokter Utama -->
-                    <div class="medical-staff-column" style="flex: 0 0 50%;">
-                        <div class="medical-staff-box">
-                            <h6 class="medical-staff-title">
-                                <i class="bi bi-person-badge me-1"></i>Dokter Penanggung Jawab
-                            </h6>
-                            <div class="medical-staff-item">
-                                <strong>Dokter:</strong> 
-                                {{ $latestMonitoring->dokter ?? '-' }}
-                            </div>
-                            <div class="medical-staff-item">
-                                <strong>Dokter Jaga:</strong> 
-                                {{ $latestMonitoring->dokter_jaga ?? '-' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kolom Kanan - Dokter Konsultan -->
-                    <div class="medical-staff-column" style="flex: 0 0 50%;">
-                        <div class="medical-staff-box">
-                            <h6 class="medical-staff-title">
-                                <i class="bi bi-person-check me-1"></i>Dokter Konsultan
-                            </h6>
-                            <div class="medical-staff-item">
-                                <strong>Konsulen:</strong> 
-                                {{ $latestMonitoring->konsulen ?? '-' }}
-                            </div>
-                            <div class="medical-staff-item">
-                                <strong>Anestesi/RB:</strong> 
-                                {{ $latestMonitoring->anastesi_rb ?? '-' }}
-                            </div>
+                <!-- Kolom Kanan - Dokter Konsulen (50%) -->
+                <div class="medical-staff-column" style="flex: 0 0 50%;">
+                    <div class="medical-staff-box">
+                        <h6 class="medical-staff-title">
+                            <i class="bi bi-person-check me-1"></i>Dokter Konsulen
+                        </h6>
+                        <div class="medical-staff-item">
+                            @if($latestMonitoring && $latestMonitoring->konsulen)
+                                @php
+                                    // Decode konsulen JSON untuk print
+                                    $konsulenNames = [];
+                                    try {
+                                        $konsulenArray = json_decode($latestMonitoring->konsulen, true);
+                                        if (!is_array($konsulenArray)) {
+                                            // Handle old format (single doctor)
+                                            $konsulenArray = [$latestMonitoring->konsulen];
+                                        }
+                                        
+                                        foreach ($konsulenArray as $konsulenId) {
+                                            $dokter = \App\Models\Dokter::where('kd_dokter', $konsulenId)->first();
+                                            if ($dokter) {
+                                                $konsulenNames[] = $dokter->nama_lengkap;
+                                            } else {
+                                                $konsulenNames[] = $konsulenId; // Fallback ke kode dokter
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+                                        // Handle invalid JSON - treat as single doctor
+                                        $dokter = \App\Models\Dokter::where('kd_dokter', $latestMonitoring->konsulen)->first();
+                                        $konsulenNames[] = $dokter ? $dokter->nama_lengkap : $latestMonitoring->konsulen;
+                                    }
+                                @endphp
+                                
+                                @if(count($konsulenNames) > 1)
+                                    <!-- Multiple konsulen - tampilkan sebagai numbered list -->
+                                    @foreach($konsulenNames as $index => $nama)
+                                        <div class="medical-staff-item" style="margin-bottom: 2px;">
+                                            <strong>{{ $index + 1 }}.</strong> {{ $nama }}
+                                        </div>
+                                    @endforeach
+                                @elseif(count($konsulenNames) == 1)
+                                    <!-- Single konsulen - tampilkan dengan label -->
+                                    <strong>Konsulen:</strong> {{ $konsulenNames[0] }}
+                                @else
+                                    <!-- No konsulen -->
+                                    <strong>Konsulen:</strong> -
+                                @endif
+                            @else
+                                <strong>Konsulen:</strong> -
+                            @endif
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
 
         <div class="filter-info" id="filterInfo">

@@ -17,4 +17,26 @@ class RmeIntakeOutputCairan extends Model
     {
         return $this->belongsTo(User::class, 'user_create', 'id');
     }
+
+    public function getShiftNameAttribute(): string
+    {
+        $shiftNames = [
+            1 => 'Shift 1 (07:00-14:00)',
+            2 => 'Shift 2 (14:00-20:00)',
+            3 => 'Shift 3 (20:00-07:00)'
+        ];
+
+        return $shiftNames[$this->shift] ?? 'Shift Tidak Dikenal';
+    }
+
+    public function getShiftTimeAttribute(): string
+    {
+        $shiftTimes = [
+            1 => '07:00-14:00',
+            2 => '14:00-20:00',
+            3 => '20:00-07:00'
+        ];
+
+        return $shiftTimes[$this->shift] ?? '-';
+    }
 }

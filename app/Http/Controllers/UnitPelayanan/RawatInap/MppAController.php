@@ -48,6 +48,22 @@ class MppAController extends Controller
             ->whereDate('tgl_masuk', $tgl_masuk)
             ->get();
 
+        // Decode dpjp_tambahan JSON for each record
+        foreach ($mppDataList as $mppData) {
+            if ($mppData->dpjp_tambahan) {
+                $dpjpTambahanArray = json_decode($mppData->dpjp_tambahan, true);
+                if (is_array($dpjpTambahanArray)) {
+                    $mppData->dpjp_tambahan_names = Dokter::whereIn('kd_dokter', $dpjpTambahanArray)->pluck('nama')->toArray();
+                } else {
+                    // Handle old format (single doctor)
+                    $dokter = Dokter::where('kd_dokter', $mppData->dpjp_tambahan)->first();
+                    $mppData->dpjp_tambahan_names = $dokter ? [$dokter->nama] : [];
+                }
+            } else {
+                $mppData->dpjp_tambahan_names = [];
+            }
+        }
+
         return view('unit-pelayanan.rawat-inap.pelayanan.mpp.form-a.index', compact(
             'dataMedis',
             'kd_unit',
@@ -99,13 +115,21 @@ class MppAController extends Controller
 
     public function store(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk)
     {
+        // Process DPJP Tambahan array
+        $dpjpTambahanArray = [];
+        if ($request->has('dpjp_tambahan') && is_array($request->dpjp_tambahan)) {
+            $dpjpTambahanArray = array_filter($request->dpjp_tambahan, function ($value) {
+                return !empty($value);
+            });
+        }
+
         $data = [
             'kd_unit' => $kd_unit,
             'kd_pasien' => $kd_pasien,
             'tgl_masuk' => $tgl_masuk,
             'urut_masuk' => $urut_masuk,
             'dpjp_utama' => $request->dpjp_utama,
-            'dpjp_tambahan' => $request->dpjp_tambahan,
+            'dpjp_tambahan' => !empty($dpjpTambahanArray) ? json_encode(array_values($dpjpTambahanArray)) : null,
             'screening_date' => $request->screening_date,
             'screening_time' => $request->screening_time,
             'assessment_date' => $request->assessment_date,
@@ -114,6 +138,7 @@ class MppAController extends Controller
             'identification_time' => $request->identification_time,
             'planning_date' => $request->planning_date,
             'planning_time' => $request->planning_time,
+            'lain_lain_text' => $request->lain_lain_text,
             'user_create' => auth()->user()->id,
         ];
 
@@ -123,9 +148,13 @@ class MppAController extends Controller
             'risiko_tinggi',
             'potensi_komplain',
             'riwayat_kronis',
+            'kasus_katastropik',    // NEW
+            'kasus_terminal',       // NEW
             'status_fungsional',
             'peralatan_medis',
             'gangguan_mental',
+            'krisis_keluarga',      // NEW
+            'isu_sosial',           // NEW
             'sering_igd',
             'perkiraan_asuhan',
             'sistem_pembiayaan',
@@ -139,7 +168,10 @@ class MppAController extends Controller
 
         // Handle assessment criteria
         $assessmentCriteria = [
-            'fisik_fungsional',
+            'assessment_fisik',     // NEW (was fisik_fungsional)
+            'assessment_fungsional', // NEW
+            'assessment_kognitif',   // NEW
+            'assessment_kemandirian', // NEW
             'riwayat_kesehatan',
             'perilaku_psiko',
             'kesehatan_mental',
@@ -158,7 +190,8 @@ class MppAController extends Controller
         // Handle identification criteria
         $identificationCriteria = [
             'tingkat_asuhan',
-            'over_under_utilization',
+            'over_utilization',     // NEW (was over_under_utilization)
+            'under_utilization',    // NEW
             'ketidak_patuhan',
             'edukasi_kurang',
             'kurang_dukungan',
@@ -242,7 +275,7 @@ class MppAController extends Controller
             'urut_masuk',
             'dokter',
             'mppData',
-            'id'  // Tambahkan parameter id
+            'id'
         ));
     }
 
@@ -260,9 +293,17 @@ class MppAController extends Controller
             abort(404, 'MPP Form A data not found');
         }
 
+        // Process DPJP Tambahan array
+        $dpjpTambahanArray = [];
+        if ($request->has('dpjp_tambahan') && is_array($request->dpjp_tambahan)) {
+            $dpjpTambahanArray = array_filter($request->dpjp_tambahan, function ($value) {
+                return !empty($value);
+            });
+        }
+
         $data = [
             'dpjp_utama' => $request->dpjp_utama,
-            'dpjp_tambahan' => $request->dpjp_tambahan,
+            'dpjp_tambahan' => !empty($dpjpTambahanArray) ? json_encode(array_values($dpjpTambahanArray)) : null,
             'screening_date' => $request->screening_date,
             'screening_time' => $request->screening_time,
             'assessment_date' => $request->assessment_date,
@@ -271,6 +312,7 @@ class MppAController extends Controller
             'identification_time' => $request->identification_time,
             'planning_date' => $request->planning_date,
             'planning_time' => $request->planning_time,
+            'lain_lain_text' => $request->lain_lain_text,
             'user_update' => auth()->user()->id,
         ];
 
@@ -280,9 +322,13 @@ class MppAController extends Controller
             'risiko_tinggi',
             'potensi_komplain',
             'riwayat_kronis',
+            'kasus_katastropik',    // NEW
+            'kasus_terminal',       // NEW
             'status_fungsional',
             'peralatan_medis',
             'gangguan_mental',
+            'krisis_keluarga',      // NEW
+            'isu_sosial',           // NEW
             'sering_igd',
             'perkiraan_asuhan',
             'sistem_pembiayaan',
@@ -296,7 +342,10 @@ class MppAController extends Controller
 
         // Handle assessment criteria
         $assessmentCriteria = [
-            'fisik_fungsional',
+            'assessment_fisik',     // NEW (was fisik_fungsional)
+            'assessment_fungsional', // NEW
+            'assessment_kognitif',   // NEW
+            'assessment_kemandirian', // NEW
             'riwayat_kesehatan',
             'perilaku_psiko',
             'kesehatan_mental',
@@ -315,7 +364,8 @@ class MppAController extends Controller
         // Handle identification criteria
         $identificationCriteria = [
             'tingkat_asuhan',
-            'over_under_utilization',
+            'over_utilization',     // NEW (was over_under_utilization)
+            'under_utilization',    // NEW
             'ketidak_patuhan',
             'edukasi_kurang',
             'kurang_dukungan',
@@ -411,16 +461,30 @@ class MppAController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
-        // Get doctor names
+        // Get doctor names and user creator
         $dpjpUtama = null;
-        $dpjpTambahan = null;
+        $dpjpTambahan = [];
+        $userCreate = null;
 
         if ($mppData->dpjp_utama) {
             $dpjpUtama = Dokter::where('kd_dokter', $mppData->dpjp_utama)->first();
         }
 
         if ($mppData->dpjp_tambahan) {
-            $dpjpTambahan = Dokter::where('kd_dokter', $mppData->dpjp_tambahan)->first();
+            $dpjpTambahanArray = json_decode($mppData->dpjp_tambahan, true);
+            if (is_array($dpjpTambahanArray)) {
+                // New format: JSON array
+                $dpjpTambahan = Dokter::whereIn('kd_dokter', $dpjpTambahanArray)->get();
+            } else {
+                // Old format: single doctor code
+                $dokter = Dokter::where('kd_dokter', $mppData->dpjp_tambahan)->first();
+                $dpjpTambahan = $dokter ? collect([$dokter]) : collect([]);
+            }
+        }
+
+        // Get user who created the record
+        if ($mppData->user_create) {
+            $userCreate = \App\Models\User::find($mppData->user_create);
         }
 
         // Logo path
@@ -431,6 +495,7 @@ class MppAController extends Controller
             'mppData',
             'dpjpUtama',
             'dpjpTambahan',
+            'userCreate',
             'logoPath'
         ));
 

@@ -131,6 +131,45 @@
                 resize: vertical;
                 width: 100%;
             }
+
+            .dpjp-tambahan-item {
+                position: relative;
+            }
+
+            .dpjp-tambahan-item .input-group {
+                display: flex;
+                align-items: stretch;
+            }
+
+            .dpjp-tambahan-item .form-select {
+                flex: 1;
+            }
+
+            .dpjp-tambahan-item .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                z-index: 1;
+            }
+
+            .select2-tambahan+.select2-container {
+                width: calc(100% - 42px) !important;
+            }
+
+            .input-group .select2-container {
+                flex: 1;
+            }
+
+            .input-group .select2-container .select2-selection {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                height: calc(2.25rem + 2px);
+                border-right: 0;
+            }
+
+            .input-group .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         </style>
     @endpush
 
@@ -164,26 +203,79 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Utama</label>
                                         <select name="dpjp_utama" class="form-select select2" style="width: 100%">
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
+                                                <option value="{{ $dok->kd_dokter }}"
+                                                    {{ isset($mppData) && $mppData->dpjp_utama == $dok->kd_dokter ? 'selected' : '' }}>
+                                                    {{ $dok->nama }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">DPJP Tambahan</label>
-                                        <select name="dpjp_tambahan" class="form-select select2" style="width: 100%">
-                                            <option value="">--Pilih--</option>
-                                            @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div id="dpjp-tambahan-container">
+                                            @if (isset($mppData) && $mppData->dpjp_tambahan)
+                                                @php
+                                                    $dpjpTambahanArray = is_array($mppData->dpjp_tambahan)
+                                                        ? $mppData->dpjp_tambahan
+                                                        : json_decode($mppData->dpjp_tambahan, true);
+                                                    if (!is_array($dpjpTambahanArray)) {
+                                                        $dpjpTambahanArray = [$mppData->dpjp_tambahan];
+                                                    }
+                                                @endphp
+                                                @foreach ($dpjpTambahanArray as $index => $dpjpTambahan)
+                                                    <div class="dpjp-tambahan-item mb-2" data-index="{{ $index }}">
+                                                        <div class="input-group">
+                                                            <select name="dpjp_tambahan[]"
+                                                                class="form-select select2-tambahan">
+                                                                <option value="">--Pilih--</option>
+                                                                @foreach ($dokter as $dok)
+                                                                    <option value="{{ $dok->kd_dokter }}"
+                                                                        {{ $dpjpTambahan == $dok->kd_dokter ? 'selected' : '' }}>
+                                                                        {{ $dok->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger remove-dpjp-tambahan"
+                                                                {{ $index == 0 ? 'style=display:none;' : '' }}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="dpjp-tambahan-item mb-2" data-index="0">
+                                                    <div class="input-group">
+                                                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                                                            <option value="">--Pilih--</option>
+                                                            @foreach ($dokter as $dok)
+                                                                <option value="{{ $dok->kd_dokter }}">{{ $dok->nama }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger remove-dpjp-tambahan"
+                                                            style="display: none;">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2"
+                                            id="add-dpjp-tambahan">
+                                            <i class="bi bi-plus"></i> Tambah Dokter
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +300,7 @@
 
                                     <!-- Row dengan tanggal jam dan semua kriteria -->
                                     <tr class="screening-row">
-                                        <td class="datetime-column" rowspan="13">
+                                        <td class="datetime-column" rowspan="17"> <!-- Updated rowspan from 13 to 18 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="screening_date"
                                                     class="form-control form-control-sm screening-date date"
@@ -241,18 +333,20 @@
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="potensi_komplain"
                                                     class="criteria-checkbox screening-checkbox" id="s3">
-                                                <label class="criteria-label" for="s3">Potensi komplain tinggi</label>
+                                                <label class="criteria-label" for="s3">Potensi komplain
+                                                    tinggi</label>
                                             </div>
                                         </td>
                                     </tr>
 
+                                    <!-- SEPARATED: Kasus dengan riwayat kronis, katastropik, terminal -->
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="riwayat_kronis"
                                                     class="criteria-checkbox screening-checkbox" id="s4">
-                                                <label class="criteria-label" for="s4">Kasus dengan riwayat kronis,
-                                                    katastropik, terminal</label>
+                                                <label class="criteria-label" for="s4">Kasus dengan riwayat
+                                                    kronis</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -260,8 +354,30 @@
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
-                                                <input type="checkbox" name="screening_criteria[]" value="status_fungsional"
-                                                    class="criteria-checkbox screening-checkbox" id="s5">
+                                                <input type="checkbox" name="screening_criteria[]"
+                                                    value="kasus_katastropik" class="criteria-checkbox screening-checkbox"
+                                                    id="s4b">
+                                                <label class="criteria-label" for="s4b">Kasus katastropik</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="kasus_terminal"
+                                                    class="criteria-checkbox screening-checkbox" id="s4c">
+                                                <label class="criteria-label" for="s4c">Kasus terminal</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]"
+                                                    value="status_fungsional" class="criteria-checkbox screening-checkbox"
+                                                    id="s5">
                                                 <label class="criteria-label" for="s5">Status fungsional rendah,
                                                     kebutuhan ADL tinggi</label>
                                             </div>
@@ -280,15 +396,37 @@
                                         </td>
                                     </tr>
 
+                                    <!-- SEPARATED: Riwayat gangguan mental, krisis keluarga, isu sosial -->
                                     <tr class="screening-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]"
                                                     value="gangguan_mental" class="criteria-checkbox screening-checkbox"
                                                     id="s7">
-                                                <label class="criteria-label" for="s7">Riwayat gangguan mental,
-                                                    krisis keluarga, isu sosial (terlantar, tinggal sendiri,
-                                                    narkoba)</label>
+                                                <label class="criteria-label" for="s7">Riwayat gangguan
+                                                    mental</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]"
+                                                    value="krisis_keluarga" class="criteria-checkbox screening-checkbox"
+                                                    id="s7b">
+                                                <label class="criteria-label" for="s7b">Krisis keluarga</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="screening-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="screening_criteria[]" value="isu_sosial"
+                                                    class="criteria-checkbox screening-checkbox" id="s7c">
+                                                <label class="criteria-label" for="s7c">Isu sosial (terlantar,
+                                                    tinggal sendiri, narkoba)</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -356,7 +494,14 @@
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="screening_criteria[]" value="lain_lain"
                                                     class="criteria-checkbox screening-checkbox" id="s13">
+                                                <input type="checkbox" name="screening_criteria[]" value="lain_lain"
+                                                    class="criteria-checkbox screening-checkbox" id="s13">
                                                 <label class="criteria-label" for="s13">Lain-lain</label>
+                                            </div>
+                                            <!-- Tambahkan textarea untuk free text -->
+                                            <div class="mt-2" id="lain-lain-text-container" style="display: none;">
+                                                <textarea name="lain_lain_text" class="form-control form-control-sm" rows="2"
+                                                    placeholder="Jelaskan lain-lain..." id="lain-lain-textarea">{{ isset($mppData) ? $mppData->lain_lain_text : '' }}</textarea>
                                             </div>
                                         </td>
                                     </tr>
@@ -367,7 +512,7 @@
                                     </tr>
 
                                     <tr class="assessment-row">
-                                        <td class="datetime-column" rowspan="11">
+                                        <td class="datetime-column" rowspan="14"> <!-- Updated rowspan from 11 to 14 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="assessment_date"
                                                     class="form-control form-control-sm assessment-date date"
@@ -376,13 +521,47 @@
                                                     class="form-control form-control-sm assessment-time">
                                             </div>
                                         </td>
+                                        <!-- SEPARATED: Fisik, Fungsional, Kognitif, Kemandirian -->
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="assessment_criteria[]"
-                                                    value="fisik_fungsional" class="criteria-checkbox assessment-checkbox"
+                                                    value="assessment_fisik" class="criteria-checkbox assessment-checkbox"
                                                     id="a1">
-                                                <label class="criteria-label" for="a1">Fisik, Fungsional, Kognitif,
-                                                    Kemandirian</label>
+                                                <label class="criteria-label" for="a1">Assessment fisik</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]"
+                                                    value="assessment_fungsional"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1b">
+                                                <label class="criteria-label" for="a1b">Assessment fungsional</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]"
+                                                    value="assessment_kognitif"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1c">
+                                                <label class="criteria-label" for="a1c">Assessment kognitif</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="assessment-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="assessment_criteria[]"
+                                                    value="assessment_kemandirian"
+                                                    class="criteria-checkbox assessment-checkbox" id="a1d">
+                                                <label class="criteria-label" for="a1d">Assessment
+                                                    kemandirian</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -507,7 +686,7 @@
                                     </tr>
 
                                     <tr class="identification-row">
-                                        <td class="datetime-column" rowspan="8">
+                                        <td class="datetime-column" rowspan="9"> <!-- Updated rowspan from 8 to 9 -->
                                             <div class="datetime-inputs">
                                                 <input type="text" name="identification_date"
                                                     class="form-control form-control-sm identification-date date"
@@ -527,14 +706,27 @@
                                         </td>
                                     </tr>
 
+                                    <!-- SEPARATED: Over/under utilization -->
                                     <tr class="identification-row">
                                         <td class="criteria-column">
                                             <div class="criteria-item">
                                                 <input type="checkbox" name="identification_criteria[]"
-                                                    value="over_under_utilization"
-                                                    class="criteria-checkbox identification-checkbox" id="i2">
-                                                <label class="criteria-label" for="i2">Over/under utilization
-                                                    pelayanan dengan dasar panduan norma yang digunakan</label>
+                                                    value="over_utilization"
+                                                    class="criteria-checkbox identification-checkbox" id="i2a">
+                                                <label class="criteria-label" for="i2a">Over utilization pelayanan
+                                                    dengan dasar panduan norma yang digunakan</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="identification-row">
+                                        <td class="criteria-column">
+                                            <div class="criteria-item">
+                                                <input type="checkbox" name="identification_criteria[]"
+                                                    value="under_utilization"
+                                                    class="criteria-checkbox identification-checkbox" id="i2b">
+                                                <label class="criteria-label" for="i2b">Under utilization pelayanan
+                                                    dengan dasar panduan norma yang digunakan</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -719,8 +911,180 @@
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            // Handle show/hide lain-lain text area
+            const lainLainCheckbox = document.getElementById('s13');
+            const lainLainContainer = document.getElementById('lain-lain-text-container');
+            const lainLainTextarea = document.getElementById('lain-lain-textarea');
+
+            if (lainLainCheckbox && lainLainContainer) {
+                // Check initial state for edit mode
+                if (lainLainCheckbox.checked) {
+                    lainLainContainer.style.display = 'block';
+                }
+
+                lainLainCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        lainLainContainer.style.display = 'block';
+                        lainLainTextarea.focus();
+                    } else {
+                        lainLainContainer.style.display = 'none';
+                        lainLainTextarea.value = '';
+                    }
+                });
+            }
+
+            // Update form validation untuk lain-lain
+            // Di bagian form validation yang sudah ada, tambahkan:
+            // Validate lain-lain text when checkbox is checked
+            if (lainLainCheckbox && lainLainCheckbox.checked && lainLainTextarea) {
+                if (!lainLainTextarea.value.trim()) {
+                    lainLainTextarea.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    lainLainTextarea.classList.remove('is-invalid');
+                }
+            }
+
+
+            let dpjpTambahanIndex = document.querySelectorAll('.dpjp-tambahan-item').length;
+
+            // Store doctor options for dynamic creation - safer approach
+            const doctorOptions = [];
+            @foreach ($dokter as $dok)
+                doctorOptions.push({
+                    value: '{{ addslashes($dok->kd_dokter) }}',
+                    text: '{{ addslashes($dok->nama) }}'
+                });
+            @endforeach
+
+            // Function to build options HTML
+            function buildOptionsHtml(selectedValue = '') {
+                let html = '<option value="">--Pilih--</option>';
+                doctorOptions.forEach(function(doctor) {
+                    const selected = selectedValue === doctor.value ? 'selected' : '';
+                    html += `<option value="${doctor.value}" ${selected}>${doctor.text}</option>`;
+                });
+                return html;
+            }
+
+            // Function to initialize Select2 for new elements
+            function initializeSelect2(element) {
+                if (typeof $.fn.select2 !== 'undefined') {
+                    $(element).select2({
+                        theme: 'bootstrap-5',
+                        placeholder: '--Pilih--',
+                        width: '100%'
+                    });
+                }
+            }
+
+            // Function to reinitialize existing selects with proper data
+            function reinitializeExistingSelects() {
+                $('.select2-tambahan').each(function() {
+                    const currentValue = $(this).val();
+
+                    // Destroy existing Select2 if exists
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+
+                    // Rebuild options with current value preserved
+                    $(this).html(buildOptionsHtml(currentValue));
+
+                    // Re-initialize Select2
+                    initializeSelect2(this);
+                });
+            }
+
+            // Initialize existing Select2 elements
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('.select2').select2({
+                    theme: 'bootstrap-5',
+                    placeholder: '--Pilih--'
+                });
+
+                // Fix existing DPJP Tambahan selects after a short delay to ensure DOM is ready
+                setTimeout(function() {
+                    reinitializeExistingSelects();
+                }, 100);
+            }
+
+            // Add new DPJP Tambahan
+            document.getElementById('add-dpjp-tambahan').addEventListener('click', function() {
+                const container = document.getElementById('dpjp-tambahan-container');
+                const newItem = document.createElement('div');
+                newItem.className = 'dpjp-tambahan-item mb-2';
+                newItem.setAttribute('data-index', dpjpTambahanIndex);
+
+                newItem.innerHTML = `
+                    <div class="input-group">
+                        <select name="dpjp_tambahan[]" class="form-select select2-tambahan">
+                            ${buildOptionsHtml()}
+                        </select>
+                        <button type="button" class="btn btn-outline-danger remove-dpjp-tambahan">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(newItem);
+
+                // Initialize Select2 for the new element
+                const newSelect = newItem.querySelector('select');
+                initializeSelect2(newSelect);
+
+                dpjpTambahanIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove DPJP Tambahan
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-dpjp-tambahan') || e.target.closest(
+                        '.remove-dpjp-tambahan')) {
+                    const button = e.target.classList.contains('remove-dpjp-tambahan') ? e.target : e.target
+                        .closest('.remove-dpjp-tambahan');
+                    const item = button.closest('.dpjp-tambahan-item');
+
+                    // Destroy Select2 before removing element
+                    const select = item.querySelector('select');
+                    if (typeof $.fn.select2 !== 'undefined' && $(select).hasClass(
+                            'select2-hidden-accessible')) {
+                        $(select).select2('destroy');
+                    }
+
+                    item.remove();
+                    updateRemoveButtons();
+                }
+            });
+
+            // Update remove buttons visibility
+            function updateRemoveButtons() {
+                const items = document.querySelectorAll('.dpjp-tambahan-item');
+                items.forEach((item, index) => {
+                    const removeBtn = item.querySelector('.remove-dpjp-tambahan');
+                    if (index === 0 && items.length === 1) {
+                        removeBtn.style.display = 'none';
+                    } else {
+                        removeBtn.style.display = 'block';
+                    }
+                });
+            }
+
+            // Initial update of remove buttons
+            updateRemoveButtons();
+
             // Form validation
             document.getElementById('mppEvaluationForm').addEventListener('submit', function(e) {
+
+                // Remove empty dpjp_tambahan values before submission
+                const dpjpTambahanSelects = document.querySelectorAll('select[name="dpjp_tambahan[]"]');
+                dpjpTambahanSelects.forEach(select => {
+                    if (!select.value || select.value === '') {
+                        select.remove();
+                    }
+                });
+
                 let isValid = true;
 
                 // Validate Screening Section
