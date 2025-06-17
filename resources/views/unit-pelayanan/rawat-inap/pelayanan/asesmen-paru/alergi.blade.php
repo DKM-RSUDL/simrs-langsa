@@ -84,17 +84,16 @@
             // Initialize the allergies data structure
             let allergies = [];
 
-            // Load existing allergies from hidden input
-            const allergiInput = document.getElementById('alergi');
-            if (allergiInput && allergiInput.value) {
+            // Load existing allergies from the controller
+            @if (isset($allergiesJson) && count($allergiesJson) > 0)
                 try {
-                    allergies = JSON.parse(allergiInput.value);
+                    allergies = @json($allergiesJson);
                     renderAlergiTable();
                 } catch (e) {
                     console.error('Error parsing allergies JSON:', e);
                     allergies = [];
                 }
-            }
+            @endif
 
             // Function to render allergi table
             function renderAlergiTable() {
@@ -130,21 +129,49 @@
                     alergenList += `<div>
                                         <input type="hidden" name="jenis_alergi[]" value="${alergi.jenis_alergi}">
                                         <input type="hidden" name="nama[]" value="${alergi.nama_alergi}">
-                                        <input type="hidden" name="reaksi[]" value="${alergi.reaksi}">
-                                        <input type="hidden" name="severe[]" value="${alergi.severe}">
+                                        <input type="hidden" name="reaksi[]" value="${alergi.reaksi || ''}">
+                                        <input type="hidden" name="severe[]" value="${alergi.severe || ''}">
                                     </div>`;
 
                 });
 
-                $('#alergen-list-input').html(alergenList);
+                const alergenListContainer = document.getElementById('alergen-list-input');
+                if (alergenListContainer) {
+                    alergenListContainer.innerHTML = alergenList;
+                }
 
                 // Add event listeners to delete buttons
                 document.querySelectorAll('.delete-alergi').forEach(button => {
                     button.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
-                        allergies.splice(index, 1);
-                        renderAlergiTable();
-                        updateAlergiDisplay();
+                        const alergiToDelete = allergies[index];
+
+                        // Show confirmation before deleting
+                        Swal.fire({
+                            title: 'Konfirmasi Hapus',
+                            text: `Apakah Anda yakin ingin menghapus alergi "${alergiToDelete.nama_alergi}"?`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                allergies.splice(index, 1);
+                                renderAlergiTable();
+                                updateAlergiDisplay();
+
+                                // Show success message
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'Data alergi berhasil dihapus',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
                     });
                 });
             }
@@ -156,12 +183,31 @@
 
                 if (allergies.length > 0) {
                     const allergyNames = allergies.map(a => a.nama_alergi).join(', ');
-                    allergiDisplay.value = allergyNames;
-                    allergiJson.value = allergies;
+                    if (allergiDisplay) {
+                        allergiDisplay.value = allergyNames;
+                    }
+                    if (allergiJson) {
+                        allergiJson.value = JSON.stringify(allergies);
+                    }
                 } else {
-                    allergiDisplay.value = '';
-                    allergiJson.value = '';
+                    if (allergiDisplay) {
+                        allergiDisplay.value = '';
+                    }
+                    if (allergiJson) {
+                        allergiJson.value = '';
+                    }
                 }
+            }
+
+            // Function to check if allergy already exists
+            function checkDuplicateAllergy(jenisAlergi, namaAlergi, excludeIndex = -1) {
+                return allergies.some((a, index) => {
+                    if (excludeIndex !== -1 && index === excludeIndex) {
+                        return false; // Skip the current item being edited
+                    }
+                    return a.jenis_alergi.toLowerCase().trim() === jenisAlergi.toLowerCase().trim() &&
+                           a.nama_alergi.toLowerCase().trim() === namaAlergi.toLowerCase().trim();
+                });
             }
 
             // Add new allergy
@@ -174,6 +220,7 @@
                 const reaksi = document.getElementById('reaksi').value.trim();
                 const severe = document.getElementById('severe').value;
 
+                // Validation: Check if required fields are filled
                 if (!jenisAlergi || !namaAlergi) {
                     Swal.fire({
                         icon: 'warning',
@@ -185,41 +232,59 @@
                     return;
                 }
 
-                // Case-insensitive duplicate check
-                const isDuplicate = allergies.some(a =>
-                    a.jenis_alergi.toLowerCase() === jenisAlergi.toLowerCase() &&
-                    a.nama_alergi.toLowerCase() === namaAlergi.toLowerCase()
-                );
-
-                if (isDuplicate) {
+                // Check for duplicate allergy
+                if (checkDuplicateAllergy(jenisAlergi, namaAlergi)) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Duplikasi Data',
-                        text: 'Alergi dengan jenis dan nama yang sama sudah ada',
+                        text: `Alergi "${namaAlergi}" dengan jenis "${jenisAlergi}" sudah ada dalam daftar`,
                         confirmButtonColor: '#3085d6',
                     });
                     tambahButton.disabled = false;
                     return;
                 }
 
-                // Add to allergies array
-                allergies.push({
-                    jenis_alergi: jenisAlergi,
-                    nama_alergi: namaAlergi,
-                    reaksi: reaksi,
-                    severe: severe
+                // Show confirmation before adding
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: `Apakah Anda yakin ingin menambahkan alergi "${namaAlergi}"?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Tambahkan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Add to allergies array (using consistent field names from controller)
+                        allergies.push({
+                            jenis_alergi: jenisAlergi,
+                            nama_alergi: namaAlergi,
+                            reaksi: reaksi,
+                            severe: severe // Using 'severe' to match controller format
+                        });
+
+                        // Clear form inputs
+                        document.getElementById('jenis_alergi').value = '';
+                        document.getElementById('nama_alergi').value = '';
+                        document.getElementById('reaksi').value = '';
+                        document.getElementById('severe').value = '';
+
+                        // Update display
+                        renderAlergiTable();
+                        updateAlergiDisplay();
+
+                        // Show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Data alergi berhasil ditambahkan',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                    tambahButton.disabled = false;
                 });
-
-                // Clear form inputs
-                document.getElementById('jenis_alergi').value = '';
-                document.getElementById('nama_alergi').value = '';
-                document.getElementById('reaksi').value = '';
-                document.getElementById('severe').value = '';
-
-                // Update display
-                renderAlergiTable();
-                updateAlergiDisplay();
-                tambahButton.disabled = false;
             });
 
             // Reset form when modal is closed

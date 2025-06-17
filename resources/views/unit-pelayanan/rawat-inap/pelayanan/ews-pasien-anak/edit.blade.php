@@ -134,6 +134,93 @@
                     </div>
                 </div>
             </form>
+
+            <div class="container-fluid mt-3">
+                <!-- Tabel Kategori Skor -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                            <tr>
+                                <td class="bg-success text-white fw-bold text-center" style="width: 80px;">Skor 0-2</td>
+                                <td class="small">Pasien dalam keadaan stabil, jika skor 0 lakukan evaluasi secara rutin
+                                    tiap 8 jam, jika skor naik 1 atau 2, lakukan evaluasi setiap 4 jam, jika di perlukan
+                                    assessment oleh dokter jaga bangsal.</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-warning text-dark fw-bold text-center">Skor 3-4</td>
+                                <td class="small">Ada peningkatan kondisi pasien, assessment oleh dokter jaga bangsal.
+                                    Lakukan evaluasi ulang setiap 2 jam atau lebih cepat, konsultasi ke DPJP, lakukan terapi
+                                    sesuai instruksi, jika diperlukan dipindahkan ke area dengan monitoring yang sesuai.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger text-white fw-bold text-center">Skor > 5</td>
+                                <td class="small">Ada perubahan yang signifikan, lakukan resusitasi, monitoring secara
+                                    kontinyu, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME) segera,
+                                    maksimal 10 menit, informasikan dan konsultasikan ke DPJP.</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-primary text-white fw-bold text-center">HENTI NAFAS/JANTUNG</td>
+                                <td class="small">Lakukan RJP oleh petugas/ tim primer, aktivasi code blue henti jantung
+                                    respon Tim Medis Emergency (TME), maksimal 5 menit, informasikan dan konsultasikan ke
+                                    DPJP.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabel Data Vital Signs berdasarkan Usia -->
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center fw-bold" rowspan="2"></th>
+                                <th class="text-center fw-bold" rowspan="2">Usia</th>
+                                <th class="text-center fw-bold" rowspan="2">Nadi saat istirahat (x/ menit)</th>
+                                <th class="text-center fw-bold" rowspan="2">Nafas saat istirahat (x/menit)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold text-center">Neonatus</td>
+                                <td class="text-center">0-1 bln</td>
+                                <td class="text-center">100-180</td>
+                                <td class="text-center">40-60</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-center">Bayi</td>
+                                <td class="text-center">1-12 bln</td>
+                                <td class="text-center">100-180</td>
+                                <td class="text-center">35-40</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-center">Balita</td>
+                                <td class="text-center">13-36 bln</td>
+                                <td class="text-center">70-110</td>
+                                <td class="text-center">25-30</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-center">Pra Sekolah</td>
+                                <td class="text-center">4-6 Thn</td>
+                                <td class="text-center">70-110</td>
+                                <td class="text-center">21-23</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-center">Sekolah</td>
+                                <td class="text-center">7-12 Thn</td>
+                                <td class="text-center">70-110</td>
+                                <td class="text-center">19-21</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-center">Remaja</td>
+                                <td class="text-center">13-19 Thn</td>
+                                <td class="text-center">55-90</td>
+                                <td class="text-center">16-18</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

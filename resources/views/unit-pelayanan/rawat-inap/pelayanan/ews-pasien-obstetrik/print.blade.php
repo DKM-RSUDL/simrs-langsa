@@ -10,6 +10,17 @@
             size: A4 portrait;
         }
 
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -115,23 +126,23 @@
         }
 
         .parameter-col {
-            width: 80px;
+            width: 90px;
             text-align: left !important;
-            padding-left: 3px !important;
+            padding-left: 4px !important;
             font-weight: bold;
             white-space: nowrap;
         }
 
         .nilai-col {
-            width: 50px;
+            width: 60px;
         }
 
         .skor-col {
-            width: 18px;
+            width: 20px;
         }
 
         .data-col {
-            width: 30px;
+            width: 50px;
             white-space: nowrap;
         }
 
@@ -165,11 +176,12 @@
         }
 
         .hasil-ews-table td {
-            padding: 2px;
+            padding: 6px;
             border: 1px solid #000;
-            font-size: 5.5pt;
+            font-size: 8pt;
             text-align: center;
-            line-height: 1.05;
+            line-height: 1.2;
+            font-weight: bold;
         }
 
         .hasil-no-risk {
@@ -181,15 +193,16 @@
         }
 
         .hasil-medium {
-            background-color: #FFFF00;
+            background-color: #FFD66B;
         }
 
         .hasil-high {
             background-color: #FF6347;
+            color: white;
         }
 
         .hasil-code-blue {
-            background-color: #0d23e9;
+            background-color: #3674B5;
             color: #FFFFFF;
         }
 
@@ -204,9 +217,74 @@
             display: flex;
             justify-content: start;
         }
+
+        /* Styles untuk halaman kedua */
+        .protocol-page {
+            font-size: 9pt;
+        }
+
+        .protocol-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .protocol-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .protocol-table th,
+        .protocol-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 9pt;
+        }
+
+        .protocol-table th {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .protocol-table td {
+            vertical-align: top;
+        }
+
+        .protocol-skor-1-4 {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .protocol-skor-5-6 {
+            background-color: #FFD66B;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .protocol-skor-7-plus {
+            background-color: #dc3545;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .protocol-code-blue {
+            background-color: #3674B5;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <!-- Halaman Pertama: Tabel EWS -->
     <div class="container">
         <div class="header">
             <div class="logo-rs">
@@ -361,7 +439,7 @@
                         @endforeach
                     </tr>
                     <tr>
-                        <td><12</td>
+                        <td>12<</td>
                         <td>3</td>
                         @foreach($sortedRecords as $record)
                             <td class="{{ in_array($record->respirasi, $respirasiMatches['<12']) ? 'cell-red' : '' }}">
@@ -690,37 +768,99 @@
             </table>
         @endif
 
+        <!-- Hasil EWS berdasarkan skor terbaru -->
+        @php
+            $latestRecord = $sortedRecords->last();
+            $resultText = '';
+            $resultClass = '';
+
+            if ($latestRecord) {
+                if (in_array($latestRecord->kesadaran, $kesadaranMatches['Unresponsive'])) {
+                    $resultText = 'Henti Nafas/Jantung: CODE BLUE<br>Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.';
+                    $resultClass = 'hasil-code-blue';
+                } elseif ($latestRecord->total_skor >= 7) {
+                    $resultText = 'Total Skor ≥ 7: RISIKO TINGGI<br>Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), Informasikan dan konsultasikan ke DPJP.';
+                    $resultClass = 'hasil-high';
+                } elseif ($latestRecord->total_skor >= 5 || in_array($latestRecord->kesadaran, $kesadaranMatches['Nyeri/Verbal'])) {
+                    $resultText = 'Total Skor 5-6: RISIKO SEDANG<br>Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).';
+                    $resultClass = 'hasil-medium';
+                } elseif ($latestRecord->total_skor >= 1 && $latestRecord->total_skor <= 4) {
+                    $resultText = 'Total Skor 1-4: RISIKO RENDAH<br>Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.';
+                    $resultClass = 'hasil-low';
+                } else {
+                    $resultText = 'Total Skor 0: TIDAK ADA RISIKO<br>Lanjutkan observasi/monitoring secara rutin/per shift.';
+                    $resultClass = 'hasil-no-risk';
+                }
+            }
+        @endphp
+
         <div class="hasil-ews">HASIL EARLY WARNING SCORING:</div>
         <table class="hasil-ews-table">
             <tr>
-                <td class="hasil-low">
-                    Total Skor 1-4: RISIKO RENDAH<br>
-                    Assessment segera oleh perawat senior, respon segera (maks 5 menit), eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan assessment oleh dokter jaga bangsal.
-                </td>
-                <td class="hasil-medium">
-                    Total Skor 5-6: RISIKO SEDANG<br>
-                    Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
-                </td>
-                <td class="hasil-high">
-                    Total Skor ≥ 7: RISIKO TINGGI<br>
-                    Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit), informasikan dan konsultasikan ke DPJP.
-                </td>
-            </tr>
-            <tr>
-                <td class="hasil-code-blue" colspan="3">
-                    Henti Nafas/Jantung: CODE BLUE<br>
-                    Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 5 menit), informasikan dan konsultasikan dengan DPJP.
+                <td class="{{ $resultClass }}">
+                    {!! $resultText !!}
                 </td>
             </tr>
         </table>
 
         <div class="footer">
-            <p>Nama dan Paraf:</p>
-            <p style="margin-top: 20px;">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
-            <p class="small-text">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+            <p style="font-size: 12px">Nama dan Paraf:</p>
+            <p style="margin-top: 30px; font-size: 12px">{{ str()->title($ewsPsienObstetrik->userCreate->name ?? '-') }}</p>
+            <p class="small-text" style="font-size: 12px">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
             @if(isset($ewsPsienObstetrik->userCreate->jabatan))
                 <p>{{ $ewsPsienObstetrik->userCreate->jabatan }}</p>
             @endif
+        </div>
+    </div>
+
+    <!-- Halaman Kedua: Protokol Assessment dan Intervensi -->
+    <div class="page-break"></div>
+    <div class="protocol-page">
+        <p class="protocol-title">PROTOKOL ASSESSMENT DAN INTERVENSI EWS</p>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+            <table class="protocol-table">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">SKOR EWS</th>
+                        <th>ASSESSMENT DAN INTERVENSI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="protocol-skor-1-4">
+                            Skor 1-4
+                        </td>
+                        <td>
+                            Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi monitoring per 4-6 jam, Jika diperlukan assessment oleh dokter jaga bangsal.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="protocol-skor-5-6">
+                            Skor 5-6
+                        </td>
+                        <td>
+                            Assessment segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait, eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="protocol-skor-7-plus">
+                            Skor 7 atau Lebih atau Parameter Code Blue (Risiko Tinggi)
+                        </td>
+                        <td>
+                            Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, Aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera, maksimal 10 menit), Informasikan dan konsultasikan ke DPJP.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="protocol-code-blue">
+                            HENTI NAFAS/JANTUNG
+                        </td>
+                        <td>
+                            Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency (TME) /tim Code Blue segera, maksimal 5 menit, informasikan dan konsultasikan dengan DPJP.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

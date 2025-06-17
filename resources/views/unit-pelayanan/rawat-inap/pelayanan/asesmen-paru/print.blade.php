@@ -602,13 +602,13 @@
             <tr>
                 <td>e. Pemeriksaan KGDS</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" {{ $rencanaKerja->igds ? 'checked' : '' }} disabled>
+                    <input type="checkbox" {{ $rencanaKerja->kgds ? 'checked' : '' }} disabled>
                 </td>
             </tr>
             <tr>
                 <td>f. Pemeriksaan faal hati (LFT)</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" disabled>
+                    <input type="checkbox" {{ $rencanaKerja->faal_hati ? 'checked' : '' }} disabled>
                 </td>
             </tr>
             <tr>
@@ -674,13 +674,13 @@
             <tr>
                 <td>q. Biopsi Kelenjar</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" disabled>
+                    <input type="checkbox" {{ $rencanaKerja->biopsi_kelenjar ? 'checked' : '' }} disabled>
                 </td>
             </tr>
             <tr>
                 <td>r. Mantoux Tes</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" disabled>
+                    <input type="checkbox" {{ $rencanaKerja->mantoux_tes ? 'checked' : '' }} disabled>
                 </td>
             </tr>
             <tr>

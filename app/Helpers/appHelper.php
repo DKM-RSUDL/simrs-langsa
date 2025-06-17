@@ -83,6 +83,8 @@ if (!function_exists('getKategoriAsesmen')) {
             case 12:
                 $subKategoriLabel = 'Geriatri';
                 break;
+            case 13:
+                $subKategoriLabel = 'Terminal & Keluarga';
         }
 
         return "$kategoriLabel $subKategoriLabel";

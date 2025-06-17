@@ -77,7 +77,7 @@
                                                 '≤ 91' => ['≤ 91', '<= 91', '= 91', '<=91'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 95" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['≥ 95']) ? 'selected' : '' }}>≥ 95</option>
                                         <option value="94-95" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['94-95']) ? 'selected' : '' }}>94-95</option>
                                         <option value="92-93" {{ in_array($ewsPasienDewasa->saturasi_o2, $saturasiMatches['92-93']) ? 'selected' : '' }}>92-93</option>
@@ -109,7 +109,7 @@
                                                 '≤ 90' => ['≤ 90', '<= 90', '= 90', '<=90'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 220" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['≥ 220']) ? 'selected' : '' }}>≥ 220</option>
                                         <option value="111-219" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['111-219']) ? 'selected' : '' }}>111-219</option>
                                         <option value="101-110" {{ in_array($ewsPasienDewasa->tekanan_darah, $tekananMatches['101-110']) ? 'selected' : '' }}>101-110</option>
@@ -133,7 +133,7 @@
                                                 '≤ 40' => ['≤ 40', '<= 40', '= 40', '<=40'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 131" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['≥ 131']) ? 'selected' : '' }}>≥ 131</option>
                                         <option value="111-130" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['111-130']) ? 'selected' : '' }}>111-130</option>
                                         <option value="91-110" {{ in_array($ewsPasienDewasa->nadi, $nadiMatches['91-110']) ? 'selected' : '' }}>91-110</option>
@@ -157,7 +157,7 @@
                                                 '≤ 8' => ['≤ 8', '<= 8', '= 8', '<=8'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 25" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['≥ 25']) ? 'selected' : '' }}>≥ 25</option>
                                         <option value="21-24" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['21-24']) ? 'selected' : '' }}>21-24</option>
                                         <option value="12-20" {{ in_array($ewsPasienDewasa->nafas, $nafasMatches['12-20']) ? 'selected' : '' }}>12-20</option>
@@ -180,7 +180,7 @@
                                                 '≤ 35' => ['≤ 35', '<= 35', '= 35', '<=35'],
                                             ];
                                         @endphp
-                                        
+
                                         <option value="≥ 39.1" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['≥ 39.1']) ? 'selected' : '' }}>≥ 39.1</option>
                                         <option value="38.1-39.0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['38.1-39.0']) ? 'selected' : '' }}>38.1-39.0</option>
                                         <option value="36.1-38.0" {{ in_array($ewsPasienDewasa->temperatur, $temperaturMatches['36.1-38.0']) ? 'selected' : '' }}>36.1-38.0</option>
@@ -225,6 +225,104 @@
                     </div>
                 </div>
             </form>
+            <p class="fw-bold text-center">INTERVENSI PENIALAIAN EARLY WARNING SYSTEM</p>
+            <div class="mt-2">
+                <!-- Risk Assessment Table -->
+                <div class="mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr class="bg-success text-white">
+                                    <td class="text-start fw-bold">Total Skor 0-4</td>
+                                    <td class="text-start fw-bold">RISIKO RENDAH</td>
+                                </tr>
+                                <tr class="bg-warning text-dark">
+                                    <td class="text-start fw-bold">Skor 3 dalam satu parameter atau Total Skor : 5 - 6</td>
+                                    <td class="text-start fw-bold">RISIKO SEDANG</td>
+                                </tr>
+                                <tr class="bg-danger text-white">
+                                    <td class="text-start fw-bold">Total Skor ≥ 7</td>
+                                    <td class="text-start fw-bold">RISIKO TINGGI</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Warning Levels Description -->
+                    <div class="mt-3">
+                        <p class="mb-1 fw-bold">Keterangan Tingkat kesadaran AVPU :</p>
+                        <p class="mb-1"><span class="fw-bold">A : ALERT</span> &nbsp;&nbsp;&nbsp; Pasien sadar penuh</p>
+                        <p class="mb-1"><span class="fw-bold">V : VOICE</span> &nbsp;&nbsp;&nbsp; Pasien membuat beberapa
+                            jenis respon saat dipanggil berbicara, terdiri dari 3 komponen yang mempengaruhi yaitu mata,
+                            suara atau motorik</p>
+                        <p class="mb-1"><span class="fw-bold">P : PAIN</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pasien akan
+                            berespon jika dirangsang sakit</p>
+                        <p class="mb-1"><span class="fw-bold">U : UNRESPONSIVE</span> &nbsp;&nbsp;&nbsp; Tidak berespon,
+                            jika pasien tidak memberikan respon terhadap suara, nyeri dsb</p>
+                    </div>
+                </div>
+
+                <!-- Intervention Table -->
+                <div class="mt-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center fw-bold" style="width: 5%;">NO</th>
+                                    <th class="text-center fw-bold" style="width: 15%;">NILAI EWS</th>
+                                    <th class="text-center fw-bold" style="width: 20%;">FREKUENSI MONITORING</th>
+                                    <th class="text-center fw-bold" style="width: 60%;">ASUHAN YANG DIBERIKAN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center">Minimal setiap 12 jam sekali</td>
+                                    <td>Lanjutkan observasi/ monitoring secara rutin/per shift</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">TOTAL SCORE<br>1 - 4</td>
+                                    <td class="text-center">Minimal Setiap<br>4 - 6 Jam Sekali</td>
+                                    <td>
+                                        <strong>1.</strong> Perawat pelaksana menginformasikan kepada ketua tim / penanggung
+                                        jawab jaga ruangan tentang siapa yang melaksanakan assesment selanjutnya.<br>
+                                        <strong>2.</strong> Ketua Tim / penanggunggjawab harus membuat keputusan:<br>
+                                        &nbsp;&nbsp;&nbsp; a. Meningkatkan frekuensi observasi / monitoring<br>
+                                        &nbsp;&nbsp;&nbsp; b. Perawatan asuhan yang dibutuhkan oleh pasien
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">TOTAL SCORE<br>5 DAN 6 ATAU 3<br>DALAM 1 (SATU)<br>PARAMETER
+                                    </td>
+                                    <td class="text-center">Peningkatan<br>Frekuensi Observasi / Monitoring<br>Setidaknya
+                                        Setiap<br>1 Jam Sekali</td>
+                                    <td>
+                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
+                                        pasien kepada dokter jaga atau DPJP<br>
+                                        <strong>2.</strong> Dokter jaga atau DPJP melakukan assesment sesuai kompetensinya
+                                        dan menentukan kondisi pasien apakah dalam penyakit akut,<br>
+                                        <strong>3.</strong> Siapkan fasilitas monitoring yang lebih canggih.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">TOTAL SCORE 7<br>ATAU LEBIH</td>
+                                    <td class="text-center">Lanjutkan Observasi / Monitoring<br>Tanda-Tanda Vital</td>
+                                    <td>
+                                        <strong>1.</strong> Ketua Tim (Perawat) segera memberikan informasi tentang kondisi
+                                        pasien kepada dokter jaga atau DPJP<br>
+                                        <strong>2.</strong> Rencanakan transfer pasien ke ruang intensive<br>
+                                        <strong>3.</strong> Aktivasi code blue bila pasien henti jantung/henti nafas
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

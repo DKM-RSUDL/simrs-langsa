@@ -261,6 +261,60 @@
                     </div>
                 </div>
             </form>
+
+            <p class="text-center fw-bold">PROTOKOL ASSESSMENT DAN INTERVENSI EWS</p>
+            <div class="d-flex justify-content-center mb-4">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-dark">
+                                <th class="text-center" style="width: 200px;">SKOR EWS</th>
+                                <th>ASSESSMENT DAN INTERVENSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-success text-white text-center fw-bold">
+                                    Skor 1-4
+                                </td>
+                                <td>
+                                    Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi
+                                    monitoring per 4-6 jam, Jika diperlukan assessmen oleh dokter jaga bangsal.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-dark text-center fw-bold" style="background-color: #FFD66B;">
+                                    Skor 5-6
+                                </td>
+                                <td>
+                                    Assessmen segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait,
+                                    eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger text-white text-center fw-bold">
+                                    Skor 7 atau Lebih atau Parameter Code Blue (Risiko Tinggi)
+                                </td>
+                                <td>
+                                    Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, Aktivasi code blue kega-
+                                    watan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera, maksimal 10 menit), Informa-
+                                    sikan dan konsultasikan ke DPJP.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-white text-center fw-bold" style="background-color: #3674B5;">
+                                    HENTI NAFAS/JANTUNG
+                                </td>
+                                <td>
+                                    Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency
+                                    (TME) /tim Code Blue segera, maksimal 5 menit, informasikan dan konsultasikan dengan DPJP.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

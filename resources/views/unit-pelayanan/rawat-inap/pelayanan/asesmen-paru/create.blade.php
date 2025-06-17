@@ -499,7 +499,7 @@
                                 <h5 class="section-title">7. Rencana Kerja Dan Penatalaksanaan</h5>
                                 <div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thorax</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">a.</span> Foto thoraks</label>
                                         <input type="checkbox" name="foto_thoraks" value="1" class="form-check-input" id="foto_thoraks">
                                         @error('foto_thoraks')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -527,37 +527,37 @@
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan IGDS</label>
-                                        <input type="checkbox" name="igds" value="1" class="form-check-input" id="igds">
+                                        <label style="min-width: 300px;"><span class="fw-bold">e.</span> Pemeriksaan KGDS</label>
+                                        <input type="checkbox" name="kgds" value="1" class="form-check-input" id="kgds">
                                         @error('igds')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal ginjal (RFG)</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">f.</span> Pemeriksaan faal hati (LFT)</label>
+                                        <input type="checkbox" name="faal_hati" value="1" class="form-check-input" id="faal_hati">
+                                        @error('faal_ginjal')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group d-flex align-items-center gap-3">
+                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan faal ginjal (RFT)</label>
                                         <input type="checkbox" name="faal_ginjal" value="1" class="form-check-input" id="faal_ginjal">
                                         @error('faal_ginjal')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">g.</span> Pemeriksaan elektrolit</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan elektrolit</label>
                                         <input type="checkbox" name="elektrolit" value="1" class="form-check-input" id="elektrolit">
                                         @error('elektrolit')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">h.</span> Pemeriksaan albumin</label>
+                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> Pemeriksaan albumin</label>
                                         <input type="checkbox" name="albumin" value="1" class="form-check-input" id="albumin">
                                         @error('albumin')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">i.</span> CT Scan thorax</label>
-                                        <input type="checkbox" name="ct_scan_thorax" value="1" class="form-check-input" id="ct_scan_thorax">
-                                        @error('ct_scan_thorax')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -611,15 +611,15 @@
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Penanganan penyakit</label>
-                                        <input type="checkbox" name="penanganan_penyakit" value="1" class="form-check-input" id="penanganan_penyakit">
+                                        <label style="min-width: 300px;"><span class="fw-bold">q.</span> Biopsi Kelenjar</label>
+                                        <input type="checkbox" name="biopsi_kelenjar" value="1" class="form-check-input" id="penanganan_penyakit">
                                         @error('penanganan_penyakit')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group d-flex align-items-center gap-3">
-                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Konsul Tes</label>
-                                        <input type="checkbox" name="konsul" value="1" class="form-check-input" id="konsul">
+                                        <label style="min-width: 300px;"><span class="fw-bold">r.</span> Mantoux Tes</label>
+                                        <input type="checkbox" name="mantoux_tes" value="1" class="form-check-input" id="konsul">
                                         @error('konsul')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror

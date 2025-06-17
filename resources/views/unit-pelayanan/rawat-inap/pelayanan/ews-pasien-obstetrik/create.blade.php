@@ -30,8 +30,10 @@
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tanggal Dan Jam Masuk</label>
                                     <div class="d-flex gap-3" style="width: 100%;">
-                                        <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}" required>
-                                        <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}" required>
+                                        <input type="date" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}"
+                                            required>
+                                        <input type="time" class="form-control" name="jam_masuk" value="{{ date('H:i') }}"
+                                            required>
                                     </div>
                                 </div>
 
@@ -42,7 +44,7 @@
                                         <option value=">25" data-skor="3">>25</option>
                                         <option value="21-25" data-skor="2">21-25</option>
                                         <option value="12-20" data-skor="0">12-20</option>
-                                        <option value="<12" data-skor="3"><12</option>
+                                        <option value="<12" data-skor="3">12< </option>
                                     </select>
                                 </div>
 
@@ -67,19 +69,22 @@
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Tekanan Darah Sistolik (mmHg)</label>
-                                    <select class="form-select" name="tekanan_darah" id="tekanan_darah" data-skor="0" required>
+                                    <select class="form-select" name="tekanan_darah" id="tekanan_darah" data-skor="0"
+                                        required>
                                         <option value="" selected disabled>--Pilih--</option>
                                         <option value="> 160" data-skor="3">> 160</option>
                                         <option value="151-160" data-skor="2">151-160</option>
                                         <option value="141-150" data-skor="1">141-150</option>
                                         <option value="91-140" data-skor="0">91-140</option>
-                                        <option value="< 90" data-skor="3">< 90</option>
+                                        <option value="< 90" data-skor="3">
+                                            < 90</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label style="min-width: 200px;">Detak Jantung (per menit)</label>
-                                    <select class="form-select" name="detak_jantung" id="detak_jantung" data-skor="0" required>
+                                    <select class="form-select" name="detak_jantung" id="detak_jantung" data-skor="0"
+                                        required>
                                         <option value="" selected disabled>--Pilih--</option>
                                         <option value="> 120" data-skor="3">> 120</option>
                                         <option value="111-120" data-skor="2">111-120</option>
@@ -142,16 +147,20 @@
                                     <!-- Skor 1-4: Risiko Rendah -->
                                     <div id="kesimpulan-hijau" class="kesimpulan-card kesimpulan-hijau d-none">
                                         <div class="alert alert-success">
-                                            <strong>Skor 1-4:</strong> Assessment segera oleh perawat senior, respon segera (maks 5 menit),
-                                            eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan assessment oleh dokter jaga bangsal.
+                                            <strong>Skor 1-4:</strong> Assessment segera oleh perawat senior, respon segera
+                                            (maks 5 menit),
+                                            eskalasi perawatan dan frekuensi monitoring per 4-6 jam. Jika diperlukan
+                                            assessment oleh dokter jaga bangsal.
                                         </div>
                                     </div>
 
                                     <!-- Skor 5-6: Risiko Sedang -->
                                     <div id="kesimpulan-kuning" class="kesimpulan-card kesimpulan-kuning d-none">
                                         <div class="alert alert-warning">
-                                            <strong>Skor 5-6:</strong> Assessment segera oleh dokter jaga (respon segera, maks 5 menit),
-                                            konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap jam,
+                                            <strong>Skor 5-6:</strong> Assessment segera oleh dokter jaga (respon segera,
+                                            maks 5 menit),
+                                            konsultasi DPJP dan spesialis terkait, eskalasi perawatan dan monitoring tiap
+                                            jam,
                                             pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
                                         </div>
                                     </div>
@@ -161,7 +170,8 @@
                                         <div class="alert alert-danger">
                                             <strong>Skor ≥ 7 atau 1 Parameter Kriteria Blue (Risiko Tinggi):</strong>
                                             Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior,
-                                            Aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera (maksimal 10 menit),
+                                            Aktivasi code blue kegawatan medis, respon Tim Medis Emergency (TME)/tim Code
+                                            Blue segera (maksimal 10 menit),
                                             Informasikan dan konsultasikan ke DPJP.
                                         </div>
                                     </div>
@@ -192,6 +202,61 @@
                     </div>
                 </div>
             </form>
+
+            <p class="text-center fw-bold">PROTOKOL ASSESSMENT DAN INTERVENSI EWS</p>
+            <div class="d-flex justify-content-center mb-4">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-dark">
+                                <th class="text-center" style="width: 200px;">SKOR EWS</th>
+                                <th>ASSESSMENT DAN INTERVENSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-success text-white text-center fw-bold">
+                                    Skor 1-4
+                                </td>
+                                <td>
+                                    Assessment segera oleh perawat senior, respon segera, maks 5 menit, eskalasi perawatan dan frekuensi
+                                    monitoring per 4-6 jam, Jika diperlukan assessmen oleh dokter jaga bangsal.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-dark text-center fw-bold" style="background-color: #FFD66B;">
+                                    Skor 5-6
+                                </td>
+                                <td>
+                                    Assessmen segera oleh dokter jaga (respon segera, maks 5 menit), konsultasi DPJP dan spesialis terkait,
+                                    eksalasi perawatan dan monitoring tiap jam, pertimbangkan perawatan dengan monitoring yang sesuai (HCU).
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger text-white text-center fw-bold">
+                                    Skor 7 atau Lebih atau Parameter Code Blue (Risiko Tinggi)
+                                </td>
+                                <td>
+                                    Resusitasi dan monitoring secara kontinyu oleh dokter jaga dan perawat senior, Aktivasi code blue kega-
+                                    watan medis, respon Tim Medis Emergency (TME)/tim Code Blue segera, maksimal 10 menit), Informa-
+                                    sikan dan konsultasikan ke DPJP.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-white text-center fw-bold" style="background-color: #3674B5;">
+                                    HENTI NAFAS/JANTUNG
+                                </td>
+                                <td>
+                                    Lakukan RJP oleh petugas/tim primer, aktivasi code blue henti jantung, respon Tim Medis Emergency
+                                    (TME) /tim Code Blue segera, maksimal 5 menit, informasikan dan konsultasikan dengan DPJP.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection
