@@ -91,6 +91,7 @@
         }
 
         footer div {
+            width: 100%;
             display: table-cell;
             vertical-align: top;
             text-align: center;
@@ -187,7 +188,7 @@
             Dengan ini menyatakan <strong>PERSETUJUAN</strong> untuk dilakukannya tindakan anestesi berupa:
         </p>
 
-        <ol>
+        <ol @if (count($anestesi->tindakan) < 2) style="list-style-type: none;" @endif>
             @foreach ($anestesi->tindakan as $item)
                 <li>
                     {{ $item }} {{ $item == 'Lain-lain' ? ': ' . $anestesi->tindakan_lainnya : '' }}

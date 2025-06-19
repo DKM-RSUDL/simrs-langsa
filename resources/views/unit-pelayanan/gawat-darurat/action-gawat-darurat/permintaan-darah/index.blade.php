@@ -83,6 +83,7 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tgl Pengiriman</th>
+                                                    <th>Unit Order</th>
                                                     <th>Nama Petugas</th>
                                                     <th>Status</th>
                                                     <th>Aksi</th>
@@ -93,6 +94,9 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($item->tgl_pengiriman)) }}</td>
+                                                        <td>
+                                                            {{ $item->unit->nama_unit }}
+                                                        </td>
                                                         <td>{{ $item->petugas_pengambilan_sampel }}</td>
                                                         <td>
                                                             @if ($item->status == 0)
@@ -111,7 +115,7 @@
                                                                     class="btn btn-info btn-sm" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
-                                                                @if ($item->status == 0)
+                                                                @if ($item->status == 0 && $item->kd_unit == $dataMedis->kd_unit)
                                                                     <a href="{{ route('permintaan-darah.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-warning btn-sm ms-2" title="Edit">
                                                                         <i class="ti-pencil"></i>
@@ -132,7 +136,8 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data Permintaan Darah</td>
+                                                        <td colspan="8" class="text-center">Tidak ada data Permintaan
+                                                            Darah</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -158,10 +163,10 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Attach SweetAlert to all delete forms
             document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function (e) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',

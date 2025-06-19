@@ -24,7 +24,9 @@
             <hr>
             <div class="form-section">
 
-                <form action="{{ route('rawat-inap.serah-terima.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($serahTerimaData->id)]) }}" method="post">
+                <form
+                    action="{{ route('rawat-inap.serah-terima.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($serahTerimaData->id)]) }}"
+                    method="post">
                     @csrf
                     @method('put')
 
@@ -61,7 +63,8 @@
                                     <select name="kd_unit_asal" id="kd_unit_asal" class="form-select select2" disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($unit as $item)
-                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == 3)>{{ $item->nama_unit }}</option>
+                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == 3)>
+                                                {{ $item->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -70,21 +73,27 @@
                                     <select name="kd_unit_tujuan" id="kd_unit_tujuan" class="form-select select2" disabled>
                                         <option value="">--Pilih--</option>
                                         @foreach ($unitTujuan as $item)
-                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == $serahTerimaData->kd_unit_tujuan)>{{ $item->nama_unit }}</option>
+                                            <option value="{{ $item->kd_unit }}" @selected($item->kd_unit == $serahTerimaData->kd_unit_tujuan)>
+                                                {{ $item->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="petugas_menyerahkan">Petugas yang Menyerahkan</label>
-                                    <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2" disabled>
+                                    <select name="petugas_menyerahkan" id="petugas_menyerahkan" class="form-select select2"
+                                        disabled>
                                         <option value="">--Pilih--</option>
-                                        <option value="{{ $serahTerimaData->petugas_menyerahkan ?? auth()->id() }}" selected>
-                                            {{ $serahTerimaData->petugasAsal->name ?? auth()->user()->name }}
+                                        <option
+                                            value="{{ $serahTerimaData->petugas_menyerahkan ?? auth()->user()->kd_karyawan }}"
+                                            selected>
+                                            {{ str()->title($serahTerimaData->petugasAsal->nama) ?? auth()->user()->name }}
                                         </option>
 
                                         @foreach ($petugas as $item)
-                                            @if ($item->id != auth()->id() && $item->id != $serahTerimaData->petugas_menyerahkan)
-                                                <option value="{{ $item->id }}">{{ $item->karyawan->gelar_depan . ' ' . str()->title($item->karyawan->nama) . ' ' . $item->karyawan->gelar_belakang }}</option>
+                                            @if ($item->kd_karyawan != auth()->user()->kd_karyawan && $item->kd_karyawan != $serahTerimaData->petugas_menyerahkan)
+                                                <option value="{{ $item->kd_karyawan }}">
+                                                    {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
+                                                </option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -93,11 +102,15 @@
                                 <div class="mb-3 row">
                                     <div class="col-md-6">
                                         <label>Tanggal</label>
-                                        <input type="date" name="tanggal_menyerahkan" value="{{ !empty($serahTerimaData->tanggal_menyerahkan) ? date('Y-m-d', strtotime($serahTerimaData->tanggal_menyerahkan)) : '' }}" class="form-control" disabled>
+                                        <input type="date" name="tanggal_menyerahkan"
+                                            value="{{ !empty($serahTerimaData->tanggal_menyerahkan) ? date('Y-m-d', strtotime($serahTerimaData->tanggal_menyerahkan)) : '' }}"
+                                            class="form-control" disabled>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Jam</label>
-                                        <input type="time" name="jam_menyerahkan" value="{{ !empty($serahTerimaData->jam_menyerahkan) ? date('H:i', strtotime($serahTerimaData->jam_menyerahkan)) : date('H:i') }}" class="form-control" disabled>
+                                        <input type="time" name="jam_menyerahkan"
+                                            value="{{ !empty($serahTerimaData->jam_menyerahkan) ? date('H:i', strtotime($serahTerimaData->jam_menyerahkan)) : date('H:i') }}"
+                                            class="form-control" disabled>
                                     </div>
                                 </div>
                                 {{-- <button type="button" class="btn btn-primary w-100">Validasi petugas yang menerima</button> --}}
@@ -107,19 +120,24 @@
                                 <h5 class="fw-bold">Yang Menerima:</h5>
                                 <div class="mb-3">
                                     <label>Diterima di Ruang/ Unit Pelayanan</label>
-                                    <input type="text" class="form-control" value="{{ $serahTerimaData->unitTujuan->nama_unit ?? '' }}" disabled>
+                                    <input type="text" class="form-control"
+                                        value="{{ $serahTerimaData->unitTujuan->nama_unit ?? '' }}" disabled>
                                 </div>
                                 <div class="mb-3">
                                     <label>Petugas yang Menerima</label>
-                                    <select name="petugas_terima" id="petugas_terima" class="form-select">
+                                    <select name="petugas_terima" id="petugas_terima" class="form-select select2">
                                         <option value="">--Pilih--</option>
-                                        <option value="{{ $serahTerimaData->petugas_terima ?? auth()->id() }}" selected>
+                                        <option
+                                            value="{{ $serahTerimaData->petugas_terima ?? auth()->user()->kd_karyawan }}"
+                                            selected>
                                             {{ $serahTerimaData->petugasTerima->name ?? auth()->user()->name }}
                                         </option>
 
                                         @foreach ($petugas as $item)
-                                            @if ($item->id != auth()->id() && $item->id != $serahTerimaData->petugas_terima)
-                                                <option value="{{ $item->id }}">{{ $item->karyawan->gelar_depan . ' ' . str()->title($item->karyawan->nama) . ' ' . $item->karyawan->gelar_belakang }}</option>
+                                            @if ($item->kd_karyawan != auth()->user()->kd_karyawan && $item->kd_karyawan != $serahTerimaData->petugas_terima)
+                                                <option value="{{ $item->kd_karyawan }}">
+                                                    {{ $item->gelar_depan . ' ' . str()->title($item->nama) . ' ' . $item->gelar_belakang }}
+                                                </option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -127,11 +145,15 @@
                                 <div class="mb-3 row">
                                     <div class="col-md-6">
                                         <label>Tanggal</label>
-                                        <input type="date" name="tanggal_terima" value="{{ !empty($serahTerimaData->tanggal_terima) ? date('Y-m-d', strtotime($serahTerimaData->tanggal_terima)) : date('Y-m-d') }}" class="form-control">
+                                        <input type="date" name="tanggal_terima"
+                                            value="{{ !empty($serahTerimaData->tanggal_terima) ? date('Y-m-d', strtotime($serahTerimaData->tanggal_terima)) : date('Y-m-d') }}"
+                                            class="form-control">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Jam</label>
-                                        <input type="time" name="jam_terima" value="{{ !empty($serahTerimaData->jam_terima) ? date('H:i', strtotime($serahTerimaData->jam_terima)) : date('H:i') }}" class="form-control">
+                                        <input type="time" name="jam_terima"
+                                            value="{{ !empty($serahTerimaData->jam_terima) ? date('H:i', strtotime($serahTerimaData->jam_terima)) : date('H:i') }}"
+                                            class="form-control">
                                     </div>
                                 </div>
                                 {{-- <button type="button" class="btn btn-primary w-100">Validasi petugas yang menerima</button> --}}

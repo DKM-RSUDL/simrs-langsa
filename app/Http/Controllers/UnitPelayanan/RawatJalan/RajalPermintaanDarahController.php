@@ -56,9 +56,9 @@ class RajalPermintaanDarahController extends Controller
     {
         // $permintaanDarah = BdrsPermintaanDarah::orderBy('TGL_PENGIRIMAN', 'desc')->paginate(10);
         $permintaanDarah = BdrsPermintaanDarah::where('kd_pasien', $dataMedis->kd_pasien)
-            ->where('kd_unit', $dataMedis->kd_unit)
-            ->whereDate('tgl_masuk', $dataMedis->tgl_masuk)
-            ->where('urut_masuk', $dataMedis->urut_masuk)
+            // ->where('kd_unit', $dataMedis->kd_unit)
+            ->whereDate('tgl_masuk', '>=', date('Y-m-d', strtotime('-3 month', strtotime(date('Y-m-d')))))
+            // ->where('urut_masuk', $dataMedis->urut_masuk)
             ->orderBy('TGL_PENGIRIMAN', 'desc')
             ->paginate(10);
 
@@ -97,7 +97,7 @@ class RajalPermintaanDarahController extends Controller
         $dokter = DokterKlinik::with(['unit', 'dokter'])
             ->whereRelation('dokter', 'status', 1)
             ->where('kd_unit', $kd_unit)
-            ->get();            
+            ->get();
 
         $gologanDarah = GolonganDarah::all();
 
@@ -344,10 +344,11 @@ class RajalPermintaanDarahController extends Controller
             DB::commit();
 
             return to_route('rawat-jalan.permintaan-darah.index', [
-            $kd_unit,
-            $kd_pasien,
-            $tgl_masuk,
-            $request->urut_masuk,])
+                $kd_unit,
+                $kd_pasien,
+                $tgl_masuk,
+                $request->urut_masuk,
+            ])
                 ->with('success', 'Berhasil mengupdate Permintaan Darah!');
         } catch (Exception $e) {
             DB::rollBack();

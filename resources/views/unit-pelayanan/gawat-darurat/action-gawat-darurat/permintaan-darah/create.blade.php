@@ -75,7 +75,8 @@
                                 </div>
                                 <div class="card-header font-weight-bold">PETUNJUK TRANSFUSI:</div>
                                 <div class="card-body">
-                                    <p class="mb-0">Pastikan Identitas Pasien dan Cocokkan etiket pada Kantong Darah, Label
+                                    <p class="mb-0">Pastikan Identitas Pasien dan Cocokkan etiket pada Kantong Darah,
+                                        Label
                                         dan Formulir, Segera kembalikan bila tidak Cocok Ke Bank Darah Rumah Sakit (BDRS)
                                         setempat atau UTD PMI</p>
                                 </div>
@@ -114,7 +115,8 @@
                                         <select name="KD_DOKTER" id="kd_dokter" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($dokter as $dok)
-                                                <option value="{{ $dok->dokter->kd_dokter }}">{{ $dok->dokter->nama_lengkap }}</option>
+                                                <option value="{{ $dok->dokter->kd_dokter }}">
+                                                    {{ $dok->dokter->nama_lengkap }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -133,12 +135,14 @@
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Diagnosa Kimia</label>
-                                        <input type="text" class="form-control" name="DIAGNOSA_KIMIA" placeholder="" required>
+                                        <input type="text" class="form-control" name="DIAGNOSA_KIMIA" placeholder=""
+                                            required>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Alasan Transfusi</label>
-                                        <input type="text" class="form-control" name="ALASAN_TRANSFUSI" placeholder="" required>
+                                        <input type="text" class="form-control" name="ALASAN_TRANSFUSI" placeholder=""
+                                            required>
                                     </div>
 
                                     <div class="form-group">
@@ -148,24 +152,26 @@
                                             <option value="">-- Pilih --</option>
                                             @foreach ($gologanDarah as $darah)
                                                 <option value="{{ $darah->kode }}">{{ $darah->jenis }}</option>
-                                            @endforeach                                            
+                                            @endforeach
                                         </select>
 
                                         <label class="ms-3">HB</label>
 
                                         <div class="input-group mb-3">
-                                            <input type="number" name="HB" class="form-control" aria-describedby="basic-addon1" required>
+                                            <input type="number" name="HB" class="form-control"
+                                                aria-describedby="basic-addon1" required>
                                             <span class="input-group-text" id="basic-addon1">g</span>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nama Suami/Istri Pasien</label>
-                                        <input type="text" class="form-control" name="NAMA_SUAMI_ISTRI" placeholder="" required>
+                                        <input type="text" class="form-control" name="NAMA_SUAMI_ISTRI" placeholder=""
+                                            required>
 
                                         <label class="mx-2">Register</label>
-                                        <input type="text" class="form-control" name="KD_PASIEN" value="{{ $dataMedis->kd_pasien }}"
-                                            readonly>
+                                        <input type="text" class="form-control" name="KD_PASIEN"
+                                            value="{{ $dataMedis->kd_pasien }}" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +181,8 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Transfusi Sebelumnya</label>
-                                        <input type="text" class="form-control" name="TRANFUSI_SEBELUMNYA" placeholder="">
+                                        <input type="text" class="form-control" name="TRANFUSI_SEBELUMNYA"
+                                            placeholder="">
                                     </div>
 
                                     <div class="form-group">
@@ -187,7 +194,8 @@
                                     <p class="fw-bold">Apakah pernah diperiksa Serologi golongan darah</p>
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Dimana</label>
-                                        <input type="text" class="form-control" name="SEROLOGI_DIMANA" placeholder="">
+                                        <input type="text" class="form-control" name="SEROLOGI_DIMANA"
+                                            placeholder="">
 
                                         <label class="mx-2">Kapan</label>
                                         <input type="date" class="form-control" name="SEROLOGI_KAPAN">
@@ -214,7 +222,8 @@
                                         </div>
 
                                         <label class="mx-3">Jumlah</label>
-                                        <input type="number" class="form-control" id="pernah-hamil-jumlah" name="PERNAH_HAMIL" placeholder="">
+                                        <input type="number" class="form-control" id="pernah-hamil-jumlah"
+                                            name="PERNAH_HAMIL" placeholder="">
                                     </div>
 
                                     <div class="form-group">
@@ -246,32 +255,33 @@
                                         <label style="min-width: 200px;">WB Segar / Biasa</label>
                                         <input type="number" class="form-control"name="WB">
                                         <span class="input-group-text">ml</span>
-                                    </div>                                    
-                                    
+                                    </div>
+
                                     <h5 class="font-weight-bold mt-4 mb-3">DARAH MERAHPEKAT (PACKED RED CELL)</h5>
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Biasa</label>
                                         <input type="number" class="form-control"name="PRC">
                                         <span class="input-group-text">ml</span>
-                                    </div>                                    
+                                    </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Pediatric <br> Leukodepleted**</label>
-                                        <input type="number" class="form-control" name="PRC_PEDIACTRIC"
-                                            min="0">
-                                            <span class="input-group-text">ml</span>
+                                        <input type="number" class="form-control" name="PRC_PEDIACTRIC" min="0">
+                                        <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">PRC Leukodepleted <br> (dengan
                                             filter)**</label>
-                                        <input class="form-control" type="number" name="PRC_LEUKODEPLETED" min="0">
+                                        <input class="form-control" type="number" name="PRC_LEUKODEPLETED"
+                                            min="0">
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group mb-3">
                                         <label style="min-width: 200px;">Washed Erythrocyte (WE)</label>
-                                        <input type="number" class="form-control" name="WASHED_ERYTHROYTE" min="0">
+                                        <input type="number" class="form-control" name="WASHED_ERYTHROYTE"
+                                            min="0">
                                         <span class="input-group-text">ml</span>
                                     </div>
 
@@ -313,13 +323,15 @@
 
                                     <div class="input-group">
                                         <label style="min-width: 200px;">Plasma Segar Beku (FFP)</label>
-                                        <input type="number" class="form-control" name="PLASMA_SEGAR_BEKU" min="0">
+                                        <input type="number" class="form-control" name="PLASMA_SEGAR_BEKU"
+                                            min="0">
                                         <span class="input-group-text">ml</span>
                                     </div>
 
                                     <div class="input-group">
                                         <label style="min-width: 200px;">Cryoprecipitate AHF</label>
-                                        <input type="number" class="form-control" name="CIYOPRECIPITATE" min="0">
+                                        <input type="number" class="form-control" name="CIYOPRECIPITATE"
+                                            min="0">
                                         <span class="input-group-text">unit</span>
                                     </div>
                                 </div>
@@ -335,54 +347,56 @@
                                             value="{{ date('Y-m-d') }}" required>
 
                                         <label class="mx-2">Jam</label>
-                                        <input type="time" class="form-control" name="WAKTU_PENGAMBILAN_SAMPEL" required>
+                                        <input type="time" class="form-control" name="WAKTU_PENGAMBILAN_SAMPEL"
+                                            value="{{ date('H:i:s') }}" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label style="min-width: 200px;">Nama Petugas</label>
-                                        <input type="text" class="form-control" name="PETUGAS_PENGAMBILAN_SAMPEL" placeholder="" required>
+                                        <input type="text" class="form-control" name="PETUGAS_PENGAMBILAN_SAMPEL"
+                                            placeholder="" required>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- UTD Section (Readonly) -->
                             <div class="mb-3 section-separator">
-                                    <div class="alert alert-secondary mt-3">
-                                        <p class="mb-1"><b>PEMBERITAHUAN:</b></p>
-                                        <ol class="pl-3 mb-0">
-                                            <li>Darah dari Donor tidak diperjualbelikan namun memerlukan biaya pengolahan
-                                                yang disebut Service Cost atau BPPD (Biaya Pengganti Pengolahan Darah)</li>
-                                            <li>Biaya Pengganti Pengolahan Darah (BPPD) berlaku bagi setiap pemakai Darah
-                                                tanpa terkecuali</li>
-                                            <li>Pembayaran Biaya Pengganti Pengolahan Darah (BPPD) dilakukan di Rumah Sakit
-                                                (Bila ada Kerjasama dengan UTD)</li>
-                                            <li>Darah yang sudah di periksa tetap dikenakan Biaya</li>
-                                        </ol>
-                                    </div>
+                                <div class="alert alert-secondary mt-3">
+                                    <p class="mb-1"><b>PEMBERITAHUAN:</b></p>
+                                    <ol class="pl-3 mb-0">
+                                        <li>Darah dari Donor tidak diperjualbelikan namun memerlukan biaya pengolahan
+                                            yang disebut Service Cost atau BPPD (Biaya Pengganti Pengolahan Darah)</li>
+                                        <li>Biaya Pengganti Pengolahan Darah (BPPD) berlaku bagi setiap pemakai Darah
+                                            tanpa terkecuali</li>
+                                        <li>Pembayaran Biaya Pengganti Pengolahan Darah (BPPD) dilakukan di Rumah Sakit
+                                            (Bila ada Kerjasama dengan UTD)</li>
+                                        <li>Darah yang sudah di periksa tetap dikenakan Biaya</li>
+                                    </ol>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary" id="simpan">
-                                    <i class="ti-save"></i> Simpan
-                                </button>
-                            </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary" id="simpan">
+                                <i class="ti-save"></i> Simpan
+                            </button>
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
+        </form>
+    </div>
     </div>
 @endsection
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Print functionality
             const printButton = document.getElementById('print_form');
             if (printButton) {
-                printButton.addEventListener('click', function () {
+                printButton.addEventListener('click', function() {
                     window.print();
                 });
             }
@@ -390,7 +404,7 @@
             // Reset confirmation
             const resetButton = document.getElementById('reset_form');
             if (resetButton) {
-                resetButton.addEventListener('click', function (e) {
+                resetButton.addEventListener('click', function(e) {
                     if (!confirm('Apakah Anda yakin ingin mereset form ini?')) {
                         e.preventDefault();
                     }
@@ -409,7 +423,7 @@
             const radioTidak = document.getElementById('radioDefault2Hamil');
             const jumlahLabel = document.querySelector('label.mx-3');
             const jumlahInput = document.getElementById('pernah-hamil-jumlah'); // Gunakan ID yang sudah ada
-            
+
             // Fungsi untuk menampilkan atau menyembunyikan input jumlah
             function toggleJumlahInput() {
                 if (radioYa.checked) {
@@ -422,11 +436,11 @@
                     jumlahInput.style.display = 'none';
                 }
             }
-            
+
             // Tambahkan event listener untuk radio button
             radioYa.addEventListener('change', toggleJumlahInput);
             radioTidak.addEventListener('change', toggleJumlahInput);
-            
+
             // Jalankan fungsi saat halaman dimuat untuk mengatur tampilan awal
             toggleJumlahInput();
         });

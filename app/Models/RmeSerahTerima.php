@@ -11,25 +11,7 @@ class RmeSerahTerima extends Model
     protected $table = 'rme_serah_terima';
     public $timestamps = false;
 
-    protected $fillable = [
-        'kd_pasien',
-        'tgl_masuk',
-        'urut_masuk',
-        'kd_unit_asal',
-        'kd_unit_tujuan',
-        'subjective',
-        'background',
-        'assessment',
-        'recomendation',
-        'tanggal_menyerahkan',
-        'jam_menyerahkan',
-        'petugas_menyerahkan',
-        'tanggal_terima',
-        'jam_terima',
-        'petugas_terima',
-        'status',
-        'urut_masuk_tujuan',
-    ];
+    protected $guarded = ['id'];
 
     public function unitAsal()
     {
@@ -43,11 +25,11 @@ class RmeSerahTerima extends Model
 
     public function petugasAsal()
     {
-        return $this->belongsTo(User::class, 'petugas_menyerahkan', 'id');
+        return $this->belongsTo(HrdKaryawan::class, 'petugas_menyerahkan', 'kd_karyawan');
     }
 
     public function petugasTerima()
     {
-        return $this->belongsTo(User::class, 'petugas_terima', 'id');
+        return $this->belongsTo(HrdKaryawan::class, 'petugas_terima', 'kd_karyawan');
     }
 }

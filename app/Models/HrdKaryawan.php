@@ -9,9 +9,7 @@ class HrdKaryawan extends Model
 {
     use HasFactory;
     protected $connection = 'sqlsrv_hrd';
-    protected $table = 'HRD_KARYAWAN';
-    public $incrementing = false;
-
+    protected $table = 'hrd_karyawan';
 
     public function ruangan()
     {

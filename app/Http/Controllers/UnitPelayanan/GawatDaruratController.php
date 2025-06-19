@@ -543,10 +543,10 @@ class GawatDaruratController extends Controller
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
 
-        $petugasIGD = User::with('karyawan')
-            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
-            ->whereRelation('karyawan', 'kd_detail_jenis_tenaga', 1)
-            ->whereRelation('karyawan', 'kd_ruangan', 36)
+        $petugasIGD = HrdKaryawan::where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->where('kd_ruangan', 36)
+            ->where('status_peg',  1)
             ->get();
 
         return view('unit-pelayanan.gawat-darurat.action-gawat-darurat.serah-terima-pasien.index', compact('dataMedis', 'serahTerimaData', 'unit', 'unitTujuan', 'petugasIGD'));
@@ -609,8 +609,6 @@ class GawatDaruratController extends Controller
                 'tanggal_menyerahkan'   => 'required|date_format:Y-m-d',
                 'jam_menyerahkan'       => 'required|date_format:H:i',
             ]);
-
-
 
             // data
             $data = [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UnitPelayanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\HrdKaryawan;
 use App\Models\Kunjungan;
 use App\Models\RmeSerahTerima;
 use App\Models\Unit;
@@ -224,10 +225,11 @@ class RawatInapController extends Controller
         $unit = Unit::where('aktif', 1)->get();
         $unitTujuan = Unit::where('kd_bagian', 1)->where('aktif', 1)->get();
 
-        $petugas = User::with('karyawan')
-            ->whereRelation('karyawan', 'kd_jenis_tenaga', 2)
-            ->whereRelation('karyawan', 'kd_detail_jenis_tenaga', 1)
-            ->whereRelation('karyawan.ruangan', 'kd_unit', $kd_unit)
+        $petugas = HrdKaryawan::with(['ruangan'])
+            ->where('kd_jenis_tenaga', 2)
+            ->where('kd_detail_jenis_tenaga', 1)
+            ->whereRelation('ruangan', 'kd_unit', $kd_unit)
+            ->where('status_peg',  1)
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.serah-terima.index', compact('dataMedis', 'serahTerimaData', 'unit', 'unitTujuan', 'petugas'));

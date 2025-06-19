@@ -304,6 +304,10 @@
                                             <div class="card-body">
                                                 <table class="table table-bordered">
                                                     <tr>
+                                                        <th>Nama OS</th>
+                                                        <td>{{ $order->pasien->nama ?? '-' }}</td>
+                                                    </tr>
+                                                    <tr>
                                                         <th>Petugas Penerima</th>
                                                         <td>{{ $order->petugas_penerima_sampel ?? '-' }}</td>
                                                     </tr>
@@ -574,6 +578,12 @@
 
                     <div class="modal-body">
                         <div class="form-group">
+                            <label for="nama_os">Nama OS</label>
+                            <input type="text" id="nama_os" class="form-control"
+                                value="{{ $order->pasien->nama }}" disabled>
+                        </div>
+
+                        <div class="form-group mt-3">
                             <label for="petugas_penerima_sampel">Petugas Penerima</label>
                             <input type="text" name="petugas_penerima_sampel" id="petugas_penerima_sampel"
                                 class="form-control" required>
