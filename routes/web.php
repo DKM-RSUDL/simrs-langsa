@@ -644,7 +644,7 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
-                            
+
 
                             // pernyataan bpjp
                             Route::prefix('pernyataan-dpjp')->group(function () {
@@ -1145,8 +1145,6 @@ Route::middleware('ssoToken')->group(function () {
                                         Route::get('/show/{data}', 'show')->name('.show');
                                         Route::delete('/', 'delete')->name('.delete');
                                         Route::post('/pdf', 'pdf')->name('.pdf');
-
-
                                     });
                                 });
                             });
@@ -1937,6 +1935,7 @@ Route::middleware('ssoToken')->group(function () {
                         Route::get('/datatables', 'datatable')->name('.datatable');
                         Route::get('/show/{data}', 'show')->name('.show');
                         Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
+                        Route::put('/pemeriksaan/{data}', 'updatePemeriksaan')->name('.pemeriksaan');
                         Route::post('/handover/{data}', 'handOver')->name('.handover');
                     });
                 });

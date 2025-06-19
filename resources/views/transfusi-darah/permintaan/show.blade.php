@@ -344,122 +344,121 @@
                             data-bs-parent="#accordionExample2" style="">
                             <div class="accordion-body">
                                 @if ($order->status == 1)
-                                    <form
-                                        action="{{ route('transfusi-darah.permintaan.handover', [encrypt($order->id)]) }}"
-                                        method="post">
-                                        @csrf
+                                    <div class="row">
+                                        <div class="col-md-6 mx-auto">
+                                            <div class="card">
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <h4 class="card-title">Pemeriksaan</h4>
+                                                    <input type="checkbox" id="edit-btn-pemeriksaan">
+                                                    <button type="button" class="btn btn-sm btn-warning"
+                                                        onclick="toggleCheckboxPemeriksaan()">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                                <form
+                                                    action="{{ route('transfusi-darah.permintaan.pemeriksaan', [encrypt($order->id)]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('put')
 
-                                        <div class="row">
-                                            <div class="col-md-6 mx-auto">
-                                                <div class="card">
                                                     <div class="card-body">
                                                         <div class="form-group">
                                                             <label for="petugas_pemeriksa">Petugas Pemeriksa</label>
                                                             <input type="text" name="petugas_pemeriksa"
-                                                                id="petugas_pemeriksa" class="form-control" required>
+                                                                id="petugas_pemeriksa" class="form-control"
+                                                                value="{{ $order->petugas_pemeriksa }}" required disabled>
                                                         </div>
                                                         <div class="form-group mt-3">
                                                             <label for="tgl_periksa">Tgl Periksa</label>
-                                                            <input type="date" name="tgl_periksa" id="tgl_periksa"
-                                                                class="form-control" value="{{ date('Y-m-d') }}"
-                                                                required>
+                                                            <input type="text" name="tgl_periksa" id="tgl_periksa"
+                                                                class="form-control date" value="{{ date('Y-m-d') }}"
+                                                                value="{{ date('Y-m-d', strtotime($order->tgl_periksa)) }}"
+                                                                required disabled>
                                                         </div>
                                                         <div class="form-group mt-3">
                                                             <label for="jam_periksa">Jam Periksa</label>
                                                             <input type="time" name="jam_periksa" id="jam_periksa"
                                                                 class="form-control" value="{{ date('H:i') }}"
-                                                                required>
+                                                                value="{{ date('H:i', strtotime($order->jam_periksa)) }}"
+                                                                required disabled>
                                                         </div>
                                                         <div class="form-group mt-3">
                                                             <label for="hasil_pemeriksaan">Hasil Pemeriksaan</label>
                                                             <select name="hasil_pemeriksaan" id="hasil_pemeriksaan"
-                                                                class="form-select" required>
+                                                                class="form-select" required disabled>
                                                                 <option value="">--Pilih--</option>
-                                                                <option value="0">Tidak Cocok</option>
-                                                                <option value="1">Cocok</option>
-                                                                <option value="2">Tanpa Cross</option>
-                                                                <option value="3">Emergency</option>
+                                                                <option value="0" @selected($order->hasil_pemeriksaan == '0')>Tidak
+                                                                    Cocok</option>
+                                                                <option value="1" @selected($order->hasil_pemeriksaan == '1')>Cocok
+                                                                </option>
+                                                                <option value="2" @selected($order->hasil_pemeriksaan == '2')>Tanpa
+                                                                    Cross</option>
+                                                                <option value="3" @selected($order->hasil_pemeriksaan == '3')>
+                                                                    Emergency</option>
                                                             </select>
                                                         </div>
-                                                        <div class="form-group mt-3">
-                                                            <label for="petugas_ambil">Petugas yang mengambil</label>
-                                                            <input type="text" name="petugas_ambil" id="petugas_ambil"
-                                                                class="form-control" required>
-                                                        </div>
                                                     </div>
-                                                </div>
+                                                    <div class="card-footer text-end">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="row" id="produk-list-wrap">
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div
-                                                        class="card-header border-bottom d-flex justify-content-between align-items-center">
-                                                        <p class="m-0 fww-semibold">Produk</p>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="form-group mt-3">
-                                                            <label for="no_kantong">No. Kantong</label>
-                                                            <input type="text" name="no_kantong[]" id="no_kantong"
-                                                                class="form-control" required>
-                                                        </div>
-                                                        <div class="form-group mt-3">
-                                                            <label for="jenis_darah">Jenis Darah</label>
-                                                            <select name="jenis_darah[]" id="jenis_darah"
-                                                                class="form-select" required>
-                                                                <option value="">--Pilih--</option>
-                                                                <option value="1">WB</option>
-                                                                <option value="2">PRC</option>
-                                                                <option value="3">TC</option>
-                                                                <option value="4">PLASMA</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="form-group mt-3">
-                                                            <label for="kd_golda">Gol. Darah</label>
-                                                            <select name="kd_golda[]" id="kd_golda" class="form-select"
-                                                                required>
-                                                                <option value="">--Pilih--</option>
-                                                                @foreach ($golDarah as $gol)
-                                                                    <option value="{{ $gol->kode }}">
-                                                                        {{ $gol->jenis }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="form-group mt-3">
-                                                            <label for="tgl_pengambilan">Tanggal Pengambilan</label>
-                                                            <input type="date" name="tgl_pengambilan[]"
-                                                                id="tgl_pengambilan" class="form-control"
-                                                                value="{{ date('Y-m-d') }}" required>
-                                                        </div>
-
-                                                        <div class="form-group mt-3">
-                                                            <label for="vol_kantong">Vol (ML) CC Kantong</label>
-                                                            <input type="number" name="vol_kantong[]" id="vol_kantong"
-                                                                class="form-control" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12 text-center">
-                                                <button type="button" class="btn btn-success" id="btn-add-produk-list">
-                                                    <i class="fa-solid fa-plus"></i>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-end mb-2">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#tambahDarahModal">
+                                                    <i class="fas fa-plus"></i>
+                                                    Tambah
                                                 </button>
                                             </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div class="col-12 text-end">
-                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered dataTable-darahlist">
+                                                    <tr align="middle">
+                                                        <th>No</th>
+                                                        <th>No Kantong</th>
+                                                        <th>Jenis Darah</th>
+                                                        <th>Gol. Darah</th>
+                                                        <th>Tanggal Pengambilan</th>
+                                                        <th>Vol (ML) CC Kantong</th>
+                                                    </tr>
+
+                                                    @foreach ($order->detail as $detail)
+                                                        <tr>
+                                                            <td align="middle">{{ $loop->iteration }}</td>
+                                                            <td align="middle">{{ $detail->no_kantong ?? '-' }}</td>
+                                                            <td align="middle">
+                                                                @if ($detail->jenis_darah == 1)
+                                                                    WB
+                                                                @endif
+
+                                                                @if ($detail->jenis_darah == 2)
+                                                                    PRC
+                                                                @endif
+
+                                                                @if ($detail->jenis_darah == 3)
+                                                                    TC
+                                                                @endif
+
+                                                                @if ($detail->jenis_darah == 4)
+                                                                    PLASMA
+                                                                @endif
+                                                            </td>
+                                                            <td align="middle">{{ $detail->golDarah->jenis ?? '-' }}</td>
+                                                            <td align="middle">
+                                                                {{ date('d M Y', strtotime($detail->tgl_pengambilan)) }}
+                                                            </td>
+                                                            <td align="middle">{{ $detail->vol_kantong }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </table>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 @endif
 
                                 @if ($order->status == 2)
@@ -620,10 +619,89 @@
             </div>
         </div>
     </div>
+
+    <!-- Tambah Darah Modal -->
+    <div class="modal fade" id="tambahDarahModal" tabindex="-1" aria-labelledby="tambahDarahModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="tambahDarahModalLabel">Pemberian Darah</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" method="post">
+                    @csrf
+                    @method('put')
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nama_os">Nama OS</label>
+                            <input type="text" id="nama_os" class="form-control"
+                                value="{{ $order->pasien->nama }}" disabled>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="petugas_ambil">Petugas yang mengambil</label>
+                            <input type="text" name="petugas_ambil" id="petugas_ambil" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="tgl_pengambilan">Tanggal Pengambilan</label>
+                            <input type="text" name="tgl_pengambilan[]" id="tgl_pengambilan"
+                                class="form-control date" value="{{ date('Y-m-d') }}" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="no_kantong">No. Kantong</label>
+                            <input type="text" name="no_kantong[]" id="no_kantong" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="vol_kantong">Vol (ML) CC Kantong</label>
+                            <input type="number" name="vol_kantong[]" id="vol_kantong" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="jenis_darah">Jenis Darah</label>
+                            <select name="jenis_darah[]" id="jenis_darah" class="form-select" required>
+                                <option value="">--Pilih--</option>
+                                <option value="1">WB</option>
+                                <option value="2">PRC</option>
+                                <option value="3">TC</option>
+                                <option value="4">PLASMA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="kd_golda">Gol. Darah</label>
+                            <select name="kd_golda[]" id="kd_golda" class="form-select" required>
+                                <option value="">--Pilih--</option>
+                                @foreach ($golDarah as $gol)
+                                    <option value="{{ $gol->kode }}">
+                                        {{ $gol->jenis }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Proses</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
     <script>
+        function toggleCheckboxPemeriksaan() {
+            const checkbox = document.getElementById('edit-btn-pemeriksaan');
+            checkbox.checked = !checkbox.checked; // Membalik status checked
+        }
+
         $('#btn-add-produk-list').on('click', function() {
             // Clone the original card row
             var $originalRow = $('#produk-list-wrap .col-md-6:first-of-type');

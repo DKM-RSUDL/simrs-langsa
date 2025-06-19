@@ -126,6 +126,30 @@ class PermintaanController extends Controller
         }
     }
 
+    public function updatePemeriksaan($idEncrypt, Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $id = decrypt($idEncrypt);
+            $order = BdrsPermintaanDarah::find($id);
+            if (empty($order)) throw new Exception('Permintaan darah tidak ditemukan !');
+
+            $order->petugas_pemeriksa = $request->petugas_pemeriksa;
+            $order->tgl_periksa = $request->tgl_periksa;
+            $order->jam_periksa = $request->jam_periksa;
+            $order->hasil_pemeriksaan = $request->hasil_pemeriksaan;
+            $order->user_pemeriksa = Auth::id();
+            $order->save();
+
+            DB::commit();
+            return to_route('transfusi-darah.permintaan.index')->with('success', 'Darah berhasil diperiksa !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
     public function handOver($idEncrypt, Request $request)
     {
         DB::beginTransaction();
@@ -135,44 +159,26 @@ class PermintaanController extends Controller
             $order = BdrsPermintaanDarah::find($id);
             if (empty($order)) throw new Exception('Permintaan darah tidak ditemukan !');
 
-            // store detail
-            $noKantong = $request->no_kantong;
-            $jenisDarah = $request->jenis_darah;
-            $kdGolda = $request->kd_golda;
-            $tglPengambilan = $request->tgl_pengambilan;
-            $volKantong = $request->vol_kantong;
-
             // store order detail
-            for ($i = 0; $i < count($noKantong); $i++) {
-                $data = [
-                    'kd_pasien'                 => $order->kd_pasien,
-                    'kd_unit'                   => $order->kd_unit,
-                    'tgl_masuk'                 => $order->tgl_masuk,
-                    'urut_masuk'                => $order->urut_masuk,
-                    'no_kantong'                => $noKantong[$i],
-                    'kd_golda'                  => $kdGolda[$i],
-                    'kd_rhesus'                 => $order->kd_rhesus,
-                    'tgl_pengambilan'           => $tglPengambilan[$i],
-                    'vol_kantong'               => $volKantong[$i],
-                    'nama_petugas_pengambilan'  => $request->petugas_ambil,
-                    'nama_petugas_penerima'     => $order->petugas_penerima_sampel,
-                    'nama_petugas_pemberian'    => $request->petugas_pemeriksa,
-                    'id_order'                  => $order->id,
-                    'jenis_darah'               => $jenisDarah[$i]
-                ];
-
-                DB::table('bdrs_permintaan_darah_detail')->insert($data);
-            }
+            $data = [
+                'kd_pasien'                 => $order->kd_pasien,
+                'kd_unit'                   => $order->kd_unit,
+                'tgl_masuk'                 => $order->tgl_masuk,
+                'urut_masuk'                => $order->urut_masuk,
+                'no_kantong'                => $request->no_kantong,
+                'kd_golda'                  => $request->kd_golda,
+                'kd_rhesus'                 => $order->kd_rhesus,
+                'tgl_pengambilan'           => $request->tgl_pengambilan,
+                'vol_kantong'               => $request->vol_kantong,
+                'nama_petugas_pengambilan'  => $request->petugas_ambil,
+                'nama_petugas_penerima'     => $order->petugas_penerima_sampel,
+                'nama_petugas_pemberian'    => $request->petugas_pemeriksa,
+                'id_order'                  => $order->id,
+                'jenis_darah'               => $request->jenis_darah
+            ];
 
             // update data order
-            $order->petugas_pemeriksa = $request->petugas_pemeriksa;
-            $order->tgl_periksa = $request->tgl_periksa;
-            $order->jam_periksa = $request->jam_periksa;
-            $order->hasil_pemeriksaan = $request->hasil_pemeriksaan;
-            $order->petugas_ambil = $request->petugas_ambil;
-            $order->user_pemeriksa = Auth::id();
-            $order->status = 2;
-            $order->save();
+
 
             DB::commit();
             return to_route('transfusi-darah.permintaan.index')->with('success', 'Darah berhasil diserahkan !');
