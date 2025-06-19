@@ -11,6 +11,7 @@ use App\Models\RmePengelolaanDarahTab2;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RanapPengawasanDarahController extends Controller
@@ -180,6 +181,7 @@ class RanapPengawasanDarahController extends Controller
             $dataPengelolaan->jam = $request->jam;
             $dataPengelolaan->transfusi_ke = $request->transfusi_ke;
             $dataPengelolaan->nomor_seri_kantong = $request->nomor_seri_kantong;
+            $dataPengelolaan->riwayat_alergi_sebelumnya = $request->riwayat_alergi_sebelumnya;
             $dataPengelolaan->riwayat_komponen_sesuai = $request->riwayat_komponen_sesuai;
             $dataPengelolaan->identitas_label_sesuai = $request->identitas_label_sesuai;
             $dataPengelolaan->golongan_darah_sesuai = $request->golongan_darah_sesuai;
@@ -188,6 +190,7 @@ class RanapPengawasanDarahController extends Controller
             $dataPengelolaan->tidak_expired = $request->tidak_expired;
             $dataPengelolaan->petugas_1 = $request->petugas_1;
             $dataPengelolaan->petugas_2 = $request->petugas_2;
+            $dataPengelolaan->user_create = Auth::user()->id;
             $dataPengelolaan->save();
 
             DB::commit();
@@ -352,6 +355,7 @@ class RanapPengawasanDarahController extends Controller
             $dataPengelolaan->jam = $request->jam;
             $dataPengelolaan->transfusi_ke = $request->transfusi_ke;
             $dataPengelolaan->nomor_seri_kantong = $request->nomor_seri_kantong;
+            $dataPengelolaan->riwayat_alergi_sebelumnya = $request->riwayat_alergi_sebelumnya;
             $dataPengelolaan->riwayat_komponen_sesuai = $request->riwayat_komponen_sesuai;
             $dataPengelolaan->identitas_label_sesuai = $request->identitas_label_sesuai;
             $dataPengelolaan->golongan_darah_sesuai = $request->golongan_darah_sesuai;
@@ -360,6 +364,7 @@ class RanapPengawasanDarahController extends Controller
             $dataPengelolaan->tidak_expired = $request->tidak_expired;
             $dataPengelolaan->petugas_1 = $request->petugas_1;
             $dataPengelolaan->petugas_2 = $request->petugas_2;
+            $dataPengelolaan->user_update = Auth::user()->id;
             $dataPengelolaan->save();
 
             DB::commit();
@@ -547,7 +552,7 @@ class RanapPengawasanDarahController extends Controller
             // Petugas
             $dataMonitoring->dokter = $request->dokter;
             $dataMonitoring->perawat = $request->perawat;
-
+            $dataMonitoring->user_create = Auth::user()->id;
             $dataMonitoring->save();
 
             DB::commit();
@@ -708,7 +713,7 @@ class RanapPengawasanDarahController extends Controller
             // Petugas
             $dataMonitoring->dokter = $request->dokter;
             $dataMonitoring->perawat = $request->perawat;
-
+            $dataMonitoring->user_update = Auth::user()->id;
             $dataMonitoring->save();
 
             DB::commit();

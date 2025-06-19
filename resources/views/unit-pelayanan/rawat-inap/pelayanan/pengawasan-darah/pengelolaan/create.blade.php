@@ -152,19 +152,37 @@
                             <h6 class="mb-0"><i class="bi bi-shield-check me-2"></i>Verifikasi Keamanan Darah</h6>
                         </div>
                         <div class="card-body">
+
                             <!-- Riwayat Komponen Darah -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    1. Riwayat komponen darah sesuai instruksi dokter
+                                    1. Riwayat Alergi Transufusi Darah sebelumnya
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_komponen_sesuai" value="1" id="riwayat_ya" required>
+                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="1" id="riwayat_ya" required>
                                         <label for="riwayat_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_komponen_sesuai" value="0" id="riwayat_tidak" required>
+                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="0" id="riwayat_tidak" required>
                                         <label for="riwayat_tidak" class="text-danger">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Riwayat Komponen Darah -->
+                            <div class="verification-item">
+                                <div class="verification-label">
+                                    2. Komponen darah sesuai instruksi dokter
+                                </div>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" name="riwayat_komponen_sesuai" value="1" id="komponen_ya" required>
+                                        <label for="komponen_ya" class="text-success">Ya</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" name="riwayat_komponen_sesuai" value="0" id="komponen_tidak" required>
+                                        <label for="komponen_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +190,7 @@
                             <!-- Identitas Label Darah -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    2. Identitas label darah sesuai dengan barcode
+                                    3. Identitas label darah sesuai dengan barcode
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
@@ -189,7 +207,7 @@
                             <!-- Golongan Darah Pasien -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    3. Golongan darah pasien sesuai dengan produk darah yang tersedia
+                                    4. Golongan darah pasien sesuai dengan produk darah yang tersedia
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
@@ -206,7 +224,7 @@
                             <!-- Volume Darah -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    4. Volume darah sesuai dengan instruksi
+                                    5. Volume darah sesuai dengan instruksi
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
@@ -223,7 +241,7 @@
                             <!-- Kantong Darah Utuh -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    5. Kantong darah utuh (tidak bocor)
+                                    6. Kantong darah utuh (tidak bocor)
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
@@ -240,7 +258,7 @@
                             <!-- Darah Tidak Expired -->
                             <div class="verification-item">
                                 <div class="verification-label">
-                                    6. Darah tidak expired
+                                    7. Darah tidak expired
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
@@ -269,17 +287,17 @@
                                         <select name="petugas_1" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($perawat as $prwt)
-                                                <option value="{{ $prwt->kd_karyawan }}">
-                                                    {{ "$prwt->nama" }}
-                                                </option>
-                                            @endforeach
+                                            <option value="{{ $prwt->kd_karyawan }}">
+                                                {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
+                                            </option>
+                                        @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Petugas 2</label>
-                                        <select name="petugas_2" class="form-select" required>
+                                        <select name="petugas_2" class="form-select select2" required>
                                             <option value="">--Pilih--</option>
                                             @foreach ($perawat as $prwt)
                                                 <option value="{{ $prwt->kd_karyawan }}">

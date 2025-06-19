@@ -50,6 +50,13 @@
                 border: 1px solid #ced4da;
                 border-radius: 4px;
             }
+
+            .info-text {
+                font-size: 0.875rem;
+                color: #6c757d;
+                font-style: italic;
+                margin-top: 0.25rem;
+            }
         </style>
     @endpush
 
@@ -61,6 +68,7 @@
         <div class="col-md-9">
             <div class="text-center mt-1 mb-2">
                 <h5 class="text-secondary fw-bold">Tambah Data Monitoring Transfusi Darah</h5>
+                <p class="info-text">Form ini dapat diisi secara bertahap dan dapat diedit kembali setelah disimpan</p>
             </div>
 
             <hr>
@@ -86,15 +94,15 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal" 
-                                               value="{{ date('Y-m-d') }}" required>
+                                        <input type="date" class="form-control" name="tanggal" required
+                                               value="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label required">Jam</label>
-                                        <input type="time" class="form-control" name="jam" 
-                                               value="{{ date('H:i') }}" required>
+                                        <input type="time" class="form-control" name="jam" required
+                                               value="{{ date('H:i') }}">
                                     </div>
                                 </div>
                             </div>
@@ -110,50 +118,50 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Sistole</label>
+                                        <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="pre_td_sistole" 
-                                                   placeholder="120" min="0" max="300" required>
+                                                   placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Diastole</label>
+                                        <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="pre_td_diastole" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">Nadi</label>
+                                        <label class="form-label">Nadi</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="pre_nadi" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">Suhu</label>
+                                        <label class="form-label">Suhu</label>
                                         <div class="input-group">
                                             <input type="number" step="0.1" class="form-control" name="pre_temp" 
-                                                   placeholder="36.5" min="30" max="45" required>
+                                                   placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">RR</label>
+                                        <label class="form-label">RR</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="pre_rr" 
-                                                   placeholder="20" min="0" max="50" required>
+                                                   placeholder="ex: 20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -170,7 +178,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="time" class="form-control" name="jam_mulai_transfusi" required>
+                                    <input type="time" class="form-control" name="jam_mulai_transfusi">
                                 </div>
                             </div>
                         </div>
@@ -185,50 +193,50 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Sistole</label>
+                                        <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post15_td_sistole" 
-                                                   placeholder="120" min="0" max="300" required>
+                                                   placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Diastole</label>
+                                        <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post15_td_diastole" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">Nadi</label>
+                                        <label class="form-label">Nadi</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post15_nadi" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">Suhu</label>
+                                        <label class="form-label">Suhu</label>
                                         <div class="input-group">
                                             <input type="number" step="0.1" class="form-control" name="post15_temp" 
-                                                   placeholder="36.5" min="30" max="45" required>
+                                                   placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">RR</label>
+                                        <label class="form-label">RR</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post15_rr" 
-                                                   placeholder="20" min="0" max="50" required>
+                                                   placeholder="ex: 20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -246,50 +254,50 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Sistole</label>
+                                        <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post1h_td_sistole" 
-                                                   placeholder="120" min="0" max="300" required>
+                                                   placeholder="120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Diastole</label>
+                                        <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post1h_td_diastole" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">Nadi</label>
+                                        <label class="form-label">Nadi</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post1h_nadi" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">Suhu</label>
+                                        <label class="form-label">Suhu</label>
                                         <div class="input-group">
                                             <input type="number" step="0.1" class="form-control" name="post1h_temp" 
-                                                   placeholder="36.5" min="30" max="45" required>
+                                                   placeholder="36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">RR</label>
+                                        <label class="form-label">RR</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post1h_rr" 
-                                                   placeholder="20" min="0" max="50" required>
+                                                   placeholder="20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -320,7 +328,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="time" class="form-control" name="jam_selesai_transfusi" required>
+                                    <input type="time" class="form-control" name="jam_selesai_transfusi">
                                 </div>
                             </div>
                         </div>
@@ -335,50 +343,50 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Sistole</label>
+                                        <label class="form-label">TD Sistole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post4h_td_sistole" 
-                                                   placeholder="120" min="0" max="300" required>
+                                                   placeholder="ex: 120" min="0" max="300">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">TD Diastole</label>
+                                        <label class="form-label">TD Diastole</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post4h_td_diastole" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">mmHg</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="mb-3">
-                                        <label class="form-label required">Nadi</label>
+                                        <label class="form-label">TD Nadi</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post4h_nadi" 
-                                                   placeholder="80" min="0" max="200" required>
+                                                   placeholder="ex: 80" min="0" max="200">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">Suhu</label>
+                                        <label class="form-label">Suhu</label>
                                         <div class="input-group">
                                             <input type="number" step="0.1" class="form-control" name="post4h_temp" 
-                                                   placeholder="36.5" min="30" max="45" required>
+                                                   placeholder="ex: 36.5" min="30" max="45">
                                             <span class="input-group-text">°C</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
-                                        <label class="form-label required">RR</label>
+                                        <label class="form-label">RR</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="post4h_rr" 
-                                                   placeholder="20" min="0" max="50" required>
+                                                   placeholder="ex: 20" min="0" max="50">
                                             <span class="input-group-text">x/mnt</span>
                                         </div>
                                     </div>
@@ -410,8 +418,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label required">Dokter</label>
-                                        <select name="dokter" class="form-select select2" required>
+                                        <label class="form-label">Dokter</label>
+                                        <select name="dokter" class="form-select select2">
                                             <option value="">--Pilih Dokter--</option>
                                             @foreach ($dokter as $dok)
                                                 <option value="{{ $dok->kd_dokter }}">
@@ -423,8 +431,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label required">Perawat</label>
-                                        <select name="perawat" class="form-select select2" required>
+                                        <label class="form-label">Perawat</label>
+                                        <select name="perawat" class="form-select select2">
                                             <option value="">--Pilih Perawat--</option>
                                             @foreach ($perawat as $prwt)
                                                 <option value="{{ $prwt->kd_karyawan }}">
@@ -466,7 +474,7 @@
                 width: '100%'
             });
 
-            // Validasi jam mulai dan selesai transfusi
+            // Validasi jam mulai dan selesai transfusi (hanya jika keduanya diisi)
             const jamMulaiInput = document.querySelector('input[name="jam_mulai_transfusi"]');
             const jamSelesaiInput = document.querySelector('input[name="jam_selesai_transfusi"]');
 
@@ -489,21 +497,9 @@
 
             jamSelesaiInput.addEventListener('change', validateTransfusionTime);
 
-            // Validasi form sebelum submit
+            // Validasi form sebelum submit (dikurangi karena tidak ada required fields)
             document.getElementById('monitoringForm').addEventListener('submit', function(e) {
-                // Validasi jam transfusi
-                if (!jamMulaiInput.value || !jamSelesaiInput.value) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Validasi Gagal',
-                        text: 'Mohon lengkapi jam mulai dan jam selesai transfusi',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
-                // Validasi dokter dan perawat tidak boleh sama (jika ada karyawan yang juga dokter)
+                // Validasi dokter dan perawat tidak boleh sama (jika keduanya diisi)
                 const dokter = document.querySelector('select[name="dokter"]').value;
                 const perawat = document.querySelector('select[name="perawat"]').value;
 
@@ -516,6 +512,11 @@
                         confirmButtonText: 'OK'
                     });
                     return;
+                }
+
+                // Konfirmasi penyimpanan
+                if (!confirm('Apakah Anda yakin ingin menyimpan data monitoring ini?')) {
+                    e.preventDefault();
                 }
             });
 
