@@ -424,7 +424,7 @@ class IntakeCairanController extends Controller
             'dataMedis',
             'intakeData'
         ))
-            ->setPaper('a4', 'landscape'); // Menggunakan landscape karena banyak kolom
+            ->setPaper('a4', 'potrait'); // Menggunakan landscape karena banyak kolom
 
         return $pdf->stream('intake_output_cairan_' . $dataMedis->kd_pasien . '_' . date('Y-m-d', strtotime($dataMedis->tgl_masuk)) . '.pdf');
     }

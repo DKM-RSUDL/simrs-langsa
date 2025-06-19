@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<div class="mt-2 patient-card">
+{{-- <div class="mt-2 patient-card">
     <div class="card-header">
         <h4>Task:</h4>
     </div>
@@ -81,4 +81,4 @@
             </li>
         </ul>
     </div>
-</div>
+</div> --}}

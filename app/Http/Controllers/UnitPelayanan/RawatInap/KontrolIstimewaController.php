@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\RmeKontrolIstimewa;
+use App\Models\RmeKontrolIstimewaJam;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -45,16 +46,30 @@ class KontrolIstimewaController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        // Data kontrol per 15 menit
         $kontrol = RmeKontrolIstimewa::with(['userCreate'])
             ->where('kd_pasien', $kd_pasien)
             ->where('kd_unit', $kd_unit)
             ->where('urut_masuk', $urut_masuk)
             ->whereDate('tgl_masuk', $tgl_masuk)
+            ->orderBy('tanggal', 'DESC')
+            ->orderBy('jam', 'DESC')
+            ->get();
+
+        // Data kontrol per jam
+        $kontrolJam = RmeKontrolIstimewaJam::with(['userCreate'])
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->where('urut_masuk', $urut_masuk)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->orderBy('tanggal', 'DESC')
+            ->orderBy('jam', 'DESC')
             ->get();
 
         return view('unit-pelayanan.rawat-inap.pelayanan.kontrol-istimewa.index', compact(
             'dataMedis',
-            'kontrol'
+            'kontrol',
+            'kontrolJam'
         ));
     }
 
