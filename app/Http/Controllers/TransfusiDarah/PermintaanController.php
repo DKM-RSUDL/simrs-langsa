@@ -143,7 +143,7 @@ class PermintaanController extends Controller
             $order->save();
 
             DB::commit();
-            return to_route('transfusi-darah.permintaan.index')->with('success', 'Darah berhasil diperiksa !');
+            return back()->with('success', 'Darah berhasil diperiksa !');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -172,16 +172,59 @@ class PermintaanController extends Controller
                 'vol_kantong'               => $request->vol_kantong,
                 'nama_petugas_pengambilan'  => $request->petugas_ambil,
                 'nama_petugas_penerima'     => $order->petugas_penerima_sampel,
-                'nama_petugas_pemberian'    => $request->petugas_pemeriksa,
+                'nama_petugas_pemberian'    => $order->petugas_pemeriksa,
                 'id_order'                  => $order->id,
-                'jenis_darah'               => $request->jenis_darah
+                'jenis_darah'               => $request->jenis_darah,
+                'user_create'               => Auth::id()
             ];
 
             // update data order
-
+            DB::table('bdrs_permintaan_darah_detail')->insert($data);
 
             DB::commit();
             return to_route('transfusi-darah.permintaan.index')->with('success', 'Darah berhasil diserahkan !');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function completeProcess($idEncrypt)
+    {
+        DB::beginTransaction();
+
+        try {
+            $id = decrypt($idEncrypt);
+            $order = BdrsPermintaanDarah::find($id);
+            if (empty($order)) throw new Exception('Permintaan darah tidak ditemukan !');
+
+            $order->status = 2;
+            $order->user_selesaikan = Auth::id();
+            $order->save();
+
+            DB::commit();
+            return to_route('transfusi-darah.permintaan.index')->with('success', 'Order diselesaikan');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function deleteDarah($idEncrypt)
+    {
+        DB::beginTransaction();
+
+        try {
+            $id = decrypt($idEncrypt);
+            $darah = BdrsPermintaanDarahDetail::find($id);
+            if (empty($darah)) throw new Exception('Darah tidak ditemukan !');
+            $noKantong = $darah->no_kantong;
+
+            // delete
+            BdrsPermintaanDarahDetail::where('id', $id)->delete();
+
+            DB::commit();
+            return back()->with('success', "Darah $noKantong dihapus !");
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());

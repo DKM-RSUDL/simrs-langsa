@@ -1937,6 +1937,8 @@ Route::middleware('ssoToken')->group(function () {
                         Route::put('/proses/{data}', 'prosesOrder')->name('.proses');
                         Route::put('/pemeriksaan/{data}', 'updatePemeriksaan')->name('.pemeriksaan');
                         Route::post('/handover/{data}', 'handOver')->name('.handover');
+                        Route::get('/selesai/{data}', 'completeProcess')->name('.selesai');
+                        Route::get('/hapus-darah/{data}', 'deleteDarah')->name('.delete-darah');
                     });
                 });
             });

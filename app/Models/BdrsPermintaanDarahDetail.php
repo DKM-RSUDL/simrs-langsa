@@ -9,12 +9,17 @@ class BdrsPermintaanDarahDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'BDRS_PERMINTAAN_DARAH_DETAIL';
+    protected $table = 'bdrs_permintaan_darah_detail';
     public $timestamps = false;
     protected $guarded = ['id'];
 
     public function golDarah()
     {
         return $this->belongsTo(GolonganDarah::class, 'kd_golda', 'kode');
+    }
+
+    public function userCreate()
+    {
+        return $this->belongsTo(User::class, 'user_create', 'id');
     }
 }

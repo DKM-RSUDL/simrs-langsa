@@ -346,13 +346,12 @@
                                 @if ($order->status == 1)
                                     <div class="row">
                                         <div class="col-md-6 mx-auto">
-                                            <div class="card">
+                                            <div class="card" id="card-pemeriksaan-form">
                                                 <div class="card-header d-flex justify-content-between align-items-center">
                                                     <h4 class="card-title">Pemeriksaan</h4>
-                                                    <input type="checkbox" id="edit-btn-pemeriksaan">
                                                     <button type="button" class="btn btn-sm btn-warning"
-                                                        onclick="toggleCheckboxPemeriksaan()">
-                                                        <i class="fas fa-edit"></i>
+                                                        id="toggle-edit-btn">
+                                                        <i class="fas fa-edit" id="edit-icon"></i>
                                                     </button>
                                                 </div>
                                                 <form
@@ -371,15 +370,15 @@
                                                         <div class="form-group mt-3">
                                                             <label for="tgl_periksa">Tgl Periksa</label>
                                                             <input type="text" name="tgl_periksa" id="tgl_periksa"
-                                                                class="form-control date" value="{{ date('Y-m-d') }}"
-                                                                value="{{ date('Y-m-d', strtotime($order->tgl_periksa)) }}"
+                                                                class="form-control date"
+                                                                value="{{ date('Y-m-d', strtotime($order->tgl_periksa ?? 'now')) }}"
                                                                 required disabled>
                                                         </div>
                                                         <div class="form-group mt-3">
                                                             <label for="jam_periksa">Jam Periksa</label>
                                                             <input type="time" name="jam_periksa" id="jam_periksa"
-                                                                class="form-control" value="{{ date('H:i') }}"
-                                                                value="{{ date('H:i', strtotime($order->jam_periksa)) }}"
+                                                                class="form-control"
+                                                                value="{{ date('H:i', strtotime($order->jam_periksa ?? 'now')) }}"
                                                                 required disabled>
                                                         </div>
                                                         <div class="form-group mt-3">
@@ -387,18 +386,23 @@
                                                             <select name="hasil_pemeriksaan" id="hasil_pemeriksaan"
                                                                 class="form-select" required disabled>
                                                                 <option value="">--Pilih--</option>
-                                                                <option value="0" @selected($order->hasil_pemeriksaan == '0')>Tidak
+                                                                <option value="0"
+                                                                    {{ ($order->hasil_pemeriksaan ?? '') == '0' ? 'selected' : '' }}>
+                                                                    Tidak Cocok</option>
+                                                                <option value="1"
+                                                                    {{ ($order->hasil_pemeriksaan ?? '') == '1' ? 'selected' : '' }}>
                                                                     Cocok</option>
-                                                                <option value="1" @selected($order->hasil_pemeriksaan == '1')>Cocok
-                                                                </option>
-                                                                <option value="2" @selected($order->hasil_pemeriksaan == '2')>Tanpa
-                                                                    Cross</option>
-                                                                <option value="3" @selected($order->hasil_pemeriksaan == '3')>
+                                                                <option value="2"
+                                                                    {{ ($order->hasil_pemeriksaan ?? '') == '2' ? 'selected' : '' }}>
+                                                                    Tanpa Cross</option>
+                                                                <option value="3"
+                                                                    {{ ($order->hasil_pemeriksaan ?? '') == '3' ? 'selected' : '' }}>
                                                                     Emergency</option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="card-footer text-end">
+                                                    <div class="card-footer text-end" id="card-footer"
+                                                        style="display: none;">
                                                         <button type="submit" class="btn btn-warning">Simpan</button>
                                                     </div>
                                                 </form>
@@ -425,6 +429,9 @@
                                                         <th>Gol. Darah</th>
                                                         <th>Tanggal Pengambilan</th>
                                                         <th>Vol (ML) CC Kantong</th>
+                                                        <th>Petugas</th>
+                                                        <th>Petugas Yang Mengambil</th>
+                                                        <th>Aksi</th>
                                                     </tr>
 
                                                     @foreach ($order->detail as $detail)
@@ -453,6 +460,17 @@
                                                                 {{ date('d M Y', strtotime($detail->tgl_pengambilan)) }}
                                                             </td>
                                                             <td align="middle">{{ $detail->vol_kantong }}</td>
+                                                            <td>
+                                                                {{ $detail->userCreate->karyawan->gelar_depan . ' ' . str()->title($detail->userCreate->karyawan->nama) . ' ' . $detail->userCreate->karyawan->gelar_belakang }}
+                                                            </td>
+                                                            <td>{{ $detail->nama_petugas_pengambilan }}</td>
+                                                            <td>
+                                                                <a href="{{ route('transfusi-darah.permintaan.delete-darah', [encrypt($detail->id)]) }}"
+                                                                    class="btn btn-sm btn-danger"
+                                                                    onclick="return confirm('Apakah anda yakin ingin menghapus darah {{ $detail->no_kantong }} ?')">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </table>
@@ -496,10 +514,6 @@
                                                                 Emergency
                                                             @endif
                                                         </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Petugas yang Mengambil</th>
-                                                        <td>{{ $order->petugas_ambil }}</td>
                                                     </tr>
                                                 </table>
                                             </div>
@@ -559,6 +573,17 @@
 
 
             </div>
+
+            @if ($order->status == 1)
+                <div class="text-end">
+                    <a href="{{ route('transfusi-darah.permintaan.selesai', [encrypt($order->id)]) }}"
+                        class="btn btn-success"
+                        onclick="return confirm('Apakah anda yakin ingin menyelesaikan order ini ?')">
+                        <i class="fas fa-check"></i>
+                        Selesai
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -629,9 +654,8 @@
                     <h1 class="modal-title fs-5" id="tambahDarahModalLabel">Pemberian Darah</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="#" method="post">
+                <form action="{{ route('transfusi-darah.permintaan.handover', [encrypt($order->id)]) }}" method="post">
                     @csrf
-                    @method('put')
 
                     <div class="modal-body">
                         <div class="form-group">
@@ -647,23 +671,23 @@
 
                         <div class="form-group mt-3">
                             <label for="tgl_pengambilan">Tanggal Pengambilan</label>
-                            <input type="text" name="tgl_pengambilan[]" id="tgl_pengambilan"
-                                class="form-control date" value="{{ date('Y-m-d') }}" required>
+                            <input type="text" name="tgl_pengambilan" id="tgl_pengambilan" class="form-control date"
+                                value="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="no_kantong">No. Kantong</label>
-                            <input type="text" name="no_kantong[]" id="no_kantong" class="form-control" required>
+                            <input type="text" name="no_kantong" id="no_kantong" class="form-control" required>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="vol_kantong">Vol (ML) CC Kantong</label>
-                            <input type="number" name="vol_kantong[]" id="vol_kantong" class="form-control" required>
+                            <input type="number" name="vol_kantong" id="vol_kantong" class="form-control" required>
                         </div>
 
                         <div class="form-group mt-3">
                             <label for="jenis_darah">Jenis Darah</label>
-                            <select name="jenis_darah[]" id="jenis_darah" class="form-select" required>
+                            <select name="jenis_darah" id="jenis_darah" class="form-select" required>
                                 <option value="">--Pilih--</option>
                                 <option value="1">WB</option>
                                 <option value="2">PRC</option>
@@ -674,7 +698,7 @@
 
                         <div class="form-group mt-3">
                             <label for="kd_golda">Gol. Darah</label>
-                            <select name="kd_golda[]" id="kd_golda" class="form-select" required>
+                            <select name="kd_golda" id="kd_golda" class="form-select" required>
                                 <option value="">--Pilih--</option>
                                 @foreach ($golDarah as $gol)
                                     <option value="{{ $gol->kode }}">
@@ -697,10 +721,47 @@
 
 @push('js')
     <script>
-        function toggleCheckboxPemeriksaan() {
-            const checkbox = document.getElementById('edit-btn-pemeriksaan');
-            checkbox.checked = !checkbox.checked; // Membalik status checked
-        }
+        $(document).ready(function() {
+            let isEditMode = false;
+
+            // Inisialisasi saat halaman dimuat
+            $('#card-pemeriksaan-form #card-footer').hide();
+
+            // Event handler untuk toggle edit
+            $('#toggle-edit-btn').on('click', function() {
+                const $toggleBtn = $(this);
+                const $editIcon = $('#edit-icon');
+                const $cardFooter = $('#card-pemeriksaan-form #card-footer');
+
+                // Ambil semua input dan select
+                const $inputs = $('#petugas_pemeriksa, #tgl_periksa, #jam_periksa');
+                const $select = $('#hasil_pemeriksaan');
+
+                if (!isEditMode) {
+                    // Mode Edit: Enable semua input dan tampilkan button simpan
+                    $inputs.prop('disabled', false);
+                    $select.prop('disabled', false);
+                    $cardFooter.show();
+
+                    // Ubah icon menjadi eye dan warna hijau
+                    $editIcon.removeClass('fa-edit').addClass('fa-eye');
+                    $toggleBtn.removeClass('btn-warning').addClass('btn-success');
+
+                    isEditMode = true;
+                } else {
+                    // Mode View: Disable semua input dan sembunyikan button simpan
+                    $inputs.prop('disabled', true);
+                    $select.prop('disabled', true);
+                    $cardFooter.hide();
+
+                    // Ubah icon menjadi edit dan warna warning
+                    $editIcon.removeClass('fa-eye').addClass('fa-edit');
+                    $toggleBtn.removeClass('btn-success').addClass('btn-warning');
+
+                    isEditMode = false;
+                }
+            });
+        });
 
         $('#btn-add-produk-list').on('click', function() {
             // Clone the original card row
