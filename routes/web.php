@@ -79,6 +79,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KontrolIstimewaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\KontrolIstimewaJamController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIccuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarIcuController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\MasukKeluarNicuController;
@@ -100,6 +101,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPernyataandpjpController;
@@ -612,6 +614,38 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
 
+                            //pengawasan darah
+                            Route::prefix('pengawasan-darah')->group(function () {
+                                Route::name('.pengawasan-darah')->group(function () {
+                                    Route::controller(RanapPengawasanDarahController::class)->group(function () {
+                                        // Route utama index
+                                        Route::get('/', 'index')->name('.index');
+
+                                        // Routes untuk MONITORING
+                                        Route::prefix('monitoring')->group(function () {
+                                            Route::get('/create', 'createMonitoring')->name('.monitoring.create');
+                                            Route::post('/', 'storeMonitoring')->name('.monitoring.store');
+                                            Route::get('/{id}', 'showMonitoring')->name('.monitoring.show');
+                                            Route::get('/{id}/edit', 'editMonitoring')->name('.monitoring.edit');
+                                            Route::put('/{id}', 'updateMonitoring')->name('.monitoring.update');
+                                            Route::delete('/{id}', 'destroyMonitoring')->name('.monitoring.destroy');
+                                        });
+
+                                        // Routes untuk PENGELOLAAN
+                                        Route::prefix('pengelolaan')->group(function () {
+                                            Route::get('/create', 'createPengelolaan')->name('.pengelolaan.create');
+                                            Route::post('/', 'storePengelolaan')->name('.pengelolaan.store');
+                                            Route::get('/{id}', 'showPengelolaan')->name('.pengelolaan.show');
+                                            Route::get('/{id}/edit', 'editPengelolaan')->name('.pengelolaan.edit');
+                                            Route::put('/{id}', 'updatePengelolaan')->name('.pengelolaan.update');
+                                            Route::delete('/{id}', 'destroyPengelolaan')->name('.pengelolaan.destroy');
+                                        });
+                                        Route::get('/print', 'printPengawasanDarah')->name('.print');
+                                    });
+                                });
+                            });
+                            
+
                             // pernyataan bpjp
                             Route::prefix('pernyataan-dpjp')->group(function () {
                                 Route::name('.pernyataan-dpjp')->group(function () {
@@ -1119,7 +1153,7 @@ Route::middleware('ssoToken')->group(function () {
 
                             Route::prefix('kontrol-istimewa-jam')->group(function () {
                                 Route::name('.kontrol-istimewa-jam')->group(function () {
-                                    Route::controller(KontrolIstimewaController::class)->group(function () {
+                                    Route::controller(KontrolIstimewaJamController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::get('/create', 'create')->name('.create');
                                         Route::post('/', 'store')->name('.store');

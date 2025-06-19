@@ -248,6 +248,13 @@
                                                     <li><a class="dropdown-item m-1" href="#">Billing System</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Finalisasi</a></li>
                                                     <li><a class="dropdown-item m-1" href="#">Status Pasien</a></li>
+                                                    <li class="dropdown-submenu">
+                                                        <a class="dropdown-item m-1 dropdown-toggle" href="#">Transfusi Darah</a>
+                                                        <ul class="dropdown-menu shadow-lg">
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Order</a></li>
+                                                            <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/pengawasan-darah'}">Pengawasan</a></li>
+                                                        </ul>
+                                                    </li>
                                                     <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/asuhan-keperawatan'}">Asuhan Keperawatan</a></li>
                                                     <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/permintaan-darah'}">Permintaan Darah</a></li>
                                                     <li><a class="dropdown-item m-1" href="${pelayananUrl + row.kd_unit + '/pelayanan/' + row.kd_pasien + '/' + row.tgl_masuk + '/' + row.urut_masuk + '/orientasi-pasien-baru'}">Orientasi Pasien Baru</a></li>

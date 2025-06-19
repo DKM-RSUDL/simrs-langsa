@@ -2,17 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
-        .nav-tabs .nav-link {
-            font-weight: 500;
-        }
-        .nav-tabs .nav-link.active {
-            background-color: #097dd6;
-            border-color: #097dd6;
-            color: white;
-        }
-        .tab-content {
-            padding-top: 20px;
-        }
+        
     </style>
 @endpush
 
@@ -146,14 +136,22 @@
                                         <table class="table table-bordered table-sm table-hover">
                                             <thead class="table-success">
                                                 <tr align="middle" style="vertical-align: middle;">
-                                                    <th width="100px" rowspan="2">NO</th>
-                                                    <th rowspan="2">WAKTU</th>
-                                                    <th rowspan="2">PETUGAS</th>
+                                                    <th width="50px" rowspan="3">NO</th>
+                                                    <th rowspan="3">WAKTU</th>
+                                                    <th rowspan="3">PETUGAS</th>
+                                                    <th colspan="4">TANDA VITAL</th>
+                                                    <th colspan="4">INPUT & OUTPUT</th>
+                                                    <th rowspan="3">KETERANGAN</th>
+                                                    <th rowspan="3">AKSI</th>
+                                                </tr>
+                                                <tr align="middle">
                                                     <th rowspan="2">NADI</th>
                                                     <th rowspan="2">NAFAS</th>
                                                     <th colspan="2">TEK. DARAH</th>
-                                                    <th rowspan="2">SUHU</th>
-                                                    <th rowspan="2">AKSI</th>
+                                                    <th rowspan="2">ORAL</th>
+                                                    <th rowspan="2">IV</th>
+                                                    <th rowspan="2">DIUROSIS</th>
+                                                    <th rowspan="2">MUNTAH</th>
                                                 </tr>
                                                 <tr align="middle">
                                                     <th>Sistole</th>
@@ -161,7 +159,6 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- Data untuk kontrol per jam akan diambil dari controller terpisah --}}
                                                 @forelse ($kontrolJam ?? [] as $item)
                                                     <tr>
                                                         <td align="middle">{{ $loop->iteration }}</td>
@@ -171,11 +168,15 @@
                                                         </td>
                                                         <td>{{ $item->userCreate->karyawan->gelar_depan . ' ' . str()->title($item->userCreate->karyawan->nama) . ' ' . $item->userCreate->karyawan->gelar_belakang }}
                                                         </td>
-                                                        <td>{{ $item->nadi }}</td>
-                                                        <td>{{ $item->nafas }}</td>
-                                                        <td>{{ $item->sistole }}</td>
-                                                        <td>{{ $item->diastole }}</td>
-                                                        <td>{{ $item->suhu ?? '-' }}</td>
+                                                        <td>{{ $item->nadi ?? '-' }}</td>
+                                                        <td>{{ $item->nafas ?? '-' }}</td>
+                                                        <td>{{ $item->sistole ?? '-' }}</td>
+                                                        <td>{{ $item->diastole ?? '-' }}</td>
+                                                        <td>{{ $item->pemberian_oral ?? '-' }}</td>
+                                                        <td>{{ $item->cairan_intra_vena ?? '-' }}</td>
+                                                        <td>{{ $item->diurosis ?? '-' }}</td>
+                                                        <td>{{ $item->muntah ?? '-' }}</td>
+                                                        <td>{{ $item->keterangan ?? '-' }}</td>
                                                         <td align="middle">
                                                             <a href="{{ route('rawat-inap.kontrol-istimewa-jam.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($item->id)]) }}"
                                                                 class="btn btn-sm btn-warning mx-1">
@@ -190,7 +191,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="9" class="text-center py-4">
+                                                        <td colspan="12" class="text-center py-4">
                                                             <div class="text-muted">
                                                                 <i class="fa fa-hourglass fa-3x mb-3"></i>
                                                                 <h5>Belum ada data kontrol istimewa per jam</h5>
@@ -267,7 +268,7 @@
                     <h1 class="modal-title fs-5" id="printModal15Label">Print Kontrol Istimewa per 15 Menit</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('rawat-inap.kontrol-istimewa.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+                <form action="{{ route('rawat-inap.kontrol-istimewa.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post" target="_blank">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -292,7 +293,7 @@
                     <h1 class="modal-title fs-5" id="printModalJamLabel">Print Kontrol Istimewa per Jam</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('rawat-inap.kontrol-istimewa-jam.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post">
+                <form action="{{ route('rawat-inap.kontrol-istimewa-jam.pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}" method="post" target="_blank">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
