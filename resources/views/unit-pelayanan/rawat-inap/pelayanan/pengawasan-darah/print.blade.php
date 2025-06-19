@@ -227,20 +227,21 @@
             <thead>
                 <tr>
                     <th rowspan="2" style="width: 3%;">No</th>
-                    <th rowspan="2" style="width: 8%;">Tanggal</th>
-                    <th rowspan="2" style="width: 6%;">Jam</th>
-                    <th rowspan="2" style="width: 8%;">Transfusi Ke</th>
-                    <th rowspan="2" style="width: 12%;">No. Seri Kantong</th>
-                    <th colspan="6" style="width: 45%;">Verifikasi Keamanan Darah</th>
-                    <th rowspan="2" style="width: 18%;">Petugas</th>
+                    <th rowspan="2" style="width: 7%;">Tanggal</th>
+                    <th rowspan="2" style="width: 5%;">Jam</th>
+                    <th rowspan="2" style="width: 6%;">Transfusi Ke</th>
+                    <th rowspan="2" style="width: 10%;">No. Seri Kantong</th>
+                    <th colspan="7" style="width: 52%;">Verifikasi Keamanan Darah</th>
+                    <th rowspan="2" style="width: 17%;">Petugas</th>
                 </tr>
                 <tr>
-                    <th style="width: 7.5%;">Riwayat Komponen</th>
-                    <th style="width: 7.5%;">Identitas Label</th>
-                    <th style="width: 7.5%;">Golongan Darah</th>
-                    <th style="width: 7.5%;">Volume</th>
-                    <th style="width: 7.5%;">Kantong Utuh</th>
-                    <th style="width: 7.5%;">Tidak Expired</th>
+                    <th style="width: 7.4%;">Riwayat Alergi</th>
+                    <th style="width: 7.4%;">Komponen Darah</th>
+                    <th style="width: 7.4%;">Identitas Label</th>
+                    <th style="width: 7.4%;">Golongan Darah</th>
+                    <th style="width: 7.4%;">Volume</th>
+                    <th style="width: 7.4%;">Kantong Utuh</th>
+                    <th style="width: 7.4%;">Tidak Expired</th>
                 </tr>
             </thead>
             <tbody>
@@ -253,6 +254,13 @@
                             <span class="badge badge-primary">{{ $data->transfusi_ke }}</span>
                         </td>
                         <td class="text-left">{{ $data->nomor_seri_kantong }}</td>
+                        <td class="{{ $data->riwayat_alergi_sebelumnya == 1 ? 'status-sesuai' : 'status-tidak-sesuai' }}">
+                            @if($data->riwayat_alergi_sebelumnya == 1)
+                                <span class="badge badge-success">Sesuai</span>
+                            @else
+                                <span class="badge badge-danger">Tidak</span>
+                            @endif
+                        </td>
                         <td class="{{ $data->riwayat_komponen_sesuai == 1 ? 'status-sesuai' : 'status-tidak-sesuai' }}">
                             @if($data->riwayat_komponen_sesuai == 1)
                                 <span class="badge badge-success">Sesuai</span>
@@ -360,32 +368,32 @@
                             {{ date('d/m/Y', strtotime($data->tanggal)) }}<br>
                             {{ date('H:i', strtotime($data->jam)) }}
                         </td>
-                        <td>{{ date('H:i', strtotime($data->jam_mulai_transfusi)) }}</td>
-                        <td>{{ date('H:i', strtotime($data->jam_selesai_transfusi)) }}</td>
+                        <td>{{ $data->jam_mulai_transfusi ? date('H:i', strtotime($data->jam_mulai_transfusi)) : '-' }}</td>
+                        <td>{{ $data->jam_selesai_transfusi ? date('H:i', strtotime($data->jam_selesai_transfusi)) : '-' }}</td>
                         <!-- Pre transfusi -->
-                        <td>{{ $data->pre_td_sistole }}</td>
-                        <td>{{ $data->pre_td_diastole }}</td>
-                        <td>{{ $data->pre_nadi }}</td>
-                        <td>{{ $data->pre_temp }}</td>
-                        <td>{{ $data->pre_rr }}</td>
+                        <td>{{ $data->pre_td_sistole ?? '-' }}</td>
+                        <td>{{ $data->pre_td_diastole ?? '-' }}</td>
+                        <td>{{ $data->pre_nadi ?? '-' }}</td>
+                        <td>{{ $data->pre_temp ?? '-' }}</td>
+                        <td>{{ $data->pre_rr ?? '-' }}</td>
                         <!-- Post 15 menit -->
-                        <td>{{ $data->post15_td_sistole }}</td>
-                        <td>{{ $data->post15_td_diastole }}</td>
-                        <td>{{ $data->post15_nadi }}</td>
-                        <td>{{ $data->post15_temp }}</td>
-                        <td>{{ $data->post15_rr }}</td>
+                        <td>{{ $data->post15_td_sistole ?? '-' }}</td>
+                        <td>{{ $data->post15_td_diastole ?? '-' }}</td>
+                        <td>{{ $data->post15_nadi ?? '-' }}</td>
+                        <td>{{ $data->post15_temp ?? '-' }}</td>
+                        <td>{{ $data->post15_rr ?? '-' }}</td>
                         <!-- Post 1 jam -->
-                        <td>{{ $data->post1h_td_sistole }}</td>
-                        <td>{{ $data->post1h_td_diastole }}</td>
-                        <td>{{ $data->post1h_nadi }}</td>
-                        <td>{{ $data->post1h_temp }}</td>
-                        <td>{{ $data->post1h_rr }}</td>
+                        <td>{{ $data->post1h_td_sistole ?? '-' }}</td>
+                        <td>{{ $data->post1h_td_diastole ?? '-' }}</td>
+                        <td>{{ $data->post1h_nadi ?? '-' }}</td>
+                        <td>{{ $data->post1h_temp ?? '-' }}</td>
+                        <td>{{ $data->post1h_rr ?? '-' }}</td>
                         <!-- Post 4 jam -->
-                        <td>{{ $data->post4h_td_sistole }}</td>
-                        <td>{{ $data->post4h_td_diastole }}</td>
-                        <td>{{ $data->post4h_nadi }}</td>
-                        <td>{{ $data->post4h_temp }}</td>
-                        <td>{{ $data->post4h_rr }}</td>
+                        <td>{{ $data->post4h_td_sistole ?? '-' }}</td>
+                        <td>{{ $data->post4h_td_diastole ?? '-' }}</td>
+                        <td>{{ $data->post4h_nadi ?? '-' }}</td>
+                        <td>{{ $data->post4h_temp ?? '-' }}</td>
+                        <td>{{ $data->post4h_rr ?? '-' }}</td>
                         <!-- Reaksi -->
                         <td class="text-left text-small">
                             @if($data->reaksi_selama_transfusi || $data->reaksi_transfusi)

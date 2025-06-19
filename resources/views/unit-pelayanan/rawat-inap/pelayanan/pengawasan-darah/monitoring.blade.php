@@ -10,6 +10,15 @@
             background-color: #dc3545;
         }
         
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .badge-info {
+            background-color: #17a2b8;
+        }
+        
         .verification-badge {
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
@@ -35,6 +44,16 @@
         .nav-link.active {
             background-color: #007bff !important;
             color: white !important;
+        }
+
+        .status-progress {
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+
+        .progress-mini {
+            height: 8px;
+            margin-top: 3px;
         }
     </style>
 @endpush
@@ -63,8 +82,6 @@
                             </li>
                         </ul>
 
-                        
-
                         {{-- Tab Content --}}
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active">
@@ -74,6 +91,7 @@
                                         <div class="row w-100">
                                             <div class="col-md-8">
                                                 <h6 class="mb-0">Data Monitoring Transfusi Darah</h6>
+                                                <small class="text-muted">Pengisian dapat dilakukan secara bertahap</small>
                                             </div>
                                             <div class="col-md-4 text-end">
                                                 <a href="{{ route('rawat-inap.pengawasan-darah.print', [
@@ -106,25 +124,108 @@
                                                     <th>Vital Sign</th>
                                                     <th>Reaksi</th>
                                                     <th>Petugas</th>
+                                                    <th>Status Kelengkapan</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($monitoringDarah as $index => $data)
+                                                    @php
+                                                        // Hitung kelengkapan data - Total 25 field
+                                                        $filledFields = 0;
+                                                        $totalFields = 25;
+                                                        
+                                                        // Field dasar (4 field)
+                                                        if($data->tanggal) $filledFields++;
+                                                        if($data->jam) $filledFields++;
+                                                        if($data->jam_mulai_transfusi) $filledFields++;
+                                                        if($data->jam_selesai_transfusi) $filledFields++;
+                                                        
+                                                        // Vital sign pre transfusi (5 field)
+                                                        if($data->pre_td_sistole) $filledFields++;
+                                                        if($data->pre_td_diastole) $filledFields++;
+                                                        if($data->pre_nadi) $filledFields++;
+                                                        if($data->pre_temp) $filledFields++;
+                                                        if($data->pre_rr) $filledFields++;
+                                                        
+                                                        // Vital sign post 15 menit (5 field)
+                                                        if($data->post15_td_sistole) $filledFields++;
+                                                        if($data->post15_td_diastole) $filledFields++;
+                                                        if($data->post15_nadi) $filledFields++;
+                                                        if($data->post15_temp) $filledFields++;
+                                                        if($data->post15_rr) $filledFields++;
+                                                        
+                                                        // Vital sign post 1 jam (5 field)
+                                                        if($data->post1h_td_sistole) $filledFields++;
+                                                        if($data->post1h_td_diastole) $filledFields++;
+                                                        if($data->post1h_nadi) $filledFields++;
+                                                        if($data->post1h_temp) $filledFields++;
+                                                        if($data->post1h_rr) $filledFields++;
+                                                        
+                                                        // Vital sign post 4 jam (5 field)
+                                                        if($data->post4h_td_sistole) $filledFields++;
+                                                        if($data->post4h_td_diastole) $filledFields++;
+                                                        if($data->post4h_nadi) $filledFields++;
+                                                        if($data->post4h_temp) $filledFields++;
+                                                        if($data->post4h_rr) $filledFields++;
+                                                        
+                                                        // Petugas (2 field) - hanya jika ada nilai
+                                                        if($data->dokter) $filledFields++;
+                                                        if($data->perawat) $filledFields++;
+                                                        
+                                                        // Pastikan tidak melebihi 100%
+                                                        $percentage = min(100, round(($filledFields / $totalFields) * 100));
+                                                        
+                                                        // Tentukan status berdasarkan persentase
+                                                        if($percentage >= 90) {
+                                                            $statusClass = 'success';
+                                                            $statusText = 'Lengkap';
+                                                            $statusIcon = 'bi-check-circle-fill';
+                                                        } elseif($percentage >= 70) {
+                                                            $statusClass = 'warning';
+                                                            $statusText = 'Hampir Lengkap';
+                                                            $statusIcon = 'bi-exclamation-triangle-fill';
+                                                        } elseif($percentage >= 40) {
+                                                            $statusClass = 'info';
+                                                            $statusText = 'Sebagian';
+                                                            $statusIcon = 'bi-info-circle-fill';
+                                                        } else {
+                                                            $statusClass = 'danger';
+                                                            $statusText = 'Minimal';
+                                                            $statusIcon = 'bi-x-circle-fill';
+                                                        }
+                                                    @endphp
+                                                    
                                                     <tr>
                                                         <td>{{ $monitoringDarah->firstItem() + $index }}</td>
                                                         <td>{{ date('d/m/Y', strtotime($data->tanggal)) }}</td>
                                                         <td>{{ date('H:i', strtotime($data->jam)) }}</td>
                                                         <td>
                                                             <small>
-                                                                Mulai: {{ date('H:i', strtotime($data->jam_mulai_transfusi)) }}<br>
-                                                                Selesai: {{ date('H:i', strtotime($data->jam_selesai_transfusi)) }}
+                                                                @if($data->jam_mulai_transfusi)
+                                                                    Mulai: {{ date('H:i', strtotime($data->jam_mulai_transfusi)) }}<br>
+                                                                @else
+                                                                    Mulai: <span class="text-muted">-</span><br>
+                                                                @endif
+                                                                @if($data->jam_selesai_transfusi)
+                                                                    Selesai: {{ date('H:i', strtotime($data->jam_selesai_transfusi)) }}
+                                                                @else
+                                                                    Selesai: <span class="text-muted">-</span>
+                                                                @endif
                                                             </small>
                                                         </td>
                                                         <td>
                                                             <small>
-                                                                Pre: {{ $data->pre_td_sistole }}/{{ $data->pre_td_diastole }} mmHg<br>
-                                                                Post: {{ $data->post4h_td_sistole }}/{{ $data->post4h_td_diastole }} mmHg
+                                                                @if($data->pre_td_sistole && $data->pre_td_diastole)
+                                                                    Pre: {{ $data->pre_td_sistole }}/{{ $data->pre_td_diastole }} mmHg<br>
+                                                                @else
+                                                                    Pre: <span class="text-muted">-</span><br>
+                                                                @endif
+                                                                @if($data->post4h_td_sistole && $data->post4h_td_diastole)
+                                                                    Post 4h: {{ $data->post4h_td_sistole }}/{{ $data->post4h_td_diastole }} mmHg
+                                                                @else
+                                                                    Post 4h: <span class="text-muted">-</span>
+                                                                @endif
                                                             </small>
                                                         </td>
                                                         <td>
@@ -136,9 +237,26 @@
                                                         </td>
                                                         <td>
                                                             <small>
-                                                                Dokter: {{ $data->dokterRelation->nama ?? 'N/A' }}<br>
-                                                                Perawat: {{ $data->perawatRelation->nama ?? 'N/A' }}
+                                                                Dokter: {{ $data->dokterRelation->nama ?? '-' }}<br>
+                                                                Perawat: {{ $data->perawatRelation->nama ?? '-' }}
                                                             </small>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-center">
+                                                                <span class="badge bg-{{ $statusClass }} d-flex align-items-center justify-content-center mb-1">
+                                                                    <i class="bi {{ $statusIcon }} me-1"></i>
+                                                                    {{ $statusText }}
+                                                                </span>
+                                                                <div class="progress progress-mini">
+                                                                    <div class="progress-bar bg-{{ $statusClass }}" role="progressbar" 
+                                                                         style="width: {{ $percentage }}%" 
+                                                                         aria-valuenow="{{ $percentage }}" 
+                                                                         aria-valuemin="0" 
+                                                                         aria-valuemax="100">
+                                                                    </div>
+                                                                </div>
+                                                                <small class="status-progress text-muted">{{ $percentage }}%</small>
+                                                            </div>
                                                         </td>
                                                         <td>
                                                             <div class="btn-group btn-group-sm" role="group">
@@ -157,7 +275,7 @@
                                                                     'tgl_masuk' => date('Y-m-d', strtotime($dataMedis->tgl_masuk)),
                                                                     'urut_masuk' => $dataMedis->urut_masuk,
                                                                     'id' => $data->id
-                                                                ]) }}" class="btn btn-warning btn-sm" title="Edit">
+                                                                ]) }}" class="btn btn-warning btn-sm" title="Edit / Lengkapi Data">
                                                                     <i class="bi bi-pencil"></i>
                                                                 </a>
                                                                 <form action="{{ route('rawat-inap.pengawasan-darah.monitoring.destroy', [
@@ -197,12 +315,13 @@
                                                     <th>Vital Sign</th>
                                                     <th>Reaksi</th>
                                                     <th>Petugas</th>
+                                                    <th>Status Kelengkapan</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="8" class="text-center">Tidak ada data Monitoring Transfusi Darah</td>
+                                                    <td colspan="9" class="text-center">Tidak ada data Monitoring Transfusi Darah</td>
                                                 </tr>
                                             </tbody>
                                         </table>
