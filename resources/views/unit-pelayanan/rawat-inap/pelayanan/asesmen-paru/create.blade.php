@@ -63,30 +63,35 @@
                                     <textarea class="form-control" name="riwayat_penyakit" rows="4"
                                         placeholder="Riwayat penyakit sekarang"></textarea>
                                 </div>
-
-                                <div class="form-group">
-                                        <label for="alergi">Alergi</label>
-                                        <div class="input-group">
-                                            <input type="text" name="alergi_display" id="alergi_display"
-                                                class="form-control" placeholder="Alergi pasien (jika ada)"
-                                                value="{{ $allergiesDisplay ?? '' }}" readonly>
-                                            <input type="hidden" name="alergi" id="alergi"
-                                                value="{{ $allergiesJson ?? '' }}">
-
-                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                                data-bs-target="#alergiModal">
-                                                <i class="ti-plus"></i> Tambah Alergi
-                                            </button>
-                                        </div>
-                                </div>
-
-                                <div class="form-group" id="alergen-list-input">
-                                </div>
-                                @push('modals')
-                                    @include('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.alergi')
-                                @endpush
-
                             </div>
+
+                            <div class="section-separator" id="alergi">
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-3"
+                                    id="openAlergiModal" data-bs-toggle="modal" data-bs-target="#alergiModal">
+                                    <i class="ti-plus"></i> Tambah Alergi
+                                </button>
+                                <input type="hidden" name="alergis" id="alergisInput" value="[]">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="createAlergiTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="20%">Jenis Alergi</th>
+                                                <th width="25%">Alergen</th>
+                                                <th width="25%">Reaksi</th>
+                                                <th width="20%">Tingkat Keparahan</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="no-alergi-row">
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data alergi</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
 
                             <!-- 3. Riwayat Penyakit Terdahulu Dan Riwayat Pengobatan -->
                             <div class="section-separator" id="riwayat-pengobatan">
@@ -1205,6 +1210,8 @@
         </div>
     </div>
 @endsection
+@include('unit-pelayanan.rawat-inap.pelayanan.asesmen-kulitkelamin.modal-create-alergi')
+
 
 @push('js')
     <script>
