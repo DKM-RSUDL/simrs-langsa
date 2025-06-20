@@ -152,6 +152,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
             $asesmenParu->paru_prognosis = $request->paru_prognosis;
+            $asesmenParu->site_marking_paru_data = $request->input('site_marking_paru_data');
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...
@@ -409,6 +410,7 @@ class AsesmenParuController extends Controller
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+    
     public function edit($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         try {
@@ -453,6 +455,12 @@ class AsesmenParuController extends Controller
             // Format allergies for display
             $allergiesDisplay = $allergies->pluck('nama_alergi')->join(', ');
 
+            // **TAMBAHAN: Ambil data site marking paru**
+            $siteMarkingParuData = '';
+            if ($asesmen && $asesmen->rmeAsesmenParu && $asesmen->rmeAsesmenParu->site_marking_paru_data) {
+                $siteMarkingParuData = $asesmen->rmeAsesmenParu->site_marking_paru_data;
+            }
+
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.edit', compact(
                 'asesmen',
                 'dataMedis',
@@ -462,7 +470,8 @@ class AsesmenParuController extends Controller
                 'allergies',
                 'allergiesJson',
                 'allergiesDisplay',
-                'satsetPrognosis'
+                'satsetPrognosis',
+                'siteMarkingParuData' // **TAMBAHAN: Kirim ke view**
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());

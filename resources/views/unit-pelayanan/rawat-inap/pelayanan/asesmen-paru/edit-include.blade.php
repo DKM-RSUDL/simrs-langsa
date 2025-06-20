@@ -198,6 +198,53 @@
                 margin: 5px 0;
             }
         }
+
+        .site-marking-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .paru-color-btn {
+            transition: all 0.2s;
+        }
+
+        .paru-color-btn:hover {
+            transform: scale(1.1);
+            border-color: #6c757d !important;
+        }
+
+        .paru-color-btn.active {
+            border-color: #fff !important;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+            transform: scale(1.1);
+        }
+
+        .paru-marking-list-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: #fff;
+            transition: background-color 0.2s;
+        }
+
+        .paru-marking-list-item:hover {
+            background: #f8f9fa;
+        }
+
+        #paruMarkingCanvas {
+            pointer-events: auto;
+        }
+
+        #paruAnatomyImage {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
     </style>
 @endpush
 
