@@ -1,89 +1,89 @@
 @extends('layouts.administrator.master')
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .card-header {
+            font-weight: bold;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .required::after {
+            content: '*';
+            color: red;
+            margin-left: 0.2rem;
+        }
+
+        .verification-item {
+            border: 1px solid #e3e6f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background-color: #fff;
+        }
+
+        .verification-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #5a5c69;
+            font-size: 14px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 25px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+
+        .radio-item label {
+            margin: 0;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Select2 Custom Styling */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #495057;
+            line-height: 36px;
+            padding-left: 12px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+            right: 10px;
+        }
+
+        .select2-dropdown {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+    </style>
+@endpush
+
 @section('content')
-    @push('css')
-        <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
-        <!-- Select2 CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <style>
-            .card-header {
-                font-weight: bold;
-            }
-
-            .form-label {
-                font-weight: 600;
-                margin-bottom: 0.3rem;
-            }
-
-            .required::after {
-                content: '*';
-                color: red;
-                margin-left: 0.2rem;
-            }
-
-            .verification-item {
-                border: 1px solid #e3e6f0;
-                border-radius: 6px;
-                padding: 15px;
-                margin-bottom: 12px;
-                background-color: #fff;
-            }
-
-            .verification-label {
-                font-weight: 500;
-                margin-bottom: 8px;
-                color: #5a5c69;
-                font-size: 14px;
-            }
-
-            .radio-group {
-                display: flex;
-                gap: 25px;
-            }
-
-            .radio-item {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .radio-item input[type="radio"] {
-                width: 18px;
-                height: 18px;
-                margin: 0;
-            }
-
-            .radio-item label {
-                margin: 0;
-                font-size: 14px;
-                cursor: pointer;
-            }
-
-            /* Select2 Custom Styling */
-            .select2-container--default .select2-selection--single {
-                height: 38px;
-                border: 1px solid #ced4da;
-                border-radius: 4px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                color: #495057;
-                line-height: 36px;
-                padding-left: 12px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: 36px;
-                right: 10px;
-            }
-
-            .select2-dropdown {
-                border: 1px solid #ced4da;
-                border-radius: 4px;
-            }
-        </style>
-    @endpush
-
     <div class="row">
         <div class="col-md-3">
             @include('components.patient-card')
@@ -117,29 +117,29 @@
                                 <div class="col-md-3">
                                     <div class="mb-3">
                                         <label class="form-label required">Tanggal</label>
-                                        <input type="date" class="form-control" name="tanggal" 
-                                               value="{{ date('Y-m-d') }}" required>
+                                        <input type="date" class="form-control" name="tanggal"
+                                            value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
                                         <label class="form-label required">Jam</label>
-                                        <input type="time" class="form-control" name="jam" 
-                                               value="{{ date('H:i') }}" required>
+                                        <input type="time" class="form-control" name="jam"
+                                            value="{{ date('H:i') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
                                         <label class="form-label required">Transfusi Ke</label>
-                                        <input type="number" class="form-control" name="transfusi_ke" 
-                                               placeholder="Masukkan urutan transfusi" min="1" required>
+                                        <input type="number" class="form-control" name="transfusi_ke"
+                                            placeholder="Masukkan urutan transfusi" min="1" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3">
                                         <label class="form-label required">Nomor Seri Kantong Darah</label>
-                                        <input type="text" class="form-control" name="nomor_seri_kantong" 
-                                               placeholder="Masukkan nomor seri" required>
+                                        <input type="text" class="form-control" name="nomor_seri_kantong"
+                                            placeholder="Masukkan nomor seri" required>
                                     </div>
                                 </div>
                             </div>
@@ -160,11 +160,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="1" id="riwayat_ya" required>
+                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="1"
+                                            id="riwayat_ya" required>
                                         <label for="riwayat_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="0" id="riwayat_tidak" required>
+                                        <input type="radio" name="riwayat_alergi_sebelumnya" value="0"
+                                            id="riwayat_tidak" required>
                                         <label for="riwayat_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -177,11 +179,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_komponen_sesuai" value="1" id="komponen_ya" required>
+                                        <input type="radio" name="riwayat_komponen_sesuai" value="1" id="komponen_ya"
+                                            required>
                                         <label for="komponen_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="riwayat_komponen_sesuai" value="0" id="komponen_tidak" required>
+                                        <input type="radio" name="riwayat_komponen_sesuai" value="0"
+                                            id="komponen_tidak" required>
                                         <label for="komponen_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -194,11 +198,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="identitas_label_sesuai" value="1" id="label_ya" required>
+                                        <input type="radio" name="identitas_label_sesuai" value="1" id="label_ya"
+                                            required>
                                         <label for="label_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="identitas_label_sesuai" value="0" id="label_tidak" required>
+                                        <input type="radio" name="identitas_label_sesuai" value="0"
+                                            id="label_tidak" required>
                                         <label for="label_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -211,11 +217,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="golongan_darah_sesuai" value="1" id="golongan_ya" required>
+                                        <input type="radio" name="golongan_darah_sesuai" value="1"
+                                            id="golongan_ya" required>
                                         <label for="golongan_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="golongan_darah_sesuai" value="0" id="golongan_tidak" required>
+                                        <input type="radio" name="golongan_darah_sesuai" value="0"
+                                            id="golongan_tidak" required>
                                         <label for="golongan_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -228,11 +236,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="volume_sesuai" value="1" id="volume_ya" required>
+                                        <input type="radio" name="volume_sesuai" value="1" id="volume_ya"
+                                            required>
                                         <label for="volume_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="volume_sesuai" value="0" id="volume_tidak" required>
+                                        <input type="radio" name="volume_sesuai" value="0" id="volume_tidak"
+                                            required>
                                         <label for="volume_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -245,11 +255,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="kantong_utuh" value="1" id="kantong_ya" required>
+                                        <input type="radio" name="kantong_utuh" value="1" id="kantong_ya"
+                                            required>
                                         <label for="kantong_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="kantong_utuh" value="0" id="kantong_tidak" required>
+                                        <input type="radio" name="kantong_utuh" value="0" id="kantong_tidak"
+                                            required>
                                         <label for="kantong_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -262,11 +274,13 @@
                                 </div>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="tidak_expired" value="1" id="expired_ya" required>
+                                        <input type="radio" name="tidak_expired" value="1" id="expired_ya"
+                                            required>
                                         <label for="expired_ya" class="text-success">Ya</label>
                                     </div>
                                     <div class="radio-item">
-                                        <input type="radio" name="tidak_expired" value="0" id="expired_tidak" required>
+                                        <input type="radio" name="tidak_expired" value="0" id="expired_tidak"
+                                            required>
                                         <label for="expired_tidak" class="text-danger">Tidak</label>
                                     </div>
                                 </div>
@@ -283,21 +297,21 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label required">Petugas 1</label>
-                                        <select name="petugas_1" class="form-select select2" required>
+                                        <label class="form-label">Petugas 1</label>
+                                        <select name="petugas_1" class="form-select select2">
                                             <option value="">--Pilih--</option>
                                             @foreach ($perawat as $prwt)
-                                            <option value="{{ $prwt->kd_karyawan }}">
-                                                {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
-                                            </option>
-                                        @endforeach
+                                                <option value="{{ $prwt->kd_karyawan }}">
+                                                    {{ "$prwt->gelar_depan $prwt->nama $prwt->gelar_belakang" }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label required">Petugas 2</label>
-                                        <select name="petugas_2" class="form-select select2" required>
+                                        <label class="form-label">Petugas 2</label>
+                                        <select name="petugas_2" class="form-select select2">
                                             <option value="">--Pilih--</option>
                                             @foreach ($perawat as $prwt)
                                                 <option value="{{ $prwt->kd_karyawan }}">
@@ -330,7 +344,6 @@
 @endsection
 
 @push('js')
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Select2
@@ -344,7 +357,7 @@
             document.getElementById('pengelolaanForm').addEventListener('submit', function(e) {
                 const requiredRadios = [
                     'riwayat_komponen_sesuai',
-                    'identitas_label_sesuai', 
+                    'identitas_label_sesuai',
                     'golongan_darah_sesuai',
                     'volume_sesuai',
                     'kantong_utuh',
