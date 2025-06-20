@@ -479,6 +479,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->site_marking_paru_data = $request->input('site_marking_paru_data');
             $asesmenParu->paru_prognosis = $request->paru_prognosis;
             $asesmenParu->save();
 
