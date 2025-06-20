@@ -598,6 +598,191 @@
                                 @endif
                             </div>
                         </div>
+                        <!-- Site Marking Paru -->
+                        <!-- Site Marking Paru -->
+                        <div class="mt-4">
+                            <h6 class="fw-semibold mb-3">Site Marking - Penandaan Anatomi Paru</h6>
+                            
+                            @php
+                                $siteMarkingParuData = [];
+                                if ($asesmen->rmeAsesmenParu && $asesmen->rmeAsesmenParu->site_marking_paru_data) {
+                                    try {
+                                        $siteMarkingParuData = json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true) ?: [];
+                                    } catch (Exception $e) {
+                                        $siteMarkingParuData = [];
+                                    }
+                                }
+                            @endphp
+                            
+                            @if(!empty($siteMarkingParuData))
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="site-marking-container position-relative border rounded" style="background: #f8f9fa;">
+                                            <img src="{{ asset('assets/images/sitemarking/paru.jpg') }}" 
+                                                id="showParuAnatomyImage" 
+                                                class="img-fluid" 
+                                                style="max-width: 100%;">
+                                            <canvas id="showParuMarkingCanvas" 
+                                                    class="position-absolute top-0 start-0" 
+                                                    style="z-index: 10; pointer-events: none;">
+                                            </canvas>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <strong>Keterangan:</strong> Gambar menampilkan penandaan yang telah dibuat oleh dokter.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Daftar Penandaan ({{ count($siteMarkingParuData) }})</h6>
+                                            </div>
+                                            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                                                @foreach($siteMarkingParuData as $index => $marking)
+                                                    <div class="marking-item border rounded p-2 mb-2 bg-light">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div class="flex-grow-1">
+                                                                <div class="fw-semibold text-primary">{{ $marking['note'] ?? "Penandaan " . ($index + 1) }}</div>
+                                                                <div class="d-flex align-items-center gap-2 mt-1">
+                                                                    <span class="badge bg-secondary" style="font-size: 10px;">CORET</span>
+                                                                    @if(isset($marking['timestamp']))
+                                                                        <small class="text-muted">
+                                                                            {{ \Carbon\Carbon::parse($marking['timestamp'])->format('d/m/Y H:i') }}
+                                                                        </small>
+                                                                    @endif
+                                                                </div>
+                                                                @if(isset($marking['strokes']) && count($marking['strokes']) > 0)
+                                                                    <small class="text-muted">
+                                                                        Jumlah stroke: {{ count($marking['strokes']) }}
+                                                                    </small>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- JavaScript untuk menampilkan site marking -->
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        displayParuSiteMarking();
+                                    });
+                                    
+                                    function displayParuSiteMarking() {
+                                        const image = document.getElementById('showParuAnatomyImage');
+                                        const canvas = document.getElementById('showParuMarkingCanvas');
+                                        
+                                        if (!image || !canvas) {
+                                            return; // Elements not found, no site marking to display
+                                        }
+                                        
+                                        const ctx = canvas.getContext('2d');
+                                        
+                                        // Data dari database - ambil langsung dari sumber
+                                        const markingsData = @json($asesmen->rmeAsesmenParu->site_marking_paru_data ? json_decode($asesmen->rmeAsesmenParu->site_marking_paru_data, true) : []);
+                                        
+                                        function setupCanvas() {
+                                            function updateCanvasSize() {
+                                                canvas.width = image.offsetWidth;
+                                                canvas.height = image.offsetHeight;
+                                                canvas.style.width = image.offsetWidth + 'px';
+                                                canvas.style.height = image.offsetHeight + 'px';
+                                                
+                                                // Redraw markings
+                                                drawAllMarkings();
+                                            }
+                                            
+                                            // Update canvas size when image loads
+                                            image.onload = updateCanvasSize;
+                                            
+                                            // Update canvas size when window resizes
+                                            window.addEventListener('resize', updateCanvasSize);
+                                            
+                                            // Initial setup
+                                            if (image.complete) {
+                                                updateCanvasSize();
+                                            }
+                                        }
+                                        
+                                        function drawAllMarkings() {
+                                            // Clear canvas
+                                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                            
+                                            if (!markingsData || markingsData.length === 0) {
+                                                return;
+                                            }
+                                            
+                                            // Draw each marking
+                                            markingsData.forEach(marking => {
+                                                if (marking.strokes && marking.strokes.length > 0) {
+                                                    drawStrokesOnCanvas(marking.strokes);
+                                                }
+                                            });
+                                        }
+                                        
+                                        function drawStrokesOnCanvas(strokesArray) {
+                                            strokesArray.forEach(stroke => {
+                                                if (stroke.length < 2) return;
+                                                
+                                                ctx.strokeStyle = stroke[0].color || '#dc3545';
+                                                ctx.lineWidth = stroke[0].size || 2;
+                                                ctx.lineCap = 'round';
+                                                ctx.lineJoin = 'round';
+                                                ctx.globalAlpha = 0.8;
+                                                
+                                                ctx.beginPath();
+                                                const firstPoint = stroke[0];
+                                                ctx.moveTo(
+                                                    (firstPoint.x / 100) * canvas.width,
+                                                    (firstPoint.y / 100) * canvas.height
+                                                );
+                                                
+                                                // Draw smooth curves
+                                                for (let i = 1; i < stroke.length - 1; i++) {
+                                                    const currentPoint = stroke[i];
+                                                    const nextPoint = stroke[i + 1];
+                                                    
+                                                    const currentX = (currentPoint.x / 100) * canvas.width;
+                                                    const currentY = (currentPoint.y / 100) * canvas.height;
+                                                    const nextX = (nextPoint.x / 100) * canvas.width;
+                                                    const nextY = (nextPoint.y / 100) * canvas.height;
+                                                    
+                                                    const midX = (currentX + nextX) / 2;
+                                                    const midY = (currentY + nextY) / 2;
+                                                    
+                                                    ctx.quadraticCurveTo(currentX, currentY, midX, midY);
+                                                }
+                                                
+                                                // Draw to last point
+                                                if (stroke.length > 1) {
+                                                    const lastPoint = stroke[stroke.length - 1];
+                                                    ctx.lineTo(
+                                                        (lastPoint.x / 100) * canvas.width,
+                                                        (lastPoint.y / 100) * canvas.height
+                                                    );
+                                                }
+                                                
+                                                ctx.stroke();
+                                                ctx.globalAlpha = 1;
+                                            });
+                                        }
+                                        
+                                        // Initialize
+                                        setupCanvas();
+                                    }
+                                </script>
+                                
+                            @else
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Tidak ada penandaan anatomi paru yang tersimpan.
+                                </div>
+                            @endif
+                        </div>
                         {{-- end baru --}}
                         {{-- <div class="card">
                             <div class="card-body">
