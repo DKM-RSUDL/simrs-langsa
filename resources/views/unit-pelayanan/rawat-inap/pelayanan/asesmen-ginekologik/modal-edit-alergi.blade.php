@@ -12,37 +12,25 @@
             <div class="modal-body">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i>
-                    Isi informasi riwayat obstetrik dengan lengkap dan akurat
+                    Isi informasi riwayat obstetrik (semua field bersifat opsional)
                 </div>
 
-                <form id="obstetrikForm" novalidate>
+                <form id="obstetrikForm">
                     <input type="hidden" id="editIndex" value="-1">
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Keadaan <span class="text-danger">*</span></label>
-                                <select class="form-select" id="keadaanInput" required>
-                                    <option value="">Pilih Keadaan</option>
-                                    <option value="Normal">Normal</option>
-                                    <option value="Komplikasi">Komplikasi</option>
-                                    <option value="Prematur">Prematur</option>
-                                    <option value="Aterm">Aterm</option>
-                                    <option value="Post Term">Post Term</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Keadaan harus dipilih
-                                </div>
+                                <label class="form-label">Keadaan</label>
+                                <input type="text" class="form-control" id="keadaanInput" 
+                                       placeholder="Contoh: Normal, Komplikasi, Prematur, dll">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Kehamilan <span class="text-danger">*</span></label>
+                                <label class="form-label">Kehamilan</label>
                                 <input type="text" class="form-control" id="kehamilanInput" 
-                                       placeholder="Contoh: Kehamilan ke-1" required maxlength="50">
-                                <div class="invalid-feedback">
-                                    Kehamilan harus diisi
-                                </div>
+                                       placeholder="Contoh: Kehamilan ke-1, Primi, dll" maxlength="50">
                             </div>
                         </div>
                     </div>
@@ -50,35 +38,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Cara Persalinan <span class="text-danger">*</span></label>
-                                <select class="form-select" id="caraPersalinanInput" required>
-                                    <option value="">Pilih Cara Persalinan</option>
-                                    <option value="Normal/Spontan">Normal/Spontan</option>
-                                    <option value="Sectio Caesarea">Sectio Caesarea</option>
-                                    <option value="Vakum">Vakum</option>
-                                    <option value="Forceps">Forceps</option>
-                                    <option value="Keguguran">Keguguran</option>
-                                    <option value="Kuretase">Kuretase</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Cara persalinan harus dipilih
-                                </div>
+                                <label class="form-label">Cara Persalinan</label>
+                                <input type="text" class="form-control" id="caraPersalinanInput" 
+                                       placeholder="Contoh: Normal, Caesar, Vakum, Forceps, dll">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Keadaan Nifas <span class="text-danger">*</span></label>
-                                <select class="form-select" id="keadaanNifasInput" required>
-                                    <option value="">Pilih Keadaan Nifas</option>
-                                    <option value="Normal">Normal</option>
-                                    <option value="Infeksi">Infeksi</option>
-                                    <option value="Perdarahan">Perdarahan</option>
-                                    <option value="Demam">Demam</option>
-                                    <option value="Komplikasi Lain">Komplikasi Lain</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Keadaan nifas harus dipilih
-                                </div>
+                                <label class="form-label">Keadaan Nifas</label>
+                                <input type="text" class="form-control" id="keadaanNifasInput" 
+                                       placeholder="Contoh: Normal, Infeksi, Perdarahan, dll">
                             </div>
                         </div>
                     </div>
@@ -93,29 +62,18 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Keadaan Anak <span class="text-danger">*</span></label>
-                                <select class="form-select" id="keadaanAnakInput" required>
-                                    <option value="">Pilih Keadaan Anak</option>
-                                    <option value="Hidup dan Sehat">Hidup dan Sehat</option>
-                                    <option value="Hidup dengan Kelainan">Hidup dengan Kelainan</option>
-                                    <option value="Meninggal">Meninggal</option>
-                                    <option value="Keguguran">Keguguran</option>
-                                    <option value="Lahir Mati">Lahir Mati</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Keadaan anak harus dipilih
-                                </div>
+                                <label class="form-label">Keadaan Anak</label>
+                                <input type="text" class="form-control" id="keadaanAnakInput" 
+                                       placeholder="Contoh: Hidup sehat, Meninggal, Keguguran, dll">
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required">Tempat dan Penolong <span class="text-danger">*</span></label>
+                        <label class="form-label">Tempat dan Penolong</label>
                         <textarea class="form-control" id="tempatPenolongInput" rows="3" 
-                                  placeholder="Contoh: RS Bunda - Dr. Ahmad (SpOG)" required maxlength="255"></textarea>
-                        <div class="invalid-feedback">
-                            Tempat dan penolong harus diisi
-                        </div>
+                                  placeholder="Contoh: RS Bunda - Dr. Ahmad (SpOG), Puskesmas - Bidan Sari, Rumah - Dukun Paraji, dll" 
+                                  maxlength="255"></textarea>
                         <small class="text-muted">Maksimal 255 karakter</small>
                     </div>
                 </form>
@@ -191,19 +149,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             tableBody.innerHTML = riwayatObstetrik.map((item, index) => `
                 <tr>
-                    <td>
-                        <span class="badge bg-light text-dark">${item.keadaan}</span>
-                    </td>
-                    <td>${item.kehamilan}</td>
-                    <td>${item.caraPersalinan}</td>
-                    <td>${item.keadaanNifas}</td>
+                    <td>${item.keadaan || '-'}</td>
+                    <td>${item.kehamilan || '-'}</td>
+                    <td>${item.caraPersalinan || '-'}</td>
+                    <td>${item.keadaanNifas || '-'}</td>
                     <td>${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : '-'}</td>
+                    <td>${item.keadaanAnak || '-'}</td>
                     <td>
-                        <span class="badge ${getAnakBadgeClass(item.keadaanAnak)}">${item.keadaanAnak}</span>
-                    </td>
-                    <td>
-                        <small title="${item.tempatPenolong}">
-                            ${item.tempatPenolong.length > 30 ? item.tempatPenolong.substring(0, 30) + '...' : item.tempatPenolong}
+                        <small title="${item.tempatPenolong || '-'}">
+                            ${item.tempatPenolong ? (item.tempatPenolong.length > 30 ? item.tempatPenolong.substring(0, 30) + '...' : item.tempatPenolong) : '-'}
                         </small>
                     </td>
                     <td>
@@ -224,7 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
         obstetrikInput.value = JSON.stringify(riwayatObstetrik);
         
         // Update counters
-        totalObstetrik.textContent = riwayatObstetrik.length;
+        if (totalObstetrik) {
+            totalObstetrik.textContent = riwayatObstetrik.length;
+        }
     }
 
     // Update list in modal
@@ -246,21 +202,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="flex-grow-1">
                                 <h6 class="card-title mb-1">
                                     <span class="badge bg-primary me-2">${index + 1}</span>
-                                    ${item.kehamilan}
+                                    ${item.kehamilan || 'Tidak diisi'}
                                 </h6>
                                 <p class="card-text mb-1">
-                                    <strong>Cara:</strong> ${item.caraPersalinan} | 
-                                    <strong>Keadaan:</strong> ${item.keadaan}
+                                    <strong>Cara:</strong> ${item.caraPersalinan || 'Tidak diisi'} | 
+                                    <strong>Keadaan:</strong> ${item.keadaan || 'Tidak diisi'}
                                 </p>
                                 <p class="card-text mb-1">
-                                    <strong>Nifas:</strong> ${item.keadaanNifas} | 
-                                    <strong>Anak:</strong> <span class="badge ${getAnakBadgeClass(item.keadaanAnak)}">${item.keadaanAnak}</span>
+                                    <strong>Nifas:</strong> ${item.keadaanNifas || 'Tidak diisi'} | 
+                                    <strong>Anak:</strong> ${item.keadaanAnak || 'Tidak diisi'}
                                 </p>
                                 <p class="card-text mb-1">
-                                    <strong>Tanggal:</strong> ${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : 'Tidak ada'}
+                                    <strong>Tanggal:</strong> ${item.tanggalLahir ? new Date(item.tanggalLahir).toLocaleDateString('id-ID') : 'Tidak diisi'}
                                 </p>
                                 <p class="card-text mb-0">
-                                    <strong>Tempat:</strong> ${item.tempatPenolong}
+                                    <strong>Tempat:</strong> ${item.tempatPenolong || 'Tidak diisi'}
                                 </p>
                             </div>
                             <div class="btn-group-vertical">
@@ -278,58 +234,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Get badge class for anak status
-    function getAnakBadgeClass(status) {
-        switch (status) {
-            case 'Hidup dan Sehat': return 'bg-success';
-            case 'Hidup dengan Kelainan': return 'bg-warning';
-            case 'Meninggal': case 'Lahir Mati': return 'bg-danger';
-            case 'Keguguran': return 'bg-secondary';
-            default: return 'bg-light text-dark';
-        }
-    }
-
     // Clear and reset form
     function clearForm() {
         const form = document.getElementById('obstetrikForm');
         form.reset();
-        form.classList.remove('was-validated');
         document.getElementById('editIndex').value = '-1';
         document.getElementById('modalTitle').textContent = 'Tambah Riwayat Obstetrik';
         document.getElementById('btnSaveText').textContent = 'Simpan';
-        
-        // Clear validation states
-        form.querySelectorAll('.form-control, .form-select').forEach(input => {
-            input.classList.remove('is-valid', 'is-invalid');
-        });
     }
 
     // Populate form for editing
     function populateForm(index) {
         const item = riwayatObstetrik[index];
-        document.getElementById('keadaanInput').value = item.keadaan;
-        document.getElementById('kehamilanInput').value = item.kehamilan;
-        document.getElementById('caraPersalinanInput').value = item.caraPersalinan;
-        document.getElementById('keadaanNifasInput').value = item.keadaanNifas;
+        document.getElementById('keadaanInput').value = item.keadaan || '';
+        document.getElementById('kehamilanInput').value = item.kehamilan || '';
+        document.getElementById('caraPersalinanInput').value = item.caraPersalinan || '';
+        document.getElementById('keadaanNifasInput').value = item.keadaanNifas || '';
         document.getElementById('tanggalLahirInput').value = item.tanggalLahir || '';
-        document.getElementById('keadaanAnakInput').value = item.keadaanAnak;
-        document.getElementById('tempatPenolongInput').value = item.tempatPenolong;
+        document.getElementById('keadaanAnakInput').value = item.keadaanAnak || '';
+        document.getElementById('tempatPenolongInput').value = item.tempatPenolong || '';
         document.getElementById('editIndex').value = index;
         document.getElementById('modalTitle').textContent = 'Edit Riwayat Obstetrik';
         document.getElementById('btnSaveText').textContent = 'Update';
     }
 
-    // Validate form
-    function validateForm() {
-        const form = document.getElementById('obstetrikForm');
-        const isValid = form.checkValidity();
-        form.classList.add('was-validated');
-        return isValid;
+    // Check if form has data (at least one field filled)
+    function hasFormData() {
+        const inputs = [
+            'keadaanInput', 'kehamilanInput', 'caraPersalinanInput', 
+            'keadaanNifasInput', 'tanggalLahirInput', 'keadaanAnakInput', 'tempatPenolongInput'
+        ];
+        
+        return inputs.some(id => {
+            const value = document.getElementById(id).value.trim();
+            return value !== '';
+        });
     }
 
     // Show success message
     function showSuccess(message) {
-        // Create toast or alert
         const alertDiv = document.createElement('div');
         alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
         alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
@@ -340,7 +283,25 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(alertDiv);
         
-        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 3000);
+    }
+
+    // Show error message
+    function showError(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alertDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+        
         setTimeout(() => {
             if (alertDiv.parentNode) {
                 alertDiv.remove();
@@ -363,7 +324,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnSaveObstetrik').addEventListener('click', function(e) {
         e.preventDefault();
         
-        if (!validateForm()) {
+        // Check if at least one field is filled
+        if (!hasFormData()) {
+            showError('Minimal isi satu field untuk menambah riwayat obstetrik!');
             return;
         }
 
@@ -413,26 +376,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event delegation for table buttons
-    obstetrikTable.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = e.target.closest('.edit-obstetrik, .delete-obstetrik');
-        if (!target) return;
+    if (obstetrikTable) {
+        obstetrikTable.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = e.target.closest('.edit-obstetrik, .delete-obstetrik');
+            if (!target) return;
 
-        const index = parseInt(target.getAttribute('data-index'));
+            const index = parseInt(target.getAttribute('data-index'));
 
-        if (target.classList.contains('edit-obstetrik')) {
-            populateForm(index);
-            updateObstetrikList();
-            obstetrikModal.show();
-        } else if (target.classList.contains('delete-obstetrik')) {
-            if (confirm('Apakah Anda yakin ingin menghapus riwayat obstetrik ini?')) {
-                riwayatObstetrik.splice(index, 1);
-                updateObstetrikTable();
+            if (target.classList.contains('edit-obstetrik')) {
+                populateForm(index);
                 updateObstetrikList();
-                showSuccess('Data riwayat obstetrik berhasil dihapus!');
+                obstetrikModal.show();
+            } else if (target.classList.contains('delete-obstetrik')) {
+                if (confirm('Apakah Anda yakin ingin menghapus riwayat obstetrik ini?')) {
+                    riwayatObstetrik.splice(index, 1);
+                    updateObstetrikTable();
+                    updateObstetrikList();
+                    showSuccess('Data riwayat obstetrik berhasil dihapus!');
+                }
             }
-        }
-    });
+        });
+    }
 
     // Initialize on page load
     updateObstetrikTable();

@@ -138,10 +138,14 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->keluhan_utama = $request->keluhan_utama;
             $asesmenGinekologik->riwayat_penyakit = $request->riwayat_penyakit;
             $asesmenGinekologik->siklus = $request->siklus;
-            $asesmenGinekologik->hpht = $request->hpht;
+            $asesmenGinekologik->hpht = Carbon::parse($request->hpht);
             $asesmenGinekologik->usia_kehamilan = $request->usia_kehamilan;
+            $asesmenGinekologik->usia_minggu = $request->usia_minggu;
+            $asesmenGinekologik->usia_hari = $request->usia_hari;
+            $asesmenGinekologik->usia_kehamilan_total_hari = $request->usia_kehamilan_total_hari;
+            $asesmenGinekologik->usia_kehamilan_display = $request->usia_kehamilan_display;
             $asesmenGinekologik->jumlah = $request->jumlah;
-            $asesmenGinekologik->tahun = $request->tahun;
+            $asesmenGinekologik->tahun =  Carbon::parse($request->tahun);
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
             $asesmenGinekologik->save();
@@ -374,7 +378,7 @@ class AsesmenGinekologikController extends Controller
             // 2. Simpan RmeAsesmenGinekologik
             $asesmenGinekologik = RmeAsesmenGinekologik::firstOrNew(['id_asesmen' => $asesmen->id]);
             $asesmenGinekologik->id_asesmen = $asesmen->id;
-            $asesmenGinekologik->user_edit = Auth::id();
+            $asesmenGinekologik->user_create = Auth::id();
             $asesmenGinekologik->tanggal = Carbon::parse($request->tanggal);
             $asesmenGinekologik->jam_masuk = $request->jam_masuk;
             $asesmenGinekologik->kondisi_masuk = $request->kondisi_masuk;
@@ -385,10 +389,14 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->keluhan_utama = $request->keluhan_utama;
             $asesmenGinekologik->riwayat_penyakit = $request->riwayat_penyakit;
             $asesmenGinekologik->siklus = $request->siklus;
-            $asesmenGinekologik->hpht = $request->hpht;
+            $asesmenGinekologik->hpht = Carbon::parse($request->hpht);
             $asesmenGinekologik->usia_kehamilan = $request->usia_kehamilan;
+            $asesmenGinekologik->usia_minggu = $request->usia_minggu;
+            $asesmenGinekologik->usia_hari = $request->usia_hari;
+            $asesmenGinekologik->usia_kehamilan_total_hari = $request->usia_kehamilan_total_hari;
+            $asesmenGinekologik->usia_kehamilan_display = $request->usia_kehamilan_display;
             $asesmenGinekologik->jumlah = $request->jumlah;
-            $asesmenGinekologik->tahun = $request->tahun;
+            $asesmenGinekologik->tahun =  Carbon::parse($request->tahun);
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
             $asesmenGinekologik->save();

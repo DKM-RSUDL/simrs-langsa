@@ -63,12 +63,12 @@
 
                         {{-- FORM ASESMEN MEDIS GINEKOLOGIK --}}
                         <form method="POST" enctype="multipart/form-data" action="{{ route('rawat-inap.asesmen.medis.ginekologik.update', [
-                                'kd_unit' => request()->route('kd_unit'),
-                                'kd_pasien' => request()->route('kd_pasien'),
-                                'tgl_masuk' => request()->route('tgl_masuk'),
-                                'urut_masuk' => request()->route('urut_masuk'),
-                                'id' => $asesmen->id
-                            ]) }}">
+        'kd_unit' => request()->route('kd_unit'),
+        'kd_pasien' => request()->route('kd_pasien'),
+        'tgl_masuk' => request()->route('tgl_masuk'),
+        'urut_masuk' => request()->route('urut_masuk'),
+        'id' => $asesmen->id
+    ]) }}">
                             @csrf
                             @method('PUT')
                             <div class="px-3">
@@ -157,6 +157,7 @@
                                         <div class="form-group">
                                             <label style="min-width: 220px;">Riwayat Haid</label>
                                             <div class="d-flex gap-3" style="width: 100%;">
+                                                <!-- Siklus -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Siklus</label>
                                                     <div class="input-group">
@@ -166,17 +167,47 @@
                                                         <span class="input-group-text">Hari</span>
                                                     </div>
                                                 </div>
+
+                                                <!-- HPHT -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">HPHT</label>
-                                                    <input type="number" class="form-control" name="hpht"
-                                                        placeholder="Hari Pertama Haid Terakhir"
-                                                        value="{{ $asesmen->rmeAsesmenGinekologik->hpht ?? '' }}">
+                                                    <input type="date" class="form-control" name="hpht" id="hpht"
+                                                        value="{{ $asesmen->rmeAsesmenGinekologik->hpht ?? date('Y-m-d') }}"
+                                                        onchange="hitungUsiaKehamilan()">
                                                 </div>
+
+                                                <!-- Usia Kehamilan -->
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Usia Kehamilan</label>
-                                                    <input type="number" class="form-control" name="usia_kehamilan"
-                                                        placeholder="Usia Kehamilan"
-                                                        value="{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan ?? '' }}">
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" name="usia_minggu"
+                                                                    id="usiaMinggu" placeholder="0" min="0" max="42"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? '' }}"
+                                                                    readonly>
+                                                                <span class="input-group-text">Minggu</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" name="usia_hari"
+                                                                    id="usiaHari" placeholder="0" min="0" max="6"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? '' }}"
+                                                                    readonly>
+                                                                <span class="input-group-text">Hari</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted mt-1 d-block" id="displayUsia">
+                                                        Pilih tanggal HPHT untuk menghitung
+                                                    </small>
+
+                                                    <!-- Hidden inputs untuk form submission -->
+                                                    <input type="hidden" name="usia_kehamilan_total_hari" id="totalHari"
+                                                        value="{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari ?? '' }}">
+                                                    <input type="hidden" name="usia_kehamilan_display" id="usiaDisplay"
+                                                        value="{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display ?? '' }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -196,9 +227,8 @@
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Suami Sekarang</label>
                                                     <div class="input-group">
-                                                        <input type="number" name="tahun" class="form-control"
-                                                            placeholder="berapa tahun" min="1"
-                                                            value="{{ $asesmen->rmeAsesmenGinekologik->tahun ?? '' }}">
+                                                        <input type="date" class="form-control" name="tahun" id="tanggal_masuk"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologik->tahun ?? date('Y-m-d') }}">
                                                         <span class="input-group-text">Tahun</span>
                                                     </div>
                                                 </div>
@@ -215,11 +245,13 @@
                                             <button type="button" class="btn btn-sm btn-primary" id="openObstetrikModal">
                                                 <i class="fas fa-plus"></i> Tambah Riwayat Obstetrik
                                             </button>
-                                            <small class="text-muted">Total: <span id="totalObstetrik">0</span> riwayat</small>
+                                            <small class="text-muted">Total: <span id="totalObstetrik">0</span>
+                                                riwayat</small>
                                         </div>
-                                        
-                                        <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput" value="{{ $asesmen->rmeAsesmenGinekologik->riwayat_obstetrik ?? '[]' }}">
-                                        
+
+                                        <input type="hidden" name="riwayat_obstetrik" id="obstetrikInput"
+                                            value="{{ $asesmen->rmeAsesmenGinekologik->riwayat_obstetrik ?? '[]' }}">
+
                                         <div class="table-responsive">
                                             <table class="table table-striped table-hover" id="obstetrikTable">
                                                 <thead class="table-light">
@@ -289,7 +321,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label style="min-width: 220px;">Nafas (Per Menit)</label>
+                                            <label style="min-width: 220px;">saturasi oksigen</label>
                                             <input type="number" class="form-control" name="nafas"
                                                 value="{{ $asesmen->rmeAsesmenGinekologikTandaVital->nafas ?? '' }}">
                                         </div>
@@ -347,8 +379,10 @@
                                                                                 <label class="form-check-label"
                                                                                     for="{{ $item->id }}-normal">Normal</label>
                                                                             </div>
-                                                                            <button class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                                type="button" data-target="{{ $item->id }}-keterangan">
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                                type="button"
+                                                                                data-target="{{ $item->id }}-keterangan">
                                                                                 <i class="bi bi-plus"></i>
                                                                             </button>
                                                                         </div>
@@ -1211,5 +1245,195 @@
             });
 
         });
+
+        // Riwayat Haid
+        const isEditMode = @json(isset($asesmen->rmeAsesmenGinekologik) && $asesmen->rmeAsesmenGinekologik);
+
+        // Set tanggal dan hitung usia kehamilan saat halaman load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Jika mode edit dan ada data tersimpan
+            if (isEditMode) {
+                // Ambil data dari database
+                const savedHpht = '{{ $asesmen->rmeAsesmenGinekologik->hpht ?? "" }}';
+                const savedUsiaMinggu = '{{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? "" }}';
+                const savedUsiaHari = '{{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? "" }}';
+                const savedUsiaDisplay = '{{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display ?? "" }}';
+
+                if (savedHpht) {
+                    document.getElementById('hpht').value = savedHpht;
+                }
+
+                // Jika ada data usia kehamilan tersimpan, tampilkan
+                if (savedUsiaMinggu || savedUsiaHari) {
+                    document.getElementById('usiaMinggu').value = savedUsiaMinggu || '0';
+                    document.getElementById('usiaHari').value = savedUsiaHari || '0';
+
+                    if (savedUsiaDisplay) {
+                        document.getElementById('displayUsia').innerHTML =
+                            `<span class="text-success"><strong>${savedUsiaDisplay}</strong></span>`;
+                        document.getElementById('usiaDisplay').value = savedUsiaDisplay;
+                    }
+
+                    // Hitung informasi tambahan berdasarkan data tersimpan
+                    const minggu = parseInt(savedUsiaMinggu) || 0;
+                    const hari = parseInt(savedUsiaHari) || 0;
+                    const totalHari = (minggu * 7) + hari;
+
+                    if (savedHpht && totalHari > 0) {
+                        const hphtDate = new Date(savedHpht);
+                        updateInfoTambahan(minggu, hari, totalHari, hphtDate);
+                        document.getElementById('infoTambahan').style.display = 'block';
+                    }
+                }
+
+                // Hitung ulang berdasarkan HPHT yang tersimpan
+                if (savedHpht) {
+                    hitungUsiaKehamilan();
+                }
+            } else {
+                // Mode tambah baru - set tanggal hari ini
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('hpht').value = today;
+                hitungUsiaKehamilan();
+            }
+        });
+
+        // Fungsi untuk menghitung usia kehamilan dari HPHT
+        function hitungUsiaKehamilan() {
+            const hphtInput = document.getElementById('hpht').value;
+
+            if (!hphtInput) {
+                clearUsiaKehamilan();
+                return;
+            }
+
+            const hphtDate = new Date(hphtInput);
+            const today = new Date();
+
+            // Reset waktu ke 00:00:00 untuk perhitungan yang akurat
+            hphtDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            // Hitung selisih hari
+            const diffTime = today.getTime() - hphtDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                // HPHT di masa depan
+                document.getElementById('displayUsia').innerHTML =
+                    '<span class="text-warning">HPHT tidak boleh di masa depan</span>';
+                clearUsiaKehamilan();
+                return;
+            }
+
+            // Konversi ke minggu dan hari
+            const weeks = Math.floor(diffDays / 7);
+            const days = diffDays % 7;
+
+            // Update input fields
+            document.getElementById('usiaMinggu').value = weeks;
+            document.getElementById('usiaHari').value = days;
+            document.getElementById('totalHari').value = diffDays;
+
+            // Format display
+            let displayText = '';
+            if (weeks === 0 && days === 0) {
+                displayText = 'Hari ini (HPHT)';
+            } else if (weeks === 0) {
+                displayText = `${days} hari`;
+            } else if (days === 0) {
+                displayText = `${weeks} minggu`;
+            } else {
+                displayText = `${weeks} minggu ${days} hari`;
+            }
+
+            document.getElementById('usiaDisplay').value = displayText;
+            document.getElementById('displayUsia').innerHTML =
+                `<span class="text-success"><strong>${displayText}</strong></span>`;
+
+            // Update informasi tambahan
+            updateInfoTambahan(weeks, days, diffDays, hphtDate);
+
+            // Tampilkan info tambahan
+            document.getElementById('infoTambahan').style.display = 'block';
+        }
+
+        // Update informasi tambahan
+        function updateInfoTambahan(weeks, days, totalDays, hphtDate) {
+            // Tentukan trimester
+            let trimester = '';
+            if (weeks < 13) {
+                trimester = 'I (0-12 minggu)';
+            } else if (weeks < 27) {
+                trimester = 'II (13-26 minggu)';
+            } else {
+                trimester = 'III (27+ minggu)';
+            }
+
+            document.getElementById('trimester').textContent = trimester;
+            document.getElementById('totalHariDisplay').textContent = totalDays + ' hari';
+
+            // Hitung perkiraan tanggal lahir (HPHT + 280 hari)
+            const perkiraanLahir = new Date(hphtDate);
+            perkiraanLahir.setDate(perkiraanLahir.getDate() + 280);
+
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('perkiraanLahir').textContent =
+                perkiraanLahir.toLocaleDateString('id-ID', options);
+        }
+
+        // Clear usia kehamilan
+        function clearUsiaKehamilan() {
+            document.getElementById('usiaMinggu').value = '';
+            document.getElementById('usiaHari').value = '';
+            document.getElementById('totalHari').value = '';
+            document.getElementById('usiaDisplay').value = '';
+            document.getElementById('displayUsia').textContent = 'Pilih tanggal HPHT untuk menghitung';
+            document.getElementById('infoTambahan').style.display = 'none';
+        }
+
+        // Function untuk manual update (jika user ubah minggu/hari secara manual)
+        function updateUsiaManual() {
+            const minggu = parseInt(document.getElementById('usiaMinggu').value) || 0;
+            const hari = parseInt(document.getElementById('usiaHari').value) || 0;
+
+            // Validasi hari tidak boleh lebih dari 6
+            if (hari > 6) {
+                document.getElementById('usiaHari').value = 6;
+                hari = 6;
+            }
+
+            // Hitung total hari
+            const totalHari = (minggu * 7) + hari;
+            document.getElementById('totalHari').value = totalHari;
+
+            // Format display
+            let displayText = '';
+            if (minggu === 0 && hari === 0) {
+                displayText = 'Belum ada usia kehamilan';
+            } else if (minggu === 0) {
+                displayText = `${hari} hari`;
+            } else if (hari === 0) {
+                displayText = `${minggu} minggu`;
+            } else {
+                displayText = `${minggu} minggu ${hari} hari`;
+            }
+
+            document.getElementById('usiaDisplay').value = displayText;
+            document.getElementById('displayUsia').innerHTML =
+                `<span class="text-info"><strong>${displayText}</strong> (manual)</span>`;
+
+            // Update informasi tambahan jika ada HPHT
+            const hphtInput = document.getElementById('hpht').value;
+            if (hphtInput && totalHari > 0) {
+                const hphtDate = new Date(hphtInput);
+                updateInfoTambahan(minggu, hari, totalHari, hphtDate);
+                document.getElementById('infoTambahan').style.display = 'block';
+            }
+        }
     </script>
 @endpush

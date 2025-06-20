@@ -14,6 +14,7 @@ use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmen;
 use App\Models\RmeAsesmenParu;
 use App\Models\RmeAsesmenParuDiagnosisImplementasi;
+use App\Models\RmeAsesmenParuPemeriksaanFisik;
 use App\Models\RmeAsesmenParuPerencanaanPulang;
 use App\Models\RmeAsesmenParuRencanaKerja;
 use App\Models\RmeAsesmenPemeriksaanFisik;
@@ -21,6 +22,7 @@ use App\Models\RmeMasterDiagnosis;
 use App\Models\RmeMasterImplementasi;
 use App\Models\RMEResume;
 use App\Models\RmeResumeDtl;
+use App\Models\SatsetPrognosis;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +39,7 @@ class AsesmenParuController extends Controller
         $itemFisik = MrItemFisik::orderby('urut')->get();
         $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
         $rmeMasterImplementasi = RmeMasterImplementasi::all();
+        $satsetPrognosis = SatsetPrognosis::all();
 
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
             ->join('transaksi as t', function ($join) {
@@ -89,6 +92,7 @@ class AsesmenParuController extends Controller
             'rmeMasterImplementasi' => $rmeMasterImplementasi,
             'allergiesJson' => $allergiesJson,
             'allergiesDisplay' => $allergiesDisplay,
+            'satsetPrognosis' => $satsetPrognosis
         ]);
     }
 
@@ -147,6 +151,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->paru_prognosis = $request->paru_prognosis;
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...
@@ -173,6 +178,30 @@ class AsesmenParuController extends Controller
             $asesmenParuRencanaKerja->lainnya_check = $request->has('lainnya_check') ? 1 : 0;
             $asesmenParuRencanaKerja->lainnya = $request->lainnya;
             $asesmenParuRencanaKerja->save();
+
+            // Perbaikan Controller untuk Asesmen Paru Pemeriksaan Fisik
+            $asesmenParuPemeriksaanFisik = new RmeAsesmenParuPemeriksaanFisik();
+            $asesmenParuPemeriksaanFisik->id_asesmen = $asesmen->id;
+            $asesmenParuPemeriksaanFisik->paru_kepala = $request->paru_kepala;
+            $asesmenParuPemeriksaanFisik->paru_kepala_keterangan = $request->paru_kepala_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_mata = $request->paru_mata;
+            $asesmenParuPemeriksaanFisik->paru_mata_keterangan = $request->paru_mata_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_tht = $request->paru_tht;
+            $asesmenParuPemeriksaanFisik->paru_tht_keterangan = $request->paru_tht_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_leher = $request->paru_leher;
+            $asesmenParuPemeriksaanFisik->paru_leher_keterangan = $request->paru_leher_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_jantung = $request->paru_jantung;
+            $asesmenParuPemeriksaanFisik->paru_jantung_keterangan = $request->paru_jantung_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_inspeksi = $request->paru_inspeksi;
+            $asesmenParuPemeriksaanFisik->paru_inspeksi_keterangan = $request->paru_inspeksi_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_palpasi = $request->paru_palpasi;
+            $asesmenParuPemeriksaanFisik->paru_perkusi = $request->paru_perkusi;
+            $asesmenParuPemeriksaanFisik->paru_auskultasi = $request->paru_auskultasi;
+
+            $asesmenParuPemeriksaanFisik->paru_suara_pernafasan = $request->paru_suara_pernafasan ?: null;
+            $asesmenParuPemeriksaanFisik->paru_suara_tambahan = $request->paru_suara_tambahan ?: null;
+
+            $asesmenParuPemeriksaanFisik->save();
 
             $asesmenParuPerencanaanPulang = new RmeAsesmenParuPerencanaanPulang();
             $asesmenParuPerencanaanPulang->id_asesmen = $asesmen->id;
@@ -228,7 +257,7 @@ class AsesmenParuController extends Controller
             $reaksi = $request->reaksi;
             $severe = $request->severe;
 
-            for($i=0; $i < count($jenisAlergi); $i++) {
+            for ($i = 0; $i < count($jenisAlergi); $i++) {
                 $dtAlergi = [
                     'kd_pasien' => $kd_pasien,
                     'jenis_alergi' => $jenisAlergi[$i],
@@ -352,6 +381,7 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
                 'rmeAlergiPasien',
+                'rmeAsesmenParuPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -365,11 +395,13 @@ class AsesmenParuController extends Controller
                 ->firstOrFail();
 
             $itemFisik = MrItemFisik::orderBy('urut')->get();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             return view('unit-pelayanan.rawat-inap.pelayanan.asesmen-paru.show', compact(
                 'asesmen',
                 'dataMedis',
-                'itemFisik'
+                'itemFisik',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -388,6 +420,7 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuPerencanaanPulang',
                 'rmeAsesmenParuDiagnosisImplementasi',
                 'rmeAlergiPasien',
+                'rmeAsesmenParuPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -403,6 +436,7 @@ class AsesmenParuController extends Controller
             $itemFisik = MrItemFisik::orderBy('urut')->get();
             $rmeMasterDiagnosis = RmeMasterDiagnosis::all();
             $rmeMasterImplementasi = RmeMasterImplementasi::all();
+            $satsetPrognosis = SatsetPrognosis::all();
 
             // Get patient's allergies from the Alergi table
             $allergies = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
@@ -428,6 +462,7 @@ class AsesmenParuController extends Controller
                 'allergies',
                 'allergiesJson',
                 'allergiesDisplay',
+                'satsetPrognosis'
             ));
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Data tidak ditemukan. Detail: ' . $e->getMessage());
@@ -487,6 +522,7 @@ class AsesmenParuController extends Controller
             $asesmenParu->saturasi_oksigen = $request->saturasi_oksigen;
             $asesmenParu->icterus = $request->icterus;
             $asesmenParu->anemia = $request->anemia;
+            $asesmenParu->paru_prognosis = $request->paru_prognosis;
             $asesmenParu->save();
 
             // 3-5. Records lainnya tetap sama...
@@ -513,6 +549,30 @@ class AsesmenParuController extends Controller
             $asesmenParuRencanaKerja->lainnya_check = $request->has('lainnya_check') ? 1 : 0;
             $asesmenParuRencanaKerja->lainnya = $request->lainnya;
             $asesmenParuRencanaKerja->save();
+
+            // Perbaikan Controller untuk Asesmen Paru Pemeriksaan Fisik
+            $asesmenParuPemeriksaanFisik = RmeAsesmenParuPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $asesmenParuPemeriksaanFisik->id_asesmen = $asesmen->id;
+            $asesmenParuPemeriksaanFisik->paru_kepala = $request->paru_kepala;
+            $asesmenParuPemeriksaanFisik->paru_kepala_keterangan = $request->paru_kepala_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_mata = $request->paru_mata;
+            $asesmenParuPemeriksaanFisik->paru_mata_keterangan = $request->paru_mata_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_tht = $request->paru_tht;
+            $asesmenParuPemeriksaanFisik->paru_tht_keterangan = $request->paru_tht_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_leher = $request->paru_leher;
+            $asesmenParuPemeriksaanFisik->paru_leher_keterangan = $request->paru_leher_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_jantung = $request->paru_jantung;
+            $asesmenParuPemeriksaanFisik->paru_jantung_keterangan = $request->paru_jantung_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_inspeksi = $request->paru_inspeksi;
+            $asesmenParuPemeriksaanFisik->paru_inspeksi_keterangan = $request->paru_inspeksi_keterangan;
+            $asesmenParuPemeriksaanFisik->paru_palpasi = $request->paru_palpasi;
+            $asesmenParuPemeriksaanFisik->paru_perkusi = $request->paru_perkusi;
+            $asesmenParuPemeriksaanFisik->paru_auskultasi = $request->paru_auskultasi;
+
+            $asesmenParuPemeriksaanFisik->paru_suara_pernafasan = $request->paru_suara_pernafasan ?: null;
+            $asesmenParuPemeriksaanFisik->paru_suara_tambahan = $request->paru_suara_tambahan ?: null;
+
+            $asesmenParuPemeriksaanFisik->save();
 
             $asesmenParuPerencanaanPulang = RmeAsesmenParuPerencanaanPulang::firstOrNew(['id_asesmen' => $asesmen->id]);
             $asesmenParuPerencanaanPulang->id_asesmen = $asesmen->id;
@@ -733,8 +793,8 @@ class AsesmenParuController extends Controller
                 'rmeAsesmenParuDiagnosisImplementasi',
                 'rmeAlergiPasien',
                 'pemeriksaanFisik' => function ($query) {
-                $query->orderBy('id_item_fisik');
-            },
+                    $query->orderBy('id_item_fisik');
+                },
             ])->findOrFail($id);
 
             $dataMedis = Kunjungan::with('pasien')

@@ -14,13 +14,13 @@
                 </a>
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
-                    class="btn btn-sm btn-info">
-                    <i class="fas fa-print"></i> print
-                </a>
-                <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
-                    class="btn btn-sm btn-secondary ms-2">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
+                        class="btn btn-sm btn-info">
+                        <i class="fas fa-print"></i> print
+                    </a>
+                    <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                        class="btn btn-sm btn-secondary ms-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Tanggal Dan Jam Masuk:</label>
                                             <p class="form-control-plaintext border-bottom">
-                                                {{ $asesmen->rmeAsesmenGinekologik->tanggal ? date('d M Y H:i', strtotime($asesmen->rmeAsesmenGinekologik->tanggal)) : '-' }}
+                                                {{ $asesmen->rmeAsesmenGinekologik->tanggal ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologik->tanggal)) : '-' }}
                                                 {{ $asesmen->rmeAsesmenGinekologik->jam_masuk ? date('H:i', strtotime($asesmen->rmeAsesmenGinekologik->jam_masuk)) : '-' }}
                                             </p>
                                         </div>
@@ -109,7 +109,7 @@
                     <!-- 3. Keluhan Utama -->
                     <div class="section-separator mb-4">
                         <h5 class="section-title">3. Keluhan Utama</h5>
-                        <div class="card">
+                        <div class="">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -126,27 +126,97 @@
                                             </p>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Riwayat Haid:</label>
+                                            <label class="form-label fw-bold">
+                                                <i class="fas fa-calendar-heart me-2 text-primary"></i>
+                                                Riwayat Haid:
+                                            </label>
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label class="form-label">Siklus:</label>
                                                     <p class="form-control-plaintext border-bottom">
                                                         {{ $asesmen->rmeAsesmenGinekologik->siklus ? $asesmen->rmeAsesmenGinekologik->siklus . ' Hari' : '-' }}
                                                     </p>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label class="form-label">HPHT:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        {{ $asesmen->rmeAsesmenGinekologik->hpht ?? '-' }}
+                                                        @if($asesmen->rmeAsesmenGinekologik->hpht)
+                                                            {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenGinekologik->hpht)->format('d/m/Y') }}
+                                                            <small class="text-muted d-block">
+                                                                {{ \Carbon\Carbon::parse($asesmen->rmeAsesmenGinekologik->hpht)->diffForHumans() }}
+                                                            </small>
+                                                        @else
+                                                            -
+                                                        @endif
                                                     </p>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label class="form-label">Usia Kehamilan:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan ?? '-' }}
+                                                        @if($asesmen->rmeAsesmenGinekologik->usia_kehamilan_display)
+                                                            <span class="badge bg-success">
+                                                                {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_display }}
+                                                            </span>
+                                                            @if($asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari)
+                                                                <small class="text-muted d-block">
+                                                                    Total:
+                                                                    {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari }}
+                                                                    hari
+                                                                </small>
+                                                            @endif
+                                                        @elseif($asesmen->rmeAsesmenGinekologik->usia_minggu || $asesmen->rmeAsesmenGinekologik->usia_hari)
+                                                            <span class="badge bg-info">
+                                                                {{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? 0 }} minggu
+                                                                {{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? 0 }} hari
+                                                            </span>
+                                                        @else
+                                                            -
+                                                        @endif
                                                     </p>
-                                                </div>
+                                                </div>                                                
                                             </div>
+
+                                            @if($asesmen->rmeAsesmenGinekologik->hpht && $asesmen->rmeAsesmenGinekologik->usia_minggu)
+                                                <!-- Detail Summary Card -->
+                                                <div class="mt-3">
+                                                    <div class="border-success">
+                                                        <div class="card-header bg-success text-white py-2">
+                                                            <h6 class="mb-0">
+                                                                <i class="fas fa-info-circle me-2"></i>
+                                                                Ringkasan Kehamilan
+                                                            </h6>
+                                                        </div>
+                                                        <div class="card-body py-2">
+                                                            <div class="row text-center">
+                                                                <div class="col-md-3">
+                                                                    <div class="border-end">
+                                                                        <h5 class="text-primary mb-1">
+                                                                            {{ $asesmen->rmeAsesmenGinekologik->usia_minggu ?? 0 }}
+                                                                        </h5>
+                                                                        <small class="text-muted">Minggu</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="border-end">
+                                                                        <h5 class="text-info mb-1">
+                                                                            {{ $asesmen->rmeAsesmenGinekologik->usia_hari ?? 0 }}
+                                                                        </h5>
+                                                                        <small class="text-muted">Hari</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="border-end">
+                                                                        <h5 class="text-warning mb-1">
+                                                                            {{ $asesmen->rmeAsesmenGinekologik->usia_kehamilan_total_hari ?? 0 }}
+                                                                        </h5>
+                                                                        <small class="text-muted">Total Hari</small>
+                                                                    </div>
+                                                                </div>                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Perkawinan:</label>
@@ -160,7 +230,7 @@
                                                 <div class="col-md-6">
                                                     <label class="form-label">Dengan Suami Sekarang:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        {{ $asesmen->rmeAsesmenGinekologik->tahun ? $asesmen->rmeAsesmenGinekologik->tahun . ' Tahun' : '-' }}
+                                                        {{ $asesmen->rmeAsesmenGinekologik->tahun ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologik->tahun)) : '-' }} Tahun                                                        
                                                     </p>
                                                 </div>
                                             </div>
@@ -234,6 +304,105 @@
                                 <p class="form-control-plaintext border-bottom">
                                     {{ $asesmen->rmeAsesmenGinekologik->riwayat_penyakit_dahulu ?? '-' }}
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-separator">
+                        <h5 class="section-title">
+                            <i class="fas fa-heartbeat me-2 text-danger"></i>
+                            6. Tanda Vital
+                        </h5>
+                        
+                        <!-- Tekanan Darah -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tekanan Darah:</label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Sistole (mmHg):</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        {{ $asesmen->rmeAsesmenGinekologikTandaVital->tekanan_darah_sistole ?? '-' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Diastole (mmHg):</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        {{ $asesmen->rmeAsesmenGinekologikTandaVital->tekanan_darah_diastole ?? '-' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vital Signs Row 1 -->
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Suhu:</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->suhu)
+                                            @php
+                                                $suhu = $asesmen->rmeAsesmenGinekologikTandaVital->suhu;                                                
+                                            @endphp
+                                            <span>
+                                                {{ $suhu }}°C
+                                            </span>                                            
+                                        @else
+                                            -
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Respirasi:</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->respirasi)
+                                            @php
+                                                $respirasi = $asesmen->rmeAsesmenGinekologikTandaVital->respirasi;                                                
+                                            @endphp
+                                            <span>
+                                                {{ $respirasi }} x/menit
+                                            </span>
+                                        @else
+                                            -
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">saturasi oksigen:</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if($asesmen->rmeAsesmenGinekologikTandaVital->nadi)
+                                            @php
+                                                $nadi = $asesmen->rmeAsesmenGinekologikTandaVital->nadi;                                                
+                                            @endphp
+                                            <span>
+                                                {{ $nadi }} x/menit
+                                            </span>                                            
+                                        @else
+                                            -
+                                        @endif
+                                    </p>
+                                </div>                                
+                            </div>
+                        </div>
+
+                        <!-- Antropometri -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-weight me-2 text-info"></i>
+                                Antropometri:
+                            </label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Berat Badan:</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        {{ $asesmen->rmeAsesmenGinekologikTandaVital->berat_badan ? $asesmen->rmeAsesmenGinekologikTandaVital->berat_badan . ' kg' : '-' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Tinggi Badan:</label>
+                                    <p class="form-control-plaintext border-bottom">
+                                        {{ $asesmen->rmeAsesmenGinekologikTandaVital->tinggi_badan ? $asesmen->rmeAsesmenGinekologikTandaVital->tinggi_badan . ' cm' : '-' }}
+                                    </p>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -532,7 +701,8 @@
                                             </p>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Membutuhkan Penggunaan Media Berkelanjutan:</label>
+                                            <label class="form-label fw-bold">Membutuhkan Penggunaan Media
+                                                Berkelanjutan:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->penggunaan_media_berkelanjutan ?? '-' }}
                                             </p>
@@ -540,25 +710,29 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Ketergantungan dengan Orang Lain dalam Aktivitas Harian:</label>
+                                            <label class="form-label fw-bold">Ketergantungan dengan Orang Lain dalam
+                                                Aktivitas Harian:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->ketergantungan_aktivitas ?? '-' }}
                                             </p>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Pasien/Keluarga Memerlukan Keterampilan Khusus Setelah Pulang:</label>
+                                            <label class="form-label fw-bold">Pasien/Keluarga Memerlukan Keterampilan Khusus
+                                                Setelah Pulang:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->keterampilan_khusus ?? '-' }}
                                             </p>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Pasien Memerlukan Alat Bantu Setelah Keluar Rumah Sakit:</label>
+                                            <label class="form-label fw-bold">Pasien Memerlukan Alat Bantu Setelah Keluar
+                                                Rumah Sakit:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->alat_bantu ?? '-' }}
                                             </p>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold">Pasien Memiliki Nyeri Kronis dan/atau Kebiasaan Setelah Pulang:</label>
+                                            <label class="form-label fw-bold">Pasien Memiliki Nyeri Kronis dan/atau
+                                                Kebiasaan Setelah Pulang:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikPemeriksaanDischarge->nyeri_kronis ?? '-' }}
                                             </p>

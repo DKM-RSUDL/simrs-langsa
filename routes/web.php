@@ -100,6 +100,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\PraAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
@@ -517,6 +518,22 @@ Route::middleware('ssoToken')->group(function () {
                             Route::prefix('ews-pasien-anak')->group(function () {
                                 Route::name('.ews-pasien-anak')->group(function () {
                                     Route::controller(EWSPasienAnakController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::get('/{id}/print-pdf', 'generatePDF')->name('.print-pdf');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
+                            // pra-anestesi
+                            Route::prefix('pra-anestesi')->group(function () {
+                                Route::name('.pra-anestesi')->group(function () {
+                                    Route::controller(PraAnestesiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');

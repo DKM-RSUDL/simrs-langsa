@@ -410,6 +410,10 @@ class RmeAsesmen extends Model
     {
         return $this->hasMany(RmeAlergiPasien::class, 'kd_pasien', 'kd_pasien');
     }
+    public function rmeAsesmenParuPemeriksaanFisik()
+    {
+        return $this->hasMany(RmeAsesmenParuPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
 
     // Asesmen Ginekologik
     public function rmeAsesmenGinekologik()
