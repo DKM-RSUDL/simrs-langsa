@@ -1329,22 +1329,6 @@
                                     <input type="hidden" id="diagnosis_kerja" name="diagnosis_kerja"
                                         value="{{ json_encode($diagnosisKerjaList) }}">
                                 </div>
-
-                                <div class="mt-5">
-                                    <div class="form-group">
-                                        <label>Gambar radiologi paru</label>
-                                        @if($diagnosisImplementasi && $diagnosisImplementasi->gambar_radiologi_paru)
-                                            <div class="mb-2">
-                                                <img src="{{ asset('storage/' . $diagnosisImplementasi->gambar_radiologi_paru) }}"
-                                                    alt="Gambar Radiologi Paru" class="img-thumbnail" style="max-width: 200px;">
-                                                <small class="d-block text-muted">Gambar saat ini</small>
-                                            </div>
-                                        @endif
-                                        <input type="file" class="form-control" name="gambar_radiologi_paru"
-                                            placeholder="gambar radiologi paru">
-                                        <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah gambar</small>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
