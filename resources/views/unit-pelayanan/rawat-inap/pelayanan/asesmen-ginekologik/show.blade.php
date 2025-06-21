@@ -13,10 +13,10 @@
                     <i class="ti-arrow-left"></i> Kembali
                 </a>
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
+                    {{-- <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
                         class="btn btn-sm btn-info">
                         <i class="fas fa-print"></i> print
-                    </a>
+                    </a> --}}
                     <a href="{{ route('rawat-inap.asesmen.medis.ginekologik.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $asesmen->id]) }}"
                         class="btn btn-sm btn-secondary ms-2">
                         <i class="fas fa-edit"></i> Edit
@@ -173,7 +173,7 @@
                                                             -
                                                         @endif
                                                     </p>
-                                                </div>                                                
+                                                </div>
                                             </div>
 
                                             @if($asesmen->rmeAsesmenGinekologik->hpht && $asesmen->rmeAsesmenGinekologik->usia_minggu)
@@ -211,7 +211,7 @@
                                                                         </h5>
                                                                         <small class="text-muted">Total Hari</small>
                                                                     </div>
-                                                                </div>                                                                
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -221,16 +221,22 @@
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Perkawinan:</label>
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <label class="form-label">Jumlah:</label>
                                                     <p class="form-control-plaintext border-bottom">
                                                         {{ $asesmen->rmeAsesmenGinekologik->jumlah ? $asesmen->rmeAsesmenGinekologik->jumlah . ' Kali' : '-' }}
                                                     </p>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <label class="form-label">Dengan Suami Sekarang:</label>
                                                     <p class="form-control-plaintext border-bottom">
-                                                        {{ $asesmen->rmeAsesmenGinekologik->tahun ? date('d M Y', strtotime($asesmen->rmeAsesmenGinekologik->tahun)) : '-' }} Tahun                                                        
+                                                        {{ $asesmen->rmeAsesmenGinekologik->tahun ? ucfirst($asesmen->rmeAsesmenGinekologik->tahun) : '-' }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Jumlah Suami:</label>
+                                                    <p class="form-control-plaintext border-bottom">
+                                                        {{ $asesmen->rmeAsesmenGinekologik->jumlah_suami ? $asesmen->rmeAsesmenGinekologik->jumlah_suami . ' Orang' : '-' }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -313,7 +319,7 @@
                             <i class="fas fa-heartbeat me-2 text-danger"></i>
                             6. Tanda Vital
                         </h5>
-                        
+
                         <!-- Tekanan Darah -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tekanan Darah:</label>
@@ -341,11 +347,11 @@
                                     <p class="form-control-plaintext border-bottom">
                                         @if($asesmen->rmeAsesmenGinekologikTandaVital->suhu)
                                             @php
-                                                $suhu = $asesmen->rmeAsesmenGinekologikTandaVital->suhu;                                                
+                                                $suhu = $asesmen->rmeAsesmenGinekologikTandaVital->suhu;
                                             @endphp
                                             <span>
                                                 {{ $suhu }}°C
-                                            </span>                                            
+                                            </span>
                                         @else
                                             -
                                         @endif
@@ -356,7 +362,7 @@
                                     <p class="form-control-plaintext border-bottom">
                                         @if($asesmen->rmeAsesmenGinekologikTandaVital->respirasi)
                                             @php
-                                                $respirasi = $asesmen->rmeAsesmenGinekologikTandaVital->respirasi;                                                
+                                                $respirasi = $asesmen->rmeAsesmenGinekologikTandaVital->respirasi;
                                             @endphp
                                             <span>
                                                 {{ $respirasi }} x/menit
@@ -371,16 +377,16 @@
                                     <p class="form-control-plaintext border-bottom">
                                         @if($asesmen->rmeAsesmenGinekologikTandaVital->nadi)
                                             @php
-                                                $nadi = $asesmen->rmeAsesmenGinekologikTandaVital->nadi;                                                
+                                                $nadi = $asesmen->rmeAsesmenGinekologikTandaVital->nadi;
                                             @endphp
                                             <span>
                                                 {{ $nadi }} x/menit
-                                            </span>                                            
+                                            </span>
                                         @else
                                             -
                                         @endif
                                     </p>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
 
@@ -402,7 +408,7 @@
                                     <p class="form-control-plaintext border-bottom">
                                         {{ $asesmen->rmeAsesmenGinekologikTandaVital->tinggi_badan ? $asesmen->rmeAsesmenGinekologikTandaVital->tinggi_badan . ' cm' : '-' }}
                                     </p>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -410,8 +416,222 @@
                     <!-- 7. Pemeriksaan Fisik -->
                     <div class="section-separator mb-4">
                         <h5 class="section-title">7. Pemeriksaan Fisik</h5>
-                        <div class="card">
-                            <div class="card-body">
+                        <div class=" my-3">
+
+                            <!-- Kesadaran -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Kesadaran:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '-' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Kepala -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Kepala:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Hidung -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Hidung:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Mata -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Mata:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Leher -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Leher:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Tenggorokan -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Tenggorokan:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Dada -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Dada:</label>
+                                </div>
+                                <div class="col-9">
+                                    <!-- Jantung -->
+                                    <div class="row mb-2">
+                                        <div class="col-3">
+                                            <span class="text-muted">Jantung:</span>
+                                        </div>
+                                        <div class="col-9">
+                                            <p class="form-control-plaintext border-bottom">
+                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1)
+                                                    Normal
+                                                @else
+                                                    Abnormal:
+                                                    {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung_keterangan ?? '-' }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Paru -->
+                                    <div class="row mb-2">
+                                        <div class="col-3">
+                                            <span class="text-muted">Paru:</span>
+                                        </div>
+                                        <div class="col-9">
+                                            <p class="form-control-plaintext border-bottom">
+                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1)
+                                                    Normal
+                                                @else
+                                                    Abnormal:
+                                                    {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_keterangan ?? '-' }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Perut -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Perut:</label>
+                                </div>
+                                <div class="col-9">
+                                    <!-- Hati -->
+                                    <div class="row mb-2">
+                                        <div class="col-3">
+                                            <span class="text-muted">Hati:</span>
+                                        </div>
+                                        <div class="col-9">
+                                            <p class="form-control-plaintext border-bottom">
+                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1)
+                                                    Normal
+                                                @else
+                                                    Abnormal:
+                                                    {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati_keterangan ?? '-' }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Limpa -->
+                                    <div class="row mb-2">
+                                        <div class="col-3">
+                                            <span class="text-muted">Limpa:</span>
+                                        </div>
+                                        <div class="col-9">
+                                            <p class="form-control-plaintext border-bottom">
+                                                @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1)
+                                                    Normal
+                                                @else
+                                                    Abnormal:
+                                                    {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa_keterangan ?? '-' }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kulit -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Kulit:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Mulut/ gigi -->
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label fw-bold">Mulut/ gigi:</label>
+                                </div>
+                                <div class="col-9">
+                                    <p class="form-control-plaintext border-bottom">
+                                        @if(($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1)
+                                            Normal
+                                        @else
+                                            Abnormal:
+                                            {{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi_keterangan ?? '-' }}
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- <div class="card-body">
                                 <p class="mb-3 small bg-info bg-opacity-10 text-dark rounded-3 p-2">
                                     <i class="bi bi-info-circle me-2"></i>
                                     Centang normal jika fisik yang dinilai normal. Jika tidak dipilih, maka pemeriksaan
@@ -419,100 +639,100 @@
                                 </p>
 
                                 @if($asesmen->pemeriksaanFisik->count() > 0 && $itemFisik->count() > 0)
-                                    <div class="row">
+                                <div class="row">
+                                    @php
+                                    // Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
+                                    $pemeriksaanFisikMap = [];
+                                    foreach ($asesmen->pemeriksaanFisik as $item) {
+                                    $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
+                                    }
+
+                                    // Buat mapping nama item fisik
+                                    $itemFisikNames = [];
+                                    foreach ($itemFisik as $item) {
+                                    $itemFisikNames[$item->id] = $item->nama;
+                                    }
+
+                                    // Bagi item fisik menjadi 2 kolom
+                                    $totalItems = $itemFisik->count();
+                                    $halfCount = ceil($totalItems / 2);
+                                    $firstColumn = $itemFisik->take($halfCount);
+                                    $secondColumn = $itemFisik->skip($halfCount);
+                                    @endphp
+
+                                    <!-- Kolom Pertama -->
+                                    <div class="col-md-6">
+                                        @foreach ($firstColumn as $fisikItem)
                                         @php
-                                            // Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
-                                            $pemeriksaanFisikMap = [];
-                                            foreach ($asesmen->pemeriksaanFisik as $item) {
-                                                $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
-                                            }
-
-                                            // Buat mapping nama item fisik
-                                            $itemFisikNames = [];
-                                            foreach ($itemFisik as $item) {
-                                                $itemFisikNames[$item->id] = $item->nama;
-                                            }
-
-                                            // Bagi item fisik menjadi 2 kolom
-                                            $totalItems = $itemFisik->count();
-                                            $halfCount = ceil($totalItems / 2);
-                                            $firstColumn = $itemFisik->take($halfCount);
-                                            $secondColumn = $itemFisik->skip($halfCount);
+                                        // Cek apakah item ini ada dalam pemeriksaan
+                                        $pemeriksaanItem = $pemeriksaanFisikMap[$fisikItem->id] ?? null;
+                                        $status = $pemeriksaanItem->is_normal ?? null;
+                                        $keterangan = $pemeriksaanItem->keterangan ?? '';
+                                        $namaItem = $fisikItem->nama;
                                         @endphp
-
-                                        <!-- Kolom Pertama -->
-                                        <div class="col-md-6">
-                                            @foreach ($firstColumn as $fisikItem)
-                                                @php
-                                                    // Cek apakah item ini ada dalam pemeriksaan
-                                                    $pemeriksaanItem = $pemeriksaanFisikMap[$fisikItem->id] ?? null;
-                                                    $status = $pemeriksaanItem->is_normal ?? null;
-                                                    $keterangan = $pemeriksaanItem->keterangan ?? '';
-                                                    $namaItem = $fisikItem->nama;
-                                                @endphp
-                                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                    <span>{{ $namaItem }}</span>
-                                                    <div class="d-flex align-items-center">
-                                                        @if ($status === '0' || $status === 0)
-                                                            <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
-                                                        @elseif ($status === '1' || $status === 1)
-                                                            <span class="badge bg-success me-2">Normal</span>
-                                                        @else
-                                                            <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                @if ($keterangan && ($status === '0' || $status === 0))
-                                                    <div class="mt-1 mb-2">
-                                                        <small class="text-muted">Keterangan: {{ $keterangan }}</small>
-                                                    </div>
+                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                            <span>{{ $namaItem }}</span>
+                                            <div class="d-flex align-items-center">
+                                                @if ($status === '0' || $status === 0)
+                                                <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
+                                                @elseif ($status === '1' || $status === 1)
+                                                <span class="badge bg-success me-2">Normal</span>
+                                                @else
+                                                <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
                                                 @endif
-                                            @endforeach
+                                            </div>
                                         </div>
-
-                                        <!-- Kolom Kedua -->
-                                        <div class="col-md-6">
-                                            @foreach ($secondColumn as $fisikItem)
-                                                @php
-                                                    // Cek apakah item ini ada dalam pemeriksaan
-                                                    $pemeriksaanItem = $pemeriksaanFisikMap[$fisikItem->id] ?? null;
-                                                    $status = $pemeriksaanItem->is_normal ?? null;
-                                                    $keterangan = $pemeriksaanItem->keterangan ?? '';
-                                                    $namaItem = $fisikItem->nama;
-                                                @endphp
-                                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                    <span>{{ $namaItem }}</span>
-                                                    <div class="d-flex align-items-center">
-                                                        @if ($status === '0' || $status === 0)
-                                                            <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
-                                                        @elseif ($status === '1' || $status === 1)
-                                                            <span class="badge bg-success me-2">Normal</span>
-                                                        @else
-                                                            <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                @if ($keterangan && ($status === '0' || $status === 0))
-                                                    <div class="mt-1 mb-2">
-                                                        <small class="text-muted">Keterangan: {{ $keterangan }}</small>
-                                                    </div>
-                                                @endif
-                                            @endforeach
+                                        @if ($keterangan && ($status === '0' || $status === 0))
+                                        <div class="mt-1 mb-2">
+                                            <small class="text-muted">Keterangan: {{ $keterangan }}</small>
                                         </div>
+                                        @endif
+                                        @endforeach
                                     </div>
+
+                                    <!-- Kolom Kedua -->
+                                    <div class="col-md-6">
+                                        @foreach ($secondColumn as $fisikItem)
+                                        @php
+                                        // Cek apakah item ini ada dalam pemeriksaan
+                                        $pemeriksaanItem = $pemeriksaanFisikMap[$fisikItem->id] ?? null;
+                                        $status = $pemeriksaanItem->is_normal ?? null;
+                                        $keterangan = $pemeriksaanItem->keterangan ?? '';
+                                        $namaItem = $fisikItem->nama;
+                                        @endphp
+                                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                            <span>{{ $namaItem }}</span>
+                                            <div class="d-flex align-items-center">
+                                                @if ($status === '0' || $status === 0)
+                                                <span class="badge bg-warning text-dark me-2">Tidak Normal</span>
+                                                @elseif ($status === '1' || $status === 1)
+                                                <span class="badge bg-success me-2">Normal</span>
+                                                @else
+                                                <span class="badge bg-secondary me-2">Tidak Diperiksa</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @if ($keterangan && ($status === '0' || $status === 0))
+                                        <div class="mt-1 mb-2">
+                                            <small class="text-muted">Keterangan: {{ $keterangan }}</small>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                    </div>
+                                </div>
                                 @else
-                                    <div class="alert alert-info">
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Data pemeriksaan fisik tidak tersedia.
-                                        <br>
-                                        <small class="text-muted">
-                                            Debug Info:
-                                            Pemeriksaan Fisik: {{ $asesmen->pemeriksaanFisik->count() }} item,
-                                            Item Fisik: {{ $itemFisik->count() }} item
-                                        </small>
-                                    </div>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Data pemeriksaan fisik tidak tersedia.
+                                    <br>
+                                    <small class="text-muted">
+                                        Debug Info:
+                                        Pemeriksaan Fisik: {{ $asesmen->pemeriksaanFisik->count() }} item,
+                                        Item Fisik: {{ $itemFisik->count() }} item
+                                    </small>
+                                </div>
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -597,14 +817,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Keadaan Umum:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->keadaan_umum ?? '-' }}
                                             </p>
                                         </div>
-                                        <div class="mb-3">
+                                        {{-- <div class="mb-3">
                                             <label class="form-label fw-bold">Status Ginekologik:</label>
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->status_ginekologik ?? '-' }}
@@ -615,9 +835,8 @@
                                             <p class="form-control-plaintext border-bottom">
                                                 {{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->pemeriksaan ?? '-' }}
                                             </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
+                                        </div> --}}
+
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Inspekulo:</label>
                                             <p class="form-control-plaintext border-bottom">

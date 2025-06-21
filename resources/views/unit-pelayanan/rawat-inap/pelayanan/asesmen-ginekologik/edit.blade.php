@@ -219,17 +219,27 @@
                                                     <label class="form-label">Jumlah</label>
                                                     <div class="input-group">
                                                         <input type="number" name="jumlah" class="form-control"
-                                                            placeholder="Total" min="1"
-                                                            value="{{ $asesmen->rmeAsesmenGinekologik->jumlah ?? '' }}">
+                                                            value="{{ $asesmen->rmeAsesmenGinekologik->jumlah ?? '' }}"
+                                                            min="1">
                                                         <span class="input-group-text">Kali</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <label class="form-label">Dengan Suami Sekarang</label>
                                                     <div class="input-group">
-                                                        <input type="date" class="form-control" name="tahun" id="tanggal_masuk"
-                                                            value="{{ $asesmen->rmeAsesmenGinekologik->tahun ?? date('Y-m-d') }}">
-                                                        <span class="input-group-text">Tahun</span>
+                                                        <select class="form-select" name="tahun">
+                                                            <option disabled {{ empty($asesmen->rmeAsesmenGinekologik->tahun) ? 'selected' : '' }}>Pilih</option>
+                                                            <option value="bulan" {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'bulan' ? 'selected' : '' }}>Bulan</option>
+                                                            <option value="tahun" {{ ($asesmen->rmeAsesmenGinekologik->tahun ?? '') == 'tahun' ? 'selected' : '' }}>Tahun</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-label">Jumlah Suami</label>
+                                                    <div class="input-group">
+                                                        <input type="number" name="jumlah_suami" class="form-control"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologik->jumlah_suami ?? '' }}"
+                                                            placeholder="Total" min="1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -341,8 +351,339 @@
 
                                     {{-- 7. Pemeriksaan Fisik --}}
                                     <div class="section-separator" id="pemeriksaan-fisik">
-                                        <h5 class="section-title">7. Pemeriksaan Fisik</h5>
-                                        <div class="row g-3">
+                                        <h5 class="section-title">7. Pemeriksaan FIsik</h5>
+                                        <form id="pemeriksaanFisikForm">
+                                            <!-- Kesadaran -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Kesadaran</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <select class="form-select" name="paru_kesadaran" style="width: 200px;">
+                                                        <option value="" {{ empty($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran) ? 'selected' : '' }}>--pilih--</option>
+                                                        <option value="Compos Mentis" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis
+                                                        </option>
+                                                        <option value="Apatis" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Apatis' ? 'selected' : '' }}>Apatis</option>
+                                                        <option value="Sopor" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Sopor' ? 'selected' : '' }}>Sopor</option>
+                                                        <option value="Coma" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Coma' ? 'selected' : '' }}>Coma</option>
+                                                        <option value="Somnolen" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_kesadaran ?? '') == 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Kepala -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Kepala</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="kepala"
+                                                                value="1" id="kepala_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kepala_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="kepala"
+                                                                value="0" id="kepala_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kepala_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="kepala_keterangan"
+                                                            id="kepala_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kepala ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Hidung -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Hidung</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="hidung"
+                                                                value="1" id="hidung_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="hidung_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="hidung"
+                                                                value="0" id="hidung_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="hidung_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="hidung_keterangan"
+                                                            id="hidung_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hidung ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Mata -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Mata</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="mata"
+                                                                value="1" id="mata_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="mata_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="mata"
+                                                                value="0" id="mata_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="mata_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="mata_keterangan"
+                                                            id="mata_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mata ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Leher -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Leher</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="leher"
+                                                                value="1" id="leher_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="leher_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="leher"
+                                                                value="0" id="leher_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="leher_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="leher_keterangan"
+                                                            id="leher_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->leher ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tenggorokan -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Tenggorokan</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="tenggorokan"
+                                                                value="1" id="tenggorokan_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="tenggorokan_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="tenggorokan"
+                                                                value="0" id="tenggorokan_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="tenggorokan_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                            name="tenggorokan_keterangan" id="tenggorokan_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->tenggorokan ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Dada -->
+                                            <div class="row mb-2 align-items-start">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Dada</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <!-- Jantung -->
+                                                    <div class="row mb-2 align-items-center">
+                                                        <div class="col-2">
+                                                            <span class="text-muted">Jantung</span>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex gap-3 align-items-center">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="jantung" value="1" id="jantung_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="jantung_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="jantung" value="0" id="jantung_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="jantung_abnormal">Abnormal:</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="jantung_keterangan" id="jantung_keterangan"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung_keterangan ?? '' }}"
+                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->jantung ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Paru -->
+                                                    <div class="row mb-2 align-items-center">
+                                                        <div class="col-2">
+                                                            <span class="text-muted">Paru</span>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex gap-3 align-items-center">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="paru"
+                                                                        value="1" id="paru_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="paru"
+                                                                        value="0" id="paru_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="paru_abnormal">Abnormal:</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="paru_keterangan" id="paru_keterangan"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru_keterangan ?? '' }}"
+                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->paru ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Perut -->
+                                            <div class="row mb-2 align-items-start">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Perut</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <!-- Hati -->
+                                                    <div class="row mb-2 align-items-center">
+                                                        <div class="col-2">
+                                                            <span class="text-muted">Hati</span>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex gap-3 align-items-center">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="hati"
+                                                                        value="1" id="hati_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="hati_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="hati"
+                                                                        value="0" id="hati_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="hati_abnormal">Abnormal:</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="hati_keterangan" id="hati_keterangan"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati_keterangan ?? '' }}"
+                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->hati ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Limpa -->
+                                                    <div class="row mb-2 align-items-center">
+                                                        <div class="col-2">
+                                                            <span class="text-muted">Limpa</span>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex gap-3 align-items-center">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="limpa" value="1" id="limpa_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="limpa_normal">Normal</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="limpa" value="0" id="limpa_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 0 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label"
+                                                                        for="limpa_abnormal">Abnormal:</label>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                    name="limpa_keterangan" id="limpa_keterangan"
+                                                                    value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa_keterangan ?? '' }}"
+                                                                    placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->limpa ?? 1) == 1 ? 'disabled' : '' }}>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Kulit -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Kulit</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="kulit"
+                                                                value="1" id="kulit_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kulit_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="kulit"
+                                                                value="0" id="kulit_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="kulit_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="kulit_keterangan"
+                                                            id="kulit_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->kulit ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Mulut/ gigi -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-2">
+                                                    <span class="fw-medium">Mulut/ gigi</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="d-flex gap-3 align-items-center">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="mulut_gigi"
+                                                                value="1" id="mulut_gigi_normal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="mulut_gigi_normal">Normal</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="mulut_gigi"
+                                                                value="0" id="mulut_gigi_abnormal" {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 0 ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="mulut_gigi_abnormal">Abnormal:</label>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="mulut_gigi_keterangan"
+                                                            id="mulut_gigi_keterangan"
+                                                            value="{{ $asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi_keterangan ?? '' }}"
+                                                            placeholder="Keterangan..." {{ ($asesmen->rmeAsesmenGinekologikPemeriksaanFisik->mulut_gigi ?? 1) == 1 ? 'disabled' : '' }}>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                        {{-- <div class="row g-3">
                                             <div class="pemeriksaan-fisik">
                                                 <h6>Pemeriksaan Fisik</h6>
                                                 <p class="text-small">Centang normal jika fisik yang dinilai normal, pilih
@@ -352,55 +693,57 @@
                                                 </p>
                                                 <div class="row">
                                                     @php
-                                                        // PERBAIKAN: Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
-                                                        $pemeriksaanFisikMap = [];
-                                                        foreach ($asesmen->pemeriksaanFisik as $item) {
-                                                            $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
-                                                        }
+                                                    // PERBAIKAN: Buat mapping pemeriksaan fisik berdasarkan id_item_fisik
+                                                    $pemeriksaanFisikMap = [];
+                                                    foreach ($asesmen->pemeriksaanFisik as $item) {
+                                                    $pemeriksaanFisikMap[$item->id_item_fisik] = $item;
+                                                    }
                                                     @endphp
                                                     @foreach ($itemFisik->chunk(ceil($itemFisik->count() / 2)) as $chunk)
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex flex-column gap-3">
-                                                                @foreach ($chunk as $item)
-                                                                    @php
-                                                                        // PERBAIKAN: Cek apakah item ini ada dalam pemeriksaan
-                                                                        $pemeriksaanItem = $pemeriksaanFisikMap[$item->id] ?? null;
-                                                                        $isNormal = $pemeriksaanItem ? ($pemeriksaanItem->is_normal == 1) : true;
-                                                                        $keterangan = $pemeriksaanItem->keterangan ?? '';
-                                                                        $showKeterangan = !$isNormal && !empty($keterangan);
-                                                                    @endphp
-                                                                    <div class="pemeriksaan-item">
-                                                                        <div class="d-flex align-items-center border-bottom pb-2">
-                                                                            <div class="flex-grow-1">{{ $item->nama }}</div>
-                                                                            <div class="form-check me-3">
-                                                                                <input type="checkbox" class="form-check-input"
-                                                                                    id="{{ $item->id }}-normal"
-                                                                                    name="{{ $item->id }}-normal" {{ $isNormal ? 'checked' : '' }}>
-                                                                                <label class="form-check-label"
-                                                                                    for="{{ $item->id }}-normal">Normal</label>
-                                                                            </div>
-                                                                            <button
-                                                                                class="btn btn-sm btn-outline-primary tambah-keterangan"
-                                                                                type="button"
-                                                                                data-target="{{ $item->id }}-keterangan">
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
-                                                                            style="display:{{ $showKeterangan ? 'block' : 'none' }};">
-                                                                            <input type="text" class="form-control"
-                                                                                name="{{ $item->id }}_keterangan"
-                                                                                placeholder="Tambah keterangan jika tidak normal..."
-                                                                                value="{{ $keterangan }}">
-                                                                        </div>
+                                                    <div class="col-md-6">
+                                                        <div class="d-flex flex-column gap-3">
+                                                            @foreach ($chunk as $item)
+                                                            @php
+                                                            // PERBAIKAN: Cek apakah item ini ada dalam pemeriksaan
+                                                            $pemeriksaanItem = $pemeriksaanFisikMap[$item->id] ?? null;
+                                                            $isNormal = $pemeriksaanItem ? ($pemeriksaanItem->is_normal ==
+                                                            1) : true;
+                                                            $keterangan = $pemeriksaanItem->keterangan ?? '';
+                                                            $showKeterangan = !$isNormal && !empty($keterangan);
+                                                            @endphp
+                                                            <div class="pemeriksaan-item">
+                                                                <div class="d-flex align-items-center border-bottom pb-2">
+                                                                    <div class="flex-grow-1">{{ $item->nama }}</div>
+                                                                    <div class="form-check me-3">
+                                                                        <input type="checkbox" class="form-check-input"
+                                                                            id="{{ $item->id }}-normal"
+                                                                            name="{{ $item->id }}-normal" {{ $isNormal
+                                                                            ? 'checked' : '' }}>
+                                                                        <label class="form-check-label"
+                                                                            for="{{ $item->id }}-normal">Normal</label>
                                                                     </div>
-                                                                @endforeach
+                                                                    <button
+                                                                        class="btn btn-sm btn-outline-primary tambah-keterangan"
+                                                                        type="button"
+                                                                        data-target="{{ $item->id }}-keterangan">
+                                                                        <i class="bi bi-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="keterangan mt-2" id="{{ $item->id }}-keterangan"
+                                                                    style="display:{{ $showKeterangan ? 'block' : 'none' }};">
+                                                                    <input type="text" class="form-control"
+                                                                        name="{{ $item->id }}_keterangan"
+                                                                        placeholder="Tambah keterangan jika tidak normal..."
+                                                                        value="{{ $keterangan }}">
+                                                                </div>
                                                             </div>
+                                                            @endforeach
                                                         </div>
+                                                    </div>
                                                     @endforeach
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
 
                                     {{-- 8. PEMERIKSAAN EKSTREMITAS --}}
@@ -578,7 +921,7 @@
 
                                         <div class="row">
                                             {{-- Column 1 --}}
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="card mb-3">
                                                     <div class="card-header bg-light">
                                                         <h6 class="mb-0 fw-semibold">Status Umum</h6>
@@ -591,7 +934,7 @@
                                                                 placeholder="Masukkan keadaan umum pasien">
                                                         </div>
 
-                                                        <div class="mb-3">
+                                                        {{-- <div class="mb-3">
                                                             <label class="form-label fw-semibold">Status Ginekologik</label>
                                                             <input type="text" class="form-control"
                                                                 name="status_ginekologik"
@@ -604,18 +947,8 @@
                                                             <input type="text" class="form-control" name="pemeriksaan"
                                                                 value="{{ $asesmen->rmeAsesmenGinekologikEkstremitasGinekologik->pemeriksaan ?? '' }}"
                                                                 placeholder="Masukkan hasil pemeriksaan">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                        </div> --}}
 
-                                            {{-- Column 2 --}}
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div class="card-header bg-light">
-                                                        <h6 class="mb-0 fw-semibold">Pemeriksaan Detail</h6>
-                                                    </div>
-                                                    <div class="card-body">
                                                         <div class="mb-3">
                                                             <label class="form-label fw-semibold">Inspekulo</label>
                                                             <textarea class="form-control" name="inspekulo" rows="4"
@@ -641,6 +974,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -1435,5 +1769,47 @@
                 document.getElementById('infoTambahan').style.display = 'block';
             }
         }
+
+        // pemeriksaan fisik
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to toggle keterangan input based on radio selection
+            function toggleKeteranganInput(radioName, keteranganId) {
+                const radios = document.getElementsByName(radioName);
+                const keteranganInput = document.getElementById(keteranganId);
+
+                if (!keteranganInput) return;
+
+                radios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        if (this.value === '0') { // Abnormal
+                            keteranganInput.disabled = false;
+                            keteranganInput.focus();
+                        } else { // Normal
+                            keteranganInput.disabled = true;
+                            keteranganInput.value = '';
+                        }
+                    });
+                });
+
+                // Initialize state - PENTING untuk mode edit
+                const selectedRadio = Array.from(radios).find(radio => radio.checked);
+                if (selectedRadio) {
+                    keteranganInput.disabled = selectedRadio.value !== '0';
+                }
+            }
+
+            // Apply toggle functionality
+            toggleKeteranganInput('kepala', 'kepala_keterangan');
+            toggleKeteranganInput('hidung', 'hidung_keterangan');
+            toggleKeteranganInput('mata', 'mata_keterangan');
+            toggleKeteranganInput('leher', 'leher_keterangan');
+            toggleKeteranganInput('tenggorokan', 'tenggorokan_keterangan');
+            toggleKeteranganInput('jantung', 'jantung_keterangan');
+            toggleKeteranganInput('paru', 'paru_keterangan');
+            toggleKeteranganInput('hati', 'hati_keterangan');
+            toggleKeteranganInput('limpa', 'limpa_keterangan');
+            toggleKeteranganInput('kulit', 'kulit_keterangan');
+            toggleKeteranganInput('mulut_gigi', 'mulut_gigi_keterangan');
+        });
     </script>
 @endpush

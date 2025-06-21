@@ -58,13 +58,21 @@ class PraAnestesiController extends Controller
 
         $dataMedis->waktu_masuk = Carbon::parse($dataMedis->TGL_MASUK . ' ' . $dataMedis->JAM_MASUK)->format('Y-m-d H:i:s');
 
+        $asesmenPraAnestesi = RmeAsesmenPraAnestesi::where('kd_unit', $kd_unit)
+                            ->where('kd_pasien', $kd_pasien)
+                            ->whereDate('tgl_masuk', $tgl_masuk)
+                            ->where('urut_masuk', $urut_masuk)
+                            ->orderBy('tanggal_create', 'desc')
+                            ->paginate(10);
+
         return view('unit-pelayanan.rawat-inap.pelayanan.pra-anestesi.index', compact(
             'kd_unit',
             'kd_pasien',
             'tgl_masuk',
             'urut_masuk',
             'dataMedis',
-            'user'
+            'user',
+            'asesmenPraAnestesi'
         ));
     }
 
@@ -100,12 +108,17 @@ class PraAnestesiController extends Controller
         DB::beginTransaction();
         try {
             $asesmenPraAnestesi = new RmeAsesmenPraAnestesi();
-            $asesmenPraAnestesi->kd_pasien = $request->kd_pasien;
-            $asesmenPraAnestesi->kd_unit = $request->kd_unit;
-            $asesmenPraAnestesi->tgl_masuk = $request->tgl_masuk;
-            $asesmenPraAnestesi->urut_masuk = $request->urut_masuk;
+
+            // parameter dari method signature, bukan dari request
+            $asesmenPraAnestesi->kd_pasien = $kd_pasien;
+            $asesmenPraAnestesi->kd_unit = $kd_unit;
+            $asesmenPraAnestesi->tgl_masuk = $tgl_masuk;
+            $asesmenPraAnestesi->urut_masuk = $urut_masuk;
+
             $asesmenPraAnestesi->user_create = Auth::id();
-            $asesmenPraAnestesi->tanggal_create = date('Y-m-d H:i:s');
+            $asesmenPraAnestesi->tanggal_create = now();
+
+            // Data dari form
             $asesmenPraAnestesi->umur = $request->umur;
             $asesmenPraAnestesi->jenis_kelamin = $request->jenis_kelamin;
             $asesmenPraAnestesi->menikah = $request->menikah;
@@ -113,11 +126,19 @@ class PraAnestesiController extends Controller
             $asesmenPraAnestesi->merokok = $request->merokok;
             $asesmenPraAnestesi->alkohol = $request->alkohol;
             $asesmenPraAnestesi->obat_resep = $request->obat_resep;
+            $asesmenPraAnestesi->obat_bebas = $request->obat_bebas;
             $asesmenPraAnestesi->aspirin_rutin = $request->aspirin_rutin;
             $asesmenPraAnestesi->aspirin_dosis = $request->aspirin_dosis;
             $asesmenPraAnestesi->obat_anti_sakit = $request->obat_anti_sakit;
             $asesmenPraAnestesi->anti_sakit_dosis = $request->anti_sakit_dosis;
             $asesmenPraAnestesi->injeksi_steroid = $request->injeksi_steroid;
+            $asesmenPraAnestesi->steroid_lokasi = $request->steroid_lokasi;
+            $asesmenPraAnestesi->alergi_obat = $request->alergi_obat;
+            $asesmenPraAnestesi->alergi_obat_detail = $request->alergi_obat_detail;
+            $asesmenPraAnestesi->alergi_lateks = $request->alergi_lateks;
+            $asesmenPraAnestesi->alergi_plester = $request->alergi_plester;
+            $asesmenPraAnestesi->alergi_makanan = $request->alergi_makanan;
+
             $asesmenPraAnestesi->save();
 
             DB::commit();

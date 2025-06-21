@@ -436,6 +436,10 @@ class RmeAsesmen extends Model
     {
         return $this->hasOne(RmeAsesmenGinekologikDiagnosisImplementasi::class, 'id_asesmen', 'id');
     }
+    public function rmeAsesmenGinekologikPemeriksaanFisik()
+    {
+        return $this->hasOne(RmeAsesmenGinekologikPemeriksaanFisik::class, 'id_asesmen', 'id');
+    }
     
     // Asesmen Terminal
     public function rmeAsesmenTerminal()

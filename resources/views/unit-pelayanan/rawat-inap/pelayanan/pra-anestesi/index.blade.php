@@ -75,31 +75,26 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @forelse($ewsPasienDewasa as $index => $item)
+                                                @forelse($asesmenPraAnestesi as $index => $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
                                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.print-pdf', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk, $item->id]) }}"
-                                                                    class="btn btn-secondary btn-sm ms-2" target="_blank">
-                                                                    <i class="bi bi-printer"></i>
-                                                                </a>
-
-                                                                <a href="{{ route('rawat-inap.ews-pasien-dewasa.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.pra-anestesi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm ms-2" title="Detail">
                                                                     <i class="ti-eye"></i>
                                                                 </a>
                                                                 @if ($item->status == 0)
-                                                                    <a href="{{ route('rawat-inap.ews-pasien-dewasa.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    <a href="{{ route('rawat-inap.pra-anestesi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                         class="btn btn-warning btn-sm ms-2" title="Edit">
                                                                         <i class="ti-pencil"></i>
                                                                     </a>
                                                                 @endif
 
                                                                 <form
-                                                                    action="{{ route('rawat-inap.ews-pasien-dewasa.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    action="{{ route('rawat-inap.pra-anestesi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form ms-2"
                                                                     style="display: inline;">
                                                                     @csrf
@@ -114,15 +109,15 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data EWS Dewasa</td>
+                                                        <td colspan="8" class="text-center">Tidak ada data Asesmen Pra Anestesi & Sedasi</td>
                                                     </tr>
-                                                @endforelse --}}
+                                                @endforelse
                                             </tbody>
                                         </table>
 
                                         <!-- Pagination -->
                                         <div class="d-flex justify-content-end">
-                                            {{-- {{ $ewsPasienDewasa->links() }} --}}
+                                            {{ $asesmenPraAnestesi->links() }}
                                         </div>
                                     </div>
                                 </div>
