@@ -55,7 +55,7 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <a href="{{ route('rawat-inap.pra-anestesi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                                <a href="{{ route('rawat-inap.asesmen-pra-anestesi.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti-plus"></i> Tambah
                                                 </a>
@@ -82,19 +82,17 @@
                                                         <td>{{ str()->title($item->userCreate->name) }}</td>
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ route('rawat-inap.pra-anestesi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                <a href="{{ route('rawat-inap.asesmen-pra-anestesi.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     class="btn btn-info btn-sm ms-2" title="Detail">
                                                                     <i class="ti-eye"></i>
+                                                                </a>                                                                
+                                                                <a href="{{ route('rawat-inap.asesmen-pra-anestesi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    class="btn btn-warning btn-sm ms-2" title="Edit">
+                                                                    <i class="ti-pencil"></i>
                                                                 </a>
-                                                                @if ($item->status == 0)
-                                                                    <a href="{{ route('rawat-inap.pra-anestesi.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
-                                                                        class="btn btn-warning btn-sm ms-2" title="Edit">
-                                                                        <i class="ti-pencil"></i>
-                                                                    </a>
-                                                                @endif
 
                                                                 <form
-                                                                    action="{{ route('rawat-inap.pra-anestesi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
+                                                                    action="{{ route('rawat-inap.asesmen-pra-anestesi.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $item->id]) }}"
                                                                     method="POST" class="delete-form ms-2"
                                                                     style="display: inline;">
                                                                     @csrf
@@ -141,7 +139,7 @@
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
-                        text: 'Data EWS Pasien Dewasa ini akan dihapus secara permanen!',
+                        text: 'Data Asesmen Pra Anestesi ini akan dihapus secara permanen!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',

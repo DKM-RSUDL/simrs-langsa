@@ -99,7 +99,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\PraAnestesiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanSecondOpinionController;
@@ -529,9 +529,9 @@ Route::middleware('ssoToken')->group(function () {
                             });
 
                             // pra-anestesi
-                            Route::prefix('pra-anestesi')->group(function () {
-                                Route::name('.pra-anestesi')->group(function () {
-                                    Route::controller(PraAnestesiController::class)->group(function () {
+                            Route::prefix('asesmen-pra-anestesi')->group(function () {
+                                Route::name('.asesmen-pra-anestesi')->group(function () {
+                                    Route::controller(AsesmenPraAnestesiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');

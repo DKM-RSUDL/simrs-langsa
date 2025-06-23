@@ -1,6 +1,7 @@
 @extends('layouts.administrator.master')
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/MedisGawatDaruratController.css') }}">
     <style>
         .card {
             border-radius: 10px;
@@ -51,7 +52,7 @@
                 </div>
 
                 <form id="praAnestesiForm" method="POST"
-                    action="{{ route('rawat-inap.pra-anestesi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
+                    action="{{ route('rawat-inap.asesmen-pra-anestesi.store', [$dataMedis->kd_unit, $dataMedis->kd_pasien, $dataMedis->tgl_masuk, $dataMedis->urut_masuk]) }}">
                     @csrf
 
                     <div class="card shadow-sm border-0">
@@ -325,12 +326,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_perdarahan"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_perdarahan"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -340,12 +341,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_pembekuan"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_pembekuan"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -355,12 +356,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_anestesi"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_anestesi"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -370,12 +371,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rk_operasi_jantung" value="Y">
+                                                            name="rk_operasi_jantung" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rk_operasi_jantung" value="T">
+                                                            name="rk_operasi_jantung" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -385,12 +386,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_diabetes"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_diabetes"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -402,12 +403,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rk_serangan_jantung" value="Y">
+                                                            name="rk_serangan_jantung" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rk_serangan_jantung" value="T">
+                                                            name="rk_serangan_jantung" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -417,12 +418,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_hipertensi"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_hipertensi"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -431,13 +432,13 @@
                                                 <label class="form-label fw-bold">Tuberkulosis</label>
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="rk_tbc"
-                                                            value="Y">
+                                                        <input class="form-check-input" type="radio" name="rk_tuberkulosis"
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="rk_tbc"
-                                                            value="T">
+                                                        <input class="form-check-input" type="radio" name="rk_tuberkulosis"
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -447,12 +448,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_penyakit_lain"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rk_penyakit_lain"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -486,7 +487,7 @@
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="bahasa"
-                                                        id="bahasa_lain" value="Lainnya">
+                                                        id="bahasa_lain" value="Bahasa Lainnya">
                                                     <label class="form-check-label" for="bahasa_lain">Lainnya:</label>
                                                     <input type="text" class="form-control mt-2" name="bahasa_lain"
                                                         placeholder="Sebutkan bahasa lain">
@@ -499,12 +500,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="gangguan_penglihatan" value="Y">
+                                                            name="gangguan_penglihatan" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="gangguan_penglihatan" value="T">
+                                                            name="gangguan_penglihatan" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -514,12 +515,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="gangguan_pendengaran" value="Y">
+                                                            name="gangguan_pendengaran" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="gangguan_pendengaran" value="T">
+                                                            name="gangguan_pendengaran" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -529,12 +530,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="gangguan_bicara"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="gangguan_bicara"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -559,12 +560,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_perdarahan"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_perdarahan"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -574,12 +575,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_pembekuan"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_pembekuan"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -589,12 +590,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_maag"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_maag"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -604,12 +605,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_anemia"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_anemia"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -619,12 +620,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_sesak"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_sesak"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -634,12 +635,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_asma"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_asma"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -649,12 +650,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_diabetes"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_diabetes"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -664,12 +665,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_pingsan"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_pingsan"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -681,12 +682,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rp_serangan_jantung" value="Y">
+                                                            name="rp_serangan_jantung" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rp_serangan_jantung" value="T">
+                                                            name="rp_serangan_jantung" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -696,12 +697,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_hepatitis"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_hepatitis"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -711,12 +712,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_hipertensi"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_hipertensi"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -726,12 +727,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rp_sumbatan_nafas" value="Y">
+                                                            name="rp_sumbatan_nafas" value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
-                                                            name="rp_sumbatan_nafas" value="T">
+                                                            name="rp_sumbatan_nafas" value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -741,12 +742,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_mengorok"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_mengorok"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -756,12 +757,12 @@
                                                 <div class="d-flex gap-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_penyakit_lain"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="rp_penyakit_lain"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -792,12 +793,12 @@
                                                 <div class="d-flex gap-3 mb-2">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="transfusi_darah"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="transfusi_darah"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -810,12 +811,12 @@
                                                 <div class="d-flex gap-3 mb-2">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="periksa_hiv"
-                                                            value="Y">
+                                                            value="Ya">
                                                         <label class="form-check-label">Ya</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="periksa_hiv"
-                                                            value="T">
+                                                            value="Tidak">
                                                         <label class="form-check-label">Tidak</label>
                                                     </div>
                                                 </div>
@@ -844,12 +845,12 @@
                                                         <label class="form-label fw-bold small">Lensa Kontak</label>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="lensa_kontak"
-                                                                value="Y">
+                                                                value="Ya">
                                                             <label class="form-check-label small">Ya</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="lensa_kontak"
-                                                                value="T">
+                                                                value="Tidak">
                                                             <label class="form-check-label small">Tidak</label>
                                                         </div>
                                                     </div>
@@ -857,12 +858,12 @@
                                                         <label class="form-label fw-bold small">Alat Bantu Dengar</label>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
-                                                                name="alat_bantu_dengar" value="Y">
+                                                                name="alat_bantu_dengar" value="Ya">
                                                             <label class="form-check-label small">Ya</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
-                                                                name="alat_bantu_dengar" value="T">
+                                                                name="alat_bantu_dengar" value="Tidak">
                                                             <label class="form-check-label small">Tidak</label>
                                                         </div>
                                                     </div>
@@ -870,12 +871,12 @@
                                                         <label class="form-label fw-bold small">Gigi Palsu</label>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="gigi_palsu"
-                                                                value="Y">
+                                                                value="Ya">
                                                             <label class="form-check-label small">Ya</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="gigi_palsu"
-                                                                value="T">
+                                                                value="Tidak">
                                                             <label class="form-check-label small">Tidak</label>
                                                         </div>
                                                     </div>
@@ -919,7 +920,7 @@
                             </div>
 
                             <!-- Khusus Pasien Perempuan -->
-                            <div class="card mb-4 shadow-sm" id="pasien-perempuan" style="display: none;">
+                            <div class="card mb-4 shadow-sm" id="pasien-perempuan">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-female me-2"></i>Khusus Pasien
                                         Perempuan</h6>
@@ -950,160 +951,11 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Menyusui</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="Y">
+                                                    <input class="form-check-input" type="radio" name="menyusui" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="T">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Khusus Pasien Perempuan -->
-                            <div class="card mb-4 shadow-sm" id="pasien-perempuan" style="display: none;">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-female me-2"></i>Khusus Pasien
-                                        Perempuan</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Kehamilan</label>
-                                                <input type="number" class="form-control" name="jumlah_kehamilan"
-                                                    placeholder="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Anak</label>
-                                                <input type="number" class="form-control" name="jumlah_anak"
-                                                    placeholder="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Terakhir</label>
-                                                <input type="date" class="form-control" name="menstruasi_terakhir">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menyusui</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="Y">
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="T">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Khusus Pasien Perempuan -->
-                            <div class="card mb-4 shadow-sm" id="pasien-perempuan" style="display: none;">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-female me-2"></i>Khusus Pasien Perempuan</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Kehamilan</label>
-                                                <input type="number" class="form-control" name="jumlah_kehamilan" placeholder="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Anak</label>
-                                                <input type="number" class="form-control" name="jumlah_anak" placeholder="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Terakhir</label>
-                                                <input type="date" class="form-control" name="menstruasi_terakhir">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi Teratur</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_teratur" value="Y">
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_teratur" value="T">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menyesui</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="Y">
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="T">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 shadow-sm">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="bi bi-person-fill"></i> Khusus Pasien Perempuan
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Kehamilan</label>
-                                                <input type="text" class="form-control" name="jumlah_kehamilan"
-                                                    placeholder="Masukkan jumlah kehamilan">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Jumlah Anak</label>
-                                                <input type="text" class="form-control" name="jumlah_anak"
-                                                    placeholder="Masukkan jumlah anak">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menstruasi terakhir</label>
-                                                <input type="text" class="form-control" name="menstruasi_terakhir"
-                                                    placeholder="Masukkan Menstruasi terakhir">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Menyusui</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="Y">
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menyusui" value="T">
+                                                    <input class="form-check-input" type="radio" name="menyusui" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
@@ -1124,88 +976,88 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Hilangnya Gigi</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="hilangnya_gigi" value="Y">
+                                                    <input class="form-check-input" type="radio" name="hilangnya_gigi" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="hilangnya_gigi" value="T">
+                                                    <input class="form-check-input" type="radio" name="hilangnya_gigi" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Masalah Mobilitas Leker</label>
+                                                <label class="form-label fw-bold">Masalah Mobilitas Leher</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="masalah_mobilitas_leher" value="Y">
+                                                    <input class="form-check-input" type="radio" name="masalah_mobilitas_leher" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="masalah_mobilitas_leher" value="T">
+                                                    <input class="form-check-input" type="radio" name="masalah_mobilitas_leher" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Leher Pendek</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="leher_pendek" value="Y">
+                                                    <input class="form-check-input" type="radio" name="leher_pendek" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="leher_pendek" value="T">
+                                                    <input class="form-check-input" type="radio" name="leher_pendek" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Batuk</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="batuk" value="Y">
+                                                    <input class="form-check-input" type="radio" name="batuk" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="batuk" value="T">
+                                                    <input class="form-check-input" type="radio" name="batuk" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Sesak Nafas</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sesak_nafas" value="Y">
+                                                    <input class="form-check-input" type="radio" name="sesak_nafas" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sesak_nafas" value="T">
+                                                    <input class="form-check-input" type="radio" name="sesak_nafas" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Baru Saja Menderita Infeksi</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="baru_saja_infeksi" value="Y">
+                                                    <input class="form-check-input" type="radio" name="baru_saja_infeksi" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="baru_saja_infeksi" value="T">
+                                                    <input class="form-check-input" type="radio" name="baru_saja_infeksi" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Menstruasi Tidak Normal</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Y">
+                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="T">
+                                                    <input class="form-check-input" type="radio" name="menstruasi_tidak_normal" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Pingsan</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="pingsan" value="Y">
+                                                    <input class="form-check-input" type="radio" name="pingsan" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="pingsan" value="T">
+                                                    <input class="form-check-input" type="radio" name="pingsan" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
@@ -1214,102 +1066,91 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Sakit Dada</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="Y">
+                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="T">
+                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Denyut Jantung Tidak Normal</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="denyut_jantung_tidak_normal" value="Y">
+                                                    <input class="form-check-input" type="radio" name="denyut_jantung_tidak_normal" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="denyut_jantung_tidak_normal" value="T">
+                                                    <input class="form-check-input" type="radio" name="denyut_jantung_tidak_normal" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Muntah</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="muntah" value="Y">
+                                                    <input class="form-check-input" type="radio" name="muntah" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="muntah" value="T">
+                                                    <input class="form-check-input" type="radio" name="muntah" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Susaah BAK</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="susaah_bab" value="Y">
+                                                    <input class="form-check-input" type="radio" name="susaah_bak" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="susaah_bab" value="T">
+                                                    <input class="form-check-input" type="radio" name="susaah_bak" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Kejang</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="kejang" value="Y">
+                                                    <input class="form-check-input" type="radio" name="kejang" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="kejang" value="T">
+                                                    <input class="form-check-input" type="radio" name="kejang" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Sedang Hamil</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Y">
+                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="T">
+                                                    <input class="form-check-input" type="radio" name="sedang_hamil" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Stroke</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="stroke" value="Y">
+                                                    <input class="form-check-input" type="radio" name="stroke" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="stroke" value="T">
+                                                    <input class="form-check-input" type="radio" name="stroke" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Obesitas</label>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="obesitas" value="Y">
+                                                    <input class="form-check-input" type="radio" name="obesitas" value="Ya">
                                                     <label class="form-check-label">Ya</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="obesitas" value="T">
+                                                    <input class="form-check-input" type="radio" name="obesitas" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Sakit Dada</label>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="Y">
-                                                    <label class="form-check-label">Ya</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="sakit_dada" value="T">
-                                                    <label class="form-check-label">Tidak</label>
-                                                </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -1379,21 +1220,21 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="text" class="form-control" name="bb"
+                                                <input type="number" class="form-control" name="bb"
                                                     placeholder="Berat Badan (kg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">TD</label>
-                                                <input type="text" class="form-control" name="td"
+                                                <input type="number" class="form-control" name="td"
                                                     placeholder="Tekanan Darah (mmHg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="text" class="form-control" name="nadi"
+                                                <input type="number" class="form-control" name="nadi"
                                                     placeholder="Nadi (x/menit)">
                                             </div>
                                         </div>
@@ -1402,13 +1243,13 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="text" class="form-control" name="suhu" placeholder="Suhu (°C)">
+                                                <input type="number" class="form-control" name="suhu" placeholder="Suhu (°C)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="text" class="form-control" name="Paru"
+                                                <input type="number" class="form-control" name="paru"
                                                     placeholder="Pernapasan (x/menit)">
                                             </div>
                                         </div>
@@ -1673,7 +1514,7 @@
                             </div>
 
                             <!-- Form Buttons -->
-                            <div class="d-flex justify-content-end mt-4">                                
+                            <div class="d-flex justify-content-end mt-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i> Simpan Asesmen
                                 </button>
