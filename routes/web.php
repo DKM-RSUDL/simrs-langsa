@@ -75,6 +75,9 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienAnakController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienDewasaController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\EWSPasienObstetrikController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\FarmasiController as RawatInapFarmasiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\GiziAnakController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\GiziDewasaController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\GiziMonitoringController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\InformedConsentController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\IntakeCairanController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\KonsultasiController as RawatInapKonsultasiController;
@@ -1338,6 +1341,57 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+
+                            //Gizi
+                            Route::prefix('gizi')->group(function () {
+                                Route::name('.gizi')->group(function () {
+
+                                    Route::prefix('anak')->group(function () {
+                                        Route::name('.anak')->group(function () {
+                                            Route::controller(GiziAnakController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/pdf/{id}', 'pdf')->name('.pdf');
+                                            });
+                                        });
+                                    });    
+
+                                    Route::prefix('dewasa')->group(function () {
+                                        Route::name('.dewasa')->group(function () {
+                                            Route::controller(GiziDewasaController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::get('/create', 'create')->name('.create');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::get('/{id}/edit', 'edit')->name('.edit');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::delete('/{id}', 'destroy')->name('.destroy');
+                                                Route::get('/pdf/{id}', 'pdf')->name('.pdf');
+                                            });
+                                        });
+                                    });
+
+                                    Route::prefix('monitoring')->group(function () {
+                                        Route::name('.monitoring')->group(function () {
+                                            Route::controller(GiziMonitoringController::class)->group(function () {
+                                                Route::get('/', 'index')->name('.index');
+                                                Route::post('/', 'store')->name('.store');
+                                                Route::put('/{id}', 'update')->name('.update');
+                                                Route::delete('/', 'destroy')->name('.destroy');
+                                            });
+                                        });
+                                    });
+
+                                });
+                            });
+
+
                         });
                     });
                 });
