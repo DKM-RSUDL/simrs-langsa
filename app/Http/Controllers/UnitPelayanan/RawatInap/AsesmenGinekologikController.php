@@ -12,6 +12,7 @@ use App\Models\RmeAsesmenGinekologikEkstremitasGinekologik;
 use App\Models\RmeAsesmenGinekologikPemeriksaanDischarge;
 use App\Models\RmeAsesmenGinekologikTandaVital;
 use App\Models\RmeAsesmenPemeriksaanFisik;
+use App\Models\RmeAsesmenGinekologikPemeriksaanFisik;
 use App\Models\RmeEfekNyeri;
 use App\Models\RmeFaktorPemberat;
 use App\Models\RmeFaktorPeringan;
@@ -145,9 +146,10 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->usia_kehamilan_total_hari = $request->usia_kehamilan_total_hari;
             $asesmenGinekologik->usia_kehamilan_display = $request->usia_kehamilan_display;
             $asesmenGinekologik->jumlah = $request->jumlah;
-            $asesmenGinekologik->tahun =  Carbon::parse($request->tahun);
+            $asesmenGinekologik->tahun =  $request->tahun;
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
+            $asesmenGinekologik->jumlah_suami = $request->jumlah_suami;
             $asesmenGinekologik->save();
 
             // 3. Simpan data tanda vital
@@ -209,6 +211,34 @@ class AsesmenGinekologikController extends Controller
             $ginekologikDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $ginekologikDiagnosisImplementasi->prognosis = $request->prognosis;
             $ginekologikDiagnosisImplementasi->save();
+
+            $ginekologikPemeriksaanFisik = new RmeAsesmenGinekologikPemeriksaanFisik();
+            $ginekologikPemeriksaanFisik->id_asesmen = $asesmen->id;
+            $ginekologikPemeriksaanFisik->paru_kesadaran = $request->paru_kesadaran;
+            $ginekologikPemeriksaanFisik->kepala = $request->kepala;
+            $ginekologikPemeriksaanFisik->kepala_keterangan = $request->kepala_keterangan;
+            $ginekologikPemeriksaanFisik->hidung = $request->hidung;
+            $ginekologikPemeriksaanFisik->hidung_keterangan = $request->hidung_keterangan;
+            $ginekologikPemeriksaanFisik->mata = $request->mata;
+            $ginekologikPemeriksaanFisik->mata_keterangan = $request->mata_keterangan;
+            $ginekologikPemeriksaanFisik->leher = $request->leher;
+            $ginekologikPemeriksaanFisik->leher_keterangan = $request->leher_keterangan;
+            $ginekologikPemeriksaanFisik->tenggorokan = $request->tenggorokan;
+            $ginekologikPemeriksaanFisik->tenggorokan_keterangan = $request->tenggorokan_keterangan;
+            $ginekologikPemeriksaanFisik->jantung = $request->jantung;
+            $ginekologikPemeriksaanFisik->jantung_keterangan = $request->jantung_keterangan;
+            $ginekologikPemeriksaanFisik->paru = $request->paru;
+            $ginekologikPemeriksaanFisik->paru_keterangan = $request->paru_keterangan;
+            $ginekologikPemeriksaanFisik->hati = $request->hati;
+            $ginekologikPemeriksaanFisik->hati_keterangan = $request->hati_keterangan;
+            $ginekologikPemeriksaanFisik->limpa = $request->limpa;
+            $ginekologikPemeriksaanFisik->limpa_keterangan = $request->limpa_keterangan;
+            $ginekologikPemeriksaanFisik->kulit = $request->kulit;
+            $ginekologikPemeriksaanFisik->kulit_keterangan = $request->kulit_keterangan;
+            $ginekologikPemeriksaanFisik->mulut_gigi = $request->mulut_gigi;
+            $ginekologikPemeriksaanFisik->mulut_gigi_keterangan = $request->mulut_gigi_keterangan;
+            $ginekologikPemeriksaanFisik->save();
+
 
             // PERBAIKAN UTAMA: Simpan data pemeriksaan fisik dengan ID yang benar
             $itemFisik = MrItemFisik::all();
@@ -294,6 +324,7 @@ class AsesmenGinekologikController extends Controller
                 'rmeAsesmenGinekologikPemeriksaanDischarge',
                 'rmeAsesmenGinekologikDiagnosisImplementasi',
                 'rmeAlergiPasien',
+                'rmeAsesmenGinekologikPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -332,6 +363,7 @@ class AsesmenGinekologikController extends Controller
                 'rmeAsesmenGinekologikPemeriksaanDischarge',
                 'rmeAsesmenGinekologikDiagnosisImplementasi',
                 'rmeAlergiPasien',
+                'rmeAsesmenGinekologikPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
                     $query->orderBy('id_item_fisik');
                 },
@@ -361,7 +393,7 @@ class AsesmenGinekologikController extends Controller
     public function update(Request $request, $kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
     {
         DB::beginTransaction();
-        
+
         try {
             // 1. Buat record RmeAsesmen
             $asesmen = RmeAsesmen::findOrFail($id);
@@ -396,9 +428,10 @@ class AsesmenGinekologikController extends Controller
             $asesmenGinekologik->usia_kehamilan_total_hari = $request->usia_kehamilan_total_hari;
             $asesmenGinekologik->usia_kehamilan_display = $request->usia_kehamilan_display;
             $asesmenGinekologik->jumlah = $request->jumlah;
-            $asesmenGinekologik->tahun =  Carbon::parse($request->tahun);
+            $asesmenGinekologik->tahun =  $request->tahun;
             $asesmenGinekologik->riwayat_obstetrik = $request->riwayat_obstetrik;
             $asesmenGinekologik->riwayat_penyakit_dahulu = $request->riwayat_penyakit_dahulu;
+            $asesmenGinekologik->jumlah_suami = $request->jumlah_suami;
             $asesmenGinekologik->save();
 
             // 3. Simpan data tanda vital
@@ -460,6 +493,33 @@ class AsesmenGinekologikController extends Controller
             $ginekologikDiagnosisImplementasi->kolaborasi = $request->kolaborasi;
             $ginekologikDiagnosisImplementasi->prognosis = $request->prognosis;
             $ginekologikDiagnosisImplementasi->save();
+
+            $ginekologikPemeriksaanFisik = RmeAsesmenGinekologikPemeriksaanFisik::firstOrNew(['id_asesmen' => $asesmen->id]);
+            $ginekologikPemeriksaanFisik->id_asesmen = $asesmen->id;
+            $ginekologikPemeriksaanFisik->paru_kesadaran = $request->paru_kesadaran;
+            $ginekologikPemeriksaanFisik->kepala = $request->kepala;
+            $ginekologikPemeriksaanFisik->kepala_keterangan = $request->kepala_keterangan;
+            $ginekologikPemeriksaanFisik->hidung = $request->hidung;
+            $ginekologikPemeriksaanFisik->hidung_keterangan = $request->hidung_keterangan;
+            $ginekologikPemeriksaanFisik->mata = $request->mata;
+            $ginekologikPemeriksaanFisik->mata_keterangan = $request->mata_keterangan;
+            $ginekologikPemeriksaanFisik->leher = $request->leher;
+            $ginekologikPemeriksaanFisik->leher_keterangan = $request->leher_keterangan;
+            $ginekologikPemeriksaanFisik->tenggorokan = $request->tenggorokan;
+            $ginekologikPemeriksaanFisik->tenggorokan_keterangan = $request->tenggorokan_keterangan;
+            $ginekologikPemeriksaanFisik->jantung = $request->jantung;
+            $ginekologikPemeriksaanFisik->jantung_keterangan = $request->jantung_keterangan;
+            $ginekologikPemeriksaanFisik->paru = $request->paru;
+            $ginekologikPemeriksaanFisik->paru_keterangan = $request->paru_keterangan;
+            $ginekologikPemeriksaanFisik->hati = $request->hati;
+            $ginekologikPemeriksaanFisik->hati_keterangan = $request->hati_keterangan;
+            $ginekologikPemeriksaanFisik->limpa = $request->limpa;
+            $ginekologikPemeriksaanFisik->limpa_keterangan = $request->limpa_keterangan;
+            $ginekologikPemeriksaanFisik->kulit = $request->kulit;
+            $ginekologikPemeriksaanFisik->kulit_keterangan = $request->kulit_keterangan;
+            $ginekologikPemeriksaanFisik->mulut_gigi = $request->mulut_gigi;
+            $ginekologikPemeriksaanFisik->mulut_gigi_keterangan = $request->mulut_gigi_keterangan;
+            $ginekologikPemeriksaanFisik->save();
 
             // Update ke table RmePemeriksaanFisik
             $itemFisik = MrItemFisik::all();
@@ -546,6 +606,7 @@ class AsesmenGinekologikController extends Controller
                 'rmeAsesmenGinekologikPemeriksaanDischarge',
                 'rmeAsesmenGinekologikDiagnosisImplementasi',
                 'rmeAlergiPasien',
+                'rmeAsesmenGinekologikPemeriksaanFisik',
                 'pemeriksaanFisik' => function ($query) {
                 $query->orderBy('id_item_fisik');
             },
