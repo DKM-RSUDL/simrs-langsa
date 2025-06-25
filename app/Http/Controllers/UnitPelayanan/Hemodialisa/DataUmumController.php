@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\UnitPelayanan\Hemodialisa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
 use App\Models\Kunjungan;
+use App\Models\RmeAlergiPasien;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -74,8 +76,13 @@ class DataUmumController extends Controller
             $dataMedis->pasien->umur = 'Tidak Diketahui';
         }
 
+        $dokter = Dokter::where('status', 1)->get();
+        $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+
         return view('unit-pelayanan.hemodialisa.pelayanan.data-umum.create', compact(
             'dataMedis',
+            'dokter',
+            'alergiPasien'
         ));
     }
 }
