@@ -1361,7 +1361,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/pdf/{id}', 'pdf')->name('.pdf');
                                             });
                                         });
-                                    });    
+                                    });
 
                                     Route::prefix('dewasa')->group(function () {
                                         Route::name('.dewasa')->group(function () {
@@ -1388,11 +1388,8 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
-
                                 });
                             });
-
-
                         });
                     });
                 });
@@ -1997,6 +1994,11 @@ Route::middleware('ssoToken')->group(function () {
                                 Route::controller(DataUmumController::class)->group(function () {
                                     Route::get('/', 'index')->name('.index');
                                     Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
                                 });
                             });
                         });
