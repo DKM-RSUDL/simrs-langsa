@@ -125,10 +125,6 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesi->tanggal_create = now();
 
             // Data dari form
-            $asesmenPraAnestesi->umur = $request->umur ?? null;
-            $asesmenPraAnestesi->jenis_kelamin = $request->jenis_kelamin ?? null;
-            $asesmenPraAnestesi->menikah = $request->menikah ?? null;
-            $asesmenPraAnestesi->pekerjaan = $request->pekerjaan ?? null;
             $asesmenPraAnestesi->merokok = $request->merokok ?? null;
             $asesmenPraAnestesi->alkohol = $request->alkohol ?? null;
             $asesmenPraAnestesi->obat_resep = $request->obat_resep ?? null;
@@ -267,12 +263,18 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesiDiagnosisPmRtRo->asa_klasifikasi = $request->asa_klasifikasi ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->pusa_mulai = $request->pusa_mulai ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->pusa_mulai_jam = $request->pusa_mulai_jam ?? null;
-            $asesmenPraAnestesiDiagnosisPmRtRo->rencana_tindakan = $request->rencana_tindakan ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_tanggal = $request->rencana_tanggal ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_jam = $request->rencana_jam ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi = $request->rencana_operasi ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi_tanggal = $request->rencana_operasi_tanggal ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi_jam = $request->rencana_operasi_jam ?? null;
+            
+            $rekomendasiAnestesi = $request->rekomendasi_tindakan_anestesi;
+            if (is_array($rekomendasiAnestesi) && !empty($rekomendasiAnestesi)) {
+                $asesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi = json_encode($rekomendasiAnestesi);
+            } else {
+                $asesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi = null;
+            }
             $asesmenPraAnestesiDiagnosisPmRtRo->save();
 
             DB::commit();
@@ -332,13 +334,9 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesi->tgl_masuk = $tgl_masuk;
             $asesmenPraAnestesi->urut_masuk = $urut_masuk;
 
-            $asesmenPraAnestesi->user_edit = Auth::id();            
+            $asesmenPraAnestesi->user_edit = Auth::id();
 
             // Data dari form
-            $asesmenPraAnestesi->umur = $request->umur ?? null;
-            $asesmenPraAnestesi->jenis_kelamin = $request->jenis_kelamin ?? null;
-            $asesmenPraAnestesi->menikah = $request->menikah ?? null;
-            $asesmenPraAnestesi->pekerjaan = $request->pekerjaan ?? null;
             $asesmenPraAnestesi->merokok = $request->merokok ?? null;
             $asesmenPraAnestesi->alkohol = $request->alkohol ?? null;
             $asesmenPraAnestesi->obat_resep = $request->obat_resep ?? null;
@@ -477,12 +475,17 @@ class AsesmenPraAnestesiController extends Controller
             $asesmenPraAnestesiDiagnosisPmRtRo->asa_klasifikasi = $request->asa_klasifikasi ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->pusa_mulai = $request->pusa_mulai ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->pusa_mulai_jam = $request->pusa_mulai_jam ?? null;
-            $asesmenPraAnestesiDiagnosisPmRtRo->rencana_tindakan = $request->rencana_tindakan ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_tanggal = $request->rencana_tanggal ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_jam = $request->rencana_jam ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi = $request->rencana_operasi ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi_tanggal = $request->rencana_operasi_tanggal ?? null;
             $asesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi_jam = $request->rencana_operasi_jam ?? null;
+            $rekomendasiAnestesi = $request->rekomendasi_tindakan_anestesi;
+            if (is_array($rekomendasiAnestesi) && !empty($rekomendasiAnestesi)) {
+                $asesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi = json_encode($rekomendasiAnestesi);
+            } else {
+                $asesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi = null;
+            }
             $asesmenPraAnestesiDiagnosisPmRtRo->save();
 
             DB::commit();

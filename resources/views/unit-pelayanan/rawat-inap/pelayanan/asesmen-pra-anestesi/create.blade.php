@@ -61,61 +61,6 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <!-- Data Demografi -->
-                            <h5 class="text-primary font-weight-bold mb-3"><i class="fas fa-user me-2"></i>Data Demografi
-                            </h5>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Umur</label>
-                                        <input type="number" class="form-control" name="umur" placeholder="Masukkan umur">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Jenis Kelamin</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="laki_laki" value="1">
-                                                <label class="form-check-label" for="laki_laki">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="perempuan" value="0">
-                                                <label class="form-check-label" for="perempuan">Perempuan</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Status Menikah</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah" id="menikah_ya"
-                                                    value="Ya">
-                                                <label class="form-check-label" for="menikah_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah"
-                                                    id="menikah_tidak" value="Tidak">
-                                                <label class="form-check-label" for="menikah_tidak">Tidak</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Pekerjaan</label>
-                                        <input type="text" class="form-control" name="pekerjaan"
-                                            placeholder="Masukkan pekerjaan">
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Kebiasaan -->
                             <div class="card mb-4 shadow-sm">
@@ -1150,7 +1095,7 @@
                                                     <input class="form-check-input" type="radio" name="obesitas" value="Tidak">
                                                     <label class="form-check-label">Tidak</label>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -1171,9 +1116,15 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Kesadaran</label>
-                                                <input type="text" class="form-control" name="kesadaran"
-                                                    placeholder="Masukkan kesadaran">
+                                                <label lass="form-label fw-bold">Kesadaran</label>
+                                                <select class="form-select" name="kesadaran">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="Compos Mentis">Compos Mentis</option>
+                                                    <option value="Apatis">Apatis</option>
+                                                    <option value="Sopor">Sopor</option>
+                                                    <option value="Coma">Coma</option>
+                                                    <option value="Somnolen">Somnolen</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -1220,21 +1171,21 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="number" class="form-control" name="bb"
+                                                <input type="text" class="form-control" name="bb"
                                                     placeholder="Berat Badan (kg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">TD</label>
-                                                <input type="number" class="form-control" name="td"
+                                                <input type="text" class="form-control" name="td"
                                                     placeholder="Tekanan Darah (mmHg)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="number" class="form-control" name="nadi"
+                                                <input type="text" class="form-control" name="nadi"
                                                     placeholder="Nadi (x/menit)">
                                             </div>
                                         </div>
@@ -1243,13 +1194,13 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="number" class="form-control" name="suhu" placeholder="Suhu (°C)">
+                                                <input type="text" class="form-control" name="suhu" placeholder="Suhu (°C)">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="number" class="form-control" name="paru"
+                                                <input type="text" class="form-control" name="paru"
                                                     placeholder="Pernapasan (x/menit)">
                                             </div>
                                         </div>
@@ -1420,20 +1371,106 @@
                                             <label class="form-check-label">ASA 4 - Pasien dengan penyakit sitamik berat yang mengancam nyawa</label>
                                         </div>
                                     </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Rekomendasi tindakan anestesi yang dipilih</label>
+                                        <div class="mt-2">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum Intravena" id="anestesi_umum_intravena"
+                                                    {{ in_array('Anestesi umum Intravena', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="anestesi_umum_intravena">
+                                                    Anestesi umum Intravena
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Sungkup muka" id="sungkup_muka"
+                                                    {{ in_array('Sungkup muka', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="sungkup_muka">
+                                                    Sungkup muka
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Laringeal mask airway" id="laringeal_mask_airway"
+                                                    {{ in_array('Laringeal mask airway', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="laringeal_mask_airway">
+                                                    Laringeal mask airway
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
+                                                    {{ in_array('Pipa endotrakeal tube', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="pipa_endotrakeal_tube">
+                                                    Pipa endotrakeal tube
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
+                                                    {{ in_array('Regional anestesi: Spinal Anastesi Blok', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="regional_spinal">
+                                                    Regional anestesi: Spinal Anastesi Blok
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Epidural" id="epidural"
+                                                    {{ in_array('Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="epidural">
+                                                    Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
+                                                    {{ in_array('Kombinasi Spinal Epidural', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="kombinasi_spinal_epidural">
+                                                    Kombinasi Spinal Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Peripheral Nerve Block" id="peripheral_nerve_block"
+                                                    {{ in_array('Peripheral Nerve Block', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="peripheral_nerve_block">
+                                                    Peripheral Nerve Block
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
+                                                    {{ in_array('Anestesi umum + Regional Anestesi', old('rekomendasi_tindakan_anestesi', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="anestesi_kombinasi">
+                                                    Anestesi umum + Regional Anestesi
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Pusa Mulai -->
+                            <!-- Puasa mulai -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Pusa Mulai
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Puasa mulai
                                     </h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Pusa mulai</label>
+                                                <label class="form-label fw-bold">Puasa mulai</label>
                                                 <input type="date" class="form-control" name="pusa_mulai">
                                             </div>
                                         </div>
@@ -1447,29 +1484,19 @@
                                 </div>
                             </div>
 
-                            <!-- Rencana tindakan OK -->
+                            <!-- Rencana tiba di OK -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-stethoscope me-2"></i>Rencana
-                                        tindakan OK</h6>
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-stethoscope me-2"></i>Rencana tiba di OK</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Rencana tindakan</label>
-                                                <input type="text" class="form-control" name="rencana_tindakan"
-                                                    placeholder="Masukkan rencana tindakan">
-                                            </div>
-                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
                                                 <input type="date" class="form-control" name="rencana_tanggal">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>
@@ -1488,21 +1515,19 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Rencana Operasi</label>
                                                 <input type="text" class="form-control" name="rencana_operasi"
                                                     placeholder="Masukkan rencana operasi">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
                                                 <input type="date" class="form-control" name="rencana_operasi_tanggal">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>

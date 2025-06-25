@@ -63,63 +63,6 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <!-- Data Demografi -->
-                            <h5 class="text-primary font-weight-bold mb-3"><i class="fas fa-user me-2"></i>Data Demografi
-                            </h5>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Umur</label>
-                                        <input type="number" class="form-control" name="umur" placeholder="Masukkan umur"
-                                            value="{{ old('umur', $asesmenPraAnestesi->umur) }}" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Jenis Kelamin</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="laki_laki" value="1" {{ old('jenis_kelamin', $asesmenPraAnestesi->jenis_kelamin) == '1' ? 'checked' : '' }} disabled>
-                                                <label class="form-check-label" for="laki_laki">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="perempuan" value="0" {{ old('jenis_kelamin', $asesmenPraAnestesi->jenis_kelamin) == '0' ? 'checked' : '' }} disabled>
-                                                <label class="form-check-label" for="perempuan">Perempuan</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Status Menikah</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah" id="menikah_ya"
-                                                    value="Ya" {{ old('menikah', $asesmenPraAnestesi->menikah) == 'Ya' ? 'checked' : '' }} disabled>
-                                                <label class="form-check-label" for="menikah_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah"
-                                                    id="menikah_tidak" value="Tidak" {{ old('menikah', $asesmenPraAnestesi->menikah) == 'Tidak' ? 'checked' : '' }} disabled>
-                                                <label class="form-check-label" for="menikah_tidak">Tidak</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Pekerjaan</label>
-                                        <input type="text" class="form-control" name="pekerjaan"
-                                            placeholder="Masukkan pekerjaan"
-                                            value="{{ old('pekerjaan', $asesmenPraAnestesi->pekerjaan) }}" disabled>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Kebiasaan -->
                             <div class="card mb-4 shadow-sm">
@@ -135,7 +78,7 @@
                                                     class="form-control @error('merokok') is-invalid @enderror"
                                                     name="merokok"
                                                     value="{{ old('merokok', $asesmenPraAnestesi->merokok ?? '') }}"
-                                                    placeholder="Opsional - masukkan kebiasaan merokok" disabled>
+                                                    disabled>
                                                 @error('merokok')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -150,7 +93,7 @@
                                                     class="form-control @error('alkohol') is-invalid @enderror"
                                                     name="alkohol"
                                                     value="{{ old('alkohol', $asesmenPraAnestesi->alkohol ?? '') }}"
-                                                    placeholder="Opsional - masukkan kebiasaan alkohol" disabled>
+                                                    disabled>
                                                 @error('alkohol')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -175,7 +118,7 @@
                                                 <label class="form-label fw-bold">Obat Resep</label>
                                                 <textarea class="form-control @error('obat_resep') is-invalid @enderror"
                                                     name="obat_resep" rows="3"
-                                                    placeholder="Nama obat dan dosis" disabled>{{ old('obat_resep', $asesmenPraAnestesi->obat_resep ?? '') }}</textarea>
+                                                    disabled>{{ old('obat_resep', $asesmenPraAnestesi->obat_resep ?? '') }}</textarea>
                                                 @error('obat_resep')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -188,7 +131,7 @@
                                                 <label class="form-label fw-bold">Obat Bebas (Vitamin, Herbal)</label>
                                                 <textarea class="form-control @error('obat_bebas') is-invalid @enderror"
                                                     name="obat_bebas" rows="3"
-                                                    placeholder="Nama obat dan dosis" disabled>{{ old('obat_bebas', $asesmenPraAnestesi->obat_bebas ?? '') }}</textarea>
+                                                    disabled>{{ old('obat_bebas', $asesmenPraAnestesi->obat_bebas ?? '') }}</textarea>
                                                 @error('obat_bebas')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -227,7 +170,7 @@
                                                     @enderror
                                                     <input type="text"
                                                         class="form-control @error('aspirin_dosis') is-invalid @enderror"
-                                                        name="aspirin_dosis" placeholder="Dosis dan frekuensi"
+                                                        name="aspirin_dosis"
                                                         value="{{ old('aspirin_dosis', $asesmenPraAnestesi->aspirin_dosis ?? '') }}" disabled>
                                                     @error('aspirin_dosis')
                                                         <div class="invalid-feedback">
@@ -263,7 +206,7 @@
                                                     @enderror
                                                     <input type="text"
                                                         class="form-control @error('anti_sakit_dosis') is-invalid @enderror"
-                                                        name="anti_sakit_dosis" placeholder="Dosis dan frekuensi"
+                                                        name="anti_sakit_dosis"
                                                         value="{{ old('anti_sakit_dosis', $asesmenPraAnestesi->anti_sakit_dosis ?? '') }}" disabled>
                                                     @error('anti_sakit_dosis')
                                                         <div class="invalid-feedback">
@@ -297,7 +240,7 @@
                                             @enderror
                                             <input type="text"
                                                 class="form-control @error('steroid_lokasi') is-invalid @enderror"
-                                                name="steroid_lokasi" placeholder="Tanggal dan lokasi injeksi"
+                                                name="steroid_lokasi"
                                                 value="{{ old('steroid_lokasi', $asesmenPraAnestesi->steroid_lokasi ?? '') }}" disabled>
                                             @error('steroid_lokasi')
                                                 <div class="invalid-feedback">
@@ -339,7 +282,7 @@
                                                     <textarea
                                                         class="form-control @error('alergi_obat_detail') is-invalid @enderror"
                                                         name="alergi_obat_detail" rows="3"
-                                                        placeholder="Daftar obat dan tipe reaksi" disabled>{{ old('alergi_obat_detail', $asesmenPraAnestesi->alergi_obat_detail ?? '') }}</textarea>
+                                                        disabled>{{ old('alergi_obat_detail', $asesmenPraAnestesi->alergi_obat_detail ?? '') }}</textarea>
                                                     @error('alergi_obat_detail')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -652,7 +595,7 @@
                                             "Ya"</label>
                                         <textarea class="form-control @error('rk_keterangan') is-invalid @enderror"
                                             name="rk_keterangan" rows="4"
-                                            placeholder="Jelaskan detail penyakit keluarga" disabled>{{ old('rk_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRiwayatKeluarga->rk_keterangan ?? '') }}</textarea>
+                                            disabled>{{ old('rk_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRiwayatKeluarga->rk_keterangan ?? '') }}</textarea>
                                         @error('rk_keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -686,7 +629,7 @@
                                                     <label class="form-check-label" for="bahasa_lain">Lainnya:</label>
                                                     <input type="text"
                                                         class="form-control mt-2 @error('bahasa_lain') is-invalid @enderror"
-                                                        name="bahasa_lain" placeholder="Sebutkan bahasa lain"
+                                                        name="bahasa_lain"
                                                         value="{{ old('bahasa_lain', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRiwayatKeluarga->bahasa_lain ?? '') }}" disabled>
                                                     @error('bahasa_lain')
                                                         <div class="invalid-feedback">
@@ -1100,7 +1043,7 @@
                                             "Ya"</label>
                                         <textarea class="form-control @error('rp_keterangan') is-invalid @enderror"
                                             name="rp_keterangan" rows="4"
-                                            placeholder="Jelaskan detail penyakit yang pernah diderita" disabled>{{ old('rp_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->rp_keterangan ?? '') }}</textarea>
+                                            disabled>{{ old('rp_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->rp_keterangan ?? '') }}</textarea>
                                         @error('rp_keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1143,7 +1086,7 @@
                                                 @enderror
                                                 <input type="text"
                                                     class="form-control @error('transfusi_tahun') is-invalid @enderror"
-                                                    name="transfusi_tahun" placeholder="Bila Ya, tahun berapa?"
+                                                    name="transfusi_tahun"
                                                     value="{{ old('transfusi_tahun', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->transfusi_tahun ?? '') }}" disabled>
                                                 @error('transfusi_tahun')
                                                     <div class="invalid-feedback">
@@ -1175,7 +1118,7 @@
                                                 @enderror
                                                 <input type="text"
                                                     class="form-control @error('hiv_tahun') is-invalid @enderror"
-                                                    name="hiv_tahun" placeholder="Bila Ya, tahun berapa?"
+                                                    name="hiv_tahun"
                                                     value="{{ old('hiv_tahun', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->hiv_tahun ?? '') }}" disabled>
                                                 @error('hiv_tahun')
                                                     <div class="invalid-feedback">
@@ -1274,7 +1217,7 @@
                                         <label class="form-label fw-bold">Riwayat, Tahun, dan Jenis Operasi</label>
                                         <textarea class="form-control @error('riwayat_operasi') is-invalid @enderror"
                                             name="riwayat_operasi" rows="3"
-                                            placeholder="Sebutkan jenis operasi dan tahunnya" disabled>{{ old('riwayat_operasi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->riwayat_operasi ?? '') }}</textarea>
+                                            disabled>{{ old('riwayat_operasi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->riwayat_operasi ?? '') }}</textarea>
                                         @error('riwayat_operasi')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1286,7 +1229,7 @@
                                             Komplikasi/Reaksi yang Dialami</label>
                                         <textarea class="form-control @error('jenis_anestesi_sebelum') is-invalid @enderror"
                                             name="jenis_anestesi_sebelum" rows="3"
-                                            placeholder="Jelaskan jenis anestesi dan komplikasi jika ada" disabled>{{ old('jenis_anestesi_sebelum', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->jenis_anestesi_sebelum ?? '') }}</textarea>
+                                            disabled>{{ old('jenis_anestesi_sebelum', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->jenis_anestesi_sebelum ?? '') }}</textarea>
                                         @error('jenis_anestesi_sebelum')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1314,7 +1257,7 @@
                                                 <label class="form-label fw-bold">Di</label>
                                                 <input type="text"
                                                     class="form-control @error('tempat_periksa_terakhir') is-invalid @enderror"
-                                                    name="tempat_periksa_terakhir" placeholder="Tempat pemeriksaan"
+                                                    name="tempat_periksa_terakhir"
                                                     value="{{ old('tempat_periksa_terakhir', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->tempat_periksa_terakhir ?? '') }}" disabled>
                                                 @error('tempat_periksa_terakhir')
                                                     <div class="invalid-feedback">
@@ -1328,7 +1271,7 @@
                                         <label class="form-label fw-bold">Untuk Penyakit Gangguan Apa</label>
                                         <textarea class="form-control @error('gangguan_periksa') is-invalid @enderror"
                                             name="gangguan_periksa" rows="3"
-                                            placeholder="Jelaskan gangguan/penyakit yang diperiksa" disabled>{{ old('gangguan_periksa', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->gangguan_periksa ?? '') }}</textarea>
+                                            disabled>{{ old('gangguan_periksa', $asesmenPraAnestesi->rmeAsesmenPraAnestesiRppRml->gangguan_periksa ?? '') }}</textarea>
                                         @error('gangguan_periksa')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1351,7 +1294,7 @@
                                                 <label class="form-label fw-bold">Jumlah Kehamilan</label>
                                                 <input type="number"
                                                     class="form-control @error('jumlah_kehamilan') is-invalid @enderror"
-                                                    name="jumlah_kehamilan" placeholder="0" min="0"
+                                                    name="jumlah_kehamilan" min="0"
                                                     value="{{ old('jumlah_kehamilan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->jumlah_kehamilan ?? '') }}" disabled>
                                                 @error('jumlah_kehamilan')
                                                     <div class="invalid-feedback">
@@ -1365,7 +1308,7 @@
                                                 <label class="form-label fw-bold">Jumlah Anak</label>
                                                 <input type="number"
                                                     class="form-control @error('jumlah_anak') is-invalid @enderror"
-                                                    name="jumlah_anak" placeholder="0" min="0"
+                                                    name="jumlah_anak" min="0"
                                                     value="{{ old('jumlah_anak', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->jumlah_anak ?? '') }}" disabled>
                                                 @error('jumlah_anak')
                                                     <div class="invalid-feedback">
@@ -1738,7 +1681,7 @@
                                         <label class="form-label fw-bold">Saluran nafas atas:</label>
                                         <textarea class="form-control @error('saluran_nafas_atas') is-invalid @enderror"
                                             name="saluran_nafas_atas" rows="4"
-                                            placeholder="Jelaskan detail penyakit yang pernah diderita" disabled>{{ old('saluran_nafas_atas', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->saluran_nafas_atas ?? '') }}</textarea>
+                                            disabled>{{ old('saluran_nafas_atas', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKppKs->saluran_nafas_atas ?? '') }}</textarea>
                                         @error('saluran_nafas_atas')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1759,22 +1702,21 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Kesadaran</label>
-                                                <input type="text"
-                                                    class="form-control @error('kesadaran') is-invalid @enderror"
-                                                    name="kesadaran" placeholder="Masukkan kesadaran"
-                                                    value="{{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') }}" disabled>
-                                                @error('kesadaran')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                                <select class="form-select" name="kesadaran" disabled>
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="Compos Mentis" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
+                                                    <option value="Apatis" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Apatis' ? 'selected' : '' }}>Apatis</option>
+                                                    <option value="Sopor" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Sopor' ? 'selected' : '' }}>Sopor</option>
+                                                    <option value="Coma" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Coma' ? 'selected' : '' }}>Coma</option>
+                                                    <option value="Somnolen" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Visus</label>
                                                 <input type="text" class="form-control @error('visus') is-invalid @enderror"
-                                                    name="visus" placeholder="Masukkan visus"
+                                                    name="visus"
                                                     value="{{ old('visus', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->visus ?? '') }}" disabled>
                                                 @error('visus')
                                                     <div class="invalid-feedback">
@@ -1788,7 +1730,7 @@
                                                 <label class="form-label fw-bold">Faring</label>
                                                 <input type="text"
                                                     class="form-control @error('faring') is-invalid @enderror" name="faring"
-                                                    placeholder="Masukkan faring"
+                                                    
                                                     value="{{ old('faring', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->faring ?? '') }}" disabled>
                                                 @error('faring')
                                                     <div class="invalid-feedback">
@@ -1804,7 +1746,7 @@
                                                 <label class="form-label fw-bold">Gigi Palsu</label>
                                                 <input type="text"
                                                     class="form-control @error('gigi_palus') is-invalid @enderror"
-                                                    name="gigi_palus" placeholder="Masukkan gigi palsu"
+                                                    name="gigi_palus"
                                                     value="{{ old('gigi_palus', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->gigi_palus ?? '') }}" disabled>
                                                 @error('gigi_palus')
                                                     <div class="invalid-feedback">
@@ -1819,7 +1761,7 @@
                                                 <textarea
                                                     class="form-control @error('keadaan_umum_keterangan') is-invalid @enderror"
                                                     name="keadaan_umum_keterangan" rows="4"
-                                                    placeholder="Masukkan keterangan keadaan umum" disabled>{{ old('keadaan_umum_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->keadaan_umum_keterangan ?? '') }}</textarea >
+                                                    disabled>{{ old('keadaan_umum_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->keadaan_umum_keterangan ?? '') }}</textarea >
                                                 @error('keadaan_umum_keterangan')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -1842,8 +1784,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="number" class="form-control @error('bb') is-invalid @enderror"
-                                                    name="bb" placeholder="Berat Badan (kg)" min="0" step="0.1"
+                                                <input type="text" class="form-control @error('bb') is-invalid @enderror"
+                                                    name="bb"
                                                     value="{{ old('bb', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->bb ?? '') }}" disabled>
                                                 @error('bb')
                                                     <div class="invalid-feedback">
@@ -1856,7 +1798,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">TD</label>
                                                 <input type="text" class="form-control @error('td') is-invalid @enderror"
-                                                    name="td" placeholder="Tekanan Darah (contoh: 120/80)"
+                                                    name="td"
                                                     value="{{ old('td', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->td ?? '') }}" disabled>
                                                 @error('td')
                                                     <div class="invalid-feedback">
@@ -1868,9 +1810,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="number"
+                                                <input type="text"
                                                     class="form-control @error('nadi') is-invalid @enderror" name="nadi"
-                                                    placeholder="Nadi (x/menit)" min="0"
                                                     value="{{ old('nadi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->nadi ?? '') }}" disabled>
                                                 @error('nadi')
                                                     <div class="invalid-feedback">
@@ -1884,9 +1825,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="number"
+                                                <input type="text"
                                                     class="form-control @error('suhu') is-invalid @enderror" name="suhu"
-                                                    placeholder="Suhu (°C)" min="0" step="0.1"
                                                     value="{{ old('suhu', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->suhu ?? '') }}" disabled>
                                                 @error('suhu')
                                                     <div class="invalid-feedback">
@@ -1898,9 +1838,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="number"
+                                                <input type="text"
                                                     class="form-control @error('paru') is-invalid @enderror" name="paru"
-                                                    placeholder="Pernapasan (x/menit)" min="0"
                                                     value="{{ old('paru', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->paru ?? '') }}" disabled>
                                                 @error('paru')
                                                     <div class="invalid-feedback">
@@ -1914,7 +1853,7 @@
                                                 <label class="form-label fw-bold">Jantung</label>
                                                 <input type="text"
                                                     class="form-control @error('jantung') is-invalid @enderror"
-                                                    name="jantung" placeholder="Kondisi jantung"
+                                                    name="jantung"
                                                     value="{{ old('jantung', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->jantung ?? '') }}" disabled>
                                                 @error('jantung')
                                                     <div class="invalid-feedback">
@@ -1930,7 +1869,7 @@
                                                 <label class="form-label fw-bold">Abdomen</label>
                                                 <input type="text"
                                                     class="form-control @error('abdomen') is-invalid @enderror"
-                                                    name="abdomen" placeholder="Kondisi abdomen"
+                                                    name="abdomen"
                                                     value="{{ old('abdomen', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->abdomen ?? '') }}" disabled>
                                                 @error('abdomen')
                                                     <div class="invalid-feedback">
@@ -1944,7 +1883,7 @@
                                                 <label class="form-label fw-bold">Ekstremitas</label>
                                                 <input type="text"
                                                     class="form-control @error('ekstremitas') is-invalid @enderror"
-                                                    name="ekstremitas" placeholder="Kondisi ekstremitas"
+                                                    name="ekstremitas"
                                                     value="{{ old('ekstremitas', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->ekstremitas ?? '') }}" disabled>
                                                 @error('ekstremitas')
                                                     <div class="invalid-feedback">
@@ -1958,7 +1897,7 @@
                                                 <label class="form-label fw-bold">Neurologi (jika ada ditemukan)</label>
                                                 <input type="text"
                                                     class="form-control @error('neurologi') is-invalid @enderror"
-                                                    name="neurologi" placeholder="Kondisi neurologi"
+                                                    name="neurologi"
                                                     value="{{ old('neurologi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->neurologi ?? '') }}" disabled>
                                                 @error('neurologi')
                                                     <div class="invalid-feedback">
@@ -1973,7 +1912,7 @@
                                         <textarea
                                             class="form-control @error('pemeriksaan_fisik_keterangan') is-invalid @enderror"
                                             name="pemeriksaan_fisik_keterangan" rows="4"
-                                            placeholder="Masukkan keterangan pemeriksaan fisik" disabled>{{ old('pemeriksaan_fisik_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->pemeriksaan_fisik_keterangan ?? '') }}</textarea>
+                                            disabled>{{ old('pemeriksaan_fisik_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->pemeriksaan_fisik_keterangan ?? '') }}</textarea>
                                         @error('pemeriksaan_fisik_keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -1995,7 +1934,7 @@
                                                 <label class="form-label fw-bold">Hb/Leuco/Thrombo</label>
                                                 <input type="text"
                                                     class="form-control @error('hb_leuco_thrombo') is-invalid @enderror"
-                                                    name="hb_leuco_thrombo" placeholder="Hasil pemeriksaan"
+                                                    name="hb_leuco_thrombo"
                                                     value="{{ old('hb_leuco_thrombo', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->hb_leuco_thrombo ?? '') }}" disabled>
                                                 @error('hb_leuco_thrombo')
                                                     <div class="invalid-feedback">
@@ -2009,7 +1948,7 @@
                                                 <label class="form-label fw-bold">PT/APTT</label>
                                                 <input type="text"
                                                     class="form-control @error('pt_aptt') is-invalid @enderror"
-                                                    name="pt_aptt" placeholder="Hasil pemeriksaan"
+                                                    name="pt_aptt"
                                                     value="{{ old('pt_aptt', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->pt_aptt ?? '') }}" disabled>
                                                 @error('pt_aptt')
                                                     <div class="invalid-feedback">
@@ -2023,7 +1962,7 @@
                                                 <label class="form-label fw-bold">Tes Kreatinin</label>
                                                 <input type="text"
                                                     class="form-control @error('tes_kreatinin') is-invalid @enderror"
-                                                    name="tes_kreatinin" placeholder="Hasil pemeriksaan"
+                                                    name="tes_kreatinin"
                                                     value="{{ old('tes_kreatinin', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->tes_kreatinin ?? '') }}" disabled>
                                                 @error('tes_kreatinin')
                                                     <div class="invalid-feedback">
@@ -2038,7 +1977,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Ureum</label>
                                                 <input type="text" class="form-control @error('ureum') is-invalid @enderror"
-                                                    name="ureum" placeholder="Hasil pemeriksaan"
+                                                    name="ureum"
                                                     value="{{ old('ureum', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->ureum ?? '') }}" disabled>
                                                 @error('ureum')
                                                     <div class="invalid-feedback">
@@ -2051,7 +1990,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">EKG</label>
                                                 <input type="text" class="form-control @error('ekg') is-invalid @enderror"
-                                                    name="ekg" placeholder="Hasil pemeriksaan"
+                                                    name="ekg"
                                                     value="{{ old('ekg', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->ekg ?? '') }}" disabled>
                                                 @error('ekg')
                                                     <div class="invalid-feedback">
@@ -2065,7 +2004,7 @@
                                                 <label class="form-label fw-bold">Na/Cl/K</label>
                                                 <input type="text"
                                                     class="form-control @error('na_cl_k') is-invalid @enderror"
-                                                    name="na_cl_k" placeholder="Hasil pemeriksaan"
+                                                    name="na_cl_k"
                                                     value="{{ old('na_cl_k', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->na_cl_k ?? '') }}" disabled>
                                                 @error('na_cl_k')
                                                     <div class="invalid-feedback">
@@ -2080,7 +2019,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">CO2</label>
                                                 <input type="text" class="form-control @error('co2') is-invalid @enderror"
-                                                    name="co2" placeholder="Hasil pemeriksaan"
+                                                    name="co2"
                                                     value="{{ old('co2', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->co2 ?? '') }}" disabled>
                                                 @error('co2')
                                                     <div class="invalid-feedback">
@@ -2094,7 +2033,7 @@
                                                 <label class="form-label fw-bold">CT Scan</label>
                                                 <input type="text"
                                                     class="form-control @error('ct_scan') is-invalid @enderror"
-                                                    name="ct_scan" placeholder="Hasil pemeriksaan"
+                                                    name="ct_scan"
                                                     value="{{ old('ct_scan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->ct_scan ?? '') }}" disabled>
                                                 @error('ct_scan')
                                                     <div class="invalid-feedback">
@@ -2107,7 +2046,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">MRI</label>
                                                 <input type="text" class="form-control @error('mri') is-invalid @enderror"
-                                                    name="mri" placeholder="Hasil pemeriksaan"
+                                                    name="mri"
                                                     value="{{ old('mri', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->mri ?? '') }}" disabled>
                                                 @error('mri')
                                                     <div class="invalid-feedback">
@@ -2122,7 +2061,7 @@
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">USG</label>
                                                 <input type="text" class="form-control @error('usg') is-invalid @enderror"
-                                                    name="usg" placeholder="Hasil pemeriksaan"
+                                                    name="usg"
                                                     value="{{ old('usg', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->usg ?? '') }}" disabled>
                                                 @error('usg')
                                                     <div class="invalid-feedback">
@@ -2136,7 +2075,7 @@
                                                 <label class="form-label fw-bold">Lain-lain</label>
                                                 <input type="text"
                                                     class="form-control @error('laboratorium_lain') is-invalid @enderror"
-                                                    name="laboratorium_lain" placeholder="Hasil pemeriksaan lain"
+                                                    name="laboratorium_lain"
                                                     value="{{ old('laboratorium_lain', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->laboratorium_lain ?? '') }}">
                                                 @error('laboratorium_lain')
                                                     <div class="invalid-feedback">
@@ -2151,7 +2090,7 @@
                                         <textarea
                                             class="form-control @error('laboratorium_keterangan') is-invalid @enderror"
                                             name="laboratorium_keterangan" rows="4"
-                                            placeholder="Masukkan keterangan hasil laboratorium" disabled>{{ old('laboratorium_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->laboratorium_keterangan ?? '') }}</textarea>
+                                            disabled>{{ old('laboratorium_keterangan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->laboratorium_keterangan ?? '') }}</textarea>
                                         @error('laboratorium_keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -2199,20 +2138,124 @@
                                             </div>
                                         @enderror
                                     </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Rekomendasi tindakan anestesi yang dipilih</label>
+                                        <div class="mt-2">
+                                            @php
+                                                // Ambil data yang sudah ada (untuk mode edit)
+                                                $selectedOptions = [];
+                                                
+                                                // Perbaikan: Menggunakan relasi yang benar berdasarkan controller
+                                                if (isset($asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi)) {
+                                                    $jsonData = $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi;
+                                                    if (!empty($jsonData)) {
+                                                        $selectedOptions = json_decode($jsonData, true) ?? [];
+                                                    }
+                                                }
+                                                
+                                                // Jika ada old input (setelah validation error) - prioritas lebih tinggi
+                                                if (old('rekomendasi_tindakan_anestesi')) {
+                                                    $selectedOptions = old('rekomendasi_tindakan_anestesi');
+                                                }
+                                            @endphp
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum Intravena" id="anestesi_umum_intravena"
+                                                    {{ in_array('Anestesi umum Intravena', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="anestesi_umum_intravena">
+                                                    Anestesi umum Intravena
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Sungkup muka" id="sungkup_muka"
+                                                    {{ in_array('Sungkup muka', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="sungkup_muka">
+                                                    Sungkup muka
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Laringeal mask airway" id="laringeal_mask_airway"
+                                                    {{ in_array('Laringeal mask airway', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="laringeal_mask_airway">
+                                                    Laringeal mask airway
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
+                                                    {{ in_array('Pipa endotrakeal tube', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="pipa_endotrakeal_tube">
+                                                    Pipa endotrakeal tube
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
+                                                    {{ in_array('Regional anestesi: Spinal Anastesi Blok', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="regional_spinal">
+                                                    Regional anestesi: Spinal Anastesi Blok
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Epidural" id="epidural"
+                                                    {{ in_array('Epidural', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="epidural">
+                                                    Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
+                                                    {{ in_array('Kombinasi Spinal Epidural', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="kombinasi_spinal_epidural">
+                                                    Kombinasi Spinal Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Peripheral Nerve Block" id="peripheral_nerve_block"
+                                                    {{ in_array('Peripheral Nerve Block', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="peripheral_nerve_block">
+                                                    Peripheral Nerve Block
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
+                                                    {{ in_array('Anestesi umum + Regional Anestesi', $selectedOptions) ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label" for="anestesi_kombinasi">
+                                                    Anestesi umum + Regional Anestesi
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Pusa Mulai -->
+                            <!-- Puasa mulai -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Pusa Mulai
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Puasa mulai
                                     </h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Pusa mulai</label>
+                                                <label class="form-label fw-bold">Puasa mulai</label>
                                                 <input type="date"
                                                     class="form-control @error('pusa_mulai') is-invalid @enderror"
                                                     name="pusa_mulai"
@@ -2242,28 +2285,14 @@
                                 </div>
                             </div>
 
-                            <!-- Rencana tindakan OK -->
+                            <!-- Rencana tiba di OK -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-stethoscope me-2"></i>Rencana
-                                        Tindakan OK</h6>
+                                        tiba di OK</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Rencana tindakan</label>
-                                                <input type="text"
-                                                    class="form-control @error('rencana_tindakan') is-invalid @enderror"
-                                                    name="rencana_tindakan" placeholder="Masukkan rencana tindakan"
-                                                    value="{{ old('rencana_tindakan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rencana_tindakan ?? '') }}" disabled>
-                                                @error('rencana_tindakan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
@@ -2278,8 +2307,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>
@@ -2306,12 +2333,12 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Rencana Operasi</label>
                                                 <input type="text"
                                                     class="form-control @error('rencana_operasi') is-invalid @enderror"
-                                                    name="rencana_operasi" placeholder="Masukkan rencana operasi"
+                                                    name="rencana_operasi"
                                                     value="{{ old('rencana_operasi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rencana_operasi ?? '') }}" disabled>
                                                 @error('rencana_operasi')
                                                     <div class="invalid-feedback">
@@ -2319,7 +2346,7 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
@@ -2334,8 +2361,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>
@@ -2353,7 +2378,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </form>
