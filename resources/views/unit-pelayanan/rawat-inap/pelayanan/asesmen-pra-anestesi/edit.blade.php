@@ -62,64 +62,6 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <!-- Data Demografi -->
-                            <h5 class="text-primary font-weight-bold mb-3"><i class="fas fa-user me-2"></i>Data Demografi
-                            </h5>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Umur</label>
-                                        <input type="number" class="form-control" name="umur" placeholder="Masukkan umur"
-                                            value="{{ old('umur', $asesmenPraAnestesi->umur) }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Jenis Kelamin</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="laki_laki" value="1" {{ old('jenis_kelamin', $asesmenPraAnestesi->jenis_kelamin) == '1' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="laki_laki">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin"
-                                                    id="perempuan" value="0" {{ old('jenis_kelamin', $asesmenPraAnestesi->jenis_kelamin) == '0' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="perempuan">Perempuan</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Status Menikah</label>
-                                        <div class="d-flex gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah" id="menikah_ya"
-                                                    value="Ya" {{ old('menikah', $asesmenPraAnestesi->menikah) == 'Ya' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="menikah_ya">Ya</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="menikah"
-                                                    id="menikah_tidak" value="Tidak" {{ old('menikah', $asesmenPraAnestesi->menikah) == 'Tidak' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="menikah_tidak">Tidak</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label fw-bold">Pekerjaan</label>
-                                        <input type="text" class="form-control" name="pekerjaan"
-                                            placeholder="Masukkan pekerjaan"
-                                            value="{{ old('pekerjaan', $asesmenPraAnestesi->pekerjaan) }}">
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Kebiasaan -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
@@ -1758,16 +1700,15 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Kesadaran</label>
-                                                <input type="text"
-                                                    class="form-control @error('kesadaran') is-invalid @enderror"
-                                                    name="kesadaran" placeholder="Masukkan kesadaran"
-                                                    value="{{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') }}">
-                                                @error('kesadaran')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
+                                                <select class="form-select" name="kesadaran">
+                                                    <option value="" selected disabled>--Pilih--</option>
+                                                    <option value="Compos Mentis" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Compos Mentis' ? 'selected' : '' }}>Compos Mentis</option>
+                                                    <option value="Apatis" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Apatis' ? 'selected' : '' }}>Apatis</option>
+                                                    <option value="Sopor" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Sopor' ? 'selected' : '' }}>Sopor</option>
+                                                    <option value="Coma" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Coma' ? 'selected' : '' }}>Coma</option>
+                                                    <option value="Somnolen" {{ old('kesadaran', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->kesadaran ?? '') == 'Somnolen' ? 'selected' : '' }}>Somnolen</option>
+                                                </select>
+                                            </div>                                            
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
@@ -1841,8 +1782,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">BB</label>
-                                                <input type="number" class="form-control @error('bb') is-invalid @enderror"
-                                                    name="bb" placeholder="Berat Badan (kg)" min="0" step="0.1"
+                                                <input type="text" class="form-control @error('bb') is-invalid @enderror"
+                                                    name="bb" placeholder="Berat Badan (kg)"
                                                     value="{{ old('bb', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->bb ?? '') }}">
                                                 @error('bb')
                                                     <div class="invalid-feedback">
@@ -1867,9 +1808,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Nadi</label>
-                                                <input type="number"
-                                                    class="form-control @error('nadi') is-invalid @enderror" name="nadi"
-                                                    placeholder="Nadi (x/menit)" min="0"
+                                                <input type="text" class="form-control @error('nadi') is-invalid @enderror"
+                                                    name="nadi" placeholder="Nadi (x/menit)"
                                                     value="{{ old('nadi', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->nadi ?? '') }}">
                                                 @error('nadi')
                                                     <div class="invalid-feedback">
@@ -1883,9 +1823,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Suhu</label>
-                                                <input type="number"
-                                                    class="form-control @error('suhu') is-invalid @enderror" name="suhu"
-                                                    placeholder="Suhu (°C)" min="0" step="0.1"
+                                                <input type="text" class="form-control @error('suhu') is-invalid @enderror"
+                                                    name="suhu" placeholder="Suhu (°C)"
                                                     value="{{ old('suhu', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->suhu ?? '') }}">
                                                 @error('suhu')
                                                     <div class="invalid-feedback">
@@ -1897,9 +1836,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Paru-Paru</label>
-                                                <input type="number"
-                                                    class="form-control @error('paru') is-invalid @enderror" name="paru"
-                                                    placeholder="Pernapasan (x/menit)" min="0"
+                                                <input type="text" class="form-control @error('paru') is-invalid @enderror"
+                                                    name="paru" placeholder="Pernapasan (x/menit)"
                                                     value="{{ old('paru', $asesmenPraAnestesi->rmeAsesmenPraAnestesiKuPfLaboratorium->paru ?? '') }}">
                                                 @error('paru')
                                                     <div class="invalid-feedback">
@@ -2198,20 +2136,124 @@
                                             </div>
                                         @enderror
                                     </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label fw-bold">Rekomendasi tindakan anestesi yang dipilih</label>
+                                        <div class="mt-2">
+                                            @php
+                                                // Ambil data yang sudah ada (untuk mode edit)
+                                                $selectedOptions = [];
+                                                
+                                                // Perbaikan: Menggunakan relasi yang benar berdasarkan controller
+                                                if (isset($asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi)) {
+                                                    $jsonData = $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rekomendasi_tindakan_anestesi;
+                                                    if (!empty($jsonData)) {
+                                                        $selectedOptions = json_decode($jsonData, true) ?? [];
+                                                    }
+                                                }
+                                                
+                                                // Jika ada old input (setelah validation error) - prioritas lebih tinggi
+                                                if (old('rekomendasi_tindakan_anestesi')) {
+                                                    $selectedOptions = old('rekomendasi_tindakan_anestesi');
+                                                }
+                                            @endphp
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum Intravena" id="anestesi_umum_intravena"
+                                                    {{ in_array('Anestesi umum Intravena', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="anestesi_umum_intravena">
+                                                    Anestesi umum Intravena
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Sungkup muka" id="sungkup_muka"
+                                                    {{ in_array('Sungkup muka', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="sungkup_muka">
+                                                    Sungkup muka
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Laringeal mask airway" id="laringeal_mask_airway"
+                                                    {{ in_array('Laringeal mask airway', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="laringeal_mask_airway">
+                                                    Laringeal mask airway
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Pipa endotrakeal tube" id="pipa_endotrakeal_tube"
+                                                    {{ in_array('Pipa endotrakeal tube', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="pipa_endotrakeal_tube">
+                                                    Pipa endotrakeal tube
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Regional anestesi: Spinal Anastesi Blok" id="regional_spinal"
+                                                    {{ in_array('Regional anestesi: Spinal Anastesi Blok', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="regional_spinal">
+                                                    Regional anestesi: Spinal Anastesi Blok
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Epidural" id="epidural"
+                                                    {{ in_array('Epidural', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="epidural">
+                                                    Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Kombinasi Spinal Epidural" id="kombinasi_spinal_epidural"
+                                                    {{ in_array('Kombinasi Spinal Epidural', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="kombinasi_spinal_epidural">
+                                                    Kombinasi Spinal Epidural
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Peripheral Nerve Block" id="peripheral_nerve_block"
+                                                    {{ in_array('Peripheral Nerve Block', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="peripheral_nerve_block">
+                                                    Peripheral Nerve Block
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="rekomendasi_tindakan_anestesi[]" 
+                                                    value="Anestesi umum + Regional Anestesi" id="anestesi_kombinasi"
+                                                    {{ in_array('Anestesi umum + Regional Anestesi', $selectedOptions) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="anestesi_kombinasi">
+                                                    Anestesi umum + Regional Anestesi
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Pusa Mulai -->
+                            <!-- Puasa mulai -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Pusa Mulai
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-calendar me-2"></i>Puasa mulai
                                     </h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Pusa mulai</label>
+                                                <label class="form-label fw-bold">Puasa mulai</label>
                                                 <input type="date"
                                                     class="form-control @error('pusa_mulai') is-invalid @enderror"
                                                     name="pusa_mulai"
@@ -2241,28 +2283,14 @@
                                 </div>
                             </div>
 
-                            <!-- Rencana tindakan OK -->
+                            <!-- Rencana tiba di OK -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-stethoscope me-2"></i>Rencana
-                                        Tindakan OK</h6>
+                                        tiba di OK</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label fw-bold">Rencana tindakan</label>
-                                                <input type="text"
-                                                    class="form-control @error('rencana_tindakan') is-invalid @enderror"
-                                                    name="rencana_tindakan" placeholder="Masukkan rencana tindakan"
-                                                    value="{{ old('rencana_tindakan', $asesmenPraAnestesi->rmeAsesmenPraAnestesiDiagnosisPmRtRo->rencana_tindakan ?? '') }}">
-                                                @error('rencana_tindakan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
@@ -2277,8 +2305,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>
@@ -2305,7 +2331,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Rencana Operasi</label>
                                                 <input type="text"
@@ -2318,7 +2344,7 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Tanggal</label>
@@ -2333,8 +2359,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Jam</label>
