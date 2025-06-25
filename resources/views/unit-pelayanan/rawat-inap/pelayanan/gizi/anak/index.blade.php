@@ -158,10 +158,6 @@
                                         <i class="fas fa-chart-line"></i>
                                         <h5>Belum Ada Data Pengkajian Gizi</h5>
                                         <p class="mb-3">Belum ada data pengkajian gizi anak yang tersimpan untuk pasien ini.</p>
-                                        <a href="{{ route('rawat-inap.gizi.anak.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" 
-                                           class="btn btn-primary">
-                                            <i class="fas fa-plus me-2"></i>Tambah Pengkajian Gizi
-                                        </a>
                                     </div>
                                 @endif
                             </div>

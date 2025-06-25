@@ -8,6 +8,7 @@ use App\Models\RmeAlergiPasien;
 use App\Models\RmeAsesmenGiziAnak;
 use App\Models\RmeMonitoringGizi;
 use App\Models\RmePengkajianGiziAnak;
+use App\Models\RmePengkajianGiziAnakDtl;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -191,7 +192,7 @@ class GiziAnakController extends Controller
             $dataGiziAnak->save();
 
             //Asesmen Gizi Anak
-            $asesmenGiziAnak = new RmeAsesmenGiziAnak();
+            $asesmenGiziAnak = new RmePengkajianGiziAnakDtl();
             $asesmenGiziAnak->id_gizi = $dataGiziAnak->id;
             $asesmenGiziAnak->berat_badan = $request->berat_badan;
             $asesmenGiziAnak->tinggi_badan = $request->tinggi_badan;
@@ -338,7 +339,7 @@ class GiziAnakController extends Controller
             $dataPengkajianGizi->save();
 
             // Update asesmen gizi anak
-            $asesmenGiziAnak = RmeAsesmenGiziAnak::where('id_gizi', $id)->first();
+            $asesmenGiziAnak = RmePengkajianGiziAnakDtl::where('id_gizi', $id)->first();
             if ($asesmenGiziAnak) {
                 $asesmenGiziAnak->berat_badan = $request->berat_badan;
                 $asesmenGiziAnak->tinggi_badan = $request->tinggi_badan;
@@ -398,7 +399,7 @@ class GiziAnakController extends Controller
                 ->firstOrFail();
 
             // Hapus data asesmen gizi terkait
-            RmeAsesmenGiziAnak::where('id_gizi', $id)->delete();
+            RmePengkajianGiziAnakDtl::where('id_gizi', $id)->delete();
 
             // Hapus data pengkajian gizi
             $dataPengkajianGizi->delete();

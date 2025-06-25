@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RmeAsesmenGiziAnak extends Model
+class RmePengkajianGiziAnakDtl extends Model
 {
+    use HasFactory;
+
     use HasFactory;
 
     protected $table = 'RME_PENGKAJIAN_GIZI_ANAK_DTL';
@@ -61,5 +63,4 @@ class RmeAsesmenGiziAnak extends Model
     {
         return $query->whereBetween('imt', [$min, $max]);
     }
-
 }
