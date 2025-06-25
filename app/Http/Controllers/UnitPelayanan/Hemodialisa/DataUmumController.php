@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Http\Controllers\UnitPelayanan\Hemodialisa;
+
+use App\Http\Controllers\Controller;
+use App\Models\Kunjungan;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+class DataUmumController extends Controller
+{
+    private $kdUnitDef_;
+
+    public function __construct()
+    {
+        $this->middleware('can:read unit-pelayanan/hemodialisa');
+        $this->kdUnitDef_ = 72;
+    }
+
+    public function index($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        // Mengambil data kunjungan dan tanggal triase terkait
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        return view('unit-pelayanan.hemodialisa.pelayanan.data-umum.index', compact(
+            'dataMedis',
+        ));
+    }
+
+
+    public function create($kd_pasien, $tgl_masuk, $urut_masuk)
+    {
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        return view('unit-pelayanan.hemodialisa.pelayanan.data-umum.create', compact(
+            'dataMedis',
+        ));
+    }
+}

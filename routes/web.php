@@ -43,6 +43,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -1932,6 +1933,16 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::put('/{id}', 'update')->name('.update');
                                         });
                                     });
+                                });
+                            });
+                        });
+
+                        // Data Umum
+                        Route::prefix('data-umum')->group(function () {
+                            Route::name('.data-umum')->group(function () {
+                                Route::controller(DataUmumController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
                                 });
                             });
                         });
