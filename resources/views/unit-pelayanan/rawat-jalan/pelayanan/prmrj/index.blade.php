@@ -105,24 +105,29 @@
 
                         <!-- Start Date -->
                         <div class="col-md-2">
-                            <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Dari Tanggal">
+                            <input type="date" name="start_date" id="start_date" class="form-control"
+                                placeholder="Dari Tanggal">
                         </div>
 
                         <!-- End Date -->
                         <div class="col-md-2">
-                            <input type="date" name="end_date" id="end_date" class="form-control" placeholder="S.d Tanggal">
+                            <input type="date" name="end_date" id="end_date" class="form-control"
+                                placeholder="S.d Tanggal">
                         </div>
 
                         <!-- Button Filter -->
                         <div class="col-md-1">
-                            <button id="filterButton" class="btn btn-secondary rounded-3"><i class="bi bi-funnel-fill"></i></button>
+                            <button id="filterButton" class="btn btn-secondary rounded-3"><i
+                                    class="bi bi-funnel-fill"></i></button>
                         </div>
 
                         <!-- Search Bar -->
                         <div class="col-md-3">
-                            <form method="GET" action="{{ route('rawat-jalan.prmrj.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
+                            <form method="GET"
+                                action="{{ route('rawat-jalan.prmrj.index', ['kd_unit' => $dataMedis->kd_unit, 'kd_pasien' => $dataMedis->kd_pasien, 'tgl_masuk' => \Carbon\Carbon::parse($dataMedis->tgl_masuk)->format('Y-m-d'), 'urut_masuk' => $dataMedis->urut_masuk]) }}">
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Cari Diagnosis" aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari Diagnosis"
+                                        aria-label="Cari" value="{{ request('search') }}" aria-describedby="basic-addon1">
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </div>
                             </form>
@@ -131,7 +136,8 @@
                         <!-- Add Button -->
                         <div class="col-md-2">
                             <div class="d-grid gap-2">
-                                <a href="{{ route('rawat-jalan.prmrj.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}" class="btn btn-primary">
+                                <a href="{{ route('rawat-jalan.prmrj.create', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk]) }}"
+                                    class="btn btn-primary">
                                     <i class="ti-plus"></i> Tambah
                                 </a>
                             </div>
@@ -142,29 +148,36 @@
                 <div class="table-responsive">
                     <table class="table table-bordered table-sm table-hover">
                         <thead class="table-primary">
-                            <tr>
+                            <tr align="middle">
                                 <th>Tanggal & Jam</th>
-                                <th>Petugas</th>
                                 <th>Diagnosis</th>
+                                <th>Petugas</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($prmrjs as $prmrj)
                                 <tr>
-                                    <td>
+                                    <td align="middle">
                                         {{ \Carbon\Carbon::parse($prmrj->tanggal)->format('Y-m-d') }}
                                         {{ \Carbon\Carbon::parse($prmrj->jam)->format('H:i') }}
+                                        WIB
                                     </td>
-                                    <td>{{ str()->title($prmrj->userCreate->name) }}</td>
                                     <td>{{ $prmrj->diagnosis }}</td>
-                                    <td>
-                                        <a href="{{ route('rawat-jalan.prmrj.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('rawat-jalan.prmrj.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <form action="{{ route('rawat-jalan.prmrj.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" method="POST" style="display:inline;" id="deleteForm_{{ $prmrj->id }}">
+                                    <td>{{ $prmrj->userCreate->karyawan->gelar_depan . ' ' . str()->title($prmrj->userCreate->karyawan->nama) . ' ' . $prmrj->userCreate->karyawan->gelar_belakang }}
+                                    </td>
+                                    <td align="middle">
+                                        <a href="{{ route('rawat-jalan.prmrj.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}"
+                                            class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('rawat-jalan.prmrj.edit', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}"
+                                            class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                        <form
+                                            action="{{ route('rawat-jalan.prmrj.destroy', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}"
+                                            method="POST" style="display:inline;" id="deleteForm_{{ $prmrj->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $prmrj->id }}"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                                data-id="{{ $prmrj->id }}"><i class="fas fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
