@@ -15,7 +15,7 @@ class RmePengkajianGiziAnak extends Model
 
     public function asesmenGizi()
     {
-        return $this->hasOne(RmeAsesmenGiziAnak::class, 'id_gizi', 'id');
+        return $this->hasOne(RmePengkajianGiziAnakDtl::class, 'id_gizi', 'id');
     }
 
     public function userCreate()
