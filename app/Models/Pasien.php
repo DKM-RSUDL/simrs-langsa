@@ -81,5 +81,14 @@ class Pasien extends Model
     {
         return $this->belongsTo(Kelurahan::class, 'kd_kelurahan', 'kd_kelurahan');
     }
-    
+
+    public function pendidikan()
+    {
+        return $this->belongsTo(Pendidikan::class, 'kd_pendidikan', 'kd_pendidikan');
+    }
+
+    public function marital()
+    {
+        return $this->belongsTo(Marital::class, 'status_marita', 'kode');
+    }
 }

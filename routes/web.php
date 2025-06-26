@@ -43,6 +43,7 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -103,7 +104,7 @@ use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanPrivasiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PersetujuanAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PermintaanSecondOpinionController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\PengawasanController;
-use App\Http\Controllers\UnitPelayanan\RawatInap\PraAnestesiController;
+use App\Http\Controllers\UnitPelayanan\RawatInap\AsesmenPraAnestesiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RadiologiController as RawatInapRadiologiController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPengawasanDarahController;
 use App\Http\Controllers\UnitPelayanan\RawatInap\RanapPermintaanDarahController;
@@ -129,6 +130,7 @@ use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanEdukasiController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RawatJalanResumeController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\RujukJalanController;
 use App\Http\Controllers\UnitPelayanan\RawatJalan\TindakanController;
+use App\Http\Controllers\UnitPelayanan\RawatJalan\RajalPRMRJController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\Pelayanan\LayananController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\PelayananRehabMedisController;
 use App\Http\Controllers\UnitPelayanan\RehabMedis\RehabMedisController;
@@ -435,6 +437,22 @@ Route::middleware('ssoToken')->group(function () {
                                     });
                                 });
                             });
+
+                            // prmrj
+                            Route::prefix('prmrj')->group(function () {
+                                Route::name('.prmrj')->group(function () {
+                                    Route::controller(RajalPRMRJController::class)->group(function () {
+                                        Route::get('/', 'index')->name('.index');
+                                        Route::get('/create', 'create')->name('.create');
+                                        Route::get('/{data}', 'show')->name('.show');
+                                        Route::get('/{data}/edit', 'edit')->name('.edit');
+                                        Route::post('/', 'store')->name('.store');
+                                        Route::put('/{data}', 'update')->name('.update');
+                                        Route::delete('/{data}', 'destroy')->name('.destroy');
+                                    });
+                                });
+                            });
+
                         });
                     });
                 });
@@ -534,9 +552,9 @@ Route::middleware('ssoToken')->group(function () {
                             });
 
                             // pra-anestesi
-                            Route::prefix('pra-anestesi')->group(function () {
-                                Route::name('.pra-anestesi')->group(function () {
-                                    Route::controller(PraAnestesiController::class)->group(function () {
+                            Route::prefix('asesmen-pra-anestesi')->group(function () {
+                                Route::name('.asesmen-pra-anestesi')->group(function () {
+                                    Route::controller(AsesmenPraAnestesiController::class)->group(function () {
                                         Route::get('/', 'index')->name('.index');
                                         Route::post('/', 'store')->name('.store');
                                         Route::get('/create', 'create')->name('.create');
@@ -1360,7 +1378,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/pdf/{id}', 'pdf')->name('.pdf');
                                             });
                                         });
-                                    });    
+                                    });
 
                                     Route::prefix('dewasa')->group(function () {
                                         Route::name('.dewasa')->group(function () {
@@ -1387,11 +1405,8 @@ Route::middleware('ssoToken')->group(function () {
                                             });
                                         });
                                     });
-
                                 });
                             });
-
-
                         });
                     });
                 });
@@ -1986,6 +2001,21 @@ Route::middleware('ssoToken')->group(function () {
                                             Route::put('/{id}', 'update')->name('.update');
                                         });
                                     });
+                                });
+                            });
+                        });
+
+                        // Data Umum
+                        Route::prefix('data-umum')->group(function () {
+                            Route::name('.data-umum')->group(function () {
+                                Route::controller(DataUmumController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{data}/edit', 'edit')->name('.edit');
+                                    Route::put('/{data}', 'update')->name('.update');
+                                    Route::get('/{data}', 'show')->name('.show');
+                                    Route::delete('/', 'delete')->name('.delete');
                                 });
                             });
                         });

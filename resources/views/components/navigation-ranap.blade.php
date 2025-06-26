@@ -201,8 +201,8 @@
         ],
         [
             'icon' => 'verified_badge.png',
-            'label' => 'Presentasi',
-            'link' => route('rawat-inap.pra-anestesi.index', [
+            'label' => 'Pra Anestesi',
+            'link' => route('rawat-inap.asesmen-pra-anestesi.index', [
                 $dataMedis->kd_unit,
                 $dataMedis->kd_pasien,
                 $tglMasukData,
