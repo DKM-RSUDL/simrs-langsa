@@ -64,7 +64,7 @@
                             <!-- Masuk -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-clock me-2"></i>Data Masuk</h6>
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-clock me-2"></i>Waktu</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -87,12 +87,12 @@
                             <!-- Alergi -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-allergies"></i> Alergi</h6>                                    
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-allergies"></i> Alergi</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="section-separator" id="alergi">                                               
+                                            <div class="section-separator" id="alergi">
                                                 <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered" id="createAlergiTable">
@@ -101,7 +101,7 @@
                                                                 <th width="20%">Jenis Alergi</th>
                                                                 <th width="25%">Alergen</th>
                                                                 <th width="25%">Reaksi</th>
-                                                                <th width="20%">Tingkat Keparahan</th>                                                                
+                                                                <th width="20%">Tingkat Keparahan</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -113,7 +113,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                                 <label class="form-label fw-bold">Diagnosis</label>
                                                 <input type="text" class="form-control" name="diagnosis" value="{{ $prmrj->diagnosis }}" disabled>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                                     <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-notes-medical me-2"></i>Riwayat Rawat Inap</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">                                        
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Data klinis penting termasuk riwayat rawat inap atau prosedur bedah sejak kunjungan terakhir</label>
@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </form>
@@ -309,7 +309,7 @@
                                 <span class="badge ${getKeparahanBadgeClass(item.tingkat_keparahan)}">
                                     ${item.tingkat_keparahan}
                                 </span>
-                            </td>                            
+                            </td>
                         `;
                         tbody.appendChild(row);
                     });
@@ -342,7 +342,7 @@
                                 <span class="badge ${getKeparahanBadgeClass(item.tingkat_keparahan)}">
                                     ${item.tingkat_keparahan}
                                 </span>
-                            </td>                            
+                            </td>
                         `;
                         tbody.appendChild(row);
                     });

@@ -65,7 +65,7 @@
                             <!-- Masuk -->
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-clock me-2"></i>Data Masuk</h6>
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-clock me-2"></i>Waktu</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -97,7 +97,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="section-separator" id="alergi">                                               
+                                            <div class="section-separator" id="alergi">
                                                 <input type="hidden" name="alergis" id="alergisInput" value="[]">
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered" id="createAlergiTable">
@@ -118,7 +118,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                                 <label class="form-label fw-bold">Diagnosis</label>
                                                 <input type="text" class="form-control" name="diagnosis">
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +146,7 @@
                                     <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-notes-medical me-2"></i>Riwayat Rawat Inap</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">                                        
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label class="form-label fw-bold">Data klinis penting termasuk riwayat rawat inap atau prosedur bedah sejak kunjungan terakhir</label>

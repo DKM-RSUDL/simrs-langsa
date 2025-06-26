@@ -144,6 +144,7 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>Tanggal & Jam</th>
+                                <th>Petugas</th>
                                 <th>Diagnosis</th>
                                 <th>Aksi</th>
                             </tr>
@@ -155,6 +156,7 @@
                                         {{ \Carbon\Carbon::parse($prmrj->tanggal)->format('Y-m-d') }}
                                         {{ \Carbon\Carbon::parse($prmrj->jam)->format('H:i') }}
                                     </td>
+                                    <td>{{ str()->title($prmrj->userCreate->name) }}</td>
                                     <td>{{ $prmrj->diagnosis }}</td>
                                     <td>
                                         <a href="{{ route('rawat-jalan.prmrj.show', [$dataMedis->kd_unit, $dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, $prmrj->id]) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
@@ -175,7 +177,7 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->                
+                <!-- Pagination -->
                 <div class="d-flex justify-content-end mt-3">
                     {{ $prmrjs->links() }}
                 </div>
@@ -184,7 +186,7 @@
     </div>
 @endsection
 
-@push('js')    
+@push('js')
     <script>
         document.getElementById('filterButton').addEventListener('click', function() {
             const selectOption = document.getElementById('SelectOption').value;
