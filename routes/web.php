@@ -43,7 +43,9 @@ use App\Http\Controllers\UnitPelayanan\GawatDarurat\TindakanController as GawatD
 use App\Http\Controllers\UnitPelayanan\GawatDarurat\TransferPasienController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenHemodialisaKeperawatanController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\AsesmenMedisController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\BeratBadanKeringController;
 use App\Http\Controllers\UnitPelayanan\Hemodialisa\DataUmumController;
+use App\Http\Controllers\UnitPelayanan\Hemodialisa\MalnutritionInflammationScoreController;
 use App\Http\Controllers\UnitPelayanan\HemodialisaController;
 use App\Http\Controllers\UnitPelayanan\Operasi\AsesmenController as OperasiAsesmenController;
 use App\Http\Controllers\UnitPelayanan\Operasi\CeklistAnasthesiController;
@@ -1957,6 +1959,7 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+                        
                     });
                 });
             });
@@ -2019,6 +2022,38 @@ Route::middleware('ssoToken')->group(function () {
                                 });
                             });
                         });
+
+                        //Berat Badan Kering (BBK)
+                        Route::prefix('berat-badan-kering')->group(function () {
+                            Route::name('.berat-badan-kering')->group(function () {
+                                Route::controller(BeratBadanKeringController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+
+                        //Malnutrition Inflammation Score (MIS)
+                        Route::prefix('malnutrition-inflammation-score')->group(function () {
+                            Route::name('.malnutrition-inflammation-score')->group(function () {
+                                Route::controller(MalnutritionInflammationScoreController::class)->group(function () {
+                                    Route::get('/', 'index')->name('.index');
+                                    Route::get('/create', 'create')->name('.create');
+                                    Route::post('/', 'store')->name('.store');
+                                    Route::get('/{id}/edit', 'edit')->name('.edit');
+                                    Route::put('/{id}', 'update')->name('.update');
+                                    Route::get('/{id}', 'show')->name('.show');
+                                    Route::delete('/{id}', 'destroy')->name('.destroy');
+                                });
+                            });
+                        });
+                        
+
                     });
                 });
             });
