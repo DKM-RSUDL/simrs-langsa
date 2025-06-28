@@ -1376,6 +1376,7 @@ Route::middleware('ssoToken')->group(function () {
                                                 Route::get('/{id}/edit', 'edit')->name('.edit');
                                                 Route::put('/{id}', 'update')->name('.update');
                                                 Route::get('/show/{id}', 'show')->name('.show');
+                                                Route::get('/grafik{id}', 'grafik')->name('.grafik');
                                                 Route::delete('/{id}', 'destroy')->name('.destroy');
                                                 Route::get('/pdf/{id}', 'pdf')->name('.pdf');
                                             });

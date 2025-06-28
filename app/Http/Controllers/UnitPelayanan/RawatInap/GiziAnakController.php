@@ -9,10 +9,17 @@ use App\Models\RmeAsesmenGiziAnak;
 use App\Models\RmeMonitoringGizi;
 use App\Models\RmePengkajianGiziAnak;
 use App\Models\RmePengkajianGiziAnakDtl;
+use App\Models\WhoBmiForAge;
+use App\Models\WhoHeadCircumferenceForAge;
+use App\Models\WhoHeightForAge;
+use App\Models\WhoWeightForAge;
+use App\Models\WhoWeightForHeight;
+use App\Models\WhoWeightForLength;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GiziAnakController extends Controller
 {
@@ -99,6 +106,12 @@ class GiziAnakController extends Controller
         
         $user = auth()->user();
         $alergiPasien = RmeAlergiPasien::where('kd_pasien', $kd_pasien)->get();
+        $WhoWeightForAge = WhoWeightForAge::all();
+        $WhoHeightForAge = WhoHeightForAge::all();
+        $WhoBmiForAge = WhoBmiForAge::all();
+        $WhoWeightForHeight = WhoWeightForHeight::all();
+        $WhoWeightForLength = WhoWeightForLength::all();
+        $WhoHeadCircumferenceForAge = WhoHeadCircumferenceForAge::all();
 
         // Mengambil data kunjungan dan tanggal triase terkait
         $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
@@ -134,6 +147,12 @@ class GiziAnakController extends Controller
             'urut_masuk',
             'dataMedis',
             'alergiPasien',
+            'WhoBmiForAge',
+            'WhoHeadCircumferenceForAge',
+            'WhoHeightForAge',
+            'WhoWeightForAge',
+            'WhoWeightForHeight',
+            'WhoWeightForLength',
             'user'
         ));
     }
@@ -458,6 +477,435 @@ class GiziAnakController extends Controller
             'dataMedis',
             'monitoringGizi'
         ));
+    }
+
+    public function grafik($kd_unit, $kd_pasien, $tgl_masuk, $urut_masuk, $id)
+    {
+        $dataPengkajianGizi = RmePengkajianGiziAnak::with(['asesmenGizi', 'userCreate'])
+            ->where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->where('kd_unit', $kd_unit)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->firstOrFail();
+
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->leftJoin('dokter', 'kunjungan.KD_DOKTER', '=', 'dokter.KD_DOKTER')
+            ->select('kunjungan.*', 't.*', 'dokter.NAMA as nama_dokter')
+            ->where('kunjungan.kd_unit', $kd_unit)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->firstOrFail();
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Ambil data monitoring gizi
+        $monitoringGizi = RmeMonitoringGizi::where('kd_unit', $kd_unit)
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('urut_masuk', $urut_masuk)
+            ->orderBy('tanggal_monitoring', 'desc')
+            ->get();
+
+        // Data WHO dan perhitungan rekomendasi
+        $whoData = [];
+        $recommendations = [];
+
+        if ($dataMedis->pasien && $dataMedis->pasien->jenis_kelamin !== null) {
+            // Convert jenis kelamin dari database pasien ke format WHO
+            $jenisKelaminPasien = $dataMedis->pasien->jenis_kelamin;
+
+            // Mapping ke format WHO:
+            // Database Pasien: 0 = Perempuan, 1 = Laki-laki
+            // Database WHO: 1 = Laki-laki, 2 = Perempuan
+            if ($jenisKelaminPasien == 1) {
+                $jenisKelaminWHO = 1; // Laki-laki
+            } elseif ($jenisKelaminPasien == 0) {
+                $jenisKelaminWHO = 2; // Perempuan
+            } else {
+                $jenisKelaminWHO = null; // Invalid
+            }
+
+            $umurBulan = $dataMedis->pasien->tgl_lahir ?
+                Carbon::parse($dataMedis->pasien->tgl_lahir)->diffInMonths(Carbon::now()) : 0;
+
+            // Tentukan range umur untuk chart (0-60 bulan)
+            $maxAge = max(60, $umurBulan + 6);
+
+            if ($jenisKelaminWHO !== null && $dataPengkajianGizi->asesmenGizi) {
+                $beratBadan = (float) $dataPengkajianGizi->asesmenGizi->berat_badan;
+                $tinggiBadan = (float) $dataPengkajianGizi->asesmenGizi->tinggi_badan;
+                $imt = (float) $dataPengkajianGizi->asesmenGizi->imt;
+
+                // 1. Weight for Age
+                $weightForAgeRaw = WhoWeightForAge::where('sex', $jenisKelaminWHO)
+                    ->where('age_months', '>=', 0)
+                    ->where('age_months', '<=', $maxAge)
+                    ->orderBy('age_months')
+                    ->get(['age_months', 'l', 'm', 's']);
+
+                $whoData['weightForAge'] = $weightForAgeRaw->map(function ($item) {
+                    return [
+                        'age' => (float)$item->age_months,
+                        'L' => (float)$item->l,
+                        'M' => (float)$item->m,
+                        'S' => (float)$item->s
+                    ];
+                })->toArray();
+
+                // Calculate Weight for Age recommendation
+                if ($beratBadan > 0) {
+                    $recommendations['weightAge'] = $this->calculateRecommendation(
+                        $beratBadan,
+                        $umurBulan,
+                        $jenisKelaminWHO,
+                        'weight-age'
+                    );
+                }
+
+                // 2. Height for Age
+                $heightForAgeRaw = WhoHeightForAge::where('sex', $jenisKelaminWHO)
+                    ->where('age_months', '>=', 0)
+                    ->where('age_months', '<=', $maxAge)
+                    ->orderBy('age_months')
+                    ->get(['age_months', 'l', 'm', 's']);
+
+                $whoData['heightForAge'] = $heightForAgeRaw->map(function ($item) {
+                    return [
+                        'age' => (float)$item->age_months,
+                        'L' => (float)$item->l,
+                        'M' => (float)$item->m,
+                        'S' => (float)$item->s
+                    ];
+                })->toArray();
+
+                // Calculate Height for Age recommendation
+                if ($tinggiBadan > 0) {
+                    $recommendations['heightAge'] = $this->calculateRecommendation(
+                        $tinggiBadan,
+                        $umurBulan,
+                        $jenisKelaminWHO,
+                        'height-age'
+                    );
+                }
+
+                // 3. BMI for Age
+                $bmiForAgeRaw = WhoBmiForAge::where('sex', $jenisKelaminWHO)
+                    ->where('age_months', '>=', 0)
+                    ->where('age_months', '<=', $maxAge)
+                    ->orderBy('age_months')
+                    ->get(['age_months', 'l', 'm', 's']);
+
+                $whoData['bmiForAge'] = $bmiForAgeRaw->map(function ($item) {
+                    return [
+                        'age' => (float)$item->age_months,
+                        'L' => (float)$item->l,
+                        'M' => (float)$item->m,
+                        'S' => (float)$item->s
+                    ];
+                })->toArray();
+
+                // Calculate BMI for Age recommendation
+                if ($imt > 0) {
+                    $recommendations['bmiAge'] = $this->calculateRecommendation(
+                        $imt,
+                        $umurBulan,
+                        $jenisKelaminWHO,
+                        'bmi-age'
+                    );
+                }
+
+                // 4. Weight for Height/Length
+                if ($umurBulan < 24) {
+                    // Gunakan Weight for Length untuk < 24 bulan
+                    $weightForHeightRaw = WhoWeightForLength::where('sex', $jenisKelaminWHO)
+                        ->orderBy('length_cm')
+                        ->get(['length_cm', 'l', 'm', 's']);
+
+                    $whoData['weightForHeight'] = $weightForHeightRaw->map(function ($item) {
+                        return [
+                            'height' => (float)$item->length_cm,
+                            'L' => (float)$item->l,
+                            'M' => (float)$item->m,
+                            'S' => (float)$item->s
+                        ];
+                    })->toArray();
+                } else {
+                    // Gunakan Weight for Height untuk >= 24 bulan
+                    $weightForHeightRaw = WhoWeightForHeight::where('sex', $jenisKelaminWHO)
+                        ->orderBy('height_cm')
+                        ->get(['height_cm', 'l', 'm', 's']);
+
+                    $whoData['weightForHeight'] = $weightForHeightRaw->map(function ($item) {
+                        return [
+                            'height' => (float)$item->height_cm,
+                            'L' => (float)$item->l,
+                            'M' => (float)$item->m,
+                            'S' => (float)$item->s
+                        ];
+                    })->toArray();
+                }
+
+                // Calculate Weight for Height recommendation
+                if ($beratBadan > 0 && $tinggiBadan > 0) {
+                    $recommendations['weightHeight'] = $this->calculateWeightHeightRecommendation(
+                        $beratBadan,
+                        $tinggiBadan,
+                        $jenisKelaminWHO,
+                        $umurBulan
+                    );
+                }
+            }
+        }
+
+        // Variabel untuk kompatibilitas (keep existing variables)
+        $WhoWeightForAge = WhoWeightForAge::all();
+        $WhoHeightForAge = WhoHeightForAge::all();
+        $WhoBmiForAge = WhoBmiForAge::all();
+        $WhoWeightForHeight = WhoWeightForHeight::all();
+        $WhoWeightForLength = WhoWeightForLength::all();
+        $WhoHeadCircumferenceForAge = WhoHeadCircumferenceForAge::all();
+
+        return view('unit-pelayanan.rawat-inap.pelayanan.gizi.anak.grafik', compact(
+            'dataPengkajianGizi',
+            'dataMedis',
+            'monitoringGizi',
+            'WhoWeightForAge',
+            'WhoHeightForAge',
+            'WhoBmiForAge',
+            'WhoWeightForHeight',
+            'WhoWeightForLength',
+            'WhoHeadCircumferenceForAge',
+            'whoData',
+            'recommendations'
+        ));
+    }
+
+    /**
+     * Menghitung Z-Score berdasarkan formula WHO LMS
+     */
+    private function calculateZScore($value, $L, $M, $S)
+    {
+        if (!$value || !$M || !$S) return null;
+
+        $zScore = 0;
+        if (abs($L) < 0.01) {
+            $zScore = log($value / $M) / $S;
+        } else {
+            $zScore = (pow($value / $M, $L) - 1) / ($L * $S);
+        }
+
+        return round($zScore, 2);
+    }
+
+    /**
+     * Mendapatkan status gizi berdasarkan Z-Score
+     */
+    private function getStatusFromZScore($zScore, $type)
+    {
+        if ($zScore === null) return ['status' => 'Tidak dapat dihitung', 'class' => 'normal'];
+
+        $status = '';
+        $class = '';
+
+        switch ($type) {
+            case 'weight-age':
+            case 'weight-height':
+                if ($zScore >= 3) {
+                    $status = 'Obesitas';
+                    $class = 'severe';
+                } elseif ($zScore >= 2) {
+                    $status = 'Berat Badan Lebih';
+                    $class = 'overweight';
+                } elseif ($zScore >= -2) {
+                    $status = 'Normal';
+                    $class = 'normal';
+                } elseif ($zScore >= -3) {
+                    $status = 'Gizi Kurang';
+                    $class = 'underweight';
+                } else {
+                    $status = 'Gizi Buruk';
+                    $class = 'severe';
+                }
+                break;
+
+            case 'height-age':
+                if ($zScore >= 3) {
+                    $status = 'Tinggi';
+                    $class = 'normal';
+                } elseif ($zScore >= 2) {
+                    $status = 'Normal Tinggi';
+                    $class = 'normal';
+                } elseif ($zScore >= -2) {
+                    $status = 'Normal';
+                    $class = 'normal';
+                } elseif ($zScore >= -3) {
+                    $status = 'Pendek';
+                    $class = 'underweight';
+                } else {
+                    $status = 'Sangat Pendek';
+                    $class = 'severe';
+                }
+                break;
+
+            case 'bmi-age':
+                if ($zScore >= 3) {
+                    $status = 'Obesitas';
+                    $class = 'severe';
+                } elseif ($zScore >= 2) {
+                    $status = 'Gemuk';
+                    $class = 'overweight';
+                } elseif ($zScore >= 1) {
+                    $status = 'Risiko Gemuk';
+                    $class = 'overweight';
+                } elseif ($zScore >= -2) {
+                    $status = 'Normal';
+                    $class = 'normal';
+                } elseif ($zScore >= -3) {
+                    $status = 'Kurus';
+                    $class = 'underweight';
+                } else {
+                    $status = 'Sangat Kurus';
+                    $class = 'severe';
+                }
+                break;
+        }
+
+        return ['status' => $status, 'class' => $class];
+    }
+
+    /**
+     * Mendapatkan rekomendasi berdasarkan status gizi
+     */
+    private function getRecommendationText($status, $type)
+    {
+        $recommendations = [
+            'weight-age' => [
+                'Normal' => 'Berat badan anak menurut umur <strong>Normal</strong>, tetap pertahankan dengan memberi makanan sehat dan bergizi.',
+                'Gizi Kurang' => 'Berat badan anak menurut umur <strong>Kurang</strong>. Perbanyak asupan makanan bergizi, konsultasi dengan ahli gizi.',
+                'Gizi Buruk' => 'Berat badan anak menurut umur <strong>Sangat Kurang</strong>. Segera konsultasi dengan dokter dan ahli gizi.',
+                'Berat Badan Lebih' => 'Berat badan anak menurut umur <strong>Berlebih</strong>. Atur pola makan dan tingkatkan aktivitas fisik.',
+                'Obesitas' => 'Berat badan anak menurut umur <strong>Obesitas</strong>. Segera konsultasi dengan dokter untuk program penurunan berat badan.'
+            ],
+            'height-age' => [
+                'Normal' => 'Tinggi badan anak menurut umur <strong>Normal</strong>, tetap berikan asupan gizi seimbang.',
+                'Normal Tinggi' => 'Tinggi badan anak menurut umur <strong>Normal Tinggi</strong>, pertahankan asupan gizi yang baik.',
+                'Tinggi' => 'Tinggi badan anak menurut umur <strong>Tinggi</strong>, pertahankan pola makan sehat.',
+                'Pendek' => 'Tinggi badan anak menurut umur <strong>Pendek</strong>. Perbanyak asupan protein, kalsium, dan vitamin D.',
+                'Sangat Pendek' => 'Tinggi badan anak menurut umur <strong>Sangat Pendek</strong>. Segera konsultasi dengan dokter untuk evaluasi lebih lanjut.'
+            ],
+            'weight-height' => [
+                'Normal' => 'Berat badan menurut tinggi badan <strong>Normal</strong>, tetap pertahankan pola makan sehat.',
+                'Gizi Kurang' => 'Berat badan menurut tinggi badan <strong>Kurang</strong>. Tingkatkan asupan kalori dan protein.',
+                'Gizi Buruk' => 'Berat badan menurut tinggi badan <strong>Sangat Kurang</strong>. Segera konsultasi dengan dokter.',
+                'Berat Badan Lebih' => 'Berat badan menurut tinggi badan <strong>Berlebih</strong>. Kurangi asupan kalori dan tingkatkan aktivitas.',
+                'Obesitas' => 'Berat badan menurut tinggi badan <strong>Obesitas</strong>. Segera konsultasi dengan dokter.'
+            ],
+            'bmi-age' => [
+                'Normal' => 'IMT anak menurut umur <strong>Normal</strong>, tetap pertahankan pola hidup sehat.',
+                'Risiko Gemuk' => 'IMT anak menurut umur <strong>Risiko Gemuk</strong>. Perhatikan pola makan dan tingkatkan aktivitas fisik.',
+                'Gemuk' => 'IMT anak menurut umur <strong>Gemuk</strong>. Atur pola makan dan rutin berolahraga.',
+                'Obesitas' => 'IMT anak menurut umur <strong>Obesitas</strong>. Segera konsultasi dengan dokter.',
+                'Kurus' => 'IMT anak menurut umur <strong>Kurus</strong>. Tingkatkan asupan makanan bergizi.',
+                'Sangat Kurus' => 'IMT anak menurut umur <strong>Sangat Kurus</strong>. Segera konsultasi dengan dokter dan ahli gizi.'
+            ]
+        ];
+
+        return $recommendations[$type][$status] ?? 'Konsultasi dengan tenaga kesehatan untuk evaluasi lebih lanjut.';
+    }
+
+    /**
+     * Menghitung rekomendasi untuk Weight/Age, Height/Age, dan BMI/Age
+     */
+    private function calculateRecommendation($value, $ageMonths, $sex, $type)
+    {
+        $modelClass = '';
+        $ageField = 'age_months';
+
+        switch ($type) {
+            case 'weight-age':
+                $modelClass = WhoWeightForAge::class;
+                break;
+            case 'height-age':
+                $modelClass = WhoHeightForAge::class;
+                break;
+            case 'bmi-age':
+                $modelClass = WhoBmiForAge::class;
+                break;
+        }
+
+        $whoData = $modelClass::where('sex', $sex)
+            ->where($ageField, $ageMonths)
+            ->first(['l', 'm', 's']);
+
+        if (!$whoData) {
+            return [
+                'status' => 'Data tidak tersedia',
+                'class' => 'normal',
+                'recommendation' => 'Data WHO tidak tersedia untuk umur ini.',
+                'target_value' => 0,
+                'z_score' => null
+            ];
+        }
+
+        $zScore = $this->calculateZScore($value, $whoData->l, $whoData->m, $whoData->s);
+        $statusInfo = $this->getStatusFromZScore($zScore, $type);
+        $recommendation = $this->getRecommendationText($statusInfo['status'], $type);
+
+        return [
+            'status' => $statusInfo['status'],
+            'class' => $statusInfo['class'],
+            'recommendation' => $recommendation,
+            'target_value' => round($whoData->m, 1),
+            'z_score' => $zScore
+        ];
+    }
+
+    /**
+     * Menghitung rekomendasi untuk Weight/Height
+     */
+    private function calculateWeightHeightRecommendation($weight, $height, $sex, $ageMonths)
+    {
+        $modelClass = $ageMonths < 24 ? WhoWeightForLength::class : WhoWeightForHeight::class;
+        $heightField = $ageMonths < 24 ? 'length_cm' : 'height_cm';
+
+        // Cari data terdekat berdasarkan tinggi/panjang badan
+        $whoData = $modelClass::where('sex', $sex)
+            ->orderByRaw("ABS({$heightField} - ?)", [$height])
+            ->first(['l', 'm', 's', $heightField]);
+
+        if (!$whoData) {
+            return [
+                'status' => 'Data tidak tersedia',
+                'class' => 'normal',
+                'recommendation' => 'Data WHO tidak tersedia untuk tinggi badan ini.',
+                'target_value' => 0,
+                'z_score' => null
+            ];
+        }
+
+        $zScore = $this->calculateZScore($weight, $whoData->l, $whoData->m, $whoData->s);
+        $statusInfo = $this->getStatusFromZScore($zScore, 'weight-height');
+        $recommendation = $this->getRecommendationText($statusInfo['status'], 'weight-height');
+
+        return [
+            'status' => $statusInfo['status'],
+            'class' => $statusInfo['class'],
+            'recommendation' => $recommendation,
+            'target_value' => round($whoData->m, 1),
+            'z_score' => $zScore
+        ];
     }
 
 }
