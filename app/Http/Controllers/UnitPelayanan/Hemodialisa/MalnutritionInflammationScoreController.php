@@ -7,6 +7,7 @@ use App\Models\Dokter;
 use App\Models\Kunjungan;
 use App\Models\RmeAlergiPasien;
 use App\Models\RmeHdMalnutrisiSkor;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -340,6 +341,72 @@ class MalnutritionInflammationScoreController extends Controller
                 ->back()
                 ->with('error', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
         }
+    }
+
+    public function print($kd_pasien, $tgl_masuk, $urut_masuk, $idEncrypted)
+    {
+        // Decrypt ID
+        $id = decrypt($idEncrypted);
+        if (!is_numeric($id)) {
+            abort(404, 'ID tidak valid');
+        }
+
+        // Ambil data kunjungan
+        $dataMedis = Kunjungan::with(['pasien', 'dokter', 'customer', 'unit'])
+            ->join('transaksi as t', function ($join) {
+                $join->on('kunjungan.kd_pasien', '=', 't.kd_pasien');
+                $join->on('kunjungan.kd_unit', '=', 't.kd_unit');
+                $join->on('kunjungan.tgl_masuk', '=', 't.tgl_transaksi');
+                $join->on('kunjungan.urut_masuk', '=', 't.urut_masuk');
+            })
+            ->where('kunjungan.kd_unit', $this->kdUnitDef_)
+            ->where('kunjungan.kd_pasien', $kd_pasien)
+            ->whereDate('kunjungan.tgl_masuk', $tgl_masuk)
+            ->where('kunjungan.urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$dataMedis) {
+            abort(404, 'Data not found');
+        }
+
+        if ($dataMedis->pasien && $dataMedis->pasien->tgl_lahir) {
+            $dataMedis->pasien->umur = Carbon::parse($dataMedis->pasien->tgl_lahir)->age;
+        } else {
+            $dataMedis->pasien->umur = 'Tidak Diketahui';
+        }
+
+        // Ambil data skor malnutrisi
+        $skorMalnutrisi = RmeHdMalnutrisiSkor::where('id', $id)
+            ->where('kd_pasien', $kd_pasien)
+            ->whereDate('tgl_masuk', $tgl_masuk)
+            ->where('kd_unit', $this->kdUnitDef_)
+            ->where('urut_masuk', $urut_masuk)
+            ->first();
+
+        if (!$skorMalnutrisi) {
+            abort(404, 'Data Malnutrition Inflammation Score tidak ditemukan');
+        }
+
+        $logoPath = public_path('assets/img/Logo-RSUD-Langsa-1.png');
+
+        // Generate PDF menggunakan DomPDF
+        $pdf = Pdf::loadView('unit-pelayanan.hemodialisa.pelayanan.malnutrition-inflammation-score.print', compact(
+            'dataMedis',
+            'skorMalnutrisi',
+            'logoPath'
+        ));
+
+        // Set paper dan orientasi
+        $pdf->setPaper('A4', 'portrait');
+
+        // Generate filename
+        $filename = 'MIS_' . $dataMedis->pasien->nama . '_' . Carbon::parse($skorMalnutrisi->tgl_rawat)->format('dmY') . '.pdf';
+
+        // Clean filename untuk keamanan
+        $filename = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $filename);
+
+        // Stream PDF ke browser
+        return $pdf->stream($filename);
     }
 
 }

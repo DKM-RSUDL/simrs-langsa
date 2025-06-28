@@ -25,21 +25,6 @@
                             </a>
                         </div>
 
-                        <!-- Alert Messages -->
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
                         <!-- Data Table -->
                         @if($skorMalnutrisi->count() > 0)
                             <div class="table-responsive">
@@ -61,7 +46,7 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
                                                     <strong>{{ \Carbon\Carbon::parse($data->tgl_rawat)->format('d/m/Y') }}</strong><br>
-                                                    <small class="text-muted">{{ $data->jam_rawat }}</small>
+                                                    <small class="text-muted">{{ \Carbon\Carbon::parse($data->jam_rawat)->format('H:i') }}</small>
                                                 </td>
                                                 <td>
                                                     <strong>BB:</strong> {{ $data->berat_badan }} kg<br>
@@ -103,6 +88,9 @@
                                                         <button type="button" class="btn btn-info me-1" data-bs-toggle="modal" data-bs-target="#detailModal{{ $data->id }}">
                                                             <i class="ti-eye"></i>
                                                         </button>
+                                                        <a href="{{ route('hemodialisa.pelayanan.malnutrition-inflammation-score.print', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($data->id)]) }}" class="btn btn-secondary me-1" target="_blank">
+                                                            <i class="ti-printer"></i>
+                                                        </a>
                                                         <a href="{{ route('hemodialisa.pelayanan.malnutrition-inflammation-score.edit', [$dataMedis->kd_pasien, date('Y-m-d', strtotime($dataMedis->tgl_masuk)), $dataMedis->urut_masuk, encrypt($data->id)]) }}" class="btn btn-warning me-1">
                                                             <i class="ti-pencil"></i>
                                                         </a>

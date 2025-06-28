@@ -2049,6 +2049,7 @@ Route::middleware('ssoToken')->group(function () {
                                     Route::get('/{id}/edit', 'edit')->name('.edit');
                                     Route::put('/{id}', 'update')->name('.update');
                                     Route::get('/{id}', 'show')->name('.show');
+                                    Route::get('/{id}/print', 'print')->name('.print');
                                     Route::delete('/{id}', 'destroy')->name('.destroy');
                                 });
                             });
